@@ -1,4 +1,3 @@
-using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -8,10 +7,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Features.Tickets;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common.Features.FilePersistence;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets;

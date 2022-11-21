@@ -12,8 +12,8 @@ public class OcrViolationTicket
 
     public static readonly string ViolationTicketTitle = "violationTicketTitle";
     public static readonly string ViolationTicketNumber = "ticket_number";
-    public static readonly string Surname = "surname";
-    public static readonly string GivenName = "given_names";
+    public static readonly string Surname = "disputant_surname";
+    public static readonly string GivenName = "disputant_given_names";
     public static readonly string DriverLicenceProvince = "drivers_licence_province";
     public static readonly string DriverLicenceNumber = "drivers_licence_number";
     public static readonly string ViolationDate = "violation_date";
@@ -26,26 +26,27 @@ public class OcrViolationTicket
     public static readonly string OffenceIsLCA = "is_lca_offence";
     public static readonly string OffenceIsTCR = "is_tcr_offence";
     public static readonly string OffenceIsOther = "is_other_offence";
-    public static readonly string Count1Description = "counts.count_1.description";
-    public static readonly string Count1ActRegs = "counts.count_1.act_or_regulation";
-    public static readonly string Count1IsACT = "counts.count_1.is_act";
-    public static readonly string Count1IsREGS = "counts.count_1.is_regulation";
-    public static readonly string Count1Section = "counts.count_1.section";
-    public static readonly string Count1TicketAmount = "counts.count_1.ticketed_amount";
-    public static readonly string Count2Description = "counts.count_2.description";
-    public static readonly string Count2ActRegs = "counts.count_2.act_or_regulation";
-    public static readonly string Count2IsACT = "counts.count_2.is_act";
-    public static readonly string Count2IsREGS = "counts.count_2.is_regulation";
-    public static readonly string Count2Section = "counts.count_2.section";
-    public static readonly string Count2TicketAmount = "counts.count_2.ticketed_amount";
-    public static readonly string Count3Description = "counts.count_3.description";
-    public static readonly string Count3ActRegs = "counts.count_3.act_or_regulation";
-    public static readonly string Count3IsACT = "counts.count_3.is_act";
-    public static readonly string Count3IsREGS = "counts.count_3.is_regulation";
-    public static readonly string Count3Section = "counts.count_3.section";
-    public static readonly string Count3TicketAmount = "counts.count_3.ticketed_amount";
-    public static readonly string HearingLocation = "provincial_court_hearing_location";
-    public static readonly string DetachmentLocation = "organization_location";
+    public static readonly string Count1Description = "counts.count_no_1.description";
+    public static readonly string Count1ActRegs = "counts.count_no_1.act_or_regulation_name_code";
+    public static readonly string Count1IsACT = "counts.count_no_1.is_act";
+    public static readonly string Count1IsREGS = "counts.count_no_1.is_regulation";
+    public static readonly string Count1Section = "counts.count_no_1.section";
+    public static readonly string Count1TicketAmount = "counts.count_no_1.ticketed_amount";
+    public static readonly string Count2Description = "counts.count_no_2.description";
+    public static readonly string Count2ActRegs = "counts.count_no_2.act_or_regulation_name_code";
+    public static readonly string Count2IsACT = "counts.count_no_2.is_act";
+    public static readonly string Count2IsREGS = "counts.count_no_2.is_regulation";
+    public static readonly string Count2Section = "counts.count_no_2.section";
+    public static readonly string Count2TicketAmount = "counts.count_no_2.ticketed_amount";
+    public static readonly string Count3Description = "counts.count_no_3.description";
+    public static readonly string Count3ActRegs = "counts.count_no_3.act_or_regulation_name_code";
+    public static readonly string Count3IsACT = "counts.count_no_3.is_act";
+    public static readonly string Count3IsREGS = "counts.count_no_3.is_regulation";
+    public static readonly string Count3Section = "counts.count_no_3.section";
+    public static readonly string Count3TicketAmount = "counts.count_no_3.ticketed_amount";
+    public static readonly string HearingLocation = "court_location";
+    public static readonly string DetachmentLocation = "detachment_location";
+    public static readonly string DateOfService = "service_date";
 
     /// <summary>
     /// Gets or sets the saved image filename.
@@ -79,7 +80,7 @@ public class OcrViolationTicket
             || Fields[Count1Section].IsPopulated()
             || Fields[Count1TicketAmount].IsPopulated();
     }
-    
+
     /// <summary>
     /// Return true if any of the 4 Count fields has a value.
     /// </summary>
@@ -90,7 +91,7 @@ public class OcrViolationTicket
             || Fields[Count2Section].IsPopulated()
             || Fields[Count2TicketAmount].IsPopulated();
     }
-    
+
     /// <summary>
     /// Return true if any of the 4 Count fields has a value.
     /// </summary>
@@ -138,11 +139,11 @@ public class Field
     /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
     public bool? IsCheckboxSelected()
     {
-        if (Value?.Equals("selected") ?? false)
+        if (Value?.Equals("selected", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return true;
         }
-        if (Value?.Equals("unselected") ?? false)
+        if (Value?.Equals("unselected", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return false;
         }

@@ -2,7 +2,7 @@ using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
-using TrafficCourts.Citizen.Service.Models.Tickets;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Services;
 
@@ -64,7 +64,7 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
                 field.Type = Enum.GetName(extractedField.ValueType);
                 foreach (BoundingRegion region in extractedField.BoundingRegions)
                 {
-                    Models.Tickets.BoundingBox boundingBox = new();
+                    Common.OpenAPIs.OracleDataApi.v1_0.BoundingBox boundingBox = new();
                     boundingBox.Points.Add(new Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
                     boundingBox.Points.Add(new Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
                     boundingBox.Points.Add(new Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));

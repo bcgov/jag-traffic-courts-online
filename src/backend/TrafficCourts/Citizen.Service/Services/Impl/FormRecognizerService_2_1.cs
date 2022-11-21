@@ -1,10 +1,9 @@
 using Azure;
 using Azure.AI.FormRecognizer;
-using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.AI.FormRecognizer.Models;
 using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
-using TrafficCourts.Citizen.Service.Models.Tickets;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Services;
 
@@ -79,7 +78,7 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
                     if (valueData is not null)
                     {
                         FieldBoundingBox bb = valueData.BoundingBox;
-                        Models.Tickets.BoundingBox boundingBox = new();
+                        BoundingBox boundingBox = new();
                         boundingBox.Points.Add(new Point(bb[0].X, bb[0].Y));
                         boundingBox.Points.Add(new Point(bb[1].X, bb[1].Y));
                         boundingBox.Points.Add(new Point(bb[2].X, bb[2].Y));
