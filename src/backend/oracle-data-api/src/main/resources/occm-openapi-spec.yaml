@@ -497,7 +497,7 @@ components:
           type: string
         disputantBirthDt:
           type: string
-          format: date
+          pattern: '^\d{4}-\d{2}-\d{2}$'
         disputantClientId:
           type: string
           format: nullable
@@ -737,7 +737,7 @@ components:
           type: string
         disputantBirthDt:
           type: string
-          format: date
+          pattern: '^\d{4}-\d{2}-\d{2}$'
         disputantClientNumberTxt:
           type: string
           format: nullable

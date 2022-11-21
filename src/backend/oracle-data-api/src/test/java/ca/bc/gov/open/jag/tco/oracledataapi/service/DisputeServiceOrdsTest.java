@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ class DisputeServiceOrdsTest extends BaseTestSuite {
 	private DisputeService disputeService;
 
 	@Test
-	public void testOrdsPersistance() {
+	public void testOrdsPersistance() throws ParseException {
 		// This test creates a Dispute where all fields are populated, saves it to ORDs, loads it from ORDs,
 		// and then compares the values of all fields to the original copy - they should be identical (except for the noted ignoredFields).
 

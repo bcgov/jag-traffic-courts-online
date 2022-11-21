@@ -2,14 +2,15 @@ package ca.bc.gov.open.jag.tco.oracledataapi.util;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
@@ -299,9 +300,11 @@ public class RandomUtil {
 
 	/**
 	 * Returns a random date within the last year.
+	 * @throws ParseException
 	 */
-	public static Date randomDate() {
-		return DateUtils.ceiling(randomDateTime(), Calendar.DAY_OF_MONTH);
+	public static Date randomDate() throws ParseException {
+		// ceiling dateTime to top of day
+		return DateUtils.parseDate(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(randomDateTime()), DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.getPattern());
 	}
 
 	/**
@@ -318,8 +321,9 @@ public class RandomUtil {
 
 	/**
 	 * Creates a Dispute where every field is populated with random data to the maximum character limit appropriate for each field.
+	 * @throws ParseException
 	 */
-	public static Dispute createFullyPopulatedDispute() {
+	public static Dispute createFullyPopulatedDispute() throws ParseException {
 		Dispute dispute = new Dispute();
 
 		dispute.setAddressCity(randomAlphanumeric(30));
@@ -379,7 +383,7 @@ public class RandomUtil {
 		return dispute;
 	}
 
-	public static ViolationTicket createViolationTicket(Dispute dispute) {
+	public static ViolationTicket createViolationTicket(Dispute dispute) throws ParseException {
 		ViolationTicket violationTicket = new ViolationTicket();
 		violationTicket.setAddress(randomAlphanumeric(100));
 		violationTicket.setAddressCity(randomAlphanumeric(100));
