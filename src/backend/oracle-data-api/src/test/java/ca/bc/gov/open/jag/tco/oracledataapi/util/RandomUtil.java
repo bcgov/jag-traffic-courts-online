@@ -426,7 +426,7 @@ public class RandomUtil {
 		count.setActOrRegulationNameCode(randomAlphabetic(5));
 		count.setIsAct(randomYN());
 		count.setIsRegulation(randomYN());
-		count.setSection(randomAlphanumeric(15));
+		count.setSection(randomAlphanumeric(10));
 		count.setSubsection(randomAlphanumeric(4));
 		count.setParagraph(randomAlphanumeric(3));
 		count.setSubparagraph(randomAlphanumeric(5));
