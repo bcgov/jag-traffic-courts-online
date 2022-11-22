@@ -170,7 +170,8 @@
     "dispute_submitted": "Dispute has been successfully submitted",
     "dispute_validation_error": "Your dispute has an error that needs to be corrected before you will be able to submit",
     "ticket_error": "Ticket could not be retrieved",
-    "dispute_create_error": "Dispute could not be created"
+    "dispute_create_error": "Dispute could not be created",
+    "language_error": "Languages could not be loaded"
   },
   "error": {
     "required": "Required",

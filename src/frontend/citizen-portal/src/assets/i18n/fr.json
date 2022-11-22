@@ -169,7 +169,8 @@
     "dispute_submitted": "Le litige a été soumis avec succès",
     "dispute_validation_error": "Votre litige comporte une erreur qui doit être corrigée avant que vous ne puissiez soumettre",
     "ticket_error": "Le ticket n'a pas pu être récupéré",
-    "dispute_create_error": "Le litige n'a pas pu être créé"
+    "dispute_create_error": "Le litige n'a pas pu être créé",
+    "language_error": "Les langs n’ont pas pu être chargés"
   },
   "error": {
     "required": "Obligatoire",

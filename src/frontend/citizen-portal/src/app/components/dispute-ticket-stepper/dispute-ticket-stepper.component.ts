@@ -7,7 +7,7 @@ import { UtilsService } from "@core/services/utils.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Address } from "@shared/models/address.model";
 import { FormControlValidators } from "@core/validators/form-control.validators";
-import { NoticeOfDispute, ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction } from "app/api";
+import { NoticeOfDispute, ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { Subscription } from "rxjs";
@@ -22,6 +22,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { MatDialog } from "@angular/material/dialog";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
 import { cloneDeep } from "lodash";
+import { LookupsService } from "app/services/lookups.service";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
@@ -64,7 +65,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public countIndexes: number[];
 
   // Additional
-  public languages = this.config.languages;
   public countsActions: any;
   public customWitnessOption = false;
   public minWitnesses = 1;
@@ -97,10 +97,15 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     private toastService: ToastService,
     public config: ConfigService,
     private dialog: MatDialog,
+    public lookups: LookupsService
   ) {
     // config or static
     this.isMobile = this.utilsService.isMobile();
     this.defaultLanguage = this.translateService.getDefaultLang();
+
+    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
+      this.lookups.languages$.next(response);
+    });
   }
 
   public ngOnInit(): void {
@@ -306,9 +311,9 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public getToolTipDEata(data) {
     if (data) {
       let msg = "";
-      this.languages.forEach(res => {
-        if (res === data.value) {
-          msg = res
+      this.lookups.languages.forEach(res => {
+        if (res.code === data.value) {
+          msg = res.description
         }
       })
       return msg;

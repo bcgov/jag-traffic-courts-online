@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
         'toaster.dispute_create_error',
         'toaster.dispute_error',
         'toaster.statute_error',
+        'toaster.language_error'
       ])
       .subscribe((translations) => {
         this.titleService.setTitle(
@@ -85,6 +86,9 @@ export class AppComponent implements OnInit {
         );
         this.configService.statute_error$.next(
           this.translateService.instant('toaster.statute_error')
+        );
+        this.configService.language_error$.next(
+          this.translateService.instant('toaster.language_error')
         );
       });
   }

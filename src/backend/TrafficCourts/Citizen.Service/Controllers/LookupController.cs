@@ -36,5 +36,23 @@ public class LookupController : ControllerBase
 
         return Ok(response.Statutes);
     }
+
+    /// <summary> 
+    /// Returns a list of Languages.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(IList<Language>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> LanguagesAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving Languages");
+
+        LanguageLookup.Request request = new();
+        LanguageLookup.Response response = await _mediator.Send(request, cancellationToken);
+
+        return Ok(response.Languages);
+    }
 }
 

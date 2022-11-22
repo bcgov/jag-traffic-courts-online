@@ -167,7 +167,7 @@ export class MockDisputeService {
     ticket.additional = <any>{
       lawyerPresent: true,
       interpreterRequired: true,
-      interpreterLanguage: 'SPA',
+      interpreterLanguageCd: 'SPA',
       witnessPresent: true,
       witnessNo: 3,
       requestReduction: true,

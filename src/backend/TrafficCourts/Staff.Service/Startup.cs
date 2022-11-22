@@ -66,6 +66,7 @@ public static class Startup
         // staff service should not be creating emails, should send messages for workflow
         builder.Services.AddEmailTemplates();
 
+        builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
 
         builder.Services.AddMediatR(assembly);

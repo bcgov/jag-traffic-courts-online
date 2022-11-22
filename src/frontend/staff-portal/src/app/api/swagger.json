@@ -2235,7 +2235,7 @@
         }
       }
     },
-    "/api/lookup": {
+    "/api/lookup/statutes": {
       "get": {
         "tags": [
           "Lookup"
@@ -2260,6 +2260,39 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/Statute"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lookup/languages": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of Languages.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Language"
                   }
                 }
               }
@@ -2626,7 +2659,9 @@
             "type": "string",
             "nullable": true
           },
-          "interpreterLanguage": {
+          "interpreterLanguageCd": {
+            "maxLength": 3,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -3096,7 +3131,7 @@
             "type": "string",
             "nullable": true
           },
-          "interpreterLanguage": {
+          "interpreterLanguageCd": {
             "type": "string",
             "nullable": true
           },
@@ -3569,6 +3604,20 @@
           "N"
         ],
         "type": "string"
+      },
+      "Language": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "OcrViolationTicket": {
         "type": "object",

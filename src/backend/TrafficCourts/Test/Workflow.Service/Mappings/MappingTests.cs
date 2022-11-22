@@ -55,7 +55,7 @@ public class MappingTests
         Assert.Equal(source.EmailAddress, target.EmailAddress);
         Assert.Equal(source.RepresentedByLawyer, target.RepresentedByLawyer);
         Assert.Equal(source.InterpreterRequired, target.InterpreterRequired);
-        Assert.Equal(source.InterpreterLanguage, target.InterpreterLanguage);
+        Assert.Equal(source.InterpreterLanguageCd, target.InterpreterLanguageCd);
         Assert.Equal(source.WitnessNo, target.WitnessNo);
         Assert.Equal(source.FineReductionReason, target.FineReductionReason);
         Assert.Equal(source.TimeToPayReason, target.TimeToPayReason);
