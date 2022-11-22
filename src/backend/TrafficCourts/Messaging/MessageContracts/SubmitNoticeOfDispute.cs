@@ -161,7 +161,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The disputant requires spoken language interpreter. The language name is indicated in this field.
     /// </summary>
-    public string? InterpreterLanguage { get; set; }
+    public string? InterpreterLanguageCd { get; set; }
 
     /// <summary>
     /// Interpreter required?

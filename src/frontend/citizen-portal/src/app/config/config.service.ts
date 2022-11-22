@@ -16,6 +16,7 @@ export class ConfigService {
   private disputeValidationError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeCreateError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private languageError: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   private _provinces = [
     {
@@ -370,91 +371,6 @@ export class ConfigService {
     },
   ];
 
-  private _languages = [
-    "American Sign Language (ASL)",
-    "Communication Realtime Translation (CART)",
-    "Afghani-Dari",
-    "Albanian",
-    "Amharic",
-    "Arabic",
-    "Azerbaijani",
-    "Azerbaijan-Turkish",
-    "Bengali",
-    "Bosnian",
-    "Bulgarian",
-    "Burmese",
-    "Cambodian (Khmer)",
-    "Cantonese",
-    "Cebuano",
-    "Chiu Chow (Swatow)",
-    "Croatian",
-    "Czech",
-    "Dari",
-    "Dinka",
-    "Dutch",
-    "Farsi",
-    "Farsi-Persian",
-    "Fiji-Hindi",
-    "Filipino",
-    "French",
-    "Fukien",
-    "Fuqing",
-    "Fuzhou",
-    "German",
-    "Greek",
-    "Gujarati",
-    "Hakha Chin",
-    "Hakka",
-    "Hebrew",
-    "Hindi",
-    "Hungarian",
-    "Igbo",
-    "Ilocano",
-    "Indonesian",
-    "Italian",
-    "Japanese",
-    "Karen",
-    "Kinyarwanda",
-    "Kirundi",
-    "Korean",
-    "Kurdish",
-    "Kurdish (Kurmanji)",
-    "Kurdish (Sorani)",
-    "Laotian",
-    "Lithuanian",
-    "Malay",
-    "Malayalam",
-    "Mandarin",
-    "Mongolian",
-    "Nepali",
-    "Oromo",
-    "Pashto",
-    "Polish",
-    "Portuguese",
-    "Punjabi",
-    "Romanian",
-    "Russian",
-    "Serbian",
-    "Shanghainese",
-    "Sinhalese",
-    "Slovak",
-    "Somali",
-    "Spanish",
-    "Sudanese",
-    "Swahili",
-    "Tagalog",
-    "Tamil",
-    "Teochew",
-    "Thai",
-    "Thai",
-    "Tigri(gna) (yna)",
-    "Turkish",
-    "Ukrainian",
-    "Urdu",
-    "Vietnamese",
-    "Xinhui"
-  ];
-
   private _countries = [
     { code: "AF", name: "Afghanistan" },
     { code: "AX", name: "Åland Islands" },
@@ -739,6 +655,13 @@ export class ConfigService {
     return this.disputeCreateError.value;
   }
 
+  public get language_error$(): BehaviorSubject<string> {
+    return this.languageError;
+  }
+  public get language_error(): string {
+    return this.languageError.value;
+  }
+
   public get provinces() {
     return this._provinces;
   }
@@ -751,10 +674,6 @@ export class ConfigService {
     return [...this.configuration.policeLocations].sort(
       this.sortConfigByName()
     );
-  }
-
-  public get languages() {
-    return this._languages;
   }
 
   public get countries() {

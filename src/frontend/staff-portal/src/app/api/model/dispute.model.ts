@@ -60,7 +60,7 @@ export interface Dispute {
     lawyerEmail?: string | null;
     officerPin?: string | null;
     detachmentLocation?: string | null;
-    interpreterLanguage?: string | null;
+    interpreterLanguageCd?: string | null;
     interpreterRequired?: DisputeInterpreterRequired;
     witnessNo?: number | null;
     fineReductionReason?: string | null;

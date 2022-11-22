@@ -19,6 +19,7 @@ model/disputeDisputantDetectedOcrIssues.model.ts
 model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
 model/field.model.ts
+model/language.model.ts
 model/models.ts
 model/noticeOfDispute.model.ts
 model/ocrViolationTicket.model.ts

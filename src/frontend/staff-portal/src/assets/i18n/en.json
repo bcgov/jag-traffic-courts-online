@@ -172,6 +172,7 @@
     "ticket_error": "Ticket could not be retrieved",
     "dispute_create_error": "Dispute could not be created",
     "statute_error": "Statutes could not be loaded",
+    "language_error": "Languages could not be loaded",
     "dispute_error": "Disputes could not be retrieved / saved."
   },
   "error": {

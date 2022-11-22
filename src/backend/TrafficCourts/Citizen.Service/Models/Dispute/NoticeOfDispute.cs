@@ -177,8 +177,8 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// <summary>
         /// The disputant requires spoken language interpreter. The language name is indicated in this field.
         /// </summary>
-        [JsonPropertyName("interpreter_language")]
-        public string? InterpreterLanguage { get; set; }
+        [JsonPropertyName("interpreter_language_cd")]
+        public string? InterpreterLanguageCd { get; set; }
 
         /// <summary>
         /// Interpreter Required

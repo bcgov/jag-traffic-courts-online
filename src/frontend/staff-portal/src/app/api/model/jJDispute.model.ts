@@ -46,7 +46,7 @@ export interface JJDispute {
     lawyerGivenName1?: string | null;
     lawyerGivenName2?: string | null;
     lawyerGivenName3?: string | null;
-    interpreterLanguage?: string | null;
+    interpreterLanguageCd?: string | null;
     witnessNo?: number | null;
     disputantAttendanceType?: JJDisputeDisputantAttendanceType;
     remarks?: Array<JJDisputeRemark> | null;

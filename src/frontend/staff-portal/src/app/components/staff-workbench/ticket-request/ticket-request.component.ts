@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DisputeCount, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, DisputeRepresentedByLawyer } from 'app/api';
+import { DisputeCount, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, DisputeRepresentedByLawyer, Language } from 'app/api';
 import { DisputeExtended } from 'app/services/dispute.service';
+import { LookupsService } from 'app/services/lookups.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-request',
@@ -16,6 +18,7 @@ export class TicketRequestComponent implements OnInit {
     contactInformation: true
   }
   public form: FormGroup;
+  public busy: Subscription;
   public countFormFields = {
     pleaCode: [null],
     count: [null],
@@ -36,12 +39,16 @@ export class TicketRequestComponent implements OnInit {
 
   constructor(
     protected formBuilder: FormBuilder,
-    private violationTicketService: ViolationTicketService
+    private violationTicketService: ViolationTicketService,
+    public lookups: LookupsService
   ) {
     this.form = this.formBuilder.group({
       timeToPayReason: null,
       fineReductionReason: null,
       disputeCounts: this.formBuilder.array([])
+    });
+    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
+      this.lookups.languages$.next(response);
     });
   }
 

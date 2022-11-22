@@ -127,7 +127,7 @@ export interface NoticeOfDispute {
     /**
      * The disputant requires spoken language interpreter. The language name is indicated in this field.
      */
-    interpreter_language?: string | null;
+    interpreter_language_cd?: string | null;
     interprer_required?: DisputeInterpreterRequired;
     /**
      * The number of witnesses that the disputant intends to call.

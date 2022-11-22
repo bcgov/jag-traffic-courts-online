@@ -8,6 +8,7 @@ export * from './disputeDisputantDetectedOcrIssues.model';
 export * from './disputeInterpreterRequired.model';
 export * from './disputeRepresentedByLawyer.model';
 export * from './field.model';
+export * from './language.model';
 export * from './noticeOfDispute.model';
 export * from './ocrViolationTicket.model';
 export * from './point.model';
