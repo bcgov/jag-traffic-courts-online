@@ -62,7 +62,7 @@ public static class Startup
             var section = builder.Configuration.GetSection(RedisOptions.Section);
             section.Bind(redis);
 
-            config.AddSagaStateMachine<VerifyEmailAddressSagaStateMachine, VerifyEmailAddressSagaState>()
+            config.AddSagaStateMachine<VerifyEmailAddressSagaStateMachine, VerifyEmailAddressSagaState, VerifyEmailAddressSagaDefinition>()
                 .RedisRepository(redis.ConnectionString);
 
             config.AddSagas(assembly);
