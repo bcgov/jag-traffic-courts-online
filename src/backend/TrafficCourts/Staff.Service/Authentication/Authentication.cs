@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenTelemetry.Resources;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc.Routing;
+using TrafficCourts.Common.Configuration.Validation;
 
 namespace TrafficCourts.Staff.Service.Authentication;
 
@@ -19,6 +20,15 @@ public static class AuthenticationExtensions
     {
         // Note: AddJwtBearer does not use IConfigureOptions<JwtBearerOptions>
         var jwtOptions = configuration.GetSection(_jwtBearerOptionsSection).Get<JwtBearerOptions>();
+
+        if (jwtOptions is null)
+        {
+            throw new SettingsValidationException($"Required configuration section not found {_jwtBearerOptionsSection}");
+        }
+
+        if (string.IsNullOrEmpty(jwtOptions.Authority)) throw new SettingsValidationException(_jwtBearerOptionsSection, nameof(JwtBearerOptions.Authority), "is required");
+        if (string.IsNullOrEmpty(jwtOptions.Audience)) throw new SettingsValidationException(_jwtBearerOptionsSection, nameof(JwtBearerOptions.Audience), "is required");
+
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -30,7 +40,7 @@ public static class AuthenticationExtensions
 
              });
 
-        services.AddTransient<IClaimsTransformation>(_ => new KeycloakRolesClaimsTransformation(_roleClaimType, jwtOptions.Audience!));
+        services.AddTransient<IClaimsTransformation>(_ => new KeycloakRolesClaimsTransformation(_roleClaimType, jwtOptions.Audience));
 
         return services;
     }
@@ -44,6 +54,14 @@ public static class AuthenticationExtensions
     public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtOptions = configuration.GetSection(_jwtBearerOptionsSection).Get<JwtBearerOptions>();
+
+        if (jwtOptions is null)
+        {
+            throw new SettingsValidationException($"Required configuration section not found {_jwtBearerOptionsSection}");
+        }
+
+        if (string.IsNullOrEmpty(jwtOptions.Authority)) throw new SettingsValidationException(_jwtBearerOptionsSection, nameof(JwtBearerOptions.Authority), "is required");
+        if (string.IsNullOrEmpty(jwtOptions.Audience)) throw new SettingsValidationException(_jwtBearerOptionsSection, nameof(JwtBearerOptions.Audience), "is required");
 
         if (!string.IsNullOrEmpty(jwtOptions.Authority) && jwtOptions.Authority.EndsWith('/'))
         {

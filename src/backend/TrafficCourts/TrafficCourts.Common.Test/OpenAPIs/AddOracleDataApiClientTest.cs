@@ -52,7 +52,7 @@ namespace TrafficCourts.Common.Test.OpenAPIs
 
         private IConfiguration BuildConfiguration(string section, OracleDataApiConfiguration configuration)
         {
-            var items = new Dictionary<string, string>
+            var items = new Dictionary<string, string?>
             {
                 { $"{section}:{nameof(OracleDataApiConfiguration.BaseUrl)}", configuration.BaseUrl }
             };

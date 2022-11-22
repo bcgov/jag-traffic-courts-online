@@ -75,7 +75,7 @@ namespace TrafficCourts.Common
             return (PropertyInfo)memberExpression.Member;
         }
 
-        public static IDisposable BeginScope<T>(this ILogger logger, T data, Expression<Func<T, object>> property)
+        public static IDisposable? BeginScope<T>(this ILogger logger, T data, Expression<Func<T, object>> property)
             where T : class
         {
             ArgumentNullException.ThrowIfNull(logger);

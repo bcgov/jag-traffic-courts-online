@@ -11,7 +11,7 @@ public static class LoggingExtensions
     /// Begins a message consume context scope. Adds common consume context properties: Consumer, MessageType and MessageId.
     /// </summary>
     /// <returns>An <see cref="System.IDisposable"/> that ends the logical operation scope on dispose.</returns>
-    public static IDisposable BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context)
+    public static IDisposable? BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context)
         where TConsumer : IConsumer<TMessage>
         where TMessage : class
     {
@@ -27,7 +27,7 @@ public static class LoggingExtensions
     /// Begins a message consume context scope. Adds common consume context properties: Consumer, MessageType and MessageId.
     /// </summary>
     /// <returns>An <see cref="System.IDisposable"/> that ends the logical operation scope on dispose.</returns>
-    public static IDisposable BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context,
+    public static IDisposable? BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context,
         Expression<Func<TMessage, object>> property)
         where TConsumer : IConsumer<TMessage>
         where TMessage : class
@@ -48,7 +48,7 @@ public static class LoggingExtensions
     /// Begins a message consume context scope. Adds common consume context properties: Consumer, MessageType and MessageId.
     /// </summary>
     /// <returns>An <see cref="System.IDisposable"/> that ends the logical operation scope on dispose.</returns>
-    public static IDisposable BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context,
+    public static IDisposable? BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context,
         Expression<Func<TMessage, object>> property1,
         Expression<Func<TMessage, object>> property2)
         where TConsumer : IConsumer<TMessage>
@@ -72,7 +72,7 @@ public static class LoggingExtensions
     /// Begins a message consume context scope. Adds common consume context properties: Consumer, MessageType and MessageId.
     /// </summary>
     /// <returns>An <see cref="System.IDisposable"/> that ends the logical operation scope on dispose.</returns>
-    public static IDisposable BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context,
+    public static IDisposable? BeginConsumeScope<TConsumer, TMessage>(this ILogger<TConsumer> logger, ConsumeContext<TMessage> context,
         params Expression<Func<TMessage, object>>[] properties)
         where TConsumer : IConsumer<TMessage>
         where TMessage : class

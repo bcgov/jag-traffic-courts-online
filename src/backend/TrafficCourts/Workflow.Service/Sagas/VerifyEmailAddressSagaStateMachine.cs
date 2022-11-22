@@ -39,7 +39,9 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
     public Event<ResendEmailVerificationEmail> ResendEmailVerificationEmail { get; private set; }
     #endregion
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public VerifyEmailAddressSagaStateMachine(IClock clock, ILogger<VerifyEmailAddressSagaStateMachine> logger)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

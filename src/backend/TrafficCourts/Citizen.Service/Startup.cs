@@ -17,6 +17,7 @@ using FluentValidation.AspNetCore;
 using TrafficCourts.Common.Features.FilePersistence;
 using HashidsNet;
 using OpenTelemetry.Metrics;
+using FluentValidation;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -96,12 +97,9 @@ public static class Startup
         builder.Services.AddRecyclableMemoryStreams();
         
         builder.Services.AddAutoMapper(assembly); // Registering and Initializing AutoMapper
-        
-        builder.Services.AddFluentValidation(configure =>
-        {
-            // Finds and registers all the fluent validators in the assembly
-            configure.RegisterValidatorsFromAssembly(assembly);
-        });
+
+        // Finds and registers all the fluent validators in the assembly
+        builder.Services.AddValidatorsFromAssembly(assembly);
 
         // Add services to the container.
         builder.Services

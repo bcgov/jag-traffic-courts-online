@@ -35,7 +35,7 @@ namespace TrafficCourts.Arc.Dispute.Client.Test
 
         private IConfiguration BuildConfiguration(string section, Configuration configuration)
         {
-            var items = new Dictionary<string, string>
+            var items = new Dictionary<string, string?>
             {
                 { $"{section}:{nameof(Configuration.Scheme)}", configuration.Scheme },
                 { $"{section}:{nameof(Configuration.Host)}", configuration.Host! },
