@@ -21,7 +21,7 @@ public class SwaggerConfigurationTests
         var values = new Dictionary<string, string>();
 
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(Enumerable.Empty<KeyValuePair<string, string>>())
+            .AddInMemoryCollection(Enumerable.Empty<KeyValuePair<string, string?>>())
             .Build();
 
         var sut = SwaggerConfiguration.Get(configuration);
@@ -33,7 +33,7 @@ public class SwaggerConfigurationTests
     [InlineData("false", false)]
     public void should_use_value_from_configuration(string value, bool expected)
     {
-        var values = new Dictionary<string, string> { { $"{SwaggerConfiguration.Section}:Enabled", value } };
+        var values = new Dictionary<string, string?> { { $"{SwaggerConfiguration.Section}:Enabled", value } };
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values)

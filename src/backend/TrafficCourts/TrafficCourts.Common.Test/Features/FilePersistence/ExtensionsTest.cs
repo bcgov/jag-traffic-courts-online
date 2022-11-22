@@ -45,7 +45,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
             ServiceCollection services = new ServiceCollection();
 
             // create IConfiguration with required data
-            var values = new Dictionary<string, string>
+            var values = new Dictionary<string, string?>
             {
                 { nameof(MinioClientConfiguration.Endpoint), fixture.Create<string>() },
                 { nameof(MinioClientConfiguration.AccessKey), fixture.Create<string>() },

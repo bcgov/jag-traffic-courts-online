@@ -64,7 +64,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
         public async Task GetRecordAsync_when_when_file_not_found()
         {
             var filename = Guid.NewGuid().ToString();
-            RedisValue expectedRedis = new RedisValue(null);
+            RedisValue expectedRedis = new RedisValue(null!);
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
@@ -118,7 +118,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
         public async Task GetFileRecordAsync_when_when_file_not_found()
         {
             var filename = Guid.NewGuid().ToString();
-            RedisValue expectedRedis = new RedisValue(null);
+            RedisValue expectedRedis = new RedisValue(null!);
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 

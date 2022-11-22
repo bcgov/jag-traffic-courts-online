@@ -65,7 +65,7 @@ public class EmailHistoryControllerTest
 
         foreach (Type t in allControllers)
         {
-            var mInfos = t.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => x.DeclaringType.Equals(t)).ToList();
+            var mInfos = t.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => x.DeclaringType is not null &&  x.DeclaringType.Equals(t)).ToList();
             foreach (MethodInfo mInfo in mInfos)
                 _endpoints.Add((t, mInfo));
         }

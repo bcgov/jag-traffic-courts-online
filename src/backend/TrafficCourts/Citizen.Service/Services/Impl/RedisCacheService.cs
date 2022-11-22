@@ -28,14 +28,16 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
         {
             try
             {
-                var jsonData = await _redisDbAsync.StringGetAsync(key);
+                RedisValue jsonData = await _redisDbAsync.StringGetAsync(key);
 
                 if (jsonData.IsNull)
                 {
                     return default;
                 }
 
-                return JsonSerializer.Deserialize<T>(jsonData);
+                // RedisValue is struct and IsNull above already checked if implicit conversion to string
+                // would return null.
+                return JsonSerializer.Deserialize<T>(jsonData!); 
             }
             catch (Exception ex)
             {
@@ -62,7 +64,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
             MemoryStream stream = _memoryStreamManager.GetStream();
 
             int size = Convert.ToInt32(fileData.Length()); // Don't think it should ever reach max of int, which is ~2 gigs
-            await stream.WriteAsync(fileData, 0, size);
+            await stream.WriteAsync(fileData!, 0, size);
 
             stream.Position = 0;
             return stream;

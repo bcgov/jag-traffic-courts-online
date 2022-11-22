@@ -60,11 +60,11 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
 
             foreach (var count in actual.DisputeCounts)
             {
-                Assert.Contains(noticeOfDispute.DisputeCounts, _ => (int)_.PleaCode == (int)count.PleaCode);
-                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.CountNo == count.CountNo);
-                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestCourtAppearance == count.RequestCourtAppearance);
-                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestReduction == count.RequestReduction);
-                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestTimeToPay == count.RequestTimeToPay);
+                Assert.Contains(noticeOfDispute.DisputeCounts!, _ => (int)_.PleaCode == (int)count.PleaCode);
+                Assert.Contains(noticeOfDispute.DisputeCounts!, _ => _.CountNo == count.CountNo);
+                Assert.Contains(noticeOfDispute.DisputeCounts!, _ => _.RequestCourtAppearance == count.RequestCourtAppearance);
+                Assert.Contains(noticeOfDispute.DisputeCounts!, _ => _.RequestReduction == count.RequestReduction);
+                Assert.Contains(noticeOfDispute.DisputeCounts!, _ => _.RequestTimeToPay == count.RequestTimeToPay);
             }
 
         }

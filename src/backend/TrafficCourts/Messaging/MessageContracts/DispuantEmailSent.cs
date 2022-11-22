@@ -10,7 +10,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The email message.
         /// </summary>
-        public EmailMessage Message { get; set; }
+        public EmailMessage? Message { get; set; }
         /// <summary>
         /// The ticket number.
         /// </summary>
