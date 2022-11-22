@@ -26,10 +26,9 @@ public class OnlyMVAIsSelectedRule : ValidationRule
         bool? tcr = _violationTicket.Fields[OcrViolationTicket.OffenceIsTCR].IsCheckboxSelected();
         bool? other = _violationTicket.Fields[OcrViolationTicket.OffenceIsOther].IsCheckboxSelected();
 
-        if (!mva ?? false)
-        {
-            AddValidationError(ValidationMessages.MVAMustBeSelectedError);
-        }
+        // TCVP-1645 MVA no longer needs to be selected, so long as nothing else is selected.
+        // code removed (see git history to restore)
+
         if ((mca ?? false) || (cta ?? false) || (wla ?? false) || (faa ?? false) || (lca ?? false) || (tcr ?? false) || (other ?? false))
         {
             AddValidationError(ValidationMessages.OnlyMVAMustBeSelectedError);

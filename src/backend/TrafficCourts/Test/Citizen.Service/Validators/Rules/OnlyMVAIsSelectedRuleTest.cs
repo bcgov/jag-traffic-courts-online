@@ -11,7 +11,7 @@ public class OnlyMVAIsSelectedRuleTest
 
     [Theory]
     [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", null)]
-    [InlineData("unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", @"^MVA must be selected.*")]
+    [InlineData("unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", null)]
     [InlineData("selected", "selected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", @"^MVA must be the only selected.*")]
     [InlineData("selected", "unselected", "selected", "unselected", "unselected", "unselected", "unselected", "unselected", @"^MVA must be the only selected.*")]
     [InlineData("selected", "unselected", "unselected", "selected", "unselected", "unselected", "unselected", "unselected", @"^MVA must be the only selected.*")]
