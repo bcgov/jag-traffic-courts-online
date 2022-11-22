@@ -6,6 +6,7 @@ using MediatR;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
+[Route("api/[controller]/[action]")]
 public class LookupController : StaffControllerBase<LookupController>
 {
     private readonly IMediator _mediator;
@@ -29,11 +30,32 @@ public class LookupController : StaffControllerBase<LookupController>
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> StatutesAsync(string? section, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving a Statutes");
+        _logger.LogDebug("Retrieving Statutes");
 
-        StatuteLookup.Request request = new StatuteLookup.Request(section);
+        StatuteLookup.Request request = new(section);
         StatuteLookup.Response response = await _mediator.Send(request, cancellationToken);
 
         return Ok(response.Statutes);
+    }
+
+    /// <summary> 
+    /// Returns a list of Languages.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">OK</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(IList<Language>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> LanguagesAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving Languages");
+
+        LanguageLookup.Request request = new();
+        LanguageLookup.Response response = await _mediator.Send(request, cancellationToken);
+
+        return Ok(response.Languages);
     }
 }
