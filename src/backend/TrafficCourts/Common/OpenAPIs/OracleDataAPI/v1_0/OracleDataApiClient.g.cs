@@ -3737,8 +3737,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("lawyerGivenName3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LawyerGivenName3 { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("interpreterLanguage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string InterpreterLanguage { get; set; }
+        [Newtonsoft.Json.JsonProperty("interpreterLanguageCd", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string InterpreterLanguageCd { get; set; }
 
         [Newtonsoft.Json.JsonProperty("witnessNo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? WitnessNo { get; set; }
@@ -4185,8 +4185,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("detachmentLocation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string DetachmentLocation { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("interpreterLanguage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string InterpreterLanguage { get; set; }
+        [Newtonsoft.Json.JsonProperty("interpreterLanguageCd", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(3)]
+        public string InterpreterLanguageCd { get; set; }
 
         [Newtonsoft.Json.JsonProperty("interpreterRequired", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]

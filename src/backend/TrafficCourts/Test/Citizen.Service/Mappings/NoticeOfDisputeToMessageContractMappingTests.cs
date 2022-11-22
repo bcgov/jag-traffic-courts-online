@@ -43,7 +43,7 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.WorkPhoneNumber, actual.WorkPhoneNumber);
             Assert.Equal(noticeOfDispute.EmailAddress, actual.EmailAddress);
             Assert.Equal(noticeOfDispute.RepresentedByLawyer, actual.RepresentedByLawyer);
-            Assert.Equal(noticeOfDispute.InterpreterLanguage, actual.InterpreterLanguage);
+            Assert.Equal(noticeOfDispute.InterpreterLanguageCd, actual.InterpreterLanguageCd);
             Assert.Equal(noticeOfDispute.WitnessNo, actual.WitnessNo);
             Assert.Equal(noticeOfDispute.FineReductionReason, actual.FineReductionReason);
             Assert.Equal(noticeOfDispute.TimeToPayReason, actual.TimeToPayReason);

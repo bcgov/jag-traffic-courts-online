@@ -567,13 +567,13 @@
                       <mat-label>
                         {{ "stepper.additional.interpreter_language" | translate }}
                       </mat-label>
-                      <mat-select formControlName="interpreter_language"
-                        matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language'))}}">
-                        <mat-option *ngFor="let language of languages" [value]="language">
-                          {{ language }}
+                      <mat-select formControlName="interpreter_language_cd"
+                        matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language_cd'))}}">
+                        <mat-option *ngFor="let language of lookups.languages" [value]="language.code">
+                          {{ language.description }}
                         </mat-option>
                       </mat-select>
-                      <mat-error *ngIf="additionalForm.get('interpreter_language')?.hasError('requiredIfTrue')">
+                      <mat-error *ngIf="additionalForm.get('interpreter_language_cd')?.hasError('requiredIfTrue')">
                         {{ "error.required" | translate }}
                       </mat-error>
                     </mat-form-field>

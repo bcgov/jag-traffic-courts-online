@@ -6,13 +6,14 @@ import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService, JJDisputeView as JJDispute } from '../../../services/jj-dispute.service';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoP, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoP, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRepresentation } from 'app/api/model/models';
 import { AuthService } from 'app/services/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { LookupsService } from 'app/services/lookups.service';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -53,10 +54,15 @@ export class JJDisputeComponent implements OnInit {
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
-    public authService: AuthService
+    public authService: AuthService,
+    public lookups: LookupsService
   ) {
     this.isMobile = this.utilsService.isMobile();
     this.jjList = this.jjDisputeService.jjList;
+
+    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
+      this.lookups.languages$.next(response);
+    });
   }
 
   public ngOnInit() {

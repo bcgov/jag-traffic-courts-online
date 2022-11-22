@@ -54,7 +54,7 @@ export class NoticeOfDisputeService {
 
   public additionFormFields = {
     represented_by_lawyer: [this.RepresentedByLawyer.N],
-    interpreter_language: [null],
+    interpreter_language_cd: [null],
     witness_no: [0],
     fine_reduction_reason: [null, []],
     time_to_pay_reason: [null, []],
@@ -64,7 +64,7 @@ export class NoticeOfDisputeService {
   }
 
   public additionFormValidators = [
-    FormGroupValidators.requiredIfTrue("__interpreter_required", "interpreter_language"),
+    FormGroupValidators.requiredIfTrue("__interpreter_required", "interpreter_language_cd"),
     FormGroupValidators.requiredIfTrue("__witness_present", "witness_no"),
   ]
 

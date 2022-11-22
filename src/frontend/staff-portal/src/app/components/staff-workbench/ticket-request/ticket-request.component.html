@@ -134,7 +134,7 @@
               <div><h3 class="mb-2 additional-info-desc">{{ disputeInfo.lawyerAddress }}</h3></div>
             </div>
           </div>
-          <div class="row mb-2" *ngIf="disputeInfo.interpreterLanguage">
+          <div class="row mb-2" *ngIf="disputeInfo.interpreterLanguageCd">
             <div class="row">
               <div class="col-lg-8">
                 <small>Action</small>
@@ -142,7 +142,7 @@
               </div>
               <div class="col">
                 <small>Language</small>
-                <div><h3 class="mb-2 additional-info-desc">{{disputeInfo.interpreterLanguage}}</h3></div>
+                <div><h3 class="mb-2 additional-info-desc">{{ lookups.getLanguageDescription(disputeInfo.interpreterLanguageCd)}}</h3></div>
               </div>
             </div>
           </div>

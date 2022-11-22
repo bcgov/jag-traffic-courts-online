@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { DisputeRepresentedByLawyer } from "app/api";
+import { DisputeRepresentedByLawyer, Language } from "app/api";
+import { LookupsService } from "app/services/lookups.service";
 import { NoticeOfDisputeService, NoticeOfDisputeExtended } from "app/services/notice-of-dispute.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-dispute-ticket-summary",
@@ -11,10 +13,16 @@ export class DisputeTicketSummaryComponent implements OnInit {
   @Input() public noticeOfDispute: NoticeOfDisputeExtended;
   public countsActions: any;
   public RepresentedByLawyer = DisputeRepresentedByLawyer;
+  public busy: Subscription;
 
   constructor(
     protected noticeOfDisputeService: NoticeOfDisputeService,
+    public lookups: LookupsService
   ) {
+
+    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
+      this.lookups.languages$.next(response);
+    });
   }
 
   ngOnInit(): void {

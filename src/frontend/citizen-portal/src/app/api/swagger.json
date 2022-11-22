@@ -186,6 +186,29 @@
         }
       }
     },
+    "/api/lookup/languages": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of Languages.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Language"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tickets/search": {
       "get": {
         "tags": [
@@ -460,6 +483,20 @@
         },
         "additionalProperties": false
       },
+      "Language": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "NoticeOfDispute": {
         "type": "object",
         "properties": {
@@ -597,7 +634,7 @@
             "description": "Address of the lawyer who will represent the disputant at the hearing.",
             "nullable": true
           },
-          "interpreter_language": {
+          "interpreter_language_cd": {
             "type": "string",
             "description": "The disputant requires spoken language interpreter. The language name is indicated in this field.",
             "nullable": true

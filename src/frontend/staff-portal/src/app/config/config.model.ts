@@ -1,11 +1,9 @@
 export interface Configuration {
   courtLocations: CourthouseConfig[];
   policeLocations: Config<string>[];
-  languages: Config<string>[];
   countries: Config<string>[];
   provinces: ProvinceConfig[];
   statuses: Config<number>[];
-  statutes: Config<number>[];
 }
 
 export class Config<T> {

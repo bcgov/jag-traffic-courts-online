@@ -39,6 +39,7 @@ export * from './jJDisputedCountRoPFinding.model';
 export * from './jJDisputedCountRoPForWantOfProsecution.model';
 export * from './jJDisputedCountRoPJailIntermittent.model';
 export * from './jJDisputedCountRoPWithdrawn.model';
+export * from './language.model';
 export * from './ocrViolationTicket.model';
 export * from './point.model';
 export * from './problemDetails.model';

@@ -27,6 +27,7 @@ export class ConfigService implements IConfigService {
   private disputeCreateError: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
   private statuteError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private languageError: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(
     protected utilsService: UtilsService,
@@ -84,6 +85,13 @@ export class ConfigService implements IConfigService {
     return this.statuteError.value;
   }
 
+  public get language_error$(): BehaviorSubject<string> {
+    return this.languageError;
+  }
+  public get language_error(): string {
+    return this.languageError.value;
+  }
+
   public get dispute_create_error$(): BehaviorSubject<string> {
     return this.disputeCreateError;
   }
@@ -106,20 +114,12 @@ export class ConfigService implements IConfigService {
     );
   }
 
-  public get languages(): Config<string>[] {
-    return [...this.configuration.languages].sort(this.sortConfigByName());
-  }
-
   public get countries(): Config<string>[] {
     return [...this.configuration.countries].sort(this.sortConfigByName());
   }
 
   public get statuses(): Config<number>[] {
     return [...this.configuration.statuses].sort(this.sortConfigByName());
-  }
-
-  public get statutes(): Config<number>[] {
-    return [...this.configuration.statutes].sort(this.sortConfigByName());
   }
 
   /**

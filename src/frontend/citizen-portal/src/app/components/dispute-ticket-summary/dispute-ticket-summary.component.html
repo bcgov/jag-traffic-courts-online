@@ -150,7 +150,7 @@
               <div><strong>{{ noticeOfDispute.lawyer_address }}</strong></div>
             </div>
           </div>
-          <div class="row mb-2" *ngIf="noticeOfDispute.interpreter_language">
+          <div class="row mb-2" *ngIf="noticeOfDispute.interpreter_language_cd">
             <div class="row">
               <div class="col-lg-8">
                 <small>Action</small>
@@ -158,7 +158,7 @@
               </div>
               <div class="col">
                 <small>Language</small>
-                <div><strong>{{noticeOfDispute.interpreter_language}}</strong></div>
+                <div><strong>{{lookups.getLanguageDescription(noticeOfDispute.interpreter_language_cd)}}</strong></div>
               </div>
             </div>
           </div>

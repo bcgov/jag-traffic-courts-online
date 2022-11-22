@@ -1236,7 +1236,7 @@
             "type": "string",
             "nullable": true
           },
-          "interpreterLanguage": {
+          "interpreterLanguageCd": {
             "type": "string",
             "nullable": true
           },
@@ -1703,7 +1703,9 @@
             "type": "string",
             "nullable": true
           },
-          "interpreterLanguage": {
+          "interpreterLanguageCd": {
+            "maxLength": 3,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
