@@ -451,13 +451,13 @@ components:
         entDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         entUserId:
           type: string
         updDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         updUserId:
           type: string
           format: nullable
@@ -541,6 +541,7 @@ components:
         filingDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
         fineReductionReasonTxt:
           type: string
         homePhoneNumberTxt:
@@ -550,8 +551,8 @@ components:
           format: nullable
         issuedDt:
           type: string
-          # FIXME: this should be date-time but can't at the moment - ORDS is unable to parse ISO format, ie, "2022-10-31T01:30:00.000-07:00"
-          format: date
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
         jjAssignedTo:
           type: string
           format: nullable
@@ -632,19 +633,16 @@ components:
           format: nullable
         submittedDt:
           type: string
-          format: date
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         systemDetectOcrIssuesYn:
           type: string
         timeToPayReasonTxt:
           type: string
-        updDtm:
-          type: string
-        updUserId:
-          type: string
-          format: nullable
         userAssignedDtm:
           type: string
-          format: nullable
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         userAssignedTo:
           type: string
           format: nullable
@@ -776,8 +774,8 @@ components:
           format: nullable
         issuedDt:
           type: string
-          # FIXME: this should be date-time but can't at the moment - ORDS is unable to parse ISO format, ie, "2022-10-31T01:30:00.000-07:00"
-          format: date
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
         issuedOnRoadOrHighwayTxt:
           type: string
           format: nullable

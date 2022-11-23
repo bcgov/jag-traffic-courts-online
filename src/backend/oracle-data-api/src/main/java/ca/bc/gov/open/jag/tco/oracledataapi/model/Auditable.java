@@ -33,7 +33,7 @@ public abstract class Auditable<U> {
 	@Column(updatable = false)
 	private U createdBy;
 
-	/** The timestamp this record was created. */
+	/** The timestamp this record was created. This should always be in UTC date-time (ISO 8601) format */
 	@CreatedDate
 	@Temporal(TIMESTAMP)
 	@Column(updatable = false)
@@ -44,7 +44,7 @@ public abstract class Auditable<U> {
 	@Schema(nullable = true)
 	private U modifiedBy;
 
-	/** The timestamp this record was last modified. */
+	/** The timestamp this record was last modified. This should always be in UTC date-time (ISO 8601) format*/
 	@LastModifiedDate
 	@Temporal(TIMESTAMP)
 	@Schema(nullable = true)
