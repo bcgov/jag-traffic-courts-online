@@ -56,6 +56,12 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count1ActRegs], 1));
         rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count2ActRegs], 2));
         rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count3ActRegs], 3));
+
+        // TCVP-1645 Use DateOfService if available, otherwise fallback to ViolationDate
+        if (violationTicket.Fields[OcrViolationTicket.DateOfService].GetDate == null)
+        {
+            violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].Value;
+        }
         rules.Add(new DateOfServiceLT30Rule(violationTicket.Fields[OcrViolationTicket.DateOfService]));
 
         // Run each rule and aggregate the results
