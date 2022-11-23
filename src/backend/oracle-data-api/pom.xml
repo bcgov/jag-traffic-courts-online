@@ -309,11 +309,8 @@
 							<invokerPackage>${default-package}.api.handler</invokerPackage>
 							<typeMappings>
 								<typeMapping>OffsetDateTime=java.util.Date</typeMapping>
-								<typeMapping>LocalDate=java.sql.Date</typeMapping>
+								<typeMapping>LocalDate=java.util.Date</typeMapping>
 							</typeMappings>
-							<importMappings>
-								<importMapping>java.time.LocalDate=java.sql.Date</importMapping>
-							</importMappings>
 						</configuration>
 					</execution>
 				</executions>
