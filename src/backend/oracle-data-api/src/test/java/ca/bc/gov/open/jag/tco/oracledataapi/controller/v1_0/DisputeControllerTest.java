@@ -299,7 +299,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testFindByTicketNumberAndTime_Null() throws Exception {
 		mvc.perform(MockMvcRequestBuilders
-				.get("/api/v1.0/dispute")) // missing parameters
+				.get("/api/v1.0/dispute/status")) // missing parameters
 				.andExpect(status().isBadRequest());
 	}
 
@@ -314,7 +314,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		})
 	public void testFindByTicketNumberAndTime_Invalid(String ticketNumber, String issuedTime) throws Exception {
 		mvc.perform(MockMvcRequestBuilders
-				.get("/api/v1.0/dispute")
+				.get("/api/v1.0/dispute/status")
 				.param("ticketNumber", ticketNumber)
 				.param("issuedTime", issuedTime))
 				.andExpect(status().isBadRequest());
@@ -433,7 +433,7 @@ class DisputeControllerTest extends BaseTestSuite {
 
 	/** Issues a GET request to /api/v1.0/dispute with the required ticketNumber and time to find a Dispute. */
 	private List<DisputeResult> findDispute(String ticketNumber, String issuedTime) {
-		UriComponentsBuilder uriBuilder = fromUriString("/dispute")
+		UriComponentsBuilder uriBuilder = fromUriString("/dispute/status")
 				.queryParam("ticketNumber", ticketNumber)
 				.queryParam("issuedTime", issuedTime);
 		ResponseEntity<List<DisputeResult>> results = getForEntity(uriBuilder, new ParameterizedTypeReference<List<DisputeResult>>() {});
