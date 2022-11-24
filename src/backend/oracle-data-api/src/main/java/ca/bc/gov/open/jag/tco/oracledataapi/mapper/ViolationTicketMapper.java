@@ -27,9 +27,9 @@ public interface ViolationTicketMapper {
 	ViolationTicketMapper INSTANCE = Mappers.getMapper(ViolationTicketMapper.class);
 
 	// Map from Oracle Data API dispute model to ORDS dispute data
-	@Mapping(target = "dispute.entDtm", source = "createdTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
+	@Mapping(target = "dispute.entDtm", source = "createdTs")
 	@Mapping(target = "dispute.entUserId", source = "createdBy")
-	@Mapping(target = "dispute.updDtm", source = "modifiedTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
+	@Mapping(target = "dispute.updDtm", source = "modifiedTs")
 	@Mapping(target = "dispute.updUserId", source = "modifiedBy")
 	@Mapping(target = "dispute.disputeId", source = "disputeId")
 	@Mapping(target = "dispute.disputeStatusTypeCd", source = "status", qualifiedByName="mapDisputeStatus")
@@ -78,7 +78,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputantCommentTxt", source = "disputantComment")
 	@Mapping(target = "dispute.rejectedReasonTxt", source = "rejectedReason")
 	@Mapping(target = "dispute.userAssignedTo", source = "userAssignedTo")
-	@Mapping(target = "dispute.userAssignedDtm", source = "userAssignedTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
+	@Mapping(target = "dispute.userAssignedDtm", source = "userAssignedTs")
 	@Mapping(target = "dispute.disputantDetectOcrIssuesYn", source = "disputantDetectedOcrIssues")
 	@Mapping(target = "dispute.disputantOcrIssuesTxt", source = "disputantOcrIssues")
 	@Mapping(target = "dispute.systemDetectOcrIssuesYn", source = "systemDetectedOcrIssues")

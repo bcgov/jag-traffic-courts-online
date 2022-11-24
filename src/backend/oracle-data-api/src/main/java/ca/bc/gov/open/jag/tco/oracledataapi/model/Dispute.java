@@ -63,7 +63,7 @@ public class Dispute extends Auditable<String> {
 
 	/**
 	 * The date and time the violation ticket was issue. Time must only be hours and
-	 * minutes.
+	 * minutes. This should always be in UTC date-time (ISO 8601) format
 	 */
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
@@ -72,6 +72,7 @@ public class Dispute extends Auditable<String> {
 
 	/**
 	 * The date and time the citizen submitted the notice of dispute.
+	 * This should always be in UTC date-time (ISO 8601) format
 	 */
 	@Column
 	@Schema(nullable = true)
@@ -215,6 +216,7 @@ public class Dispute extends Auditable<String> {
 
 	/**
 	 * Indicates whether the disputant's email address is verified or not.
+	 * This should always be in UTC date (ISO 8601) format
 	 */
 	@Column
 	private Boolean emailAddressVerified = Boolean.FALSE;
@@ -373,6 +375,7 @@ public class Dispute extends Auditable<String> {
 
 	/**
 	 * The date and time a dispute was assigned to a Staff to be reviewed.
+	 * This should always be in UTC date-time (ISO 8601) format
 	 */
 	@Column
 	@Schema(nullable = true)

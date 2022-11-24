@@ -349,7 +349,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ViolationTicket violationTicket = new ViolationTicket();
 		violationTicket.setDispute(dispute);
 		violationTicket.setTicketNumberTxt(ticketNumber);
-		violationTicket.setIssuedDt(new java.sql.Date(issuedDate.getTime()));
+		violationTicket.setIssuedDt(new java.util.Date(issuedDate.getTime()));
 
 		ViolationTicketListResponse validResponse = new ViolationTicketListResponse();
 		validResponse.setViolationTickets(new ArrayList<ViolationTicket>());

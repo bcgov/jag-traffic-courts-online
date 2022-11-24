@@ -35,8 +35,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 @Repository
 public class DisputeRepositoryImpl implements DisputeRepository {
 
-	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
+	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 	public static final String TIME_FORMAT = "HH:mm";
 
@@ -61,7 +60,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeGuid) {
-				String olderThanDate = null ;
+		String olderThanDate = null ;
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
 
 		if (olderThan != null) {
