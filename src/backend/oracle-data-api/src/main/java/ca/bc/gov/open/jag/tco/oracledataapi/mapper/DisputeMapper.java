@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -24,6 +25,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeReposito
  * This mapper maps from ORDS dispute model to Oracle Data API dispute model
  */
 @Mapper
+(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR) // This is required for tests to work
 public interface DisputeMapper {
 
 	DisputeMapper INSTANCE = Mappers.getMapper(DisputeMapper.class);
@@ -218,8 +220,8 @@ public interface DisputeMapper {
 				dispute.setLawyerAddress(null);
 			} else {
 				String fullLawyerAddress = "";
-				fullLawyerAddress += addressLine1 == null ? "" : addressLine1 + " ";
-				fullLawyerAddress += addressLine2 == null ? "" : addressLine2 + " ";
+				fullLawyerAddress += addressLine1 == null ? "" : addressLine1;
+				fullLawyerAddress += addressLine2 == null ? "" : addressLine2;
 				fullLawyerAddress += addressLine3 == null ? "" : addressLine3;
 				dispute.setLawyerAddress(fullLawyerAddress);
 			}
