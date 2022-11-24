@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -22,6 +23,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeReposito
  * This mapper maps from Oracle Data API dispute model to ORDS dispute data
  */
 @Mapper
+(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR) // This is required for tests to work
 public interface ViolationTicketMapper {
 
 	ViolationTicketMapper INSTANCE = Mappers.getMapper(ViolationTicketMapper.class);
