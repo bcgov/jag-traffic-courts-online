@@ -217,10 +217,11 @@ public interface DisputeMapper {
 			if (addressLine1 == null && addressLine2 == null && addressLine3 == null) {
 				dispute.setLawyerAddress(null);
 			} else {
-				dispute.setLawyerAddress(
-						addressLine1 == null ? "" : addressLine1 + " " +
-								addressLine2 == null ? "" : addressLine2 + " " +
-										addressLine3 == null ? "" : addressLine3);
+				String fullLawyerAddress = "";
+				fullLawyerAddress += addressLine1 == null ? "" : addressLine1 + " ";
+				fullLawyerAddress += addressLine2 == null ? "" : addressLine2 + " ";
+				fullLawyerAddress += addressLine3 == null ? "" : addressLine3;
+				dispute.setLawyerAddress(fullLawyerAddress);
 			}
 		}
 	}
