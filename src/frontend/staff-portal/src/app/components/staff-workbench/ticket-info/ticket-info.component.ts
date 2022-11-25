@@ -291,15 +291,17 @@ export class TicketInfoComponent implements OnInit {
 
     // We are only sending the violation Ticket fields so update a local copy of lastUpdatedDispute
     // with violation Ticket form fields only that were changed
-    this.lastUpdatedDispute.violationTicket.ticketNumber = this.form.get('violationTicket').get('ticketNumber').value;
-    this.lastUpdatedDispute.violationTicket.disputantSurname = this.form.get('violationTicket').get('disputantSurname').value;
-    this.lastUpdatedDispute.violationTicket.disputantGivenNames = this.form.get('violationTicket').get('disputantGivenNames').value;
-    this.lastUpdatedDispute.violationTicket.disputantDriversLicenceNumber = this.form.get('violationTicket').get('disputantDriversLicenceNumber').value;
-    this.lastUpdatedDispute.violationTicket.driversLicenceProvince = this.form.get('violationTicket').get('driversLicenceProvince').value;
-    this.lastUpdatedDispute.violationTicket.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
+    let putDispute = this.lastUpdatedDispute;
+
+    putDispute.violationTicket.ticketNumber = this.form.get('violationTicket').get('ticketNumber').value;
+    putDispute.violationTicket.disputantSurname = this.form.get('violationTicket').get('disputantSurname').value;
+    putDispute.violationTicket.disputantGivenNames = this.form.get('violationTicket').get('disputantGivenNames').value;
+    putDispute.violationTicket.disputantDriversLicenceNumber = this.form.get('violationTicket').get('disputantDriversLicenceNumber').value;
+    putDispute.violationTicket.driversLicenceProvince = this.form.get('violationTicket').get('driversLicenceProvince').value;
+    putDispute.violationTicket.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
 
     // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddThh:mm
-    this.lastUpdatedDispute.violationTicket.issuedTs =
+    putDispute.violationTicket.issuedTs =
       this.form.get('violationTicket').get('violationDate').value +
       "T" +
       this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
@@ -308,7 +310,7 @@ export class TicketInfoComponent implements OnInit {
 
 
     // Counts 1,2,3
-    this.lastUpdatedDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
+    putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
       // if form has violation ticket, stuff it in putDispute
       let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
@@ -318,15 +320,15 @@ export class TicketInfoComponent implements OnInit {
         let ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
         if (ticketedAmount) violationTicketCount.ticketedAmount = +ticketedAmount; // numeric
         else violationTicketCount.ticketedAmount = null;
-        this.lastUpdatedDispute.violationTicket.violationTicketCounts = [...this.lastUpdatedDispute.violationTicket.violationTicketCounts, violationTicketCount];
-        console.log(i, violationTicketCount, this.lastUpdatedDispute.violationTicket.violationTicketCounts);
+        putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
+        console.log(i, violationTicketCount, putDispute.violationTicket.violationTicketCounts);
       }
     }
 
-    this.logger.log('TicketInfoComponent::putDispute', this.lastUpdatedDispute);
+    this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
     // no need to pass back byte array with image
-    let tempDispute = this.lastUpdatedDispute;
+    let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
     this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: DisputeExtended) => {
@@ -343,23 +345,26 @@ export class TicketInfoComponent implements OnInit {
   public onSubmitNoticeOfDispute(): void {
     // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
     // with notice of dispute form fields only that were changed
-    this.lastUpdatedDispute.disputantSurname = this.form.get('disputantSurname').value;
-    this.lastUpdatedDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
-    this.lastUpdatedDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
-    this.lastUpdatedDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
-    this.lastUpdatedDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
-    this.lastUpdatedDispute.emailAddress = this.form.get('emailAddress').value;
-    this.lastUpdatedDispute.disputantBirthdate = this.form.get('disputantBirthdate').value;
-    this.lastUpdatedDispute.address = this.form.get('address').value;
-    this.lastUpdatedDispute.addressCity = this.form.get('addressCity').value;
-    this.lastUpdatedDispute.addressProvince = this.form.get('addressProvince').value;
-    this.lastUpdatedDispute.postalCode = this.form.get('postalCode').value;
-    this.lastUpdatedDispute.rejectedReason = this.form.get('rejectedReason').value;
+    let putDispute = this.lastUpdatedDispute;
 
-    this.logger.log('TicketInfoComponent::putDispute', this.lastUpdatedDispute);
+
+    putDispute.disputantSurname = this.form.get('disputantSurname').value;
+    putDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
+    putDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
+    putDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
+    putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
+    putDispute.emailAddress = this.form.get('emailAddress').value;
+    putDispute.disputantBirthdate = this.form.get('disputantBirthdate').value;
+    putDispute.address = this.form.get('address').value;
+    putDispute.addressCity = this.form.get('addressCity').value;
+    putDispute.addressProvince = this.form.get('addressProvince').value;
+    putDispute.postalCode = this.form.get('postalCode').value;
+    putDispute.rejectedReason = this.form.get('rejectedReason').value;
+
+    this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
     // no need to pass back byte array with image
-    let tempDispute = this.lastUpdatedDispute;
+    let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
     this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: DisputeExtended) => {
