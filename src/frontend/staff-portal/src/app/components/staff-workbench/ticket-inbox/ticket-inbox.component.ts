@@ -191,14 +191,14 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   // return number of validation errors
   getOcrViolationErrors(field?: Field): DisputeSystemDetectedOcrIssues {
     if (field == undefined || field == null) return this.SystemDetectedOcrIssues.N;
-    if (field.fieldConfidence && field.fieldConfidence < 0.8) {
+    if (field?.fieldConfidence && field.fieldConfidence < 0.8) {
       return this.SystemDetectedOcrIssues.Y;
     } else return this.SystemDetectedOcrIssues.N;
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data.filter((x: DisputeExtended) => x.status == DisputeStatus.New))
-      return this.dataSource.data.filter((x: DisputeExtended) => x.status == DisputeStatus.New).length;
+    if (this.dataSource.data?.filter((x: DisputeExtended) => x.status == DisputeStatus.New))
+      return this.dataSource.data?.filter((x: DisputeExtended) => x.status == DisputeStatus.New).length;
     else return 0;
   }
 

@@ -74,7 +74,7 @@ export class ViolationTicketService implements IViolationTicketService {
   // return OCR error for a single field
   private getFieldOCRMessages(field: Field, key: string, ocrMapping: mappingOCR[]): OCRMessageToDisplay {
     // set heading message
-    let heading = ocrMapping.filter(x => x.key == key)[0].heading;
+    let heading = ocrMapping?.filter(x => x.key == key)[0].heading;
     if (!heading) heading = key;
     return ({ heading: heading, key: key, fieldConfidence: field?.fieldConfidence });
   }

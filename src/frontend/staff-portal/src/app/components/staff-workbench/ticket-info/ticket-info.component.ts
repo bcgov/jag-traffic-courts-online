@@ -199,7 +199,7 @@ export class TicketInfoComponent implements OnInit {
   // return a filtered list of statutes
   public filterStatutes(val: string): StatuteView[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
-    return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
+    return this.lookupsService.statutes?.filter(option => option.__statuteString.indexOf(val) >= 0);
   }
 
   // is the statute valid? on the form
@@ -291,17 +291,15 @@ export class TicketInfoComponent implements OnInit {
 
     // We are only sending the violation Ticket fields so update a local copy of lastUpdatedDispute
     // with violation Ticket form fields only that were changed
-    let putDispute = this.lastUpdatedDispute;
-
-    putDispute.violationTicket.ticketNumber = this.form.get('violationTicket').get('ticketNumber').value;
-    putDispute.violationTicket.disputantSurname = this.form.get('violationTicket').get('disputantSurname').value;
-    putDispute.violationTicket.disputantGivenNames = this.form.get('violationTicket').get('disputantGivenNames').value;
-    putDispute.violationTicket.disputantDriversLicenceNumber = this.form.get('violationTicket').get('disputantDriversLicenceNumber').value;
-    putDispute.violationTicket.driversLicenceProvince = this.form.get('violationTicket').get('driversLicenceProvince').value;
-    putDispute.violationTicket.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
+    this.lastUpdatedDispute.violationTicket.ticketNumber = this.form.get('violationTicket').get('ticketNumber').value;
+    this.lastUpdatedDispute.violationTicket.disputantSurname = this.form.get('violationTicket').get('disputantSurname').value;
+    this.lastUpdatedDispute.violationTicket.disputantGivenNames = this.form.get('violationTicket').get('disputantGivenNames').value;
+    this.lastUpdatedDispute.violationTicket.disputantDriversLicenceNumber = this.form.get('violationTicket').get('disputantDriversLicenceNumber').value;
+    this.lastUpdatedDispute.violationTicket.driversLicenceProvince = this.form.get('violationTicket').get('driversLicenceProvince').value;
+    this.lastUpdatedDispute.violationTicket.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
 
     // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddThh:mm
-    putDispute.violationTicket.issuedTs =
+    this.lastUpdatedDispute.violationTicket.issuedTs =
       this.form.get('violationTicket').get('violationDate').value +
       "T" +
       this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
@@ -310,22 +308,25 @@ export class TicketInfoComponent implements OnInit {
 
 
     // Counts 1,2,3
-    putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
+    this.lastUpdatedDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
       // if form has violation ticket, stuff it in putDispute
       let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
       if (fullDescription && fullDescription !== " ") {
         let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value;
         violationTicketCount.countNo = i;
-        console.log(violationTicketCount);
-        putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
+        let ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
+        if (ticketedAmount) violationTicketCount.ticketedAmount = +ticketedAmount; // numeric
+        else violationTicketCount.ticketedAmount = null;
+        this.lastUpdatedDispute.violationTicket.violationTicketCounts = [...this.lastUpdatedDispute.violationTicket.violationTicketCounts, violationTicketCount];
+        console.log(i, violationTicketCount, this.lastUpdatedDispute.violationTicket.violationTicketCounts);
       }
     }
 
-    this.logger.log('TicketInfoComponent::putDispute', putDispute);
+    this.logger.log('TicketInfoComponent::putDispute', this.lastUpdatedDispute);
 
     // no need to pass back byte array with image
-    let tempDispute = putDispute;
+    let tempDispute = this.lastUpdatedDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
     this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: DisputeExtended) => {
@@ -342,25 +343,23 @@ export class TicketInfoComponent implements OnInit {
   public onSubmitNoticeOfDispute(): void {
     // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
     // with notice of dispute form fields only that were changed
-    let putDispute = this.lastUpdatedDispute;
+    this.lastUpdatedDispute.disputantSurname = this.form.get('disputantSurname').value;
+    this.lastUpdatedDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
+    this.lastUpdatedDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
+    this.lastUpdatedDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
+    this.lastUpdatedDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
+    this.lastUpdatedDispute.emailAddress = this.form.get('emailAddress').value;
+    this.lastUpdatedDispute.disputantBirthdate = this.form.get('disputantBirthdate').value;
+    this.lastUpdatedDispute.address = this.form.get('address').value;
+    this.lastUpdatedDispute.addressCity = this.form.get('addressCity').value;
+    this.lastUpdatedDispute.addressProvince = this.form.get('addressProvince').value;
+    this.lastUpdatedDispute.postalCode = this.form.get('postalCode').value;
+    this.lastUpdatedDispute.rejectedReason = this.form.get('rejectedReason').value;
 
-    putDispute.disputantSurname = this.form.get('disputantSurname').value;
-    putDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
-    putDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
-    putDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
-    putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
-    putDispute.emailAddress = this.form.get('emailAddress').value;
-    putDispute.disputantBirthdate = this.form.get('disputantBirthdate').value;
-    putDispute.address = this.form.get('address').value;
-    putDispute.addressCity = this.form.get('addressCity').value;
-    putDispute.addressProvince = this.form.get('addressProvince').value;
-    putDispute.postalCode = this.form.get('postalCode').value;
-    putDispute.rejectedReason = this.form.get('rejectedReason').value;
-
-    this.logger.log('TicketInfoComponent::putDispute', putDispute);
+    this.logger.log('TicketInfoComponent::putDispute', this.lastUpdatedDispute);
 
     // no need to pass back byte array with image
-    let tempDispute = putDispute;
+    let tempDispute = this.lastUpdatedDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
     this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: DisputeExtended) => {
@@ -446,7 +445,7 @@ export class TicketInfoComponent implements OnInit {
 
   // get legal paragraphing for a particular count
   public getCountLegalParagraphing(countNumber: number, violationTicket: ViolationTicket): string {
-    let violationTicketCount = violationTicket.violationTicketCounts.filter(x => x.countNo == countNumber)[0];
+    let violationTicketCount = violationTicket.violationTicketCounts?.filter(x => x.countNo == countNumber)[0];
     if (violationTicketCount) {
       let desc = (this.violationTicketService
         .getLegalParagraphing(violationTicketCount) + (violationTicketCount.description ? " " + violationTicketCount.description : ""));
@@ -606,7 +605,7 @@ export class TicketInfoComponent implements OnInit {
 
     // lookup legal statute from part[1] which should be in legal paragraph form
     if (parts && parts.length > 1) {
-      let foundStatute = this.lookupsService.statutes.filter(x => x.code === parts[1] && x.actCode === parts[0]);
+      let foundStatute = this.lookupsService.statutes?.filter(x => x.code === parts[1] && x.actCode === parts[0]);
       if (foundStatute && foundStatute.length > 0) {
         countForm.get('actOrRegulationNameCode').setValue(foundStatute[0].actCode);
         countForm.get('section').setValue(foundStatute[0].sectionText);
@@ -643,7 +642,10 @@ export class TicketInfoComponent implements OnInit {
           response
         );
 
-        this.initialDisputeValues = this.setFieldsFromJSON(response);
+        // If disputant surname is filled in, then this is not the first time this ticket has been opened, only call setFieldsFromJSON the first time
+        if (response.violationTicket.disputantSurname) {
+          this.initialDisputeValues = response;
+        } else this.initialDisputeValues = this.setFieldsFromJSON(response);
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);
 
@@ -668,9 +670,7 @@ export class TicketInfoComponent implements OnInit {
         // set counts 1,2,3 of violation ticket
         this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
           let countForm = this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.countNo.toString());
-          if (!violationTicketCount.ticketedAmount)
-            countForm.get('ticketedAmount').setValue(undefined);
-          else countForm.get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
+          countForm.get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
           let fullDesc = this.getCountLegalParagraphing(violationTicketCount.countNo, this.initialDisputeValues.violationTicket);
           countForm
             .get('fullDescription')
@@ -679,7 +679,7 @@ export class TicketInfoComponent implements OnInit {
           countForm.get('description').setValue(violationTicketCount.description);
 
           // lookup legal statute
-          let foundStatute = this.lookupsService.statutes.filter(x => x.code === violationTicketCount.section && x.actCode === violationTicketCount.actOrRegulationNameCode);
+          let foundStatute = this.lookupsService.statutes?.filter(x => x.code === violationTicketCount.section && x.actCode === violationTicketCount.actOrRegulationNameCode);
           if (foundStatute && foundStatute.length > 0) {
             countForm.get('section').setValue(foundStatute[0].sectionText);
             countForm.get('subsection').setValue(foundStatute[0].subsectionText);
@@ -700,8 +700,8 @@ export class TicketInfoComponent implements OnInit {
 
         // update validation rule for drivers licence number
         // set country from province
-        if (this.provinces.filter(x => x.name == this.lastUpdatedDispute.addressProvince || this.lastUpdatedDispute.addressProvince == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
-        else if (this.states.filter(x => x.name == this.initialDisputeValues.addressProvince).length > 0) this.form.get('country').setValue("United States");
+        if (this.provinces?.filter(x => x.name == this.lastUpdatedDispute.addressProvince || this.lastUpdatedDispute.addressProvince == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
+        else if (this.states?.filter(x => x.name == this.initialDisputeValues.addressProvince).length > 0) this.form.get('country').setValue("United States");
         else this.form.get('country').setValue("International");
 
         this.onCountryChange(this.form.get('country').value);
