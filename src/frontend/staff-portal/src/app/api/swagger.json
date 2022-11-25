@@ -4142,18 +4142,26 @@
             "$ref": "#/components/schemas/ViolationTicketCountIsRegulation"
           },
           "section": {
+            "maxLength": 10,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "subsection": {
+            "maxLength": 4,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "paragraph": {
+            "maxLength": 3,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "subparagraph": {
+            "maxLength": 5,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },

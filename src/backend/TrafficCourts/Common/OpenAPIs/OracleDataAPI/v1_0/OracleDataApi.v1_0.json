@@ -2008,21 +2008,29 @@
             "enum": [ "Y", "N" ]
           },
           "section": {
+            "maxLength": 10,
+            "minLength": 0,
             "type": "string",
             "nullable": true,
             "readOnly": true
           },
           "subsection": {
+            "maxLength": 4,
+            "minLength": 0,
             "type": "string",
             "nullable": true,
             "readOnly": true
           },
           "paragraph": {
+            "maxLength": 3,
+            "minLength": 0,
             "type": "string",
             "nullable": true,
             "readOnly": true
           },
           "subparagraph": {
+            "maxLength": 5,
+            "minLength": 0,
             "type": "string",
             "nullable": true,
             "readOnly": true
