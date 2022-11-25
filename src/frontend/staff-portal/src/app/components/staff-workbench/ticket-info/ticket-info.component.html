@@ -190,9 +190,10 @@
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto"
                             (keyup)="onFullDescription1Keyup()"
+                            (change)="onChangeCount(1, $event.target.value)"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
-                          <mat-autocomplete #auto="matAutocomplete" panelWidth="750">
+                          <mat-autocomplete #auto="matAutocomplete" panelWidth="750" (optionSelected)="onChangeCount(1, $event.option.value)">
                             <mat-option [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(1, initialDisputeValues.violationTicket) }}</mat-option>
                             <mat-option *ngFor="let statute of filteredCount1Statutes"
@@ -200,6 +201,7 @@
                               {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <mat-hint *ngIf="!isStatuteValid(1)" style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
                         </mat-form-field>
                       </div>
                       <!-- Violation Ticket Count 1 Fine Amount -->
@@ -228,9 +230,10 @@
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto2"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value"
+                            (change)="onChangeCount(2, $event.target.value)"
                             (keyup)="onFullDescription2Keyup()"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
-                          <mat-autocomplete #auto2="matAutocomplete" panelWidth="750">
+                          <mat-autocomplete #auto2="matAutocomplete" panelWidth="750" (optionSelected)="onChangeCount(2, $event.option.value)">
                             <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
                             <mat-option *ngFor="let statute of filteredCount2Statutes"
@@ -238,6 +241,7 @@
                               {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <mat-hint *ngIf="!isStatuteValid(2)" style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
                         </mat-form-field>
                       </div>
                       <!-- Violation Ticket Count 2 Fine Amount -->
@@ -266,9 +270,10 @@
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto3"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value"
+                            (change)="onChangeCount(3, $event.target.value)"
                             (keyup)="onFullDescription3Keyup()"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
-                          <mat-autocomplete #auto3="matAutocomplete" panelWidth="750">
+                          <mat-autocomplete #auto3="matAutocomplete" panelWidth="750" (optionSelected)="onChangeCount(3, $event.option.value)">
                             <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(3, initialDisputeValues.violationTicket) }}</mat-option>
                             <mat-option *ngFor="let statute of filteredCount3Statutes"
@@ -276,6 +281,7 @@
                               {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <mat-hint *ngIf="!isStatuteValid(3)" style="color:red; font-weight: bold;">Invalid statute selection.</mat-hint>
                         </mat-form-field>
                       </div>
                       <!-- Violation Ticket Count 3 Ticketed Amount -->
@@ -318,11 +324,11 @@
               <div style="float: right; width: 100%;" class="row">
                 <button class="large" mat-flat-button type="button" color="primary" (click)="validate()"
                   style="background-color: #2ba242;"
-                  [disabled]="form.get('violationTicket').invalid || lastUpdatedDispute.status !== 'NEW' || form.get('violationTicket').touched">
+                  [disabled]="form.get('violationTicket').invalid || lastUpdatedDispute.status !== 'NEW' || form.get('violationTicket').touched || !isStatuteValid(1) || !isStatuteValid(2) || !isStatuteValid(3)">
                   Validate
                 </button>
                 <button class="large" mat-flat-button type="submit" color="primary"
-                  [disabled]="!(form.get('violationTicket').touched) || form.get('violationTicket').invalid">
+                  [disabled]="!(form.get('violationTicket').touched) || form.get('violationTicket').invalid || !isStatuteValid(1) || !isStatuteValid(2) || !isStatuteValid(3)">
                   Save
                 </button>
               </div>
@@ -370,10 +376,10 @@
                     [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
                 </p><br />
                 <p class="systemFlagList"><span
-                    [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
-                      [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{courtLocationFlag.fieldConfidence
+                    [ngClass]="courtLocationFlag?.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
+                      [ngClass]="courtLocationFlag?.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{courtLocationFlag?.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
-                    [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{courtLocationFlag.heading}}</span>
+                    [ngClass]="courtLocationFlag?.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{courtLocationFlag?.heading}}</span>
                 </p><br />
               </div>
             </form>

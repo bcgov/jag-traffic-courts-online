@@ -4453,15 +4453,19 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         public ViolationTicketCountIsRegulation? IsRegulation { get; set; }
 
         [Newtonsoft.Json.JsonProperty("section", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(10)]
         public string Section { get; set; }
 
         [Newtonsoft.Json.JsonProperty("subsection", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(4)]
         public string Subsection { get; set; }
 
         [Newtonsoft.Json.JsonProperty("paragraph", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(3)]
         public string Paragraph { get; set; }
 
         [Newtonsoft.Json.JsonProperty("subparagraph", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(5)]
         public string Subparagraph { get; set; }
 
         [Newtonsoft.Json.JsonProperty("ticketedAmount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

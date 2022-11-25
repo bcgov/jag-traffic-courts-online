@@ -199,7 +199,14 @@ export class TicketInfoComponent implements OnInit {
   // return a filtered list of statutes
   public filterStatutes(val: string): StatuteView[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
-    return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
+    return this.lookupsService.statutes?.filter(option => option.__statuteString.indexOf(val) >= 0);
+  }
+
+  // is the statute valid? on the form
+  public isStatuteValid(countNo: number): boolean {
+    let countForm = this.form.get('violationTicket').get('violationTicketCount' + countNo.toString());
+    if (countForm.get('fullDescription').value && !countForm.get('section').value && countForm.get('fullDescription').value !== " ") return false;
+    return true;
   }
 
   public resendEmailVerification() {
@@ -306,9 +313,10 @@ export class TicketInfoComponent implements OnInit {
     putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
       // if form has violation ticket, stuff it in putDispute
-      if (this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value) {
-        let violationTicketCount = this.constructViolationTicketCount(
-          this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value, i);
+      let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
+      if (fullDescription && fullDescription !== " ") {
+        let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value;
+        violationTicketCount.countNo = i;
         violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
         putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
       }
@@ -335,6 +343,7 @@ export class TicketInfoComponent implements OnInit {
     // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
     // with notice of dispute form fields only that were changed
     let putDispute = this.lastUpdatedDispute;
+
 
     putDispute.disputantSurname = this.form.get('disputantSurname').value;
     putDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
@@ -396,60 +405,6 @@ export class TicketInfoComponent implements OnInit {
     return { subparagraph: subparagraph, section: section, subsection: subsection, paragraph: paragraph };
   }
 
-  public constructViolationTicketCount(__statuteString: string, count: number): ViolationTicketCount {
-
-    this.tempViolationTicketCount = { description: "", ticketedAmount: null, actOrRegulationNameCode: "", isAct: this.IsAct.N, isRegulation: this.IsRegulation.N, paragraph: "", subparagraph: "", subsection: "", section: "" };
-    this.tempViolationTicketCount.countNo = count;
-    if (!__statuteString) return this.tempViolationTicketCount;
-
-    // look in list of statutes
-    let statute = this.lookupsService.statutes.filter(x => x.__statuteString == __statuteString) as StatuteView[];
-    if (statute && statute.length > 0) {
-      this.tempViolationTicketCount.description = statute[0].descriptionText;
-      this.tempViolationTicketCount.actOrRegulationNameCode = statute[0].code; // to do break down legal paragraphing
-      let parts = this.unLegalParagraph(statute[0].sectionText);
-      this.tempViolationTicketCount.subparagraph = parts.subparagraph;
-      this.tempViolationTicketCount.section = parts.section;
-      this.tempViolationTicketCount.subsection = parts.subsection;
-      this.tempViolationTicketCount.paragraph = parts.paragraph;
-      return this.tempViolationTicketCount;
-    }
-
-    // if not found in list of statutes, make an attempt from passed in string
-    // first portion before space is act or regulation
-    // second portion before next space is legal paragraphing
-    // remaining is desciption
-    const __statuteStringParts = __statuteString.split(" ");
-
-    // three parts yay
-    if (__statuteStringParts.length > 2) {
-      this.tempViolationTicketCount.actOrRegulationNameCode = __statuteStringParts[0];
-      let parts = this.unLegalParagraph(__statuteStringParts[1]);
-      this.tempViolationTicketCount.subparagraph = parts.subparagraph;
-      this.tempViolationTicketCount.section = parts.section;
-      this.tempViolationTicketCount.subsection = parts.subsection;
-      this.tempViolationTicketCount.paragraph = parts.paragraph;
-      this.tempViolationTicketCount.description = __statuteString.substring(
-        __statuteString.indexOf(__statuteStringParts[2])
-      );
-    }
-
-    // two parts hmm....
-    else if (__statuteStringParts.length > 1) {
-      this.tempViolationTicketCount.actOrRegulationNameCode = "";
-      this.tempViolationTicketCount.section = __statuteStringParts[0];
-      this.tempViolationTicketCount.description = __statuteString.substring(__statuteString.indexOf(__statuteStringParts[1]));
-
-      // yuk shove it in description field
-    } else {
-      this.tempViolationTicketCount.actOrRegulationNameCode = "";
-      this.tempViolationTicketCount.section = "";
-      this.tempViolationTicketCount.description = __statuteString;
-    }
-
-    return this.tempViolationTicketCount;
-  }
-
   public enableNoticeOfDisputeSave(): boolean {
 
     // check for fields invalid in contact information only
@@ -492,7 +447,7 @@ export class TicketInfoComponent implements OnInit {
 
   // get legal paragraphing for a particular count
   public getCountLegalParagraphing(countNumber: number, violationTicket: ViolationTicket): string {
-    let violationTicketCount = violationTicket.violationTicketCounts.filter(x => x.countNo == countNumber)[0];
+    let violationTicketCount = violationTicket.violationTicketCounts?.filter(x => x.countNo == countNumber)[0];
     if (violationTicketCount) {
       let desc = (this.violationTicketService
         .getLegalParagraphing(violationTicketCount) + (violationTicketCount.description ? " " + violationTicketCount.description : ""));
@@ -645,6 +600,34 @@ export class TicketInfoComponent implements OnInit {
       });
   }
 
+   // count description changed in form
+   onChangeCount(countNo: number, fullDescription: string) {
+    let countForm = this.form.get('violationTicket').get('violationTicketCount' + countNo.toString());
+    let parts = fullDescription.split(" "); // act/code fullsection description
+
+    // lookup legal statute from part[1] which should be in legal paragraph form
+    if (parts && parts.length > 1) {
+      let foundStatute = this.lookupsService.statutes?.filter(x => x.code === parts[1] && x.actCode === parts[0]);
+      if (foundStatute && foundStatute.length > 0) {
+        countForm.get('actOrRegulationNameCode').setValue(foundStatute[0].actCode);
+        countForm.get('section').setValue(foundStatute[0].sectionText);
+        countForm.get('subsection').setValue(foundStatute[0].subsectionText);
+        countForm.get('paragraph').setValue(foundStatute[0].paragraphText);
+        countForm.get('subparagraph').setValue(foundStatute[0].subparagraphText);
+        countForm.get('description').setValue(foundStatute[0].shortDescriptionText);
+        countForm.get('fullDescription').setValue(`${foundStatute[0].actCode} ${foundStatute[0].code} ${foundStatute[0].shortDescriptionText}`);
+      } else {
+        countForm.get('actOrRegulationNameCode').setValue(undefined);
+        countForm.get('section').setValue(undefined);
+        countForm.get('subsection').setValue(undefined);
+        countForm.get('paragraph').setValue(undefined);
+        countForm.get('subparagraph').setValue(undefined);
+        countForm.get('description').setValue(undefined);
+      }
+      countForm.updateValueAndValidity();
+    }
+  }
+
   // get dispute by id
   getDispute(): void {
     this.logger.log('TicketInfoComponent::getDispute');
@@ -661,7 +644,10 @@ export class TicketInfoComponent implements OnInit {
           response
         );
 
-        this.initialDisputeValues = this.setFieldsFromJSON(response);
+        // If disputant surname is filled in, then this is not the first time this ticket has been opened, only call setFieldsFromJSON the first time
+        if (response.violationTicket.disputantSurname) {
+          this.initialDisputeValues = response;
+        } else this.initialDisputeValues = this.setFieldsFromJSON(response);
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);
 
@@ -686,13 +672,23 @@ export class TicketInfoComponent implements OnInit {
         // set counts 1,2,3 of violation ticket
         this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
           let countForm = this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.countNo.toString());
-          countForm.patchValue(violationTicketCount);
-          if (!violationTicketCount.ticketedAmount)
-            countForm.get('ticketedAmount').setValue(undefined);
+          countForm.get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
           let fullDesc = this.getCountLegalParagraphing(violationTicketCount.countNo, this.initialDisputeValues.violationTicket);
           countForm
             .get('fullDescription')
-            .setValue(fullDesc);
+           .setValue(fullDesc);
+          countForm.get('actOrRegulationNameCode').setValue(violationTicketCount.actOrRegulationNameCode);
+          countForm.get('description').setValue(violationTicketCount.description);
+
+          // lookup legal statute
+          let foundStatute = this.lookupsService.statutes?.filter(x => x.code === violationTicketCount.section && x.actCode === violationTicketCount.actOrRegulationNameCode);
+          if (foundStatute && foundStatute.length > 0) {
+            countForm.get('section').setValue(foundStatute[0].sectionText);
+            countForm.get('subsection').setValue(foundStatute[0].subsectionText);
+            countForm.get('paragraph').setValue(foundStatute[0].paragraphText);
+            countForm.get('subparagraph').setValue(foundStatute[0].subparagraphText);
+          }
+          countForm.updateValueAndValidity();
         });
 
         this.violationTicketService.getAllOCRMessages(this.lastUpdatedDispute.violationTicket.ocrViolationTicket);
@@ -706,14 +702,15 @@ export class TicketInfoComponent implements OnInit {
 
         // update validation rule for drivers licence number
         // set country from province
-        if (this.provinces.filter(x => x.name == this.lastUpdatedDispute.addressProvince || this.lastUpdatedDispute.addressProvince == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
-        else if (this.states.filter(x => x.name == this.initialDisputeValues.addressProvince).length > 0) this.form.get('country').setValue("United States");
+        if (this.provinces?.filter(x => x.name == this.lastUpdatedDispute.addressProvince || this.lastUpdatedDispute.addressProvince == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
+        else if (this.states?.filter(x => x.name == this.initialDisputeValues.addressProvince).length > 0) this.form.get('country').setValue("United States");
         else this.form.get('country').setValue("International");
 
         this.onCountryChange(this.form.get('country').value);
         if (this.lastUpdatedDispute.status !== "NEW") {
           this.form.controls.violationTicket.disable();
         }
+        this.form.get('violationTicket').updateValueAndValidity();
       }, (error: any) => {
         this.retrieving = false;
         if (error.status == 409) this.conflict = true;
