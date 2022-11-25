@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using System.Threading;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Workflow.Service.Services;
 
@@ -78,5 +79,17 @@ public class OracleDataApiService : IOracleDataApiService
     public async Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken)
     {
         await _client.VerifyDisputeEmailAsync(disputeId);
+    }
+
+    public async Task<ICollection<DisputeResult>> SearchDisputeAsync(string ticketNumber, string issuedTime, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _client.FindDisputeAsync(ticketNumber, issuedTime, cancellationToken);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

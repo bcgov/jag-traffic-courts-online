@@ -15,6 +15,8 @@ public class MessageContractToDisputeMappingProfile : Profile
         CreateMap<Messaging.MessageContracts.TicketCount, Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicketCount>();
         //CreateMap<Messaging.MessageContracts.SendEmail, Common.OpenAPIs.OracleDataApi.v1_0.EmailHistory>();
         CreateMap<Messaging.MessageContracts.SaveFileHistoryRecord, Common.OpenAPIs.OracleDataApi.v1_0.FileHistory> ();
+        CreateMap<Common.OpenAPIs.OracleDataApi.v1_0.DisputeResult, Messaging.MessageContracts.SearchDisputeResponse> ()
+            .ForMember(dest => dest.DisputeId, opt => opt.MapFrom(src => src.DisputeId.ToString("n")));
 
         CreateMap<DateOnly, DateTime>();
     }

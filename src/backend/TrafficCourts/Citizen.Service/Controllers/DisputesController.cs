@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Disputes;
+using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
 using TrafficCourts.Messaging;
@@ -151,6 +152,61 @@ public class DisputesController : ControllerBase
         catch (RequestTimeoutException ex)
         {
             _logger.LogError(ex, "Request Timed out");
+            throw;
+        }
+    }
+
+    [HttpGet("/api/disputes/search")]
+    [ProducesResponseType(typeof(SearchDisputeResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> SearchDisputeAsync(
+            [FromQuery]
+            [Required]
+            [RegularExpression(Search.Request.TicketNumberRegex, ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")] string ticketNumber,
+            [FromQuery]
+            [Required]
+            [RegularExpression(Search.Request.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
+            CancellationToken cancellationToken)
+    {
+
+        try
+        {
+            var message = new SearchDisputeRequest { TicketNumber = ticketNumber, IssuedTime = time };
+            var response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(message, cancellationToken);
+            IActionResult result;
+
+            if (!string.IsNullOrEmpty(response.Message.DisputeId))
+            {
+                _logger.LogDebug("Dispute found");
+                var disputeId = _hashids.EncodeHex(response.Message.DisputeId);
+                result = Ok(new Models.Dispute.SearchDisputeResult
+                {
+                    DisputeId = disputeId,
+                    DisputeStatus = response.Message.DisputeStatus
+                });
+            }
+            else if (response.Message.IsError)
+            {
+                _logger.LogError("Unknown search dispute error");
+                result = StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            else
+            {
+                _logger.LogDebug("Dispute not found");
+                result = NotFound("Dispute not found");
+            }
+
+            return result;
+        }
+        catch (RequestTimeoutException ex)
+        {
+            _logger.LogError(ex, "Request Timed out");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unknown Error");
             throw;
         }
     }
