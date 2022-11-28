@@ -1,4 +1,7 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
+ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/dotnet-60-runtime
+
+FROM $BUILD_IMAGE:6.0 AS build
 WORKDIR /src
 COPY ["Citizen.Service/TrafficCourts.Citizen.Service.csproj", "Citizen.Service/"]
 COPY ["Common/TrafficCourts.Common.csproj", "Common/"]
@@ -12,7 +15,7 @@ FROM build AS publish
 RUN dotnet publish "TrafficCourts.Citizen.Service.csproj" -c Release -o /app/publish
 COPY entrypoint.sh /app/publish
 
-FROM registry.access.redhat.com/ubi8/dotnet-60-runtime AS base
+FROM $RUNTIME_IMAGE AS base
 WORKDIR /opt/app-root/app
 EXPOSE 8080
 COPY --from=publish /app/publish .

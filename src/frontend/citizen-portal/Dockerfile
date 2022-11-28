@@ -1,5 +1,8 @@
+ARG BUILD_IMAGE=docker.io/node
+ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/nginx-120
+
 # Build image
-FROM docker.io/node:14.18 as build-deps
+FROM $BUILD_IMAGE:14.18 as build-deps
 
 ARG API_BASE_PATH=http://citizen-api/api/
 ENV API_BASE_PATH=${API_BASE_PATH}
@@ -25,7 +28,7 @@ RUN apt-get update; \
 RUN envsubst '${API_BASE_PATH}' < /usr/src/app/nginx-api-proxy-pass.conf.template > /usr/src/app/nginx-api-proxy-pass.conf
 
 # Runtime image
-FROM registry.access.redhat.com/ubi8/nginx-120
+FROM $RUNTIME_IMAGE
 
 COPY --from=build-deps /usr/src/app/src/favicon.ico /usr/share/nginx/html
 COPY --from=build-deps /usr/src/app/dist/citizen-portal /usr/share/nginx/html
