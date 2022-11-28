@@ -1,0 +1,39 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: node
+  namespace: 0198bb-tools
+  labels:
+    usage: build-pipeline-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: '14.18'
+      from:
+        kind: DockerImage
+        name: 'docker.io/node:14.18'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      referencePolicy:
+        type: Source
+    - name: '14.21.1'
+      from:
+        kind: DockerImage
+        name: 'docker.io/node:14.21.1'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      referencePolicy:
+        type: Source
+    - name: '16.18.1'
+      from:
+        kind: DockerImage
+        name: 'docker.io/node:16.18.1'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      referencePolicy:
+        type: Source
+    - name: '18.12.1'
+      from:
+        kind: DockerImage
+        name: 'docker.io/node:18.12.1'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      referencePolicy:
+        type: Source
