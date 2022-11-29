@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeContactInformation;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
@@ -236,6 +239,144 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals("Banner", dispute.getDisputantGivenName1());
 		List<Dispute> disputes = getAllDisputes(null, null);
 		assertEquals(1, disputes.size());
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = DisputeStatus.class, names = { "NEW", "VALIDATED", "PROCESSING" })
+	public void testUpdateDisputeContact(DisputeStatus disputeStatus) throws Exception {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setStatus(disputeStatus);
+		dispute.setDisputantSurname("Parker");
+		dispute.setDisputantGivenName1("Peter");
+		dispute.setDisputantGivenName2("Pete");
+		dispute.setDisputantGivenName3("P");
+		dispute.setAddressLine1("123 Main St.");
+		dispute.setAddressLine2("Appt 3");
+		dispute.setAddressLine3("Room 102");
+		dispute.setAddressCity("Star City");
+		dispute.setAddressProvince("ALB");
+		dispute.setPostalCode("V9A8W3");
+		dispute.setEmailAddress("someone1@somewhere.com");
+		dispute.setHomePhoneNumber("2501112222");
+		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
+		saveDispute(dispute);
+
+		DisputeContactInformation patch = new DisputeContactInformation();
+		patch.setDisputantSurname("Spiderman");
+		patch.setDisputantGivenName1("Mr");
+		patch.setDisputantGivenName2("Spidy");
+		patch.setDisputantGivenName3("Creapy Crawly");
+		patch.setAddressLine1("124 Main St.");
+		patch.setAddressLine2("Appt 5");
+		patch.setAddressLine3("Room 203");
+		patch.setAddressCity("Starling City");
+		patch.setAddressProvince("BC");
+		patch.setPostalCode("V9A7W4");
+		patch.setEmailAddress("someone2@somewhere.com");
+		patch.setHomePhoneNumber("2505556666");
+
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/noticeOfDispute/{guid}/contact", dispute.getNoticeOfDisputeGuid())
+				.content(asJsonString(patch))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+		Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
+
+		assertEquals("Spiderman", result.getDisputantSurname());
+		assertEquals("Mr", result.getDisputantGivenName1());
+		assertEquals("Spidy", result.getDisputantGivenName2());
+		assertEquals("Creapy Crawly", result.getDisputantGivenName3());
+		assertEquals("124 Main St.", result.getAddressLine1());
+		assertEquals("Appt 5", result.getAddressLine2());
+		assertEquals("Room 203", result.getAddressLine3());
+		assertEquals("Starling City", result.getAddressCity());
+		assertEquals("BC", result.getAddressProvince());
+		assertEquals("V9A7W4", result.getPostalCode());
+		assertEquals("someone2@somewhere.com", result.getEmailAddress());
+		assertEquals("2505556666", result.getHomePhoneNumber());
+	}
+
+	@Test
+	public void testUpdateDisputeContact_400() throws Exception {
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/noticeOfDispute/{guid}/contact", "an-unknown-guid-id")
+				.content(asJsonString(new DisputeContactInformation()))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "REJECTED" })
+	public void testUpdateDisputeContact_405(DisputeStatus disputeStatus) throws Exception {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setStatus(disputeStatus);
+		dispute.setDisputantSurname("Parker");
+		dispute.setDisputantGivenName1("Peter");
+		dispute.setDisputantGivenName2("Pete");
+		dispute.setDisputantGivenName3("P");
+		dispute.setAddressLine1("123 Main St.");
+		dispute.setAddressLine2("Appt 3");
+		dispute.setAddressLine3("Room 102");
+		dispute.setAddressCity("Star City");
+		dispute.setAddressProvince("ALB");
+		dispute.setPostalCode("V9A8W3");
+		dispute.setEmailAddress("someone1@somewhere.com");
+		dispute.setHomePhoneNumber("2501112222");
+		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
+		saveDispute(dispute);
+
+		DisputeContactInformation patch = new DisputeContactInformation();
+		patch.setDisputantSurname("Spiderman");
+		patch.setDisputantGivenName1("Mr");
+		patch.setDisputantGivenName2("Spidy");
+		patch.setDisputantGivenName3("Creapy Crawly");
+		patch.setAddressLine1("124 Main St.");
+		patch.setAddressLine2("Appt 5");
+		patch.setAddressLine3("Room 203");
+		patch.setAddressCity("Starling City");
+		patch.setAddressProvince("BC");
+		patch.setPostalCode("V9A7W4");
+		patch.setEmailAddress("someone2@somewhere.com");
+		patch.setHomePhoneNumber("2505556666");
+
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/noticeOfDispute/{guid}/contact", dispute.getNoticeOfDisputeGuid())
+				.content(asJsonString(patch))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isMethodNotAllowed());
+	}
+
+	@Test
+	public void testUpdateDisputeContact_500() throws Exception {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setStatus(null);
+		dispute.setDisputantSurname("Parker");
+		dispute.setDisputantGivenName1("Peter");
+		dispute.setDisputantGivenName2("Pete");
+		dispute.setDisputantGivenName3("P");
+		dispute.setAddressLine1("123 Main St.");
+		dispute.setAddressLine2("Appt 3");
+		dispute.setAddressLine3("Room 102");
+		dispute.setAddressCity("Star City");
+		dispute.setAddressProvince("ALB");
+		dispute.setPostalCode("V9A8W3");
+		dispute.setEmailAddress("someone1@somewhere.com");
+		dispute.setHomePhoneNumber("2501112222");
+		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
+		saveDispute(dispute);
+
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/noticeOfDispute/{guid}/contact", dispute.getNoticeOfDisputeGuid())
+				.content(asJsonString(new DisputeContactInformation()))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test

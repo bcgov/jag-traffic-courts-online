@@ -3,12 +3,14 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -20,8 +22,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.error.BadDataException;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeContactInformation;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
@@ -314,6 +318,41 @@ public class DisputeService {
 	 */
 	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime) {
 		return disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+	}
+
+	/**
+	 * Updates the {@link Dispute} with the given id with the provided patched fields.
+	 * @param noticeOfDisputeGuid
+	 * @param patch
+	 * @return an updated {@link Dispute} record.
+	 * @throws NoSuchElementException if the Dispute was not found..
+	 * @throws BadDataException if the Dispute.status is null (a required field for business logic).
+	 * @throws NotAllowedException if the Dispute.status is not NEW, VALIDATED, or PROCESSING.
+	 */
+	public Dispute patchDispute(String noticeOfDisputeGuid, @Valid DisputeContactInformation patch) {
+		Dispute dispute = getDisputeByNoticeOfDisputeGuid(noticeOfDisputeGuid);
+
+		if (dispute == null) {
+			throw new NoSuchElementException("Dispute not found with noticeOfDisputeGuid: " + noticeOfDisputeGuid);
+		}
+		if (dispute.getStatus() == null) {
+			throw new BadDataException("Dispute missing required field 'status'");
+		}
+
+		// Disputes must have a status of NEW, VALIDATED, or PROCESSING in order to permit changes to contact information
+		switch (dispute.getStatus()) {
+		case NEW:
+		case VALIDATED:
+		case PROCESSING:
+			BeanUtils.copyProperties(patch, dispute);
+
+			// reset email verified since we are changing it.
+			dispute.setEmailAddressVerified(Boolean.FALSE);
+
+			return disputeRepository.update(dispute);
+		default:
+			throw new NotAllowedException("Disputes must have a status of NEW, VALIDATED, or PROCESSING in order to permit changes to contact information. Dispute has a status of " + dispute.getStatus());
+		}
 	}
 
 }

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerAdvisor {
 
 	private Logger logger = LoggerFactory.getLogger(ControllerAdvisor.class);
+
+	/**
+	 * Returns an API HTTP error code of 404 if NoSuchElementException is thrown (typically when trying to GET a Dispute for a non-existent record).
+	 */
+	@ExceptionHandler(BadDataException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<Object> handleBadDataException(BadDataException ex) {
+		logger.debug("handleBadDataException", ex);
+		return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Bad record in database.", ex);
+	}
 
 	/**
 	 * Returns an API HTTP error code of 404 if NoSuchElementException is thrown (typically when trying to GET a Dispute for a non-existent record).
@@ -103,7 +114,13 @@ public class ControllerAdvisor {
 		List<String> details = new ArrayList<>();
 		if (ex instanceof BindException) {
 			for (ObjectError error : ((BindException)ex).getBindingResult().getAllErrors()) {
-				details.add(error.getDefaultMessage());
+				if (error instanceof FieldError) {
+					FieldError fieldError = (FieldError) error;
+					details.add("Field error on field '" + fieldError.getField() + "': " + fieldError.getDefaultMessage());
+				}
+				else {
+					details.add(error.toString());
+				}
 			}
 		}
 		else {

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeContactInformation;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
@@ -316,6 +317,25 @@ public class DisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Dispute>(disputeService.update(id, dispute), HttpStatus.OK);
+	}
+
+	/**
+	 * PUT endpoint that updates the contact information of a Dispute.
+	 *
+	 * @param id of the dispute to be updated
+	 * @param patch patched fields
+	 * @return updated {@link Dispute}
+	 */
+	@Operation(summary = "Updates Dispute contact information the given patched values.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "Dispute status is not NEW, VALIDATED, or PROCESSING. Update failed.")
+	})
+	@PutMapping(path="/dispute/noticeOfDispute/{guid}/contact")
+	public ResponseEntity<Dispute> updateDisputeContactInfo(@PathVariable(name="guid") String noticeOfDisputeGuid, @Valid @RequestBody DisputeContactInformation patch) {
+		return new ResponseEntity<Dispute>(disputeService.patchDispute(noticeOfDisputeGuid, patch), HttpStatus.OK);
 	}
 
 	/**
