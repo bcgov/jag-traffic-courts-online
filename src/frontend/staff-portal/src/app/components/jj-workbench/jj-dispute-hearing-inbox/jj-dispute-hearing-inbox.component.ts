@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeService, JJDisputeView } from 'app/services/jj-dispute.service';
+import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { JJDisputeStatus, JJDispute, JJDisputeHearingType, JJDisputeCourtAppearanceRoP } from 'app/api';
+import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
 
@@ -24,7 +24,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   busy: Subscription;
   public appearanceDateFilter = new FormControl('');
   public jjAssignedToFilter = new FormControl('');
-  data = [] as JJDisputeView[];
+  data = [] as JJDispute[];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort = new MatSort();
   displayedColumns: string[] = [
@@ -42,7 +42,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   constructor(
     public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
-    public authService: AuthService
+    private authService: AuthService
   ) {
     // listen for when to refresh from db
     this.jjDisputeService.refreshDisputes.subscribe(x => {
@@ -71,7 +71,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
-        this.jjIDIR = this.authService.userIDIRLogin;
+        this.jjIDIR = userProfile.idir;
         this.getAll();
       }
     })
@@ -105,7 +105,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     this.jjDisputeInfo.emit(element);
   }
 
-  private createFilter(): (record: JJDisputeView, filter: string) => boolean {
+  private createFilter(): (record: JJDispute, filter: string) => boolean {
     let filterFunction = function (record, filter): boolean {
       let searchTerms = JSON.parse(filter);
       let searchDate = new Date(searchTerms.appearanceTs);
@@ -120,7 +120,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
 
 
-  function (record: JJDisputeView, filter) {
+  function (record: JJDispute, filter) {
   }
 
 
@@ -137,7 +137,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.data;
 
       // show court appearance fields for most recent court appearance
-      this.dataSource.data.forEach((jjDispute: JJDisputeView) => {
+      this.dataSource.data.forEach((jjDispute: JJDispute) => {
         if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
           let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a,b) => {if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
           jjDispute.room = mostRecentCourtAppearance.room;

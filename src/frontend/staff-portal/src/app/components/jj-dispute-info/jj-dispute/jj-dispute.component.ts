@@ -4,14 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { JJDisputeService, JJDisputeView as JJDispute } from '../../../services/jj-dispute.service';
+import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoP, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { UserRepresentation } from 'app/api/model/models';
-import { AuthService } from 'app/services/auth.service';
+import { UserRepresentation } from 'app/services/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
 
@@ -54,7 +53,6 @@ export class JJDisputeComponent implements OnInit {
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
-    public authService: AuthService,
     public lookups: LookupsService
   ) {
     this.isMobile = this.utilsService.isMobile();

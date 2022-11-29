@@ -1,7 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Statute, LookupService, Language} from 'app/api';
+import { Statute as StatuteBase, LookupService, Language } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -41,15 +41,15 @@ export class LookupsService implements ILookupsService {
      *
      * @param none
      */
-  public getStatutes(): Observable<StatuteView[]> {
+  public getStatutes(): Observable<Statute[]> {
 
     return this.lookupService.apiLookupStatutesGet()
       .pipe(
         map((response: Statute[]) =>
           response ? response : null
         ),
-        map((statutes: StatuteView[]) => {
-          statutes.forEach(resp => { resp.__statuteString = this.get__statuteString(resp) });
+        map((statutes: Statute[]) => {
+          statutes.forEach(resp => { resp.__statuteString = this.getStatuteString(resp) });
           statutes.sort((a, b) => { if (a.__statuteString < b.__statuteString) return -1; })
           return statutes;
         }),
@@ -67,15 +67,15 @@ export class LookupsService implements ILookupsService {
       );
   }
 
-  public get statutes$(): BehaviorSubject<StatuteView[]> {
+  public get statutes$(): BehaviorSubject<Statute[]> {
     return this._statutes;
   }
 
-  public get statutes(): StatuteView[] {
+  public get statutes(): Statute[] {
     return this._statutes.value;
   }
 
-  public get__statuteString(statute: Statute): string {
+  public getStatuteString(statute: Statute): string {
     return `${statute.actCode} ${statute.code} ${statute.descriptionText}`;
   }
 
@@ -84,7 +84,7 @@ export class LookupsService implements ILookupsService {
      *
      * @param none
      */
-   public getLanguages(): Observable<Language[]> {
+  public getLanguages(): Observable<Language[]> {
 
     return this.lookupService.apiLookupLanguagesGet()
       .pipe(
@@ -118,12 +118,12 @@ export class LookupsService implements ILookupsService {
   }
 
   public getLanguageDescription(code: string): string {
-      let found = this.languages?.filter(x => x.code.trim().toLowerCase() === code.trim().toLowerCase());
-      if (found && found.length > 0) return found[0].description;
-      else return code;
+    let found = this.languages?.filter(x => x.code.trim().toLowerCase() === code.trim().toLowerCase());
+    if (found && found.length > 0) return found[0].description;
+    else return code;
   }
 }
 
-export interface StatuteView extends Statute {
+export interface Statute extends StatuteBase {
   __statuteString?: string;
 }

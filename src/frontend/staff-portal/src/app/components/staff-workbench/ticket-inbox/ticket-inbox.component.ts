@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { DisputeService, DisputeExtended } from 'app/services/dispute.service';
+import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, OcrViolationTicket, Field } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
@@ -13,12 +13,9 @@ import { AuthService, KeycloakProfile } from 'app/services/auth.service';
   styleUrls: ['../../../app.component.scss', './ticket-inbox.component.scss'],
 })
 export class TicketInboxComponent implements OnInit, AfterViewInit {
-  @Input() public IDIR: string;
-  @Output() public disputeInfo: EventEmitter<DisputeExtended> = new EventEmitter();
+  @Output() public disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   dataSource = new MatTableDataSource();
-  public IDIRLogin: string = "";
-  // public decidePopup = '';
   busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',
@@ -33,7 +30,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     'systemDetectedOcrIssues',
     'userAssignedTo',
   ];
-  disputes: DisputeExtended[] = [];
+  disputes: Dispute[] = [];
   public userProfile: KeycloakProfile = {};
   public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
   public DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
@@ -54,7 +51,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         this.userProfile = userProfile;
-        this.IDIRLogin = this.authService.userIDIRLogin;
       }
     })
 
@@ -62,7 +58,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     this.getAllDisputes();
   }
 
-  isNew(d: DisputeExtended): boolean {
+  isNew(d: Dispute): boolean {
     return d.status == DisputeStatus.New && (d.emailAddressVerified === true || !d.emailAddress);
   }
 
@@ -74,10 +70,10 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.disputes;
 
     // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a: DisputeExtended, b: DisputeExtended) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
+    this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
 
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = function (record: DisputeExtended, filter) {
+    this.dataSource.filterPredicate = function (record: Dispute, filter) {
       return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
@@ -89,7 +85,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
       response.forEach(d => {
         if (d.status != "CANCELLED") { // do not show cancelled
-          var newDispute: DisputeExtended = {
+          var newDispute: Dispute = {
             ticketNumber: d.ticketNumber,
             disputantSurname: d.disputantSurname,
             disputantGivenNames: d.disputantGivenNames,
@@ -123,10 +119,10 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.disputes;
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: DisputeExtended, b: DisputeExtended) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: DisputeExtended, filter) {
+      this.dataSource.filterPredicate = function (record: Dispute, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
     });
@@ -197,8 +193,8 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data?.filter((x: DisputeExtended) => x.status == DisputeStatus.New))
-      return this.dataSource.data?.filter((x: DisputeExtended) => x.status == DisputeStatus.New).length;
+    if (this.dataSource.data?.filter((x: Dispute) => x.status == DisputeStatus.New))
+      return this.dataSource.data?.filter((x: Dispute) => x.status == DisputeStatus.New).length;
     else return 0;
   }
 

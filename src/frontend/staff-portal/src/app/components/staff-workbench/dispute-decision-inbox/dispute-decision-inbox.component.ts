@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeService } from 'app/services/jj-dispute.service';
-import { JJDispute } from '../../../api/model/jJDispute.model';
+import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { CourthouseConfig } from '@config/config.model';
@@ -22,7 +21,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   public courtLocations: CourthouseConfig[];
   public IDIR: string = "";
   currentTeam: string = "All";
-  data = [] as JJDisputeView[];
+  data = [] as JJDispute[];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort = new MatSort();
   displayedColumns: string[] = [
@@ -30,7 +29,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     "jjDecisionDate",
     "jjAssignedTo",
     "violationDate",
-    "disputantName",
+    "fullName",
     "courthouseLocation",
     "vtcAssignedTo"
   ];
@@ -44,7 +43,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     if (this.mockConfigService.courtLocations) {
       this.courtLocations = this.mockConfigService.courtLocations;
     }
-    this.jjDisputeService.refreshDisputes.subscribe(x => {this.getAll();})
+    this.jjDisputeService.refreshDisputes.subscribe(x => { this.getAll(); })
   }
 
   filterByTeam(team: string) {
@@ -55,7 +54,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   public ngOnInit() {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
-        this.IDIR = this.authService.userIDIRLogin;
+        this.IDIR = this.authService.userProfile.idir;
       }
     });
     this.getAll();
@@ -72,14 +71,14 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   getAll(): void {
     this.logger.log('JJDisputeDecisionInboxComponent::getAllDisputes');
 
-    this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
+    this.jjDisputeService.getJJDisputes().subscribe((response: JJDispute[]) => {
       // filter jj disputes only show those in CONFIRMED status
       this.data = response.filter(x => x.status == JJDisputeStatus.Confirmed);
       this.dataSource.data = this.data;
 
       this.data.forEach(x => {
-        x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
-        x.vtcAssignedToName = this.authService.getFullName(this.jjDisputeService.vtcList?.filter(y => this.authService.getIDIR(y) === x.vtcAssignedTo)[0]);
+        x.jjAssignedToName = this.jjDisputeService.jjList?.filter(y => y.idir === x.jjAssignedTo)[0]?.fullName;
+        x.vtcAssignedToName = this.jjDisputeService.vtcList?.filter(y => y.idir === x.vtcAssignedTo)[0]?.fullName;
       });
 
       // initially sort by decision date within status
@@ -88,9 +87,4 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
       });
     });
   }
-}
-
-export interface JJDisputeView extends JJDispute {
-  vtcAssignedToName: string;
-  jjAssignedToName: string;
 }

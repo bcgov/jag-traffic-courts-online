@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { AuthService, KeycloakProfile } from 'app/services/auth.service';
-import { DisputeExtended } from 'app/services/dispute.service';
-import { JJDisputeView } from 'app/services/jj-dispute.service';
+import { Dispute } from 'app/services/dispute.service';
+import { JJDispute } from 'app/services/jj-dispute.service';
 import { DisputeDecisionInboxComponent } from '../dispute-decision-inbox/dispute-decision-inbox.component';
 import { TicketInboxComponent } from '../ticket-inbox/ticket-inbox.component';
 import { DisputeService } from 'app/services/dispute.service';
@@ -16,35 +15,24 @@ import { DisputeService } from 'app/services/dispute.service';
 export class StaffWorkbenchDashboardComponent implements OnInit {
   busy: Subscription;
   public tabSelected = new FormControl(0);
-  public fullName: string = "Loading...";
-  public staffIDIR: string = "";
-  public userProfile: KeycloakProfile = {};
   public showTicket: boolean = false;
   public decidePopup = '';
-  public disputeInfo: DisputeExtended;
-  public jjDisputeInfo: JJDisputeView;
+  public disputeInfo: Dispute;
+  public jjDisputeInfo: JJDispute;
 
   @ViewChild(DisputeDecisionInboxComponent) public disputeChild: DisputeDecisionInboxComponent;
   @ViewChild(TicketInboxComponent) public ticketChild: TicketInboxComponent;
 
   constructor(
-    private authService: AuthService,
     private disputeService: DisputeService
   ) {
 
   }
 
   public async ngOnInit() {
-    this.authService.userProfile$.subscribe(userProfile => {
-      if (userProfile) {
-        this.userProfile = userProfile;
-        this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
-        this.staffIDIR = this.authService.userIDIR;
-      }
-    })
   }
 
-  changeDispute(dispute: DisputeExtended) {
+  changeDispute(dispute: Dispute) {
     this.disputeInfo = dispute;
     if (dispute.ticketNumber[0] == 'A') {
       this.decidePopup = 'E'
@@ -54,7 +42,7 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
     this.showTicket = true;
   }
 
-  changeJJDispute(jjDispute: JJDisputeView) {
+  changeJJDispute(jjDispute: JJDispute) {
     this.jjDisputeInfo = jjDispute;
     this.showTicket = true;
   }

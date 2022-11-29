@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    public authService: AuthService,
+    private authService: AuthService,
     public keycloak: KeycloakService,
   ) {
     this.hasMobileSidemenu = false;

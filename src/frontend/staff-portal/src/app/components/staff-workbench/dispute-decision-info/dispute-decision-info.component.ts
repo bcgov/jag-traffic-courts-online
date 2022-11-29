@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { JJDispute } from 'app/api';
+import { JJDispute } from 'app/services/jj-dispute.service';
 
 @Component({
   selector: 'app-dispute-decision-info',

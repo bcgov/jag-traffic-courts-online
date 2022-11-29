@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
-import { JJDisputeService, JJDisputeView } from 'app/services/jj-dispute.service';
+import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { MatTab } from '@angular/material/tabs';
 
 @Component({
@@ -16,10 +16,8 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   tabSelected = new FormControl(0);
   public jjAdminRole: boolean = false;
   jjPage: string = "WR Assignments";
-  public fullName: string = "Loading...";
-  public jjIDIR: string = "";
   public userProfile: KeycloakProfile = {};
-  public jjDisputeInfo: JJDisputeView;
+  public jjDisputeInfo: JJDispute;
   @ViewChild("DCF") private dcfTab: MatTab;
   public isInfoEditable;
 
@@ -33,14 +31,12 @@ export class JjWorkbenchDashboardComponent implements OnInit {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         this.userProfile = userProfile;
-        this.fullName = this.authService.userFullName;
         this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
-        this.jjIDIR = this.authService.userIDIRLogin;
       }
     })
   }
 
-  changeJJDispute(jjDispute: JJDisputeView) {
+  changeJJDispute(jjDispute: JJDispute) {
     this.isInfoEditable = !this.dcfTab.isActive;
     this.jjDisputeInfo = jjDispute;
     this.showDispute = true;
