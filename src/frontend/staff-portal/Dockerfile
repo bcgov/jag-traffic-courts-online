@@ -30,6 +30,20 @@ RUN envsubst '${API_BASE_PATH}' < /usr/src/app/nginx-api-proxy-pass.conf.templat
 # Runtime image
 FROM $RUNTIME_IMAGE
 
+# Optional Git Version arguments
+ARG GIT_COMMIT_DATE=not-set
+ARG GIT_SHA=not-set
+ARG GIT_SHORT_SHA=not-set
+ARG GIT_VERSION=not-set
+
+LABEL git.commit.date="$GIT_COMMIT_DATE" \
+      git.sha="$GIT_SHA" \
+      git.sha.short="$GIT_SHORT_SHA" \
+      git.version="$GIT_VERSION"
+
+ENV APP_VERSION=$GIT_VERSION
+ENV GIT_SHA=$GIT_SHA
+
 COPY --from=build-deps /usr/src/app/src/favicon.ico /usr/share/nginx/html
 COPY --from=build-deps /usr/src/app/dist/staff-portal /usr/share/nginx/html
 COPY --from=build-deps /usr/src/app/nginx.conf /opt/app-root/etc/nginx.default.d/default.conf
