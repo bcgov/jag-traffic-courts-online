@@ -115,7 +115,7 @@ export class AuthService {
       .pipe(
         map((response: UserRepresentation[]) => {
           this.logger.info('KeycloakService::getUsersInGroup', response)
-          response.map((user: UserRepresentation) => {
+          response.forEach((user: UserRepresentation) => {
             user.idir = this.splitIDIR(user.username);
             user.fullName = this.getFullName(user);
           })
@@ -138,6 +138,7 @@ export class AuthService {
 export interface UserRepresentation extends UserRepresentationBase {
   idir?: string;
   fullName?: string;
+  jjDisplayName?: string;
 }
 
 export interface KeycloakProfile extends KeycloakProfileJS {
