@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
-import { DisputeExtended, DisputeService } from '../../../services/dispute.service';
+import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { Subscription } from 'rxjs';
 import { ProvinceConfig, CourthouseConfig } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
-import { LookupsService, StatuteView } from 'app/services/lookups.service';
+import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
@@ -22,7 +22,7 @@ import { ViolationTicketService, OCRMessageToDisplay } from 'app/services/violat
   styleUrls: ['./ticket-info.component.scss'],
 })
 export class TicketInfoComponent implements OnInit {
-  @Input() public disputeInfo: DisputeExtended;
+  @Input() public disputeInfo: Dispute;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
 
   public isMobile: boolean;
@@ -33,14 +33,14 @@ export class TicketInfoComponent implements OnInit {
   public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';
   public busy: Subscription;
-  public lastUpdatedDispute: DisputeExtended;
+  public lastUpdatedDispute: Dispute;
   public form: FormGroup;
   public flagsForm: FormGroup;
   public tempViolationTicketCount: ViolationTicketCount;
   public todayDate: Date = new Date();
   public provinces: ProvinceConfig[];
   public states: ProvinceConfig[];
-  public initialDisputeValues: DisputeExtended;
+  public initialDisputeValues: Dispute;
   public courtLocations: CourthouseConfig[];
   public imageToShow: any;
   public errorThreshold: number = 0.800;
@@ -52,9 +52,9 @@ export class TicketInfoComponent implements OnInit {
    * @description
    * Whether to show the address line fields.
    */
-  public filteredCount1Statutes: StatuteView[];
-  public filteredCount2Statutes: StatuteView[];
-  public filteredCount3Statutes: StatuteView[];
+  public filteredCount1Statutes: Statute[];
+  public filteredCount2Statutes: Statute[];
+  public filteredCount3Statutes: Statute[];
   public collapseObj: any = {
     ticketInformation: true,
     contactInformation: true,
@@ -70,7 +70,6 @@ export class TicketInfoComponent implements OnInit {
     private disputeService: DisputeService,
     public mockConfigService: MockConfigService,
     public lookupsService: LookupsService,
-    @Inject(Router) private router,
   ) {
     const today = new Date();
     this.isMobile = this.utilsService.isMobile();
@@ -82,7 +81,7 @@ export class TicketInfoComponent implements OnInit {
       this.courtLocations = this.mockConfigService.courtLocations.sort((a, b) => { if (a.name < b.name) return 1; });
     }
 
-    this.busy = this.lookupsService.getStatutes().subscribe((response: StatuteView[]) => {
+    this.busy = this.lookupsService.getStatutes().subscribe((response: Statute[]) => {
       this.lookupsService.statutes$.next(response);
     });
   }
@@ -197,7 +196,7 @@ export class TicketInfoComponent implements OnInit {
   }
 
   // return a filtered list of statutes
-  public filterStatutes(val: string): StatuteView[] {
+  public filterStatutes(val: string): Statute[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
     return this.lookupsService.statutes?.filter(option => option.__statuteString.indexOf(val) >= 0);
   }
@@ -328,7 +327,7 @@ export class TicketInfoComponent implements OnInit {
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: DisputeExtended) => {
+    this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -364,7 +363,7 @@ export class TicketInfoComponent implements OnInit {
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: DisputeExtended) => {
+    this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -457,14 +456,14 @@ export class TicketInfoComponent implements OnInit {
   }
 
   // put dispute by id
-  putDispute(dispute: DisputeExtended): void {
+  putDispute(dispute: Dispute): void {
     this.logger.log('TicketInfoComponent::putDispute', dispute);
 
     // no need to pass back byte array with image
     let tempDispute = dispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputeService.putDispute(dispute.disputeId, tempDispute).subscribe((response: DisputeExtended) => {
+    this.busy = this.disputeService.putDispute(dispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -473,7 +472,7 @@ export class TicketInfoComponent implements OnInit {
   }
 
   // use violationTicket Service
-  setFieldsFromJSON(dispute: DisputeExtended): DisputeExtended {
+  setFieldsFromJSON(dispute: Dispute): Dispute {
     if (dispute.violationTicket?.ocrViolationTicket && dispute.violationTicket?.ocrViolationTicket?.fields) {
       var fields = dispute.violationTicket?.ocrViolationTicket.fields;
 
@@ -637,7 +636,7 @@ export class TicketInfoComponent implements OnInit {
     this.lastUpdatedDispute = null;
 
     this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId)
-      .subscribe((response: DisputeExtended) => {
+      .subscribe((response: Dispute) => {
         this.retrieving = false;
         this.logger.info(
           'TicketInfoComponent::getDispute response',

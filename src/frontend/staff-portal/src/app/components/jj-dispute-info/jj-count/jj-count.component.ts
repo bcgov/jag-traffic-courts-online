@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, Inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +9,7 @@ import { JJDispute, JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCou
 import { MatRadioChange } from '@angular/material/radio';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
-import { LookupsService, StatuteView } from 'app/services/lookups.service';
+import { LookupsService, Statute } from 'app/services/lookups.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -48,8 +48,8 @@ export class JJCountComponent implements OnInit {
   public lesserOrGreaterAmount: number = 0;
   public surcharge: number = 0;
   public busy: Subscription;
-  public lesserDescriptionFilteredStatutes: StatuteView[];
-  public drivingProhibitionFilteredStatutes: StatuteView[];
+  public lesserDescriptionFilteredStatutes: Statute[];
+  public drivingProhibitionFilteredStatutes: Statute[];
 
   constructor(
     protected route: ActivatedRoute,
@@ -63,7 +63,7 @@ export class JJCountComponent implements OnInit {
     const today = new Date();
     this.isMobile = this.utilsService.isMobile();
 
-    this.busy = this.lookupsService.getStatutes().subscribe((response: StatuteView[]) => {
+    this.busy = this.lookupsService.getStatutes().subscribe((response: Statute[]) => {
       this.lookupsService.statutes$.next(response);
     });
 
@@ -161,7 +161,7 @@ export class JJCountComponent implements OnInit {
   }
 
   // return a filtered list of statutes
-  public filterStatutes(val: string): StatuteView[] {
+  public filterStatutes(val: string): Statute[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
     return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
   }

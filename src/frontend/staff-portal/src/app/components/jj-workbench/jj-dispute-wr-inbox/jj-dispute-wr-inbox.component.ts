@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeService } from 'app/services/jj-dispute.service';
+import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { JJDisputeStatus, JJDispute, JJDisputeHearingType } from 'app/api';
+import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
     "ticketNumber",
     "dateSubmitted",
     "violationDate",
-    "disputantName",
+    "fullName",
     "courthouseLocation",
     "policeDetachment",
     "status",
@@ -33,7 +33,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   constructor(
     public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
-    public authService: AuthService
+    private authService: AuthService
   ) {
     // listen for when to refresh from db
     this.jjDisputeService.refreshDisputes.subscribe(x => {
@@ -44,7 +44,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
-        this.jjIDIR = this.authService.userIDIRLogin;
+        this.jjIDIR = this.authService.userProfile.idir;
         this.getAll();
       }
     })

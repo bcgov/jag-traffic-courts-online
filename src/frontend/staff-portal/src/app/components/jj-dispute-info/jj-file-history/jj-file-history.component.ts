@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, EmailHistory, EmailHistorySuccessfullySent } from 'app/api';
-import { catchError, map } from 'rxjs/operators';
 import { LoggerService } from '@core/services/logger.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 

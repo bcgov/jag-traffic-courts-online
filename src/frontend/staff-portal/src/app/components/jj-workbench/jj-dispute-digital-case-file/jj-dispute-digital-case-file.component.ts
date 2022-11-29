@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeService, JJDisputeView as JJDispute } from 'app/services/jj-dispute.service';
+import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
@@ -26,7 +26,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     "ticketNumber",
     "dateSubmitted",
     "violationDate",
-    "surname",
+    "fullName",
     "courthouseLocation",
     "status",
   ];
@@ -58,7 +58,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   ngOnInit(): void {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
-        this.jjIDIR = this.authService.userIDIRLogin;
+        this.jjIDIR = userProfile.idir;
         this.getAll();
       }
     })

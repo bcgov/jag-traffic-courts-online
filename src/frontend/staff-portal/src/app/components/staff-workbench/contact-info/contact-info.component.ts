@@ -1,32 +1,33 @@
-import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ProvinceConfig } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { DisputeExtended, DisputeService } from '../../../services/dispute.service';
+import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { Subscription } from 'rxjs';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-contact-info',
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss', '../../../app.component.scss']
 })
 export class ContactInfoComponent implements OnInit {
-  @Input() public disputeInfo: DisputeExtended;
+  @Input() public disputeInfo: Dispute;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public provinces: ProvinceConfig[];
   public states: ProvinceConfig[];
   public busy: Subscription;
-  public initialDisputeValues: DisputeExtended;
+  public initialDisputeValues: Dispute;
   public todayDate: Date = new Date();
-  public lastUpdatedDispute: DisputeExtended;
+  public lastUpdatedDispute: Dispute;
   public retrieving: boolean = true;
   public violationDate: string = "";
   public violationTime: string = "";
@@ -44,7 +45,6 @@ export class ContactInfoComponent implements OnInit {
     public mockConfigService: MockConfigService,
     private disputeService: DisputeService,
     private logger: LoggerService,
-    @Inject(Router) private router,
   ) {
     const today = new Date();
     this.isMobile = this.utilsService.isMobile();
@@ -149,20 +149,20 @@ export class ContactInfoComponent implements OnInit {
 
   public resendEmailVerification() {
     this.disputeService.resendEmailVerification(this.lastUpdatedDispute.disputeId)
-    .subscribe(email => {
-      const data: DialogOptions = {
-        titleKey: "Email Verification Resent",
-        icon: "email",
-        actionType: "green",
-        messageKey:
-          "The email verification has been resent to the contact email address provided.\n\n" + this.lastUpdatedDispute.emailAddress,
-        actionTextKey: "Ok",
-        cancelHide: true
-      };
-      this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
-        .subscribe((action: any) => {
-        });
-    })
+      .subscribe(email => {
+        const data: DialogOptions = {
+          titleKey: "Email Verification Resent",
+          icon: "email",
+          actionType: "green",
+          messageKey:
+            "The email verification has been resent to the contact email address provided.\n\n" + this.lastUpdatedDispute.emailAddress,
+          actionTextKey: "Ok",
+          cancelHide: true
+        };
+        this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+          .subscribe((action: any) => {
+          });
+      })
   }
 
   public reject(): void {
@@ -245,10 +245,10 @@ export class ContactInfoComponent implements OnInit {
   }
 
   // put dispute by id
-  putDispute(dispute: DisputeExtended): void {
+  putDispute(dispute: Dispute): void {
     this.logger.log('ContactInfoComponent::putDispute', dispute);
 
-    this.busy = this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: DisputeExtended) => {
+    this.busy = this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: Dispute) => {
       this.logger.info(
         'ContactInfoComponent::putDispute response',
         response
@@ -264,7 +264,7 @@ export class ContactInfoComponent implements OnInit {
   getDispute(): void {
     this.logger.log('ContactInfoComponent::getDispute');
 
-    this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: DisputeExtended) => {
+    this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
       this.retrieving = false;
       this.logger.info(
         'ContactInfoComponent::getDispute response',
@@ -276,7 +276,7 @@ export class ContactInfoComponent implements OnInit {
 
       // set violation date and time
       let tempViolationDate = this.lastUpdatedDispute?.issuedTs?.split("T");
-      if(tempViolationDate){
+      if (tempViolationDate) {
         this.violationDate = tempViolationDate[0];
         this.violationTime = tempViolationDate[1].split(":")[0] + ":" + tempViolationDate[1].split(":")[1];
       }
@@ -301,7 +301,4 @@ export class ContactInfoComponent implements OnInit {
   public handleCollapse(name: string) {
     this.collapseObj[name] = !this.collapseObj[name]
   }
-
 }
-
-

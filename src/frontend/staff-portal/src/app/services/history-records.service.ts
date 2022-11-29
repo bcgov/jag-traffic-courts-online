@@ -1,11 +1,10 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { FileHistoryService, FileHistory, EmailHistory, EmailHistoryService } from 'app/api';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +20,6 @@ export class HistoryRecordService {
     private configService: ConfigService,
     private fileHistoryService: FileHistoryService,
     private emailHistoryService: EmailHistoryService,
-    private authService: AuthService
   ) {
   }
 

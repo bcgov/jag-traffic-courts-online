@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserRepresentation } from 'app/api';
+import { UserRepresentation as UserRepresentationBase } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
@@ -59,6 +59,8 @@ export class AuthService {
     return from(this.keycloak.loadUserProfile())
       .pipe(
         map((response: KeycloakProfile) => {
+          response.idir = this.splitIDIR(this.keycloak.getUsername());
+          response.fullName = this.getFullName(this.userProfile);
           this._userProfile.next(response);
           return response;
         })
@@ -73,8 +75,12 @@ export class AuthService {
     return this._userProfile.value;
   }
 
-  public get userFullName(): string {
-    return this.userProfile?.firstName + " " + this.userProfile?.lastName;;
+  private splitIDIR(fullIDIR): string {
+    return fullIDIR?.split("@")[0];
+  }
+
+  private getFullName(user: UserRepresentation | KeycloakProfile): string {
+    return (user?.firstName ? user?.firstName + " " : "") + (user?.lastName ? user?.lastName : "");
   }
 
   public login() {
@@ -100,33 +106,18 @@ export class AuthService {
     return result;
   }
 
-  public get userIDIR(): string {
-    return this.keycloak.getUsername();
-  }
-
-  public get userIDIRLogin(): string {
-    return this.keycloak.getUsername().split("@")[0];
-  }
-
   public checkRole(role: string): boolean {
     return this.keycloak.isUserInRole(role, this.site);
   }
 
-  public getIDIR(user: UserRepresentation): string {
-    return user.username.split("@")[0];
-  }
-
-  public getFullName(user: UserRepresentation): string {
-    return (user?.firstName ? user?.firstName + " " : "") + (user?.lastName ? user?.lastName : "");
-  }
-
-  public getUsersInGroup(group: string): Observable<Array<UserRepresentationView>> {
+  public getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {
     return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
       .pipe(
-        map((response: UserRepresentationView[]) => {
+        map((response: UserRepresentation[]) => {
           this.logger.info('KeycloakService::getUsersInGroup', response)
-          response.map((user: UserRepresentationView) => {
-            user.idir = this.getIDIR(user);
+          response.map((user: UserRepresentation) => {
+            user.idir = this.splitIDIR(user.username);
+            user.fullName = this.getFullName(user);
           })
           return response ? response : null
         }),
@@ -144,10 +135,13 @@ export class AuthService {
   }
 }
 
-export interface UserRepresentationView extends UserRepresentation {
+export interface UserRepresentation extends UserRepresentationBase {
   idir?: string;
+  fullName?: string;
 }
 
 export interface KeycloakProfile extends KeycloakProfileJS {
+  idir?: string;
+  fullName?: string;
   attributes?: any;
 }

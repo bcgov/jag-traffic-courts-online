@@ -1,5 +1,5 @@
 import { Component, Input  } from '@angular/core';
-import { Dispute } from '../../../api/model/dispute.model';
+import { Dispute } from 'app/services/dispute.service';
 
 @Component({
   selector: 'app-ticket-status',

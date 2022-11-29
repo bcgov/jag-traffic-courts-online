@@ -355,7 +355,7 @@
           <mat-form-field class="select-box-only">
             <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
               <mat-option [value]=""></mat-option>
-              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>JJ {{ authService.getFullName(jj) }}</i>
+              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>JJ {{ jj.fullName }}</i>
               </mat-option>
             </mat-select>
           </mat-form-field>

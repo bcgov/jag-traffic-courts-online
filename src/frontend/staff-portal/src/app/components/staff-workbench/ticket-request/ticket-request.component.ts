@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DisputeCount, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, DisputeRepresentedByLawyer, Language } from 'app/api';
-import { DisputeExtended } from 'app/services/dispute.service';
+import { Dispute } from 'app/services/dispute.service';
 import { LookupsService } from 'app/services/lookups.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./ticket-request.component.scss']
 })
 export class TicketRequestComponent implements OnInit {
-  @Input() disputeInfo: DisputeExtended;
+  @Input() disputeInfo: Dispute;
   public countsActions: any;
   public collapseObj: any = {
     contactInformation: true

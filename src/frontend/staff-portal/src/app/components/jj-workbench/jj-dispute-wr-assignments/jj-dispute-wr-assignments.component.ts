@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { CourthouseConfig } from '@config/config.model';
-import { JJDisputeService, JJDisputeView } from 'app/services/jj-dispute.service';
-import { JJDispute } from '../../../api/model/jJDispute.model';
+import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { AuthService } from 'app/services/auth.service';
 import { JJDisputeHearingType } from 'app/api';
 
 @Component({
@@ -18,10 +16,9 @@ import { JJDisputeHearingType } from 'app/api';
 })
 export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
-  @Input() public IDIR: string;
 
   busy: Subscription;
-  data = [] as JJDisputeView[];
+  data = [] as JJDispute[];
   public courtLocations: CourthouseConfig[];
   public currentTeam: string = "A";
   public bulkjjAssignedTo: string = "unassigned";
@@ -36,7 +33,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     "bulkAssign",
     "ticketNumber",
     "submittedTs",
-    "surname",
+    "fullName",
     "courthouseLocation",
     "policeDetachment",
     "timeToPayReason",
@@ -46,8 +43,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
     public mockConfigService: MockConfigService,
-    public authService: AuthService
-
   ) {
 
     if (this.mockConfigService.courtLocations) {
@@ -114,12 +109,12 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   getAll(team: string): void {
     this.logger.log('JJDisputeWRAssignmentsComponent::getAllDisputes');
 
-    this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
+    this.jjDisputeService.getJJDisputes().subscribe((response: JJDispute[]) => {
       // filter jj disputes only show new, review, in_progress
       this.data = response.filter(x => (this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
-      this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
+      this.data = this.data.sort((a: JJDispute, b: JJDispute) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
       this.data.forEach(x => {
-        x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
+        x.jjAssignedToName = this.jjDisputeService.jjList?.filter(y => y.idir === x.jjAssignedTo)[0]?.fullName;
         x.bulkAssign = false;
       });
       this.resetAssignedUnassigned();
@@ -147,17 +142,17 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     this.filterByTeam(this.currentTeam);
   }
 
-  public onAssign(element: JJDisputeView): void {
+  public onAssign(element: JJDispute): void {
     this.bulkUpdateJJAssignedTo([element.ticketNumber], element.jjAssignedTo);
   }
 
   onSelectAll(event: MatCheckboxChange) {
     if (event.checked === true) {
-      this.assignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = true);
-      this.unassignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = true);
+      this.assignedDataSource.data.forEach((x: JJDispute) => x.bulkAssign = true);
+      this.unassignedDataSource.data.forEach((x: JJDispute) => x.bulkAssign = true);
     } else {
-      this.assignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = false);
-      this.unassignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = false);
+      this.assignedDataSource.data.forEach((x: JJDispute) => x.bulkAssign = false);
+      this.unassignedDataSource.data.forEach((x: JJDispute) => x.bulkAssign = false);
     }
   }
 
@@ -173,18 +168,18 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   getBulkButtonDisabled() {
-    if (this.assignedDataSource.data.filter((x: JJDisputeView) => x.bulkAssign === true)?.length == 0 &&
-      this.unassignedDataSource.data.filter((x: JJDisputeView) => x.bulkAssign === true)?.length === 0)
+    if (this.assignedDataSource.data.filter((x: JJDispute) => x.bulkAssign === true)?.length == 0 &&
+      this.unassignedDataSource.data.filter((x: JJDispute) => x.bulkAssign === true)?.length === 0)
       return true;
     else return false;
   }
 
   onBulkAssign() {
     let ticketNumbers = [];
-    this.assignedDataSource.data.forEach((jjDispute: JJDisputeView) => {
+    this.assignedDataSource.data.forEach((jjDispute: JJDispute) => {
       if (jjDispute.bulkAssign === true) ticketNumbers.push(jjDispute.ticketNumber);
     })
-    this.unassignedDataSource.data.forEach((jjDispute: JJDisputeView) => {
+    this.unassignedDataSource.data.forEach((jjDispute: JJDispute) => {
       if (jjDispute.bulkAssign === true) ticketNumbers.push(jjDispute.ticketNumber);
     });
     this.bulkUpdateJJAssignedTo(ticketNumbers, this.bulkjjAssignedTo);
