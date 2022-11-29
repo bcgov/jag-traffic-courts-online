@@ -1,27 +1,28 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MatStepper } from "@angular/material/stepper";
 import { ActivatedRoute, Router } from "@angular/router";
-import { ConfigService } from "@config/config.service";
-import { UtilsService } from "@core/services/utils.service";
-import { TranslateService } from "@ngx-translate/core";
-import { Address } from "@shared/models/address.model";
-import { FormControlValidators } from "@core/validators/form-control.validators";
-import { NoticeOfDispute, ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
-import { ticketTypes } from "@shared/enums/ticket-type.enum";
-import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { Subscription } from "rxjs";
+import { MatStepper } from "@angular/material/stepper";
 import { MatCheckboxChange } from "@angular/material/checkbox";
-import { FormUtilsService } from "@core/services/form-utils.service";
+import { MatDialog } from "@angular/material/dialog";
+import { TranslateService } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
+import { cloneDeep } from "lodash";
+
 import { ToastService } from "@core/services/toast.service";
-import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
-import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
+import { UtilsService } from "@core/services/utils.service";
+import { FormUtilsService } from "@core/services/form-utils.service";
+import { FormControlValidators } from "@core/validators/form-control.validators";
+import { ConfigService } from "@config/config.service";
 import { ProvinceConfig } from "@config/config.model";
+import { Address } from "@shared/models/address.model";
+import { ticketTypes } from "@shared/enums/ticket-type.enum";
+import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { cloneDeep } from "lodash";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
+import { ViolationTicketService } from "app/services/violation-ticket.service";
+import { DisputeService, NoticeOfDispute } from "app/services/dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 
 @Component({
@@ -77,20 +78,20 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public declared = false;
 
   // Consume from the service
-  private ticketFormFields = this.noticeOfDisputeService.ticketFormFields;
-  private countFormFields = this.noticeOfDisputeService.countFormFields;
-  private countFormDefaultValue = this.noticeOfDisputeService.countFormDefaultValue;
-  private additionFormFields = this.noticeOfDisputeService.additionFormFields;
-  private additionFormValidators = this.noticeOfDisputeService.additionFormValidators;
-  private additionFormDefaultValue = this.noticeOfDisputeService.additionFormDefaultValue;
-  private legalRepresentationFields = this.noticeOfDisputeService.legalRepresentationFields;
+  private ticketFormFields = this.disputeService.ticketFormFields;
+  private countFormFields = this.disputeService.countFormFields;
+  private countFormDefaultValue = this.disputeService.countFormDefaultValue;
+  private additionFormFields = this.disputeService.additionFormFields;
+  private additionFormValidators = this.disputeService.additionFormValidators;
+  // private additionFormDefaultValue = this.disputeService.additionFormDefaultValue;
+  private legalRepresentationFields = this.disputeService.legalRepresentationFields;
 
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
     protected formBuilder: FormBuilder,
     protected violationTicketService: ViolationTicketService,
-    protected noticeOfDisputeService: NoticeOfDisputeService,
+    protected disputeService: DisputeService,
     private utilsService: UtilsService,
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
@@ -211,7 +212,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   private getCountsActions() {
-    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
+    this.countsActions = this.disputeService.getCountsActions(this.countForms.value);
   }
 
   public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
@@ -253,7 +254,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
 
     if (isAdditional) {
-      this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
+      this.noticeOfDispute = this.disputeService.getNoticeOfDispute({
         ...this.form.value,
         ...this.additionalForm.value,
         ...this.legalRepresentationForm.value,
@@ -358,6 +359,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
    * Submit the dispute
    */
   public submitDispute(): void {
-    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
+    this.disputeService.createNoticeOfDispute(this.noticeOfDispute);
   }
 }

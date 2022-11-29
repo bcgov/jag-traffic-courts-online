@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NoticeOfDisputeService } from 'app/services/notice-of-dispute.service';
+import { DisputeService } from 'app/services/dispute.service';
 
 @Component({
   selector: 'app-email-verification',
@@ -14,11 +14,11 @@ export class EmailVerificationComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private noticeOfDisputeService: NoticeOfDisputeService,
+    private disputeService: DisputeService,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.token = params.token;
-      this.noticeOfDisputeService.verifyEmail(this.token).subscribe(() => {
+      this.disputeService.verifyEmail(this.token).subscribe(() => {
         this.checking = false;
         this.verified = true;
       }, error => { 

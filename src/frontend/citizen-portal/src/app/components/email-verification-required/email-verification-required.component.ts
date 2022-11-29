@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ticketTypes } from '@shared/enums/ticket-type.enum';
-import { DisputeRepresentedByLawyer, NoticeOfDispute } from 'app/api';
-import { NoticeOfDisputeService } from 'app/services/notice-of-dispute.service';
+import { DisputeRepresentedByLawyer } from 'app/api';
+import { DisputeService, NoticeOfDispute } from 'app/services/dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -22,23 +22,23 @@ export class EmailVerificationRequiredComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private noticeOfDisputeService: NoticeOfDisputeService,
+    private disputeService: DisputeService,
     private violationTicketService: ViolationTicketService,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.email = params.email;
       this.token = params.token;
     });
-    this.noticeOfDispute = noticeOfDisputeService.noticeOfDispute;
+    this.noticeOfDispute = disputeService.noticeOfDispute;
   }
 
   public ngOnInit() {
     this.ticketType = this.violationTicketService.ticketType;
-    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
+    this.countsActions = this.disputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
   }
 
   resendEmail() {
-    this.noticeOfDisputeService.resendVerificationEmail(this.token).subscribe(() => { });
+    this.disputeService.resendVerificationEmail(this.token).subscribe(() => { });
   }
 
   public onPrint(): void {
