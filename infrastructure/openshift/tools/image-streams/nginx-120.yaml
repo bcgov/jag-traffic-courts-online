@@ -1,0 +1,29 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: nginx-120
+  namespace: 0198bb-tools
+  labels:
+    usage: build-pipeline-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: 'latest'
+      from:
+        kind: DockerImage
+        name: 'registry.access.redhat.com/ubi8/nginx-120:latest'
+      referencePolicy:
+        type: Source
+    - name: '1-74'
+      from:
+        kind: DockerImage
+        name: 'registry.access.redhat.com/ubi8/nginx-120:1-74'
+      referencePolicy:
+        type: Source
+    - name: '1-54'
+      from:
+        kind: DockerImage
+        name: 'registry.access.redhat.com/ubi8/nginx-120:1-54'
+      referencePolicy:
+        type: Source

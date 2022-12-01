@@ -1,37 +1,25 @@
+# Deploy Routes
 
-# Deploy Template Commands
+There are OpenShift route definitions in each of the [dev](./dev), [test](./test) and [prod](./prod) folders.
+They can be applied individually with `oc apply -f <filename>`
 
-This directory contains the OpenShift template for deploying the Citizen Portal.
+# Deploy Image Streams
 
-Note: The template creates a public route based on the `.apps.silver.devops.gov.bc.ca` name. This route should be deleted. In the future,
-we can create environment specific routes using a cleaner approach. 
+A copy of all image used to build or run the solution are available in the tools namespace.  An image stream manifest file
+exists for each image. Each image may have one or more tags that are made available. Each tag will reside in the same file.
+The [dotnet](tools/image-streams/dotnet.yaml) has the sdk and runtime images in the same file.
 
-## Dev
+To update the image streams, you can apply the images streams using the `oc` command.
 
-```bash
-oc project 0198bb-dev
-oc apply -f infrastructure\openshift\dev\citizen-web-configuration-configmap.yaml
-oc process -f infrastructure\openshift\traffic-courts-online-app.yml -n 0198bb-dev -p FRONTEND_URL=tickets -p OC_ENV=dev | oc apply -f -
+```
+oc login ...
+oc apply -f tools/image-streams/
 ```
 
-The Citizen Portal is available at `https://tickets-0198bb-dev.apps.silver.devops.gov.bc.ca/`
+# Deploy Sysdig Team
 
-## Test
+The [sysdigteam.yaml](sysdigteam.yaml) needs to created as per [Set up a team in Sysdig Monitor](https://docs.developer.gov.bc.ca/sysdig-monitor-setup-team/).
 
-```bash
-oc project 0198bb-test
-oc apply -f infrastructure\openshift\test\citizen-web-configuration-configmap.yaml
-oc process -f infrastructure\openshift\traffic-courts-online-app.yml -n 0198bb-test -p FRONTEND_URL=tickets -p OC_ENV=test | oc apply -f -      
-oc delete route citizen-web
-oc create -f tickets-test.gov.bc.ca-route.yaml
-```
+# Deploy Applications
 
-## Prod
-
-```bash
-oc project 0198bb-prod
-oc apply -f infrastructure\openshift\prod\citizen-web-configuration-configmap.yaml
-oc process -f infrastructure\openshift\traffic-courts-online-app.yml -n 0198bb-prod -p FRONTEND_URL=tickets -p OC_ENV=prod | oc apply -f -
-oc delete route citizen-web
-oc create -f tickets.gov.bc.ca-route.yaml
-```
+See the [gitops chart](../../.gitops/charts/) folder.
