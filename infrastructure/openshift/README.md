@@ -7,7 +7,7 @@ They can be applied individually with `oc apply -f <filename>`
 
 A copy of all image used to build or run the solution are available in the tools namespace.  An image stream manifest file
 exists for each image. Each image may have one or more tags that are made available. Each tag will reside in the same file.
-The [dotnet](tools/image-streams/dotnet.yaml) has the sdk and runtime images in the same file.
+The [dotnet](tools/image-streams/dotnet.yaml) manifiest has the sdk and runtime images in the same file.
 
 To update the image streams, you can apply the images streams using the `oc` command.
 
