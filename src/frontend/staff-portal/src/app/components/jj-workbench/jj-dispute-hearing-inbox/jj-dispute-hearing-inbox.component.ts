@@ -22,7 +22,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     appearanceTs: new Date()
   }
   busy: Subscription;
-  public appearanceDateFilter = new FormControl('');
+  public appearanceDateFilter = new FormControl(new Date());
   public jjAssignedToFilter = new FormControl('');
   data = [] as JJDispute[];
   dataSource = new MatTableDataSource();
