@@ -20,6 +20,21 @@ RUN dotnet publish "TrafficCourts.Staff.Service.csproj" -c Release -o /app/publi
 COPY entrypoint.sh /app/publish
 
 FROM base AS final
+
+# Optional Git Version arguments
+ARG GIT_COMMIT_DATE=not-set
+ARG GIT_SHA=not-set
+ARG GIT_SHORT_SHA=not-set
+ARG GIT_VERSION=not-set
+
+LABEL git.commit.date="$GIT_COMMIT_DATE" \
+      git.sha="$GIT_SHA" \
+      git.sha.short="$GIT_SHORT_SHA" \
+      git.version="$GIT_VERSION"
+
+ENV APP_VERSION=$GIT_VERSION
+ENV GIT_SHA=$GIT_SHA
+
 WORKDIR /app
 COPY --from=publish /app/publish .
 RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh

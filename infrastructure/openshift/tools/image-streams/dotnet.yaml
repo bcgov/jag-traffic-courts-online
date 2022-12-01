@@ -65,14 +65,38 @@ spec:
     - name: '6.0'
       from:
         kind: DockerImage
-        name: 'mcr.microsoft.com/dotnet/aspnet:6.0'
+        name: 'mcr.microsoft.com/dotnet/sdk:6.0'
         imagePullSecret: 'pipeline-docker-hub-pull'
       referencePolicy:
         type: Source
     - name: '7.0'
       from:
         kind: DockerImage
-        name: 'mcr.microsoft.com/dotnet/aspnet:7.0'
+        name: 'mcr.microsoft.com/dotnet/sdk:7.0'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      referencePolicy:
+        type: Source
+---
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: dotnet-60-runtime
+  namespace: 0198bb-tools
+  labels:
+    usage: build-pipeline-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: 'latest'
+      from:
+        kind: DockerImage
+        name: 'registry.access.redhat.com/ubi8/dotnet-60-runtime:latest'
+      referencePolicy:
+        type: Source
+    - name: '6.0-20.20221101100921'
+      from:
+        kind: DockerImage
+        name: 'registry.access.redhat.com/ubi8/dotnet-60-runtime:6.0-20.20221101100921'
       referencePolicy:
         type: Source
