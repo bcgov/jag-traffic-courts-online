@@ -26,7 +26,6 @@ public class DisputantUpdateRequest extends Auditable<String> {
 	private Long disputantUpdateRequestId;
 
 	@Column
-	@NotNull
 	private Long disputeId;
 
 	@Column(length = 3)

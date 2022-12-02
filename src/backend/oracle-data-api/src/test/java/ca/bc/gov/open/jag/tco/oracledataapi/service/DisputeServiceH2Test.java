@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -105,23 +109,44 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	}
 
 	@Test
-	void testDisputantUpdateRequest() throws Exception {
+	public void testDisputantUpdateRequest() throws Exception {
+		String noticeOfDisputeGuid = UUID.randomUUID().toString();
+
+		Dispute dispute = new Dispute();
+		dispute.setStatus(DisputeStatus.NEW);
+		dispute.setNoticeOfDisputeGuid(noticeOfDisputeGuid);
+		dispute = disputeRepository.save(dispute);
+
 		String json = "{ \"address_line1\": \"123 Main Street\", \"address_line2\": \"\", \"address_line3\": \"\" }";
 		DisputantUpdateRequest updateRequest = new DisputantUpdateRequest();
 		updateRequest.setDisputeId(Long.valueOf(1L));
 		updateRequest.setStatus(DisputantUpdateStatus.PENDING);
 		updateRequest.setUpdateType(DisputantUpdateType.DISPUTANT_ADDRESS);
 		updateRequest.setUpdateJson(json);
-		DisputantUpdateRequest savedUpdateReq = disputeService.save(updateRequest);
+		DisputantUpdateRequest savedUpdateReq = disputeService.saveDisputantUpdateRequest(noticeOfDisputeGuid, updateRequest);
+		Long disputantUpdateRequestId = savedUpdateReq.getDisputantUpdateRequestId();
 
-		assertNotNull(savedUpdateReq.getDisputantUpdateRequestId());
+		assertNotNull(disputantUpdateRequestId);
 
-		savedUpdateReq = disputeService.findDisputantUpdateRequestById(savedUpdateReq.getDisputantUpdateRequestId());
+		List<DisputantUpdateRequest> updateRequests = disputeService.findDisputantUpdateRequestByDisputeId(dispute.getDisputeId());
 
-		assertEquals(1L, savedUpdateReq.getDisputeId().longValue());
+		assertEquals(1, updateRequests.size());
+		savedUpdateReq = updateRequests.get(0);
+
+		assertEquals(dispute.getDisputeId(), savedUpdateReq.getDisputeId().longValue());
 		assertEquals(DisputantUpdateStatus.PENDING, savedUpdateReq.getStatus());
 		assertEquals(DisputantUpdateType.DISPUTANT_ADDRESS, savedUpdateReq.getUpdateType());
 		assertEquals(json, savedUpdateReq.getUpdateJson());
+
+		savedUpdateReq = disputeService.updateDisputantUpdateRequest(disputantUpdateRequestId, DisputantUpdateStatus.ACCEPTED);
+		assertEquals(DisputantUpdateStatus.ACCEPTED, savedUpdateReq.getStatus());
+	}
+
+	@Test
+	public void testDisputantUpdateRequest_404() throws Exception {
+		assertThrows(NoSuchElementException.class, () -> {
+			disputeService.saveDisputantUpdateRequest("some-guid", new DisputantUpdateRequest());
+		});
 	}
 
 	private Long saveDispute(DisputeStatus disputeStatus) {
