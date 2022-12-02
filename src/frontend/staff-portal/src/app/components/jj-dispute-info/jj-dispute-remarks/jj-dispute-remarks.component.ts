@@ -9,10 +9,11 @@ import { JJDisputeRemark } from 'app/api';
   styleUrls: ['./jj-dispute-remarks.component.scss'],
 })
 export class JJDisputeRemarksComponent implements OnInit {
-  @Input() public data: JJDisputeRemark[];
-  dataSource = new MatTableDataSource<JJDisputeRemark>();
+  @Input() data: JJDisputeRemark[];
   @ViewChild(MatSort) sort = new MatSort();
-  public displayedColumns: string[] = [
+
+  dataSource = new MatTableDataSource<JJDisputeRemark>();
+  displayedColumns: string[] = [
     "createdTs",
     "userFullName",
     "note",

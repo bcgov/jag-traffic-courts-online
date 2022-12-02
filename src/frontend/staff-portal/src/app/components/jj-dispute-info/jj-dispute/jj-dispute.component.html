@@ -135,7 +135,7 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Interpreter</p>
-          <p class="section-grid-text">{{ lookups.getLanguageDescription(lastUpdatedJJDispute.interpreterLanguageCd) }}
+          <p class="section-grid-text">{{ getLanguageDesc(lastUpdatedJJDispute.interpreterLanguageCd) }}
           </p>
         </span>
         <span class="section-grid-cell">
@@ -355,7 +355,7 @@
           <mat-form-field class="select-box-only">
             <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
               <mat-option [value]=""></mat-option>
-              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>JJ {{ jj.fullName }}</i>
+              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
               </mat-option>
             </mat-select>
           </mat-form-field>

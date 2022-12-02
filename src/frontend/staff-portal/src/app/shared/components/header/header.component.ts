@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfigService } from 'app/services/app-config.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
@@ -14,35 +13,31 @@ import { filter } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class HeaderComponent implements OnInit {
-  public fullName: string;
+  fullName: string;
   todayDate: Date = new Date();
-  @Input() public isMobile: boolean;
-  @Input() public hasMobileSidemenu: boolean;
-  @Output() public toggle: EventEmitter<void>;
+  @Output() toggle: EventEmitter<void>;
 
-  public languageCode: string;
-  public languageDesc: string;
-  public btnLabel: string = 'IDIR Sign in';
-  public btnIcon: string = 'login';
+  languageCode: string;
+  languageDesc: string;
+  btnLabel: string = 'IDIR Sign in';
+  btnIcon: string = 'login';
 
-  public environment: string;
-  public version: string;
-  public isLoggedIn: Boolean = false;
-  public userProfile: KeycloakProfile = {};
-  public jjRole: boolean = false;
-  public vtcRole: boolean = false;
-  public headingText: string = "Authenticating...";
+  environment: string;
+  version: string;
+  isLoggedIn: Boolean = false;
+  userProfile: KeycloakProfile = {};
+  jjRole: boolean = false;
+  vtcRole: boolean = false;
+  headingText: string = "Authenticating...";
 
   constructor(
-    protected logger: LoggerService,
     private appConfigService: AppConfigService,
     private translateService: TranslateService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    public keycloak: KeycloakService,
+    private keycloak: KeycloakService,
   ) {
-    this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
 
     this.languageCode = this.translateService.getDefaultLang();
@@ -67,7 +62,7 @@ export class HeaderComponent implements OnInit {
     })
   }
 
-  public toggleSidenav(): void {
+  toggleSidenav(): void {
     this.toggle.emit();
   }
 
@@ -82,7 +77,7 @@ export class HeaderComponent implements OnInit {
     };
   }
 
-  public onLanguage(): void {
+  onLanguage(): void {
     this.translateService.setDefaultLang(this.languageCode);
     const { languageCode, languageDesc } = this.toggleLanguage(
       this.languageCode

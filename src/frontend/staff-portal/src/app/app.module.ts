@@ -46,6 +46,10 @@ import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-hist
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
 import { AuthService } from './services/auth.service';
 import { AppHttpInterceptor } from '@core/interceptors/http-interceptor';
+import { StoreModule } from '@ngrx/store';
+import * as JJDisputeStore from './store/jj-dispute';
+import { EffectsModule } from '@ngrx/effects';
+import { reducers } from './store';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -109,6 +113,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
       isolate: false,
       extend: true,
     }),
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([JJDisputeStore.Effects]),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [NgBusyModule, TranslateModule],

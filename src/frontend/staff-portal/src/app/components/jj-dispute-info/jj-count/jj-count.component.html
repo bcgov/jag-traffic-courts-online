@@ -41,26 +41,26 @@
     <div style="display: grid; grid-template-columns: auto auto">
       <span class="section-grid-cell" style="grid-column: span 2">
         <p class="section-grid-header">For this count I would like to</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === AppearInCourt.Y">
+        <p class="section-grid-text" *ngIf="jjDisputedCount?.appearInCourt === AppearInCourt.Y">
           I want to appear in court</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === AppearInCourt.N">
+        <p class="section-grid-text" *ngIf="jjDisputedCount?.appearInCourt === AppearInCourt.N">
           I do not want to appear in court</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Request fine reduction</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction === RequestReduction.Y">
+        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestReduction === RequestReduction.Y">
           yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction !== RequestReduction.Y">
+        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestReduction !== RequestReduction.Y">
           no</p>
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Request time to pay</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay === RequestTimeToPay.Y">
+        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y">
           yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay !== RequestTimeToPay.Y">
+        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y">
           no</p>
       </span>
     </div>
