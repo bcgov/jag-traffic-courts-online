@@ -67,6 +67,18 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string DriversLicenceProvince { get; set; } = null!;
 
         /// <summary>
+        /// The province sequence number of the drivers licence was issued by.
+        /// </summary>
+        [JsonPropertyName("drivers_licence_province_seq_no")]
+        public int? DriversLicenceProvinceSeqNo { get; set; }
+
+        /// <summary>
+        /// The country code of the drivers licence was issued by.
+        /// </summary>
+        [JsonPropertyName("drivers_licence_country_id")]
+        public int? DriversLicenceCountryId { get; set; }
+
+        /// <summary>
         /// The mailing address of the disputant.
         /// </summary>
         [JsonPropertyName("address_line1")]
@@ -95,6 +107,24 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// </summary>
         [JsonPropertyName("address_province")]
         public string AddressProvince { get; set; } = null!;
+
+        /// <summary>
+        /// The mailing address province's country code of the disputant.
+        /// </summary>
+        [JsonPropertyName("address_province_country_id")]
+        public int? AddressProvinceCountryId { get; set; }
+
+        /// <summary>
+        /// The mailing address province's sequence number of the disputant.
+        /// </summary>
+        [JsonPropertyName("address_province_seq_no")]
+        public int? AddressProvinceSeqNo { get; set; }
+
+        /// <summary>
+        /// The mailing address country id of the disputant.
+        /// </summary>
+        [JsonPropertyName("address_country_id")]
+        public int? AddressCountryId { get; set; }
 
         /// <summary>
         /// The mailing address postal code or zip code of the disputant.
