@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -138,6 +139,22 @@ public class Dispute extends Auditable<String> {
 	private String disputantClientId;
 
 	/**
+	 * The country code of the drivers licence was issued by.
+	 */
+	@Max(8)
+	@Column(length = 8)
+	@Schema(maximum = "8", nullable = true)
+	private Integer driversLicenceIssuedCountryId;
+
+	/**
+	 * The province sequence number of the drivers licence was issued by.
+	 */
+	@Max(4)
+	@Column(length = 4)
+	@Schema(maximum = "4", nullable = true)
+	private Integer driversLicenceIssuedProvinceSeqNo;
+
+	/**
 	 * The province or state the drivers licence was issued by.
 	 */
 	@Size(max = 30)
@@ -184,6 +201,30 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 30)
 	@Schema(maxLength = 30, nullable = true)
 	private String addressProvince;
+
+	/**
+	 * The mailing address province's country code of the disputant.
+	 */
+	@Max(8)
+	@Column(length = 8)
+	@Schema(maximum = "8", nullable = true)
+	private Integer addressProvinceCountryId;
+
+	/**
+	 * The mailing address province's sequence number of the disputant.
+	 */
+	@Max(4)
+	@Column(length = 4)
+	@Schema(maximum = "4", nullable = true)
+	private Integer addressProvinceSeqNo;
+
+	/**
+	 * The mailing address country id of the disputant.
+	 */
+	@Max(8)
+	@Column(length = 8)
+	@Schema(maximum = "8", nullable = true)
+	private Integer addressCountryId;
 
 	/**
 	 * The mailing address postal code or zip code of the disputant.

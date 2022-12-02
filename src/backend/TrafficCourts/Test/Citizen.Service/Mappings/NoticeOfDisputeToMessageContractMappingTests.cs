@@ -33,11 +33,16 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.DisputantBirthdate, actual.DisputantBirthdate);
             Assert.Equal(noticeOfDispute.DriversLicenceNumber, actual.DriversLicenceNumber);
             Assert.Equal(noticeOfDispute.DriversLicenceProvince, actual.DriversLicenceProvince);
+            Assert.Equal(noticeOfDispute.DriversLicenceProvinceSeqNo, actual.DriversLicenceProvinceSeqNo);
+            Assert.Equal(noticeOfDispute.DriversLicenceCountryId, actual.DriversLicenceCountryId);
             Assert.Equal(noticeOfDispute.AddressLine1, actual.AddressLine1);
             Assert.Equal(noticeOfDispute.AddressLine2, actual.AddressLine2);
             Assert.Equal(noticeOfDispute.AddressLine3, actual.AddressLine3);
             Assert.Equal(noticeOfDispute.AddressCity, actual.AddressCity);
             Assert.Equal(noticeOfDispute.AddressProvince, actual.AddressProvince);
+            Assert.Equal(noticeOfDispute.AddressCountryId, actual.AddressCountryId);
+            Assert.Equal(noticeOfDispute.AddressProvinceCountryId, actual.AddressProvinceCountryId);
+            Assert.Equal(noticeOfDispute.AddressProvinceSeqNo, actual.AddressProvinceSeqNo);
             Assert.Equal(noticeOfDispute.PostalCode, actual.PostalCode);
             Assert.Equal(noticeOfDispute.HomePhoneNumber, actual.HomePhoneNumber);
             Assert.Equal(noticeOfDispute.WorkPhoneNumber, actual.WorkPhoneNumber);
