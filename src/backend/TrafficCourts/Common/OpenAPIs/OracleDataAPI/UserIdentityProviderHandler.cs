@@ -9,7 +9,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
     /// </summary>
     public class UserIdentityProviderHandler : DelegatingHandler
     {
-        public const string UsernameClaimType = "preferred_username";
+        public const string UsernameClaimType = "idir_username";
         public const string FullNameClaimType = ClaimTypes.Name;
 
         private readonly IHttpContextAccessor _httpContextAccessor;

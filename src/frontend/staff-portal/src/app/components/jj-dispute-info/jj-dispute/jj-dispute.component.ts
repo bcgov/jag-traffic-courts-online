@@ -8,11 +8,12 @@ import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.servic
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoP, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRepresentation } from 'app/services/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
+import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -43,6 +44,7 @@ export class JJDisputeComponent implements OnInit {
   public HearingType = JJDisputeHearingType;
   public RoPApp = JJDisputeCourtAppearanceRoPApp;
   public RoPCrown = JJDisputeCourtAppearanceRoPCrown;
+  public DisputeStatus = JJDisputeStatus;
 
   constructor(
     protected route: ActivatedRoute,
@@ -82,9 +84,31 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
+    this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;  // Send to VTC Staff for review
     this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
     this.putJJDispute();
+  }
+
+  public onRequireCourtHearing(): void {
+    const data: DialogOptions = {
+      titleKey: "Require Court Hearing?",
+      messageKey:
+        "Please enter the reason a court hearing is being requested. This information will be shared with staff only.",
+      actionTextKey: "Require Court Hearing",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline",
+      message: ""
+    };
+    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+      .subscribe((action?: any) => {
+        if (action?.output?.response) {
+          this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
+          this.lastUpdatedJJDispute.hearingType = this.HearingType.CourtAppearance;
+          this.remarks = action.output.reason; // update to send back on put
+          this.putJJDispute();
+        }
+      });
   }
 
   public updateAppearanceTs() {
@@ -97,8 +121,8 @@ export class JJDisputeComponent implements OnInit {
 
   public onSave(): void {
     // Update status to in progress unless status is set to review in which case do not change
-    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review) {
-      this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    if (this.lastUpdatedJJDispute.status !== this.DisputeStatus.Review) {
+      this.lastUpdatedJJDispute.status = this.DisputeStatus.InProgress;
       this.putJJDispute();
     } else {
       this.putJJDispute();
@@ -139,6 +163,7 @@ export class JJDisputeComponent implements OnInit {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
+              this.jjDisputeService.refreshDisputes.emit();
               this.onBackClicked();
             })
           })
@@ -157,6 +182,7 @@ export class JJDisputeComponent implements OnInit {
         'JJDisputeComponent::putJJDispute response',
         response
       );
+      this.jjDisputeService.refreshDisputes.emit();
       this.onBackClicked();
     });
   }

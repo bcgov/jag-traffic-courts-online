@@ -14,14 +14,6 @@ public class DisputeMapperTest extends BaseTestSuite{
 
 	private DisputeMapper disputeMapper;
 
-	@Autowired
-	private DisputeMapperImpl disputeMapperImpl;
-
-	@BeforeEach
-	void setUp() {
-		disputeMapper = disputeMapperImpl;
-	}
-
 	@Test
 	void testMapToDispute_shouldReturnFullLawyerAddress() {
 		ViolationTicket testViolationTicket = new ViolationTicket();

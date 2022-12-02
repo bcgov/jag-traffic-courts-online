@@ -49,6 +49,15 @@ public interface IJJDisputeService
     /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
     Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, CancellationToken cancellationToken);
 
+    /// <summary>Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING as well as adds an optional remark that explaining why the status was set to REVIEW and sets hearing type to COURT_APPEARANCE.</summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
+    Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string remark, CancellationToken cancellationToken);
+
     /// <summary>Updates the status of a particular JJDispute record to ACCEPTED.</summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>

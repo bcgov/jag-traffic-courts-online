@@ -16,14 +16,6 @@ public class ViolationTicketMapperTest extends BaseTestSuite{
 
 	private ViolationTicketMapper violationTicketMapper;
 
-	@Autowired
-	private ViolationTicketMapperImpl violationTicketMapperImpl;
-
-	@BeforeEach
-	void setUp() {
-		violationTicketMapper = violationTicketMapperImpl;
-	}
-
 	@Test
 	void testMapToViolationTicket_shouldReturnSplitOutLawyerAddress() {
 		Dispute testDispute = new Dispute();

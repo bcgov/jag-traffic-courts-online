@@ -73,7 +73,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDispute[]) => {
       // filter jj disputes only show those in CONFIRMED status
-      this.data = response.filter(x => x.status == JJDisputeStatus.Confirmed);
+      this.data = response.filter(x => x.status == JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.RequireCourtHearing);
       this.dataSource.data = this.data;
 
       this.data.forEach(x => {
