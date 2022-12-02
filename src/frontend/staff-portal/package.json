@@ -35,6 +35,8 @@
     "@auth0/angular-jwt": "^5.0.2",
     "@azure/ai-form-recognizer": "^3.1.0",
     "@bcgov/bc-sans": "^1.0.1",
+    "@ngrx/effects": "14",
+    "@ngrx/store": "14",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "bootstrap": "5.1.0",
@@ -62,6 +64,7 @@
     "@angular-eslint/template-parser": "14.4.0",
     "@angular/cli": "^14.2.10",
     "@angular/compiler-cli": "^14.2.12",
+    "@ngrx/eslint-plugin": "^14.3.2",
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "@types/faker": "^5.5.7",
     "@types/jasmine": "~3.8.2",
@@ -88,7 +91,7 @@
     "yarn-audit-fix": "^7.0.4"
   },
   "resolutions": {
-    "autoprefixer": "10.4.8",
+    "autoprefixer": "10.4.5",
     "postcss": "^8.1.0"
   }
 }

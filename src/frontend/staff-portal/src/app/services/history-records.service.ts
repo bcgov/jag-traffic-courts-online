@@ -3,7 +3,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FileHistoryService, FileHistory, EmailHistory, EmailHistoryService } from 'app/api';
 
 @Injectable({
@@ -12,7 +12,6 @@ import { FileHistoryService, FileHistory, EmailHistory, EmailHistoryService } fr
 export class HistoryRecordService {
   private _FileHistories: BehaviorSubject<FileHistory[]> = new BehaviorSubject<FileHistory[]>(null);
   private _EmailHistories: BehaviorSubject<EmailHistory[]> = new BehaviorSubject<EmailHistory[]>(null);
-  public refreshDisputes: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private toastService: ToastService,

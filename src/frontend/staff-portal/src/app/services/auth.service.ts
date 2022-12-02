@@ -58,11 +58,11 @@ export class AuthService {
   public loadUserProfile(): Observable<KeycloakProfile> {
     return from(this.keycloak.loadUserProfile())
       .pipe(
-        map((response: KeycloakProfile) => {
-          response.idir = this.splitIDIR(this.keycloak.getUsername());
-          response.fullName = this.getFullName(this.userProfile);
-          this._userProfile.next(response);
-          return response;
+        map((userProfile: KeycloakProfile) => {
+          userProfile.idir = this.getIDIR(userProfile);
+          userProfile.fullName = this.getFullName(userProfile);
+          this._userProfile.next(userProfile);
+          return userProfile;
         })
       )
   }
@@ -75,12 +75,12 @@ export class AuthService {
     return this._userProfile.value;
   }
 
-  private splitIDIR(fullIDIR): string {
-    return fullIDIR?.split("@")[0];
+  private getIDIR(user: UserRepresentation | KeycloakProfile): string {
+    return user.attributes?.idir_username.length > 0 ? user.attributes?.idir_username[0] : "";
   }
 
   private getFullName(user: UserRepresentation | KeycloakProfile): string {
-    return (user?.firstName ? user?.firstName + " " : "") + (user?.lastName ? user?.lastName : "");
+    return user.attributes?.display_name.length > 0 ? user.attributes?.display_name[0] : "";
   }
 
   public login() {
@@ -116,13 +116,13 @@ export class AuthService {
         map((response: UserRepresentation[]) => {
           this.logger.info('KeycloakService::getUsersInGroup', response)
           response.forEach((user: UserRepresentation) => {
-            user.idir = this.splitIDIR(user.username);
+            user.idir = this.getIDIR(user);
             user.fullName = this.getFullName(user);
           })
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.keycloak_error;
+          var errorMsg = error?.error?.detail || this.configService.keycloak_error;
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.keycloak_error);
           this.logger.error(
@@ -144,5 +144,5 @@ export interface UserRepresentation extends UserRepresentationBase {
 export interface KeycloakProfile extends KeycloakProfileJS {
   idir?: string;
   fullName?: string;
-  attributes?: any;
+  attributes?: { [key: string]: Array<string>; } | null;
 }

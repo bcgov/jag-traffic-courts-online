@@ -1,11 +1,8 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
-import { UtilsService } from '@core/services/utils.service';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { JJDisputeService } from '../../../services/jj-dispute.service';
-import { JJDispute, JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
+import { JJDispute } from '../../../services/jj-dispute.service';
+import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatRadioChange } from '@angular/material/radio';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
@@ -18,55 +15,46 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./jj-count.component.scss']
 })
 export class JJCountComponent implements OnInit {
-  @Input() public jjDisputeInfo: JJDispute;
-  @Input() public count: number;
-  @Input() public type: string;
-  @Input() public isViewOnly: boolean = false;
-  @Input() public jjDisputedCount: JJDisputedCount;
-  @Output() public jjDisputedCountUpdate: EventEmitter<JJDisputedCount> = new EventEmitter<JJDisputedCount>();
+  @Input() jjDisputeInfo: JJDispute;
+  @Input() count: number;
+  @Input() type: string;
+  @Input() isViewOnly: boolean = false;
+  @Input() jjDisputedCount: JJDisputedCount;
+  @Output() jjDisputedCountUpdate: EventEmitter<JJDisputedCount> = new EventEmitter<JJDisputedCount>();
 
   // Enums
-  public IncludesSurcharge = JJDisputedCountIncludesSurcharge;
-  public RequestReduction = JJDisputedCountRequestReduction;
-  public RequestTimeToPay = JJDisputedCountRequestTimeToPay;
-  public AppearInCourt = JJDisputedCountAppearInCourt;
-  public HearingType = JJDisputeHearingType;
-  public JailIntermittent = JJDisputedCountRoPJailIntermittent;
-  public Abatement = JJDisputedCountRoPAbatement;
-  public Withdrawn = JJDisputedCountRoPWithdrawn;
-  public ForWantOfProsecution = JJDisputedCountRoPForWantOfProsecution;
-  public Dismissed = JJDisputedCountRoPDismissed;
-  public Finding = JJDisputedCountRoPFinding;
+  IncludesSurcharge = JJDisputedCountIncludesSurcharge;
+  RequestReduction = JJDisputedCountRequestReduction;
+  RequestTimeToPay = JJDisputedCountRequestTimeToPay;
+  AppearInCourt = JJDisputedCountAppearInCourt;
+  HearingType = JJDisputeHearingType;
+  JailIntermittent = JJDisputedCountRoPJailIntermittent;
+  Abatement = JJDisputedCountRoPAbatement;
+  Withdrawn = JJDisputedCountRoPWithdrawn;
+  ForWantOfProsecution = JJDisputedCountRoPForWantOfProsecution;
+  Dismissed = JJDisputedCountRoPDismissed;
+  Finding = JJDisputedCountRoPFinding;
 
   // Variables
-  public isMobile: boolean;
-  public todayDate: Date = new Date();
-  public form: FormGroup;
-  public timeToPay: string = "no";
-  public fineReduction: string = "no";
-  public inclSurcharge: string = "yes";
-  public lesserOrGreaterAmount: number = 0;
-  public surcharge: number = 0;
-  public busy: Subscription;
-  public lesserDescriptionFilteredStatutes: Statute[];
-  public drivingProhibitionFilteredStatutes: Statute[];
+  busy: Subscription;
+  todayDate: Date = new Date();
+  form: FormGroup;
+  timeToPay: string = "no";
+  fineReduction: string = "no";
+  inclSurcharge: string = "yes";
+  lesserOrGreaterAmount: number = 0;
+  surcharge: number = 0;
+  lesserDescriptionFilteredStatutes: Statute[];
+  drivingProhibitionFilteredStatutes: Statute[];
 
   constructor(
-    protected route: ActivatedRoute,
     private dialog: MatDialog,
-    private utilsService: UtilsService,
-    public lookupsService: LookupsService,
-    public mockConfigService: MockConfigService,
-    public jjDisputeService: JJDisputeService,
-    protected formBuilder: FormBuilder,
+    private lookupsService: LookupsService,
+    private formBuilder: FormBuilder,
   ) {
-    const today = new Date();
-    this.isMobile = this.utilsService.isMobile();
-
     this.busy = this.lookupsService.getStatutes().subscribe((response: Statute[]) => {
       this.lookupsService.statutes$.next(response);
     });
-
   }
 
   ngOnInit(): void {  
@@ -161,7 +149,7 @@ export class JJCountComponent implements OnInit {
   }
 
   // return a filtered list of statutes
-  public filterStatutes(val: string): Statute[] {
+  filterStatutes(val: string): Statute[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
     return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
   }
@@ -184,16 +172,7 @@ export class JJCountComponent implements OnInit {
   }
 
   onChangelesserOrGreaterAmount() {
-    // surcharge is always 15%
-    if (this.inclSurcharge == "yes") {
-      this.form.get('totalFineAmount').setValue(this.form.get('lesserOrGreaterAmount').value);
-      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value / 1.15;
-      this.surcharge = 0.15 * this.lesserOrGreaterAmount;
-    } else {
-      this.form.get('totalFineAmount').setValue(this.form.get('lesserOrGreaterAmount').value * 1.15);
-      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
-      this.surcharge = this.form.get('lesserOrGreaterAmount').value * 0.15;
-    }
+    this.updateInclSurcharge(this.inclSurcharge);
   }
 
   updateFineAmount(event: MatRadioChange) {

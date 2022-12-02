@@ -9,10 +9,11 @@ import { JJDisputeCourtAppearanceRoP as JJDisputeCourtAppearanceRoPBase } from '
   styleUrls: ['./jj-dispute-court-appearances.component.scss'],
 })
 export class JJDisputeCourtAppearancesComponent implements OnInit {
-  @Input() public data: JJDisputeCourtAppearanceRoP[];
-  dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>();
+  @Input() data: JJDisputeCourtAppearanceRoP[];
   @ViewChild(MatSort) sort = new MatSort();
-  public displayedColumns: string[] = [
+
+  dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>();
+  displayedColumns: string[] = [
     "appearanceDate",
     "appearanceTime",
     "room",
