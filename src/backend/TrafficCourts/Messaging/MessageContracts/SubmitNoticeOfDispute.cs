@@ -65,6 +65,16 @@ public class SubmitNoticeOfDispute
     public string DriversLicenceProvince { get; set; } = null!;
 
     /// <summary>
+    /// The province sequence number of the drivers licence was issued by.
+    /// </summary>
+    public int? DriversLicenceProvinceSeqNo { get; set; }
+
+    /// <summary>
+    /// The country code of the drivers licence was issued by.
+    /// </summary>
+    public int? DriversLicenceCountryId { get; set; }
+
+    /// <summary>
     /// The mailing address line one of the disputant.
     /// </summary>
     public string AddressLine1 { get; set; } = null!;
@@ -87,6 +97,21 @@ public class SubmitNoticeOfDispute
     /// The mailing address province of the disputant.
     /// </summary>
     public string AddressProvince { get; set; } = null!;
+
+    /// <summary>
+    /// The mailing address province's country code of the disputant.
+    /// </summary>
+    public int? AddressProvinceCountryId { get; set; }
+
+    /// <summary>
+    /// The mailing address province's sequence number of the disputant.
+    /// </summary>
+    public int? AddressProvinceSeqNo { get; set; }
+
+    /// <summary>
+    /// The mailing address country id of the disputant.
+    /// </summary>
+    public int? AddressCountryId { get; set; }
 
     /// <summary>
     /// The mailing address postal code or zip code of the disputant.

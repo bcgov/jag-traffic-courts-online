@@ -39,6 +39,8 @@ class DisputeServiceOrdsTest extends BaseTestSuite {
 				//"disputeId",
 				"violationTicket",
 				"disputeCounts",
+				"addressCountryId",
+				"driversLicenceIssuedCountryId",
 				"createdBy",
 				"createdTs");
 		logDiffs(disputeDiffs, "Dispute");

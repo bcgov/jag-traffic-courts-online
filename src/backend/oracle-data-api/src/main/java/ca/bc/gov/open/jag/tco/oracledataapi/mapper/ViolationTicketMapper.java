@@ -85,12 +85,13 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputantOcrIssuesTxt", source = "disputantOcrIssues")
 	@Mapping(target = "dispute.systemDetectOcrIssuesYn", source = "systemDetectedOcrIssues")
 	@Mapping(target = "dispute.ocrTicketJsonFilenameTxt", source = "ocrTicketFilename")
-	// TODO - need replace the default constant values below to set the IDs from the actual dispute model source from request
-	@Mapping(target = "dispute.addressCtryId", constant = "1")
+	// Only setting Country IDs to 1 (Canada) as default for now, other IDs must be set from the actual dispute model source from request
+	// If these IDs are passed as null, then the actual string value of the field such as (drvLicIssuedIntlProvTxt) will be saved based on the logic in the database
 	@Mapping(target = "dispute.drvLicIssuedCtryId", constant = "1")
-	@Mapping(target = "dispute.drvLicIssuedProvSeqNo", constant = "1")
-	@Mapping(target = "dispute.addressProvCtryId", constant = "1")
-	@Mapping(target = "dispute.addressProvSeqNo", constant = "1")
+	@Mapping(target = "dispute.drvLicIssuedProvSeqNo", source = "driversLicenceIssuedProvinceSeqNo")
+	@Mapping(target = "dispute.addressCtryId", constant = "1")
+	@Mapping(target = "dispute.addressProvCtryId", source = "addressProvinceCountryId")
+	@Mapping(target = "dispute.addressProvSeqNo", source = "addressProvinceSeqNo")
 	// Map from Oracle Data API violation ticket model to ORDS violation ticket data
 	@Mapping(target = "entUserId", source = "violationTicket.createdBy")
 	@Mapping(target = "entDtm", source = "violationTicket.createdTs")

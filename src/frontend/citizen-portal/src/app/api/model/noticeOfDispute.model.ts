@@ -56,6 +56,14 @@ export interface NoticeOfDispute {
      */
     drivers_licence_province?: string | null;
     /**
+     * The province sequence number of the drivers licence was issued by.
+     */
+    drivers_licence_province_seq_no?: number | null;
+    /**
+     * The country code of the drivers licence was issued by.
+     */
+    drivers_licence_country_id?: number | null;
+    /**
      * The mailing address of the disputant.
      */
     address_line1?: string | null;
@@ -75,6 +83,18 @@ export interface NoticeOfDispute {
      * The mailing address province of the disputant.
      */
     address_province?: string | null;
+    /**
+     * The mailing address province\'s country code of the disputant.
+     */
+    address_province_country_id?: number | null;
+    /**
+     * The mailing address province\'s sequence number of the disputant.
+     */
+    address_province_seq_no?: number | null;
+    /**
+     * The mailing address country id of the disputant.
+     */
+    address_country_id?: number | null;
     /**
      * The mailing address postal code or zip code of the disputant.
      */

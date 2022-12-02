@@ -44,11 +44,16 @@ public class MappingTests
         Assert.Equal(source.DisputantBirthdate, target.DisputantBirthdate);
         Assert.Equal(source.DriversLicenceNumber, target.DriversLicenceNumber);
         Assert.Equal(source.DriversLicenceProvince, target.DriversLicenceProvince);
+        Assert.Equal(source.DriversLicenceProvinceSeqNo, target.DriversLicenceIssuedProvinceSeqNo);
+        Assert.Equal(source.DriversLicenceCountryId, target.DriversLicenceIssuedCountryId);
         Assert.Equal(source.AddressLine1, target.AddressLine1);
         Assert.Equal(source.AddressLine2, target.AddressLine2);
         Assert.Equal(source.AddressLine3, target.AddressLine3);
         Assert.Equal(source.AddressCity, target.AddressCity);
         Assert.Equal(source.AddressProvince, target.AddressProvince);
+        Assert.Equal(source.AddressProvinceSeqNo, target.AddressProvinceSeqNo);
+        Assert.Equal(source.AddressProvinceCountryId, target.AddressProvinceCountryId);
+        Assert.Equal(source.AddressCountryId, target.AddressCountryId);
         Assert.Equal(source.PostalCode, target.PostalCode);
         Assert.Equal(source.HomePhoneNumber, target.HomePhoneNumber);
         Assert.Equal(source.WorkPhoneNumber, target.WorkPhoneNumber);

@@ -2721,6 +2721,20 @@
             "type": "string",
             "nullable": true
           },
+          "driversLicenceIssuedCountryId": {
+            "maximum": 8,
+            "minimum": -2147483648,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "driversLicenceIssuedProvinceSeqNo": {
+            "maximum": 4,
+            "minimum": -2147483648,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "driversLicenceProvince": {
             "maxLength": 30,
             "minLength": 0,
@@ -2752,6 +2766,27 @@
             "maxLength": 30,
             "minLength": 0,
             "type": "string",
+            "nullable": true
+          },
+          "addressProvinceCountryId": {
+            "maximum": 8,
+            "minimum": -2147483648,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "addressProvinceSeqNo": {
+            "maximum": 4,
+            "minimum": -2147483648,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "addressCountryId": {
+            "maximum": 8,
+            "minimum": -2147483648,
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "postalCode": {

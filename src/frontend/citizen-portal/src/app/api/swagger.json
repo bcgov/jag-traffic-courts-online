@@ -152,6 +152,80 @@
         }
       }
     },
+    "/api/disputes/search": {
+      "get": {
+        "tags": [
+          "Disputes"
+        ],
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "pattern": "^[A-Z]{2}[0-9]{8}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDisputeResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDisputeResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDisputeResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/api/lookup/statutes": {
       "get": {
         "tags": [
@@ -450,6 +524,16 @@
         ],
         "type": "string"
       },
+      "DisputeStatus": {
+        "enum": [
+          "NEW",
+          "PROCESSING",
+          "REJECTED",
+          "CANCELLED",
+          "VALIDATED"
+        ],
+        "type": "string"
+      },
       "Field": {
         "type": "object",
         "properties": {
@@ -546,6 +630,18 @@
             "description": "The province or state the drivers licence was issued by.",
             "nullable": true
           },
+          "drivers_licence_province_seq_no": {
+            "type": "integer",
+            "description": "The province sequence number of the drivers licence was issued by.",
+            "format": "int32",
+            "nullable": true
+          },
+          "drivers_licence_country_id": {
+            "type": "integer",
+            "description": "The country code of the drivers licence was issued by.",
+            "format": "int32",
+            "nullable": true
+          },
           "address_line1": {
             "type": "string",
             "description": "The mailing address of the disputant.",
@@ -569,6 +665,24 @@
           "address_province": {
             "type": "string",
             "description": "The mailing address province of the disputant.",
+            "nullable": true
+          },
+          "address_province_country_id": {
+            "type": "integer",
+            "description": "The mailing address province's country code of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_province_seq_no": {
+            "type": "integer",
+            "description": "The mailing address province's sequence number of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_country_id": {
+            "type": "integer",
+            "description": "The mailing address country id of the disputant.",
+            "format": "int32",
             "nullable": true
           },
           "postal_code": {
@@ -748,6 +862,22 @@
           }
         },
         "additionalProperties": { }
+      },
+      "SearchDisputeResponse": {
+        "type": "object",
+        "properties": {
+          "disputeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputeStatus": {
+            "$ref": "#/components/schemas/DisputeStatus"
+          },
+          "isError": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
       },
       "Statute": {
         "type": "object",
