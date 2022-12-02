@@ -1,5 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 
@@ -97,6 +102,26 @@ class DisputeServiceH2Test extends BaseTestSuite {
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, null);
 		});
+	}
+
+	@Test
+	void testDisputantUpdateRequest() throws Exception {
+		String json = "{ \"address_line1\": \"123 Main Street\", \"address_line2\": \"\", \"address_line3\": \"\" }";
+		DisputantUpdateRequest updateRequest = new DisputantUpdateRequest();
+		updateRequest.setDisputeId(Long.valueOf(1L));
+		updateRequest.setStatus(DisputantUpdateStatus.PENDING);
+		updateRequest.setUpdateType(DisputantUpdateType.DISPUTANT_ADDRESS);
+		updateRequest.setUpdateJson(json);
+		DisputantUpdateRequest savedUpdateReq = disputeService.save(updateRequest);
+
+		assertNotNull(savedUpdateReq.getDisputantUpdateRequestId());
+
+		savedUpdateReq = disputeService.findDisputantUpdateRequestById(savedUpdateReq.getDisputantUpdateRequestId());
+
+		assertEquals(1L, savedUpdateReq.getDisputeId().longValue());
+		assertEquals(DisputantUpdateStatus.PENDING, savedUpdateReq.getStatus());
+		assertEquals(DisputantUpdateType.DISPUTANT_ADDRESS, savedUpdateReq.getUpdateType());
+		assertEquals(json, savedUpdateReq.getUpdateJson());
 	}
 
 	private Long saveDispute(DisputeStatus disputeStatus) {

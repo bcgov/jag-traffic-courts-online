@@ -21,12 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputantUpdateRequestRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
 @Service
@@ -36,6 +38,9 @@ public class DisputeService {
 
 	@Autowired
 	DisputeRepository disputeRepository;
+
+	@Autowired
+	private DisputantUpdateRequestRepository disputantUpdateRequestRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -314,6 +319,22 @@ public class DisputeService {
 	 */
 	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime) {
 		return disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+	}
+
+	/**
+	 * Persists an update request for a Disputant's contact information
+	 * @param updateRequest must not be null
+	 */
+	public DisputantUpdateRequest save(DisputantUpdateRequest updateRequest) {
+		return disputantUpdateRequestRepository.save(updateRequest);
+	}
+
+	/**
+	 * Retrieves a DisputantUpdateRequest by id
+	 * @param id must not be null
+	 */
+	public DisputantUpdateRequest findDisputantUpdateRequestById(Long id) {
+		return disputantUpdateRequestRepository.findById(id).orElseThrow();
 	}
 
 }
