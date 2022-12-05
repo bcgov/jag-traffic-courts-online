@@ -8,6 +8,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -22,6 +24,10 @@ import lombok.Setter;
  * An abstract Auditable class that auto-populates <code>createdBy</code>, <code>createdTs</code>, <code>modifiedBy</code>, and
  * <code>modifiedTs</code> fields. Classes need only to extend this class to add auditing fields to a model object.
  */
+@TypeDefs({
+	@TypeDef(name = "disputantUpdateStatus", defaultForType = DisputantUpdateStatus.class, typeClass = ShortNamedEnumType.class),
+	@TypeDef(name = "disputantUpdateType", defaultForType = DisputantUpdateType.class, typeClass = ShortNamedEnumType.class)
+})
 @MappedSuperclass
 @Getter
 @Setter

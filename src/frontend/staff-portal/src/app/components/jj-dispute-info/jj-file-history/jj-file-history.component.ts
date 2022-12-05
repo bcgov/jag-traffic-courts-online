@@ -12,15 +12,15 @@ import { HistoryRecordService } from 'app/services/history-records.service';
   styleUrls: ['./jj-file-history.component.scss'],
 })
 export class JJFileHistoryComponent implements OnInit {
-  @Input() public ticketNumber: string;
-
-  dataSource = new MatTableDataSource<HistoryRecord>();
+  @Input() ticketNumber: string;
   @ViewChild(MatSort) sort = new MatSort();
 
-  public fileHistory: FileHistory[] = [];
-  public emailHistory: EmailHistory[] = [];
+  dataSource = new MatTableDataSource<HistoryRecord>();
 
-  public displayedColumns: string[] = [
+  fileHistory: FileHistory[] = [];
+  emailHistory: EmailHistory[] = [];
+
+  displayedColumns: string[] = [
     "createdTs",
     "recordType",
     "eventDescription",
@@ -52,7 +52,7 @@ export class JJFileHistoryComponent implements OnInit {
     });
   }
 
-  public setDisplayHistory() {
+  setDisplayHistory() {
 
     // file history events
     this.fileHistory.forEach(fileHistoryRecord => {
@@ -77,7 +77,6 @@ export class JJFileHistoryComponent implements OnInit {
       return (a.createdTs > b.createdTs) ? 1 : -1;
     })
   }
-
 }
 
 export interface HistoryRecord {

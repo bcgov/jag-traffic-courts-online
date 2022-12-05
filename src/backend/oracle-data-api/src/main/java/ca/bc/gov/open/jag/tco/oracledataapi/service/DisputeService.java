@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -21,12 +22,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputantUpdateRequestRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
 @Service
@@ -36,6 +40,9 @@ public class DisputeService {
 
 	@Autowired
 	DisputeRepository disputeRepository;
+
+	@Autowired
+	private DisputantUpdateRequestRepository disputantUpdateRequestRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -314,6 +321,45 @@ public class DisputeService {
 	 */
 	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime) {
 		return disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+	}
+
+	/**
+	 * Persists an update request for a Disputant's contact information
+	 * @param noticeOfDisputeGuid guid of the Dispute to associate with.
+	 * @param updateRequest the updateRequest to persist
+	 * @return the newly saved DisputantUpdateRequest record, never null.
+	 * @throws NoSuchElementException if the Dispute referenced by noticeOfDisputeGuid was not found.
+	 */
+	public DisputantUpdateRequest saveDisputantUpdateRequest(String noticeOfDisputeGuid, DisputantUpdateRequest updateRequest) {
+		Dispute dispute = getDisputeByNoticeOfDisputeGuid(noticeOfDisputeGuid);
+		if (dispute == null) {
+			throw new NoSuchElementException();
+		}
+
+		// Dispute found. Use the ID as the FK in the disputantUpdateRequest object.
+		updateRequest.setDisputeId(dispute.getDisputeId());
+
+		return disputantUpdateRequestRepository.save(updateRequest);
+	}
+
+	/**
+	 * Retrieves all DisputantUpdateRequests by disputeId
+	 * @param disputeId must not be null
+	 */
+	public List<DisputantUpdateRequest> findDisputantUpdateRequestByDisputeId(Long disputeId) {
+		return disputantUpdateRequestRepository.findByDisputeId(disputeId);
+	}
+
+	/**
+	 * Updates the status of the given DisputantUpdateStatus record
+	 * @param updateRequestId
+	 * @param status
+	 * @return the newly saved DisputantUpdateRequest record, never null.
+	 */
+	public DisputantUpdateRequest updateDisputantUpdateRequest(Long updateRequestId, DisputantUpdateStatus status) {
+		DisputantUpdateRequest disputantUpdateRequest = disputantUpdateRequestRepository.findById(updateRequestId).orElseThrow();
+		disputantUpdateRequest.setStatus(status);
+		return disputantUpdateRequestRepository.save(disputantUpdateRequest);
 	}
 
 }

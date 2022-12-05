@@ -3,10 +3,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
-import { Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
-import { AuthService } from 'app/services/auth.service';
+import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
+import { select, Store } from '@ngrx/store';
+import { AppState } from 'app/store';
 
 @Component({
   selector: 'app-jj-dispute-hearing-inbox',
@@ -14,19 +16,24 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./jj-dispute-hearing-inbox.component.scss'],
 })
 export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
-  @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
-  @Input() public jjIDIR: string;
-  public HearingType = JJDisputeHearingType;
-  public filterValues: any = {
+  @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
+  @ViewChild(MatSort) sort = new MatSort();
+  busy: Subscription;
+
+  jjIDIR: string;
+  HearingType = JJDisputeHearingType;
+  filterValues: any = {
     jjAssignedTo: '',
     appearanceTs: new Date()
   }
-  busy: Subscription;
-  public appearanceDateFilter = new FormControl(new Date());
-  public jjAssignedToFilter = new FormControl('');
-  data = [] as JJDispute[];
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatSort) sort = new MatSort();
+  appearanceDateFilter = new FormControl(new Date());
+  jjAssignedToFilter = new FormControl('');
+  statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
+  statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
+  jjList: UserRepresentation[];
+  data$: Observable<JJDispute[]>;
+  data: JJDispute[] = [];
+  dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "jjAssignedTo",
     "ticketNumber",
@@ -40,13 +47,13 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(
-    public jjDisputeService: JJDisputeService,
+    private jjDisputeService: JJDisputeService,
     private logger: LoggerService,
-    private authService: AuthService
+    private authService: AuthService,
+    private store: Store<AppState>
   ) {
-    // listen for when to refresh from db
-    this.jjDisputeService.refreshDisputes.subscribe(x => {
-      this.getAll();
+    this.jjDisputeService.jjList$.subscribe(result => {
+      this.jjList = result;
     });
 
     // listen for changes in jj Assigned
@@ -63,16 +70,21 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       .subscribe(
         value => {
           this.filterValues.appearanceTs = this.appearanceDateFilter.value;
-          this.dataSource.filter =JSON.stringify(this.filterValues);
+          this.dataSource.filter = JSON.stringify(this.filterValues);
         }
       )
+
+    this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
   }
 
   ngOnInit(): void {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         this.jjIDIR = userProfile.idir;
-        this.getAll();
+        this.data$.subscribe(jjDisputes => {
+          this.data = jjDisputes.map(jjDispute => { return { ...jjDispute } });
+          this.getAll();
+        })
       }
     })
   }
@@ -84,7 +96,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
     // update most recent court appearance rop
     if (updateDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
-      let mostRecentCourtAppearance = updateDispute.jjDisputeCourtAppearanceRoPs.sort((a,b) => {if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
+      let mostRecentCourtAppearance = updateDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
       let i = updateDispute.jjDisputeCourtAppearanceRoPs.indexOf(mostRecentCourtAppearance);
       updateDispute.jjDisputeCourtAppearanceRoPs[i].adjudicator = element.jjAssignedTo;
     }
@@ -119,52 +131,28 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     return filterFunction;
   }
 
-
-  function (record: JJDispute, filter) {
-  }
-
-
   getAll(): void {
-    this.logger.log('JJDisputeHearingInboxComponent::getAllDisputes');
+    // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
+    this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1);
+    this.dataSource.data = this.data;
 
-    this.jjDisputeService.getJJDisputes().subscribe((response: JJDispute[]) => {
-      // filter jj disputes only show those for the current JJ
-      this.data = response; // current IDIR
+    // initially sort by submitted date within status
+    this.dataSource.data = this.dataSource.data.sort((a, b) => {
+      // if they have the same status
+      if (a.status === b.status) {
+        if (a.submittedTs > b.submittedTs) { return 1; } else { return -1; }
+      }
 
-      // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
-      this.data = this.data.filter(x => (x.status === JJDisputeStatus.HearingScheduled || x.status === JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.InProgress || x.status === JJDisputeStatus.Review
-        || x.status === JJDisputeStatus.RequireCourtHearing || x.status === JJDisputeStatus.RequireMoreInfo) && x.hearingType === this.HearingType.CourtAppearance);
-      this.dataSource.data = this.data;
-
-      // show court appearance fields for most recent court appearance
-      this.dataSource.data.forEach((jjDispute: JJDispute) => {
-        if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
-          let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a,b) => {if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
-          jjDispute.room = mostRecentCourtAppearance.room;
-          jjDispute.duration = mostRecentCourtAppearance.duration;
-          jjDispute.appearanceTs = new Date(mostRecentCourtAppearance.appearanceTs);
-        }
-      });
-
-      // initially sort by submitted date within status
-      this.dataSource.data = this.dataSource.data.sort((a: JJDispute, b: JJDispute) =>
-        {
-          // if they have the same status
-          if (a.status === b.status) {
-            if (a.submittedTs > b.submittedTs) { return 1; } else { return -1; }
-          }
-
-          // compare statuses
-          else {
-            if (this.jjDisputeService.jjDisputeStatusesSorted.indexOf(a.status) > this.jjDisputeService.jjDisputeStatusesSorted.indexOf(b.status)) { return 1; } else { return -1; }
-          }
-        });
-
-      // this section allows filtering only on jj IDIR
-      this.dataSource.filterPredicate = this.createFilter();
-
-      this.jjAssignedToFilter.setValue(this.jjIDIR);
-      this.appearanceDateFilter.setValue(new Date());
+      // compare statuses
+      else {
+        if (this.jjDisputeService.jjDisputeStatusesSorted.indexOf(a.status) > this.jjDisputeService.jjDisputeStatusesSorted.indexOf(b.status)) { return 1; } else { return -1; }
+      }
     });
+
+    // this section allows filtering only on jj IDIR
+    this.dataSource.filterPredicate = this.createFilter();
+
+    this.jjAssignedToFilter.setValue(this.jjIDIR);
+    this.appearanceDateFilter.setValue(new Date());
   }
 }

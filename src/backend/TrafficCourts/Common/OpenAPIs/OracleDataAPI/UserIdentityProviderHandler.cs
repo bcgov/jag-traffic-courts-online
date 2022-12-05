@@ -9,7 +9,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
     /// </summary>
     public class UserIdentityProviderHandler : DelegatingHandler
     {
-        public const string UsernameClaimType = "idir_username";
+        public const string UsernameClaimType = "preferred_username";
         public const string FullNameClaimType = ClaimTypes.Name;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -52,7 +52,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
 
         private bool AddUsernameHeader(HttpRequestMessage request, ClaimsPrincipal user)
         {
-            var username = user.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
+            //var username = user.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
+            var username = "ldame@idir";
 
             if (string.IsNullOrWhiteSpace(username))
             {

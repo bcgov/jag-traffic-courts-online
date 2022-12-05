@@ -70,7 +70,7 @@
       <span *ngIf="element.status==='REVIEW'"><button mat-rounded-button
           style="color:white; background-color:#f63f3f; width:150px; border-radius: 10px;"
           disabled="true">Review</button></span>
-      <span *ngIf="jjDisputeService.JJDisputeStatusComplete.indexOf(element.status) > -1"><button mat-rounded-button
+      <span *ngIf="statusComplete.indexOf(element.status) > -1"><button mat-rounded-button
           style="color:white; background-color:#c5c5c5; width:150px; border-radius: 10px;"
           disabled="true">Complete</button></span>
     </td>
