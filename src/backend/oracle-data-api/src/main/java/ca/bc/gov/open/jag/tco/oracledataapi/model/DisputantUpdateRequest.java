@@ -31,12 +31,12 @@ public class DisputantUpdateRequest extends Auditable<String> {
 	@Column(length = 3)
 	@Schema(nullable = false)
 	@NotNull
-	private DisputantUpdateStatus status;
+	private DisputantUpdateRequestStatus status;
 
 	@Column(length = 3)
 	@Schema(nullable = false)
 	@NotNull
-	private DisputantUpdateType updateType;
+	private DisputantUpdateRequestType updateType;
 
 	@Column(length = 1000)
 	@Schema(nullable = false)

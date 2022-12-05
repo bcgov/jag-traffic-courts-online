@@ -49,7 +49,15 @@ namespace TrafficCourts.Common.Features.Mail.Model
                 HtmlContentTemplate = "In order to confirm submission of your intent to dispute traffic violation ticket {ticketid} click on the following link." +
                     "<br/><br/><a href='{emailVerificationUrl}?uuid={emailVerificationToken}'>{emailVerificationUrl}?uuid={emailVerificationToken}</a>" +
                     "<br/><br/>If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
-            }
+            },
+        new MailTemplate()
+            {
+                TemplateName = "DisputantUpdateRequestApprovedTemplate",
+                Sender = "DoNotReply@tickets.gov.bc.ca",
+                SubjectTemplate = "TBD (ie. Disputant contact information changes approved)",
+                HtmlContentTemplate = "TBD",
+                PlainContentTemplate = "TBD"
+            },
         };
 
         public List<MailTemplate> MailTemplates { get; set; } = new List<MailTemplate>();

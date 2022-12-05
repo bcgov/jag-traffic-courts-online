@@ -76,5 +76,11 @@ public interface IDisputeService
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken);
 
-
+    /// <summary>
+    /// Accepts a citizen's requested changes to their Disputant Contact information.
+    /// </summary>
+    /// <param name="updateStatusId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
 }

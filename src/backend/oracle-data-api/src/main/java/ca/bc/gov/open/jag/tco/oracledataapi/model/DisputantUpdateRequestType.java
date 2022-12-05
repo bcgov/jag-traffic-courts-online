@@ -1,7 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 
-public enum DisputantUpdateType implements ShortNamedEnum {
+public enum DisputantUpdateRequestType implements ShortNamedEnum {
 
 	DISPUTANT_ADDRESS("ADR"),
 	DISPUTANT_PHONE("PHN"),
@@ -11,7 +11,7 @@ public enum DisputantUpdateType implements ShortNamedEnum {
 
 	private String shortName;
 
-	private DisputantUpdateType(String shortName) {
+	private DisputantUpdateRequestType(String shortName) {
 		this.shortName = shortName;
 	}
 
