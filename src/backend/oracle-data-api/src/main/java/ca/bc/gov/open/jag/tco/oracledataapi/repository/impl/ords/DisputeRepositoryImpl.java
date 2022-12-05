@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -204,6 +205,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	@Override
 	public void unassignDisputes(Date olderThan) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		String dateStr = simpleDateFormat.format(olderThan);
 
 		logger.debug("Unassigning Disputes older than '{}'", dateStr);
