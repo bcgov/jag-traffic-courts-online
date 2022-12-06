@@ -45,7 +45,6 @@ import { JJDisputeCourtAppearancesComponent } from '@components/jj-dispute-info/
 import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-history/jj-file-history.component';
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
 import { AuthService } from './services/auth.service';
-import { AppHttpInterceptor } from '@core/interceptors/http-interceptor';
 import { StoreModule } from '@ngrx/store';
 import * as JJDisputeStore from './store/jj-dispute';
 import { EffectsModule } from '@ngrx/effects';
@@ -122,11 +121,6 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     CurrencyPipe,
     DatePipe,
     MockConfigService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AppHttpInterceptor,
-      multi: true
-    },
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,

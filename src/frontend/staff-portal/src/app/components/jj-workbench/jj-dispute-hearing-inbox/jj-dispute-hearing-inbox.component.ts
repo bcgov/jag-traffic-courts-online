@@ -132,7 +132,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
 
   getAll(): void {
-    // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
+    // only show status HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_MORE_INFO
     this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1);
     this.dataSource.data = this.data;
 

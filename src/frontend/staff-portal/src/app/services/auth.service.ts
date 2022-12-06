@@ -76,7 +76,7 @@ export class AuthService {
   }
 
   private getIDIR(user: UserRepresentation | KeycloakProfile): string {
-    return user.attributes?.idir_username.length > 0 ? user.attributes?.idir_username[0] : "";
+    return (user.attributes?.idir_username.length > 0 ? user.attributes?.idir_username[0] : "").toUpperCase();
   }
 
   private getFullName(user: UserRepresentation | KeycloakProfile): string {
