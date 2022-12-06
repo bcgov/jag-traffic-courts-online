@@ -77,7 +77,7 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
 
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "JJ requires court hearing for this dispute.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "JJ requires a court hearing for this dispute.");
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
