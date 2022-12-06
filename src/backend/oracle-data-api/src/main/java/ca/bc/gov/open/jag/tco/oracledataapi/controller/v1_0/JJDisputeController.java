@@ -193,7 +193,7 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> requireCourtHearingJJDispute(@PathVariable String ticketNumber,
 			@RequestBody @Size(max = 256) String remark,
 			Principal principal) {
-		logger.debug("PUT /dispute/{id}/requirecourthearing called");
+		logger.debug("PUT /dispute/{}/requirecourthearing called", ticketNumber);
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.requireCourtHearing(ticketNumber, principal, remark), HttpStatus.OK);
 	}
