@@ -31,8 +31,8 @@
   "registrationEmailAsUsername": false,
   "rememberMe": false,
   "verifyEmail": false,
-  "loginWithEmailAllowed": true,
-  "duplicateEmailsAllowed": false,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": true,
   "resetPasswordAllowed": false,
   "editUsernameAllowed": false,
   "bruteForceProtected": true,
@@ -43,472 +43,6 @@
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
-  "roles": {
-    "realm": [
-      {
-        "id": "c06e4a1c-f3cf-47aa-ba71-c9755639e744",
-        "name": "uma_authorization",
-        "description": "${role_uma_authorization}",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "traffic-court",
-        "attributes": {}
-      },
-      {
-        "id": "01a38726-7250-4a3c-afb5-fc1ac4b5f126",
-        "name": "offline_access",
-        "description": "${role_offline-access}",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "traffic-court",
-        "attributes": {}
-      },
-      {
-        "id": "474dfd27-1d55-4b5e-8102-e5adcc7328d7",
-        "name": "default-roles-traffic-court",
-        "description": "${role_default-roles}",
-        "composite": true,
-        "composites": {
-          "realm": [
-            "offline_access",
-            "uma_authorization"
-          ],
-          "client": {
-            "account": [
-              "view-profile",
-              "manage-account"
-            ]
-          }
-        },
-        "clientRole": false,
-        "containerId": "traffic-court",
-        "attributes": {}
-      }
-    ],
-    "client": {
-      "realm-management": [
-        {
-          "id": "57d67041-c739-4e5a-82a1-440c053477f9",
-          "name": "realm-admin",
-          "description": "${role_realm-admin}",
-          "composite": true,
-          "composites": {
-            "client": {
-              "realm-management": [
-                "manage-authorization",
-                "view-events",
-                "manage-identity-providers",
-                "view-authorization",
-                "manage-clients",
-                "query-users",
-                "manage-users",
-                "query-groups",
-                "create-client",
-                "manage-realm",
-                "query-realms",
-                "view-users",
-                "view-realm",
-                "view-identity-providers",
-                "impersonation",
-                "query-clients",
-                "view-clients",
-                "manage-events"
-              ]
-            }
-          },
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "039c84e6-443d-4b4f-a2f6-489db735c052",
-          "name": "manage-authorization",
-          "description": "${role_manage-authorization}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "00470175-7171-4588-b9e2-3760aaba7a53",
-          "name": "view-events",
-          "description": "${role_view-events}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "d5fb69a4-b094-4754-a94a-4f2609914e3f",
-          "name": "manage-identity-providers",
-          "description": "${role_manage-identity-providers}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "910e71ca-3487-4849-a04a-f4fa8f6e7b7b",
-          "name": "view-authorization",
-          "description": "${role_view-authorization}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "4ab4802e-b082-4fc4-bf6d-7d4e875d3baf",
-          "name": "manage-clients",
-          "description": "${role_manage-clients}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "df55524f-c01f-4f9e-9edc-e637fa05a4e9",
-          "name": "query-users",
-          "description": "${role_query-users}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "971faf7e-a83d-4c7a-a337-9bab2cb4a798",
-          "name": "manage-users",
-          "description": "${role_manage-users}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "13ca83b2-84db-449b-a74a-5af4e0bea45f",
-          "name": "query-groups",
-          "description": "${role_query-groups}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "deb32105-c516-45e2-a4e8-f4b17a0a63a5",
-          "name": "create-client",
-          "description": "${role_create-client}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "4f6ed31d-3d8e-443e-ba43-b7c6264c4832",
-          "name": "manage-realm",
-          "description": "${role_manage-realm}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "b3d31a77-1309-459a-a3aa-ce911e07b33e",
-          "name": "query-realms",
-          "description": "${role_query-realms}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "2350e98d-c4ea-451c-98df-e69644d4b275",
-          "name": "view-users",
-          "description": "${role_view-users}",
-          "composite": true,
-          "composites": {
-            "client": {
-              "realm-management": [
-                "query-users",
-                "query-groups"
-              ]
-            }
-          },
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "48326136-0619-4f6e-88de-49e0b5ca75cf",
-          "name": "view-identity-providers",
-          "description": "${role_view-identity-providers}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "d33598b5-6fe6-47fd-912d-929248cf5077",
-          "name": "view-realm",
-          "description": "${role_view-realm}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "18ec6228-ecce-447b-b713-1f820e7e268f",
-          "name": "impersonation",
-          "description": "${role_impersonation}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "1618828a-8491-4b06-b02d-46a89bf66cb6",
-          "name": "query-clients",
-          "description": "${role_query-clients}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "01726023-9b42-4504-a1db-b2f4b402cc5d",
-          "name": "manage-events",
-          "description": "${role_manage-events}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        },
-        {
-          "id": "14f04d14-04be-4a19-8c74-30c674932889",
-          "name": "view-clients",
-          "description": "${role_view-clients}",
-          "composite": true,
-          "composites": {
-            "client": {
-              "realm-management": [
-                "query-clients"
-              ]
-            }
-          },
-          "clientRole": true,
-          "containerId": "45238ccd-8008-48b7-821b-62df443a709c",
-          "attributes": {}
-        }
-      ],
-      "security-admin-console": [],
-      "admin-cli": [],
-      "staff-api": [
-        {
-          "id": "557903bb-3f55-4f3a-be11-db0e6a75b8f9",
-          "name": "admin-judicial-justice",
-          "description": "https://justice.gov.bc.ca/wiki/pages/viewpage.action?pageId=345243986",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "c2b063b6-b251-48ae-83a6-bd87ec66eb7f",
-          "attributes": {}
-        },
-        {
-          "id": "f17f5dac-ad33-408f-b835-4896a49d5a80",
-          "name": "judicial-justice",
-          "description": "https://justice.gov.bc.ca/wiki/pages/viewpage.action?pageId=345243986",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "c2b063b6-b251-48ae-83a6-bd87ec66eb7f",
-          "attributes": {}
-        },
-        {
-          "id": "22606b5f-f871-4ded-a3f2-0269627877e4",
-          "name": "admin-vtc-staff",
-          "description": "https://justice.gov.bc.ca/wiki/pages/viewpage.action?pageId=345243986",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "c2b063b6-b251-48ae-83a6-bd87ec66eb7f",
-          "attributes": {}
-        },
-        {
-          "id": "6ec6956f-cdaa-4dba-a57e-28a0fe32b2c4",
-          "name": "vtc-staff",
-          "description": "https://justice.gov.bc.ca/wiki/pages/viewpage.action?pageId=345243986",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "c2b063b6-b251-48ae-83a6-bd87ec66eb7f",
-          "attributes": {}
-        },
-        {
-          "id": "2880d116-b824-4b38-b7dc-7d54578f6969",
-          "name": "uma_protection",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "c2b063b6-b251-48ae-83a6-bd87ec66eb7f",
-          "attributes": {}
-        }
-      ],
-      "account-console": [],
-      "broker": [
-        {
-          "id": "f73faae0-d716-489d-aafc-cd2025abab58",
-          "name": "read-token",
-          "description": "${role_read-token}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "5924608c-f9cd-4565-b3bb-7589635268e4",
-          "attributes": {}
-        }
-      ],
-      "account": [
-        {
-          "id": "b0b4ff2e-9be8-4d86-a899-db737ec4f05d",
-          "name": "manage-account",
-          "description": "${role_manage-account}",
-          "composite": true,
-          "composites": {
-            "client": {
-              "account": [
-                "manage-account-links"
-              ]
-            }
-          },
-          "clientRole": true,
-          "containerId": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
-          "attributes": {}
-        },
-        {
-          "id": "f3c6128c-a383-4a2e-813d-6c96835c890e",
-          "name": "view-profile",
-          "description": "${role_view-profile}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
-          "attributes": {}
-        },
-        {
-          "id": "e03075bc-68f3-45f6-a845-94b2fd7d7f2e",
-          "name": "manage-consent",
-          "description": "${role_manage-consent}",
-          "composite": true,
-          "composites": {
-            "client": {
-              "account": [
-                "view-consent"
-              ]
-            }
-          },
-          "clientRole": true,
-          "containerId": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
-          "attributes": {}
-        },
-        {
-          "id": "39b981d6-9ec5-4ae4-b67a-9bb34f15c8df",
-          "name": "view-consent",
-          "description": "${role_view-consent}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
-          "attributes": {}
-        },
-        {
-          "id": "3b5c6181-4f21-41e1-b605-d09710398f0d",
-          "name": "delete-account",
-          "description": "${role_delete-account}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
-          "attributes": {}
-        },
-        {
-          "id": "a4494363-a213-4071-80af-b18b866813e8",
-          "name": "view-applications",
-          "description": "${role_view-applications}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
-          "attributes": {}
-        },
-        {
-          "id": "ea38159c-8dff-41bd-a355-df7842daf69c",
-          "name": "manage-account-links",
-          "description": "${role_manage-account-links}",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
-          "attributes": {}
-        }
-      ],
-      "staff-portal": []
-    }
-  },
-  "groups": [
-    {
-      "id": "87d65a9a-1352-42f5-af23-3afdbbc4ccfc",
-      "name": "admin-judicial-justice",
-      "path": "/admin-judicial-justice",
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {
-        "staff-api": [
-          "admin-judicial-justice",
-          "judicial-justice"
-        ]
-      },
-      "subGroups": []
-    },
-    {
-      "id": "dd076b11-cb70-4f26-93aa-2795da8e8e36",
-      "name": "admin-vtc-staff",
-      "path": "/admin-vtc-staff",
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {
-        "staff-api": [
-          "admin-vtc-staff",
-          "vtc-staff"
-        ]
-      },
-      "subGroups": []
-    },
-    {
-      "id": "f768cd4e-8c11-4d89-b075-5b10f5c571b0",
-      "name": "judicial-justice",
-      "path": "/judicial-justice",
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {
-        "staff-api": [
-          "judicial-justice"
-        ]
-      },
-      "subGroups": []
-    },
-    {
-      "id": "7b314af6-a578-4562-8c31-8977fe337cf3",
-      "name": "realm-admins",
-      "path": "/realm-admins",
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {
-        "realm-management": [
-          "realm-admin"
-        ]
-      },
-      "subGroups": []
-    },
-    {
-      "id": "54d85373-c62d-447a-a96e-09a045fd823f",
-      "name": "vtc-staff",
-      "path": "/vtc-staff",
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {
-        "staff-api": [
-          "vtc-staff"
-        ]
-      },
-      "subGroups": []
-    }
-  ],
   "defaultRole": {
     "id": "474dfd27-1d55-4b5e-8102-e5adcc7328d7",
     "name": "default-roles-traffic-court",
@@ -565,20 +99,7 @@
       "serviceAccountClientId": "staff-api",
       "disableableCredentialTypes": [],
       "requiredActions": [],
-      "realmRoles": [
-        "default-roles-traffic-court"
-      ],
-      "clientRoles": {
-        "realm-management": [
-          "view-users",
-          "view-clients"
-        ],
-        "staff-api": [
-          "uma_protection"
-        ]
-      },
-      "notBefore": 0,
-      "groups": []
+      "notBefore": 0
     }
   ],
   "scopeMappings": [
@@ -966,21 +487,6 @@
           }
         },
         {
-          "id": "3fde391f-8f9d-4c6f-aff0-f8de94aa2796",
-          "name": "JUSTIN Participant Id",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-attribute-mapper",
-          "consentRequired": false,
-          "config": {
-            "userinfo.token.claim": "true",
-            "user.attribute": "partid",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "partid",
-            "jsonType.label": "String"
-          }
-        },
-        {
           "id": "43eaae72-be8f-44ae-86cb-0adda422a6fe",
           "name": "Client IP Address",
           "protocol": "openid-connect",
@@ -1026,6 +532,9 @@
               },
               {
                 "name": "read"
+              },
+              {
+                "name": "require_court_hearing"
               },
               {
                 "name": "update"
@@ -1125,6 +634,18 @@
               "resources": "[\"jj-dispute\"]",
               "scopes": "[\"accept\"]",
               "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+            }
+          },
+          {
+            "id": "4eb19a17-2eb3-4815-a8fd-253bee63cd5d",
+            "name": "can require_court_hearing jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"require_court_hearing\"]",
+              "applyPolicies": "[\"has role admin-judicial-justice\",\"has role judicial-justice\"]"
             }
           },
           {
@@ -1294,6 +815,11 @@
           {
             "id": "f85d84cd-223e-4e1e-9747-afbbcd4da2c2",
             "name": "accept"
+          },
+          {
+            "id": "899689eb-f7d3-4494-9c06-37d9a841a336",
+            "name": "require_court_hearing",
+            "displayName": "require_court_hearing"
           }
         ],
         "decisionStrategy": "UNANIMOUS"
@@ -1487,6 +1013,21 @@
           }
         },
         {
+          "id": "81295efa-d692-44c3-98af-0125aaafc268",
+          "name": "JUSTIN Participant Id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "partid",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "partid",
+            "jsonType.label": "String"
+          }
+        },
+        {
           "id": "46fd9417-af51-4ede-bd96-f6f4350eec75",
           "name": "zoneinfo",
           "protocol": "openid-connect",
@@ -1498,6 +1039,21 @@
             "id.token.claim": "true",
             "access.token.claim": "true",
             "claim.name": "zoneinfo",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "f5b92727-2807-495a-afb8-c857e6b6f600",
+          "name": "username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "idir_username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
             "jsonType.label": "String"
           }
         },
@@ -1526,21 +1082,6 @@
             "access.token.claim": "true",
             "claim.name": "updated_at",
             "jsonType.label": "long"
-          }
-        },
-        {
-          "id": "82b35bdb-2e62-456f-9b91-92095eb8b4ce",
-          "name": "username",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-property-mapper",
-          "consentRequired": false,
-          "config": {
-            "userinfo.token.claim": "true",
-            "user.attribute": "username",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "preferred_username",
-            "jsonType.label": "String"
           }
         },
         {
@@ -1977,17 +1518,17 @@
       "firstBrokerLoginFlowAlias": "first broker login",
       "config": {
         "validateSignature": "true",
-        "userInfoUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/userinfo",
-        "tokenUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/token",
-        "clientId": "traffic-courts-online-3499",
-        "jwksUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/certs",
+        "userInfoUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/userinfo",
+        "tokenUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
+        "clientId": "traffic-courts-online-4437",
+        "jwksUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
         "backchannelSupported": "true",
-        "issuer": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth",
+        "issuer": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard",
         "useJwksUrl": "true",
         "loginHint": "true",
-        "authorizationUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/auth",
+        "authorizationUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/auth",
         "clientAuthMethod": "client_secret_basic",
-        "logoutUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/logout",
+        "logoutUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/logout",
         "syncMode": "FORCE",
         "clientSecret": "**********"
       }
@@ -1995,25 +1536,25 @@
   ],
   "identityProviderMappers": [
     {
-      "id": "e1b680fa-e12c-43e1-820b-02448f53ec56",
-      "name": "displayName",
+      "id": "9814574e-0aa7-4c00-99fb-bab8a9e968ed",
+      "name": "display_name",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "displayName",
-        "user.attribute": "displayName"
+        "claim": "display_name",
+        "user.attribute": "display_name"
       }
     },
     {
-      "id": "fb5aa5dd-0688-41fe-88b9-3be9ed51480d",
-      "name": "idir_guid",
+      "id": "b4275e1d-543a-4998-86c2-f7358122ee16",
+      "name": "family_name",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "idir_userid",
-        "user.attribute": "idir_user_guid"
+        "claim": "family_name",
+        "user.attribute": "family_name"
       }
     },
     {
@@ -2028,81 +1569,41 @@
       }
     },
     {
-      "id": "4a1c81c0-39c2-4261-bd85-36b7d88f7cb9",
-      "name": "userPrincipalName",
+      "id": "05709ddb-1ed6-4108-82ff-6b30eec5d09a",
+      "name": "given_name",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "userPrincipalName",
-        "user.attribute": "userPrincipalName"
+        "claim": "given_name",
+        "user.attribute": "given_name"
       }
     },
     {
-      "id": "a9fe0d20-2739-4050-a312-fc9a9b68f64d",
-      "name": "username",
-      "identityProviderAlias": "idir",
-      "identityProviderMapper": "oidc-username-idp-mapper",
-      "config": {
-        "template": "${CLAIM.preferred_username}",
-        "syncMode": "INHERIT"
-      }
-    },
-    {
-      "id": "698dfe00-6f9e-4866-9a3d-28ebeb13136a",
-      "name": "firstName",
+      "id": "167e03ca-34ac-4c9f-b654-c094c1541f56",
+      "name": "useridentifier",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "firstName",
-        "user.attribute": "firstName"
+        "user.attribute": "useridentifier",
+        "claim": "idir_user_guid"
       }
     },
     {
-      "id": "2bc67e05-419c-43ff-892d-dd0f864801fb",
-      "name": "idir_userid",
+      "id": "8c2e50a9-7e24-48ec-9f86-eb2bb27abc56",
+      "name": "idir_username",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "idir_userid",
-        "user.attribute": "idir_userid"
-      }
-    },
-    {
-      "id": "6982e629-eb2f-49e7-a964-d50fe0f412db",
-      "name": "lastName",
-      "identityProviderAlias": "idir",
-      "identityProviderMapper": "oidc-user-attribute-idp-mapper",
-      "config": {
-        "syncMode": "INHERIT",
-        "claim": "lastName",
-        "user.attribute": "lastName"
-      }
-    },
-    {
-      "id": "ae2f9d23-da6d-41fb-aa7f-f04d0e088935",
-      "name": "samaccountname",
-      "identityProviderAlias": "idir",
-      "identityProviderMapper": "oidc-user-attribute-idp-mapper",
-      "config": {
-        "syncMode": "INHERIT",
-        "claim": "samaccountname",
-        "user.attribute": "samaccountname"
+        "claim": "idir_username",
+        "user.attribute": "idir_username"
       }
     }
   ],
   "components": {
     "org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy": [
-      {
-        "id": "da79bd9b-7e9c-41a1-bc59-03b29bab6004",
-        "name": "Full Scope Disabled",
-        "providerId": "scope",
-        "subType": "anonymous",
-        "subComponents": {},
-        "config": {}
-      },
       {
         "id": "affbc200-4142-4bfd-ab29-9f16aed8d35c",
         "name": "Max Clients Limit",
@@ -2177,18 +1678,6 @@
         }
       },
       {
-        "id": "5cf23fef-ba4b-4d5e-9f1e-e87cc457bef3",
-        "name": "Allowed Client Scopes",
-        "providerId": "allowed-client-templates",
-        "subType": "anonymous",
-        "subComponents": {},
-        "config": {
-          "allow-default-scopes": [
-            "true"
-          ]
-        }
-      },
-      {
         "id": "c9ecc68f-e0b4-4de1-b0f1-a29c05395868",
         "name": "Allowed Client Scopes",
         "providerId": "allowed-client-templates",
@@ -2199,20 +1688,37 @@
             "true"
           ]
         }
+      },
+      {
+        "id": "da79bd9b-7e9c-41a1-bc59-03b29bab6004",
+        "name": "Full Scope Disabled",
+        "providerId": "scope",
+        "subType": "anonymous",
+        "subComponents": {},
+        "config": {}
+      },
+      {
+        "id": "5cf23fef-ba4b-4d5e-9f1e-e87cc457bef3",
+        "name": "Allowed Client Scopes",
+        "providerId": "allowed-client-templates",
+        "subType": "anonymous",
+        "subComponents": {},
+        "config": {
+          "allow-default-scopes": [
+            "true"
+          ]
+        }
+      }
+    ],
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "id": "770844f2-f964-4b8d-a8c0-1411d0d38d00",
+        "providerId": "declarative-user-profile",
+        "subComponents": {},
+        "config": {}
       }
     ],
     "org.keycloak.keys.KeyProvider": [
-      {
-        "id": "f5967ca8-1f0c-456f-a864-c339ea948430",
-        "name": "aes-generated",
-        "providerId": "aes-generated",
-        "subComponents": {},
-        "config": {
-          "priority": [
-            "100"
-          ]
-        }
-      },
       {
         "id": "c58e4e51-9873-464f-a48b-6f5dd5c91b49",
         "name": "rsa-generated",
@@ -2249,6 +1755,17 @@
           ],
           "algorithm": [
             "RSA-OAEP"
+          ]
+        }
+      },
+      {
+        "id": "f5967ca8-1f0c-456f-a864-c339ea948430",
+        "name": "aes-generated",
+        "providerId": "aes-generated",
+        "subComponents": {},
+        "config": {
+          "priority": [
+            "100"
           ]
         }
       }
