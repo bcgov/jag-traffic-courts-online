@@ -28,6 +28,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.EffectiveDate = source.TicketIssuanceDate;
                 // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
                 adnotated.FileNumber = source.TicketFileNumber.ToUpper() + "  01";
+                adnotated.CountNumber = ticket.Count.ToString("D3"); // left pad with zeros
                 adnotated.MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence);
                 
                 // Map adnotated ticket specific data
