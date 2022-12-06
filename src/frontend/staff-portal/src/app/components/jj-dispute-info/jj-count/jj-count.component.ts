@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { JJDispute } from '../../../services/jj-dispute.service';
-import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
+import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatRadioChange } from '@angular/material/radio';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
@@ -24,6 +24,7 @@ export class JJCountComponent implements OnInit {
 
   // Enums
   IncludesSurcharge = JJDisputedCountIncludesSurcharge;
+  Plea = JJDisputedCountPlea;
   RequestReduction = JJDisputedCountRequestReduction;
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   AppearInCourt = JJDisputedCountAppearInCourt;
@@ -39,9 +40,9 @@ export class JJCountComponent implements OnInit {
   busy: Subscription;
   todayDate: Date = new Date();
   form: FormGroup;
-  timeToPay: string = "no";
-  fineReduction: string = "no";
-  inclSurcharge: string = "yes";
+  timeToPay: string = "";
+  fineReduction: string = "";
+  inclSurcharge: string = "";
   lesserOrGreaterAmount: number = 0;
   surcharge: number = 0;
   lesserDescriptionFilteredStatutes: Statute[];
@@ -57,7 +58,7 @@ export class JJCountComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.form = this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons ?
       this.formBuilder.group({
         totalFineAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
@@ -101,9 +102,9 @@ export class JJCountComponent implements OnInit {
 
       // initialize form, radio buttons
       this.form.patchValue(this.jjDisputedCount);
-      this.inclSurcharge = this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no";
-      this.fineReduction = this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no";
-      this.timeToPay = this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no";
+      this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no") : "";
+      this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
+      this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.get('revisedDueDate').setValue(this.jjDisputedCount.revisedDueDate);
 
@@ -152,23 +153,6 @@ export class JJCountComponent implements OnInit {
   filterStatutes(val: string): Statute[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
     return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
-  }
-
-  onMoreOptions() {
-    const data: DialogOptions = {
-      titleKey: "Response to Written Reasons Dispute",
-      messageKey: "",
-      actionTextKey: "Require court hearing",
-      actionType: "warn",
-      cancelTextKey: "Go back",
-      icon: "error_outline",
-    };
-    this.dialog.open(MoreOptionsDialogComponent, { data, width: "50%" }).afterClosed()
-      .subscribe((action: any) => {
-        if (action) {
-          // TODO: fill in to do actions depending on choice
-        }
-      });
   }
 
   onChangelesserOrGreaterAmount() {
