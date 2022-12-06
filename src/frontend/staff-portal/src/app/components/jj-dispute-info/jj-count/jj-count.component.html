@@ -9,11 +9,11 @@
     <div style="display: grid; grid-template-columns: auto auto">
       <span class="section-grid-cell">
         <p class="section-grid-header">Plea</p>
-        <p class="section-grid-text">{{ jjDisputedCount ? jjDisputedCount.plea : '&nbsp;' }}</p>
+        <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.plea === Plea.G ? 'Guilty' : 'Not Guilty' ) : '&nbsp;' }}</p>
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Offence Date</p>
-        <p class="section-grid-text">{{ jjDisputeInfo.violationDate | date: "MMM dd,yyyy" }}</p>
+        <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputeInfo.violationDate | date: "MMM dd,yyyy") : '&nbsp;' }}</p>
       </span>
       <span class="section-grid-cell" style="grid-column: span 2">
         <p class="section-grid-header">Description of offence</p>
@@ -52,7 +52,7 @@
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
         <p class="section-grid-text" *ngIf="jjDisputedCount?.requestReduction === RequestReduction.Y">
           yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestReduction !== RequestReduction.Y">
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y">
           no</p>
       </span>
       <span class="section-grid-cell">
@@ -60,7 +60,7 @@
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
         <p class="section-grid-text" *ngIf="jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y">
           yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y">
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y">
           no</p>
       </span>
     </div>
@@ -109,14 +109,14 @@
         </span>
         <span class="section-jj-grid-cell">
           <p class="section-grid-header"><span *ngIf="fineReduction=='yes'">Includes surcharge</span></p>
-          <p class="section-grid-header"><span *ngIf="fineReduction=='no'">&nbsp;<br /><br /></span></p>
+          <p class="section-grid-header"><span *ngIf="!jjDisputedCount || fineReduction=='no'">&nbsp;<br /><br /></span></p>
           <p class="section-jj-grid-text">
             <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
               (change)="updateInclSurcharge($event.value)" *ngIf="fineReduction=='yes'" [disabled]="!jjDisputedCount">
               <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
               <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
             </mat-radio-group>
-            <span *ngIf="fineReduction=='no'"><br /><br /><br /><br /></span>
+            <span *ngIf="!jjDisputedCount || fineReduction=='no'"><br /><br /><br /><br /></span>
           </p>
         </span>
         <span class="section-jj-grid-cell">
@@ -468,17 +468,7 @@
         </span>
       </div>
     </form>
-    <div style="display: grid; grid-template-columns: 33% 33% 33%">
-      <span class="section-jj-grid-cell">
-        <p class="section-jj-grid-text">
-          <button *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
-            (click)="onMoreOptions()"
-            [disabled]="(jjDisputeInfo.status != 'NEW' && jjDisputeInfo.status != 'IN_PROGRESS') || !jjDisputedCount">
-            More...
-          </button>
-        </p>
-        <p class="section-grid-header">&nbsp;</p>
-      </span>
+    <div style="display: grid; grid-template-columns: 49% 49%">
       <span class="section-jj-grid-cell">
         <p><span
             style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Due

@@ -17,7 +17,7 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   @ViewChild("DCF") private dcfTab: MatTab;
   userProfile: KeycloakProfile = {};
   busy: Subscription;
-  
+
   data$: Observable<JJDispute[]>;
   showDispute: boolean = false;
   tabSelected = new FormControl(0);
@@ -45,7 +45,7 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   }
 
   changeJJDispute(jjDispute: JJDispute) {
-    this.isInfoEditable = !this.dcfTab.isActive;
+    this.isInfoEditable = !this.dcfTab.isActive && this.jjDisputeService.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     this.jjDisputeInfo = jjDispute;
     this.showDispute = true;
   }

@@ -15,7 +15,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 public class ViolationTicketMapperTest extends BaseTestSuite{
 
 	private ViolationTicketMapper violationTicketMapper;
-
+	
 	@Autowired
 	private ViolationTicketMapperImpl violationTicketMapperImpl;
 

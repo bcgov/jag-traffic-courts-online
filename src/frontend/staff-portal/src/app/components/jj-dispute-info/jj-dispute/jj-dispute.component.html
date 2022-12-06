@@ -11,9 +11,10 @@
     <div style="float:inline">
       <span style="float:left">
         <h1><b>
-            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons</span>
-            <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">Hearing Ticket</span>
-            Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute</span>
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket Dispute</span>
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
+            - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
           </b></h1>
       </span>
       <span style="float:right">
@@ -369,12 +370,19 @@
       </div>
       <div fxFlex>
       </div>
+      <button fxFlex="30" *ngIf="type !== 'ticket' && lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons" class="large" mat-flat-button type="button" color="primary"
+        style="margin-right: 20px;" (click)="onRequireCourtHearing()">
+        Require Court Hearing
+      </button>
       <button fxFlex="30" *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
         style="margin-right: 20px;" (click)="onSave()">
         Save & Finish Later
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()">
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" *ngIf="lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing">
         Submit
+      </button>
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing">
+        Back
       </button>
     </div><br /><br />
   </div>

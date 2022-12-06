@@ -18,6 +18,9 @@
           "name": "read"
         },
         {
+          "name": "require_court_hearing"
+        },
+        {
           "name": "update"
         },
         {
@@ -115,6 +118,18 @@
         "resources": "[\"jj-dispute\"]",
         "scopes": "[\"accept\"]",
         "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+      }
+    },
+    {
+      "id": "4eb19a17-2eb3-4815-a8fd-253bee63cd5d",
+      "name": "can require_court_hearing jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"require_court_hearing\"]",
+        "applyPolicies": "[\"has role admin-judicial-justice\",\"has role judicial-justice\"]"
       }
     },
     {
@@ -284,6 +299,11 @@
     {
       "id": "f85d84cd-223e-4e1e-9747-afbbcd4da2c2",
       "name": "accept"
+    },
+    {
+      "id": "899689eb-f7d3-4494-9c06-37d9a841a336",
+      "name": "require_court_hearing",
+      "displayName": "require_court_hearing"
     }
   ],
   "decisionStrategy": "UNANIMOUS"

@@ -10,6 +10,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
     public class UserIdentityProviderHandler : DelegatingHandler
     {
         public const string UsernameClaimType = "preferred_username";
+        public const string PartIdClaimType = "partid";
         public const string FullNameClaimType = ClaimTypes.Name;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -45,7 +46,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
                 _logger.LogError("Could not find preferred_username claim on current user");
             }
 
-            AddPartIdHeader(request, httpContext);
+            AddPartIdHeader(request, httpContext.User);
 
             return await base.SendAsync(request, cancellationToken);
         }
@@ -53,7 +54,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
         private bool AddUsernameHeader(HttpRequestMessage request, ClaimsPrincipal user)
         {
             var username = user.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
-
+            
             if (string.IsNullOrWhiteSpace(username))
             {
                 return false;
@@ -83,15 +84,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
             return true;
         }
 
-        private void AddPartIdHeader(HttpRequestMessage request, HttpContext httpContext)
+        private bool AddPartIdHeader(HttpRequestMessage request, ClaimsPrincipal user)
         {
-            httpContext.Request.Headers.TryGetValue("partid", out var partIdHeader);
-            string partId = partIdHeader.ToString();
-            
-            if (!string.IsNullOrWhiteSpace(partId))
+            var partId = user.Claims.FirstOrDefault(_ => _.Type == PartIdClaimType)?.Value;
+
+            if (string.IsNullOrWhiteSpace(partId))
             {
-                request.Headers.Add("x-partId", partId);
+                return false;
             }
+            request.Headers.Add("x-partId", partId);
+            return true;
         }
     }
 }

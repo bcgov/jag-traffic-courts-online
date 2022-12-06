@@ -24,7 +24,7 @@ export class JJDisputeService {
   public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
   public jjDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
   public jjDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
-  public jjDisputeStatusDisplay: JJDisputeStatus[] = [JJDisputeStatus.HearingScheduled, JJDisputeStatus.Confirmed, JJDisputeStatus.InProgress, JJDisputeStatus.Review, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
+  public jjDisputeStatusDisplay: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.InProgress, JJDisputeStatus.Review, JJDisputeStatus.RequireMoreInfo];
 
   constructor(
     private toastService: ToastService,
@@ -111,6 +111,31 @@ export class JJDisputeService {
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'jj-DisputeService::putJJDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  /**
+     * Require a court hearing
+     *
+     * @param ticketNumber, jjDispute
+     */
+   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<JJDispute> {
+    return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjRequireCourtHearingPut', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjRequireCourtHearingPut error has occurred: ',
             error
           );
           throw error;
@@ -251,8 +276,8 @@ export class JJDisputeService {
     jjDispute.isEditable = this.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
-    jjDispute.jjAssignedToName = this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo)[0]?.fullName;
-    jjDispute.vtcAssignedToName = this.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo)[0]?.fullName;
+    jjDispute.jjAssignedToName = this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
+    jjDispute.vtcAssignedToName = this.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo?.toUpperCase())[0]?.fullName;
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];

@@ -31,8 +31,8 @@
   "registrationEmailAsUsername": false,
   "rememberMe": false,
   "verifyEmail": false,
-  "loginWithEmailAllowed": true,
-  "duplicateEmailsAllowed": false,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": true,
   "resetPasswordAllowed": false,
   "editUsernameAllowed": false,
   "bruteForceProtected": true,
@@ -88,11 +88,861 @@
   "webAuthnPolicyPasswordlessCreateTimeout": 0,
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
+  "users": [
+    {
+      "id": "a8509cdb-484f-4f41-bc96-df2bcb2cec28",
+      "createdTimestamp": 1659723444965,
+      "username": "service-account-staff-api",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "serviceAccountClientId": "staff-api",
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "notBefore": 0
+    }
+  ],
   "scopeMappings": [
     {
       "clientScope": "offline_access",
       "roles": [
         "offline_access"
+      ]
+    }
+  ],
+  "clientScopeMappings": {
+    "account": [
+      {
+        "client": "account-console",
+        "roles": [
+          "manage-account"
+        ]
+      }
+    ]
+  },
+  "clients": [
+    {
+      "id": "52e8cfe4-506b-464b-b2a4-e9dad30dc744",
+      "clientId": "account",
+      "name": "${client_account}",
+      "rootUrl": "${authBaseUrl}",
+      "baseUrl": "/realms/traffic-court/account/",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "/realms/traffic-court/account/*"
+      ],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {},
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": 0,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "9754213c-841a-42e9-871d-a32e5683b061",
+      "clientId": "account-console",
+      "name": "${client_account-console}",
+      "rootUrl": "${authBaseUrl}",
+      "baseUrl": "/realms/traffic-court/account/",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "/realms/traffic-court/account/*"
+      ],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": 0,
+      "protocolMappers": [
+        {
+          "id": "fe5f80e4-e38e-4a33-b530-11675e427c66",
+          "name": "audience resolve",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-resolve-mapper",
+          "consentRequired": false,
+          "config": {}
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "e914a42e-efae-43f5-8e7f-506bd1cf8851",
+      "clientId": "admin-cli",
+      "name": "${client_admin-cli}",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {},
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": 0,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "5924608c-f9cd-4565-b3bb-7589635268e4",
+      "clientId": "broker",
+      "name": "${client_broker}",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": true,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {},
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": 0,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "45238ccd-8008-48b7-821b-62df443a709c",
+      "clientId": "realm-management",
+      "name": "${client_realm-management}",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "**********",
+      "redirectUris": [],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": true,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "client.secret.creation.time": "1660077180"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": 0,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "c70104e9-eae8-40dc-8220-68565619df62",
+      "clientId": "security-admin-console",
+      "name": "${client_security-admin-console}",
+      "rootUrl": "${authAdminUrl}",
+      "baseUrl": "/admin/traffic-court/console/",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "/admin/traffic-court/console/*"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": false,
+      "nodeReRegistrationTimeout": 0,
+      "protocolMappers": [
+        {
+          "id": "f7481fc5-e5b4-430c-9e4f-3ece5b8a1f8a",
+          "name": "locale",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "locale",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "locale",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "c2b063b6-b251-48ae-83a6-bd87ec66eb7f",
+      "clientId": "staff-api",
+      "description": "A client that is available for the TCO Staff API",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "**********",
+      "redirectUris": [
+        "app://postman/callback",
+        "https://localhost:5005/*",
+        "https://localhost:7136/*",
+        "https://staff-api-0198bb-dev.apps.silver.devops.gov.bc.ca/*"
+      ],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "saml.multivalued.roles": "false",
+        "saml.force.post.binding": "false",
+        "frontchannel.logout.session.required": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "use.refresh.tokens": "true",
+        "oidc.ciba.grant.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "client_credentials.use_refresh_token": "true",
+        "saml.client.signature": "false",
+        "require.pushed.authorization.requests": "false",
+        "saml.allow.ecp.flow": "false",
+        "saml.assertion.signature": "false",
+        "id.token.as.detached.signature": "false",
+        "client.secret.creation.time": "1659723444",
+        "saml.encrypt": "false",
+        "login_theme": "keycloak",
+        "saml.server.signature": "false",
+        "exclude.session.state.from.auth.response": "false",
+        "saml.artifact.binding": "false",
+        "saml_force_name_id_format": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "acr.loa.map": "{}",
+        "saml.authnstatement": "false",
+        "display.on.consent.screen": "false",
+        "token.response.type.bearer.lower-case": "false",
+        "saml.onetimeuse.condition": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "a800001a-79f0-40a4-81fd-d19b16ed43b9",
+          "name": "Client ID",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientId",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientId",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "aefa9dbc-7b44-4a25-b15a-6a8e9ff5f590",
+          "name": "Client Host",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientHost",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientHost",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "43eaae72-be8f-44ae-86cb-0adda422a6fe",
+          "name": "Client IP Address",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientAddress",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientAddress",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ],
+      "authorizationSettings": {
+        "allowRemoteResourceManagement": true,
+        "policyEnforcementMode": "ENFORCING",
+        "resources": [
+          {
+            "name": "jj-dispute",
+            "type": "urn:staff-api:resources:jj-dispute",
+            "ownerManagedAccess": false,
+            "displayName": "jj-dispute",
+            "attributes": {},
+            "_id": "8c3dadf5-aaca-4bef-b802-b15d6f1eed82",
+            "uris": [],
+            "scopes": [
+              {
+                "name": "accept"
+              },
+              {
+                "name": "read"
+              },
+              {
+                "name": "require_court_hearing"
+              },
+              {
+                "name": "update"
+              },
+              {
+                "name": "review"
+              },
+              {
+                "name": "assign"
+              }
+            ]
+          },
+          {
+            "name": "dispute",
+            "type": "urn:staff-api:resources:dispute",
+            "ownerManagedAccess": false,
+            "displayName": "dispute",
+            "attributes": {},
+            "_id": "fb7f064f-c819-41ba-98c8-2c46f2ca2c2d",
+            "uris": [],
+            "scopes": [
+              {
+                "name": "read"
+              },
+              {
+                "name": "cancel"
+              },
+              {
+                "name": "reject"
+              },
+              {
+                "name": "update"
+              },
+              {
+                "name": "submit"
+              },
+              {
+                "name": "delete"
+              },
+              {
+                "name": "validate"
+              },
+              {
+                "name": "create"
+              }
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "id": "b8d4f115-046b-42aa-9450-436af87039b2",
+            "name": "has role vtc-staff",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "roles": "[{\"id\":\"staff-api/vtc-staff\",\"required\":true}]"
+            }
+          },
+          {
+            "id": "f0b1fe1e-2e2f-4361-946c-2118613f33fd",
+            "name": "has role admin-judicial-justice",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "roles": "[{\"id\":\"staff-api/admin-judicial-justice\",\"required\":true}]"
+            }
+          },
+          {
+            "id": "4c417ab6-5f82-4187-96cc-7fe7304ce15a",
+            "name": "has role admin-vtc-staff",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "roles": "[{\"id\":\"staff-api/admin-vtc-staff\",\"required\":true}]"
+            }
+          },
+          {
+            "id": "9b577517-9c17-42f3-aa8e-136a9a9efa46",
+            "name": "has role judicial-justice",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "roles": "[{\"id\":\"staff-api/judicial-justice\",\"required\":true}]"
+            }
+          },
+          {
+            "id": "f92168bf-af54-4543-9097-1dad0bc13195",
+            "name": "can accept jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"accept\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+            }
+          },
+          {
+            "id": "4eb19a17-2eb3-4815-a8fd-253bee63cd5d",
+            "name": "can require_court_hearing jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"require_court_hearing\"]",
+              "applyPolicies": "[\"has role admin-judicial-justice\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "8e810eac-cf5c-45d3-889c-13c519d94e90",
+            "name": "can read dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"dispute\"]",
+              "scopes": "[\"read\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "c447d05b-fe22-477d-8dd8-1af13b1f037d",
+            "name": "can cancel dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"dispute\"]",
+              "scopes": "[\"cancel\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "35d19f9a-fa1d-456b-9208-a452c68b1c55",
+            "name": "can update dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"dispute\"]",
+              "scopes": "[\"update\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "9a527c87-1995-4cb0-8be9-89f21bab5cb9",
+            "name": "can validate dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"dispute\"]",
+              "scopes": "[\"validate\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "fb8f7558-f80c-47e1-a68c-b069e4007318",
+            "name": "can read jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"read\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "cf3947b0-d8d4-4576-86ff-6b1d1b903f11",
+            "name": "can submit dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"dispute\"]",
+              "scopes": "[\"submit\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "ddcdd65d-bcfb-4e20-9c52-452e9a45de14",
+            "name": "can reject dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"dispute\"]",
+              "scopes": "[\"reject\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "48bb5ae1-c944-4409-b813-42bebbb8b6d6",
+            "name": "can update jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"update\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+            }
+          },
+          {
+            "id": "7ce63336-84b3-4f2d-ae3b-fb0f1bf66a2a",
+            "name": "can assign jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"assign\"]",
+              "applyPolicies": "[\"has role admin-judicial-justice\"]"
+            }
+          },
+          {
+            "id": "7436e778-1bf7-423c-ad02-69584c53024a",
+            "name": "can review jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"review\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+            }
+          }
+        ],
+        "scopes": [
+          {
+            "id": "09d396b9-8eff-413e-a976-c949d246f992",
+            "name": "create"
+          },
+          {
+            "id": "9643248b-8b2e-4d99-864f-04ba536f3323",
+            "name": "update"
+          },
+          {
+            "id": "fb72f426-9d5e-48fb-ae72-06877050136d",
+            "name": "read"
+          },
+          {
+            "id": "4f42d361-4c53-4e66-8c7c-5aa366d3dc3b",
+            "name": "delete"
+          },
+          {
+            "id": "ccc0bc56-fa1a-4184-8950-182b7bdb07d0",
+            "name": "submit"
+          },
+          {
+            "id": "592c1116-1d05-463d-8ceb-56ebf91ef301",
+            "name": "reject"
+          },
+          {
+            "id": "79f10ad7-3bdc-41f1-a86a-9b2b8735a2ac",
+            "name": "validate",
+            "displayName": "validate"
+          },
+          {
+            "id": "9b2024a3-bf81-4fe6-874d-efef71b5a530",
+            "name": "cancel",
+            "displayName": "cancel"
+          },
+          {
+            "id": "1d7a2e88-1641-4b72-93d1-8888a818ae30",
+            "name": "assign"
+          },
+          {
+            "id": "eb4ef3f1-704d-4e1a-8222-69b6f05528e3",
+            "name": "review"
+          },
+          {
+            "id": "f85d84cd-223e-4e1e-9747-afbbcd4da2c2",
+            "name": "accept"
+          },
+          {
+            "id": "899689eb-f7d3-4494-9c06-37d9a841a336",
+            "name": "require_court_hearing",
+            "displayName": "require_court_hearing"
+          }
+        ],
+        "decisionStrategy": "UNANIMOUS"
+      }
+    },
+    {
+      "id": "b7bcef4c-1485-4d5e-bb48-d07d9e20c789",
+      "clientId": "staff-portal",
+      "description": "A client for the staff portal",
+      "baseUrl": "https://staff-web-0198bb-dev.apps.silver.devops.gov.bc.ca",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "http://localhost:8081/*",
+        "https://staff-web-0198bb-dev.apps.silver.devops.gov.bc.ca/*",
+        "http://localhost:4200/*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "saml.multivalued.roles": "false",
+        "saml.force.post.binding": "false",
+        "frontchannel.logout.session.required": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "use.refresh.tokens": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "client_credentials.use_refresh_token": "false",
+        "saml.client.signature": "false",
+        "require.pushed.authorization.requests": "false",
+        "saml.allow.ecp.flow": "false",
+        "saml.assertion.signature": "false",
+        "id.token.as.detached.signature": "false",
+        "client.secret.creation.time": "1659723611",
+        "saml.encrypt": "false",
+        "saml.server.signature": "false",
+        "exclude.session.state.from.auth.response": "false",
+        "saml.artifact.binding": "false",
+        "saml_force_name_id_format": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "acr.loa.map": "{}",
+        "saml.authnstatement": "false",
+        "display.on.consent.screen": "false",
+        "token.response.type.bearer.lower-case": "false",
+        "saml.onetimeuse.condition": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "72f9753b-1446-4c6b-aecc-5974fa6be9a7",
+          "name": "Client IP Address",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientAddress",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientAddress",
+            "jsonType.label": "String",
+            "access.tokenResponse.claim": "false"
+          }
+        },
+        {
+          "id": "6605e480-b902-4522-90a0-56331fc7a817",
+          "name": "Client Host",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientHost",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientHost",
+            "jsonType.label": "String",
+            "access.tokenResponse.claim": "false"
+          }
+        },
+        {
+          "id": "b8958076-64a5-45c3-b63b-3788632bcbab",
+          "name": "Client ID",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientId",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientId",
+            "jsonType.label": "String",
+            "access.tokenResponse.claim": "false"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
       ]
     }
   ],
@@ -163,6 +1013,21 @@
           }
         },
         {
+          "id": "81295efa-d692-44c3-98af-0125aaafc268",
+          "name": "JUSTIN Participant Id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "partid",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "partid",
+            "jsonType.label": "String"
+          }
+        },
+        {
           "id": "46fd9417-af51-4ede-bd96-f6f4350eec75",
           "name": "zoneinfo",
           "protocol": "openid-connect",
@@ -174,6 +1039,21 @@
             "id.token.claim": "true",
             "access.token.claim": "true",
             "claim.name": "zoneinfo",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "f5b92727-2807-495a-afb8-c857e6b6f600",
+          "name": "username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "idir_username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
             "jsonType.label": "String"
           }
         },
@@ -202,21 +1082,6 @@
             "access.token.claim": "true",
             "claim.name": "updated_at",
             "jsonType.label": "long"
-          }
-        },
-        {
-          "id": "82b35bdb-2e62-456f-9b91-92095eb8b4ce",
-          "name": "username",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-property-mapper",
-          "consentRequired": false,
-          "config": {
-            "userinfo.token.claim": "true",
-            "user.attribute": "username",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "preferred_username",
-            "jsonType.label": "String"
           }
         },
         {
@@ -653,17 +1518,17 @@
       "firstBrokerLoginFlowAlias": "first broker login",
       "config": {
         "validateSignature": "true",
-        "userInfoUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/userinfo",
-        "tokenUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/token",
-        "clientId": "traffic-courts-online-3499",
-        "jwksUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/certs",
+        "userInfoUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/userinfo",
+        "tokenUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/token",
+        "clientId": "traffic-courts-online-4437",
+        "jwksUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs",
         "backchannelSupported": "true",
-        "issuer": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth",
+        "issuer": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard",
         "useJwksUrl": "true",
         "loginHint": "true",
-        "authorizationUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/auth",
+        "authorizationUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/auth",
         "clientAuthMethod": "client_secret_basic",
-        "logoutUrl": "https://dev.oidc.gov.bc.ca/auth/realms/onestopauth/protocol/openid-connect/logout",
+        "logoutUrl": "https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/logout",
         "syncMode": "FORCE",
         "clientSecret": "**********"
       }
@@ -671,25 +1536,25 @@
   ],
   "identityProviderMappers": [
     {
-      "id": "e1b680fa-e12c-43e1-820b-02448f53ec56",
-      "name": "displayName",
+      "id": "9814574e-0aa7-4c00-99fb-bab8a9e968ed",
+      "name": "display_name",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "displayName",
-        "user.attribute": "displayName"
+        "claim": "display_name",
+        "user.attribute": "display_name"
       }
     },
     {
-      "id": "fb5aa5dd-0688-41fe-88b9-3be9ed51480d",
-      "name": "idir_guid",
+      "id": "b4275e1d-543a-4998-86c2-f7358122ee16",
+      "name": "family_name",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "idir_userid",
-        "user.attribute": "idir_user_guid"
+        "claim": "family_name",
+        "user.attribute": "family_name"
       }
     },
     {
@@ -704,81 +1569,41 @@
       }
     },
     {
-      "id": "4a1c81c0-39c2-4261-bd85-36b7d88f7cb9",
-      "name": "userPrincipalName",
+      "id": "05709ddb-1ed6-4108-82ff-6b30eec5d09a",
+      "name": "given_name",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "userPrincipalName",
-        "user.attribute": "userPrincipalName"
+        "claim": "given_name",
+        "user.attribute": "given_name"
       }
     },
     {
-      "id": "a9fe0d20-2739-4050-a312-fc9a9b68f64d",
-      "name": "username",
-      "identityProviderAlias": "idir",
-      "identityProviderMapper": "oidc-username-idp-mapper",
-      "config": {
-        "template": "${CLAIM.preferred_username}",
-        "syncMode": "INHERIT"
-      }
-    },
-    {
-      "id": "698dfe00-6f9e-4866-9a3d-28ebeb13136a",
-      "name": "firstName",
+      "id": "167e03ca-34ac-4c9f-b654-c094c1541f56",
+      "name": "useridentifier",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "firstName",
-        "user.attribute": "firstName"
+        "user.attribute": "useridentifier",
+        "claim": "idir_user_guid"
       }
     },
     {
-      "id": "2bc67e05-419c-43ff-892d-dd0f864801fb",
-      "name": "idir_userid",
+      "id": "8c2e50a9-7e24-48ec-9f86-eb2bb27abc56",
+      "name": "idir_username",
       "identityProviderAlias": "idir",
       "identityProviderMapper": "oidc-user-attribute-idp-mapper",
       "config": {
         "syncMode": "INHERIT",
-        "claim": "idir_userid",
-        "user.attribute": "idir_userid"
-      }
-    },
-    {
-      "id": "6982e629-eb2f-49e7-a964-d50fe0f412db",
-      "name": "lastName",
-      "identityProviderAlias": "idir",
-      "identityProviderMapper": "oidc-user-attribute-idp-mapper",
-      "config": {
-        "syncMode": "INHERIT",
-        "claim": "lastName",
-        "user.attribute": "lastName"
-      }
-    },
-    {
-      "id": "ae2f9d23-da6d-41fb-aa7f-f04d0e088935",
-      "name": "samaccountname",
-      "identityProviderAlias": "idir",
-      "identityProviderMapper": "oidc-user-attribute-idp-mapper",
-      "config": {
-        "syncMode": "INHERIT",
-        "claim": "samaccountname",
-        "user.attribute": "samaccountname"
+        "claim": "idir_username",
+        "user.attribute": "idir_username"
       }
     }
   ],
   "components": {
     "org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy": [
-      {
-        "id": "da79bd9b-7e9c-41a1-bc59-03b29bab6004",
-        "name": "Full Scope Disabled",
-        "providerId": "scope",
-        "subType": "anonymous",
-        "subComponents": {},
-        "config": {}
-      },
       {
         "id": "affbc200-4142-4bfd-ab29-9f16aed8d35c",
         "name": "Max Clients Limit",
@@ -853,18 +1678,6 @@
         }
       },
       {
-        "id": "5cf23fef-ba4b-4d5e-9f1e-e87cc457bef3",
-        "name": "Allowed Client Scopes",
-        "providerId": "allowed-client-templates",
-        "subType": "anonymous",
-        "subComponents": {},
-        "config": {
-          "allow-default-scopes": [
-            "true"
-          ]
-        }
-      },
-      {
         "id": "c9ecc68f-e0b4-4de1-b0f1-a29c05395868",
         "name": "Allowed Client Scopes",
         "providerId": "allowed-client-templates",
@@ -875,20 +1688,37 @@
             "true"
           ]
         }
+      },
+      {
+        "id": "da79bd9b-7e9c-41a1-bc59-03b29bab6004",
+        "name": "Full Scope Disabled",
+        "providerId": "scope",
+        "subType": "anonymous",
+        "subComponents": {},
+        "config": {}
+      },
+      {
+        "id": "5cf23fef-ba4b-4d5e-9f1e-e87cc457bef3",
+        "name": "Allowed Client Scopes",
+        "providerId": "allowed-client-templates",
+        "subType": "anonymous",
+        "subComponents": {},
+        "config": {
+          "allow-default-scopes": [
+            "true"
+          ]
+        }
+      }
+    ],
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "id": "770844f2-f964-4b8d-a8c0-1411d0d38d00",
+        "providerId": "declarative-user-profile",
+        "subComponents": {},
+        "config": {}
       }
     ],
     "org.keycloak.keys.KeyProvider": [
-      {
-        "id": "f5967ca8-1f0c-456f-a864-c339ea948430",
-        "name": "aes-generated",
-        "providerId": "aes-generated",
-        "subComponents": {},
-        "config": {
-          "priority": [
-            "100"
-          ]
-        }
-      },
       {
         "id": "c58e4e51-9873-464f-a48b-6f5dd5c91b49",
         "name": "rsa-generated",
@@ -925,6 +1755,17 @@
           ],
           "algorithm": [
             "RSA-OAEP"
+          ]
+        }
+      },
+      {
+        "id": "f5967ca8-1f0c-456f-a864-c339ea948430",
+        "name": "aes-generated",
+        "providerId": "aes-generated",
+        "subComponents": {},
+        "config": {
+          "priority": [
+            "100"
           ]
         }
       }

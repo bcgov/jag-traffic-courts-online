@@ -5,11 +5,12 @@ import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.servic
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRepresentation } from 'app/services/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
+import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -19,7 +20,7 @@ import { LookupsService } from 'app/services/lookups.service';
 export class JJDisputeComponent implements OnInit {
   @Input() jjDisputeInfo: JJDispute
   @Input() type: string;
-  @Input() isViewOnly: boolean = false;
+  @Input() isViewOnly = false;
   @Output() onBack: EventEmitter<any> = new EventEmitter();
 
   busy: Subscription;
@@ -39,6 +40,8 @@ export class JJDisputeComponent implements OnInit {
   HearingType = JJDisputeHearingType;
   RoPApp = JJDisputeCourtAppearanceRoPApp;
   RoPCrown = JJDisputeCourtAppearanceRoPCrown;
+  DisputeStatus = JJDisputeStatus;
+  requireCourtHearingReason: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -75,10 +78,39 @@ export class JJDisputeComponent implements OnInit {
     });;
   }
 
-  onSubmit(): void {
-    this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
+  public onSubmit(): void {
+    this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;  // Send to VTC Staff for review
     this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
     this.putJJDispute();
+  }
+
+  onRequireCourtHearing() {
+    const data: DialogOptions = {
+      titleKey: "Require court hearing?",
+      messageKey:
+        "Please enter the reason this request requires a court hearing. This information will be shared with staff only.",
+      actionTextKey: "Require court hearing",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline",
+      message: this.requireCourtHearingReason
+    };
+    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+      .subscribe((action?: any) => {
+        if (action?.output?.response) {
+          this.requireCourtHearingReason = action.output.reason; // update on form for appearances
+
+          // udate the reason entered, reject dispute and return to TRM home
+          this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.requireCourtHearingReason).subscribe({
+            next: response => {
+              this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
+              this.onBackClicked();
+            },
+            error: err => { },
+            complete: () => { }
+          });
+        }
+      });
   }
 
   updateAppearanceTs() {
@@ -91,8 +123,8 @@ export class JJDisputeComponent implements OnInit {
 
   onSave(): void {
     // Update status to in progress unless status is set to review in which case do not change
-    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review) {
-      this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    if (this.lastUpdatedJJDispute.status !== this.DisputeStatus.Review) {
+      this.lastUpdatedJJDispute.status = this.DisputeStatus.InProgress;
       this.putJJDispute();
     } else {
       this.putJJDispute();
@@ -133,6 +165,7 @@ export class JJDisputeComponent implements OnInit {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
+              this.jjDisputeService.refreshDisputes.emit();
               this.onBackClicked();
             })
           })
@@ -151,6 +184,7 @@ export class JJDisputeComponent implements OnInit {
         'JJDisputeComponent::putJJDispute response',
         response
       );
+      this.jjDisputeService.refreshDisputes.emit();
       this.onBackClicked();
     });
   }

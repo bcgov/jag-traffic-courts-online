@@ -292,6 +292,68 @@ public class JJController : StaffControllerBase<JJController>
     }
 
     /// <summary>
+    /// Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE as well as adds an optional remark that explaining why the status was set.
+    /// </summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The JJDispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
+    /// <response code="404">JJDispute record not found. Update failed.</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be less than or equal to 256 characters. Update failed.</response>
+    /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}/requirecourthearing")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.RequireCourtHearing)]
+    public async Task<IActionResult> RequireCourtHearingJJDisputeAsync(
+        string ticketNumber,
+        [FromForm]
+        [StringLength(256, ErrorMessage = "Remark note cannot exceed 256 characters.")] string remark,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJDispute status to REQUIRE_COURT_HEARING");
+
+        try
+        {
+            await _JJDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
+            return Ok();
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Updates the status of a particular JJDispute record to ACCEPTED.
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>

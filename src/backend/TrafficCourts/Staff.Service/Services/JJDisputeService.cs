@@ -73,6 +73,17 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
+    public async Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string remark, CancellationToken cancellationToken)
+    {
+        JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
+
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "JJ requires a court hearing for this dispute.");
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        return dispute;
+    }
+
+
     public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
