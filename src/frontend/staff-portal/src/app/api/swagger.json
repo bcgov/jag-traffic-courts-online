@@ -1127,6 +1127,34 @@
         }
       }
     },
+    "/api/dispute/updaterequest/{updateStatusId}/accept": {
+      "put": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Approves a DisputantUpdateRequest record, setting it's status to ACCEPTED.",
+        "parameters": [
+          {
+            "name": "updateStatusId",
+            "in": "path",
+            "description": "Unique identifier for a specific DisputantUpdateRequest record to accept.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/api/emailhistory/emailhistory": {
       "get": {
         "tags": [

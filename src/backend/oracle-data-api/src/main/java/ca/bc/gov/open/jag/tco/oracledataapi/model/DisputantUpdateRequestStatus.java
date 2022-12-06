@@ -1,6 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-public enum DisputantUpdateStatus implements ShortNamedEnum {
+public enum DisputantUpdateRequestStatus implements ShortNamedEnum {
 
 	PENDING("PEN"),
 	ACCEPTED("ACC"),
@@ -8,7 +8,7 @@ public enum DisputantUpdateStatus implements ShortNamedEnum {
 
 	private String shortName;
 
-	private DisputantUpdateStatus(String shortName) {
+	private DisputantUpdateRequestStatus(String shortName) {
 		this.shortName = shortName;
 	}
 

@@ -456,4 +456,20 @@ public class DisputeController : StaffControllerBase<DisputeController>
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
+
+    /// <summary>
+    /// Approves a DisputantUpdateRequest record, setting it's status to ACCEPTED.
+    /// </summary>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to accept.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPut("updateRequest/{updateStatusId}/accept")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
+    public async Task<IActionResult> AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    {
+        await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
+        return Ok();
+    }
 }

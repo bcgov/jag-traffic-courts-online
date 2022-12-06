@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
@@ -86,7 +86,7 @@ public class DisputeController {
 	 */
 	@GetMapping("/dispute/{id}")
 	public ResponseEntity<Dispute> getDispute(@PathVariable Long id, Principal principal) {
-		logger.debug("GET /disputes/{id} called");
+		logger.debug("GET /disputes/{} called", id);
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -388,7 +388,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
 	})
-	public ResponseEntity<List<DisputantUpdateRequest>> getDisputantUpdateRequest(@PathVariable @Parameter(description = "The disputeId of the Dispute.") Long id) {
+	public ResponseEntity<List<DisputantUpdateRequest>> getDisputantUpdateRequests(@PathVariable @Parameter(description = "The disputeId of the Dispute.") Long id) {
 		logger.debug("GET /dispute/{}/updateRequest called", id);
 		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByDisputeId(id), HttpStatus.OK);
 	}
@@ -396,7 +396,7 @@ public class DisputeController {
 	/**
 	 * PUT endpoint that updates the status of a DisputantUpdateRequest record.
 	 *
-	 * @param status to be saved
+	 * @param disputantUpdateRequestStatus to be saved
 	 * @return id of the saved {@link DisputantUpdateRequest}
 	 */
 	@PutMapping("/dispute/updateRequest/{id}")
@@ -412,10 +412,10 @@ public class DisputeController {
 			Long updateRequestId,
 			@RequestParam
 			@Parameter(description = "The status the request record should be updated to.", example = "ACCEPTED")
-			DisputantUpdateStatus status) {
-		logger.debug("PUT /dispute/updateRequest/{id} called", updateRequestId);
+			DisputantUpdateRequestStatus disputantUpdateRequestStatus) {
+		logger.debug("PUT /dispute/updateRequest/{} called", updateRequestId);
 
-		DisputantUpdateRequest disputantUpdateRequest = disputeService.updateDisputantUpdateRequest(updateRequestId, status);
+		DisputantUpdateRequest disputantUpdateRequest = disputeService.updateDisputantUpdateRequest(updateRequestId, disputantUpdateRequestStatus);
 		return new ResponseEntity<DisputantUpdateRequest>(disputantUpdateRequest, HttpStatus.OK);
 	}
 
