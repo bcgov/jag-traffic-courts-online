@@ -115,4 +115,17 @@ public class MappingTests
         Assert.Equal(source.LawyerAddress, target.LawyerAddress);
         Assert.Equal(source.LawyerPhoneNumber, target.LawyerPhoneNumber);
     }
+
+    [Fact]
+    public void TestJsonDeserializer()
+    {
+        string json = "{ \"disputantGivenName1\": \"fname1\", \"disputantGivenName2\": \"fname2\", \"disputantGivenName3\": \"fname3\", \"disputantSurname\": \"lname\" }";
+        Dispute? patch = Newtonsoft.Json.JsonConvert.DeserializeObject<Dispute>(json);
+        Assert.NotNull(patch);
+        Assert.Equal("fname1", patch.DisputantGivenName1);
+        Assert.Equal("fname2", patch.DisputantGivenName2);
+        Assert.Equal("fname3", patch.DisputantGivenName3);
+        Assert.Equal("lname", patch.DisputantSurname);
+    }
+
 }
