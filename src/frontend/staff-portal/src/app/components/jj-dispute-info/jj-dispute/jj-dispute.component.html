@@ -11,9 +11,8 @@
     <div style="float:inline">
       <span style="float:left">
         <h1><b>
-            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons</span>
-            <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket</span>
-            Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute</span>
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
             - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
           </b></h1>
