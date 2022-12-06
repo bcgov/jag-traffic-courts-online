@@ -13,6 +13,14 @@ import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 public class DisputeMapperTest extends BaseTestSuite{
 
 	private DisputeMapper disputeMapper;
+	
+	@Autowired
+	private DisputeMapperImpl disputeMapperImpl;
+
+	@BeforeEach
+	void setUp() {
+		disputeMapper = disputeMapperImpl;
+	}
 
 	@Test
 	void testMapToDispute_shouldReturnFullLawyerAddress() {
