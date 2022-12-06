@@ -72,22 +72,22 @@ export class JJCountComponent implements OnInit {
         revisedDueDate: [null],
         comments: [{ value: null, disabled: !this.jjDisputedCount }],
         jjDisputedCountRoP: this.formBuilder.group({
-          finding: null,
-          lesserDescription: null,
-          ssProbationDuration: null,
-          ssProbationConditions: null,
-          jailDuration: null,
-          jailIntermittent: null,
-          probationDuration: null,
-          probationConditions: null,
-          drivingProhibition: null,
-          drivingProhibitionMVASection: null,
-          dismissed: null,
-          forWantOfProsecution: null,
-          withdrawn: null,
-          abatement: null,
-          stayOfProceedingsBy: null,
-          other: null,
+          finding:  [{ value: null, disabled: !this.jjDisputedCount }],
+          lesserDescription:  [{ value: null, disabled: !this.jjDisputedCount }],
+          ssProbationDuration:  [{ value: null, disabled: !this.jjDisputedCount }],
+          ssProbationConditions:  [{ value: null, disabled: !this.jjDisputedCount }],
+          jailDuration:  [{ value: null, disabled: !this.jjDisputedCount }],
+          jailIntermittent:  [{ value: null, disabled: !this.jjDisputedCount }],
+          probationDuration:  [{ value: null, disabled: !this.jjDisputedCount }],
+          probationConditions:  [{ value: null, disabled: !this.jjDisputedCount }],
+          drivingProhibition:  [{ value: null, disabled: !this.jjDisputedCount }],
+          drivingProhibitionMVASection:  [{ value: null, disabled: !this.jjDisputedCount }],
+          dismissed:  [{ value: null, disabled: !this.jjDisputedCount }],
+          forWantOfProsecution:  [{ value: null, disabled: !this.jjDisputedCount }],
+          withdrawn:  [{ value: null, disabled: !this.jjDisputedCount }],
+          abatement:  [{ value: null, disabled: !this.jjDisputedCount }],
+          stayOfProceedingsBy:  [{ value: null, disabled: !this.jjDisputedCount }],
+          other:  [{ value: null, disabled: !this.jjDisputedCount }],
         })
       });
 
@@ -108,7 +108,7 @@ export class JJCountComponent implements OnInit {
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.get('revisedDueDate').setValue(this.jjDisputedCount.revisedDueDate);
 
-      if(this.isViewOnly) {
+      if(this.isViewOnly || !this.jjDisputedCount) {
         this.form.disable();
       }
 
