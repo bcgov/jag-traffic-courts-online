@@ -16,16 +16,15 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             List<ArcFileRecord> arcFileRecordList = new();
 
             // Additional minutes between the transaction times since each transaction timestamp for EV and ED must be unique for ARC to process
-            double addedMinutes = 0;
+            var now = GetCurrentDate();
 
             foreach (TicketCount ticket in source.TicketDetails)
             {
-
                 AdnotatedTicket adnotated = new();
 
                 // Adnotated ticket's Master File Data mapping
-                adnotated.TransactionDate = DateTime.Now.AddMinutes(addedMinutes);
-                adnotated.TransactionTime = DateTime.Now.AddMinutes(addedMinutes);
+                adnotated.TransactionDate = now;
+                adnotated.TransactionTime = now;
                 adnotated.EffectiveDate = source.TicketIssuanceDate;
                 // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
                 adnotated.FileNumber = source.TicketFileNumber.ToUpper() + "  01";
@@ -77,13 +76,13 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         continue;
                     }
 
-                    addedMinutes++;
+                    now = now.AddMinutes(1);
 
                     DisputedTicket disputed = new()
                     {
                         // Dispited ticket's Master File Data mapping
-                        TransactionDate = DateTime.Now.AddMinutes(addedMinutes),
-                        TransactionTime = DateTime.Now.AddMinutes(addedMinutes),
+                        TransactionDate = now,
+                        TransactionTime = now,
                         EffectiveDate = source.TicketIssuanceDate,
                         // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
                         FileNumber = source.TicketFileNumber.ToUpper() + "  01",
@@ -102,7 +101,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                     arcFileRecordList.Add(disputed);
                 }
 
-                addedMinutes++;
+                now = now.AddMinutes(1);
             }
             return arcFileRecordList;
         }
@@ -115,6 +114,21 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             string givenNames = string.Join(" ", splitted).ToString().ToUpper();
 
             return surname + givenNames;
+        }
+
+        private static DateTime GetCurrentDate()
+        {
+            DateTime date = DateTime.Now;
+
+            // Calculate the number of ticks (1 tick = 100 nanoseconds)
+            // that represent 1 second, and add that number of ticks
+            // to the current DateTime object to round it down to the
+            // nearest whole second.
+
+            // kind of ugly but it works
+            long ticksPerSecond = TimeSpan.TicksPerSecond;
+            DateTime roundedDate = date.AddTicks(ticksPerSecond / 2 * -1);
+            return roundedDate;
         }
     }
 }
