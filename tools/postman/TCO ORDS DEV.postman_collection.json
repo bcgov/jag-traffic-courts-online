@@ -1,0 +1,231 @@
+{
+	"info": {
+		"_postman_id": "61624821-f33b-4889-9ae0-e74fa85fb468",
+		"name": "TCO ORDS DEV",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev.jag.gov.bc.ca/ords/devj/tcoords/tco/v1/ping",
+					"protocol": "https",
+					"host": [
+						"dev",
+						"jag",
+						"gov",
+						"bc",
+						"ca"
+					],
+					"path": [
+						"ords",
+						"devj",
+						"tcoords",
+						"tco",
+						"v1",
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "jjDisputeList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/jjDisputeList?justinRccId&violationTicketId&ticketNumber",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"jjDisputeList"
+					],
+					"query": [
+						{
+							"key": "justinRccId",
+							"value": null
+						},
+						{
+							"key": "violationTicketId",
+							"value": null
+						},
+						{
+							"key": "ticketNumber",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "jjDispute",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/jjDispute?ticketNumber=EA90100004",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"jjDispute"
+					],
+					"query": [
+						{
+							"key": "ticketNumber",
+							"value": "EA90100004"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateDispute",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"disputeId\": \"25\",\r\n    \"disputeStatusTypeCd\": \"NEW\",\r\n    \"violationDt\": \"Smith\",\r\n    \"submittedDt\": \"Tcotest\",\r\n    \"icbcReceivedDt\": null,\r\n    \"vtcAssignedTo\": null,\r\n    \"vtcAssignedDtm\": null,\r\n    \"jjAssignedTo\": \"DELTA MUN\",\r\n    \"jjAssignedDtm\": null,\r\n    \"remarksTxt\": \"Will not get updated\",\r\n    \"entDtm\": \"2022-11-25T11:14:55Z\",\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": \"2022-12-05T03:31:18Z\",\r\n    \"updUserId\": \"TCO\",\r\n    \"disputeCounts\": [\r\n        {\r\n            \"disputeCountId\": \"1\",\r\n            \"adjustedAmt\": \"75\",\r\n            \"includesSurchargeYn\": \"Y\",\r\n            \"revisedDueDt\": \"2023-05-11\",\r\n            \"totalFineAmt\": \"215.50\",\r\n            \"commentsTxt\": \"Move the due date to May 11th next year\",\r\n            \"requestTimeToPayYn\": \"Y\",\r\n            \"requestReductionYn\": \"Y\",\r\n            \"requestCourtAppearanceYn\": \"N\",\r\n            \"entDtm\": null,\r\n            \"entUserId\": \"TCO\",\r\n            \"updDtm\": null,\r\n            \"updUserId\": \"EWONG\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/updateDispute",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"updateDispute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "disputeStatus",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/disputeStatus?disputeId&statusCd&userId",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"disputeStatus"
+					],
+					"query": [
+						{
+							"key": "disputeId",
+							"value": null
+						},
+						{
+							"key": "statusCd",
+							"value": null
+						},
+						{
+							"key": "userId",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assignDisputeJj",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeJj?disputeId&userId",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"assignDisputeJj"
+					],
+					"query": [
+						{
+							"key": "disputeId",
+							"value": null
+						},
+						{
+							"key": "userId",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assignDisputeVtc",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeVtc?disputeId&userId",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"assignDisputeVtc"
+					],
+					"query": [
+						{
+							"key": "disputeId",
+							"value": null
+						},
+						{
+							"key": "userId",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unassignDisputeVtc",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/unassignDisputeVtc?assignedBeforeTs=2022-09-19T08:12:13Z",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"unassignDisputeVtc"
+					],
+					"query": [
+						{
+							"key": "assignedBeforeTs",
+							"value": "2022-09-19T08:12:13Z"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
