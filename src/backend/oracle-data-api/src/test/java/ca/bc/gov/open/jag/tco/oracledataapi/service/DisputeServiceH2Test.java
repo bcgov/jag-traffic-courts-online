@@ -17,8 +17,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 
@@ -120,8 +120,8 @@ class DisputeServiceH2Test extends BaseTestSuite {
 		String json = "{ \"address_line1\": \"123 Main Street\", \"address_line2\": \"\", \"address_line3\": \"\" }";
 		DisputantUpdateRequest updateRequest = new DisputantUpdateRequest();
 		updateRequest.setDisputeId(Long.valueOf(1L));
-		updateRequest.setStatus(DisputantUpdateStatus.PENDING);
-		updateRequest.setUpdateType(DisputantUpdateType.DISPUTANT_ADDRESS);
+		updateRequest.setStatus(DisputantUpdateRequestStatus.PENDING);
+		updateRequest.setUpdateType(DisputantUpdateRequestType.DISPUTANT_ADDRESS);
 		updateRequest.setUpdateJson(json);
 		DisputantUpdateRequest savedUpdateReq = disputeService.saveDisputantUpdateRequest(noticeOfDisputeGuid, updateRequest);
 		Long disputantUpdateRequestId = savedUpdateReq.getDisputantUpdateRequestId();
@@ -134,12 +134,12 @@ class DisputeServiceH2Test extends BaseTestSuite {
 		savedUpdateReq = updateRequests.get(0);
 
 		assertEquals(dispute.getDisputeId(), savedUpdateReq.getDisputeId().longValue());
-		assertEquals(DisputantUpdateStatus.PENDING, savedUpdateReq.getStatus());
-		assertEquals(DisputantUpdateType.DISPUTANT_ADDRESS, savedUpdateReq.getUpdateType());
+		assertEquals(DisputantUpdateRequestStatus.PENDING, savedUpdateReq.getStatus());
+		assertEquals(DisputantUpdateRequestType.DISPUTANT_ADDRESS, savedUpdateReq.getUpdateType());
 		assertEquals(json, savedUpdateReq.getUpdateJson());
 
-		savedUpdateReq = disputeService.updateDisputantUpdateRequest(disputantUpdateRequestId, DisputantUpdateStatus.ACCEPTED);
-		assertEquals(DisputantUpdateStatus.ACCEPTED, savedUpdateReq.getStatus());
+		savedUpdateReq = disputeService.updateDisputantUpdateRequest(disputantUpdateRequestId, DisputantUpdateRequestStatus.ACCEPTED);
+		assertEquals(DisputantUpdateRequestStatus.ACCEPTED, savedUpdateReq.getStatus());
 	}
 
 	@Test

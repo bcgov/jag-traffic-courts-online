@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
@@ -356,7 +356,7 @@ public class DisputeService {
 	 * @param status
 	 * @return the newly saved DisputantUpdateRequest record, never null.
 	 */
-	public DisputantUpdateRequest updateDisputantUpdateRequest(Long updateRequestId, DisputantUpdateStatus status) {
+	public DisputantUpdateRequest updateDisputantUpdateRequest(Long updateRequestId, DisputantUpdateRequestStatus status) {
 		DisputantUpdateRequest disputantUpdateRequest = disputantUpdateRequestRepository.findById(updateRequestId).orElseThrow();
 		disputantUpdateRequest.setStatus(status);
 		return disputantUpdateRequestRepository.save(disputantUpdateRequest);

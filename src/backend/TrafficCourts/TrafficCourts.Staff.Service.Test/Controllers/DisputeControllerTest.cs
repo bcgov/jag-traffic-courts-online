@@ -221,6 +221,28 @@ public class DisputeControllerTest
     }
 
     [Fact]
+    public async void TestAcceptDisputeUpdateRequest_200()
+    {
+
+        // Arrange
+        Dispute dispute = new();
+        long id = 1;
+        dispute.DisputeId = id;
+        var disputeService = new Mock<IDisputeService>();
+        disputeService
+            .Setup(_ => _.AcceptDisputeUpdateRequestAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Verifiable();
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+
+        // Act
+        await disputeController.AcceptDisputeUpdateRequestAsync(id, CancellationToken.None);
+
+        // Assert
+        disputeService.VerifyAll();
+    }
+
+    [Fact]
     public void AllEndpointsShouldImplementAuthorizeAttribute()
     {
         // Check all endpoints of DisputeController to confirm all are guarded with proper KeycloakAuthorization or explicit AllowAnonymous Attribute

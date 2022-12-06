@@ -25,8 +25,8 @@ import lombok.Setter;
  * <code>modifiedTs</code> fields. Classes need only to extend this class to add auditing fields to a model object.
  */
 @TypeDefs({
-	@TypeDef(name = "disputantUpdateStatus", defaultForType = DisputantUpdateStatus.class, typeClass = ShortNamedEnumType.class),
-	@TypeDef(name = "disputantUpdateType", defaultForType = DisputantUpdateType.class, typeClass = ShortNamedEnumType.class)
+	@TypeDef(name = "disputantUpdateStatus", defaultForType = DisputantUpdateRequestStatus.class, typeClass = ShortNamedEnumType.class),
+	@TypeDef(name = "disputantUpdateType", defaultForType = DisputantUpdateRequestType.class, typeClass = ShortNamedEnumType.class)
 })
 @MappedSuperclass
 @Getter
