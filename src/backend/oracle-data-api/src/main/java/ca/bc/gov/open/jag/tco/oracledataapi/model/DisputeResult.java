@@ -12,6 +12,14 @@ import lombok.Setter;
 public class DisputeResult {
 
 	private Long disputeId;
+
 	private DisputeStatus disputeStatus;
+
+	private JJDisputeStatus jjDisputeStatus;
+
+	public DisputeResult(Long disputeId, DisputeStatus disputeStatus) {
+		this.disputeId = disputeId;
+		this.disputeStatus = disputeStatus;
+	}
 
 }
