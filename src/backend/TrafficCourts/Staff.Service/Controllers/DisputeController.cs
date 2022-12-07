@@ -472,4 +472,20 @@ public class DisputeController : StaffControllerBase<DisputeController>
         await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
         return Ok();
     }
+
+    /// <summary>
+    /// Rejects a DisputantUpdateRequest record, setting it's status to REJECTED.
+    /// </summary>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to reject.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPut("updateRequest/{updateStatusId}/reject")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
+    public async Task<IActionResult> RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    {
+        await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
+        return Ok();
+    }
 }

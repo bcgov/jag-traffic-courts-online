@@ -227,10 +227,26 @@ public class DisputeService : IDisputeService
     {
         // TCVP-1975 - consumers of this message are expected to:
         // - call oracle-data-api to patch the Dispute with the DisputantUpdateRequest changes.
-        // - call oracle-data-api to update flag in OCCAM.
+        // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
         DisputantUpdateRequestAccepted message = new(updateStatusId);
+        await _bus.PublishWithLog(_logger, message, cancellationToken);
+    }
+
+    /// <summary>
+    /// Rejects a citizen's requested changes to their Disputant Contact information.
+    /// </summary>
+    /// <param name="updateStatusId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    {
+        // TCVP-1974 - consumers of this message are expected to:
+        // - call oracle-data-api to update request status in OCCAM.
+        // - send confirmation email indicating request was rejected
+        // - populate file/email history records
+        DisputantUpdateRequestRejected message = new(updateStatusId);
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 }

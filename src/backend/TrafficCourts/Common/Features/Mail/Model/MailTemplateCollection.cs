@@ -52,9 +52,17 @@ namespace TrafficCourts.Common.Features.Mail.Model
             },
         new MailTemplate()
             {
-                TemplateName = "DisputantUpdateRequestApprovedTemplate",
+                TemplateName = "DisputantUpdateRequestAcceptedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Disputant contact information changes approved)",
+                HtmlContentTemplate = "TBD",
+                PlainContentTemplate = "TBD"
+            },
+        new MailTemplate()
+            {
+                TemplateName = "DisputantUpdateRequestRejectedTemplate",
+                Sender = "DoNotReply@tickets.gov.bc.ca",
+                SubjectTemplate = "TBD (ie. Disputant contact information changes rejected)",
                 HtmlContentTemplate = "TBD",
                 PlainContentTemplate = "TBD"
             },
