@@ -3,6 +3,7 @@ import { DisputeRepresentedByLawyer, Language } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
 import { NoticeOfDisputeService, NoticeOfDisputeExtended } from "app/services/notice-of-dispute.service";
 import { Subscription } from "rxjs";
+import { ConfigService } from "@config/config.service";
 
 @Component({
   selector: "app-dispute-ticket-summary",
@@ -17,7 +18,8 @@ export class DisputeTicketSummaryComponent implements OnInit {
 
   constructor(
     protected noticeOfDisputeService: NoticeOfDisputeService,
-    public lookups: LookupsService
+    public lookups: LookupsService,
+    public configService: ConfigService
   ) {
 
     this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {

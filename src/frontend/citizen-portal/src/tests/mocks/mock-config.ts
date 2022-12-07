@@ -5,6 +5,16 @@ export class MockConfig {
     /* eslint-disable */
     // Export of /lookup response:
     return {
+      countries: [
+        {
+          ctryId: 1,
+          ctryLongNm: 'Canada',
+        },
+        {
+          ctryId: 2,
+          ctryLongNm: 'United States',
+        },
+      ],
       courtLocations: [
         {
           code: '82.0001',
@@ -317,367 +327,98 @@ export class MockConfig {
           name: 'Rejected',
         },
       ],
-      countries: [
+      provincesAndStates: [
         {
-          code: 'CA',
-          name: 'Canada',
+          provId: 1,
+          ctryId: 1,
+          provSeqNo: 1,
+          provNm: "British Columbia",
+          provAbbreviationCd: "BC"
         },
         {
-          code: 'US',
-          name: 'United States',
+          provId: 2,
+          ctryId: 1,
+          provSeqNo: 2,
+          provNm: "Manitoba",
+          provAbbreviationCd: "MB"
         },
-      ],
-      provinces: [
         {
-          code: 'AB',
-          countryCode: 'CA',
-          name: 'Alberta',
+          provId: 3,
+          ctryId: 1,
+          provSeqNo: 3,
+          provNm: "Quebec",
+          provAbbreviationCd: "PQ"
         },
         {
-          code: 'AK',
-          countryCode: 'US',
-          name: 'Alaska',
+          provId: 4,
+          ctryId: 1,
+          provSeqNo: 4,
+          provNm: "New Brunswick",
+          provAbbreviationCd: "NB"
         },
         {
-          code: 'AL',
-          countryCode: 'US',
-          name: 'Alabama',
+          provId: 5,
+          ctryId: 1,
+          provSeqNo: 5,
+          provNm: "Newfoundland",
+          provAbbreviationCd: "NL"
         },
         {
-          code: 'AR',
-          countryCode: 'US',
-          name: 'Arkansas',
+          provId: 6,
+          ctryId: 1,
+          provSeqNo: 6,
+          provNm: "Nova Scotia",
+          provAbbreviationCd: "NS"
         },
         {
-          code: 'AS',
-          countryCode: 'US',
-          name: 'American Samoa',
+          provId: 7,
+          ctryId: 1,
+          provSeqNo: 7,
+          provNm: "Prince Edward Island",
+          provAbbreviationCd: "PE"
         },
         {
-          code: 'AZ',
-          countryCode: 'US',
-          name: 'Arizona',
+          provId: 8,
+          ctryId: 1,
+          provSeqNo: 8,
+          provNm: "Northwest Territories",
+          provAbbreviationCd: "NT"
         },
         {
-          code: 'BC',
-          countryCode: 'CA',
-          name: 'British Columbia',
+          provId: 9,
+          ctryId: 1,
+          provSeqNo: 9,
+          provNm: "Yukon",
+          provAbbreviationCd: "YT"
         },
         {
-          code: 'CA',
-          countryCode: 'US',
-          name: 'California',
+          provId: 10,
+          ctryId: 1,
+          provSeqNo: 10,
+          provNm: "Alberta",
+          provAbbreviationCd: "AB"
         },
         {
-          code: 'CO',
-          countryCode: 'US',
-          name: 'Colorado',
+          provId: 11,
+          ctryId: 1,
+          provSeqNo: 11,
+          provNm: "Saskatchewan",
+          provAbbreviationCd: "SK"
         },
         {
-          code: 'CT',
-          countryCode: 'US',
-          name: 'Connecticut',
+          provId: 12,
+          ctryId: 1,
+          provSeqNo: 12,
+          provNm: "Ontario",
+          provAbbreviationCd: "ON"
         },
         {
-          code: 'DC',
-          countryCode: 'US',
-          name: 'District of Columbia',
-        },
-        {
-          code: 'DE',
-          countryCode: 'US',
-          name: 'Delaware',
-        },
-        {
-          code: 'FL',
-          countryCode: 'US',
-          name: 'Florida',
-        },
-        {
-          code: 'GA',
-          countryCode: 'US',
-          name: 'Georgia',
-        },
-        {
-          code: 'GU',
-          countryCode: 'US',
-          name: 'Guam',
-        },
-        {
-          code: 'HI',
-          countryCode: 'US',
-          name: 'Hawaii',
-        },
-        {
-          code: 'IA',
-          countryCode: 'US',
-          name: 'Iowa',
-        },
-        {
-          code: 'ID',
-          countryCode: 'US',
-          name: 'Idaho',
-        },
-        {
-          code: 'IL',
-          countryCode: 'US',
-          name: 'Illinois',
-        },
-        {
-          code: 'IN',
-          countryCode: 'US',
-          name: 'Indiana',
-        },
-        {
-          code: 'KS',
-          countryCode: 'US',
-          name: 'Kansas',
-        },
-        {
-          code: 'KY',
-          countryCode: 'US',
-          name: 'Kentucky',
-        },
-        {
-          code: 'LA',
-          countryCode: 'US',
-          name: 'Louisiana',
-        },
-        {
-          code: 'MA',
-          countryCode: 'US',
-          name: 'Massachusetts',
-        },
-        {
-          code: 'MB',
-          countryCode: 'CA',
-          name: 'Manitoba',
-        },
-        {
-          code: 'MD',
-          countryCode: 'US',
-          name: 'Maryland',
-        },
-        {
-          code: 'ME',
-          countryCode: 'US',
-          name: 'Maine',
-        },
-        {
-          code: 'MI',
-          countryCode: 'US',
-          name: 'Michigan',
-        },
-        {
-          code: 'MN',
-          countryCode: 'US',
-          name: 'Minnesota',
-        },
-        {
-          code: 'MO',
-          countryCode: 'US',
-          name: 'Missouri',
-        },
-        {
-          code: 'MP',
-          countryCode: 'US',
-          name: 'Northern Mariana Islands',
-        },
-        {
-          code: 'MS',
-          countryCode: 'US',
-          name: 'Mississippi',
-        },
-        {
-          code: 'MT',
-          countryCode: 'US',
-          name: 'Montana',
-        },
-        {
-          code: 'NB',
-          countryCode: 'CA',
-          name: 'New Brunswick',
-        },
-        {
-          code: 'NC',
-          countryCode: 'US',
-          name: 'North Carolina',
-        },
-        {
-          code: 'ND',
-          countryCode: 'US',
-          name: 'North Dakota',
-        },
-        {
-          code: 'NE',
-          countryCode: 'US',
-          name: 'Nebraska',
-        },
-        {
-          code: 'NH',
-          countryCode: 'US',
-          name: 'New Hampshire',
-        },
-        {
-          code: 'NJ',
-          countryCode: 'US',
-          name: 'New Jersey',
-        },
-        {
-          code: 'NL',
-          countryCode: 'CA',
-          name: 'Newfoundland and Labrador',
-        },
-        {
-          code: 'NM',
-          countryCode: 'US',
-          name: 'New Mexico',
-        },
-        {
-          code: 'NS',
-          countryCode: 'CA',
-          name: 'Nova Scotia',
-        },
-        {
-          code: 'NT',
-          countryCode: 'CA',
-          name: 'Northwest Territories',
-        },
-        {
-          code: 'NU',
-          countryCode: 'CA',
-          name: 'Nunavut',
-        },
-        {
-          code: 'NV',
-          countryCode: 'US',
-          name: 'Nevada',
-        },
-        {
-          code: 'NY',
-          countryCode: 'US',
-          name: 'New York',
-        },
-        {
-          code: 'OH',
-          countryCode: 'US',
-          name: 'Ohio',
-        },
-        {
-          code: 'OK',
-          countryCode: 'US',
-          name: 'Oklahoma',
-        },
-        {
-          code: 'ON',
-          countryCode: 'CA',
-          name: 'Ontario',
-        },
-        {
-          code: 'OR',
-          countryCode: 'US',
-          name: 'Oregon',
-        },
-        {
-          code: 'PA',
-          countryCode: 'US',
-          name: 'Pennsylvania',
-        },
-        {
-          code: 'PE',
-          countryCode: 'CA',
-          name: 'Prince Edward Island',
-        },
-        {
-          code: 'PR',
-          countryCode: 'US',
-          name: 'Puerto Rico',
-        },
-        {
-          code: 'QC',
-          countryCode: 'CA',
-          name: 'Quebec',
-        },
-        {
-          code: 'RI',
-          countryCode: 'US',
-          name: 'Rhode Island',
-        },
-        {
-          code: 'SC',
-          countryCode: 'US',
-          name: 'South Carolina',
-        },
-        {
-          code: 'SD',
-          countryCode: 'US',
-          name: 'South Dakota',
-        },
-        {
-          code: 'SK',
-          countryCode: 'CA',
-          name: 'Saskatchewan',
-        },
-        {
-          code: 'TN',
-          countryCode: 'US',
-          name: 'Tennessee',
-        },
-        {
-          code: 'TX',
-          countryCode: 'US',
-          name: 'Texas',
-        },
-        {
-          code: 'UM',
-          countryCode: 'US',
-          name: 'United States Minor Outlying Islands',
-        },
-        {
-          code: 'UT',
-          countryCode: 'US',
-          name: 'Utah',
-        },
-        {
-          code: 'VA',
-          countryCode: 'US',
-          name: 'Virginia',
-        },
-        {
-          code: 'VI',
-          countryCode: 'US',
-          name: 'Virgin Islands, U.S.',
-        },
-        {
-          code: 'VT',
-          countryCode: 'US',
-          name: 'Vermont',
-        },
-        {
-          code: 'WA',
-          countryCode: 'US',
-          name: 'Washington',
-        },
-        {
-          code: 'WI',
-          countryCode: 'US',
-          name: 'Wisconsin',
-        },
-        {
-          code: 'WV',
-          countryCode: 'US',
-          name: 'West Virginia',
-        },
-        {
-          code: 'WY',
-          countryCode: 'US',
-          name: 'Wyoming',
-        },
-        {
-          code: 'YT',
-          countryCode: 'CA',
-          name: 'Yukon',
-        },
+          provId: 13,
+          ctryId: 1,
+          provSeqNo: 13,
+          provNm: "Nunavut",
+          provAbbreviationCd: "NU"
+        }
       ],
       statutes: [
         { code: 11817, name: 'MVA 78 Allow unlicenced minor to drive' },
