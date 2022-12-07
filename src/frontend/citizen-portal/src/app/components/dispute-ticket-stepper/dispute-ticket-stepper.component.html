@@ -70,7 +70,7 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Country</mat-label>
-                          <mat-select (selectionChange)="onCountryChange($event.value)" formControlName="address_country_id">
+                          <mat-select (selectionChange)="onCountryChange($event?.value)" formControlName="address_country_id">
                             <mat-option [value]="canadaFound[0]?.ctryId">{{ canadaFound[0]?.ctryLongNm }}</mat-option>
                             <mat-option [value]="usaFound[0]?.ctryId">{{ usaFound[0]?.ctryLongNm }}</mat-option>
                             <mat-option *ngFor="let country of countries" [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
@@ -90,25 +90,25 @@
                       </div>
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
-                          <mat-label *ngIf="form.get('address_country_id').value===canadaFound[0]?.ctryId">Province</mat-label>
-                          <mat-label *ngIf="form.get('address_country_id').value===usaFound[0]?.ctryId">State</mat-label>
-                          <mat-select (selectionChange)="onAddressProvinceChange($event.value)" formControlName="address_province_provId"
-                            *ngIf="form.get('address_country_id').value === canadaFound[0]?.ctryId || form.get('address_country_id').value === usaFound[0]?.ctryId">
-                            <div *ngIf="form.get('address_country_id').value === canadaFound[0]?.ctryId">
+                          <mat-label *ngIf="form.get('address_country_id')?.value===canadaFound[0]?.ctryId">Province</mat-label>
+                          <mat-label *ngIf="form.get('address_country_id')?.value===usaFound[0]?.ctryId">State</mat-label>
+                          <mat-select (selectionChange)="onAddressProvinceChange($event?.value)" formControlName="address_province_provId"
+                            *ngIf="form.get('address_country_id')?.value === canadaFound[0]?.ctryId || form.get('address_country_id')?.value === usaFound[0]?.ctryId">
+                            <div *ngIf="form.get('address_country_id')?.value === canadaFound[0]?.ctryId">
                               <mat-option [value]="bcFound[0]?.provId">{{ bcFound[0]?.provNm }}</mat-option>
                               <mat-option *ngFor="let province of provinces" [value]="province.provId">{{ province.provNm }}
                               </mat-option>
                             </div>
-                            <div *ngIf="form.get('address_country_id').value === usaFound[0]?.ctryId">
+                            <div *ngIf="form.get('address_country_id')?.value === usaFound[0]?.ctryId">
                               <mat-option *ngFor="let state of states" [value]="state.provId">{{ state.provNm }}
                               </mat-option>
                             </div>
                           </mat-select>
                           <mat-label
-                            *ngIf="form.get('address_country_id').value!==usaFound[0]?.ctryId && form.get('address_country_id').value !== canadaFound[0]?.ctryId">
+                            *ngIf="form.get('address_country_id')?.value!==usaFound[0]?.ctryId && form.get('address_country_id')?.value !== canadaFound[0]?.ctryId">
                             Province/State</mat-label>
                           <input matInput formControlName="address_province"
-                            *ngIf="form.get('address_country_id').value !== usaFound[0]?.ctryId && form.get('address_country_id').value !== canadaFound[0]?.ctryId"
+                            *ngIf="form.get('address_country_id')?.value !== usaFound[0]?.ctryId && form.get('address_country_id')?.value !== canadaFound[0]?.ctryId"
                             maxlength="30" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
@@ -119,20 +119,20 @@
                   <div class="row">
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label *ngIf="form.get('address_country_id').value ===1">Postal Code</mat-label>
+                        <mat-label *ngIf="form.get('address_country_id')?.value === canadaFound[0]?.ctryId">Postal Code</mat-label>
                         <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
                           formControlName="postal_code" [showMaskTyped]="true"
-                          *ngIf="form.get('address_country_id').value===1" />
-                        <mat-label *ngIf="form.get('address_country_id').value===2">Zip Code</mat-label>
+                          *ngIf="form.get('address_country_id')?.value===canadaFound[0]?.ctryId" />
+                        <mat-label *ngIf="form.get('address_country_id')?.value===usaFound[0].ctryId">Zip Code</mat-label>
                         <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
                           formControlName="postal_code" [showMaskTyped]="true"
-                          *ngIf="form.get('address_country_id').value===2" />
+                          *ngIf="form.get('address_country_id')?.value===usaFound[0].ctryId" />
                         <mat-label
-                          *ngIf="form.get('address_country_id').value!==2 && form.get('address_country_id').value!==1">
+                          *ngIf="form.get('address_country_id')?.value!==usaFound[0].ctryId && form.get('address_country_id')?.value!==1">
                           Postal/Zip Code</mat-label>
                         <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
                           formControlName="postal_code"
-                          *ngIf="form.get('address_country_id').value!==2 && form.get('address_country_id').value !== 1" />
+                          *ngIf="form.get('address_country_id')?.value!==2 && form.get('address_country_id')?.value !== 1" />
                         <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate
                           }}</mat-error>
                         <mat-error *ngIf="form.get('postal_code').hasError('pattern')">Must be a valid postal/zip code
@@ -159,10 +159,10 @@
                       <mat-form-field class="w-100">
                         <mat-label>Phone number</mat-label>
                         <input matInput formControlName="home_phone_number" mask="(000) 000-0000"
-                          *ngIf="form.get('address_country_id').value === canadaFound[0]?.ctryId || form.get('address_country_id').value === usaFound[0]?.ctryId"
+                          *ngIf="form.get('address_country_id')?.value === canadaFound[0]?.ctryId || form.get('address_country_id')?.value === usaFound[0]?.ctryId"
                           [showMaskTyped]="true" />
                         <input matInput formControlName="home_phone_number" mask="00000000000000000000"
-                          *ngIf="form.get('address_country_id').value !== canadaFound[0]?.ctryId && form.get('address_country_id').value !== usaFound[0]?.ctryId" />
+                          *ngIf="form.get('address_country_id')?.value !== canadaFound[0]?.ctryId && form.get('address_country_id')?.value !== usaFound[0]?.ctryId" />
                         <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" |
                           translate}}
                         </mat-error>
@@ -199,9 +199,9 @@
                         <mat-label>Driver's licence number</mat-label>
                         <input matInput formControlName="drivers_licence_number"
                           (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
-                          *ngIf="form.get('drivers_licence_country_id').value === 1 && form.get('drivers_licence_province_seq_no').value === 1" />
+                          *ngIf="form.get('drivers_licence_country_id')?.value === canadaFound[0].ctryId && form.get('drivers_licence_province_seq_no')?.value === bcFound[0].provSeqNo" />
                         <input matInput formControlName="drivers_licence_number" maxlength="20"
-                          *ngIf="form.get('drivers_licence_country_id').value !== 1 || form.get('drivers_licence_province_seq_no').value !== 1" />
+                          *ngIf="form.get('drivers_licence_country_id')?.value !== canadaFound[0].ctryId || form.get('drivers_licence_province_seq_no')?.value !== bcFound[0].provSeqNo" />
                         <mat-error *ngIf="form.get('drivers_licence_number').hasError('required')">{{ "error.required" |
                           translate }}</mat-error>
                         <mat-error *ngIf="form.get('drivers_licence_number')?.errors?.minlength ||
@@ -486,8 +486,8 @@
                 <div class="row">
                   <div class="col">
                     <mat-checkbox class="me-4 mb-2" color="primary"
-                      [checked]="additionalForm.get('represented_by_lawyer').value === RepresentedByLawyer.Y ? true:false"
-                      (change)="additionalForm.get('represented_by_lawyer').setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
+                      [checked]="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y ? true:false"
+                      (change)="additionalForm.get('represented_by_lawyer')?.setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
                       I intend to be represented by a lawyer in court.
                       <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y"
                         style="font-weight: lighter;">
@@ -496,7 +496,7 @@
                     </mat-checkbox>
                   </div>
                 </div>
-                <ng-container *ngIf="additionalForm.get('represented_by_lawyer').value === RepresentedByLawyer.Y">
+                <ng-container *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
                   <div [formGroup]="legalRepresentationForm">
                     <div class="row">
                       <div class="col-md-6">

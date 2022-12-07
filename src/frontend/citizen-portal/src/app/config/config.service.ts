@@ -93,12 +93,6 @@ export class ConfigService {
     return this._provincesAndStates;
   }
 
-  public get policeLocations(): Config<string>[] {
-    return [...this.configuration.policeLocations].sort(
-      this.sortConfigByName()
-    );
-  }
-
   public get countries() {
     return this._countries;
   }
@@ -123,10 +117,6 @@ export class ConfigService {
 
   public get statuses(): Config<number>[] {
     return [...this.configuration.statuses].sort(this.sortConfigByName());
-  }
-
-  public get statutes(): Config<number>[] {
-    return [...this.configuration.statutes].sort(this.sortConfigByName());
   }
 
   /**

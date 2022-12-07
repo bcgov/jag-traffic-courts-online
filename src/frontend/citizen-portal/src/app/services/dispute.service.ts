@@ -39,7 +39,10 @@ export class DisputeService {
     address: [null, [Validators.required, Validators.maxLength(300)]],
     address_city: [null, [Validators.required]],
     address_province: [null, [Validators.required, Validators.maxLength(30)]],
-    country: ["Canada", [Validators.required]],
+    address_province_provId: [1],
+    address_province_country_id: [1],
+    address_province_seq_no: [1],
+    address_country_id: [1, [Validators.required]],
     postal_code: [null, [Validators.required]],
     home_phone_number: [null, [FormControlValidators.phone]],
     work_phone_number: [null, [FormControlValidators.phone]], // not using now
@@ -47,6 +50,9 @@ export class DisputeService {
     disputant_birthdate: [null, [Validators.required]],
     drivers_licence_number: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
     drivers_licence_province: [null, [Validators.required]],
+    drivers_licence_province_provId: [1],
+    drivers_licence_country_id: [null],
+    drivers_licence_province_seq_no: [null],
     dispute_counts: [],
   }
 
