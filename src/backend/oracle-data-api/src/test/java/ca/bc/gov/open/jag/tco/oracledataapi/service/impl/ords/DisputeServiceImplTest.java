@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.NoSuchElementException;
 
 import javax.ws.rs.InternalServerErrorException;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +29,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 
 class DisputeServiceImplTest extends BaseTestSuite {
@@ -270,7 +271,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testUnassignExpect200() throws Exception {
 		Date now = new Date();
-		String assignedBeforeTs = dateToString(now, DisputeRepositoryImpl.DATE_TIME_FORMAT);
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
 		ResponseResult response = new ResponseResult();
 		response.setStatus("1");
 
@@ -284,7 +285,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testUnassignExpect500_ApiException() throws Exception {
 		Date now = new Date();
-		String assignedBeforeTs = dateToString(now, DisputeRepositoryImpl.DATE_TIME_FORMAT);
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
 
 		Mockito.when(violationTicketApi.v1UnassignViolationTicketPost(assignedBeforeTs)).thenThrow(ApiException.class);
 
@@ -296,7 +297,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testUnassignExpect500_noErrorMsg() throws Exception {
 		Date now = new Date();
-		String assignedBeforeTs = dateToString(now, DisputeRepositoryImpl.DATE_TIME_FORMAT);
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
 		ResponseResult response = new ResponseResult();
 		response.setStatus("0"); // 0 status (meaning failure) and no message
 
@@ -310,7 +311,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testUnassignExpect500_nullReponse() throws Exception {
 		Date now = new Date();
-		String assignedBeforeTs = dateToString(now, DisputeRepositoryImpl.DATE_TIME_FORMAT);
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
 
 		Mockito.when(violationTicketApi.v1UnassignViolationTicketPost(assignedBeforeTs)).thenReturn(null);
 
@@ -322,7 +323,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testUnassignExpect500_withErrorMsg() throws Exception {
 		Date now = new Date();
-		String assignedBeforeTs = dateToString(now, DisputeRepositoryImpl.DATE_TIME_FORMAT);
+		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
 		ResponseResult response = new ResponseResult();
 		response.setStatus("0"); // 0 status (meaning failure)
 		response.setException("some failure cause");
@@ -340,7 +341,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		DisputeStatus disputeStatus = DisputeStatus.PROCESSING;
 		String ticketNumber = "AX00000000";
 		String issuedDateStr = "13:54";
-		Date issuedDate = DateUtils.parseDate(issuedDateStr, "HH:mm");
+		Date issuedDate = DateUtils.parseDate(issuedDateStr, DateUtil.TIME_FORMAT);
 
 		ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute dispute = new ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute();
 		dispute.setDisputeId(disputeId.toString());
@@ -368,7 +369,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		disputeResults = repository.findByTicketNumberAndTime("AX", issuedDate);
 		assertEquals(0, disputeResults.size());
 
-		disputeResults = repository.findByTicketNumberAndTime(ticketNumber, DateUtils.parseDate("13:55", "HH:mm"));
+		disputeResults = repository.findByTicketNumberAndTime(ticketNumber, DateUtils.parseDate("13:55", DateUtil.TIME_FORMAT));
 		assertEquals(0, disputeResults.size());
 	}
 
@@ -384,7 +385,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testGetAllDisputesExpect200() throws Exception {
 		Date now = new Date();
-		String olderThanDate = dateToString(now, DisputeRepositoryImpl.DATE_FORMAT);
+		String olderThanDate = dateToString(now, DateUtil.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
 		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
 		ViolationTicketListResponse response = new ViolationTicketListResponse();
@@ -401,7 +402,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testGetAllDisputesExpect500_InternalServerError() throws Exception {
 		Date now = new Date();
-		String olderThanDate = dateToString(now, DisputeRepositoryImpl.DATE_FORMAT);
+		String olderThanDate = dateToString(now, DateUtil.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
 		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
 		ViolationTicketListResponse response = new ViolationTicketListResponse();
@@ -497,8 +498,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	}
 
 	private String dateToString(Date date, String format) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-		return dateFormat.format(date);
+		return DateFormatUtils.formatUTC(date, format);
 	}
 
 }

@@ -28,10 +28,13 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputantUpdateRequestRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 @Service
 public class DisputeService {
@@ -39,7 +42,10 @@ public class DisputeService {
 	private Logger logger = LoggerFactory.getLogger(DisputeService.class);
 
 	@Autowired
-	DisputeRepository disputeRepository;
+	private DisputeRepository disputeRepository;
+
+	@Autowired
+	private JJDisputeRepository jjDisputeRepository;
 
 	@Autowired
 	private DisputantUpdateRequestRepository disputantUpdateRequestRepository;
@@ -320,7 +326,22 @@ public class DisputeService {
 	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs.
 	 */
 	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime) {
-		return disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+		List<DisputeResult> disputeResults = disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+
+		if (CollectionUtils.isNotEmpty(disputeResults)) {
+			List<JJDispute> jjDisputeResults = jjDisputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+			if (CollectionUtils.isNotEmpty(jjDisputeResults)) {
+				if (jjDisputeResults.size() > 1) {
+					logger.error("More than one JJDispute found for TicketNumber '{}' and IssuedTime '{}'", ticketNumber, DateUtil.formatAsHourMinuteUTC(issuedTime));
+				}
+				JJDispute jjDispute = jjDisputeResults.get(0);
+				for (DisputeResult disputeResult : disputeResults) {
+					disputeResult.setJjDisputeStatus(jjDispute.getStatus());
+				}
+			}
+		}
+
+		return disputeResults;
 	}
 
 	/**

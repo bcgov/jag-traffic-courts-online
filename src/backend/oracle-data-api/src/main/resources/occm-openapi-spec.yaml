@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   - description: local
-    url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca'
+    url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca/occamords/occam/'
 paths:
   /v1/ping:
     get:
