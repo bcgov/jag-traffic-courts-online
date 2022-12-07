@@ -2,7 +2,14 @@
 {
     public class DisputeApproved
     {
-        public string CitizenName { get; set; } = String.Empty;
+        [Obsolete($"Use {nameof(GivenName1)}, {nameof(GivenName2)},  {nameof(GivenName3)} and {nameof(Surname)}")]
+        public string? CitizenName { get; set; }
+
+        public string? Surname { get; set; }
+        public string? GivenName1 { get; set; }
+        public string? GivenName2 { get; set; }
+        public string? GivenName3 { get; set; }
+
         public DateTime? TicketIssuanceDate { get; set; }
         public string TicketFileNumber { get; set; } = String.Empty;
         public string IssuingOrganization { get; set; } = String.Empty;

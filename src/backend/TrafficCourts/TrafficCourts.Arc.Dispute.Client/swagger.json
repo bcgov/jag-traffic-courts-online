@@ -94,11 +94,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "transaction_date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "transaction_time": {
+          "transaction_date_time": {
             "type": "string",
             "format": "date-time"
           },
@@ -193,6 +189,23 @@
         "type": "object",
         "properties": {
           "citizen_name": {
+            "type": "string",
+            "nullable": true,
+            "deprecated": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "given_name1": {
+            "type": "string",
+            "nullable": true
+          },
+          "given_name2": {
+            "type": "string",
+            "nullable": true
+          },
+          "given_name3": {
             "type": "string",
             "nullable": true
           },
