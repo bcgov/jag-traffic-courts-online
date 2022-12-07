@@ -65,7 +65,7 @@ export class AppConfigService {
 
   constructor(private http: HttpClient) { }
 
-  public loadAppConfig(): Observable<any> {
+  loadAppConfig(): Observable<any> {
     return this.http.get('/assets/app.config.json').pipe(
       map((config: AppConfig) => {
         this.appConfig = config;
@@ -133,7 +133,7 @@ export class AppConfigService {
     return flag ? flag : false;
   }
 
-  public isFeatureFlagEnabled(featureName: string): boolean {
+  isFeatureFlagEnabled(featureName: string): boolean {
     // Read the value from the config service
     if (this.appConfig?.features?.hasOwnProperty(featureName)) {
       return this.appConfig?.features[featureName];

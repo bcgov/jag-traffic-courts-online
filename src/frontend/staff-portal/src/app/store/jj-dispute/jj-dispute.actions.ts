@@ -17,5 +17,6 @@ export const Assign = createAction(
 );
 
 export const AssignSuccess = createAction(
-  ActionTypes.ASSIGN_SUCCESS
+  ActionTypes.ASSIGN_SUCCESS,
+  props<{ updatedData: JJDispute[] }>()
 );

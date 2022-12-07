@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { LoggerService } from '@core/services/logger.service';
-import { filter, map, Observable, Subscription } from 'rxjs';
+import { filter, Observable, Subscription } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 import { AppState } from 'app/store';
@@ -38,7 +37,6 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
 
   constructor(
     private jjDisputeService: JJDisputeService,
-    private logger: LoggerService,
     private authService: AuthService,
     private store: Store<AppState>
   ) {
@@ -68,9 +66,6 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   }
 
   getAll(): void {
-    this.logger.log('JJDisputeWRInboxComponent::getJJDisputesByIDIR');
-
-    // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
     this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1 && x.hearingType === this.HearingType.WrittenReasons);
     this.dataSource.data = this.data;
 

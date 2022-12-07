@@ -99,7 +99,11 @@
               ],
               "optimization": false,
               "outputHashing": "none",
-              "sourceMap": true,
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "vendor": false
+              },
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,

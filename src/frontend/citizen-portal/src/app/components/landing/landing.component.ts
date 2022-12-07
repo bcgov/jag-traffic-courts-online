@@ -9,13 +9,13 @@ import { AppConfigService } from 'app/services/app-config.service';
 })
 export class LandingComponent implements AfterViewInit {
   // Urls for the various links
-  public understandYourTicketLink: string;
-  public paymentOptionsLink: string;
-  public disputeTicketLink: string;
-  public roadSafetyBCVisitUsLink: string;
-  public icbcVisitUsLink: string;
-  public provincialCourtOfBCVisitUsLink: string;
-  public courthouseServicesOfBCVisitUsLink: string;
+  understandYourTicketLink: string;
+  paymentOptionsLink: string;
+  disputeTicketLink: string;
+  roadSafetyBCVisitUsLink: string;
+  icbcVisitUsLink: string;
+  provincialCourtOfBCVisitUsLink: string;
+  courthouseServicesOfBCVisitUsLink: string;
 
   constructor(
     private appConfigService: AppConfigService,
@@ -34,7 +34,7 @@ export class LandingComponent implements AfterViewInit {
       this.appConfigService.courthouseServicesOfBCVisitUsLink;
   }
 
-  public ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     // refresh link urls now that we set the links
     this.snowplow.refreshLinkClickTracking();
   }

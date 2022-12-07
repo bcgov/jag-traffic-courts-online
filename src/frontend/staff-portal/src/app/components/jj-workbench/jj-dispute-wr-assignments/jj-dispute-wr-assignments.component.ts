@@ -4,12 +4,11 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { CourthouseConfig } from '@config/config.model';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { LoggerService } from '@core/services/logger.service';
-import { filter, Observable, Subscription } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { JJDisputeHearingType } from 'app/api';
 import { UserRepresentation } from 'app/services/auth.service';
-import { AppState } from 'app/store';
+import { AppState, JJDisputeStore } from 'app/store';
 import { select, Store } from '@ngrx/store';
 
 @Component({
@@ -21,7 +20,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
-  busy: Subscription;
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   courtLocations: CourthouseConfig[];
@@ -47,7 +45,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private jjDisputeService: JJDisputeService,
-    private logger: LoggerService,
     private mockConfigService: MockConfigService,
     private store: Store<AppState>
   ) {
@@ -60,14 +57,13 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     }
 
     this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
-    this.data$.subscribe(jjDisputes => {
-      this.data = jjDisputes.map(jjDispute => { return { ...jjDispute } });
-      this.getAll("A");
-    })
   }
 
   ngOnInit(): void {
-    this.getAll("A");
+    this.data$.subscribe(jjDisputes => {
+      this.data = jjDisputes.map(jjDispute => { return { ...jjDispute } });
+      this.getAll(this.currentTeam);
+    })
   }
 
   ngAfterViewInit() {
@@ -123,6 +119,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     this.resetAssignedUnassigned();
 
     this.filterByTeam(team); // initialize
+    this.bulkjjAssignedTo = this.valueOfUnassigned;
   }
 
   resetAssignedUnassigned() {
@@ -161,15 +158,8 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   bulkUpdateJJAssignedTo(ticketNumbers: string[], assignTo: string) {
-    assignTo = !assignTo || assignTo === this.valueOfUnassigned ? null : assignTo;
-    this.busy = this.jjDisputeService.apiJjAssignPut(ticketNumbers, assignTo).subscribe((response) => {
-      this.logger.info(
-        'JJDisputeWRAssignmentsComponent::onBulkAssign response',
-        response
-      );
-      this.getAll("A");
-      this.bulkjjAssignedTo = this.valueOfUnassigned;
-    });
+    let username = !assignTo || assignTo === this.valueOfUnassigned ? null : assignTo;
+    this.store.dispatch(JJDisputeStore.Actions.Assign({ ticketNumbers, username }));
   }
 
   getBulkButtonDisabled() {

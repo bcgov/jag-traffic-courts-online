@@ -119,6 +119,7 @@ export class AuthService {
             user.idir = this.getIDIR(user);
             user.fullName = this.getFullName(user);
           })
+          response = response.filter(i => i.idir);
           return response ? response : null
         }),
         catchError((error: any) => {

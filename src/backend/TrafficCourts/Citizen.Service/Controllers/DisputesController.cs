@@ -8,7 +8,6 @@ using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
-using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
 
@@ -179,7 +178,7 @@ public class DisputesController : ControllerBase
             if (!string.IsNullOrEmpty(response.Message.DisputeId))
             {
                 _logger.LogDebug("Dispute found");
-                var disputeId = _hashids.EncodeHex(response.Message.DisputeId);
+                var disputeId = _hashids.EncodeHex(response.Message.DisputeId.PadLeft(48, '0'));
                 result = Ok(new Models.Dispute.SearchDisputeResult
                 {
                     DisputeId = disputeId,
@@ -202,12 +201,12 @@ public class DisputesController : ControllerBase
         catch (RequestTimeoutException ex)
         {
             _logger.LogError(ex, "Request Timed out");
-            throw;
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unknown Error");
-            throw;
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 }

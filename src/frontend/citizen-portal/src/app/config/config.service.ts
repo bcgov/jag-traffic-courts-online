@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Config, Configuration, ProvinceConfig } from '@config/config.model';
-import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
-  protected configuration: Configuration;
+  private configuration: Configuration;
 
   private disputeSubmitted: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeValidationError: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -18,7 +16,7 @@ export class ConfigService {
   private disputeCreateError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private languageError: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  private _provinces = [
+  private _provinces: ProvinceConfig[] = [
     {
       code: 'AB',
       countryCode: 'CA',
@@ -371,7 +369,7 @@ export class ConfigService {
     },
   ];
 
-  private _countries = [
+  private _countries: Config<string>[] = [
     { code: "AF", name: "Afghanistan" },
     { code: "AX", name: "Åland Islands" },
     { code: "AL", name: "Albania" },
@@ -619,8 +617,8 @@ export class ConfigService {
   ];
 
   constructor(
-    protected utilsService: UtilsService,
-    protected appConfigService: AppConfigService
+    private utilsService: UtilsService,
+    private appConfigService: AppConfigService
   ) { }
 
   public get dispute_submitted$(): BehaviorSubject<string> {
@@ -662,7 +660,7 @@ export class ConfigService {
     return this.languageError.value;
   }
 
-  public get provinces() {
+  public get provinces(): ProvinceConfig[] {
     return this._provinces;
   }
 
@@ -676,7 +674,7 @@ export class ConfigService {
     );
   }
 
-  public get countries() {
+  public get countries(): Config<string>[] {
     return this._countries;
   }
 

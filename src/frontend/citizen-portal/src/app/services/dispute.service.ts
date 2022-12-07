@@ -251,3 +251,9 @@ export interface NoticeOfDispute extends NoticeOfDisputeBase {
   lawyer_full_name?: string;
   address?: string;
 }
+
+export interface NoticeOfDispute extends NoticeOfDisputeBase {
+  disputant_given_names?: string;
+  lawyer_full_name?: string;
+  address?: string;
+}

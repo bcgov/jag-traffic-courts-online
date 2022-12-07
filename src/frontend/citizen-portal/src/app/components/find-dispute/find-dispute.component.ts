@@ -4,7 +4,7 @@ import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Subscription } from 'rxjs';
-import { ViolationTicketService } from 'app/services/violation-ticket.service';
+import { DisputeService } from 'app/services/dispute.service';
 
 @Component({
   selector: 'app-find-dispute',
@@ -13,23 +13,23 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class FindDisputeComponent implements OnInit {
-  public busy: Subscription;
-  public form: FormGroup;
+  busy: Subscription;
+  form: FormGroup;
   private progressRef: NgProgressRef;
 
-  public notFound = false;
-  public toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s license number and loation 3. Count Act / Section / Description 4. Fine amount';
+  notFound = false;
+  toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s license number and loation 3. Count Act / Section / Description 4. Fine amount';
 
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
     private ngProgress: NgProgress,
     private logger: LoggerService,
-    private violationTicketService: ViolationTicketService,
+    private disputeService: DisputeService,
   ) {
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.progressRef = this.ngProgress.ref();
 
     this.form = this.formBuilder.group({
@@ -38,7 +38,7 @@ export class FindDisputeComponent implements OnInit {
     });
   }
 
-  public onSearch(): void {
+  onSearch(): void {
     this.logger.log('FindTicketComponent::onSearch');
 
     this.notFound = false;
@@ -52,6 +52,8 @@ export class FindDisputeComponent implements OnInit {
     if (!validity) {
       return;
     }
-    this.busy = this.violationTicketService.searchTicket(this.form.value).subscribe(res => res);
+    this.busy = this.disputeService.searchDispute(this.form.value).subscribe(res => {
+      let test = res;
+    });
   }
 }
