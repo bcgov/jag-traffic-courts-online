@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Text;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Common;
 
@@ -13,7 +14,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            List<ArcFileRecord> arcFileRecordList = new();
+            // Destination is not null only when you pass the destination in the Map call.
+            if (destination is null)
+            {
+                destination = new List<ArcFileRecord>();
+            }
 
             // Additional minutes between the transaction times since each transaction timestamp for EV and ED must be unique for ARC to process
             var now = GetCurrentDate();
@@ -23,8 +28,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 AdnotatedTicket adnotated = new();
 
                 // Adnotated ticket's Master File Data mapping
-                adnotated.TransactionDate = now;
-                adnotated.TransactionTime = now;
+                adnotated.TransactionDateTime = now;
                 adnotated.EffectiveDate = source.TicketIssuanceDate;
                 // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
                 adnotated.FileNumber = source.TicketFileNumber.ToUpper() + "  01";
@@ -32,7 +36,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence);
                 
                 // Map adnotated ticket specific data
-                adnotated.Name = ReverseName(source.CitizenName);
+                adnotated.Name = GetName(source);
 
                 if (!string.IsNullOrEmpty(ticket.Section))
                 {
@@ -64,7 +68,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.OrganizationLocation = source.IssuingLocation.ToUpper();
                 adnotated.ServiceDate = source.TicketIssuanceDate;
 
-                arcFileRecordList.Add(adnotated);
+                destination.Add(adnotated);
 
                 // Check if there are data required to encapsulate citizen dispute information
                 if (source.DisputeCounts is not null && source.DisputeCounts.Count != 0)
@@ -77,16 +81,16 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         continue;
                     }
 
-                    now = now.AddMinutes(1);
+                    now = Increment(now);
 
                     DisputedTicket disputed = new()
                     {
                         // Dispited ticket's Master File Data mapping
-                        TransactionDate = now,
-                        TransactionTime = now,
+                        TransactionDateTime = now,
                         EffectiveDate = source.TicketIssuanceDate,
                         // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
                         FileNumber = source.TicketFileNumber.ToUpper() + "  01",
+                        CountNumber = disputeCount.Count.ToString("D3"), // left pad with zeros
                         MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence),
 
                         // Mapping disputed ticket specific data
@@ -99,12 +103,60 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         PostalCode = source.PostalCode?.ToUpper() ?? String.Empty
                     };
 
-                    arcFileRecordList.Add(disputed);
+                    destination.Add(disputed);
                 }
 
-                now = now.AddMinutes(1);
+                now = Increment(now);
             }
-            return arcFileRecordList;
+
+            return destination;
+        }
+
+        internal static string GetName(TcoDisputeTicket ticket)
+        {
+            // the name used to come thru as a citizen name field
+            // but in later release, the name is split into individual fields
+            if (!string.IsNullOrEmpty(ticket.CitizenName))
+            {
+                return ReverseName(ticket.CitizenName);
+            }
+
+            StringBuilder name = new StringBuilder();
+            if (!string.IsNullOrEmpty(ticket.Surname))
+            {
+                name.Append(ticket.Surname);
+                name.Append(',');
+            }
+
+            if (!string.IsNullOrEmpty(ticket.GivenName1))
+            {
+                if (name.Length != 0)
+                {
+                    name.Append(' ');
+                }
+                name.Append(ticket.GivenName1.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(ticket.GivenName2))
+            {
+                if (name.Length != 0)
+                {
+                    name.Append(' ');
+                }
+                name.Append(ticket.GivenName2.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(ticket.GivenName3))
+            {
+                if (name.Length != 0)
+                {
+                    name.Append(' ');
+                }
+                
+                name.Append(ticket.GivenName3.Trim());
+            }
+
+            return name.ToString();
         }
 
         internal static string ReverseName(string name)
@@ -117,19 +169,21 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             return surname + givenNames;
         }
 
+        /// <summary>
+        /// Function to get curent date and time, set in unit tests
+        /// </summary>
+        internal static Func<DateTime> Now = () => DateTime.Now;
+
         private static DateTime GetCurrentDate()
         {
-            DateTime date = DateTime.Now;
-
-            // Calculate the number of ticks (1 tick = 100 nanoseconds)
-            // that represent 1 second, and add that number of ticks
-            // to the current DateTime object to round it down to the
-            // nearest whole second.
-
-            // kind of ugly but it works
-            long ticksPerSecond = TimeSpan.TicksPerSecond;
-            DateTime roundedDate = date.AddTicks(ticksPerSecond / 2 * -1);
-            return roundedDate;
+            DateTime now = Now();
+            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
+            return now;
         }
+
+        /// <summary>
+        /// Incements the date so each record has a unique date and time.
+        /// </summary>
+        private static DateTime Increment(DateTime value) => value.AddSeconds(1);
     }
 }

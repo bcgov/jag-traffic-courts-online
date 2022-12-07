@@ -1,11 +1,7 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Common;
@@ -22,8 +18,13 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             var fixture = new Fixture();
             var tcoDisputeTicket = fixture.Create<TcoDisputeTicket>();
 
+            FixCountNumbers(tcoDisputeTicket);
+
             tcoDisputeTicket.DriversLicence = new Random().Next(99999999).ToString(); //must be numeric
             var expectedMvbClientNumber = DriversLicence.WithCheckDigit(tcoDisputeTicket.DriversLicence);
+
+            var now = DateTime.Now;
+            DisputeTicketToArcFileRecordListConverter.Now = () => now;
 
             var mockMapper = new MapperConfiguration(cfg =>
             {
@@ -38,41 +39,44 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             Assert.NotNull(actual);
             Assert.NotEmpty(actual);
 
-            foreach (var actualRec in actual)
+            // AutoFixture should have created 3 each of these
+            Assert.Equal(3, tcoDisputeTicket.TicketDetails.Count);
+            Assert.Equal(3, tcoDisputeTicket.DisputeCounts.Count);
+            Assert.Equal(6, actual.Count);
+
+            DateTime expectedTransactionDateTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
+
+            for (int i = 0; i < 3; i++)
             {
-                var expectedTimestamp = DateTime.Now;
-                var expectedHM = new DateTime(expectedTimestamp.Year, expectedTimestamp.Month, expectedTimestamp.Day, expectedTimestamp.Hour, expectedTimestamp.Minute, 0);
+                // first record will be AdnotatedTicket, the second record will be DisputedTicket
+                var actualAdnotatedTicket = Assert.IsType<AdnotatedTicket>(actual[i * 2]);
+                var actualDisputedTicket = Assert.IsType<DisputedTicket>(actual[i * 2 + 1]);
 
-                var actualTimestamp = actualRec.TransactionDate;
-                var actualHM = new DateTime(actualTimestamp.Year, actualTimestamp.Month, actualTimestamp.Day, actualTimestamp.Hour, actualTimestamp.Minute, 0);
-                Assert.Equal(expectedHM, actualHM);
-                Assert.Equal(tcoDisputeTicket.TicketFileNumber.ToUpper() + "  01", actualRec.FileNumber);
-                Assert.Equal(expectedMvbClientNumber, actualRec.MvbClientNumber);
+                Assert.Equal(tcoDisputeTicket.TicketDetails[i].Count.ToString("D3"), actualAdnotatedTicket.CountNumber);
+                Assert.Equal(tcoDisputeTicket.DisputeCounts[i].Count.ToString("D3"), actualDisputedTicket.CountNumber);
 
-                if (actualRec is AdnotatedTicket)
-                {
-                    AdnotatedTicket actualAdnotatedTicket = (AdnotatedTicket)actualRec;
-                    // TODO: Need to add a separate test for reversing the name later
-                    //Assert.Equal(tcoDisputeTicket.CitizenName.ToUpper(), actualAdnotatedTicket.Name);
-                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Section?.ToUpper() == actualAdnotatedTicket.Section);
-                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Subsection?.ToUpper() == actualAdnotatedTicket.Subsection);
-                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Paragraph?.ToUpper() == actualAdnotatedTicket.Paragraph);
-                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Subparagraph?.ToUpper() == actualAdnotatedTicket.Subparagraph);
-                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Act.ToUpper() == actualAdnotatedTicket.Act);
-                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Amount == actualAdnotatedTicket.OriginalAmount);
-                    Assert.Equal(tcoDisputeTicket.IssuingOrganization.ToUpper(), actualAdnotatedTicket.Organization);
-                    Assert.Equal(tcoDisputeTicket.IssuingLocation.ToUpper(), actualAdnotatedTicket.OrganizationLocation);
-                }
-                else
-                {
-                    DisputedTicket actualDisputedTicket = (DisputedTicket)actualRec;
-                    // TODO: Need to add a separate test for reversing the name later
-                    //Assert.Equal(tcoDisputeTicket.CitizenName.ToUpper(), actualDisputedTicket.Name);
-                    Assert.Equal(tcoDisputeTicket.StreetAddress?.ToUpper(), actualDisputedTicket.StreetAddress);
-                    Assert.Equal(tcoDisputeTicket.City?.ToUpper(), actualDisputedTicket.City);
-                    Assert.Equal(tcoDisputeTicket.Province?.ToUpper(), actualDisputedTicket.Province);
-                    Assert.Equal(tcoDisputeTicket.PostalCode?.ToUpper(), actualDisputedTicket.PostalCode);
-                }
+                Assert.Equal(expectedTransactionDateTime.AddSeconds(i * 2), actualAdnotatedTicket.TransactionDateTime);
+                Assert.Equal(expectedTransactionDateTime.AddSeconds(i * 2 + 1), actualDisputedTicket.TransactionDateTime);
+
+                Assert.Equal(tcoDisputeTicket.TicketFileNumber.ToUpper() + "  01", actualAdnotatedTicket.FileNumber);
+                Assert.Equal(expectedMvbClientNumber, actualAdnotatedTicket.MvbClientNumber);
+
+
+                // TODO: Need to add a separate test for reversing the name later
+                //Assert.Equal(tcoDisputeTicket.CitizenName.ToUpper(), actualAdnotatedTicket.Name);
+                Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Section?.ToUpper() == actualAdnotatedTicket.Section);
+                Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Subsection?.ToUpper() == actualAdnotatedTicket.Subsection);
+                Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Paragraph?.ToUpper() == actualAdnotatedTicket.Paragraph);
+                Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Subparagraph?.ToUpper() == actualAdnotatedTicket.Subparagraph);
+                Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Act.ToUpper() == actualAdnotatedTicket.Act);
+                Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Amount == actualAdnotatedTicket.OriginalAmount);
+                Assert.Equal(tcoDisputeTicket.IssuingOrganization.ToUpper(), actualAdnotatedTicket.Organization);
+                Assert.Equal(tcoDisputeTicket.IssuingLocation.ToUpper(), actualAdnotatedTicket.OrganizationLocation);
+
+                Assert.Equal(tcoDisputeTicket.StreetAddress?.ToUpper(), actualDisputedTicket.StreetAddress);
+                Assert.Equal(tcoDisputeTicket.City?.ToUpper(), actualDisputedTicket.City);
+                Assert.Equal(tcoDisputeTicket.Province?.ToUpper(), actualDisputedTicket.Province);
+                Assert.Equal(tcoDisputeTicket.PostalCode?.ToUpper(), actualDisputedTicket.PostalCode);
             }  
         }
 
@@ -109,6 +113,30 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             bool actual = LegalSection.TryParse(section, out LegalSection? legalSection);
             Assert.False(actual);
             Assert.Null(legalSection);
+        }
+
+        private void FixCountNumbers(TcoDisputeTicket disputedTicket)
+        {
+            // map the count numbers to normal ranges
+
+            if (disputedTicket?.TicketDetails is not null)
+            {
+                int count = 1;
+                foreach (var item in disputedTicket.TicketDetails!)
+                {
+                    item.Count = count++;
+                }
+            }
+
+            if (disputedTicket?.DisputeCounts is not null)
+            {
+                int count = 1;
+                foreach (var item in disputedTicket!.DisputeCounts!)
+                {
+                    item.Count = count++;
+                }
+            }
+
         }
     }
 }
