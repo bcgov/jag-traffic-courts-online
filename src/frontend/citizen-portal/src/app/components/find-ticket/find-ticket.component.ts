@@ -17,13 +17,13 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class FindTicketComponent implements OnInit {
-  busy: Subscription;
-  form: FormGroup;
+  public busy: Subscription;
+  public form: FormGroup;
   private progressRef: NgProgressRef;
 
-  notFound = false;
-  toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s license number and loation 3. Count Act / Section / Description 4. Fine amount';
-  configuration = new Configuration();
+  public notFound = false;
+  public toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s license number and loation 3. Count Act / Section / Description 4. Fine amount';
+  public configuration = new Configuration();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,7 +35,7 @@ export class FindTicketComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.progressRef = this.ngProgress.ref();
 
     this.form = this.formBuilder.group({
@@ -44,7 +44,7 @@ export class FindTicketComponent implements OnInit {
     });
   }
 
-  onSearch(): void {
+  public onSearch(): void {
     this.logger.log('FindTicketComponent::onSearch');
 
     this.notFound = false;
@@ -61,19 +61,19 @@ export class FindTicketComponent implements OnInit {
     this.busy = this.violationTicketService.searchTicket(this.form.value).subscribe(res => res);
   }
 
-  onFileChange(event: any) {
+  public onFileChange(event: any) {
     this.logger.log('FindTicketComponent::onFileChange');
     this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef);
     event.target.value = null; // reset file input
   }
 
-  onViewTicketExample(): void {
+  public onViewTicketExample(): void {
     this.dialog.open(TicketExampleDialogComponent, {
       width: '600px',
     });
   }
 
-  onViewImageRequirements(): void {
+  public onViewImageRequirements(): void {
     this.dialog.open(ImageRequirementsDialogComponent, {
       width: '600px',
     });

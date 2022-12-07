@@ -16,13 +16,13 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./scan-ticket.component.scss'],
 })
 export class ScanTicketComponent implements OnInit {
-  busy: Subscription | Promise<any>;
-  ticketImageSrc: string;
-  ticketImageFile: string;
-  ticketFilename: string;
-  form: FormGroup;
+  public busy: Subscription | Promise<any>;
+  public ticketImageSrc: string;
+  public ticketImageFile: string;
+  public ticketFilename: string;
+  public form: FormGroup;
   private ticket: ViolationTicket;
-  DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,7 +34,7 @@ export class ScanTicketComponent implements OnInit {
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     let inputTicketData = this.violationTicketService.inputTicketData;
     this.ticket = this.violationTicketService.ticket;
     if (!inputTicketData || !this.ticket) {
@@ -51,7 +51,7 @@ export class ScanTicketComponent implements OnInit {
     this.form.controls.disputant_ocr_issues.enable();
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     const data: DialogOptions = {
       titleKey: 'Are you sure all ticket information is correct?',
       messageKey: `Please ensure that all entered fields match the paper ticket copy exactly.
@@ -69,7 +69,7 @@ export class ScanTicketComponent implements OnInit {
       });
   }
 
-  onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
+  public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
     this.logger.log('onStatuteSelected', event$.option.value);
   }
 }

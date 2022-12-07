@@ -1,5 +1,5 @@
 import { ActionReducerMap } from "@ngrx/store";
-import { JJDisputeStore } from ".";
+import * as JJDisputeStore from "./jj-dispute";
 
 export interface AppState {
     jjDispute: JJDisputeStore.State

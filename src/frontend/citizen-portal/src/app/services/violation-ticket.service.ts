@@ -25,11 +25,11 @@ export class ViolationTicketService {
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private _ticketType: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  ocrTicketDateKey = "violation_date";
-  ocrTicketTimeKey = "violation_time";
-  ocrIssueDetectedKey = "disputant_detected_ocr_issues";
-  ocrIssueDescKey = "disputant_ocr_issues";
-  DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  public ocrTicketDateKey = "violation_date";
+  public ocrTicketTimeKey = "violation_time";
+  public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
+  public ocrIssueDescKey = "disputant_ocr_issues";
+  public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   public queryParams: any;
 
   constructor(
@@ -51,35 +51,35 @@ export class ViolationTicketService {
     });
   }
 
-  get ticket$(): Observable<ViolationTicket> {
+  public get ticket$(): Observable<ViolationTicket> {
     return this._ticket.asObservable();
   }
 
-  get ticket(): ViolationTicket {
+  public get ticket(): ViolationTicket {
     return this._ticket.value;
   }
 
-  private get ocrTicket$(): Observable<OcrViolationTicket> { // not for current stage
+  private get ocrTicket$(): Observable<OcrViolationTicket> { // not public for current stage
     return this._ocrTicket.asObservable();
   }
 
-  private get ocrTicket(): OcrViolationTicket { // not for current stage
+  private get ocrTicket(): OcrViolationTicket { // not public for current stage
     return this._ocrTicket.value;
   }
 
-  get inputTicketData$(): Observable<any> {
+  public get inputTicketData$(): Observable<any> {
     return this._inputTicketData.asObservable();
   }
 
-  get inputTicketData() {
+  public get inputTicketData() {
     return this._inputTicketData.value;
   }
 
-  get ticketType() {
+  public get ticketType() {
     return this._ticketType.value;
   }
 
-  searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
+  public searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
     this.reset();
     this.logger.info("ViolationTicketService:: Search for ticket");
     if (!params) {
@@ -111,7 +111,7 @@ export class ViolationTicketService {
       );
   }
 
-  analyseTicket(ticketFile: File, progressRef: NgProgressRef): void {
+  public analyseTicket(ticketFile: File, progressRef: NgProgressRef): void {
     this.reset();
     this.logger.info("file target", ticketFile);
     if (!this.checkSize(ticketFile?.size)) {
@@ -152,7 +152,7 @@ export class ViolationTicketService {
     })
   }
 
-  validateTicket(params?: QueryParamsForSearch): boolean {
+  public validateTicket(params?: QueryParamsForSearch): boolean {
     var result = false;
     if (this.ticket && this.ticket.issued_date) {
       var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
@@ -257,7 +257,7 @@ export class ViolationTicketService {
     return result;
   }
 
-  getTicketType(ticket): string {
+  public getTicketType(ticket): string {
     let result: string;
     if (ticket && ticket.ticket_number) {
       result = this.ticketTypePipe.transform(ticket.ticket_number);
@@ -265,7 +265,7 @@ export class ViolationTicketService {
     return result;
   }
 
-  updateOcrIssue(issueDetected, issuseDesc): void {
+  public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
     ticket[this.ocrIssueDetectedKey] = (issueDetected === this.DetectedOcrIssues.Y) ? issueDetected : this.DetectedOcrIssues.N;
     ticket[this.ocrIssueDescKey] = issuseDesc;

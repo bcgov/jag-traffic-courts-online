@@ -29,6 +29,8 @@ export class HeaderComponent implements OnInit {
   public version: string;
 
   constructor(
+    // protected authService: AuthService,
+    protected logger: LoggerService,
     private appConfigService: AppConfigService,
     private translateService: TranslateService
   ) {

@@ -7,25 +7,25 @@ import { ViolationTicketCount } from 'app/api';
   styleUrls: ['./count-item-summary.component.scss'],
 })
 export class CountItemSummaryComponent implements OnInit {
-  @Input() count: ViolationTicketCount;
-  @Input() selectView = false;
+  @Input() public count: ViolationTicketCount;
+  @Input() public selectView = false;
 
-  selectCount: boolean;
+  public selectCount: boolean;
 
   constructor() { }
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void { }
 
-  selectBox(toggle: boolean): void {
+  public selectBox(toggle: boolean): void {
     this.selectCount = toggle;
   }
 
-  onSelectCountChanged(value: boolean): void {
+  public onSelectCountChanged(value: boolean): void {
     this.selectCount = value;
   }
 
-  get isSelected(): any {
+  public get isSelected(): any {
     let selected = false;
 
     if (this.showCheckbox) {
@@ -39,7 +39,7 @@ export class CountItemSummaryComponent implements OnInit {
     };
   }
 
-  get showCheckbox(): boolean {
+  public get showCheckbox(): boolean {
     return this.selectView && this.count.ticketed_amount > 0;
   }
 }

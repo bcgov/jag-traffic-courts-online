@@ -1,21 +1,24 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, forkJoin, Subscription } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService, UserRepresentation } from './auth.service';
 import { cloneDeep } from "lodash";
-import { AppState, JJDisputeStore } from 'app/store';
+import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
+import * as JJDisputeStore from 'app/store/jj-dispute';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JJDisputeService {
+  private _jjDisputes: BehaviorSubject<JJDispute[]> = new BehaviorSubject<JJDispute[]>(null);
   private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
+  private _jjDispute: BehaviorSubject<JJDispute> = new BehaviorSubject<JJDispute>(null);
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
 
   public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
@@ -31,12 +34,12 @@ export class JJDisputeService {
     private authService: AuthService,
     private store: Store<AppState>
   ) {
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+    let observables = {
+      jjList: this.authService.getUsersInGroup("judicial-justice"),
+      vtcList: this.authService.getUsersInGroup("vtc-staff"),
+    };
+    let subscription: Subscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
-        let observables = {
-          jjList: this.authService.getUsersInGroup("judicial-justice"),
-          vtcList: this.authService.getUsersInGroup("vtc-staff"),
-        };
         forkJoin(observables).subscribe({
           next: results => {
             this._jjList.next(results.jjList
@@ -50,6 +53,7 @@ export class JJDisputeService {
               }));
             this._vtcList.next(results.vtcList);
             this.store.dispatch(JJDisputeStore.Actions.Get());
+            subscription.unsubscribe();
           },
           error: err => {
             this.logger.error("JJDisputeService: Load jjList and vtcList failed")
@@ -57,7 +61,7 @@ export class JJDisputeService {
           }
         });
       }
-    })
+    });
   }
 
   /**
@@ -70,7 +74,8 @@ export class JJDisputeService {
       .pipe(
         map((response: JJDispute[]) => {
           this.logger.info('jj-DisputeService::getJJDisputes', response);
-          response.map(jjDispute => this.toDisplay(jjDispute));
+          response.map(jJDispute => this.toDisplay(jJDispute));
+          this._jjDisputes.next(response);
           return response;
         }),
         catchError((error: any) => {
@@ -198,6 +203,14 @@ export class JJDisputeService {
       );
   }
 
+  public get JJDisputes$(): Observable<JJDispute[]> {
+    return this._jjDisputes.asObservable();
+  }
+
+  public get JJDisputes(): JJDispute[] {
+    return this._jjDisputes.value;
+  }
+
   public get jjList$(): Observable<UserRepresentation[]> {
     return this._jjList.asObservable();
   }
@@ -238,16 +251,24 @@ export class JJDisputeService {
       );
   }
 
-  public addRemarks(jjDispute: JJDispute, remarksText: string): JJDispute {
-    if (!jjDispute.remarks) {
-      jjDispute.remarks = [];
+  public get JJDispute$(): Observable<JJDispute> {
+    return this._jjDispute.asObservable();
+  }
+
+  public get JJDispute(): JJDispute {
+    return this._jjDispute.value;
+  }
+
+  public addRemarks(jJDispute: JJDispute, remarksText: string): JJDispute {
+    if (!jJDispute.remarks) {
+      jJDispute.remarks = [];
     }
     let remarks: JJDisputeRemark = {
       userFullName: this.authService.userProfile.fullName,
       note: remarksText
     }
-    jjDispute.remarks.push(remarks);
-    return jjDispute;
+    jJDispute.remarks.push(remarks);
+    return jJDispute;
   }
 
   private toDisplay(jjDispute: JJDispute): JJDispute {
@@ -255,7 +276,7 @@ export class JJDisputeService {
     jjDispute.isEditable = this.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
-    jjDispute.jjAssignedToName = this.getJJAssignedToName(jjDispute);
+    jjDispute.jjAssignedToName = this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
     jjDispute.vtcAssignedToName = this.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo?.toUpperCase())[0]?.fullName;
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
@@ -266,10 +287,6 @@ export class JJDisputeService {
     }
 
     return jjDispute;
-  }
-
-  public getJJAssignedToName(jjDispute: JJDispute): string {
-    return this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
   }
 }
 

@@ -13,16 +13,16 @@ import { DisputeRepresentedByLawyer } from "app/api";
   styleUrls: ["./dispute-submit-success.component.scss"],
 })
 export class DisputeSubmitSuccessComponent implements OnInit {
-  busy: Subscription;
-  noticeOfDispute: NoticeOfDispute;
-  readonly changeOfAddressURL: string =
+  public busy: Subscription;
+  public noticeOfDispute: NoticeOfDispute;
+  public readonly changeOfAddressURL: string =
     "https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr805.pdf?forcedownload=true";
-  readonly whatToExpectURL: string =
+  public readonly whatToExpectURL: string =
     "https://www.provincialcourt.bc.ca/downloads/Traffic/Traffic%20Court%20Guide.pdf";
-  ticketTypes = ticketTypes;
-  ticketType;
-  countsActions: any;
-  RepresentedByLawyer = DisputeRepresentedByLawyer;
+  public ticketTypes = ticketTypes;
+  public ticketType;
+  public countsActions: any;
+  public RepresentedByLawyer = DisputeRepresentedByLawyer;
 
   constructor(
     private router: Router,
@@ -30,7 +30,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     private violationTicketService: ViolationTicketService,
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.noticeOfDispute = this.disputeService.noticeOfDispute;
     if (!this.noticeOfDispute) {
       this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -40,7 +40,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     this.countsActions = this.disputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
   }
 
-  onPrint(): void {
+  public onPrint(): void {
     window.print();
   }
 }

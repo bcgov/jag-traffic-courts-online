@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, isDevMode, NgModule } from '@angular/core';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
@@ -46,10 +46,9 @@ import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-hist
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
 import { AuthService } from './services/auth.service';
 import { StoreModule } from '@ngrx/store';
+import * as JJDisputeStore from './store/jj-dispute';
 import { EffectsModule } from '@ngrx/effects';
-import { reducers, JJDisputeStore } from './store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from '../environments/environment';
+import { reducers } from './store';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -115,12 +114,6 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     }),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([JJDisputeStore.Effects]),
-    // Instrumentation must be imported after importing StoreModule (config is optional)
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: !isDevMode(), // Restrict extension to log-only mode
-      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
-    }),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [NgBusyModule, TranslateModule],

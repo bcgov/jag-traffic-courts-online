@@ -1645,25 +1645,6 @@
   dependencies:
     "tslib" "^2.0.0"
 
-"@ngrx/store@14", "@ngrx/store@14.3.2":
-  "integrity" "sha512-XGHjr0arh6gClo8Ce+xqJLvW9PkeXPW2tCo9Z5qMtHFI/z5dUppLVKGmMgD/fQBDyoqWTK5xu+89tDkdeZfRjQ=="
-  "resolved" "https://registry.npmjs.org/@ngrx/store/-/store-14.3.2.tgz"
-  "version" "14.3.2"
-  dependencies:
-    "tslib" "^2.0.0"
-
-"@ngtools/webpack@14.2.10":
-  "integrity" "sha512-sLHapZLVub6mEz5b19tf1VfIV1w3tYfg7FNPLeni79aldxu1FbP1v2WmiFAnMzrswqyK0bhTtxrl+Z/CLKqyoQ=="
-  "resolved" "https://registry.npmjs.org/@ngtools/webpack/-/webpack-14.2.10.tgz"
-  "version" "14.2.10"
-
-"@ngx-translate/core@^13.0.0", "@ngx-translate/core@>=13.0.0":
-  "integrity" "sha512-+tzEp8wlqEnw0Gc7jtVRAJ6RteUjXw6JJR4O65KlnxOmJrCGPI0xjV/lKRnQeU0w4i96PQs/jtpL921Wrb7PWg=="
-  "resolved" "https://registry.npmjs.org/@ngx-translate/core/-/core-13.0.0.tgz"
-  "version" "13.0.0"
-  dependencies:
-    "tslib" "^2.0.0"
-
 "@ngx-translate/http-loader@^6.0.0":
   "integrity" "sha512-LCekn6qCbeXWlhESCxU1rAbZz33WzDG0lI7Ig0pYC1o5YxJWrkU9y3Y4tNi+jakQ7R6YhTR2D3ox6APxDtA0wA=="
   "resolved" "https://registry.npmjs.org/@ngx-translate/http-loader/-/http-loader-6.0.0.tgz"

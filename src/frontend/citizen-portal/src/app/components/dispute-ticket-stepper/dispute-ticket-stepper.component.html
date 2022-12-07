@@ -73,7 +73,8 @@
                           <mat-select formControlName="country" (selectionChange)="onCountryChange($event.value)">
                             <mat-option value="Canada">Canada</mat-option>
                             <mat-option value="United States">United States</mat-option>
-                            <mat-option *ngFor="let country of countries" [value]="country.name">{{ country.name }}
+                            <mat-option *ngFor="let country of config.countries" [value]="country.name">{{ country.name
+                              }}
                             </mat-option>
                           </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -189,7 +190,7 @@
                         <mat-select formControlName="drivers_licence_province"
                           (selectionChange)="onDLProvinceChange($event.value)">
                           <mat-option value="BC">British Columbia</mat-option>
-                          <mat-option *ngFor="let province of allProvinces" [value]="province.code">
+                          <mat-option *ngFor="let province of config.provinces" [value]="province.code">
                             {{ province.name }}
                           </mat-option>
                         </mat-select>
@@ -568,7 +569,7 @@
                       </mat-label>
                       <mat-select formControlName="interpreter_language_cd"
                         matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language_cd'))}}">
-                        <mat-option *ngFor="let language of languages" [value]="language.code">
+                        <mat-option *ngFor="let language of lookups.languages" [value]="language.code">
                           {{ language.description }}
                         </mat-option>
                       </mat-select>

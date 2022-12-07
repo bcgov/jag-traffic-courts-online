@@ -9,8 +9,8 @@ import { DisputeService } from 'app/services/dispute.service';
 })
 export class EmailVerificationComponent {
   private token: string;
-  verified: boolean = false;
-  checking: boolean = true;
+  public verified: boolean = false;
+  public checking: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
