@@ -7,7 +7,7 @@ data:
     server {
       listen 8080;
       location / {
-        proxy_pass https://dev.jag.gov.bc.ca/ords/devj/occamords/occam/;
+        proxy_pass https://dev.jag.gov.bc.ca/ords/devj/;
       }
       error_page   500 502 503 504  /50x.html;
       location = /50x.html {

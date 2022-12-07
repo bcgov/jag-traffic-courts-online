@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "1.50.0"
+    tag: "1.50.1"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "1.50.0"
+    tag: "1.50.1"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-06-30-preview"
@@ -23,14 +23,14 @@ citizen-api:
 
 citizen-web:
   image:
-    tag: "1.50.0"
+    tag: "1.50.1"
     pullPolicy: Always
 
   appConfig: |  
     {
         "production": false,
         "environment": "Test",
-        "version": "1.50.0",
+        "version": "1.50.1",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -43,7 +43,7 @@ citizen-web:
 
 oracle-data-api:
   image:
-    tag: "1.50.0"
+    tag: "1.50.1"
     pullPolicy: Always
   env:
     "ORDS_API_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam"
@@ -56,7 +56,7 @@ oracle-data-api:
 
 staff-api:
   image:
-    tag: "1.50.0"
+    tag: "1.50.1"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -68,7 +68,7 @@ staff-api:
 
 staff-web:
   image:
-    tag: "1.50.0"
+    tag: "1.50.1"
     pullPolicy: Always
   keycloakConfig: |
     {
@@ -84,7 +84,7 @@ staff-web:
     {
         "production": false,
         "environment": "Test",
-        "version": "1.50.0",
+        "version": "1.50.1",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
@@ -94,7 +94,7 @@ staff-web:
 
 workflow-service:
   image:
-    tag: "1.50.0"
+    tag: "1.50.1"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"

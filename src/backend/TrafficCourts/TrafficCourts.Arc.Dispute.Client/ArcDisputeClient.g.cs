@@ -258,11 +258,8 @@ namespace TrafficCourts.Arc.Dispute.Client
         [Newtonsoft.Json.JsonProperty("lockout_flag", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Lockout_flag { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("transaction_date", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime Transaction_date { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("transaction_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime Transaction_time { get; set; }
+        [Newtonsoft.Json.JsonProperty("transaction_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime Transaction_date_time { get; set; }
 
         [Newtonsoft.Json.JsonProperty("transaction_location", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Transaction_location { get; set; }
@@ -340,7 +337,20 @@ namespace TrafficCourts.Arc.Dispute.Client
     public partial class TcoDisputeTicket
     {
         [Newtonsoft.Json.JsonProperty("citizen_name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Obsolete]
         public string Citizen_name { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("surname", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Surname { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("given_name1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Given_name1 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("given_name2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Given_name2 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("given_name3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Given_name3 { get; set; }
 
         [Newtonsoft.Json.JsonProperty("ticket_issuance_date", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime Ticket_issuance_date { get; set; }

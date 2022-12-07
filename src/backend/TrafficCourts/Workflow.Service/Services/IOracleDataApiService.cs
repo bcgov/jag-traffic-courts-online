@@ -11,6 +11,7 @@ namespace TrafficCourts.Workflow.Service.Services
         Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken);
         Task<ICollection<DisputeResult>> SearchDisputeAsync(string ticketNumber, string issuedTime, CancellationToken cancellationToken);
         Task<Dispute> GetDisputeByIdAsync(long disputeId, CancellationToken cancellationToken);
+        Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken);
         Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long disputantUpdateRequestId, DisputantUpdateRequestStatus disputantUpdateRequestStatus, CancellationToken cancellationToken);
     }
 }

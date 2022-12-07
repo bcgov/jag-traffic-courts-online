@@ -8,7 +8,11 @@ public class Mapper
     public static DisputeApproved ToDisputeApproved(Dispute dispute)
     {
         DisputeApproved target = new();
-        target.CitizenName = dispute.DisputantGivenName1 + " " + (dispute.DisputantGivenName2 is not null ? (dispute.DisputantGivenName2 + " ") : "") + (dispute.DisputantGivenName3 is not null ? (dispute.DisputantGivenName3 + " ") : "") + dispute.DisputantSurname;
+        target.CitizenName = null;
+        target.Surname = dispute.DisputantSurname;
+        target.GivenName1 = dispute.DisputantGivenName1;
+        target.GivenName2 = dispute.DisputantGivenName2;
+        target.GivenName3 = dispute.DisputantGivenName3;
         target.TicketIssuanceDate = dispute.IssuedTs?.DateTime;
         target.TicketFileNumber = dispute.TicketNumber;
         target.IssuingOrganization = dispute.ViolationTicket.DetachmentLocation;

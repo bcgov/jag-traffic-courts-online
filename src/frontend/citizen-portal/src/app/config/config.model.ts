@@ -1,7 +1,6 @@
 import { CountryCodeValue, ProvinceCodeValue } from "./config.service";
 
 export interface Configuration {
-  courtLocations: Config<string>[];
   policeLocations: Config<string>[];
   countries: CountryCodeValue[];
   provincesAndStates: ProvinceCodeValue[];

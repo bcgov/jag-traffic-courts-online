@@ -8,6 +8,7 @@ import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ImageTicketNotFoundDialogComponent } from "@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component";
 import { TicketNotFoundDialogComponent } from "@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
+import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
 import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
 import { FileUtilsService } from "@shared/services/file-utils.service";
 import { DisputeDisputantDetectedOcrIssues, Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
@@ -29,7 +30,7 @@ export class ViolationTicketService {
   public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
   public ocrIssueDescKey = "disputant_ocr_issues";
   public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
-  private queryParams: any;
+  public queryParams: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -78,7 +79,7 @@ export class ViolationTicketService {
     return this._ticketType.value;
   }
 
-  public searchTicket(params?): Observable<ViolationTicket> {
+  public searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
     this.reset();
     this.logger.info("ViolationTicketService:: Search for ticket");
     if (!params) {
@@ -151,7 +152,7 @@ export class ViolationTicketService {
     })
   }
 
-  public validateTicket(params?): boolean {
+  public validateTicket(params?: QueryParamsForSearch): boolean {
     var result = false;
     if (this.ticket && this.ticket.issued_date) {
       var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
