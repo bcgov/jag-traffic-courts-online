@@ -14,7 +14,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
 {
     private readonly ILogger<DisputantUpdateRequestAcceptedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private static readonly string _approvedDisputantUpdateRequestEmailTemplateName = "DisputantUpdateRequestApprovedTemplate";
+    private static readonly string _acceptedDisputantUpdateRequestEmailTemplateName = "DisputantUpdateRequestAcceptedTemplate";
 
     public DisputantUpdateRequestAcceptedConsumer(ILogger<DisputantUpdateRequestAcceptedConsumer> logger, IOracleDataApiService oracleDataApiService)
     {
@@ -82,10 +82,10 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
 
     private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
     {
-        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _approvedDisputantUpdateRequestEmailTemplateName);
+        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _acceptedDisputantUpdateRequestEmailTemplateName);
         if (template == null)
         {
-            _logger.LogError("Email {Template} not found", _approvedDisputantUpdateRequestEmailTemplateName);
+            _logger.LogError("Email {Template} not found", _acceptedDisputantUpdateRequestEmailTemplateName);
             return;
         }
 

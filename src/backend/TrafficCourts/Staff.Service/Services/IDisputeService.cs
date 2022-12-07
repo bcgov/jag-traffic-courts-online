@@ -83,4 +83,12 @@ public interface IDisputeService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Rejects a citizen's requested changes to their Disputant Contact information.
+    /// </summary>
+    /// <param name="updateStatusId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
 }
