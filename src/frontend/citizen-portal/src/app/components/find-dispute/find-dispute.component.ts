@@ -4,7 +4,7 @@ import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { filter, Subscription } from 'rxjs';
-import { AppState, DisputeStore } from 'app/store';
+import { DisputeStore, selectLoadingDispute } from 'app/store';
 import { select, Store } from '@ngrx/store';
 
 @Component({
@@ -25,7 +25,7 @@ export class FindDisputeComponent implements OnInit {
     private formUtilsService: FormUtilsService,
     private ngProgress: NgProgress,
     private logger: LoggerService,
-    private store: Store<AppState>
+    private store: Store
   ) {
   }
 
@@ -53,6 +53,6 @@ export class FindDisputeComponent implements OnInit {
       return;
     }
     this.store.dispatch(DisputeStore.Actions.Search({ params: this.form.value }));
-    this.busy = this.store.pipe(select(state => state.dispute.loading), filter(i => !i)).subscribe(() => this.busy.unsubscribe());
+    this.busy = this.store.pipe(select(selectLoadingDispute), filter(i => !i)).subscribe(() => this.busy.unsubscribe());
   }
 }

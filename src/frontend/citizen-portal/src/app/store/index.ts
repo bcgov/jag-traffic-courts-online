@@ -1,2 +1,2 @@
 export * as DisputeStore from "./dispute";
-export { reducers, AppState } from "./app.state";
+export * from "./app.state";
