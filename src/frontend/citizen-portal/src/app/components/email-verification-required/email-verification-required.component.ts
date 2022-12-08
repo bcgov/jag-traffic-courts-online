@@ -11,14 +11,15 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   styleUrls: ['./email-verification-required.component.scss'],
 })
 export class EmailVerificationRequiredComponent implements OnInit {
-  public email: string;
   private token: string;
-  public ticketType;
-  public ticketTypes = ticketTypes;
-  public countsActions: any;
-  public RepresentedByLawyer = DisputeRepresentedByLawyer;
+  
+  email: string;
+  ticketType;
+  ticketTypes = ticketTypes;
+  countsActions: any;
+  RepresentedByLawyer = DisputeRepresentedByLawyer;
 
-  public noticeOfDispute: NoticeOfDispute;
+  noticeOfDispute: NoticeOfDispute;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +33,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
     this.noticeOfDispute = disputeService.noticeOfDispute;
   }
 
-  public ngOnInit() {
+  ngOnInit() {
     this.ticketType = this.violationTicketService.ticketType;
     this.countsActions = this.disputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
   }
@@ -41,7 +42,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
     this.disputeService.resendVerificationEmail(this.token).subscribe(() => { });
   }
 
-  public onPrint(): void {
+  onPrint(): void {
     window.print();
   }
 }

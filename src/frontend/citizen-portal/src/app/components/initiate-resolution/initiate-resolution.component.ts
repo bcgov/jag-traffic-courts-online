@@ -14,14 +14,14 @@ import { ViolationTicket } from "app/api";
 })
 export class InitiateResolutionComponent implements OnInit {
   private params: any;
-  public busy: Subscription;
-  public ticket: ViolationTicket;
-  public ticketType: string;
-  public ticketTypes = ticketTypes;
+  busy: Subscription;
+  ticket: ViolationTicket;
+  ticketType: string;
+  ticketTypes = ticketTypes;
 
   constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
+    private route: ActivatedRoute,
+    private router: Router,
     private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
   ) {
@@ -32,7 +32,7 @@ export class InitiateResolutionComponent implements OnInit {
     });
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     if (this.violationTicketService.validateTicket(this.params)) {
       this.logger.info("InitiateResolutionComponent:: Use existing ticket");
       this.ticket = this.violationTicketService.ticket;
@@ -42,7 +42,7 @@ export class InitiateResolutionComponent implements OnInit {
     }
   }
 
-  public onDisputeTicket(): void {
+  onDisputeTicket(): void {
     this.logger.info("InitiateResolutionComponent::onDisputeTicket", this.violationTicketService.ticket);
     this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)]);
   }

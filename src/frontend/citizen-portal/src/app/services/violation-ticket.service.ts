@@ -30,7 +30,7 @@ export class ViolationTicketService {
   public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
   public ocrIssueDescKey = "disputant_ocr_issues";
   public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
-  public queryParams: any;
+  private queryParams: any;
 
   constructor(
     private route: ActivatedRoute,
