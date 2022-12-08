@@ -7,12 +7,9 @@ import { FormControlValidators } from "@core/validators/form-control.validators"
 import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
-import { DisputeStatusDialogComponent } from "@shared/dialogs/dispute-status-dialog/dispute-status-dialog.component";
-import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
 import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, SearchDisputeResult, DisputeStatus } from "app/api";
 import { AppRoutes } from "app/app.routes";
-import { DisputeStore } from "app/store";
-import { BehaviorSubject, map, Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
 
 @Injectable({
