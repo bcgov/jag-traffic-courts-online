@@ -27,6 +27,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 class JJDisputeControllerTest extends BaseTestSuite {
@@ -97,12 +98,12 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		 JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
 				 .jjAssignedTo("Steven Strange")
 				 .ticketNumber("AX12345678")
-				 .violationDate(DateUtils.parseDate("12:45", "HH:mm"))
+				 .violationDate(DateUtils.parseDate("12:45", DateUtil.TIME_FORMAT))
 				 .build());
 		 JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
 				 .jjAssignedTo("Tony Stark")
 				 .ticketNumber("AX00000000")
-				 .violationDate(DateUtils.parseDate("14:32", "HH:mm"))
+				 .violationDate(DateUtils.parseDate("14:32", DateUtil.TIME_FORMAT))
 				 .build());
 		 List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
@@ -113,12 +114,12 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertTrue(ticketNumbers.contains(allDisputes.get(1).getTicketNumber()));
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX12345678", DateUtils.parseDate("12:45", "HH:mm")));
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX12345678", DateUtils.parseDate("12:45", DateUtil.TIME_FORMAT)));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute1.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX12345678", DateUtils.parseDate("14:32", "HH:mm")));
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX12345678", DateUtils.parseDate("14:32", DateUtil.TIME_FORMAT)));
 		assertEquals(0, allDisputes.size()); // mismatched terms - search should return nothing
 	}
 

@@ -30,15 +30,12 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 @ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = false)
 @Qualifier("disputeRepository")
 @Repository
 public class DisputeRepositoryImpl implements DisputeRepository {
-
-	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-	public static final String DATE_FORMAT = "yyyy-MM-dd";
-	public static final String TIME_FORMAT = "HH:mm";
 
 	private static Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
 
@@ -65,7 +62,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
 
 		if (olderThan != null) {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT);
 			olderThanDate = simpleDateFormat.format(olderThan);
 		}
 
@@ -86,7 +83,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date issuedTime) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_FORMAT);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.TIME_FORMAT);
 		String time = simpleDateFormat.format(issuedTime);
 		ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(null, null, ticketNumber, null, time);
 		List<Dispute> extractedDisputes = extractDisputes(response);
@@ -204,8 +201,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public void unassignDisputes(Date olderThan) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); //FIXME: UTC is a time standard, not a time zone - I think this should be GMT.
 		String dateStr = simpleDateFormat.format(olderThan);
 
 		logger.debug("Unassigning Disputes older than '{}'", dateStr);

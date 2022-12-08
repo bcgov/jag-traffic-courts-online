@@ -17,7 +17,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
-import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 /**
  * This mapper maps from Oracle Data API dispute model to ORDS dispute data
@@ -42,7 +42,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputantGiven1Nm", source = "disputantGivenName1")
 	@Mapping(target = "dispute.disputantGiven2Nm", source = "disputantGivenName2")
 	@Mapping(target = "dispute.disputantGiven3Nm", source = "disputantGivenName3")
-	@Mapping(target = "dispute.disputantBirthDt", source = "disputantBirthdate", dateFormat = DisputeRepositoryImpl.DATE_FORMAT)
+	@Mapping(target = "dispute.disputantBirthDt", source = "disputantBirthdate", dateFormat = DateUtil.DATE_FORMAT)
 	@Mapping(target = "dispute.disputantOrganizationNm", source = "disputantOrganization")
 	@Mapping(target = "dispute.disputantDrvLicNumberTxt", source = "driversLicenceNumber")
 	@Mapping(target = "dispute.drvLicIssuedIntlProvTxt", source = "driversLicenceProvince")
@@ -109,7 +109,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "drvLicIssuedCountryTxt", source = "violationTicket.driversLicenceCountry")
 	@Mapping(target = "drvLicIssuedYearNo", source = "violationTicket.driversLicenceIssuedYear")
 	@Mapping(target = "drvLicExpiryYearNo", source = "violationTicket.driversLicenceExpiryYear")
-	@Mapping(target = "disputantBirthDt", source = "violationTicket.disputantBirthdate", dateFormat = DisputeRepositoryImpl.DATE_FORMAT)
+	@Mapping(target = "disputantBirthDt", source = "violationTicket.disputantBirthdate", dateFormat = DateUtil.DATE_FORMAT)
 	@Mapping(target = "addressTxt", source = "violationTicket.address")
 	@Mapping(target = "addressCityTxt", source = "violationTicket.addressCity")
 	@Mapping(target = "addressProvinceTxt", source = "violationTicket.addressProvince")

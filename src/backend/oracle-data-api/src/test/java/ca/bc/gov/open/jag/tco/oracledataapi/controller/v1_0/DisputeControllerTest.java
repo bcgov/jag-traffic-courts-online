@@ -28,6 +28,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 class DisputeControllerTest extends BaseTestSuite {
@@ -277,7 +278,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		dispute.setTicketNumber("AX12345678");
-		dispute.setIssuedTs(DateUtils.parseDate("14:54", "HH:mm"));
+		dispute.setIssuedTs(DateUtils.parseDate("14:54", DateUtil.TIME_FORMAT));
 		dispute.setViolationTicket(null);
 		Long disputeId = saveDispute(dispute);
 
