@@ -46,9 +46,8 @@ import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-hist
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
 import { AuthService } from './services/auth.service';
 import { StoreModule } from '@ngrx/store';
-import * as JJDisputeStore from './store/jj-dispute';
 import { EffectsModule } from '@ngrx/effects';
-import { reducers } from './store';
+import { reducers, JJDisputeStore } from './store';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');

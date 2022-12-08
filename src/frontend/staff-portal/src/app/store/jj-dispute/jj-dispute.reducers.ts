@@ -7,7 +7,7 @@ export function JJDisputeReducer(state: JJDisputeState = initialState, action: A
 }
 
 const jjDisputeReducer = createReducer(initialState,
-  on(Actions.Get, state => ({ ...state, loading: true })),
+  on(Actions.Get, state => ({ ...state, loading: true, data: [] })), // temporary solution for refresh "data: []"
   on(Actions.GetSuccess, (state, result) => ({ ...state, loading: false, data: result.data })),
 
   on(Actions.Assign, state => ({ ...state, loading: true })),
