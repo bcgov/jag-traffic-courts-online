@@ -28,28 +28,28 @@ namespace TrafficCourts.Workflow.Service.Consumers
         {
             using var scope = _logger.BeginConsumeScope(context);
 
-
             string ticketNumber = context.Message.TicketNumber;
             string issuedTime = context.Message.IssuedTime;
             ICollection<DisputeResult> searchResult;
             try
             {
                 searchResult = await _oracleDataApiService.SearchDisputeAsync(context.Message.TicketNumber, context.Message.IssuedTime, context.CancellationToken);
-                try
+                if (searchResult is null || searchResult.Count == 0)
                 {
-                    var result = searchResult.OrderByDescending(d => d.DisputeId).First();
-                    await context.RespondAsync<SearchDisputeResponse>(result);
+                    _logger.LogError("Dispute not found");
                 }
-                catch (Exception ex)
+                DisputeResult? result = searchResult?.OrderByDescending(d => d.DisputeId).FirstOrDefault();
+                await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
                 {
-                    _logger.LogError(ex, "Failed to process message");
-                    await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse { IsError = true });
-                }
+                    DisputeId = result?.DisputeId.ToString(),
+                    DisputeStatus = result?.DisputeStatus.ToString(),
+                    JJDisputeStatus = result?.JjDisputeStatus?.ToString()
+                });
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.LogError("Dispute not found");
-                await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse());
+                _logger.LogError(ex, "Failed to process message");
+                await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse { IsError = true });
             }
         }
     }
