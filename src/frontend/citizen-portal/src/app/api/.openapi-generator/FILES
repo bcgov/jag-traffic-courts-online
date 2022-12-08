@@ -20,13 +20,14 @@ model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
 model/disputeStatus.model.ts
 model/field.model.ts
+model/jJDisputeStatus.model.ts
 model/language.model.ts
 model/models.ts
 model/noticeOfDispute.model.ts
 model/ocrViolationTicket.model.ts
 model/point.model.ts
 model/problemDetails.model.ts
-model/searchDisputeResponse.model.ts
+model/searchDisputeResult.model.ts
 model/statute.model.ts
 model/violationTicket.model.ts
 model/violationTicketCount.model.ts

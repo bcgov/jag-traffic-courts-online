@@ -10,11 +10,13 @@
  * Do not edit the class manually.
  */
 import { DisputeStatus } from './disputeStatus.model';
+import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 
-export interface SearchDisputeResponse { 
-    disputeId?: string | null;
-    disputeStatus?: DisputeStatus;
-    isError?: boolean;
+export interface SearchDisputeResult { 
+    dispute_id?: string | null;
+    dispute_status?: DisputeStatus;
+    jjdispute_status?: JJDisputeStatus;
+    is_error?: boolean;
 }
 

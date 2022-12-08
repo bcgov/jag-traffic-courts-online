@@ -11,13 +11,13 @@
  */
 
 
-export type DisputeStatus = 'NEW' | 'PROCESSING' | 'REJECTED' | 'CANCELLED' | 'VALIDATED';
+export type DisputeStatus = 'NEW' | 'VALIDATED' | 'PROCESSING' | 'REJECTED' | 'CANCELLED';
 
 export const DisputeStatus = {
     New: 'NEW' as DisputeStatus,
+    Validated: 'VALIDATED' as DisputeStatus,
     Processing: 'PROCESSING' as DisputeStatus,
     Rejected: 'REJECTED' as DisputeStatus,
-    Cancelled: 'CANCELLED' as DisputeStatus,
-    Validated: 'VALIDATED' as DisputeStatus
+    Cancelled: 'CANCELLED' as DisputeStatus
 };
 

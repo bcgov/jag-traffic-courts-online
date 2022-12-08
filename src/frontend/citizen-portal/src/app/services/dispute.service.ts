@@ -7,10 +7,12 @@ import { FormControlValidators } from "@core/validators/form-control.validators"
 import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
+import { DisputeStatusDialogComponent } from "@shared/dialogs/dispute-status-dialog/dispute-status-dialog.component";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, SearchDisputeResponse, DisputeStatus } from "app/api";
+import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, SearchDisputeResult, DisputeStatus } from "app/api";
 import { AppRoutes } from "app/app.routes";
-import { BehaviorSubject, catchError, map, Observable } from "rxjs";
+import { DisputeStore } from "app/store";
+import { BehaviorSubject, map, Observable, of } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
 
 @Injectable({
@@ -21,19 +23,19 @@ export class DisputeService {
   private _countFormDefaultValue: any;
   private _additionFormDefaultValue: any;
 
-  public RepresentedByLawyer = DisputeRepresentedByLawyer;
-  public RequestTimeToPay = DisputeCountRequestTimeToPay;
-  public RequestReduction = DisputeCountRequestReduction;
-  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
-  public PleaCode = DisputeCountPleaCode;
-  public Status = DisputeStatus;
+  RepresentedByLawyer = DisputeRepresentedByLawyer;
+  RequestTimeToPay = DisputeCountRequestTimeToPay;
+  RequestReduction = DisputeCountRequestReduction;
+  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  PleaCode = DisputeCountPleaCode;
+  Status = DisputeStatus;
 
-  public statusOfUpdatable = [
+  statusOfUpdatable = [
     this.Status.New,
     this.Status.Processing,
   ]
 
-  public ticketFormFields = {
+  ticketFormFields = {
     disputant_surname: [null, [Validators.required]],
     disputant_given_names: [null, [Validators.required]],
     address: [null, [Validators.required, Validators.maxLength(300)]],
@@ -50,7 +52,7 @@ export class DisputeService {
     dispute_counts: [],
   }
 
-  public countFormFields = {
+  countFormFields = {
     plea_cd: [null],
     request_time_to_pay: this.RequestTimeToPay.N,
     request_reduction: this.RequestReduction.N,
@@ -59,7 +61,7 @@ export class DisputeService {
     __apply_to_remaining_counts: [false],
   }
 
-  public additionFormFields = {
+  additionFormFields = {
     represented_by_lawyer: [this.RepresentedByLawyer.N],
     interpreter_language_cd: [null],
     witness_no: [0],
@@ -70,12 +72,12 @@ export class DisputeService {
     __interpreter_required: [false],
   }
 
-  public additionFormValidators = [
+  additionFormValidators = [
     FormGroupValidators.requiredIfTrue("__interpreter_required", "interpreter_language_cd"),
     FormGroupValidators.requiredIfTrue("__witness_present", "witness_no"),
   ]
 
-  public legalRepresentationFields = {
+  legalRepresentationFields = {
     law_firm_name: [null, [Validators.required]],
     lawyer_full_name: [null, [Validators.required]],
     lawyer_email: [null, [Validators.required, Validators.email]],
@@ -95,23 +97,23 @@ export class DisputeService {
     this._additionFormDefaultValue = this.fb.group(this.additionFormFields).value;
   }
 
-  public get noticeOfDispute$(): Observable<NoticeOfDispute> {
+  get noticeOfDispute$(): Observable<NoticeOfDispute> {
     return this._noticeOfDispute.asObservable();
   }
 
-  public get noticeOfDispute(): NoticeOfDispute {
+  get noticeOfDispute(): NoticeOfDispute {
     return this._noticeOfDispute.value;
   }
 
-  public get countFormDefaultValue(): any {
+  get countFormDefaultValue(): any {
     return this._countFormDefaultValue;
   }
 
-  public get additionFormDefaultValue(): any {
+  get additionFormDefaultValue(): any {
     return this._additionFormDefaultValue;
   }
 
-  public createNoticeOfDispute(input: NoticeOfDispute): void {
+  createNoticeOfDispute(input: NoticeOfDispute): void {
     input.disputant_birthdate = this.datePipe.transform(input.disputant_birthdate, "yyyy-MM-dd");
     input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss");
     input = this.splitGivenNames(input);  // break disputant names into first, second, third
@@ -153,43 +155,28 @@ export class DisputeService {
       });
   }
 
-  public resendVerificationEmail(noticeOfDisputeId: string): Observable<any> {
+  resendVerificationEmail(noticeOfDisputeId: string): Observable<any> {
     return this.disputesService.apiDisputesEmailUuidHashResendPut(noticeOfDisputeId);
   }
 
-  public verifyEmail(token: string): Observable<any> {
+  verifyEmail(token: string): Observable<any> {
     return this.disputesService.apiDisputesEmailVerifyPut(token);
   }
 
-  public searchDispute(params?: QueryParamsForSearch): Observable<SearchDisputeResponse> {
-    if (!params) {
-      params = this.violationTicketService.queryParams;
-    }
+  searchDispute(params: QueryParamsForSearch): Observable<SearchDisputeResult> {
     return this.disputesService.apiDisputesSearchGet(params.ticketNumber, params.time)
       .pipe(
-        map((response: SearchDisputeResponse) => {
-          if (response) {
-            if (this.statusOfUpdatable.indexOf(response.disputeStatus) > -1) {
-              return response;
-            } else {
-              return null;
-            }
-          }
-        }),
-        catchError((error: any) => {
-          throw error;
+        map((response: SearchDisputeResult) => {
+          return response;
         })
       );
   }
 
-
-  public splitAddressLines(noticeOfDisputeExtended: NoticeOfDispute): NoticeOfDispute {
-    let noticeOfDispute = noticeOfDisputeExtended;
-
+  splitAddressLines(noticeOfDispute: NoticeOfDispute): NoticeOfDispute {
     // split up where commas occur and stuff in address lines 1,2,3
     // Canada post guidelines state that each address line should be no more than 40 chars, we are chopping each line at 100
-    if (noticeOfDisputeExtended.address) {
-      let addressLines = noticeOfDisputeExtended.address.split(",");
+    if (noticeOfDispute.address) {
+      let addressLines = noticeOfDispute.address.split(",");
       if (addressLines.length > 0) noticeOfDispute.address_line1 = addressLines[0].length > 100 ? addressLines[0].substring(0, 100) : addressLines[0];
       if (addressLines.length > 1) noticeOfDispute.address_line2 = addressLines[1].length > 100 ? addressLines[1].substring(0, 100) : addressLines[1];
       if (addressLines.length > 2) noticeOfDispute.address_line3 = addressLines[2].length > 100 ? addressLines[2].substring(0, 100) : addressLines[2];
@@ -198,12 +185,10 @@ export class DisputeService {
     return noticeOfDispute;
   }
 
-  public splitGivenNames(noticeOfDisputeExtended: NoticeOfDispute): NoticeOfDispute {
-    let noticeOfDispute = noticeOfDisputeExtended;
-
+  splitGivenNames(noticeOfDispute: NoticeOfDispute): NoticeOfDispute {
     // split up where spaces occur and stuff in given names 1,2,3
-    if (noticeOfDisputeExtended.disputant_given_names) {
-      let givenNames = noticeOfDisputeExtended.disputant_given_names.split(" ");
+    if (noticeOfDispute.disputant_given_names) {
+      let givenNames = noticeOfDispute.disputant_given_names.split(" ");
       if (givenNames.length > 0) noticeOfDispute.disputant_given_name1 = givenNames[0];
       if (givenNames.length > 1) noticeOfDispute.disputant_given_name2 = givenNames[1];
       if (givenNames.length > 2) noticeOfDispute.disputant_given_name3 = givenNames[2];
@@ -212,12 +197,10 @@ export class DisputeService {
     return noticeOfDispute;
   }
 
-  public splitLawyerNames(noticeOfDisputeExtended: NoticeOfDispute): NoticeOfDispute {
-    let noticeOfDispute = noticeOfDisputeExtended;
-
+  splitLawyerNames(noticeOfDispute: NoticeOfDispute): NoticeOfDispute {
     // split up where spaces occur and stuff in given names 1,2,3
-    if (noticeOfDisputeExtended.lawyer_full_name) {
-      let lawyerNames = noticeOfDisputeExtended.lawyer_full_name.split(" ");
+    if (noticeOfDispute.lawyer_full_name) {
+      let lawyerNames = noticeOfDispute.lawyer_full_name.split(" ");
       if (lawyerNames.length > 0) noticeOfDispute.lawyer_surname = lawyerNames[lawyerNames.length - 1]; // last one
       if (lawyerNames.length > 1) noticeOfDispute.lawyer_given_name1 = lawyerNames[0];
       if (lawyerNames.length > 2) noticeOfDispute.lawyer_given_name2 = lawyerNames[1];
@@ -227,7 +210,7 @@ export class DisputeService {
     return noticeOfDispute;
   }
 
-  public getCountsActions(counts: DisputeCount[]): any {
+  getCountsActions(counts: DisputeCount[]): any {
     let countsActions: any = {};
     let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.count_no).join(", ");
     countsActions.not_request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.N));
@@ -239,10 +222,17 @@ export class DisputeService {
     return countsActions;
   }
 
-  public getNoticeOfDispute(formValue): NoticeOfDispute {
+  getNoticeOfDispute(formValue): NoticeOfDispute {
     // form contains all sub forms
     // get the ticket from storage to make sure the user can't change the ticket info
     return <NoticeOfDispute>{ ...this.violationTicketService.ticket, ...formValue };
+  }
+
+  showDisputeStatus(data: DisputeStore.StateData): void {
+    this.dialog.open(DisputeStatusDialogComponent, {
+      width: "60vw",
+      data: data
+    })
   }
 }
 

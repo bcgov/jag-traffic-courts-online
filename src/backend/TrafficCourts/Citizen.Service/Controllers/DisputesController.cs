@@ -159,7 +159,7 @@ public class DisputesController : ControllerBase
     }
 
     [HttpGet("/api/disputes/search")]
-    [ProducesResponseType(typeof(SearchDisputeResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SearchDisputeResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SearchDisputeAsync(

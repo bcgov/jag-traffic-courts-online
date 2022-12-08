@@ -37,6 +37,7 @@ import { DisputeTicketStepperComponent } from '@components/dispute-ticket-steppe
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
 import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
 import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
+import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
@@ -44,6 +45,9 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { DisputeStore, reducers } from './store';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -75,7 +79,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     EmailVerificationRequiredComponent,
     EmailVerificationComponent,
     DisputeLandingComponent,
-    FindDisputeComponent
+    FindDisputeComponent,
+    UpdateDisputeLandingComponent,
   ],
   imports: [
     CommonModule,
@@ -100,7 +105,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       },
       isolate: false,
       extend: true,
-    })
+    }),
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([DisputeStore.Effects]),
   ],
   exports: [
     NgBusyModule,
