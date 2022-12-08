@@ -23,7 +23,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             // Additional minutes between the transaction times since each transaction timestamp for EV and ED must be unique for ARC to process
             var now = GetCurrentDate();
 
-            foreach (TicketCount ticket in source.TicketDetails)
+            // process each of the ticket counts in "count" order
+            foreach (TicketCount ticket in source.TicketDetails.OrderBy(_ => _.Count))
             {
                 AdnotatedTicket adnotated = new();
 
@@ -95,12 +96,12 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
 
                         // Mapping disputed ticket specific data
                         ServiceDate = source.TicketIssuanceDate,
-                        Name = ReverseName(source.CitizenName),
-                        DisputeType = disputeCount.DisputeType?.ToUpper() ?? "A", //TODO: Find out what dispute type actually means
-                        StreetAddress = source.StreetAddress?.ToUpper() ?? String.Empty,
-                        City = source.City?.ToUpper() ?? String.Empty,
-                        Province = source.Province?.ToUpper() ?? String.Empty,
-                        PostalCode = source.PostalCode?.ToUpper() ?? String.Empty
+                        Name = GetName(source),
+                        DisputeType = disputeCount.DisputeType?.Trim().ToUpper() ?? "A", //TODO: Find out what dispute type actually means
+                        StreetAddress = source.StreetAddress?.Trim().ToUpper() ?? String.Empty,
+                        City = source.City?.Trim().ToUpper() ?? String.Empty,
+                        Province = source.Province?.Trim().ToUpper() ?? String.Empty,
+                        PostalCode = source.PostalCode?.Trim().ToUpper() ?? String.Empty
                     };
 
                     destination.Add(disputed);
@@ -116,47 +117,39 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
         {
             // the name used to come thru as a citizen name field
             // but in later release, the name is split into individual fields
-            if (!string.IsNullOrEmpty(ticket.CitizenName))
+            if (!string.IsNullOrWhiteSpace(ticket.CitizenName))
             {
                 return ReverseName(ticket.CitizenName);
             }
 
             StringBuilder name = new StringBuilder();
-            if (!string.IsNullOrEmpty(ticket.Surname))
+            if (AppendIfNotIsNullOrWhiteSpace(name, ticket.Surname))
             {
-                name.Append(ticket.Surname);
-                name.Append(',');
+                name.Append(','); // add comma after surname
             }
 
-            if (!string.IsNullOrEmpty(ticket.GivenName1))
+            AppendIfNotIsNullOrWhiteSpace(name, ticket.GivenName1);
+            AppendIfNotIsNullOrWhiteSpace(name, ticket.GivenName2);
+            AppendIfNotIsNullOrWhiteSpace(name, ticket.GivenName3);
+
+            return name.ToString().ToUpper(); // name always needs to be converted to upper case
+        }
+
+        private static bool AppendIfNotIsNullOrWhiteSpace(StringBuilder buffer, string? value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                if (name.Length != 0)
+                if (buffer.Length != 0)
                 {
-                    name.Append(' ');
+                    // add a space before the previous text
+                    buffer.Append(' ');
                 }
-                name.Append(ticket.GivenName1.Trim());
+
+                buffer.Append(value.Trim());
+                return true;
             }
 
-            if (!string.IsNullOrEmpty(ticket.GivenName2))
-            {
-                if (name.Length != 0)
-                {
-                    name.Append(' ');
-                }
-                name.Append(ticket.GivenName2.Trim());
-            }
-
-            if (!string.IsNullOrEmpty(ticket.GivenName3))
-            {
-                if (name.Length != 0)
-                {
-                    name.Append(' ');
-                }
-                
-                name.Append(ticket.GivenName3.Trim());
-            }
-
-            return name.ToString();
+            return false;
         }
 
         internal static string ReverseName(string name)
