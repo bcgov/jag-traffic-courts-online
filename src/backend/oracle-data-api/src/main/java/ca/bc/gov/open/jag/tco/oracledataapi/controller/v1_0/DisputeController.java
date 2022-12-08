@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -116,8 +118,10 @@ public class DisputeController {
 			@DateTimeFormat(pattern="HH:mm")
 			@Parameter(description = "The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.", example = "14:53", schema = @Schema(type="string"))
 			Date issuedTime) {
-		logger.debug("GET /disputes called");
-		return new ResponseEntity<List<DisputeResult>>(disputeService.findDispute(ticketNumber, issuedTime), HttpStatus.OK);
+		logger.debug("GET /disputes/status?ticketNumber={}&issuedTime={} called", ticketNumber, DateFormatUtils.format(issuedTime, DateUtil.TIME_FORMAT));
+		List<DisputeResult> results = disputeService.findDispute(ticketNumber, issuedTime);
+		logger.debug("  found {} record(s).", results.size());
+		return new ResponseEntity<List<DisputeResult>>(results, HttpStatus.OK);
 	}
 
 	/**

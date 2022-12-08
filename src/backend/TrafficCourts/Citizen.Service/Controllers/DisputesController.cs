@@ -6,8 +6,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Features.Tickets;
+using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
@@ -180,11 +182,16 @@ public class DisputesController : ControllerBase
             {
                 _logger.LogDebug("Dispute found");
                 var disputeId = _hashids.EncodeHex(response.Message.DisputeId);
-                result = Ok(new Models.Dispute.SearchDisputeResult
+                _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
+                _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
+                SearchDisputeResult searchResult = new()
                 {
                     DisputeId = disputeId,
-                    DisputeStatus = response.Message.DisputeStatus
-                });
+                    DisputeStatus = disputeStatus,
+                    JJDisputeStatus = jjDisputeStatus
+                };
+
+                result = Ok(searchResult);
             }
             else if (response.Message.IsError)
             {

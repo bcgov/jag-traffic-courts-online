@@ -2,6 +2,7 @@
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
+using JJDisputeStatus = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDisputeStatus;
 
 namespace TrafficCourts.Staff.Service.Services;
 
