@@ -11,6 +11,153 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 {
     public class MappingTests
     {
+        private readonly IMapper _mapper;
+
+        public MappingTests()
+        {
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+
+            _mapper = configuration.CreateMapper();
+        }
+
+        public static IEnumerable<object?[]> CitizenNameMappingTestCases
+        {
+            get
+            {
+                // parameters: string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected
+
+                // all null should map to empty string
+                yield return new object?[] { null, null, null, null, null, "" };
+                // all empty strings should map to empty string
+                yield return new object?[] { "", "", "", "", "", "" };
+                // all white space should map to empty string
+                yield return new object?[] { " ", " ", " ", " ", " ", "" };
+
+                // should take last word as last name and append other names afterword, converted to upper case
+                yield return new object?[] { "John Doe", "", "", "", "", "Doe, John".ToUpper() };
+                // should take last word as last name and append other names afterword, converted to upper case
+                yield return new object?[] { "John James Doe", "", "", "", "", "Doe, John James".ToUpper() };
+
+                // formats with surname, given1, given2 and given3
+
+                // last name only
+                yield return new object?[] { null, "Doe", "", "", "", "Doe,".ToUpper() };
+                yield return new object?[] { "", "Doe", "", "", "", "Doe,".ToUpper() };
+
+                // last name + given 1
+                yield return new object?[] { null, "Doe", "John", "", "", "Doe, John".ToUpper() };
+                yield return new object?[] { "", "Doe", "John", "", "", "Doe, John".ToUpper() };
+
+                // last name + given 1  + given 2
+                yield return new object?[] { null, "Doe", "John", "James", "", "Doe, John James".ToUpper() };
+                yield return new object?[] { "", "Doe", "John", "James", "", "Doe, John James".ToUpper() };
+
+                // last name + given 1  + given 2 + given 3
+                yield return new object?[] { null, "Doe", "John", "James", "Jack", "Doe, John James Jack".ToUpper() };
+                yield return new object?[] { "", "Doe", "John", "James", "Jack", "Doe, John James Jack".ToUpper() };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(CitizenNameMappingTestCases))]
+        public void client_name_is_mapped_correctly_with_no_disputed_count(string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected)
+        {
+            // arrange
+            var data = new TcoDisputeTicket
+            {
+                CitizenName = citizenName,
+                Surname = surname,
+                GivenName1 = given1,
+                GivenName2 = given2,
+                GivenName3 = given3
+            };
+
+            // mapper requires at least one ticket count
+            data.TicketDetails.Add(new TicketCount { Count = 1 });
+
+            // act
+            var actual = _mapper.Map<List<ArcFileRecord>>(data);
+            
+            // assert
+            var record = Assert.Single(actual);
+            var adnotated = Assert.IsType<AdnotatedTicket>(record);
+
+            Assert.Equal(expected, adnotated.Name);
+        }
+
+        [Theory]
+        [MemberData(nameof(CitizenNameMappingTestCases))]
+        public void client_name_is_mapped_correctly_with_disputed_count(string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected)
+        {
+            // arrange
+            var data = new TcoDisputeTicket
+            {
+                CitizenName = citizenName,
+                Surname = surname,
+                GivenName1 = given1,
+                GivenName2 = given2,
+                GivenName3 = given3
+            };
+
+            // mapper requires at least one ticket count
+            data.TicketDetails.Add(new TicketCount { Count = 1 });
+            data.DisputeCounts.Add(new DisputeCount { Count = 1 });
+
+            // act
+            var actual = _mapper.Map<List<ArcFileRecord>>(data);
+
+            // assert, should be two records
+            Assert.Equal(2, actual.Count);
+
+            var adnotated = Assert.IsType<AdnotatedTicket>(actual[0]);
+            var disputed = Assert.IsType<DisputedTicket>(actual[1]);
+
+            // name should match on both records
+            Assert.Equal(expected, adnotated.Name);
+            Assert.Equal(expected, disputed.Name);
+        }
+
+        public static IEnumerable<object?[]> CitizenStreetAddressMappingTestCases
+        {
+            get
+            {
+                yield return new object?[] { null, "" };
+                yield return new object?[] { "", "" };
+                yield return new object?[] { "123 Main St", "123 Main St".ToUpper() };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(CitizenStreetAddressMappingTestCases))]
+        public void client_street_address_is_mapped_correctly(string? streetAddress, string expected)
+        {
+            // arrange
+            var data = new TcoDisputeTicket
+            {
+                StreetAddress = streetAddress
+            };
+
+            // mapper requires at least one ticket count and matching dispute count
+            data.TicketDetails.Add(new TicketCount { Count = 1 });
+            data.DisputeCounts.Add(new DisputeCount { Count = 1 });
+
+            // act
+            var actual = _mapper.Map<List<ArcFileRecord>>(data);
+
+            Assert.Equal(2, actual.Count);
+
+            var adnotated = Assert.IsType<AdnotatedTicket>(actual[0]);
+            var disputed = Assert.IsType<DisputedTicket>(actual[1]);
+
+            // name should match on both records
+            Assert.Equal(expected, disputed.StreetAddress);
+
+
+        }
+
         [Fact]
         public void Test_convert_data_from_TcoDisputeTicket_to_ArcFileRecord_list()
         {
@@ -26,14 +173,8 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             var now = DateTime.Now;
             DisputeTicketToArcFileRecordListConverter.Now = () => now;
 
-            var mockMapper = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new MappingProfile());
-            });
-            var mapper = mockMapper.CreateMapper();
-
             // Act
-            var actual = mapper.Map<List<ArcFileRecord>>(tcoDisputeTicket);
+            var actual = _mapper.Map<List<ArcFileRecord>>(tcoDisputeTicket);
 
             // Assert
             Assert.NotNull(actual);
@@ -115,6 +256,10 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             Assert.Null(legalSection);
         }
 
+        /// <summary>
+        /// Fixes up the ticket and dispute counts to be in valid range
+        /// </summary>
+        /// <param name="disputedTicket"></param>
         private void FixCountNumbers(TcoDisputeTicket disputedTicket)
         {
             // map the count numbers to normal ranges
