@@ -21,7 +21,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
 import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { DisputeService, NoticeOfDispute } from "app/services/dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 
 @Component({
@@ -81,19 +81,19 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   declared = false;
 
   // Consume from the service
-  private ticketFormFields = this.disputeService.ticketFormFields;
-  private countFormFields = this.disputeService.countFormFields;
-  private countFormDefaultValue = this.disputeService.countFormDefaultValue;
-  private additionFormFields = this.disputeService.additionFormFields;
-  private additionFormValidators = this.disputeService.additionFormValidators;
-  // private additionFormDefaultValue = this.disputeService.additionFormDefaultValue;
-  private legalRepresentationFields = this.disputeService.legalRepresentationFields;
+  private ticketFormFields = this.noticeOfDisputeService.ticketFormFields;
+  private countFormFields = this.noticeOfDisputeService.countFormFields;
+  private countFormDefaultValue = this.noticeOfDisputeService.countFormDefaultValue;
+  private additionFormFields = this.noticeOfDisputeService.additionFormFields;
+  private additionFormValidators = this.noticeOfDisputeService.additionFormValidators;
+  // private additionFormDefaultValue = this.noticeOfDisputeService.additionFormDefaultValue;
+  private legalRepresentationFields = this.noticeOfDisputeService.legalRepresentationFields;
 
   constructor(
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private violationTicketService: ViolationTicketService,
-    private disputeService: DisputeService,
+    private noticeOfDisputeService: NoticeOfDisputeService,
     private utilsService: UtilsService,
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
@@ -212,7 +212,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   private getCountsActions() {
-    this.countsActions = this.disputeService.getCountsActions(this.countForms.value);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
   }
 
   onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
@@ -254,7 +254,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
 
     if (isAdditional) {
-      this.noticeOfDispute = this.disputeService.getNoticeOfDispute({
+      this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
         ...this.form.value,
         ...this.additionalForm.value,
         ...this.legalRepresentationForm.value,
@@ -359,6 +359,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
    * Submit the dispute
    */
   public submitDispute(): void {
-    this.disputeService.createNoticeOfDispute(this.noticeOfDispute);
+    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
   }
 }

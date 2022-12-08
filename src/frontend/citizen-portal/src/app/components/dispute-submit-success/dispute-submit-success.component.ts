@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { AppRoutes } from "app/app.routes";
-import { DisputeService, NoticeOfDispute } from "app/services/dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { Subscription } from "rxjs";
 import { DisputeRepresentedByLawyer } from "app/api";
@@ -26,18 +26,18 @@ export class DisputeSubmitSuccessComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private disputeService: DisputeService,
+    private noticeOfDisputeService: NoticeOfDisputeService,
     private violationTicketService: ViolationTicketService,
   ) { }
 
   ngOnInit(): void {
-    this.noticeOfDispute = this.disputeService.noticeOfDispute;
+    this.noticeOfDispute = this.noticeOfDisputeService.noticeOfDispute;
     if (!this.noticeOfDispute) {
       this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
       return;
     }
     this.ticketType = this.violationTicketService.ticketType;
-    this.countsActions = this.disputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
   }
 
   onPrint(): void {

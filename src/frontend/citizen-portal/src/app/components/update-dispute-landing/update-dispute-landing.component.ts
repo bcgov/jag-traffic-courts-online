@@ -22,6 +22,7 @@ export class UpdateDisputeLandingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // subscrible to dispute changes only because data will change when params change
     this.store.pipe(select(state => state.dispute.data?.dispute)).subscribe(dispute => {
       if (!dispute) {
         this.store.dispatch(DisputeStore.Actions.Search({}))
@@ -29,6 +30,8 @@ export class UpdateDisputeLandingComponent implements OnInit {
         this.isEditable = !dispute.jjdispute_status || dispute.jjdispute_status === JJDisputeStatus.New;
       }
     })
+
+    // subscrible to all changes
     this.store.pipe(select(state => state.dispute.data)).subscribe(data => {
       this.data = data;
     })

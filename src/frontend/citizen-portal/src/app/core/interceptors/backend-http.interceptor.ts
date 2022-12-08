@@ -7,12 +7,12 @@ import { RouteUtils } from '@core/utils/route-utils.class';
 import { AppConfigService } from 'app/services/app-config.service';
 import { Observable, of } from 'rxjs';
 import { MockConfig } from 'tests/mocks/mock-config';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { MockNoticeOfDisputeService } from 'tests/mocks/mock-notice-of-dispute.service';
 
 @Injectable()
 export class BackendHttpInterceptor implements HttpInterceptor {
   constructor(
-    private mockDisputeService: MockDisputeService,
+    private mockNoticeOfDisputeService: MockNoticeOfDisputeService,
     private appConfigService: AppConfigService,
     private logger: LoggerService
   ) { }
@@ -62,7 +62,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
   private handleTicketsRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
-    const ticket = this.mockDisputeService.ticket;
+    const ticket = this.mockNoticeOfDisputeService.ticket;
 
     switch (requestMethod) {
       case 'GET':

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { DisputeRepresentedByLawyer, Language } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
-import { DisputeService, NoticeOfDispute } from "app/services/dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -16,14 +16,14 @@ export class DisputeTicketSummaryComponent implements OnInit {
   busy: Subscription;
 
   constructor(
-    private disputeService: DisputeService,
+    private noticeOfDisputeService: NoticeOfDisputeService,
     private lookups: LookupsService
   ) {
   }
 
   ngOnInit(): void {
     if (this.noticeOfDispute) {
-      this.countsActions = this.disputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
+      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
     }
   }
 

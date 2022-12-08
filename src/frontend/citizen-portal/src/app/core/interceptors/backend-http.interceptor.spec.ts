@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { MockNoticeOfDisputeService } from 'tests/mocks/mock-notice-of-dispute.service';
 
 import { BackendHttpInterceptor } from './backend-http.interceptor';
 
@@ -8,7 +8,7 @@ describe('BackendHttpInterceptor', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [BackendHttpInterceptor, MockDisputeService],
+      providers: [BackendHttpInterceptor, MockNoticeOfDisputeService],
     })
   );
 
