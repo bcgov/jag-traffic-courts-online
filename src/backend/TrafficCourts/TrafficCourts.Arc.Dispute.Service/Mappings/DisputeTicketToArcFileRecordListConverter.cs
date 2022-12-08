@@ -97,11 +97,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         // Mapping disputed ticket specific data
                         ServiceDate = source.TicketIssuanceDate,
                         Name = GetName(source),
-                        DisputeType = disputeCount.DisputeType?.ToUpper() ?? "A", //TODO: Find out what dispute type actually means
-                        StreetAddress = source.StreetAddress?.ToUpper() ?? String.Empty,
-                        City = source.City?.ToUpper() ?? String.Empty,
-                        Province = source.Province?.ToUpper() ?? String.Empty,
-                        PostalCode = source.PostalCode?.ToUpper() ?? String.Empty
+                        DisputeType = disputeCount.DisputeType?.Trim().ToUpper() ?? "A", //TODO: Find out what dispute type actually means
+                        StreetAddress = source.StreetAddress?.Trim().ToUpper() ?? String.Empty,
+                        City = source.City?.Trim().ToUpper() ?? String.Empty,
+                        Province = source.Province?.Trim().ToUpper() ?? String.Empty,
+                        PostalCode = source.PostalCode?.Trim().ToUpper() ?? String.Empty
                     };
 
                     destination.Add(disputed);

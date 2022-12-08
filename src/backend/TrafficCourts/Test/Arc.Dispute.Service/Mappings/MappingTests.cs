@@ -23,6 +23,28 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             _mapper = configuration.CreateMapper();
         }
 
+        /// <summary>
+        /// Create a dispute ticket with the specified number of ticket and dispute counts
+        /// </summary>
+        private static TcoDisputeTicket CreateDisputeTicket(int ticketCount, int disputeCount)
+        {
+            var dispute = new TcoDisputeTicket();
+
+            for (int i = 0; i < ticketCount; i++)
+            {
+                dispute.TicketDetails.Add(new TicketCount { Count = i + 1 });
+            }
+
+            for (int i = 0; i < disputeCount; i++)
+            {
+                dispute.DisputeCounts.Add(new DisputeCount { Count = i + 1 });
+            }
+
+            return dispute;
+        }
+
+        #region Citizen Name Mapping
+
         public static IEnumerable<object?[]> CitizenNameMappingTestCases
         {
             get
@@ -65,22 +87,17 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
         [MemberData(nameof(CitizenNameMappingTestCases))]
         public void client_name_is_mapped_correctly_with_no_disputed_count(string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected)
         {
-            // arrange
-            var data = new TcoDisputeTicket
-            {
-                CitizenName = citizenName,
-                Surname = surname,
-                GivenName1 = given1,
-                GivenName2 = given2,
-                GivenName3 = given3
-            };
-
             // mapper requires at least one ticket count
-            data.TicketDetails.Add(new TicketCount { Count = 1 });
+            var dispute = CreateDisputeTicket(1, 0);
+            dispute.CitizenName = citizenName;
+            dispute.Surname = surname;
+            dispute.GivenName1 = given1;
+            dispute.GivenName2 = given2;
+            dispute.GivenName3 = given3;
 
             // act
-            var actual = _mapper.Map<List<ArcFileRecord>>(data);
-            
+            var actual = _mapper.Map<List<ArcFileRecord>>(dispute);
+
             // assert
             var record = Assert.Single(actual);
             var adnotated = Assert.IsType<AdnotatedTicket>(record);
@@ -92,22 +109,16 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
         [MemberData(nameof(CitizenNameMappingTestCases))]
         public void client_name_is_mapped_correctly_with_disputed_count(string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected)
         {
-            // arrange
-            var data = new TcoDisputeTicket
-            {
-                CitizenName = citizenName,
-                Surname = surname,
-                GivenName1 = given1,
-                GivenName2 = given2,
-                GivenName3 = given3
-            };
-
             // mapper requires at least one ticket count
-            data.TicketDetails.Add(new TicketCount { Count = 1 });
-            data.DisputeCounts.Add(new DisputeCount { Count = 1 });
+            var dispute = CreateDisputeTicket(1, 1);
+            dispute.CitizenName = citizenName;
+            dispute.Surname = surname;
+            dispute.GivenName1 = given1;
+            dispute.GivenName2 = given2;
+            dispute.GivenName3 = given3;
 
             // act
-            var actual = _mapper.Map<List<ArcFileRecord>>(data);
+            var actual = _mapper.Map<List<ArcFileRecord>>(dispute);
 
             // assert, should be two records
             Assert.Equal(2, actual.Count);
@@ -120,13 +131,21 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             Assert.Equal(expected, disputed.Name);
         }
 
+        #endregion
+
+        #region Citizen Street Address Mapping
+
         public static IEnumerable<object?[]> CitizenStreetAddressMappingTestCases
         {
             get
             {
-                yield return new object?[] { null, "" };
-                yield return new object?[] { "", "" };
+                yield return new object?[] { null, "" }; // null to empty string
+                yield return new object?[] { "", "" }; // empty string to empty string
+                yield return new object?[] { " \t\r\n\f", "" }; // white space characters to empty string
                 yield return new object?[] { "123 Main St", "123 Main St".ToUpper() };
+                yield return new object?[] { " 123 Main St", "123 Main St".ToUpper() }; // leading space
+                yield return new object?[] { "123 Main St ", "123 Main St".ToUpper() }; // trailing space
+                yield return new object?[] { " 123 Main St ", "123 Main St".ToUpper() }; // leading and trailing spaces
             }
         }
 
@@ -135,28 +154,21 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
         public void client_street_address_is_mapped_correctly(string? streetAddress, string expected)
         {
             // arrange
-            var data = new TcoDisputeTicket
-            {
-                StreetAddress = streetAddress
-            };
-
-            // mapper requires at least one ticket count and matching dispute count
-            data.TicketDetails.Add(new TicketCount { Count = 1 });
-            data.DisputeCounts.Add(new DisputeCount { Count = 1 });
+            var dispute = CreateDisputeTicket(1, 1);
+            dispute.StreetAddress = streetAddress;
 
             // act
-            var actual = _mapper.Map<List<ArcFileRecord>>(data);
+            var actual = _mapper.Map<List<ArcFileRecord>>(dispute);
 
             Assert.Equal(2, actual.Count);
 
             var adnotated = Assert.IsType<AdnotatedTicket>(actual[0]);
             var disputed = Assert.IsType<DisputedTicket>(actual[1]);
 
-            // name should match on both records
             Assert.Equal(expected, disputed.StreetAddress);
-
-
         }
+
+        #endregion
 
         [Fact]
         public void Test_convert_data_from_TcoDisputeTicket_to_ArcFileRecord_list()
@@ -168,7 +180,6 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             FixCountNumbers(tcoDisputeTicket);
 
             tcoDisputeTicket.DriversLicence = new Random().Next(99999999).ToString(); //must be numeric
-            var expectedMvbClientNumber = DriversLicence.WithCheckDigit(tcoDisputeTicket.DriversLicence);
 
             var now = DateTime.Now;
             DisputeTicketToArcFileRecordListConverter.Now = () => now;
@@ -193,15 +204,19 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                 var actualAdnotatedTicket = Assert.IsType<AdnotatedTicket>(actual[i * 2]);
                 var actualDisputedTicket = Assert.IsType<DisputedTicket>(actual[i * 2 + 1]);
 
+                // count numbers should be formatted correctly on each record
                 Assert.Equal(tcoDisputeTicket.TicketDetails[i].Count.ToString("D3"), actualAdnotatedTicket.CountNumber);
                 Assert.Equal(tcoDisputeTicket.DisputeCounts[i].Count.ToString("D3"), actualDisputedTicket.CountNumber);
 
+                // transaction times should be sequential by 1 second
                 Assert.Equal(expectedTransactionDateTime.AddSeconds(i * 2), actualAdnotatedTicket.TransactionDateTime);
                 Assert.Equal(expectedTransactionDateTime.AddSeconds(i * 2 + 1), actualDisputedTicket.TransactionDateTime);
 
+                // FileNumber should be the upper case ticket number with two spaces and then 01
                 Assert.Equal(tcoDisputeTicket.TicketFileNumber.ToUpper() + "  01", actualAdnotatedTicket.FileNumber);
-                Assert.Equal(expectedMvbClientNumber, actualAdnotatedTicket.MvbClientNumber);
 
+                // the MvbClientNumber should be the drivers licence with check digit
+                Assert.Equal(DriversLicence.WithCheckDigit(tcoDisputeTicket.DriversLicence), actualAdnotatedTicket.MvbClientNumber);
 
                 // TODO: Need to add a separate test for reversing the name later
                 //Assert.Equal(tcoDisputeTicket.CitizenName.ToUpper(), actualAdnotatedTicket.Name);
@@ -218,7 +233,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                 Assert.Equal(tcoDisputeTicket.City?.ToUpper(), actualDisputedTicket.City);
                 Assert.Equal(tcoDisputeTicket.Province?.ToUpper(), actualDisputedTicket.Province);
                 Assert.Equal(tcoDisputeTicket.PostalCode?.ToUpper(), actualDisputedTicket.PostalCode);
-            }  
+            }
         }
 
         /// <summary>
