@@ -46,7 +46,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public RequestTimeToPay = DisputeCountRequestTimeToPay;
   public RequestReduction = DisputeCountRequestReduction;
   public selected = null;
-  public countries: CountryCodeValue[] = [];
 
   public form: FormGroup;
   public countForms: FormArray;
@@ -111,8 +110,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.usaFound = this.config.countries.filter(x => x.ctryLongNm === "USA");
     this.provinces = this.config.provincesAndStates.filter(x => x.ctryId === this.canadaFound[0]?.ctryId && x.provSeqNo !== this.bcFound[0]?.provSeqNo);  // skip BC it will be manually at top of list
     this.states = this.config.provincesAndStates.filter(x => x.ctryId === this.usaFound[0]?.ctryId); // USA only
-    this.countries = this.config.countries.filter(x => x.ctryId !== this.canadaFound[0].ctryId && x.ctryId !== this.usaFound[0].ctryId); // skip USA and canada they will be manualy at top of list
-    this.countries = this.config.countries;
 
     this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
       this.lookups.languages$.next(response);

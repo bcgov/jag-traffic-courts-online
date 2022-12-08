@@ -1,6 +1,7 @@
 import { LoggerService } from '@core/services/logger.service';
 import { Injectable } from '@angular/core';
 import { ViolationTicket, OcrViolationTicket, Field, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
+import { ConfigService } from '@config/config.service';
 
 export interface IViolationTicketService {
   getAllOCRMessages(ocrViolationTicket: OcrViolationTicket);
@@ -42,6 +43,7 @@ export class ViolationTicketService implements IViolationTicketService {
 
   constructor(
     private logger: LoggerService,
+    private config: ConfigService
   ) {
   }
 
@@ -86,7 +88,14 @@ export class ViolationTicketService implements IViolationTicketService {
       if (!violationTicket.ticketNumber) violationTicket.ticketNumber = ocrViolationTicket?.fields["ticket_number"].value;
       if (!violationTicket.disputantSurname) violationTicket.disputantSurname = ocrViolationTicket?.fields["disputant_surname"].value;
       if (!violationTicket.disputantGivenNames) violationTicket.disputantGivenNames = ocrViolationTicket?.fields["disputant_given_names"].value;
-      if (!violationTicket.driversLicenceProvince) violationTicket.driversLicenceProvince = ocrViolationTicket?.fields["drivers_licence_province"].value;
+      if (!violationTicket.driversLicenceProvince) {
+        violationTicket.driversLicenceProvince = ocrViolationTicket?.fields["drivers_licence_province"].value;
+        let provFound = this.config.provincesAndStates.filter(x => x.provNm === violationTicket.driversLicenceProvince);
+        if (provFound.length > 0) {
+          let ctryFound = this.config.countries.filter(x => x.ctryId === provFound[0].ctryId);
+          if (ctryFound.length > 0) violationTicket.driversLicenceCountry = ctryFound[0].ctryLongNm;
+        }
+      }
       if (!violationTicket.disputantDriversLicenceNumber) violationTicket.disputantDriversLicenceNumber = ocrViolationTicket?.fields["drivers_licence_number"].value;
       if (!violationTicket.detachmentLocation) violationTicket.detachmentLocation = ocrViolationTicket?.fields["detachment_location"].value;
       if (!violationTicket.courtLocation) violationTicket.courtLocation = ocrViolationTicket?.fields["court_location"].value;

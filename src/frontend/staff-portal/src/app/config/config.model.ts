@@ -1,9 +1,10 @@
+import { CountryCodeValue, ProvinceCodeValue } from "./config.service";
+
 export interface Configuration {
   courtLocations: CourthouseConfig[];
-  policeLocations: Config<string>[];
-  countries: Config<string>[];
-  provinces: ProvinceConfig[];
+  countries: CountryCodeValue[];
   statuses: Config<number>[];
+  provincesAndStates: ProvinceCodeValue[];
 }
 
 export class Config<T> {
@@ -14,10 +15,6 @@ export class Config<T> {
     this.code = code;
     this.name = name;
   }
-}
-
-export interface ProvinceConfig extends Config<string> {
-  countryCode: string;
 }
 
 export interface CourthouseConfig extends Config<string> {

@@ -73,7 +73,7 @@
                           <mat-select (selectionChange)="onCountryChange($event?.value)" formControlName="address_country_id">
                             <mat-option [value]="canadaFound[0]?.ctryId">{{ canadaFound[0]?.ctryLongNm }}</mat-option>
                             <mat-option [value]="usaFound[0]?.ctryId">{{ usaFound[0]?.ctryLongNm }}</mat-option>
-                            <mat-option *ngFor="let country of countries" [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
+                            <mat-option *ngFor="let country of config.countries" [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
                           </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
