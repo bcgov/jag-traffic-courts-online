@@ -40,7 +40,7 @@ export class DisputeStatusDialogComponent {
         }
         case StatusStepType.PROCESSING: {
           let statuses: DisputeStatus[] = [DisputeStatus.Processing];
-          if (statuses.indexOf(this.dispute.dispute_status) > -1) {
+          if (statuses.indexOf(this.dispute?.dispute_status) > -1) {
             isCompleted = true;
           }
           break;
@@ -54,14 +54,14 @@ export class DisputeStatusDialogComponent {
             JJDisputeStatus.Review,
           ];
 
-          if (jjStatuses.indexOf(this.dispute.jjdispute_status) > -1) {
+          if (jjStatuses.indexOf(this.dispute?.jjdispute_status) > -1) {
             isCompleted = true;
           }
           break;
         }
         case StatusStepType.CONFIRMED: {
           let jjStatuses: JJDisputeStatus[] = [JJDisputeStatus.Confirmed];
-          if (jjStatuses.indexOf(this.dispute.jjdispute_status) > -1) {
+          if (jjStatuses.indexOf(this.dispute?.jjdispute_status) > -1) {
             isCompleted = true;
           }
           break;
