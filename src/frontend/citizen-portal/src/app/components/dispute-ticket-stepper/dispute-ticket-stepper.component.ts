@@ -148,6 +148,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     if (this.ticket.drivers_licence_province) {
       let foundProvinces = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === this.ticket.drivers_licence_province);
       if (foundProvinces.length > 0) {
+        this.form.get("drivers_licence_province_provId").setValue(foundProvinces[0].provId);
         this.onDLProvinceChange(foundProvinces[0].provId);
       }
       else this.form.get("drivers_licence_province").setValue(this.ticket.drivers_licence_province);
@@ -202,11 +203,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       this.form.get("home_phone_number").setValidators([Validators.maxLength(20)]);
       this.form.get("drivers_licence_number").setValidators([Validators.maxLength(20)]);
       this.form.get("drivers_licence_province").setValidators([Validators.maxLength(30)]);
-      this.form.get("drivers_licence_province").setValue(null);
-      this.form.get("drivers_licence_province_seq_no").setValidators(null);
-      this.form.get("drivers_licence_province_seq_no").setValue(null);
-      this.form.get("drivers_licence_province_provId").setValue(null);
-      this.form.get("drivers_licence_country_id").setValue(ctryId);
 
       if ((ctryId === this.canadaFound[0]?.ctryId) || (ctryId === this.usaFound[0]?.ctryId)) { // canada or usa validators
         this.form.get("address_province_seq_no").addValidators([Validators.required]);
@@ -220,9 +216,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
         this.form.get("address_province").setValue(this.bcFound[0].provNm);
         this.form.get("address_province_seq_no").setValue(this.bcFound[0].provSeqNo)
         this.form.get("address_province_provId").setValue(this.bcFound[0].provId);
-        this.form.get("drivers_licence_province").setValue(this.bcFound[0].provNm);
-        this.form.get("drivers_licence_province_seq_no").setValue(this.bcFound[0].provSeqNo)
-        this.form.get("drivers_licence_province_provId").setValue(this.bcFound[0].provId);
       }
 
       this.form.get("postal_code").updateValueAndValidity();
@@ -233,9 +226,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       this.form.get("home_phone_number").updateValueAndValidity();
       this.form.get("drivers_licence_number").updateValueAndValidity();
       this.form.get("drivers_licence_province").updateValueAndValidity();
-      this.form.get("drivers_licence_province_seq_no").updateValueAndValidity();
-      this.form.get("drivers_licence_province").updateValueAndValidity();
-      this.form.get("drivers_licence_country_id").updateValueAndValidity();
     }, 0);
   }
 
