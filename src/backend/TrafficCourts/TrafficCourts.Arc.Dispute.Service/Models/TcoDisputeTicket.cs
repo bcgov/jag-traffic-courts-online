@@ -9,7 +9,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         /// </summary>
         [Obsolete($"Use {nameof(GivenName1)}, {nameof(GivenName2)},  {nameof(GivenName3)} and {nameof(Surname)}")]
         [JsonProperty("citizen_name")]
-        public string CitizenName { get; set; } = String.Empty;
+        public string? CitizenName { get; set; } = String.Empty;
 
         [JsonProperty("citizen_surname")]
         //[JsonRequired] // make required when CitizenName is removed
@@ -63,7 +63,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         public string? Email { get; set; }
         
         [JsonProperty("dispute_counts")]
-        public IList<DisputeCount>? DisputeCounts { get; set; }
+        public List<DisputeCount> DisputeCounts { get; set; } = new();
     }
 
     public class TicketCount

@@ -2,6 +2,7 @@
 using AutoMapper;
 using TrafficCourts.Citizen.Service.Mappings;
 using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
 
