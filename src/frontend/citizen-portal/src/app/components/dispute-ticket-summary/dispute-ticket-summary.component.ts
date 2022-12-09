@@ -17,7 +17,7 @@ export class DisputeTicketSummaryComponent implements OnInit {
   busy: Subscription;
 
   constructor(
-    public configService: ConfigService,
+    private configService: ConfigService,
     private noticeOfDisputeService: NoticeOfDisputeService,
     private lookups: LookupsService
   ) {
@@ -31,5 +31,9 @@ export class DisputeTicketSummaryComponent implements OnInit {
 
   getLanguageDescription(lang): string {
     return this.lookups.getLanguageDescription(lang);
+  }
+
+  getCountryLongName(countryId: number): string {
+    return this.configService.getCtryLongNm(countryId);
   }
 }
