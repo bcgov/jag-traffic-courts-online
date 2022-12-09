@@ -17,10 +17,10 @@ import { ViolationTicket } from 'app/api';
 export class CountSummaryComponent implements OnInit {
   @ViewChildren('countitem')
   countComponents: QueryList<CountItemSummaryComponent>;
-  @Input() public ticket: ViolationTicket;
-  @Input() public selectView = false;
+  @Input() ticket: ViolationTicket;
+  @Input() selectView = false;
 
-  public defaultLanguage: string;
+  defaultLanguage: string;
 
   constructor() { }
 
@@ -28,7 +28,7 @@ export class CountSummaryComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public onSelectAllChange(event: MatCheckboxChange): void {
+  onSelectAllChange(event: MatCheckboxChange): void {
     this.countComponents.forEach((child) => {
       child.selectBox(event.checked);
     });

@@ -566,7 +566,7 @@
                       </mat-label>
                       <mat-select formControlName="interpreter_language_cd"
                         matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language_cd'))}}">
-                        <mat-option *ngFor="let language of lookups.languages" [value]="language.code">
+                        <mat-option *ngFor="let language of languages" [value]="language.code">
                           {{ language.description }}
                         </mat-option>
                       </mat-select>

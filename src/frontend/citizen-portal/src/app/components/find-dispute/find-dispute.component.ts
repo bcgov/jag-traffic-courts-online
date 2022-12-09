@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
-import { Subscription } from 'rxjs';
-import { ViolationTicketService } from 'app/services/violation-ticket.service';
+import { filter, Subscription } from 'rxjs';
+import { DisputeStore, disputeLoadingSelector } from 'app/store';
+import { select, Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-find-dispute',
@@ -13,23 +14,22 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class FindDisputeComponent implements OnInit {
-  public busy: Subscription;
-  public form: FormGroup;
   private progressRef: NgProgressRef;
+  busy: Subscription;
+  form: FormGroup;
 
-  public notFound = false;
-  public toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s license number and loation 3. Count Act / Section / Description 4. Fine amount';
+  notFound = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
     private ngProgress: NgProgress,
     private logger: LoggerService,
-    private violationTicketService: ViolationTicketService,
+    private store: Store
   ) {
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.progressRef = this.ngProgress.ref();
 
     this.form = this.formBuilder.group({
@@ -38,8 +38,8 @@ export class FindDisputeComponent implements OnInit {
     });
   }
 
-  public onSearch(): void {
-    this.logger.log('FindTicketComponent::onSearch');
+  onSearch(): void {
+    this.logger.log('FindDisputeComponent::onSearch');
 
     this.notFound = false;
     const validity = this.formUtilsService.checkValidity(this.form);
@@ -52,6 +52,7 @@ export class FindDisputeComponent implements OnInit {
     if (!validity) {
       return;
     }
-    this.busy = this.violationTicketService.searchTicket(this.form.value).subscribe(res => res);
+    this.store.dispatch(DisputeStore.Actions.Search({ params: this.form.value }));
+    this.busy = this.store.pipe(select(disputeLoadingSelector), filter(i => !i)).subscribe(() => this.busy.unsubscribe());
   }
 }

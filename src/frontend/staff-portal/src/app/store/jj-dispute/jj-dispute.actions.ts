@@ -7,7 +7,7 @@ export const Get = createAction(
 );
 
 export const GetSuccess = createAction(
-  ActionTypes.GET,
+  ActionTypes.GET_SUCCESS,
   props<{ data: JJDispute[] }>()
 );
 

@@ -9,12 +9,12 @@ describe('TicketNotFoundDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TicketNotFoundDialogComponent ],
+      declarations: [TicketNotFoundDialogComponent],
       providers: [
         {
           provide: MatDialog,
           useValue: {
-            close: (dialogResult: any) => {},
+            close: (dialogResult: any) => { },
           },
         },
         {
@@ -22,8 +22,7 @@ describe('TicketNotFoundDialogComponent', () => {
           useValue: {},
         },
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {

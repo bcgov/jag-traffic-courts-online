@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions as StoreActions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { map, exhaustMap } from 'rxjs/operators';
+import { map, mergeMap, switchMap } from 'rxjs/operators';
 import { AppState } from '../';
 import { Actions } from './';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
@@ -16,7 +16,7 @@ export class JJDisputeEffects {
 
   getJJDisputes$ = createEffect(() => this.actions$.pipe(
     ofType(Actions.Get),
-    exhaustMap(() => this.jjDisputeService.getJJDisputes()
+    switchMap(() => this.jjDisputeService.getJJDisputes()
       .pipe(
         map(data => {
           return Actions.GetSuccess({ data })
@@ -26,7 +26,7 @@ export class JJDisputeEffects {
 
   assignJJDisputes$ = createEffect(() => this.actions$.pipe(
     ofType(Actions.Assign),
-    exhaustMap(action => this.jjDisputeService.apiJjAssignPut(action.ticketNumbers, action.username)
+    mergeMap(action => this.jjDisputeService.apiJjAssignPut(action.ticketNumbers, action.username)
       .pipe(
         map(() => {
           this.store.dispatch(Actions.Get());

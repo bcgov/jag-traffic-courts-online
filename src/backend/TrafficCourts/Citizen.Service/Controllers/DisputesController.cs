@@ -159,7 +159,7 @@ public class DisputesController : ControllerBase
     }
 
     [HttpGet("/api/disputes/search")]
-    [ProducesResponseType(typeof(SearchDisputeResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SearchDisputeResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SearchDisputeAsync(
@@ -181,7 +181,7 @@ public class DisputesController : ControllerBase
             if (!string.IsNullOrEmpty(response.Message.DisputeId))
             {
                 _logger.LogDebug("Dispute found");
-                var disputeId = _hashids.EncodeHex(response.Message.DisputeId);
+                var disputeId = _hashids.EncodeHex(response.Message.DisputeId.PadLeft(48, '0'));
                 _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
                 _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
                 SearchDisputeResult searchResult = new()

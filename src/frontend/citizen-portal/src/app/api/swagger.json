@@ -185,17 +185,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchDisputeResponse"
+                  "$ref": "#/components/schemas/SearchDisputeResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchDisputeResponse"
+                  "$ref": "#/components/schemas/SearchDisputeResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchDisputeResponse"
+                  "$ref": "#/components/schemas/SearchDisputeResult"
                 }
               }
             }
@@ -527,10 +527,10 @@
       "DisputeStatus": {
         "enum": [
           "NEW",
+          "VALIDATED",
           "PROCESSING",
           "REJECTED",
-          "CANCELLED",
-          "VALIDATED"
+          "CANCELLED"
         ],
         "type": "string"
       },
@@ -566,6 +566,20 @@
           }
         },
         "additionalProperties": false
+      },
+      "JJDisputeStatus": {
+        "enum": [
+          "NEW",
+          "IN_PROGRESS",
+          "DATA_UPDATE",
+          "CONFIRMED",
+          "REQUIRE_COURT_HEARING",
+          "REQUIRE_MORE_INFO",
+          "ACCEPTED",
+          "REVIEW",
+          "HEARING_SCHEDULED"
+        ],
+        "type": "string"
       },
       "Language": {
         "type": "object",
@@ -863,17 +877,20 @@
         },
         "additionalProperties": { }
       },
-      "SearchDisputeResponse": {
+      "SearchDisputeResult": {
         "type": "object",
         "properties": {
-          "disputeId": {
+          "dispute_id": {
             "type": "string",
             "nullable": true
           },
-          "disputeStatus": {
+          "dispute_status": {
             "$ref": "#/components/schemas/DisputeStatus"
           },
-          "isError": {
+          "jjdispute_status": {
+            "$ref": "#/components/schemas/JJDisputeStatus"
+          },
+          "is_error": {
             "type": "boolean"
           }
         },

@@ -41,7 +41,6 @@ export class JjWorkbenchDashboardComponent implements OnInit {
       }
     })
     this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
-    // this.store.dispatch(JJDisputeStore.Actions.Get());
   }
 
   changeJJDispute(jjDispute: JJDispute) {
@@ -52,6 +51,6 @@ export class JjWorkbenchDashboardComponent implements OnInit {
 
   backInbox() {
     this.showDispute = false;
-    this.jjDisputeService.refreshDisputes.emit();
+    this.store.dispatch(JJDisputeStore.Actions.Get());
   }
 }

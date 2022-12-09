@@ -1,26 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ImageRequirementsDialogComponent } from '../image-requirements-dialog/image-requirements-dialog.component';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-ticket-not-found-dialog',
   templateUrl: './ticket-not-found-dialog.component.html',
   styleUrls: ['./ticket-not-found-dialog.component.scss']
 })
-export class TicketNotFoundDialogComponent implements OnInit {
-
+export class TicketNotFoundDialogComponent {
   constructor(
-    private dialog: MatDialog,
   ) {
   }
-
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
-  ngOnInit(): void {
-  }
-  public onViewImageRequirements(): void {
-    this.dialog.open(ImageRequirementsDialogComponent, {
-      width: '600px',
-    });
-  }
-
 }

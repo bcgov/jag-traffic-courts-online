@@ -21,7 +21,7 @@ import { FormErrorStateMatcher } from "@shared/directives/form-error-state-match
 import { cloneDeep } from "lodash";
 import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { DisputeService, NoticeOfDispute } from "app/services/dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 
 @Component({
@@ -34,72 +34,72 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   @ViewChild(MatStepper) private stepper: MatStepper;
   @ViewChild(AddressAutocompleteComponent) private addressAutocomplete: AddressAutocompleteComponent;
 
-  public busy: Subscription;
-  public isMobile: boolean;
-  public previousButtonIcon = "keyboard_arrow_left";
-  public defaultLanguage: string;
-  public ticketTypes = ticketTypes;
-  public todayDate: Date = new Date();
-  public Plea = DisputeCountPleaCode;
-  public RepresentedByLawyer = DisputeRepresentedByLawyer;
-  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
-  public RequestTimeToPay = DisputeCountRequestTimeToPay;
-  public RequestReduction = DisputeCountRequestReduction;
-  public selected = null;
+  languages: Language[] = [];
 
-  public form: FormGroup;
-  public countForms: FormArray;
-  public additionalForm: FormGroup;
-  public legalRepresentationForm: FormGroup;
-  public ticket: ViolationTicket;
-  public noticeOfDispute: NoticeOfDispute;
-  public ticketType;
-  public matcher = new FormErrorStateMatcher();
+  busy: Subscription;
+  isMobile: boolean;
+  previousButtonIcon = "keyboard_arrow_left";
+  defaultLanguage: string;
+  ticketTypes = ticketTypes;
+  todayDate: Date = new Date();
+  Plea = DisputeCountPleaCode;
+  RepresentedByLawyer = DisputeRepresentedByLawyer;
+  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  RequestTimeToPay = DisputeCountRequestTimeToPay;
+  RequestReduction = DisputeCountRequestReduction;
+  selected = null;
+
+  form: FormGroup;
+  countForms: FormArray;
+  additionalForm: FormGroup;
+  legalRepresentationForm: FormGroup;
+  ticket: ViolationTicket;
+  noticeOfDispute: NoticeOfDispute;
+  ticketType;
+  matcher = new FormErrorStateMatcher();
 
   // Disputant
-  public showManualButton: boolean = true;
-  public showAddressFields: boolean = true; // temporary preset for testing
-  public optOut: boolean = false;
+  showManualButton: boolean = true;
+  showAddressFields: boolean = true; // temporary preset for testing
+  optOut: boolean = false;
 
   // Count
-  public countIndexes: number[];
+  countIndexes: number[];
 
   // Additional
-  public countsActions: any;
-  public customWitnessOption = false;
-  public minWitnesses = 1;
-  public maxWitnesses = 99;
-  public additionalIndex: number;
-  public provinces: ProvinceCodeValue[];
-  public states: ProvinceCodeValue[];
+  provinces: ProvinceCodeValue[];
+  states: ProvinceCodeValue[];
+  countsActions: any;
+  customWitnessOption = false;
+  minWitnesses = 1;
+  maxWitnesses = 99;
+  additionalIndex: number;
 
   // Summary
-  public declared = false;
+  declared = false;
 
   // Consume from the service
-  public bcFound: ProvinceCodeValue[] = [];
-  public canadaFound: CountryCodeValue[] = [];
-  public usaFound: CountryCodeValue[] = [];
-  private ticketFormFields = this.disputeService.ticketFormFields;
-  private countFormFields = this.disputeService.countFormFields;
-  private countFormDefaultValue = this.disputeService.countFormDefaultValue;
-  private additionFormFields = this.disputeService.additionFormFields;
-  private additionFormValidators = this.disputeService.additionFormValidators;
-  private legalRepresentationFields = this.disputeService.legalRepresentationFields;
+  bcFound: ProvinceCodeValue[] = [];
+  canadaFound: CountryCodeValue[] = [];
+  usaFound: CountryCodeValue[] = [];
+  private ticketFormFields = this.noticeOfDisputeService.ticketFormFields;
+  private countFormFields = this.noticeOfDisputeService.countFormFields;
+  private countFormDefaultValue = this.noticeOfDisputeService.countFormDefaultValue;
+  private additionFormFields = this.noticeOfDisputeService.additionFormFields;
+  private additionFormValidators = this.noticeOfDisputeService.additionFormValidators;
+  private legalRepresentationFields = this.noticeOfDisputeService.legalRepresentationFields;
 
   constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
-    protected formBuilder: FormBuilder,
-    protected violationTicketService: ViolationTicketService,
-    protected disputeService: DisputeService,
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private violationTicketService: ViolationTicketService,
+    private noticeOfDisputeService: NoticeOfDisputeService,
     private utilsService: UtilsService,
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
-    public config: ConfigService,
-    private dialog: MatDialog,
-    public lookups: LookupsService
+    private config: ConfigService,
+    private lookups: LookupsService
   ) {
     // config or static
     this.isMobile = this.utilsService.isMobile();
@@ -116,13 +116,15 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.ticket = this.violationTicketService.ticket;
     if (!this.ticket) {
       this.violationTicketService.goToFind();
       return;
     }
     this.ticketType = this.violationTicketService.ticketType;
+
+    this.languages = this.lookups.languages;
 
     // build inner object array before the form
     let countArray = [];
@@ -271,22 +273,22 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   private getCountsActions() {
-    this.countsActions = this.disputeService.getCountsActions(this.countForms.value);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
   }
 
-  public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
+  onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
     // Will be implemented
   }
 
-  public onStepCancel(): void {
+  onStepCancel(): void {
     this.violationTicketService.goToInitiateResolution();
   }
 
-  public onAttendHearingChange(countForm: FormGroup, event): void {
+  onAttendHearingChange(countForm: FormGroup, event): void {
     countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event.value, __skip: false });
   }
 
-  public onStepSave(): void {
+  onStepSave(): void {
     let isAdditional = this.stepper.selectedIndex === this.additionalIndex;
     let isValid = this.formUtilsService.checkValidity(this.form);
 
@@ -313,7 +315,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
 
     if (isAdditional) {
-      this.noticeOfDispute = this.disputeService.getNoticeOfDispute({
+      this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
         ...this.form.value,
         ...this.additionalForm.value,
         ...this.legalRepresentationForm.value,
@@ -341,7 +343,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public isValid(countInx?): boolean {
+  isValid(countInx?): boolean {
     let countForm = this.countForms?.controls[countInx]
     if (countForm) {
       let valid = countForm.valid || countForm.value.__skip;
@@ -355,11 +357,11 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     return this.form.valid;
   }
 
-  public onChangeRepresentedByLawyer(event: MatCheckboxChange) {
+  onChangeRepresentedByLawyer(event: MatCheckboxChange) {
     this.additionalForm.markAsUntouched();
   }
 
-  public onChangeWitnessPresent(event: MatCheckboxChange) {
+  onChangeWitnessPresent(event: MatCheckboxChange) {
     if (event.checked) {
       this.additionalForm.controls.witness_no.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
@@ -368,7 +370,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public getToolTipDEata(data) {
+  getToolTipDEata(data) {
     if (data) {
       let msg = "";
       this.lookups.languages.forEach(res => {
@@ -418,6 +420,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
    * Submit the dispute
    */
   public submitDispute(): void {
-    this.disputeService.createNoticeOfDispute(this.noticeOfDispute);
+    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
   }
 }

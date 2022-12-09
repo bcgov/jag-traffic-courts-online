@@ -2,7 +2,7 @@ import { Address } from '@shared/models/address.model';
 import * as faker from 'faker';
 import { BehaviorSubject } from 'rxjs';
 
-export class MockDisputeService {
+export class MockNoticeOfDisputeService {
   private _ticket: BehaviorSubject<any>;
 
   constructor() {
