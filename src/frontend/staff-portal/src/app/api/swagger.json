@@ -1155,6 +1155,34 @@
         }
       }
     },
+    "/api/dispute/updaterequest/{updateStatusId}/reject": {
+      "put": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Rejects a DisputantUpdateRequest record, setting it's status to REJECTED.",
+        "parameters": [
+          {
+            "name": "updateStatusId",
+            "in": "path",
+            "description": "Unique identifier for a specific DisputantUpdateRequest record to reject.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/api/emailhistory/emailhistory": {
       "get": {
         "tags": [
@@ -2750,15 +2778,11 @@
             "nullable": true
           },
           "driversLicenceIssuedCountryId": {
-            "maximum": 8,
-            "minimum": -2147483648,
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
           "driversLicenceIssuedProvinceSeqNo": {
-            "maximum": 4,
-            "minimum": -2147483648,
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -2797,22 +2821,16 @@
             "nullable": true
           },
           "addressProvinceCountryId": {
-            "maximum": 8,
-            "minimum": -2147483648,
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
           "addressProvinceSeqNo": {
-            "maximum": 4,
-            "minimum": -2147483648,
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
           "addressCountryId": {
-            "maximum": 8,
-            "minimum": -2147483648,
             "type": "integer",
             "format": "int32",
             "nullable": true

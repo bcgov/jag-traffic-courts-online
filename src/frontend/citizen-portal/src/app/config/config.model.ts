@@ -1,10 +1,7 @@
 export interface Configuration {
-  courtLocations: Config<string>[];
-  policeLocations: Config<string>[];
-  countries: Config<string>[];
-  provinces: ProvinceConfig[];
+  countries: CountryCodeValue[];
+  provincesAndStates: ProvinceCodeValue[];
   statuses: Config<number>[];
-  statutes: Config<number>[];
 }
 
 export class Config<T> {
@@ -17,6 +14,28 @@ export class Config<T> {
   }
 }
 
-export interface ProvinceConfig extends Config<string> {
-  countryCode: string;
+export class CountryCodeValue {
+  ctryId?: number;
+  ctryLongNm?: string;
+
+  constructor(ctryId: number, ctryLongNm: string) {
+    this.ctryId = ctryId;
+    this.ctryLongNm = ctryLongNm;
+  }
+}
+
+export class ProvinceCodeValue {
+  ctryId?: number;
+  provSeqNo?: number;
+  provNm?: string;
+  provAbbreviationCd?: string;
+  provId: number;
+
+  constructor (ctryId?: number, provSeqNo?: number, provNm?: string, provAbbreviationCd?: string, provId?: number) {
+    this.ctryId = ctryId;
+    this.provSeqNo = provSeqNo;
+    this.provNm = provNm;
+    this.provAbbreviationCd = provAbbreviationCd;
+    this.provId = provId;
+  }
 }

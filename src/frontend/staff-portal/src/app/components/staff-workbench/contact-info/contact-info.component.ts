@@ -5,8 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
-import { ProvinceConfig } from '@config/config.model';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
+import { CountryCodeValue, ProvinceCodeValue } from '@config/config.service';
+import { ConfigService } from '@config/config.service';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { Subscription } from 'rxjs';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
@@ -22,8 +22,11 @@ export class ContactInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
-  public provinces: ProvinceConfig[];
-  public states: ProvinceConfig[];
+  public provinces: ProvinceCodeValue[];
+  public states: ProvinceCodeValue[];
+  public bcFound: ProvinceCodeValue[] = [];
+  public canadaFound: CountryCodeValue[] = [];
+  public usaFound: CountryCodeValue[] = [];
   public busy: Subscription;
   public initialDisputeValues: Dispute;
   public todayDate: Date = new Date();
@@ -42,17 +45,18 @@ export class ContactInfoComponent implements OnInit {
     protected formBuilder: FormBuilder,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    public mockConfigService: MockConfigService,
+    public config: ConfigService,
     private disputeService: DisputeService,
     private logger: LoggerService,
   ) {
     const today = new Date();
     this.isMobile = this.utilsService.isMobile();
 
-    if (this.mockConfigService.provinces) {
-      this.provinces = this.mockConfigService.provinces.filter(x => x.countryCode == 'CA' && x.code != 'BC');
-      this.states = this.mockConfigService.provinces.filter(x => x.countryCode == 'US');
-    }
+    this.bcFound = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === "BC");
+    this.canadaFound = this.config.countries.filter(x => x.ctryLongNm === "Canada");
+    this.usaFound = this.config.countries.filter(x => x.ctryLongNm === "USA");
+    this.provinces = this.config.provincesAndStates.filter(x => x.ctryId === this.canadaFound[0]?.ctryId && x.provSeqNo !== this.bcFound[0]?.provSeqNo);  // skip BC it will be manually at top of list
+    this.states = this.config.provincesAndStates.filter(x => x.ctryId === this.usaFound[0]?.ctryId); // USA only
   }
 
   public ngOnInit() {
@@ -66,54 +70,86 @@ export class ContactInfoComponent implements OnInit {
       address: [null, [Validators.required, Validators.maxLength(300)]],
       addressCity: [null, [Validators.required]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
+      addressProvinceProvId: [null],
+      addressProvinceCountryId: [null],
+      addressProvinceSeqNo: [null],
+      addressCountryId: [null, [Validators.required]],
       rejectedReason: [null, Validators.maxLength(256)], // Optional
-      country: [null, [Validators.required]],
       postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]],
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
+      driversLicenceProvinceProvId: [null],
+      driversLicenceCountryId: [null],
+      driversLicenceProvinceSeqNo: [null],
     });
     this.getDispute();
   }
 
-  public onCountryChange(country) {
+  public onCountryChange(ctryId: number) {
     setTimeout(() => {
       this.form.get('postalCode').setValidators([Validators.maxLength(6)]);
       this.form.get('addressProvince').setValidators([Validators.maxLength(30)]);
+      this.form.get('addressProvince').setValue(null);
+      this.form.get('addressProvinceSeqNo').setValidators(null);
+      this.form.get('addressProvinceSeqNo').setValue(null);
+      this.form.get('addressProvinceCountryId').setValue(null);
+      this.form.get('addressProvinceProvId').setValue(null);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
+      this.form.get('driversLicenceProvinceSeqNo').setValidators(null);
 
-      if (country == 'Canada' || country == 'United States') {
-        this.form.get('addressProvince').addValidators([Validators.required]);
+      if (ctryId === this.canadaFound[0]?.ctryId || ctryId === this.usaFound[0]?.ctryId) {
+        this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceProvince').addValidators([Validators.required]);
-      }
+        this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+      } else this.form.get('addressProvince').addValidators([Validators.required]);
 
-      if (country == 'Canada') {
+      if (ctryId == this.canadaFound[0]?.ctryId) {
         this.form.get('postalCode').addValidators([Validators.minLength(6)]);
+        this.form.get("addressProvince").setValue(this.bcFound[0].provNm);
+        this.form.get("addressProvinceSeqNo").setValue(this.bcFound[0].provSeqNo)
+        this.form.get("addressProvinceProvId").setValue(this.bcFound[0].provId);
       }
 
       this.form.get('postalCode').updateValueAndValidity();
       this.form.get('addressProvince').updateValueAndValidity();
+      this.form.get("addressProvinceCountryId").updateValueAndValidity();
+      this.form.get("addressProvinceSeqNo").updateValueAndValidity();
+      this.form.get("addressProvinceProvId").updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
-      this.onDLProvinceChange(this.form.get('driversLicenceProvince').value);
+      this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
     }, 5);
   }
 
-  public onDLProvinceChange(province) {
+  public onDLProvinceChange(provId: number) {
     setTimeout(() => {
-      if (province == 'BC') {
+      let provFound = this.config.provincesAndStates.filter(x => x.provId === provId);
+      if (provFound.length === 0) return;
+      this.form.get("driversLicenceProvince").setValue(provFound[0]?.provNm);
+      this.form.get("driversLicenceCountryId").setValue(provFound[0]?.ctryId);
+      this.form.get("driversLicenceProvinceSeqNo").setValue(provFound[0]?.provSeqNo);
+      if (provFound[0].provAbbreviationCd == 'BC') {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
         this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
       } else {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
       }
-      if (this.form.get('country').value == 'United States' || this.form.get('country').value == 'Canada') {
+      if (provFound[0].ctryId == this.usaFound[0].ctryId || provFound[0].ctryId == this.canadaFound[0].ctryId) {
         this.form.get('driversLicenceNumber').addValidators([Validators.required]);
       }
       this.form.get('driversLicenceNumber').updateValueAndValidity();
     }, 5)
+  }
+
+  public onAddressProvinceChange(provId: number) {
+    setTimeout(() => {
+      let provFound = this.config.provincesAndStates.filter(x => x.provId === provId);
+      this.form.get("addressProvince").setValue(provFound[0].provNm);
+      this.form.get("addressProvinceCountryId").setValue(provFound[0].ctryId);
+      this.form.get("addressProvinceSeqNo").setValue(provFound[0].provSeqNo);
+    }, 0)
   }
 
   public onSubmit(): void {
@@ -281,16 +317,39 @@ export class ContactInfoComponent implements OnInit {
         this.violationTime = tempViolationDate[1].split(":")[0] + ":" + tempViolationDate[1].split(":")[1];
       }
 
-
+      // set provId for drivers Licence and address this field is only good client side as angular dropdown needs a single value key to behave well, doesnt like two part key of ctryid & seqno
       this.form.patchValue(this.initialDisputeValues);
+      this.form.get('driversLicenceCountryId').setValue(this.initialDisputeValues.driversLicenceIssuedCountryId);
+      this.form.get('driversLicenceProvinceSeqNo').setValue(this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
+      let provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.driversLicenceIssuedCountryId && x.provSeqNo === this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
+      if (provFound.length > 0) {
+        this.form.get('driversLicenceProvinceProvId').setValue(provFound[0].provId);
+      }
 
+      provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.addressProvinceCountryId && x.provSeqNo === this.initialDisputeValues.addressProvinceSeqNo);
+      if (provFound.length > 0) this.form.get('addressProvinceProvId').setValue(provFound[0].provId);
+      this.form.get('addressProvince').setValidators([Validators.maxLength(30)]);
+      this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
+      this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
+      this.form.get("driversLicenceProvinceSeqNo").setValidators(null);
 
-      // set country from province
-      if (this.provinces.filter(x => x.name == this.lastUpdatedDispute.addressProvince || this.lastUpdatedDispute.addressProvince == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
-      else if (this.states.filter(x => x.name == this.initialDisputeValues.addressProvince).length > 0) this.form.get('country').setValue("United States");
-      else this.form.get('country').setValue("International");
+      if (this.form.get('addressCountryId').value === this.canadaFound[0]?.ctryId || this.form.get('addressCountryId').value === this.usaFound[0]?.ctryId) {
+        this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('postalCode').addValidators([Validators.required]);
+        this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
+        this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+      }
 
-      this.onCountryChange(this.form.get('country').value);
+      if (this.form.get('addressCountryId').value == this.canadaFound[0]?.ctryId) {
+        this.form.get('postalCode').addValidators([Validators.minLength(6)]);
+      }
+      this.form.get('postalCode').updateValueAndValidity();
+      this.form.get('addressProvince').updateValueAndValidity();
+      this.form.get("addressProvinceSeqNo").updateValueAndValidity();
+      this.form.get("addressProvinceProvId").updateValueAndValidity();
+      this.form.get('homePhoneNumber').updateValueAndValidity();
+      this.form.get('driversLicenceProvince').updateValueAndValidity();
+      this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
     });
   }
 

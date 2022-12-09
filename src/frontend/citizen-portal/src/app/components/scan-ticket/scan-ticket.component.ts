@@ -68,8 +68,4 @@ export class ScanTicketComponent implements OnInit {
         }
       });
   }
-
-  onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
-    this.logger.log('onStatuteSelected', event$.option.value);
-  }
 }

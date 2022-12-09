@@ -141,17 +141,15 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The country code of the drivers licence was issued by.
 	 */
-	@Max(8)
 	@Column(length = 8)
-	@Schema(maximum = "8", nullable = true)
+	@Schema(nullable = true)
 	private Integer driversLicenceIssuedCountryId;
 
 	/**
 	 * The province sequence number of the drivers licence was issued by.
 	 */
-	@Max(4)
 	@Column(length = 4)
-	@Schema(maximum = "4", nullable = true)
+	@Schema(nullable = true)
 	private Integer driversLicenceIssuedProvinceSeqNo;
 
 	/**
@@ -205,25 +203,22 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The mailing address province's country code of the disputant.
 	 */
-	@Max(8)
 	@Column(length = 8)
-	@Schema(maximum = "8", nullable = true)
+	@Schema(nullable = true)
 	private Integer addressProvinceCountryId;
 
 	/**
 	 * The mailing address province's sequence number of the disputant.
 	 */
-	@Max(4)
 	@Column(length = 4)
-	@Schema(maximum = "4", nullable = true)
+	@Schema(nullable = true)
 	private Integer addressProvinceSeqNo;
 
 	/**
 	 * The mailing address country id of the disputant.
 	 */
-	@Max(8)
 	@Column(length = 8)
-	@Schema(maximum = "8", nullable = true)
+	@Schema(nullable = true)
 	private Integer addressCountryId;
 
 	/**

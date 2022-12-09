@@ -87,9 +87,9 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.ocrTicketJsonFilenameTxt", source = "ocrTicketFilename")
 	// Only setting Country IDs to 1 (Canada) as default for now, other IDs must be set from the actual dispute model source from request
 	// If these IDs are passed as null, then the actual string value of the field such as (drvLicIssuedIntlProvTxt) will be saved based on the logic in the database
-	@Mapping(target = "dispute.drvLicIssuedCtryId", constant = "1")
+	@Mapping(target = "dispute.drvLicIssuedCtryId", source = "driversLicenceIssuedCountryId")
 	@Mapping(target = "dispute.drvLicIssuedProvSeqNo", source = "driversLicenceIssuedProvinceSeqNo")
-	@Mapping(target = "dispute.addressCtryId", constant = "1")
+	@Mapping(target = "dispute.addressCtryId", source = "addressCountryId")
 	@Mapping(target = "dispute.addressProvCtryId", source = "addressProvinceCountryId")
 	@Mapping(target = "dispute.addressProvSeqNo", source = "addressProvinceSeqNo")
 	// Map from Oracle Data API violation ticket model to ORDS violation ticket data

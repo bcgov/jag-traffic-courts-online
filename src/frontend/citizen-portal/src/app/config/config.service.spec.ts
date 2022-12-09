@@ -24,15 +24,7 @@ describe('ConfigService', () => {
   it('should get provinces code', inject(
     [ConfigService],
     (service: ConfigService) => {
-      const code = service.provinces[0].code;
-      expect(code).toBeDefined();
-    }
-  ));
-
-  it('should get courtLocations code', inject(
-    [ConfigService],
-    (service: ConfigService) => {
-      const code = service.courtLocations[0].code;
+      const code = service.provincesAndStates[0].provSeqNo;
       expect(code).toBeDefined();
     }
   ));
@@ -40,8 +32,8 @@ describe('ConfigService', () => {
   it('should get countries code', inject(
     [ConfigService],
     (service: ConfigService) => {
-      const code = service.countries[0];
-      expect(code).toBeDefined();
+      const ctryId = service.countries[0].ctryId;
+      expect(ctryId).toBeDefined();
     }
   ));
 

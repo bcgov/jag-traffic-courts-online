@@ -1,24 +1,24 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { CountryCodeValue, ProvinceCodeValue } from "@config/config.model";
 import { MatStepper } from "@angular/material/stepper";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialog } from "@angular/material/dialog";
 import { TranslateService } from "@ngx-translate/core";
-import { Subscription } from "rxjs";
-import { cloneDeep } from "lodash";
-
+import { Subscription } from "rxjs"
 import { ToastService } from "@core/services/toast.service";
 import { UtilsService } from "@core/services/utils.service";
 import { FormUtilsService } from "@core/services/form-utils.service";
 import { FormControlValidators } from "@core/validators/form-control.validators";
 import { ConfigService } from "@config/config.service";
-import { Config, ProvinceConfig } from "@config/config.model";
 import { Address } from "@shared/models/address.model";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
+import { cloneDeep } from "lodash";
 import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
@@ -33,12 +33,8 @@ import { LookupsService } from "app/services/lookups.service";
 export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   @ViewChild(MatStepper) private stepper: MatStepper;
   @ViewChild(AddressAutocompleteComponent) private addressAutocomplete: AddressAutocompleteComponent;
-  
+
   languages: Language[] = [];
-  countries: Config<string>[] = [];
-  allProvinces: ProvinceConfig[] = [];
-  provinces: ProvinceConfig[];
-  states: ProvinceConfig[];
 
   busy: Subscription;
   isMobile: boolean;
@@ -71,6 +67,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   countIndexes: number[];
 
   // Additional
+  provinces: ProvinceCodeValue[];
+  states: ProvinceCodeValue[];
   countsActions: any;
   customWitnessOption = false;
   minWitnesses = 1;
@@ -81,12 +79,14 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   declared = false;
 
   // Consume from the service
+  bcFound: ProvinceCodeValue[] = [];
+  canadaFound: CountryCodeValue[] = [];
+  usaFound: CountryCodeValue[] = [];
   private ticketFormFields = this.noticeOfDisputeService.ticketFormFields;
   private countFormFields = this.noticeOfDisputeService.countFormFields;
   private countFormDefaultValue = this.noticeOfDisputeService.countFormDefaultValue;
   private additionFormFields = this.noticeOfDisputeService.additionFormFields;
   private additionFormValidators = this.noticeOfDisputeService.additionFormValidators;
-  // private additionFormDefaultValue = this.noticeOfDisputeService.additionFormDefaultValue;
   private legalRepresentationFields = this.noticeOfDisputeService.legalRepresentationFields;
 
   constructor(
@@ -98,12 +98,22 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
-    private config: ConfigService,
+    public config: ConfigService,
     private lookups: LookupsService
   ) {
     // config or static
     this.isMobile = this.utilsService.isMobile();
     this.defaultLanguage = this.translateService.getDefaultLang();
+
+    this.bcFound = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === "BC");
+    this.canadaFound = this.config.countries.filter(x => x.ctryLongNm === "Canada");
+    this.usaFound = this.config.countries.filter(x => x.ctryLongNm === "USA");
+    this.provinces = this.config.provincesAndStates.filter(x => x.ctryId === this.canadaFound[0]?.ctryId && x.provSeqNo !== this.bcFound[0]?.provSeqNo);  // skip BC it will be manually at top of list
+    this.states = this.config.provincesAndStates.filter(x => x.ctryId === this.usaFound[0]?.ctryId); // USA only
+
+    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
+      this.lookups.languages$.next(response);
+    });
   }
 
   ngOnInit(): void {
@@ -113,12 +123,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       return;
     }
     this.ticketType = this.violationTicketService.ticketType;
-    
+
     this.languages = this.lookups.languages;
-    this.countries = this.config.countries;
-    this.allProvinces = this.config.provinces;
-    this.provinces = this.config.provinces.filter(x => x.countryCode == "CA" && x.code != "BC");
-    this.states = this.config.provinces.filter(x => x.countryCode == "US");
 
     // build inner object array before the form
     let countArray = [];
@@ -137,6 +143,23 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       this.ticket[key] && this.form.get(key)?.patchValue(this.ticket[key]);
     });
     this.ticket.drivers_licence_number && this.form.controls["drivers_licence_number"].setValue(this.ticket.drivers_licence_number.toString());
+
+    // search for drivers licence province using abbreviation e.g. BC
+    if (this.ticket.drivers_licence_province) {
+      let foundProvinces = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === this.ticket.drivers_licence_province);
+      if (foundProvinces.length > 0) {
+        this.form.get("drivers_licence_province_provId").setValue(foundProvinces[0].provId);
+        this.onDLProvinceChange(foundProvinces[0].provId);
+      }
+      else this.form.get("drivers_licence_province").setValue(this.ticket.drivers_licence_province);
+    } else { // no DL found init to BC
+      this.form.get("drivers_licence_province_provId").setValue(this.bcFound[0].provId);
+      this.onDLProvinceChange(this.bcFound[0].provId);
+    }
+
+    this.form.get("address_province_provId").setValue(this.bcFound[0]?.provId);
+    this.onAddressProvinceChange(this.bcFound[0]?.provId);
+
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
 
     this.countIndexes = this.ticket.counts.map(i => i.count_no);
@@ -168,42 +191,69 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onCountryChange(country) {
+  onCountryChange(ctryId: number) {
     setTimeout(() => {
       this.form.get("postal_code").setValidators([Validators.maxLength(6)]);
       this.form.get("address_province").setValidators([Validators.maxLength(30)]);
+      this.form.get("address_province").setValue(null);
+      this.form.get("address_province_seq_no").setValidators(null);
+      this.form.get("address_province_seq_no").setValue(null);
+      this.form.get("address_province_country_id").setValue(ctryId);
+      this.form.get("address_province_provId").setValue(null);
       this.form.get("home_phone_number").setValidators([Validators.maxLength(20)]);
       this.form.get("drivers_licence_number").setValidators([Validators.maxLength(20)]);
       this.form.get("drivers_licence_province").setValidators([Validators.maxLength(30)]);
 
-      if (country === "Canada" || country === "United States") {
-        this.form.get("address_province").addValidators([Validators.required]);
+      if ((ctryId === this.canadaFound[0]?.ctryId) || (ctryId === this.usaFound[0]?.ctryId)) { // canada or usa validators
+        this.form.get("address_province_seq_no").addValidators([Validators.required]);
         this.form.get("postal_code").addValidators([Validators.required]);
         this.form.get("home_phone_number").addValidators([Validators.required, FormControlValidators.phone]);
         this.form.get("drivers_licence_number").addValidators([Validators.required]);
-        this.form.get("drivers_licence_province").addValidators([Validators.required]);
+        this.form.get("drivers_licence_province_seq_no").addValidators([Validators.required]);
+      }
+
+      if (ctryId === this.canadaFound[0]?.ctryId && this.bcFound.length > 0) { // pick BC by default if Canada selected
+        this.form.get("address_province").setValue(this.bcFound[0].provNm);
+        this.form.get("address_province_seq_no").setValue(this.bcFound[0].provSeqNo)
+        this.form.get("address_province_provId").setValue(this.bcFound[0].provId);
       }
 
       this.form.get("postal_code").updateValueAndValidity();
       this.form.get("address_province").updateValueAndValidity();
+      this.form.get("address_province_country_id").updateValueAndValidity();
+      this.form.get("address_province_seq_no").updateValueAndValidity();
+      this.form.get("address_province_provId").updateValueAndValidity();
       this.form.get("home_phone_number").updateValueAndValidity();
       this.form.get("drivers_licence_number").updateValueAndValidity();
       this.form.get("drivers_licence_province").updateValueAndValidity();
     }, 0);
   }
 
-  onDLProvinceChange(province) {
+  public onDLProvinceChange(provId: number) {
     setTimeout(() => {
-      if (province == "BC") {
+      let provFound = this.config.provincesAndStates.filter(x => x.provId === provId);
+      this.form.get("drivers_licence_province").setValue(provFound[0].provNm);
+      this.form.get("drivers_licence_country_id").setValue(provFound[0].ctryId);
+      this.form.get("drivers_licence_province_seq_no").setValue(provFound[0].provSeqNo);
+      if (provFound[0].provAbbreviationCd == "BC") {
         this.form.get("drivers_licence_number").setValidators([Validators.maxLength(9)]);
         this.form.get("drivers_licence_number").addValidators([Validators.minLength(7)]);
       } else {
         this.form.get("drivers_licence_number").setValidators([Validators.maxLength(20)]);
       }
-      if (this.form.get("country").value === "United States" || this.form.get("country").value === "Canada") {
+      if (provFound[0].ctryId === this.canadaFound[0]?.ctryId || provFound[0].ctryId === this.usaFound[0]?.ctryId) {
         this.form.get("drivers_licence_number").addValidators([Validators.required]);
       }
       this.form.get("drivers_licence_number").updateValueAndValidity();
+    }, 0)
+  }
+
+  public onAddressProvinceChange(provId: number) {
+    setTimeout(() => {
+      let provFound = this.config.provincesAndStates.filter(x => x.provId === provId);
+      this.form.get("address_province").setValue(provFound[0].provNm);
+      this.form.get("address_province_country_id").setValue(provFound[0].ctryId);
+      this.form.get("address_province_seq_no").setValue(provFound[0].provSeqNo);
     }, 0)
   }
 
@@ -258,7 +308,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
         ...this.form.value,
         ...this.additionalForm.value,
         ...this.legalRepresentationForm.value,
-        country: this.form.get("country").value, // disabled field is not available in this.form.value
+        address_country_id: this.form.get("address_country_id").value, // disabled field is not available in this.form.value
         dispute_counts: this.countForms.value
       });
     } else {

@@ -3,6 +3,7 @@ import { DisputeRepresentedByLawyer, Language } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
 import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { Subscription } from "rxjs";
+import { ConfigService } from "@config/config.service";
 
 @Component({
   selector: "app-dispute-ticket-summary",
@@ -16,6 +17,7 @@ export class DisputeTicketSummaryComponent implements OnInit {
   busy: Subscription;
 
   constructor(
+    public configService: ConfigService,
     private noticeOfDisputeService: NoticeOfDisputeService,
     private lookups: LookupsService
   ) {

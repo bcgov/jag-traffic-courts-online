@@ -45,10 +45,10 @@ describe('ConfigCodePipe', () => {
     (configService: ConfigService) => {
       const pipe = new ConfigCodePipe(configService);
       const prefix = pipe.transform(
-        configService.countries[0].code,
+        configService.countries[0].ctryId,
         'countries'
       );
-      expect(prefix).toBe(configService.countries[0].name);
+      expect(prefix).toBe(configService.countries[0].ctryLongNm);
     }
   ));
 });

@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
 import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 
