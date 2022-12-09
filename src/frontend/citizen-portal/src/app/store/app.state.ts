@@ -16,7 +16,7 @@ export const disputeStateDataSelector = createSelector(
   (state: DisputeStore.State) => state.data
 );
 
-export const loadingDisputeSelector = createSelector(
+export const disputeLoadingSelector = createSelector(
   disputeSelectorState,
   (state: DisputeStore.State) => state.loading
 );
