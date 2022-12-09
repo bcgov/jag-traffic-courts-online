@@ -181,11 +181,7 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('addressProvinceProvId').setValue(null);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
-      this.form.get("driversLicenceProvince").setValue(null);
       this.form.get("driversLicenceProvinceSeqNo").setValidators(null);
-      this.form.get("driversLicenceProvinceSeqNo").setValue(null);
-      this.form.get("driversLicenceProvinceProvId").setValue(null);
-      this.form.get("driversLicenceCountryId").setValue(ctryId);
 
       if (ctryId === this.canadaFound[0]?.ctryId || ctryId == this.usaFound[0]?.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
@@ -199,9 +195,6 @@ export class TicketInfoComponent implements OnInit {
         this.form.get("addressProvince").setValue(this.bcFound[0].provNm);
         this.form.get("addressProvinceSeqNo").setValue(this.bcFound[0].provSeqNo)
         this.form.get("addressProvinceProvId").setValue(this.bcFound[0].provId);
-        this.form.get("driversLicenceProvince").setValue(this.bcFound[0].provNm);
-        this.form.get("driversLicenceProvinceSeqNo").setValue(this.bcFound[0].provSeqNo)
-        this.form.get("driversLicenceProvinceProvId").setValue(this.bcFound[0].provId);
       }
 
       this.form.get('postalCode').updateValueAndValidity();
@@ -212,9 +205,6 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('homePhoneNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
       this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
-      this.form.get("driversLicenceProvince").updateValueAndValidity();
-      this.form.get("driversLicenceCountryId").updateValueAndValidity();
-      this.onNoticeOfDisputeDLProvinceChange(this.form.get('driversLicenceProvince').value);
     }, 5);
   }
 
@@ -300,6 +290,15 @@ export class TicketInfoComponent implements OnInit {
     }, 5)
   }
 
+  public onAddressProvinceChange(provId: number) {
+    setTimeout(() => {
+      let provFound = this.config.provincesAndStates.filter(x => x.provId === provId);
+      this.form.get("addressProvince").setValue(provFound[0].provNm);
+      this.form.get("addressProvinceCountryId").setValue(provFound[0].ctryId);
+      this.form.get("addressProvinceSeqNo").setValue(provFound[0].provSeqNo);
+    }, 0)
+  }
+
   // change validators on drivers licence number in notice of dispute when changing province / state
   public onNoticeOfDisputeDLProvinceChange(provId: number) {
     setTimeout(() => {
@@ -360,7 +359,7 @@ export class TicketInfoComponent implements OnInit {
       // if form has violation ticket, stuff it in putDispute
       let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
       if (fullDescription && fullDescription !== " ") {
-        let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value;
+        let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
         violationTicketCount.countNo = i;
         violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
         putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
@@ -388,8 +387,6 @@ export class TicketInfoComponent implements OnInit {
     // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
     // with notice of dispute form fields only that were changed
     let putDispute = this.lastUpdatedDispute;
-
-
     putDispute.disputantSurname = this.form.get('disputantSurname').value;
     putDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
     putDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
@@ -404,6 +401,7 @@ export class TicketInfoComponent implements OnInit {
     putDispute.addressProvince = this.form.get('addressProvince').value;
     putDispute.addressProvinceCountryId = this.form.get('addressProvinceCountryId').value;
     putDispute.addressProvinceSeqNo = this.form.get('addressProvinceSeqNo').value;
+    putDispute.addressCountryId = this.form.get('addressCountryId').value;
     putDispute.postalCode = this.form.get('postalCode').value;
     putDispute.rejectedReason = this.form.get('rejectedReason').value;
 
@@ -436,7 +434,7 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('addressProvinceSeqNo').markAsUntouched();
       this.form.get('addressProvinceCountryId').markAsUntouched();
       this.form.get('addressProvinceProvId').markAsUntouched();
-      this.form.get('country').markAsUntouched();
+      this.form.get('addressCountryId').markAsUntouched();
       this.form.get('postalCode').markAsUntouched();
       this.form.get('rejectedReason').markAsUntouched();
     });
@@ -467,7 +465,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('homePhoneNumber').invalid) return false;
     if (this.form.get('disputantSurname').invalid) return false;
     if (this.form.get('disputantGivenNames').invalid) return false;
-    if (this.form.get('country').invalid) return false;
+    if (this.form.get('addressCountryId').invalid) return false;
     if (this.form.get('disputantBirthdate').invalid) return false;
     if (this.form.get('address').invalid) return false;
     if (this.form.get('addressCity').invalid) return false;
@@ -488,7 +486,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('homePhoneNumber').touched) return true;
     if (this.form.get('disputantSurname').touched) return true;
     if (this.form.get('disputantGivenNames').touched) return true;
-    if (this.form.get('country').touched) return true;
+    if (this.form.get('addressCountryId').touched) return true;
     if (this.form.get('disputantBirthdate').touched) return true;
     if (this.form.get('address').touched) return true;
     if (this.form.get('addressCity').touched) return true;
@@ -718,7 +716,11 @@ export class TicketInfoComponent implements OnInit {
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);
         this.form.get('driversLicenceProvinceSeqNo').setValue(this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
-        this.form.get('driversLicenceProvinceCountrId').setValue(this.initialDisputeValues.driversLicenceIssuedCountryId);
+        this.form.get('driversLicenceCountryId').setValue(this.initialDisputeValues.driversLicenceIssuedCountryId);
+
+        // set provId for drivers Licence and address this field is only good client side as angular dropdown needs a single value key to behave well, doesnt like two part key of ctryid & seqno
+        let provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.driversLicenceIssuedCountryId && x.provSeqNo === this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
+        if (provFound.length > 0) this.form.get('driversLicenceProvinceProvId').setValue(provFound[0].provId);
 
         // set violation date and time
         let violationDate = response.issuedTs?.split("T");
@@ -769,7 +771,32 @@ export class TicketInfoComponent implements OnInit {
           fieldConfidence: this.lastUpdatedDispute.violationTicket.ocrViolationTicket?.fields["court_location"]?.fieldConfidence
         };
 
-        this.onCountryChange(this.form.get('country').value);
+        // update address field validators
+        provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.addressProvinceCountryId && x.provSeqNo === this.initialDisputeValues.addressProvinceSeqNo);
+        if (provFound.length > 0) this.form.get('addressProvinceProvId').setValue(provFound[0].provId);
+        this.form.get('addressProvince').setValidators([Validators.maxLength(30)]);
+        this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
+        this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
+        this.form.get("driversLicenceProvinceSeqNo").setValidators(null);
+
+        if (this.form.get('addressCountryId').value === this.canadaFound[0]?.ctryId || this.form.get('addressCountryId').value === this.usaFound[0]?.ctryId) {
+          this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
+          this.form.get('postalCode').addValidators([Validators.required]);
+          this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
+          this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+        }
+
+        if (this.form.get('addressCountryId').value == this.canadaFound[0]?.ctryId) {
+          this.form.get('postalCode').addValidators([Validators.minLength(6)]);
+        }
+        this.form.get('postalCode').updateValueAndValidity();
+        this.form.get('addressProvince').updateValueAndValidity();
+        this.form.get("addressProvinceSeqNo").updateValueAndValidity();
+        this.form.get("addressProvinceProvId").updateValueAndValidity();
+        this.form.get('homePhoneNumber').updateValueAndValidity();
+        this.form.get('driversLicenceProvince').updateValueAndValidity();
+        this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
+
         if (this.lastUpdatedDispute.status !== "NEW") {
           this.form.controls.violationTicket.disable();
         }

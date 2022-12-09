@@ -124,7 +124,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
     this.ticketType = this.violationTicketService.ticketType;
 
-
     // build inner object array before the form
     let countArray = [];
     this.ticket.counts.forEach(count => {
@@ -144,11 +143,18 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.ticket.drivers_licence_number && this.form.controls["drivers_licence_number"].setValue(this.ticket.drivers_licence_number.toString());
 
     // search for drivers licence province using abbreviation e.g. BC
-    let foundProvinces = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === this.ticket.drivers_licence_province);
-    if (foundProvinces.length > 0) {
-      this.onDLProvinceChange(foundProvinces[0].provId);
+    if (this.ticket.drivers_licence_province) {
+      let foundProvinces = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === this.ticket.drivers_licence_province);
+      if (foundProvinces.length > 0) {
+        this.onDLProvinceChange(foundProvinces[0].provId);
+      }
+      else this.form.get("drivers_licence_province").setValue(this.ticket.drivers_licence_province);
+    } else { // no DL found init to BC
+      console.log("DL province", this.ticket.drivers_licence_province);
+      this.form.get("drivers_licence_province_provId").setValue(this.bcFound[0].provId);
+      this.onDLProvinceChange(this.bcFound[0].provId);
     }
-    else this.form.get("drivers_licence_province").setValue(this.ticket.drivers_licence_province);
+
     this.form.get("address_province_provId").setValue(this.bcFound[0]?.provId);
     this.onAddressProvinceChange(this.bcFound[0]?.provId);
 

@@ -50,7 +50,7 @@ export class DisputeService {
     disputant_birthdate: [null, [Validators.required]],
     drivers_licence_number: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
     drivers_licence_province: [null, [Validators.required]],
-    drivers_licence_province_provId: [1],
+    drivers_licence_province_provId: [null],
     drivers_licence_country_id: [null],
     drivers_licence_province_seq_no: [null],
     dispute_counts: [],

@@ -444,7 +444,7 @@
                       <mat-select formControlName="addressCountryId" (selectionChange)="onCountryChange($event.value)">
                         <mat-option [value]="canadaFound[0]?.ctryId">{{ canadaFound[0]?.ctryLongNm }}</mat-option>
                         <mat-option [value]="usaFound[0]?.ctryId">{{ usaFound[0]?.ctryLongNm }}</mat-option>
-                        <mat-option *ngFor="let country of config.countries" [value]="country.ctryId">{{ country.ctryLngNm }}</mat-option>
+                        <mat-option *ngFor="let country of config.countries" [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
                       </mat-select>
                       <mat-error>{{ "error.required" | translate }}</mat-error>
                     </mat-form-field>
@@ -467,7 +467,7 @@
                     <mat-form-field class="w-100">
                       <mat-label *ngIf="form.get('addressCountryId').value===canadaFound[0]?.ctryId">Province</mat-label>
                       <mat-label *ngIf="form.get('addressCountryId').value===usaFound[0]?.ctryId">State</mat-label>
-                      <mat-select formControlName="addressProvinceProvId"
+                      <mat-select formControlName="addressProvinceProvId" (selectionChange)="onAddressProvinceChange($event.value)"
                         *ngIf="form.get('addressCountryId').value === canadaFound[0]?.ctryId || form.get('addressCountryId').value === usaFound[0]?.ctryId">
                         <div *ngIf="form.get('addressCountryId').value === canadaFound[0]?.ctryId">
                           <mat-option [value]="bcFound[0]?.provId">{{bcFound[0]?.provNm }}</mat-option>

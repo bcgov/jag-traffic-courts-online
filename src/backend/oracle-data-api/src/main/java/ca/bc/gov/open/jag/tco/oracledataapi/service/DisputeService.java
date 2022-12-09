@@ -154,7 +154,7 @@ public class DisputeService {
 					for (int i = 0; i < violationTicketCountSize; i++) {
 						BeanUtils.copyProperties(dispute.getViolationTicket().getViolationTicketCounts().get(i), violationTicketCountsToUpdate.get(i), "createdBy", "createdTs", "violationTicketCountId");
 					}
-				}
+				} 
 				logger.warn("Unexpected number of violationTicketCounts: " + violationTicketCountSize +
 						" received from the request whereas updatable number of violationTicketCounts from database is: " + violationTicketCountsToUpdate.size() +
 						". This should not happen with current dispute update use case unless something has been changed");
