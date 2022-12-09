@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Config, Configuration } from '@config/config.model';
+import { Config, Configuration, CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -142,17 +142,4 @@ export class ConfigService {
     return (a: Config<number | string>, b: Config<number | string>) =>
       this.utilsService.sortByKey<Config<number | string>>(a, b, 'name');
   }
-}
-
-export interface CountryCodeValue {
-  ctryId?: number,
-  ctryLongNm?: string
-}
-
-export interface ProvinceCodeValue {
-  ctryId?: number;
-  provSeqNo?: number;
-  provNm?: string;
-  provAbbreviationCd?: string;
-  provId: number;
 }

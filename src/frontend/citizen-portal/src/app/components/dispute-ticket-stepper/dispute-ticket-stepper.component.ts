@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { CountryCodeValue, ProvinceCodeValue } from "@config/config.service";
+import { CountryCodeValue, ProvinceCodeValue } from "@config/config.model";
 import { MatStepper } from "@angular/material/stepper";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialog } from "@angular/material/dialog";
