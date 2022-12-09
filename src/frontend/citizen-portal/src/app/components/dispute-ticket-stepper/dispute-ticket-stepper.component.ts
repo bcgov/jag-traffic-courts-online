@@ -98,7 +98,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
-    private config: ConfigService,
+    public config: ConfigService,
     private lookups: LookupsService
   ) {
     // config or static
@@ -152,7 +152,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       }
       else this.form.get("drivers_licence_province").setValue(this.ticket.drivers_licence_province);
     } else { // no DL found init to BC
-      console.log("DL province", this.ticket.drivers_licence_province);
       this.form.get("drivers_licence_province_provId").setValue(this.bcFound[0].provId);
       this.onDLProvinceChange(this.bcFound[0].provId);
     }
@@ -191,7 +190,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public onCountryChange(ctryId: number) {
+  onCountryChange(ctryId: number) {
     setTimeout(() => {
       this.form.get("postal_code").setValidators([Validators.maxLength(6)]);
       this.form.get("address_province").setValidators([Validators.maxLength(30)]);
