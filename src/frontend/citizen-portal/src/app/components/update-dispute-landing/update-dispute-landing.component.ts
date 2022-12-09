@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { JJDisputeStatus } from 'app/api';
 import { DisputeService } from 'app/services/dispute.service';
-import { AppState, DisputeStore, selectDispute, selectDisputeStateData } from 'app/store';
+import { DisputeStore, disputeSelector, disputeStateDataSelector } from 'app/store';
 
 @Component({
   selector: 'app-update-dispute-landing',
@@ -17,13 +17,13 @@ export class UpdateDisputeLandingComponent implements OnInit {
 
   constructor(
     private disputeService: DisputeService,
-    private store: Store<AppState>,
+    private store: Store,
   ) {
   }
 
   ngOnInit(): void {
     // subscrible to dispute changes only because data will change when params change
-    this.store.pipe(select(selectDispute)).subscribe(dispute => {
+    this.store.pipe(select(disputeSelector)).subscribe(dispute => {
       if (!dispute) {
         this.store.dispatch(DisputeStore.Actions.Search({}))
       } else {
@@ -32,7 +32,7 @@ export class UpdateDisputeLandingComponent implements OnInit {
     })
 
     // subscrible to all changes
-    this.store.pipe(select(selectDisputeStateData)).subscribe(data => {
+    this.store.pipe(select(disputeStateDataSelector)).subscribe(data => {
       this.data = data;
     })
   }
