@@ -36,6 +36,6 @@ export class DisputeService {
 export enum StatusStepType {
   SUBMITTED = "Submitted",
   PROCESSING = "Processing",
-  REVIEW = "Review/Scheduling",
+  SCHEDULED = "Hearing Scheduled",
   CONFIRMED = "Decision Made",
 }

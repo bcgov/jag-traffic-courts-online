@@ -45,7 +45,7 @@ export class DisputeStatusDialogComponent {
           }
           break;
         }
-        case StatusStepType.REVIEW: {
+        case StatusStepType.SCHEDULED: {
           let jjStatuses: JJDisputeStatus[] = [
             JJDisputeStatus.HearingScheduled,
             JJDisputeStatus.InProgress,
