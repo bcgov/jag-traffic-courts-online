@@ -13,6 +13,7 @@ import { LandingComponent } from './components/landing/landing.component';
 import { EmailVerificationComponent } from '@components/email-verification/email-verification.component';
 import { DisputeLandingComponent } from '@components/dispute-landing/dispute-landing.component';
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
+import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,10 @@ const routes: Routes = [
       {
         path: AppRoutes.FIND_DISPUTE,
         component: FindDisputeComponent,
+      },
+      {
+        path: AppRoutes.UPDATE_DISPUTE,
+        component: UpdateDisputeLandingComponent,
       },
       {
         path: '',

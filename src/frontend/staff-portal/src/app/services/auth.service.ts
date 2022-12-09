@@ -119,7 +119,7 @@ export class AuthService {
             user.idir = this.getIDIR(user);
             user.fullName = this.getFullName(user);
           })
-          return response ? response : null
+          return response ? response.filter(u => u.idir) : null
         }),
         catchError((error: any) => {
           var errorMsg = error?.error?.detail || this.configService.keycloak_error;

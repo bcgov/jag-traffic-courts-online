@@ -12,6 +12,7 @@ export class AppRoutes {
   public static EMAILVERIFICATION = 'email/verify';
   public static DISPUTE = 'dispute';
   public static FIND_DISPUTE = 'findDispute';
+  public static UPDATE_DISPUTE = 'updateDispute';
 
   public static MODULE_PATH = AppRoutes.TICKET;
 

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { DisputeRepresentedByLawyer, Language } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
-import { DisputeService, NoticeOfDispute } from "app/services/dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -10,24 +10,24 @@ import { Subscription } from "rxjs";
   styleUrls: ["./dispute-ticket-summary.component.scss"],
 })
 export class DisputeTicketSummaryComponent implements OnInit {
-  @Input() public noticeOfDispute: NoticeOfDispute;
-  public countsActions: any;
-  public RepresentedByLawyer = DisputeRepresentedByLawyer;
-  public busy: Subscription;
+  @Input() noticeOfDispute: NoticeOfDispute;
+  countsActions: any;
+  RepresentedByLawyer = DisputeRepresentedByLawyer;
+  busy: Subscription;
 
   constructor(
-    protected disputeService: DisputeService,
-    public lookups: LookupsService
+    private noticeOfDisputeService: NoticeOfDisputeService,
+    private lookups: LookupsService
   ) {
-
-    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
-      this.lookups.languages$.next(response);
-    });
   }
 
   ngOnInit(): void {
     if (this.noticeOfDispute) {
-      this.countsActions = this.disputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
+      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
     }
+  }
+
+  getLanguageDescription(lang): string {
+    return this.lookups.getLanguageDescription(lang);
   }
 }

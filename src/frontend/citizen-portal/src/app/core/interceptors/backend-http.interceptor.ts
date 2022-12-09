@@ -2,19 +2,14 @@ import {
   HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoggerService } from '@core/services/logger.service';
 import { RouteUtils } from '@core/utils/route-utils.class';
 import { AppConfigService } from 'app/services/app-config.service';
 import { Observable, of } from 'rxjs';
-import { MockConfig } from 'tests/mocks/mock-config';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 @Injectable()
 export class BackendHttpInterceptor implements HttpInterceptor {
   constructor(
-    private mockDisputeService: MockDisputeService,
     private appConfigService: AppConfigService,
-    private logger: LoggerService
   ) { }
 
   intercept(
@@ -62,14 +57,10 @@ export class BackendHttpInterceptor implements HttpInterceptor {
   private handleTicketsRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
-    const ticket = this.mockDisputeService.ticket;
-
     switch (requestMethod) {
       case 'GET':
       case 'PUT':
       case 'POST':
-        return of(new HttpResponse({ status: 200, body: { result: ticket } }));
-        break;
       default:
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',

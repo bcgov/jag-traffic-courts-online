@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ticketTypes } from '@shared/enums/ticket-type.enum';
 import { DisputeRepresentedByLawyer } from 'app/api';
-import { DisputeService, NoticeOfDispute } from 'app/services/dispute.service';
+import { NoticeOfDisputeService, NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -11,37 +11,38 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   styleUrls: ['./email-verification-required.component.scss'],
 })
 export class EmailVerificationRequiredComponent implements OnInit {
-  public email: string;
   private token: string;
-  public ticketType;
-  public ticketTypes = ticketTypes;
-  public countsActions: any;
-  public RepresentedByLawyer = DisputeRepresentedByLawyer;
+  
+  email: string;
+  ticketType;
+  ticketTypes = ticketTypes;
+  countsActions: any;
+  RepresentedByLawyer = DisputeRepresentedByLawyer;
 
-  public noticeOfDispute: NoticeOfDispute;
+  noticeOfDispute: NoticeOfDispute;
 
   constructor(
     private route: ActivatedRoute,
-    private disputeService: DisputeService,
+    private noticeOfDisputeService: NoticeOfDisputeService,
     private violationTicketService: ViolationTicketService,
   ) {
     this.route.queryParams.subscribe((params) => {
       this.email = params.email;
       this.token = params.token;
     });
-    this.noticeOfDispute = disputeService.noticeOfDispute;
+    this.noticeOfDispute = noticeOfDisputeService.noticeOfDispute;
   }
 
-  public ngOnInit() {
+  ngOnInit() {
     this.ticketType = this.violationTicketService.ticketType;
-    this.countsActions = this.disputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
   }
 
   resendEmail() {
-    this.disputeService.resendVerificationEmail(this.token).subscribe(() => { });
+    this.noticeOfDisputeService.resendVerificationEmail(this.token).subscribe(() => { });
   }
 
-  public onPrint(): void {
+  onPrint(): void {
     window.print();
   }
 }
