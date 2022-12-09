@@ -36,6 +36,7 @@ import { AddressAutocompleteComponent } from './components/address-autocomplete/
 import { YesNoPipe } from './pipes/yes-no.pipe';
 import { ImageTicketNotFoundDialogComponent } from './dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component';
 import { DisputeStatusDialogComponent } from './dialogs/dispute-status-dialog/dispute-status-dialog.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
     declarations: [
@@ -79,6 +80,7 @@ import { DisputeStatusDialogComponent } from './dialogs/dispute-status-dialog/di
         NgxProgressModule,
         ConfigModule,
         TranslateModule,
+        MatStepperModule,
     ],
     exports: [
         CommonModule,

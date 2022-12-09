@@ -9,19 +9,19 @@ export const reducers: ActionReducerMap<AppState> = {
   dispute: DisputeStore.Reducers
 }
 
-export const disputeSelectorState = (state: AppState) => state.dispute;
+export const disputeStateSelector = (state: AppState) => state.dispute;
 
 export const disputeStateDataSelector = createSelector(
-  disputeSelectorState,
+  disputeStateSelector,
   (state: DisputeStore.State) => state.data
 );
 
 export const disputeLoadingSelector = createSelector(
-  disputeSelectorState,
+  disputeStateSelector,
   (state: DisputeStore.State) => state.loading
 );
 
 export const disputeSelector = createSelector(
-  disputeSelectorState,
+  disputeStateSelector,
   (state: DisputeStore.State) => state.data?.dispute
 );

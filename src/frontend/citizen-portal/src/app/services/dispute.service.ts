@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { DisputeStatusDialogComponent } from "@shared/dialogs/dispute-status-dialog/dispute-status-dialog.component";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputesService, SearchDisputeResult, DisputeStatus } from "app/api";
+import { DisputesService, SearchDisputeResult } from "app/api";
 import { DisputeStore } from "app/store";
-import { map, Observable} from "rxjs";
+import { map, Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -31,4 +31,11 @@ export class DisputeService {
       data: data
     })
   }
+}
+
+export enum StatusStepType {
+  SUBMITTED = "Submitted",
+  PROCESSING = "Processing",
+  SCHEDULED = "Hearing Scheduled",
+  CONFIRMED = "Decision Made",
 }

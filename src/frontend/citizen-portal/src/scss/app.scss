@@ -44,3 +44,29 @@
   height: 0;
   overflow: hidden;
 }
+
+.status-stepper {
+  .mat-step-icon-selected {
+    transform: none;
+  }
+
+  .mat-step-label-selected .mat-step-text-label {
+    font-size: 16px;
+  }
+
+  .mat-step-header {
+    cursor: auto;
+    pointer-events: none;
+
+    &.cdk-keyboard-focused,
+    &.cdk-program-focused,
+    &:hover:not([aria-disabled]),
+    &:hover[aria-disabled=false] {
+      background-color: unset;
+    }
+  }
+
+  .mat-horizontal-content-container {
+    padding: 0;
+  }
+}

@@ -19,7 +19,6 @@ export interface ILookupsService {
 export class LookupsService implements ILookupsService {
   private _languages: BehaviorSubject<Language[]>;
 
-
   constructor(
     private toastService: ToastService,
     private logger: LoggerService,

@@ -22,6 +22,10 @@ export class ConfigService {
   private _countries: CountryCodeValue[] = [];
   private _provincesAndStates: ProvinceCodeValue[] = [];
 
+  private _bcCodeValue: ProvinceCodeValue;
+  private _canadaCodeValue: CountryCodeValue;
+  private _usaCodeValue: CountryCodeValue;
+
   constructor(
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService
@@ -30,7 +34,7 @@ export class ConfigService {
     // import countries
     this._countries = [];
     CountriesListJSON.countryCodeValues.forEach(x => {
-      this._countries.push({ ctryId: +x.ctryId, ctryLongNm: x.ctryLongNm});
+      this._countries.push(new CountryCodeValue(+x.ctryId, x.ctryLongNm));
     })
     this._countries = this._countries.sort((a,b)=> a.ctryLongNm > b.ctryLongNm ? 1 : -1);
 
@@ -38,16 +42,20 @@ export class ConfigService {
     this._provincesAndStates = [];
     let i = 1;
     CanadaProvincesJSON.provinceCodeValues.forEach(x => {
-      this._provincesAndStates.push({provId: i, ctryId: +x.ctryId, provSeqNo: +x.provSeqNo, provNm: x.provNm, provAbbreviationCd: x.provAbbreviationCd});
+      this._provincesAndStates.push(new ProvinceCodeValue(+x.ctryId, +x.provSeqNo, x.provNm, x.provAbbreviationCd, i));
       i++;
     })
 
     // import states
     USStatesJSON.provinceCodeValues.forEach(x => {
-      this._provincesAndStates.push({provId: i, ctryId: +x.ctryId, provSeqNo: +x.provSeqNo, provNm: x.provNm, provAbbreviationCd: x.provAbbreviationCd});
+      this._provincesAndStates.push(new ProvinceCodeValue(+x.ctryId, +x.provSeqNo, x.provNm, x.provAbbreviationCd, i));
       i++;
     })
     this._provincesAndStates = this._provincesAndStates.sort((a,b)=> a.provNm > b.provNm ? 1 : -1);
+
+    this._bcCodeValue = this.getBCCodeValue();
+    this._canadaCodeValue = this.getCanadaCodeValue();
+    this._usaCodeValue = this.getUSACodeValue();
   }
 
   public get dispute_submitted$(): BehaviorSubject<string> {
@@ -85,6 +93,7 @@ export class ConfigService {
   public get language_error$(): BehaviorSubject<string> {
     return this.languageError;
   }
+
   public get language_error(): string {
     return this.languageError.value;
   }
@@ -95,6 +104,36 @@ export class ConfigService {
 
   public get countries() {
     return this._countries;
+  }
+
+  private getBCCodeValue(): ProvinceCodeValue {
+    let found = this._provincesAndStates.filter(x => x.provAbbreviationCd === "BC");
+    if (found?.length > 0) return found[0];
+    else return null;
+  }
+
+  private getCanadaCodeValue(): CountryCodeValue {
+    let found = this._countries.filter(x => x.ctryLongNm === "Canada");
+    if (found?.length > 0) return found[0];
+    else return null;
+  }
+
+  private getUSACodeValue(): CountryCodeValue {
+    let found = this._countries.filter(x => x.ctryLongNm === "USA");
+    if (found?.length > 0) return found[0];
+    else return null;
+  }
+
+  public get bcCodeValue(): ProvinceCodeValue {
+    return this._bcCodeValue;
+  }
+
+  public get canadaCodeValue(): CountryCodeValue {
+    return this._canadaCodeValue;
+  }
+
+  public get usaCodeValue(): CountryCodeValue {
+    return this._usaCodeValue;
   }
 
   public getCtryLongNm(ctryId: number) {
