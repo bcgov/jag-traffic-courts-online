@@ -1,0 +1,32 @@
+openapi: 3.0.3
+info:
+  description: This is an Oracle REST Data Services (ORDS) service for the Traffic Court Online schema.
+  title: Traffic Court Online
+  version: 1.0.0
+servers:
+  - description: local
+    url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca/tcoords/tco/'
+paths:
+  /v1/ping:
+    get:
+      operationId: ping
+      summary: Pings the server to test the connection
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResult'
+      tags:
+        - Health
+components:
+  schemas:
+    PingResult:
+      type: object
+      properties:
+        status:
+          type: string
+        currentTimestamp:
+          type: string
+          format: date-time

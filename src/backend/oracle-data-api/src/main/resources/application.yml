@@ -124,7 +124,6 @@ ords:
   rest-api:
     # If true, will enable debugging for all API calls to see request/response objects 
     debug: ${ORDS_API_DEBUG:false}
-    url: ${ORDS_API_URL:localhost}
     # The connection timeout limit in miliseconds
     timeout: ${ORDS_API_TIMEOUT_MS:2000}
     retry:
@@ -132,3 +131,7 @@ ords:
       count: ${ORDS_API_RETRY_COUNT:3}
       # The Duration of the fixed delays
       delay: ${ORDS_API_RETRY_DELAY_SEC:5}
+    occam:
+      url: ${ORDS_API_OCCAM_URL:localhost}
+    tco:
+      url: ${ORDS_API_TCO_URL:localhost}

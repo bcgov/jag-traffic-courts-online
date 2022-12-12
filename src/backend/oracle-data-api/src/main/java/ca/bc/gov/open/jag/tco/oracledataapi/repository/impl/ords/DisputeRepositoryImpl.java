@@ -18,11 +18,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.api.ViolationTicketApi;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ResponseResult;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketListResponse;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;

@@ -2,7 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.util.List;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 

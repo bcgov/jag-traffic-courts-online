@@ -21,7 +21,8 @@
 		<spring-cloud-sleuth-otel.version>1.1.0</spring-cloud-sleuth-otel.version>
 		<org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
 		<org.projectlombok.version>1.18.24</org.projectlombok.version>
-		<default-package>ca.bc.gov.open.jag.tco.oracledataapi</default-package>
+		<occam-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.occam</occam-package>
+		<tco-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.tco</tco-package>
 	</properties>
 
 	<dependencyManagement>
@@ -292,7 +293,7 @@
 				<version>6.2.1</version>
 				<executions>
 					<execution>
-						<id>spring-boot-api</id>
+						<id>ords-occam-api</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
@@ -304,9 +305,31 @@
 								<useRuntimeException>true</useRuntimeException>
 							</configOptions>
 							<library>jersey2</library>
-							<apiPackage>${default-package}.api</apiPackage>
-							<modelPackage>${default-package}.api.model</modelPackage>
-							<invokerPackage>${default-package}.api.handler</invokerPackage>
+							<apiPackage>${occam-package}.api</apiPackage>
+							<modelPackage>${occam-package}.api.model</modelPackage>
+							<invokerPackage>${occam-package}.api.handler</invokerPackage>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=java.util.Date</typeMapping>
+								<typeMapping>LocalDate=java.util.Date</typeMapping>
+							</typeMappings>
+						</configuration>
+					</execution>
+					<execution>
+						<id>ords-tco-api</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/tco-openapi-spec.yaml</inputSpec>
+							<generatorName>java</generatorName>
+							<configOptions>
+								<useTags>true</useTags>
+								<useRuntimeException>true</useRuntimeException>
+							</configOptions>
+							<library>jersey2</library>
+							<apiPackage>${tco-package}.api</apiPackage>
+							<modelPackage>${tco-package}.api.model</modelPackage>
+							<invokerPackage>${tco-package}.api.handler</invokerPackage>
 							<typeMappings>
 								<typeMapping>OffsetDateTime=java.util.Date</typeMapping>
 								<typeMapping>LocalDate=java.util.Date</typeMapping>
