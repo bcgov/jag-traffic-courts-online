@@ -28,10 +28,13 @@ ords:
   rest-api:
     # If true, will enable debugging for all API calls to see request/response objects 
     debug: ${ORDS_API_DEBUG:false}
-    url: ${ORDS_API_URL:localhost}
     timeout: 2000
     retry:
       # The maximum number of retry attempts to allow
       count: 3
       # The Duration of the fixed delays
       delay: 5
+    occam:
+      url: ${ORDS_API_OCCAM_URL:localhost}
+    tco:
+      url: ${ORDS_API_TCO_URL:localhost}

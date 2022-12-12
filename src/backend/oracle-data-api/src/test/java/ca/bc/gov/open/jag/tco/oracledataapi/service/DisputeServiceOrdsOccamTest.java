@@ -1,5 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
@@ -19,13 +21,25 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.HealthApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.PingResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 @ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = true)
-class DisputeServiceOrdsTest extends BaseTestSuite {
+class DisputeServiceOrdsOccamTest extends BaseTestSuite {
 
 	@Autowired
 	private DisputeService disputeService;
+
+	@Autowired
+	private HealthApi healthApi;
+
+	@Test
+	void testPingOrdsOccam() throws Exception {
+		PingResult pingResult = healthApi.ping();
+		assertNotNull(pingResult);
+		assertEquals("success", pingResult.getStatus());
+	}
 
 	@Test
 	public void testOrdsPersistance() throws ParseException {

@@ -46,7 +46,8 @@ oracle-data-api:
     tag: "1.50.2"
     pullPolicy: Always
   env:
-    "ORDS_API_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam"
+    "ORDS_API_OCCAM_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam"
+    "ORDS_API_TCO_URL": "https://dev.jag.gov.bc.ca/ords/devj/tcoords/tco"
     "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG"
     "TZ": "America/Vancouver"
     "LOOKUP_REPOSITORY_SRC": "ords"

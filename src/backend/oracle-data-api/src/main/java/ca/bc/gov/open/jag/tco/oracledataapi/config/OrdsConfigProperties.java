@@ -17,11 +17,13 @@ import lombok.Setter;
 @ConfigurationProperties
 @Getter
 @Setter
-public class ConfigProperties {
+public class OrdsConfigProperties {
 
-	// ORDS Service properties
-	@Value("${ords.rest-api.url}")
-    private String ordsRestApiUrl;
+	@Value("${ords.rest-api.occam.url}")
+    private String ordsRestApiOccamUrl;
+
+	@Value("${ords.rest-api.tco.url}")
+    private String ordsRestApiTcoUrl;
 
     @Value("${ords.rest-api.timeout}")
     private int ordsRestApiTimeout;

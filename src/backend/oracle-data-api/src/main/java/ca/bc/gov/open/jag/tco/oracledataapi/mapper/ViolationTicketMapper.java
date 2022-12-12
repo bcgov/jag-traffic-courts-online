@@ -11,12 +11,12 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 /**
@@ -144,7 +144,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "ticketedAmt", source = "ticketedAmount")
 	// Map from Oracle Data API dispute count model to ORDS dispute counts data
 	@Mapping(target = "disputeCount", source = "violationTicketCount", qualifiedByName="mapDisputeCount")
-	ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketCount convertViolationTicketCountToViolationTicketCountDto (ViolationTicketCount violationTicketCount);
+	ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketCount convertViolationTicketCountToViolationTicketCountDto (ViolationTicketCount violationTicketCount);
 
 	/**
 	 * Custom mapping for mapping Boolean value to YesNo fields
@@ -169,10 +169,10 @@ public interface ViolationTicketMapper {
 	 * Custom mapping for dispute count
 	 *
 	 * @param violationTicketCount
-	 * @return {@link ca.bc.gov.open.jag.tco.oracledataapi.api.model.DisputeCount}
+	 * @return {@link ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeCount}
 	 */
 	@Named("mapDisputeCount")
-	default ca.bc.gov.open.jag.tco.oracledataapi.api.model.DisputeCount mapDisputeCount(ViolationTicketCount violationTicketCount) {
+	default ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeCount mapDisputeCount(ViolationTicketCount violationTicketCount) {
 		int countNo = violationTicketCount.getCountNo();
 
 		if ( violationTicketCount == null
@@ -187,7 +187,7 @@ public interface ViolationTicketMapper {
 
 		for (DisputeCount disputeCount : disputeCounts) {
 			if (disputeCount.getCountNo() == countNo) {
-				ca.bc.gov.open.jag.tco.oracledataapi.api.model.DisputeCount count = new ca.bc.gov.open.jag.tco.oracledataapi.api.model.DisputeCount();
+				ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeCount count = new ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeCount();
 				count.setEntDtm(disputeCount.getCreatedTs());
 				count.setEntUserId(disputeCount.getCreatedBy());
 				count.setUpdDtm(disputeCount.getModifiedTs());
