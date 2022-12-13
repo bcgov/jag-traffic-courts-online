@@ -58,11 +58,6 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                 // all white space should map to empty string
                 yield return new object?[] { " ", " ", " ", " ", "" };
 
-                // should take last word as last name and append other names afterword, converted to upper case
-                yield return new object?[] { "", "", "", "", "Doe, John".ToUpper() };
-                // should take last word as last name and append other names afterword, converted to upper case
-                yield return new object?[] { "", "", "", "", "Doe, John James".ToUpper() };
-
                 // formats with surname, given1, given2 and given3
 
                 // last name only
