@@ -7,8 +7,9 @@ public class Mapper
 {
     public static DisputeApproved ToDisputeApproved(Dispute dispute)
     {
+        ArgumentNullException.ThrowIfNull(dispute);
+
         DisputeApproved target = new();
-        target.CitizenName = null;
         target.Surname = dispute.DisputantSurname;
         target.GivenName1 = dispute.DisputantGivenName1;
         target.GivenName2 = dispute.DisputantGivenName2;
@@ -18,37 +19,11 @@ public class Mapper
         target.IssuingOrganization = dispute.ViolationTicket.DetachmentLocation;
         target.IssuingLocation = dispute.ViolationTicket.CourtLocation;
         target.DriversLicence = dispute.DriversLicenceNumber;
-        List <Messaging.MessageContracts.ViolationTicketCount> violationTicketCounts = new();
-        foreach (var violationTicketCount in dispute.ViolationTicket.ViolationTicketCounts)
-        {
-            Messaging.MessageContracts.ViolationTicketCount ticketCount = new()
-            {
-                Count = violationTicketCount.CountNo,
-                Subparagraph = violationTicketCount.Subparagraph,
-                Section = violationTicketCount.Section,
-                Subsection = violationTicketCount.Subsection,
-                Paragraph = violationTicketCount.Paragraph,
-                Act = violationTicketCount.ActOrRegulationNameCode,
-                Amount = violationTicketCount.TicketedAmount
-            };
 
-            violationTicketCounts.Add(ticketCount);
-        }
+        target.DisputeCounts = Map(dispute.DisputeCounts);
+        target.ViolationTicketCounts = Map(dispute.ViolationTicket.ViolationTicketCounts);
 
-        List<Messaging.MessageContracts.DisputedCount> disputeCounts = new();
-        foreach (var dc in dispute.DisputeCounts)
-        {
-            Messaging.MessageContracts.DisputedCount disputeCount = new()
-            {
-                Count = dc.CountNo,
-                DisputeType = nameof(dc.PleaCode)
-            };
-
-            disputeCounts.Add(disputeCount);
-        }
-        target.DisputeCounts = disputeCounts;
-        target.ViolationTicketCounts = violationTicketCounts;
-        target.StreetAddress = dispute.AddressLine1 + ((dispute.AddressLine2 is null) ? "" : ", " + dispute.AddressLine2) + ((dispute.AddressLine3 is null) ? "" : ", " + dispute.AddressLine3);
+        target.StreetAddress = FormatStreetAddress(dispute);
         target.City = dispute.AddressCity;
         target.Province = dispute.AddressProvince;
         target.PostalCode = dispute.PostalCode;
@@ -57,10 +32,58 @@ public class Mapper
         return target;
     }
 
+    private static IList<Messaging.MessageContracts.ViolationTicketCount> Map(IEnumerable<Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicketCount>? counts)
+    {
+        if (counts is null)
+        {
+            return Array.Empty<Messaging.MessageContracts.ViolationTicketCount>();
+        }
+
+        var result = counts
+            .Select(_ => new Messaging.MessageContracts.ViolationTicketCount
+            {
+                Count = _.CountNo,
+                Subparagraph = _.Subparagraph,
+                Section = _.Section,
+                Subsection = _.Subsection,
+                Paragraph = _.Paragraph,
+                Act = _.ActOrRegulationNameCode,
+                Amount = _.TicketedAmount
+            }).ToList();
+
+        return result;
+    }
+
+    private static IList<DisputedCount> Map(IEnumerable<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount>? counts)
+    {
+        if (counts is null)
+        {
+            return Array.Empty<DisputedCount>();
+        }
+
+        var result = counts
+            .Select(_ => new DisputedCount
+            {
+                Count = _.CountNo,
+                DisputeType = _.PleaCode.ToString()
+            })
+            .ToList();
+
+        return result;
+    }
+
+    private static string FormatStreetAddress(Dispute dispute)
+    {
+        // TODO: clean this up
+        return dispute.AddressLine1 + ((dispute.AddressLine2 is null) ? "" : ", " + dispute.AddressLine2) + ((dispute.AddressLine3 is null) ? "" : ", " + dispute.AddressLine3);
+    }
+
     public static DisputeRejected ToDisputeRejected(Dispute dispute)
     {
-        DisputeRejected disputeRejected = new();
-        disputeRejected.Reason = dispute.RejectedReason;
+        DisputeRejected disputeRejected = new()
+        {
+            Reason = dispute.RejectedReason
+        };
         return disputeRejected;
     }
 
