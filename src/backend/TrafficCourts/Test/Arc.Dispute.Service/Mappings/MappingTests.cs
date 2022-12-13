@@ -70,7 +70,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
                 // last name + given 1  + given 2
                 yield return new object?[] { "Doe", "John", "James", "", "Doe, John James".ToUpper() };
-                yield return new object?[] { "", "Doe", "John", "James", "", "Doe, John James".ToUpper() };
+                yield return new object?[] { "Doe", "John", "James", "", "Doe, John James".ToUpper() };
 
                 // last name + given 1  + given 2 + given 3
                 yield return new object?[] { "Doe", "John", "James", "Jack", "Doe, John James Jack".ToUpper() };
