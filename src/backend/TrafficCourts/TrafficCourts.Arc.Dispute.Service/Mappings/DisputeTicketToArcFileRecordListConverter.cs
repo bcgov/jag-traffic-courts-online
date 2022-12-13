@@ -115,13 +115,6 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
 
         internal static string GetName(TcoDisputeTicket ticket)
         {
-            // the name used to come thru as a citizen name field
-            // but in later release, the name is split into individual fields
-            if (!string.IsNullOrWhiteSpace(ticket.CitizenName))
-            {
-                return ReverseName(ticket.CitizenName);
-            }
-
             StringBuilder name = new StringBuilder();
             if (AppendIfNotIsNullOrWhiteSpace(name, ticket.Surname))
             {
@@ -150,16 +143,6 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             }
 
             return false;
-        }
-
-        internal static string ReverseName(string name)
-        {
-            var splitted = name.Split(" ");
-            string surname = splitted.Last().ToString().ToUpper() + ", ";
-            splitted = splitted.SkipLast(1).ToArray();
-            string givenNames = string.Join(" ", splitted).ToString().ToUpper();
-
-            return surname + givenNames;
         }
 
         /// <summary>

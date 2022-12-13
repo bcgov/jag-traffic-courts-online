@@ -52,44 +52,43 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                 // parameters: string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected
 
                 // all null should map to empty string
-                yield return new object?[] { null, null, null, null, null, "" };
+                yield return new object?[] { null, null, null, null, "" };
                 // all empty strings should map to empty string
-                yield return new object?[] { "", "", "", "", "", "" };
+                yield return new object?[] { "", "", "", "", "" };
                 // all white space should map to empty string
-                yield return new object?[] { " ", " ", " ", " ", " ", "" };
+                yield return new object?[] { " ", " ", " ", " ", "" };
 
                 // should take last word as last name and append other names afterword, converted to upper case
-                yield return new object?[] { "John Doe", "", "", "", "", "Doe, John".ToUpper() };
+                yield return new object?[] { "", "", "", "", "Doe, John".ToUpper() };
                 // should take last word as last name and append other names afterword, converted to upper case
-                yield return new object?[] { "John James Doe", "", "", "", "", "Doe, John James".ToUpper() };
+                yield return new object?[] { "", "", "", "", "Doe, John James".ToUpper() };
 
                 // formats with surname, given1, given2 and given3
 
                 // last name only
-                yield return new object?[] { null, "Doe", "", "", "", "Doe,".ToUpper() };
-                yield return new object?[] { "", "Doe", "", "", "", "Doe,".ToUpper() };
+                yield return new object?[] { "Doe", "", "", "", "Doe,".ToUpper() };
+                yield return new object?[] { "Doe", "", "", "", "Doe,".ToUpper() };
 
                 // last name + given 1
-                yield return new object?[] { null, "Doe", "John", "", "", "Doe, John".ToUpper() };
-                yield return new object?[] { "", "Doe", "John", "", "", "Doe, John".ToUpper() };
+                yield return new object?[] { "Doe", "John", "", "", "Doe, John".ToUpper() };
+                yield return new object?[] { "Doe", "John", "", "", "Doe, John".ToUpper() };
 
                 // last name + given 1  + given 2
-                yield return new object?[] { null, "Doe", "John", "James", "", "Doe, John James".ToUpper() };
+                yield return new object?[] { "Doe", "John", "James", "", "Doe, John James".ToUpper() };
                 yield return new object?[] { "", "Doe", "John", "James", "", "Doe, John James".ToUpper() };
 
                 // last name + given 1  + given 2 + given 3
-                yield return new object?[] { null, "Doe", "John", "James", "Jack", "Doe, John James Jack".ToUpper() };
-                yield return new object?[] { "", "Doe", "John", "James", "Jack", "Doe, John James Jack".ToUpper() };
+                yield return new object?[] { "Doe", "John", "James", "Jack", "Doe, John James Jack".ToUpper() };
+                yield return new object?[] { "Doe", "John", "James", "Jack", "Doe, John James Jack".ToUpper() };
             }
         }
 
         [Theory]
         [MemberData(nameof(CitizenNameMappingTestCases))]
-        public void client_name_is_mapped_correctly_with_no_disputed_count(string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected)
+        public void client_name_is_mapped_correctly_with_no_disputed_count(string? surname, string? given1, string? given2, string? given3, string expected)
         {
             // mapper requires at least one ticket count
             var dispute = CreateDisputeTicket(1, 0);
-            dispute.CitizenName = citizenName;
             dispute.Surname = surname;
             dispute.GivenName1 = given1;
             dispute.GivenName2 = given2;
@@ -107,11 +106,10 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
         [Theory]
         [MemberData(nameof(CitizenNameMappingTestCases))]
-        public void client_name_is_mapped_correctly_with_disputed_count(string? citizenName, string? surname, string? given1, string? given2, string? given3, string expected)
+        public void client_name_is_mapped_correctly_with_disputed_count(string? surname, string? given1, string? given2, string? given3, string expected)
         {
             // mapper requires at least one ticket count
             var dispute = CreateDisputeTicket(1, 1);
-            dispute.CitizenName = citizenName;
             dispute.Surname = surname;
             dispute.GivenName1 = given1;
             dispute.GivenName2 = given2;

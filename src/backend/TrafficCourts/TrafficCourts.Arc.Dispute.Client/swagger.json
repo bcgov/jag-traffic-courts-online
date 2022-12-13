@@ -188,11 +188,6 @@
       "TcoDisputeTicket": {
         "type": "object",
         "properties": {
-          "citizen_name": {
-            "type": "string",
-            "nullable": true,
-            "deprecated": true
-          },
           "surname": {
             "type": "string",
             "nullable": true

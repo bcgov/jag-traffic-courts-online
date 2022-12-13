@@ -4,15 +4,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
 {
     public class TcoDisputeTicket
     {
-        /// <summary>
-        /// Depricated. Use Surname, GivenName1, GivenName2, GivenName3
-        /// </summary>
-        [Obsolete($"Use {nameof(GivenName1)}, {nameof(GivenName2)},  {nameof(GivenName3)} and {nameof(Surname)}")]
-        [JsonProperty("citizen_name")]
-        public string? CitizenName { get; set; } = String.Empty;
-
         [JsonProperty("citizen_surname")]
-        //[JsonRequired] // make required when CitizenName is removed
+        [JsonRequired]
         public string? Surname { get; set; } = String.Empty;
 
         [JsonProperty("citizen_given_name_1")]
