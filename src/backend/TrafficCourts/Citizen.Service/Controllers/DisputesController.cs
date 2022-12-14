@@ -10,9 +10,10 @@ using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
+using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Dispute.DisputantContactInformation;
+using DisputantUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputantUpdateRequest;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -89,7 +90,7 @@ public class DisputesController : ControllerBase
         var hex = _hashids.DecodeHex(uuidHash);
         if (hex == String.Empty || hex.Length != 32 || !Guid.TryParse(hex, out Guid noticeOfDisputeGuid))
         {
-            return BadRequest("Invalid dispute id");
+            return BadRequest("Invalid noticeOfDisputeGuid");
         }
 
         var message = new ResendEmailVerificationEmail { NoticeOfDisputeGuid = noticeOfDisputeGuid };
@@ -213,6 +214,74 @@ public class DisputesController : ControllerBase
         {
             _logger.LogError(ex, "Request Timed out");
             throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unknown Error");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Submits an update request for a Disputant's contact information.
+    /// </summary>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="disputantContactInformation">The requested fields to update.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    [HttpPut("/api/dispute/{guidHash}/contact")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateDisputeContactInfoAsync([Required] string guidHash, [FromBody] DisputantContactInformation disputantContactInformation, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Attempt to decode the hashed noticeOfDisputeGuid
+            var hex = _hashids.DecodeHex(guidHash);
+            if (hex == String.Empty || hex.Length != 32 || !Guid.TryParse(hex, out Guid noticeOfDisputeGuid))
+            {
+                return BadRequest("Invalid guidHash");
+            }
+
+            // Verify Dispute exists and whose status is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
+            string[] validStatuses = { DisputeStatus.NEW.ToString(), DisputeStatus.VALIDATED.ToString(), DisputeStatus.PROCESSING.ToString() };
+            SearchDisputeRequest searchRequest = new() { NoticeOfDisputeGuid = noticeOfDisputeGuid };
+            Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
+            if (response.Message?.NoticeOfDisputeGuid is null)
+            {
+                return NotFound("Dispute not found");
+            }
+            else if (response.Message?.DisputeStatus is not null && !validStatuses.Contains(response.Message.DisputeStatus))
+            {
+                return BadRequest($"Dispute has a status of {response.Message.DisputeStatus}. Expecting one of NEW, VALIDATED, or PROCESSING.");
+            }
+            else if (response.Message?.JJDisputeStatus is not null)
+            {
+                return BadRequest($"JJDispute has status of {response.Message?.JJDisputeStatus}. Must be blank.");
+            }
+
+            // Submit request to Workflow Service for processing.
+            DisputantUpdateRequest message = new()
+            {
+                NoticeOfDisputeGuid = noticeOfDisputeGuid,
+                AddressCity = disputantContactInformation.AddressCity,
+                AddressLine1 = disputantContactInformation.AddressLine1,
+                AddressLine2 = disputantContactInformation.AddressLine2,
+                AddressLine3 = disputantContactInformation.AddressLine3,
+                AddressProvince = disputantContactInformation.AddressProvince,
+                DisputantGivenName1 = disputantContactInformation.DisputantGivenName1,
+                DisputantGivenName2 = disputantContactInformation.DisputantGivenName2,
+                DisputantGivenName3 = disputantContactInformation.DisputantGivenName3,
+                DisputantSurname = disputantContactInformation.DisputantSurname,
+                EmailAddress = disputantContactInformation.EmailAddress,
+                HomePhoneNumber = disputantContactInformation.HomePhoneNumber,
+                PostalCode = disputantContactInformation.PostalCode,
+            };
+            await _bus.PublishWithLog(_logger, message, cancellationToken);
+
+            return Ok();
         }
         catch (Exception ex)
         {

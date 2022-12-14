@@ -1159,14 +1159,14 @@
     "/api/v1.0/dispute/status": {
       "get": {
         "tags": [ "dispute-controller" ],
-        "summary": "Finds Dispute statuses by TicketNumber and IssuedTime.",
+        "summary": "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.",
         "operationId": "findDispute",
         "parameters": [
           {
             "name": "ticketNumber",
             "in": "query",
             "description": "The Dispute.ticketNumber to search for (of the format XX00000000)",
-            "required": true,
+            "required": false,
             "schema": {
               "pattern": "[A-Z]{2}\\d{8}",
               "type": "string"
@@ -1177,9 +1177,16 @@
             "name": "issuedTime",
             "in": "query",
             "description": "The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.",
-            "required": true,
+            "required": false,
             "schema": { "type": "string" },
             "example": "14:53"
+          },
+          {
+            "name": "noticeOfDisputeGuid",
+            "in": "query",
+            "description": "The noticeOfDisputeGuid of the Dispute to retreive.",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {

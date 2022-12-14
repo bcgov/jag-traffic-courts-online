@@ -77,6 +77,16 @@ public class ControllerAdvisor {
 	}
 
 	/**
+	 * Returns an API HTTP error code of 400 if there are bad parameters.
+	 */
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+		logger.debug("handleIllegalArgumentException", ex);
+		return getResponse(HttpStatus.BAD_REQUEST, "Bad Parameters", ex);
+	}
+
+	/**
 	 * Returns an API HTTP error code of 400 if there are validation errors.
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)

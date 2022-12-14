@@ -306,18 +306,20 @@ class DisputeControllerTest extends BaseTestSuite {
 
 	@ParameterizedTest
 	@CsvSource({
-		"AB12345678,123abc", // should be of the format HH:mm
-		"AB12345678,55:99",  // invalid time
-		"AB123456789,14:23", // too long
-		"ABC1234567,14:23",  // invalid regex
-		",14:23",            // invalid ticketNumber
-		"ABC1234567,",       // invalid time
+		"AB12345678,123abc,", // should be of the format HH:mm
+		"AB12345678,55:99,",  // invalid time
+		"AB123456789,14:23,", // too long
+		"ABC1234567,14:23,",  // invalid regex
+		",,",                 // missing parameters
+		"AB12345678,,",       // missing parameter
+		",14:23,",            // missing parameter
 		})
-	public void testFindByTicketNumberAndTime_Invalid(String ticketNumber, String issuedTime) throws Exception {
+	public void testFindByTicketNumberAndTime_Invalid(String ticketNumber, String issuedTime, String noticeOfDisputeGuid) throws Exception {
 		mvc.perform(MockMvcRequestBuilders
 				.get("/api/v1.0/dispute/status")
 				.param("ticketNumber", ticketNumber)
-				.param("issuedTime", issuedTime))
+				.param("issuedTime", issuedTime)
+				.param("noticeOfDisputeGuid", noticeOfDisputeGuid))
 				.andExpect(status().isBadRequest());
 	}
 

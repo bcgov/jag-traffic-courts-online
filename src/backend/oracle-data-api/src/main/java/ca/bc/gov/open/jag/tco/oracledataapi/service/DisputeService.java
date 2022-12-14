@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -323,10 +324,22 @@ public class DisputeService {
 	}
 
 	/**
-	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs.
+	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs, or by noticeOfDisputeGuid if specified.
+	 * @param noticeOfDisputeGuid
 	 */
-	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime) {
-		List<DisputeResult> disputeResults = disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime, String noticeOfDisputeGuid) {
+		List<DisputeResult> disputeResults = new ArrayList<DisputeResult>();
+
+		// if noticeOfDisputeGuid is specified, use that
+		if (StringUtils.isNotBlank(noticeOfDisputeGuid)) {
+			for (Dispute dispute : disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid)) {
+				disputeResults.add(new DisputeResult(dispute.getDisputeId(), dispute.getStatus()));
+			}
+		}
+		// otherwise, find by ticketNumber and time
+		else {
+			disputeResults.addAll(disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime));
+		}
 
 		if (CollectionUtils.isNotEmpty(disputeResults)) {
 			List<JJDispute> jjDisputeResults = jjDisputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);

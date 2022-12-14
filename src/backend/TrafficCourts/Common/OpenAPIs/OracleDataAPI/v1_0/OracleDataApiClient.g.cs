@@ -394,23 +394,25 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves Dispute by the noticeOfDisputeGuid (UUID).
@@ -3707,37 +3709,43 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         }
 
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid)
         {
-            return FindDisputeAsync(ticketNumber, issuedTime, System.Threading.CancellationToken.None);
+            return FindDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken)
         {
-            if (ticketNumber == null)
-                throw new System.ArgumentNullException("ticketNumber");
-
-            if (issuedTime == null)
-                throw new System.ArgumentNullException("issuedTime");
-
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1.0/dispute/status?");
-            urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Append(System.Uri.EscapeDataString("issuedTime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(issuedTime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            if (ticketNumber != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (issuedTime != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("issuedTime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(issuedTime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (noticeOfDisputeGuid != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("noticeOfDisputeGuid") + "=").Append(System.Uri.EscapeDataString(ConvertToString(noticeOfDisputeGuid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             urlBuilder_.Length--;
 
             var client_ = _httpClient;
