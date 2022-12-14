@@ -5394,9 +5394,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DisputeResultJjDisputeStatus? JjDisputeStatus { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("jjDisputeHearingType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("jjDisputeHearingType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public DisputeResultJjDisputeHearingType JjDisputeHearingType { get; set; }
+        public DisputeResultJjDisputeHearingType? JjDisputeHearingType { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 

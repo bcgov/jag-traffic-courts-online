@@ -2448,6 +2448,7 @@
           },
           "jjDisputeHearingType": {
             "type": "string",
+            "nullable": true,
             "enum": [ "UNKNOWN", "COURT_APPEARANCE", "WRITTEN_REASONS" ]
           }
         }
