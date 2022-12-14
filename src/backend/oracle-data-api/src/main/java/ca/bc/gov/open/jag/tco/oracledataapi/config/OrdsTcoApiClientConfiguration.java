@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.HealthApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.handler.ApiClient;
 
 @Configuration
@@ -29,6 +30,11 @@ public class OrdsTcoApiClientConfiguration {
 	@Bean
 	public HealthApi ordsTcoHealthApi(ApiClient ordsTcoApiClient) {
 		return new HealthApi(ordsTcoApiClient);
+	}
+
+	@Bean
+	public JjDisputeApi ordsTcoJjDisputeApi(ApiClient ordsTcoApiClient) {
+		return new JjDisputeApi(ordsTcoApiClient);
 	}
 
 }
