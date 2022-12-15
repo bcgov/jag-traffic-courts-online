@@ -69,7 +69,7 @@ public class SearchDisputeConsumerTest
             }
         };
         _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
-        _expectedResponse.DisputeId = "1";
+        _expectedResponse.NoticeOfDisputeGuid = "1";
         _expectedResponse.DisputeStatus = "VALIDATED";
         _expectedResponse.JJDisputeStatus = "IN_PROGRESS";
 
@@ -83,7 +83,7 @@ public class SearchDisputeConsumerTest
     private void VerifyExpectedResponse()
     {
         _context.Verify(m => m.RespondAsync<SearchDisputeResponse>(It.Is<SearchDisputeResponse>(
-            a => a.DisputeId == _expectedResponse.DisputeId
+            a => a.NoticeOfDisputeGuid == _expectedResponse.NoticeOfDisputeGuid
                 && a.DisputeStatus == _expectedResponse.DisputeStatus
                 && a.JJDisputeStatus == _expectedResponse.JJDisputeStatus
                 && a.IsError == _expectedResponse.IsError
