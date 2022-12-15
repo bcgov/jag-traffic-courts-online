@@ -3,7 +3,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,8 +95,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         public async Task record_should_have_a_length_of_256_and_end_with_newline(ArcFileRecord record)
         {
             // Act
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // assert
             Assert.NotNull(actual);
@@ -110,8 +108,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         public async Task lockout_flag_should_be_zero(ArcFileRecord record)
         {
             // Act
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 1-   1      Lockout Flag 0=Unlocked; 1=Locked
             Assert.Equal("0", Get(actual, 1, 1));
@@ -124,8 +121,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         {
             record.TransactionDateTime = date;
 
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 2-   9      Transaction Date (yyyymmdd)
             Assert.Equal(date.ToString("yyyyMMdd"), Get(actual, 2, 9));
@@ -139,17 +135,16 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         public async Task transaction_location_should_be_be_correct(ArcFileRecord record)
         {
             // Act
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
+            // 
             Assert.Equal("20254", Get(actual, 16, 20)); // column 16-20
         }
 
         [Fact]
         public async Task adnotated_ticket_record_should_have_EV_transaction_type()
         {
-            var stream = await CreateFileAsync(new AdnotatedTicket());
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(new AdnotatedTicket());
 
             // 21-  23      Transaction Type   
             Assert.Equal("EV ", Get(actual, 21, 23));
@@ -157,10 +152,9 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
 
 
         [Fact]
-        public async Task dispute_Ticket_record_should_have_ED_transaction_type()
+        public async Task dispute_ticket_record_should_have_ED_transaction_type()
         {
-            var stream = await CreateFileAsync(new DisputedTicket());
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(new DisputedTicket());
 
             // 21-  23      Transaction Type   
             Assert.Equal("ED ", Get(actual, 21, 23));
@@ -171,8 +165,8 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         public async Task effective_date_should_be_correct(ArcFileRecord record, DateTime date)
         {
             record.EffectiveDate = date;
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+
+            var actual = await CreateFileAsStringAsync(record);
 
             // 24-  31      Effective Date (yyyymmdd) 
             Assert.Equal(date.ToString("yyyyMMdd"), Get(actual, 24, 31));
@@ -181,9 +175,8 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         [Theory]
         [MemberData(nameof(EachArcFileRecordType))]
         public async Task owner_should_be_00001(ArcFileRecord record)
-        {           
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+        {
+            var actual = await CreateFileAsStringAsync(record);
 
             // 32 - 36      Owner
             Assert.Equal("00001", Get(actual, 32, 36));
@@ -196,8 +189,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
             var expected = Guid.NewGuid().ToString("n")[0..14];
             record.FileNumber = expected;
 
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 37-  50      File Number 
             Assert.Equal(expected, Get(actual, 37, 50));
@@ -210,8 +202,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
             var expected = Guid.NewGuid().ToString("n")[0..3];
             record.CountNumber = expected;
 
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 51-  53      Count Number 
             Assert.Equal(expected, Get(actual, 51, 53));
@@ -221,8 +212,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         [MemberData(nameof(EachArcFileRecordType))]
         public async Task receivable_type_should_be_correct(ArcFileRecord record)
         {
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 54-  54      Receivable Type 
             Assert.Equal("M", Get(actual, 54, 54));
@@ -232,8 +222,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         [MemberData(nameof(EachArcFileRecordType))]
         public async Task transaction_number_should_be_00000(ArcFileRecord record)
         {
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 55-  59      Transaction Number
             Assert.Equal("00000", Get(actual, 55, 59));
@@ -246,8 +235,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
             var expected = Guid.NewGuid().ToString("n")[0..9];
             record.MvbClientNumber = expected;
 
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 60-  68      MVB Client Number 
             Assert.Equal(expected, Get(actual, 60, 68));
@@ -258,8 +246,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         [MemberData(nameof(EachArcFileRecordType))]
         public async Task update_flag_should_be_correct(ArcFileRecord record)
         {
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 69-  69      Update Flag
             Assert.Equal(" ", Get(actual, 69, 69));
@@ -269,8 +256,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         [MemberData(nameof(EachArcFileRecordType))]
         public async Task filler_should_be_correct(ArcFileRecord record)
         {
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 170- 255      Filler
             var expected = new string(' ', 255 - 170 + 1);
@@ -280,10 +266,9 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
 
         [Theory]
         [MemberData(nameof(EachArcFileRecordType))]
-        public async Task Create__ARCF0630_should_be_correct(ArcFileRecord record)
+        public async Task ARCF0630_should_be_correct(ArcFileRecord record)
         {
-            var stream = await CreateFileAsync(record);
-            var actual = AsString(stream);
+            var actual = await CreateFileAsStringAsync(record);
 
             // 256- 256      Create ARCF0630 Record Flag
             Assert.Equal(" ", Get(actual, 256, 256));
@@ -321,6 +306,12 @@ ARCUICBC DIM       1           256- 256      Create ARCF0630 Record Flag        
         private async Task<MemoryStream> CreateFileAsync(ArcFileRecord record)
         {
             return await CreateFileAsync(new[] { record });
+        }
+
+        private async Task<string> CreateFileAsStringAsync(ArcFileRecord record)
+        {
+            var stream = await CreateFileAsync(new[] { record });
+            return AsString(stream);
         }
 
         private async Task<MemoryStream> CreateFileAsync(IList<ArcFileRecord> records)

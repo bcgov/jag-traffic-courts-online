@@ -44,7 +44,6 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                     adnotated.Section = ticket.Section.ToUpper();
                     adnotated.Subsection = ticket.Subsection?.ToUpper() ?? String.Empty;
                     adnotated.Paragraph = ticket.Paragraph?.ToUpper() ?? String.Empty;
-                    adnotated.Subparagraph = ticket.Subparagraph?.ToUpper() ?? String.Empty;
                 } 
                 else
                 {
@@ -60,7 +59,6 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                     adnotated.Section = legalSection?.Section.ToUpper() ?? String.Empty;
                     adnotated.Subsection = legalSection?.Subsection.ToUpper() ?? String.Empty;
                     adnotated.Paragraph = legalSection?.Paragraph.ToUpper() ?? String.Empty;
-                    adnotated.Subparagraph = legalSection?.Subparagrah.ToUpper() ?? String.Empty;
                 }
 
                 adnotated.Act = ticket.Act?.ToUpper() ?? "MVA";

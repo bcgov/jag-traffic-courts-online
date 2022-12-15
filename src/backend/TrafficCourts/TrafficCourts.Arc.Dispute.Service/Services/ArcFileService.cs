@@ -93,7 +93,6 @@ public class ArcFileService : IArcFileService
         mapper.Property(_ => _.Section, new Window(6) { Alignment = FixedAlignment.RightAligned }).ColumnName("section");
         mapper.Property(_ => _.Subsection, new Window(2) { Alignment = FixedAlignment.RightAligned }).ColumnName("subsection");
         mapper.Property(_ => _.Paragraph, new Window(1)).ColumnName("paragraph");
-        mapper.Property(_ => _.Subparagraph, new Window(1)).ColumnName("subparagraph");
         mapper.Property(_ => _.Act, new Window(3)).ColumnName("act");
         mapper.Property(_ => _.OriginalAmount, new Window(9) { FillCharacter = '0', Alignment = FixedAlignment.RightAligned }).ColumnName("original_amount").OutputFormat("N2");
         mapper.Property(_ => _.Organization, new Window(4)).ColumnName("organization");

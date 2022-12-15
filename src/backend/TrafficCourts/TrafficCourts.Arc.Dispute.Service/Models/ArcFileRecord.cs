@@ -4,6 +4,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
 {
     public abstract class ArcFileRecord
     {
+        protected ArcFileRecord(string transactionType)
+        {
+            TransactionType = transactionType;
+        }
+
         public int LockoutFlag { get; } = 0;
 
         public DateTime TransactionDateTime { get; set; }
@@ -20,26 +25,32 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         public DateTime TransactionTime => TransactionDateTime;
 
         public int TransactionLocation { get; } = 20254;
+
+        public string TransactionType { get; private set; }
+
+        public string TransactionNumber { get; } = "00000";
+
         public DateTime EffectiveDate { get; set; }
         public string Owner { get; } = "00001";
         public string FileNumber { get; set; } = String.Empty;
         public string CountNumber { get; set; } = "000"; // 000 in an output would represent an error
         public string ReceivableType { get; } = "M";
         public string MvbClientNumber { get; set; } = String.Empty;
-        public string UpdateFlag { get; set; } = String.Empty;
-        public string Filler { get; set; } = String.Empty;
-        public string ARCF0630RecordFlag { get; set; } = String.Empty;
+        public string UpdateFlag { get; } = String.Empty;
+        public string Filler { get; } = String.Empty;
+        public string ARCF0630RecordFlag { get; } = String.Empty;
     }
 
     public class AdnotatedTicket : ArcFileRecord
     {
-        public string TransactionType { get; } = "EV";
-        public string TransactionNumber { get; } = "00000";
+        public AdnotatedTicket() : base("EV")
+        {
+        }
+
         public string Name { get; set; } = String.Empty;
         public string Section { get; set; } = String.Empty;
         public string Subsection { get; set; } = String.Empty;
         public string Paragraph { get; set; } = String.Empty;
-        public string Subparagraph { get; set; } = String.Empty;
         public string Act { get; set; } = String.Empty;
         public decimal OriginalAmount { get; set; }
         public string Organization { get; set; } = String.Empty;
@@ -50,8 +61,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
 
     public class DisputedTicket : ArcFileRecord
     {
-        public string TransactionType { get; } = "ED";
-        public string TransactionNumber { get; } = "00000";
+        public DisputedTicket() : base("ED")
+        {
+        }
+
+
         public DateTime ServiceDate { get; set; }
         public string Name { get; set; } = String.Empty;
         public string DisputeType { get; set; } = String.Empty;
