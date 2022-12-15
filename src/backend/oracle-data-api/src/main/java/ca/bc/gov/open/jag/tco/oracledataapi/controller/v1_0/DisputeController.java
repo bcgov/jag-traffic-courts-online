@@ -423,4 +423,27 @@ public class DisputeController {
 		return new ResponseEntity<DisputantUpdateRequest>(disputantUpdateRequest, HttpStatus.OK);
 	}
 
+	/**
+	 * PUT endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.
+	 *
+	 * @param List of IDs of DisputantUpdateRequest records' status to be updated to pending
+	 */
+	@PutMapping("/dispute/updateRequest/{ids}/pending")
+	@Operation(summary = "An endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest records updated to status PENDING."),
+		@ApiResponse(responseCode = "404", description = "DisputantUpdateRequest records could not be found."),
+		@ApiResponse(responseCode = "405", description = "A DisputantUpdateRequest status can only be set to PENDING iff status is HOLD. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Status Update failed.")
+	})
+	public ResponseEntity<Void> updateDisputantUpdateRequestsStatusToPending(
+			@PathVariable(name = "ids")
+			@Parameter(description = "The id of the DisputantUpdateRequest record to update.")
+			List<Long> updateRequestIds) {
+		logger.debug("PUT /dispute/updateRequest/{}/pending called", updateRequestIds);
+
+		disputeService.updateDisputantUpdateRequestsStatusPending(updateRequestIds);
+		return ResponseEntity.ok().build();
+	}
+
 }

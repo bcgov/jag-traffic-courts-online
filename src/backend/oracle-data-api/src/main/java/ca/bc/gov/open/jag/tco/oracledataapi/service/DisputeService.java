@@ -154,7 +154,7 @@ public class DisputeService {
 					for (int i = 0; i < violationTicketCountSize; i++) {
 						BeanUtils.copyProperties(dispute.getViolationTicket().getViolationTicketCounts().get(i), violationTicketCountsToUpdate.get(i), "createdBy", "createdTs", "violationTicketCountId");
 					}
-				} 
+				}
 				logger.warn("Unexpected number of violationTicketCounts: " + violationTicketCountSize +
 						" received from the request whereas updatable number of violationTicketCounts from database is: " + violationTicketCountsToUpdate.size() +
 						". This should not happen with current dispute update use case unless something has been changed");
@@ -381,6 +381,30 @@ public class DisputeService {
 		DisputantUpdateRequest disputantUpdateRequest = disputantUpdateRequestRepository.findById(updateRequestId).orElseThrow();
 		disputantUpdateRequest.setStatus(status);
 		return disputantUpdateRequestRepository.save(disputantUpdateRequest);
+	}
+
+	/**
+	 * Updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD only
+	 * @param updateRequestIds
+	 */
+	public void updateDisputantUpdateRequestsStatusPending(List<Long> updateRequestIds) {
+
+		List<DisputantUpdateRequest> disputantUpdateRequestList = disputantUpdateRequestRepository.findAllById(updateRequestIds);
+
+		if (CollectionUtils.isEmpty(disputantUpdateRequestList) || updateRequestIds.size() != disputantUpdateRequestList.size()) {
+			logger.error("One or more disputantUpdateRequest record could not be found for the given IDs: " + updateRequestIds);
+			throw new NoSuchElementException();
+		}
+
+		if(disputantUpdateRequestList.stream().anyMatch(ur -> !DisputantUpdateRequestStatus.HOLD.equals(ur.getStatus()))) {
+			throw new NotAllowedException("Changing the status to %s is only permitted from %s status for any of the DisputantUpdateRequest records submitted.",
+					DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestStatus.HOLD);
+		}
+
+		for (DisputantUpdateRequest disputantUpdateRequest : disputantUpdateRequestList) {
+			disputantUpdateRequest.setStatus(DisputantUpdateRequestStatus.PENDING);
+			disputantUpdateRequestRepository.save(disputantUpdateRequest);
+		}
 	}
 
 }
