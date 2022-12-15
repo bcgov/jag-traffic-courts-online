@@ -98,7 +98,8 @@ export class JJDisputeService {
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::putJJDispute', response)
-          return response ? response : null
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
         }),
         catchError((error: any) => {
           var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
@@ -123,7 +124,8 @@ export class JJDisputeService {
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjRequireCourtHearingPut', response)
-          return response ? response : null
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
         }),
         catchError((error: any) => {
           var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
@@ -143,7 +145,8 @@ export class JJDisputeService {
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberReviewPut', response)
-          return response ? response : null
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
         }),
         catchError((error: any) => {
           var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
@@ -184,7 +187,8 @@ export class JJDisputeService {
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberAcceptPut', response)
-          return response ? response : null
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
         }),
         catchError((error: any) => {
           var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;

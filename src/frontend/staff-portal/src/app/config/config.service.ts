@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Config, Configuration, CourthouseConfig } from '@config/config.model';
+import { Config, Configuration, CountryCodeValue, CourthouseConfig, ProvinceCodeValue } from '@config/config.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -31,32 +31,40 @@ export class ConfigService {
   private _countries: CountryCodeValue[] = [];
   private _provincesAndStates: ProvinceCodeValue[] = [];
 
+  private _bcCodeValue: ProvinceCodeValue;
+  private _canadaCodeValue: CountryCodeValue;
+  private _usaCodeValue: CountryCodeValue;
+
   constructor(
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService,
   ) {
-      // import countries
-      this._countries = [];
-      CountriesListJSON.countryCodeValues.forEach(x => {
-        this._countries.push({ ctryId: +x.ctryId, ctryLongNm: x.ctryLongNm});
-      })
-      this._countries = this._countries.sort((a,b)=> a.ctryLongNm > b.ctryLongNm ? 1 : -1);
+    // import countries
+    this._countries = [];
+    CountriesListJSON.countryCodeValues.forEach(x => {
+      this._countries.push(new CountryCodeValue(+x.ctryId, x.ctryLongNm));
+    })
+    this._countries = this._countries.sort((a, b) => a.ctryLongNm > b.ctryLongNm ? 1 : -1);
 
-      // import provinces
-      this._provincesAndStates = [];
-      let i = 1;
-      CanadaProvincesJSON.provinceCodeValues.forEach(x => {
-        this._provincesAndStates.push({provId: i, ctryId: +x.ctryId, provSeqNo: +x.provSeqNo, provNm: x.provNm, provAbbreviationCd: x.provAbbreviationCd});
-        i++;
-      })
+    // import provinces
+    this._provincesAndStates = [];
+    let i = 1;
+    CanadaProvincesJSON.provinceCodeValues.forEach(x => {
+      this._provincesAndStates.push(new ProvinceCodeValue(+x.ctryId, +x.provSeqNo, x.provNm, x.provAbbreviationCd, i));
+      i++;
+    })
 
-      // import states
-      USStatesJSON.provinceCodeValues.forEach(x => {
-        this._provincesAndStates.push({provId: i, ctryId: +x.ctryId, provSeqNo: +x.provSeqNo, provNm: x.provNm, provAbbreviationCd: x.provAbbreviationCd});
-        i++;
-      })
-      this._provincesAndStates = this._provincesAndStates.sort((a,b)=> a.provNm > b.provNm ? 1 : -1);
-    }
+    // import states
+    USStatesJSON.provinceCodeValues.forEach(x => {
+      this._provincesAndStates.push(new ProvinceCodeValue(+x.ctryId, +x.provSeqNo, x.provNm, x.provAbbreviationCd, i));
+      i++;
+    })
+    this._provincesAndStates = this._provincesAndStates.sort((a, b) => a.provNm > b.provNm ? 1 : -1);
+
+    this._bcCodeValue = this.getBCCodeValue();
+    this._canadaCodeValue = this.getCanadaCodeValue();
+    this._usaCodeValue = this.getUSACodeValue();
+  }
 
   public get dispute_submitted$(): BehaviorSubject<string> {
     return this.disputeSubmitted;
@@ -136,6 +144,18 @@ export class ConfigService {
     return [...this._countries];
   }
 
+  public get bcCodeValue(): ProvinceCodeValue {
+    return this._bcCodeValue;
+  }
+
+  public get canadaCodeValue(): CountryCodeValue {
+    return this._canadaCodeValue;
+  }
+
+  public get usaCodeValue(): CountryCodeValue {
+    return this._usaCodeValue;
+  }
+
   public get statuses(): Config<number>[] {
     return [...this.configuration.statuses].sort(this.sortConfigByName());
   }
@@ -160,22 +180,31 @@ export class ConfigService {
     return null;
   }
 
-  public getCtryLongNm(ctryId: number) {
-    let countriesFound = this._countries.filter(x => x.ctryId === ctryId);
-    if (countriesFound?.length > 0) return countriesFound[0].ctryLongNm;
-    else return "";
+  private getBCCodeValue(): ProvinceCodeValue {
+    return this._provincesAndStates.filter(x => x.provAbbreviationCd === "BC").shift();
   }
 
-  public getProvAbbreviationCd(ctryId: number, provSeqNo: number) {
-    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo);
-    if (provincesFound?.length > 0) return provincesFound[0].provAbbreviationCd;
-    else return "";
+  private getCanadaCodeValue(): CountryCodeValue {
+    return this._countries.filter(x => x.ctryLongNm === "Canada").shift();
+  }
+
+  private getUSACodeValue(): CountryCodeValue {
+    return this._countries.filter(x => x.ctryLongNm === "USA").shift();
+  }
+
+  public getCtryLongNm(ctryId: number) {
+    let countriesFound = this._countries.filter(x => x.ctryId === ctryId).shift();
+    return countriesFound?.ctryLongNm;
   }
 
   public getProvNm(ctryId: number, provSeqNo: number) {
-    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo);
-    if (provincesFound?.length > 0) return provincesFound[0].provNm;
-    else return
+    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo).shift();
+    return provincesFound?.provNm;
+  }
+
+  public getProvAbbreviationCd(ctryId: number, provSeqNo: number) {
+    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo).shift();
+    return provincesFound?.provAbbreviationCd;
   }
 
   /**
@@ -189,17 +218,4 @@ export class ConfigService {
     return (a: Config<number | string>, b: Config<number | string>) =>
       this.utilsService.sortByKey<Config<number | string>>(a, b, 'name');
   }
-}
-
-export interface CountryCodeValue {
-  ctryId?: number,
-  ctryLongNm?: string
-}
-
-export interface ProvinceCodeValue {
-  ctryId?: number;
-  provSeqNo?: number;
-  provNm?: string;
-  provAbbreviationCd?: string;
-  provId?: number;
 }
