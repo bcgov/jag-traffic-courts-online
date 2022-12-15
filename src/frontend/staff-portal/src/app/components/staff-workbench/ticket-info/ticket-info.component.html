@@ -142,7 +142,7 @@
                           <mat-select formControlName="driversLicenceProvince"
                             (selectionChange)="onViolationTicketDLProvinceChange($event.value)"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'">
-                            <mat-option [value]="bcFound[0].provAbbreviationCd">{{bcFound[0]?.provNm}}</mat-option>
+                            <mat-option [value]="bc.provAbbreviationCd">{{bc.provNm}}</mat-option>
                             <mat-option *ngFor="let province of provinces" [value]="province.provAbbreviationCd">{{ province.provNm }}
                             </mat-option>
                             <mat-option *ngFor="let state of states" [value]="state.provAbbreviationCd">{{ state.provNm }}
@@ -159,9 +159,9 @@
                           <mat-label>DL number</mat-label>
                           <input matInput formControlName="disputantDriversLicenceNumber" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
                             autocomplete="off" [readonly]="lastUpdatedDispute.status === 'VALIDATED'"
-                            *ngIf="form.get('violationTicket').get('driversLicenceProvince').value === bcFound[0].provAbbreviationCd" />
+                            *ngIf="form.get('violationTicket').get('driversLicenceProvince').value === bc.provAbbreviationCd" />
                           <input matInput formControlName="disputantDriversLicenceNumber" autocomplete="off"
-                            *ngIf="form.get('violationTicket').get('driversLicenceProvince').value !== bcFound[0].provAbbreviationCd"
+                            *ngIf="form.get('violationTicket').get('driversLicenceProvince').value !== bc.provAbbreviationCd"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
                           <mat-error
                             *ngIf="form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('required')">{{
@@ -442,8 +442,8 @@
                     <mat-form-field class="w-100">
                       <mat-label>Country</mat-label>
                       <mat-select formControlName="addressCountryId" (selectionChange)="onCountryChange($event.value)">
-                        <mat-option [value]="canadaFound[0]?.ctryId">{{ canadaFound[0]?.ctryLongNm }}</mat-option>
-                        <mat-option [value]="usaFound[0]?.ctryId">{{ usaFound[0]?.ctryLongNm }}</mat-option>
+                        <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
+                        <mat-option [value]="usa.ctryId">{{ usa.ctryLongNm }}</mat-option>
                         <mat-option *ngFor="let country of config.countries" [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
                       </mat-select>
                       <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -465,25 +465,25 @@
                   <!-- Notice of dispute province/state -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label *ngIf="form.get('addressCountryId').value===canadaFound[0]?.ctryId">Province</mat-label>
-                      <mat-label *ngIf="form.get('addressCountryId').value===usaFound[0]?.ctryId">State</mat-label>
+                      <mat-label *ngIf="form.get('addressCountryId').value===canada.ctryId">Province</mat-label>
+                      <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">State</mat-label>
                       <mat-select formControlName="addressProvinceProvId" (selectionChange)="onAddressProvinceChange($event.value)"
-                        *ngIf="form.get('addressCountryId').value === canadaFound[0]?.ctryId || form.get('addressCountryId').value === usaFound[0]?.ctryId">
-                        <div *ngIf="form.get('addressCountryId').value === canadaFound[0]?.ctryId">
-                          <mat-option [value]="bcFound[0]?.provId">{{bcFound[0]?.provNm }}</mat-option>
+                        *ngIf="form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId">
+                        <div *ngIf="form.get('addressCountryId').value === canada.ctryId">
+                          <mat-option [value]="bc.provId">{{bc.provNm }}</mat-option>
                           <mat-option *ngFor="let province of provinces" [value]="province.provId">{{ province.provNm }}
                           </mat-option>
                         </div>
-                        <div *ngIf="form.get('addressCountryId').value === usaFound[0]?.ctryId">
+                        <div *ngIf="form.get('addressCountryId').value === usa.ctryId">
                           <mat-option *ngFor="let state of states" [value]="state.provId">{{ state.provNm }}
                           </mat-option>
                         </div>
                       </mat-select>
                       <mat-label
-                        *ngIf="form.get('addressCountryId').value!==usaFound[0]?.ctryId && form.get('addressCountryId').value !== canadaFound[0]?.ctryId">
+                        *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId">
                         Province/State</mat-label>
                       <input matInput formControlName="addressProvince"
-                        *ngIf="form.get('addressCountryId').value !== usaFound[0]?.ctryId && form.get('addressCountryId').value !== canadaFound[0]?.ctryId"
+                        *ngIf="form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId"
                         maxlength="30" />
                       <mat-error>{{ "error.required" | translate }}</mat-error>
                     </mat-form-field>
@@ -496,19 +496,19 @@
                 <!-- Notice of dispute postal code -->
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
-                    <mat-label *ngIf="form.get('addressCountryId').value ===canadaFound[0]?.ctryId">Postal code</mat-label>
+                    <mat-label *ngIf="form.get('addressCountryId').value ===canada.ctryId">Postal code</mat-label>
                     <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
-                      formControlName="postalCode" [showMaskTyped]="true" *ngIf="form.get('addressCountryId').value===canadaFound[0]?.ctryId" />
-                    <mat-label *ngIf="form.get('addressCountryId').value===usaFound[0]?.ctryId">Zip Code</mat-label>
+                      formControlName="postalCode" [showMaskTyped]="true" *ngIf="form.get('addressCountryId').value===canada.ctryId" />
+                    <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">Zip Code</mat-label>
                     <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
                       formControlName="postalCode" [showMaskTyped]="true"
-                      *ngIf="form.get('addressCountryId').value===usaFound[0]?.ctryId" />
+                      *ngIf="form.get('addressCountryId').value===usa.ctryId" />
                     <mat-label
-                      *ngIf="form.get('addressCountryId').value!==usaFound[0]?.ctryId && form.get('addressCountryId').value!==canadaFound[0]?.ctryId">
+                      *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId">
                       Postal/Zip Code</mat-label>
                     <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
                       formControlName="postalCode"
-                      *ngIf="form.get('addressCountryId').value!==usaFound[0]?.ctryId && form.get('addressCountryId').value !== canadaFound[0]?.ctryId" />
+                      *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId" />
                     <mat-error *ngIf="form.get('postalCode').hasError('required')">{{ "error.required" | translate
                       }}</mat-error>
                     <mat-error *ngIf="form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')">Must be a valid postal/zip code
@@ -536,10 +536,10 @@
                   <mat-form-field class="w-100">
                     <mat-label>Phone number</mat-label>
                     <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000"
-                      *ngIf="form.get('addressCountryId').value === canadaFound[0]?.ctryId || form.get('addressCountryId').value === usaFound[0]?.ctryId"
+                      *ngIf="form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId"
                       [showMaskTyped]="true" />
                     <input matInput formControlName="homePhoneNumber" mask="00000000000000000000"
-                      *ngIf="form.get('addressCountryId').value !== canadaFound[0]?.ctryId && form.get('addressCountryId').value !== usaFound[0]?.ctryId" />
+                      *ngIf="form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId" />
                     <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('required')">{{"error.required" |
                       translate}}
                     </mat-error>
@@ -569,7 +569,7 @@
                     <mat-label>Prov/State of DL</mat-label>
                     <mat-select formControlName="driversLicenceProvinceProvId"
                       (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
-                      <mat-option [value]="bcFound[0]?.provId">{{bcFound[0]?.provNm}}</mat-option>
+                      <mat-option [value]="bc.provId">{{bc.provNm}}</mat-option>
                       <mat-option *ngFor="let province of provinces" [value]="province.provId">{{ province.provNm }}
                       </mat-option>
                       <mat-option *ngFor="let state of states" [value]="state.provId">{{ state.provNm }}</mat-option>
@@ -583,9 +583,9 @@
                   <mat-form-field class="w-100">
                     <mat-label>DL number</mat-label>
                     <input matInput formControlName="driversLicenceNumber" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
-                      *ngIf="form.get('driversLicenceProvinceProvId').value === bcFound[0]?.provId" />
+                      *ngIf="form.get('driversLicenceProvinceProvId').value === bc.provId" />
                     <input matInput formControlName="driversLicenceNumber" maxlength="20"
-                      *ngIf="form.get('driversLicenceProvinceProvId').value !== bcFound[0]?.provId" />
+                      *ngIf="form.get('driversLicenceProvinceProvId').value !== bc.provId" />
                     <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
                       translate }}</mat-error>
                     <mat-error *ngIf="
