@@ -38,7 +38,7 @@ public class ArcFileService : IArcFileService
             return;
         }
 
-        using var stream = await CreateStreamFromArcData(arcFileData, cancellationToken);
+        using var stream = await CreateStreamFromArcDataAsync(arcFileData, cancellationToken);
 
         // Create a name for the file from the unique file number field of the dispute ticket data
         string fileName = "dispute-" + arcFileData[0].FileNumber.Split(" ").First().ToString() + ".txt";
@@ -47,10 +47,10 @@ public class ArcFileService : IArcFileService
         _sftpService.UploadFile(stream, _options.RemotePath, fileName);
     }
 
-    internal async Task<MemoryStream> CreateStreamFromArcData(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
+    internal async Task<MemoryStream> CreateStreamFromArcDataAsync(IList<ArcFileRecord> records, CancellationToken cancellationToken)
     {
-        System.Diagnostics.Debug.Assert(arcFileData != null, "Arc File Data List is null to create a stream out of it");
-        System.Diagnostics.Debug.Assert(arcFileData.Count != 0, "Arc File Data List is empty to create a stream out of it");
+        System.Diagnostics.Debug.Assert(records != null, "Arc File Data List is null to create a stream out of it");
+        System.Diagnostics.Debug.Assert(records.Count != 0, "Arc File Data List is empty to create a stream out of it");
 
         // Inject ticket mapper function based on the derived class object
         var selector = new FixedLengthTypeMapperInjector();
@@ -64,7 +64,7 @@ public class ArcFileService : IArcFileService
         var fileWriter = new StreamWriter(stream, Encoding.ASCII);
         var writer = selector.GetWriter(fileWriter, new FixedLengthOptions { RecordSeparator = NewLineRecordSeparator });
 
-        await writer.WriteAllAsync(arcFileData);
+        await writer.WriteAllAsync(records);
 
         fileWriter.Flush();
         stream.Position = 0;
@@ -93,7 +93,6 @@ public class ArcFileService : IArcFileService
         mapper.Property(_ => _.Section, new Window(6) { Alignment = FixedAlignment.RightAligned }).ColumnName("section");
         mapper.Property(_ => _.Subsection, new Window(2) { Alignment = FixedAlignment.RightAligned }).ColumnName("subsection");
         mapper.Property(_ => _.Paragraph, new Window(1)).ColumnName("paragraph");
-        mapper.Property(_ => _.Subparagraph, new Window(1)).ColumnName("subparagraph");
         mapper.Property(_ => _.Act, new Window(3)).ColumnName("act");
         mapper.Property(_ => _.OriginalAmount, new Window(9) { FillCharacter = '0', Alignment = FixedAlignment.RightAligned }).ColumnName("original_amount").OutputFormat("N2");
         mapper.Property(_ => _.Organization, new Window(4)).ColumnName("organization");
