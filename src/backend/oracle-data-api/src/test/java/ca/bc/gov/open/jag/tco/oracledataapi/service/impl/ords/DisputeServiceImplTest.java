@@ -20,14 +20,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.ViolationTicketApi;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ResponseResult;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
@@ -343,7 +343,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		String issuedDateStr = "13:54";
 		Date issuedDate = DateUtils.parseDate(issuedDateStr, DateUtil.TIME_FORMAT);
 
-		ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute dispute = new ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute();
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute dispute = new ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute();
 		dispute.setDisputeId(disputeId.toString());
 		dispute.setDisputeStatusTypeCd(disputeStatus.toShortName());
 
