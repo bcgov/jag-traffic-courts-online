@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
 
 public class DisputeMapperTest extends BaseTestSuite{
 

@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.api.LookupValuesApi;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.LookupMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
@@ -23,13 +23,13 @@ public class LookupServiceImpl extends BaseLookupService {
 	@Override
 	public List<Statute> getStatutes() throws ApiException {
 		// Get all statutes from the ORDS webclient service and convert them to OracleDataApi using Mapstruct
-		List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.Statute> statutes = lookupValuesApi.statutesList().getStatuteCodeValues();
+		List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Statute> statutes = lookupValuesApi.statutesList().getStatuteCodeValues();
 		return LookupMapper.INSTANCE.convertStatutes(statutes);
 	}
 
 	@Override
 	public List<Language> getLanguages() throws ApiException {
-		List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.Language> languages = lookupValuesApi.languagesList().getLanguageCodeValues();
+		List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language> languages = lookupValuesApi.languagesList().getLanguageCodeValues();
 		return LookupMapper.INSTANCE.convertLanguages(languages);
 	}
 
