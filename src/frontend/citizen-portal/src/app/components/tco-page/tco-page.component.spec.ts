@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TcoPageComponent } from './tco-page.component';
@@ -8,7 +9,8 @@ describe('TcoPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TcoPageComponent ]
+      declarations: [ TcoPageComponent ],
+      imports: [ HttpClientTestingModule ]
     })
     .compileComponents();
   });
