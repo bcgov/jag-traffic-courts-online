@@ -4,7 +4,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
 {
     public abstract class ArcFileRecord
     {
-        public int LockoutFlag { get; set; }
+        public int LockoutFlag { get; } = 0;
+
         public DateTime TransactionDateTime { get; set; }
         /// <summary>
         /// Mapped to seprate output field, so we need a separate property for date.

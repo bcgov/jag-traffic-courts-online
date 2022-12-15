@@ -38,7 +38,7 @@ public class ArcFileService : IArcFileService
             return;
         }
 
-        using var stream = await CreateStreamFromArcData(arcFileData, cancellationToken);
+        using var stream = await CreateStreamFromArcDataAsync(arcFileData, cancellationToken);
 
         // Create a name for the file from the unique file number field of the dispute ticket data
         string fileName = "dispute-" + arcFileData[0].FileNumber.Split(" ").First().ToString() + ".txt";
@@ -47,10 +47,10 @@ public class ArcFileService : IArcFileService
         _sftpService.UploadFile(stream, _options.RemotePath, fileName);
     }
 
-    internal async Task<MemoryStream> CreateStreamFromArcData(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
+    internal async Task<MemoryStream> CreateStreamFromArcDataAsync(IList<ArcFileRecord> records, CancellationToken cancellationToken)
     {
-        System.Diagnostics.Debug.Assert(arcFileData != null, "Arc File Data List is null to create a stream out of it");
-        System.Diagnostics.Debug.Assert(arcFileData.Count != 0, "Arc File Data List is empty to create a stream out of it");
+        System.Diagnostics.Debug.Assert(records != null, "Arc File Data List is null to create a stream out of it");
+        System.Diagnostics.Debug.Assert(records.Count != 0, "Arc File Data List is empty to create a stream out of it");
 
         // Inject ticket mapper function based on the derived class object
         var selector = new FixedLengthTypeMapperInjector();
@@ -64,7 +64,7 @@ public class ArcFileService : IArcFileService
         var fileWriter = new StreamWriter(stream, Encoding.ASCII);
         var writer = selector.GetWriter(fileWriter, new FixedLengthOptions { RecordSeparator = NewLineRecordSeparator });
 
-        await writer.WriteAllAsync(arcFileData);
+        await writer.WriteAllAsync(records);
 
         fileWriter.Flush();
         stream.Position = 0;
