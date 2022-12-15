@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from "@angular/core";
 import { DisputeRepresentedByLawyer, Language } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
 import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
-import { Subscription } from "rxjs";
 import { ConfigService } from "@config/config.service";
 
 @Component({
@@ -14,7 +13,6 @@ export class DisputeTicketSummaryComponent implements OnInit {
   @Input() noticeOfDispute: NoticeOfDispute;
   countsActions: any;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
-  busy: Subscription;
 
   constructor(
     private configService: ConfigService,

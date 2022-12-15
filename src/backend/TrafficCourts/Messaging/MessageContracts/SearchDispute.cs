@@ -10,8 +10,12 @@ public class SearchDisputeRequest
 
 public class SearchDisputeResponse
 {
-    public string? DisputeId { get; set; }
+    /// <summary>
+    /// The notice of dispute identifer.
+    /// </summary>
+    public string? NoticeOfDisputeGuid { get; set; }
     public string? DisputeStatus { get; set; }
     public string? JJDisputeStatus { get; set; }
+    public string? HearingType { get; set; }
     public bool IsError { get; set; }
 }

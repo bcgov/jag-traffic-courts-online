@@ -3,12 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { DisputeDisputantDetectedOcrIssues, ViolationTicket } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-scan-ticket',
@@ -17,7 +15,6 @@ import { Subscription } from 'rxjs';
 })
 export class ScanTicketComponent implements OnInit {
   private ticket: ViolationTicket;
-  busy: Subscription | Promise<any>;
   ticketImageSrc: string;
   ticketImageFile: string;
   ticketFilename: string;
@@ -28,7 +25,6 @@ export class ScanTicketComponent implements OnInit {
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private router: Router,
-    private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TicketPageComponent } from './ticket-page.component';
+import { TcoPageComponent } from './tco-page.component';
 
-describe('TicketPageComponent', () => {
-  let component: TicketPageComponent;
-  let fixture: ComponentFixture<TicketPageComponent>;
+describe('TcoPageComponent', () => {
+  let component: TcoPageComponent;
+  let fixture: ComponentFixture<TcoPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TicketPageComponent ]
+      declarations: [ TcoPageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TicketPageComponent);
+    fixture = TestBed.createComponent(TcoPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

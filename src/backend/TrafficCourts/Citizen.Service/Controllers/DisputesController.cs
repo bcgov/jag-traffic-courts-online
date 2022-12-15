@@ -178,17 +178,20 @@ public class DisputesController : ControllerBase
             var response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(message, cancellationToken);
             IActionResult result;
 
-            if (!string.IsNullOrEmpty(response.Message.DisputeId))
+            if (!string.IsNullOrEmpty(response.Message.NoticeOfDisputeGuid))
             {
                 _logger.LogDebug("Dispute found");
-                var disputeId = _hashids.EncodeHex(response.Message.DisputeId.PadLeft(48, '0'));
+                var identifier = _hashids.EncodeHex(response.Message.NoticeOfDisputeGuid);
                 _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
                 _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
+                _ = Enum.TryParse(response.Message.HearingType, out JJDisputeHearingType hearingType);
+
                 SearchDisputeResult searchResult = new()
                 {
-                    DisputeId = disputeId,
+                    Identifier = identifier,
                     DisputeStatus = disputeStatus,
-                    JJDisputeStatus = jjDisputeStatus
+                    JJDisputeStatus = jjDisputeStatus,
+                    HearingType = hearingType
                 };
 
                 result = Ok(searchResult);

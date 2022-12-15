@@ -7,7 +7,7 @@ export function DisputeReducer(state: DisputeState = initialState, action: Actio
 }
 
 const disputeReducer = createReducer(initialState,
-  on(Actions.Search, (state, input) => ({ ...state, loading: true, data: { dispute: null, params: input.params } })),
-  on(Actions.SearchSuccess, (state, result) => ({ ...state, loading: false, data: result })),
-  on(Actions.SearchFailed, state => ({ ...state, loading: false })),
+  on(Actions.Search, (state, input) => ({ ...state, result: null, params: input.params, loading: true })),
+  on(Actions.SearchSuccess, (state, response) => ({ ...state, ...response.payload, loading: false })),
+  on(Actions.SearchFailed, state => ({ ...state, params: null, loading: false })),
 )

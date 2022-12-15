@@ -29,7 +29,7 @@ export class ProvinceCodeValue {
   provSeqNo?: number;
   provNm?: string;
   provAbbreviationCd?: string;
-  provId: number;
+  provId?: number;
 
   constructor (ctryId?: number, provSeqNo?: number, provNm?: string, provAbbreviationCd?: string, provId?: number) {
     this.ctryId = ctryId;

@@ -138,7 +138,7 @@ export class NoticeOfDisputeService {
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
             this._noticeOfDispute.next(input);
             if (input.email_address) {
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.EMAILVERIFICATIONREQUIRED)], {
+              this.router.navigate([AppRoutes.ticketPath(AppRoutes.EMAILVERIFICATIONREQUIRED)], {
                 queryParams: {
                   email: input.email_address,
                   token: res.noticeOfDisputeId
@@ -146,7 +146,7 @@ export class NoticeOfDisputeService {
               });
             }
             else {
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
+              this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUBMIT_SUCCESS)], {
                 queryParams: {
                   ticketNumber: input.ticket_number,
                   time: this.datePipe.transform(input.issued_date, "HH:mm"),

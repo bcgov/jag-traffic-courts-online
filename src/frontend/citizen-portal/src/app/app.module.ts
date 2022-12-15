@@ -1,62 +1,52 @@
-import {
-  HttpClient,
-  HttpClientModule,
-} from '@angular/common/http';
+import { HttpClient, HttpClientModule,} from '@angular/common/http';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatStepperModule } from '@angular/material/stepper';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
+import { WindowRefService } from '@core/services/window-ref.service';
 import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
-import { SharedModule } from './shared/shared.module';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import localeEn from '@angular/common/locales/en';
+import localeFr from '@angular/common/locales/fr';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { SharedModule } from './shared/shared.module';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
+import { AppConfigService } from './services/app-config.service';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { DisputeStore, reducers } from './store';
 import { LandingComponent } from './components/landing/landing.component';
-import { MatStepperModule } from '@angular/material/stepper';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { TcoPageComponent } from './components/tco-page/tco-page.component';
+import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
+import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
+import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
+import { CountSummaryComponent } from './components/initiate-resolution/count-summary/count-summary.component';
+import { CountItemSummaryComponent } from './components/initiate-resolution/count-item-summary/count-item-summary.component';
+import { CountItemDisputeSummaryComponent } from './components/dispute-ticket-summary/count-item-dispute-summary/count-item-dispute-summary.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
 import { InitiateResolutionComponent } from './components/initiate-resolution/initiate-resolution.component';
 import { EmailVerificationRequiredComponent } from './components/email-verification-required/email-verification-required.component';
 import { EmailVerificationComponent } from './components/email-verification/email-verification.component';
-import { DisputeLandingComponent } from './components/dispute-landing/dispute-landing.component';
+import { TicketLandingComponent } from './components/ticket-landing/ticket-landing.component';
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
-import { AppConfigService } from './services/app-config.service';
-
-import localeEn from '@angular/common/locales/en';
-import localeFr from '@angular/common/locales/fr';
-import { registerLocaleData } from '@angular/common';
-import { WindowRefService } from '@core/services/window-ref.service';
-import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
-import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
-import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
-import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
-import { CountSummaryComponent } from './components/count-summary/count-summary.component';
-import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
-import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
-import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { CdkAccordionModule } from '@angular/cdk/accordion';
-import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { FormsModule } from '@angular/forms';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { DisputeStore, reducers } from './store';
+import { UpdateDisputeAuthComponent } from '@components/update-dispute-auth/update-dispute-auth.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
-
-// export function appInit(appConfigService: AppConfigService) {
-//   return () => {
-//     return appConfigService.loadAppConfig();
-//   };
-// }
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -70,7 +60,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputeSubmitSuccessComponent,
     InitiateResolutionComponent,
     DisputeTicketStepperComponent,
-    TicketPageComponent,
+    TcoPageComponent,
     DisputeTicketSummaryComponent,
     ScanTicketComponent,
     CountSummaryComponent,
@@ -78,9 +68,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CountItemDisputeSummaryComponent,
     EmailVerificationRequiredComponent,
     EmailVerificationComponent,
-    DisputeLandingComponent,
+    TicketLandingComponent,
     FindDisputeComponent,
     UpdateDisputeLandingComponent,
+    UpdateDisputeAuthComponent,
   ],
   imports: [
     CommonModule,

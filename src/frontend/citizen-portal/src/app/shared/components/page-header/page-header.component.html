@@ -1,10 +1,9 @@
 <div class="mb-2 d-print-none">
-  <h1 #header class="mb-1 ">
+  <h1 #headerWrapper class="mb-1 ">
     <ng-content select="[header]"></ng-content>
   </h1>
-  <div #subHeader class="mt-2 mb-3 subheader">
-    <ng-content  select="[subHeader]"></ng-content>
+  <div #subHeaderWrapper class="mt-2 mb-3 subheader">
+    <ng-content select="[subHeader]"></ng-content>
   </div>
-  <hr *ngIf="header.nativeElement?.childNodes?.length 
-  || subHeader.nativeElement?.childNodes?.length" class="heading-hr m-0" />
+  <hr *ngIf="showHr" class="heading-hr m-0" />
 </div>

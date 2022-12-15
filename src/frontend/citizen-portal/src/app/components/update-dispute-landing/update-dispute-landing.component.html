@@ -1,6 +1,4 @@
 <app-page>
-  <app-page-header></app-page-header>
-
   <div style="margin-top: 8rem;">
     <h1><b>What would you like to do?</b></h1>
   </div>
@@ -13,21 +11,23 @@
         </div>
       </div>
     </div>
-    <div fxFlex="32">
-      <div *ngIf="isEditable" class="option">
-        <div class="option-content">
-          <h2><b>Change Address</b></h2>
-          <div>Update your content name, email, mailing address or phone number</div>
+    <ng-container *ngIf="isEditable | async">
+      <div fxFlex="32">
+        <div class="option">
+          <div class="option-content">
+            <h2><b>Change Address</b></h2>
+            <div>Update your content name, email, mailing address or phone number</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div fxFlex="32">
-      <div *ngIf="isEditable" class="option">
-        <div class="option-content">
-          <h2><b>Change Dispute</b></h2>
-          <div>Change your contact information, plea or court options</div>
+      <div fxFlex="32">
+        <div class="option">
+          <div class="option-content" (click)="goToUpdateDisputeAuth()">
+            <h2><b>Change Dispute</b></h2>
+            <div>Change your contact information, plea or court options</div>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 </app-page>

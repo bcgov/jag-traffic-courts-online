@@ -21,17 +21,13 @@ export class LandingComponent implements AfterViewInit {
     private appConfigService: AppConfigService,
     private snowplow: SnowplowService
   ) {
-    this.understandYourTicketLink =
-      this.appConfigService.understandYourTicketLink;
+    this.understandYourTicketLink = this.appConfigService.understandYourTicketLink;
     this.paymentOptionsLink = this.appConfigService.paymentOptionsLink;
     this.disputeTicketLink = this.appConfigService.resolutionOptionsLink;
-    this.roadSafetyBCVisitUsLink =
-      this.appConfigService.roadSafetyBCVisitUsLink;
+    this.roadSafetyBCVisitUsLink = this.appConfigService.roadSafetyBCVisitUsLink;
     this.icbcVisitUsLink = this.appConfigService.icbcVisitUsLink;
-    this.provincialCourtOfBCVisitUsLink =
-      this.appConfigService.provincialCourtOfBCVisitUsLink;
-    this.courthouseServicesOfBCVisitUsLink =
-      this.appConfigService.courthouseServicesOfBCVisitUsLink;
+    this.provincialCourtOfBCVisitUsLink = this.appConfigService.provincialCourtOfBCVisitUsLink;
+    this.courthouseServicesOfBCVisitUsLink = this.appConfigService.courthouseServicesOfBCVisitUsLink;
   }
 
   ngAfterViewInit(): void {

@@ -567,6 +567,13 @@
         },
         "additionalProperties": false
       },
+      "JJDisputeHearingType": {
+        "enum": [
+          "COURT_APPEARANCE",
+          "WRITTEN_REASONS"
+        ],
+        "type": "string"
+      },
       "JJDisputeStatus": {
         "enum": [
           "NEW",
@@ -880,7 +887,7 @@
       "SearchDisputeResult": {
         "type": "object",
         "properties": {
-          "dispute_id": {
+          "identifier": {
             "type": "string",
             "nullable": true
           },
@@ -889,6 +896,9 @@
           },
           "jjdispute_status": {
             "$ref": "#/components/schemas/JJDisputeStatus"
+          },
+          "hearing_type": {
+            "$ref": "#/components/schemas/JJDisputeHearingType"
           },
           "is_error": {
             "type": "boolean"

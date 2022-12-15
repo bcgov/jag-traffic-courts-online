@@ -1,0 +1,191 @@
+@import "palette";
+@import "bootstrap/bootstrap-imports";
+
+.is-active {
+  text-decoration: underline;
+}
+
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.flex-footer {
+  margin-top: auto;
+}
+
+.header-summary-links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+
+  li {
+    margin-bottom: 0;
+    margin-left: 1em;
+    margin-right: 1em;
+    line-height: unset;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  a {
+    font-size: 1.125em;
+    color: #fff !important;
+    font-weight: 400;
+  }
+}
+
+.divider {
+  color: #fff;
+}
+
+div.summary-header {
+  background-color: theme-palette(blue, bg);
+  width: 100%;
+  min-height: 60px;
+  padding: 20px 0;
+  opacity: 0.8;
+}
+
+div.container {
+  opacity: unset;
+
+  button a {
+    color: theme-palette(blue);
+  }
+
+  a {
+    color: theme-palette(blue, link);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 320px) {
+  div.header-summary-background {
+    background: url("/assets/landing-page-background-320x500.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 375px) {
+  div.header-summary-background {
+    background: url("/assets/landing-page-background-375x420.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 376px) and (max-width: 414px) {
+  div.header-summary-background {
+    background: url("/assets/landing-page-background-414x420.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 415px) and (max-width: 600px) {
+  div.header-summary-background {
+    background: url("/assets/landing-page-background-600x420.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 767px) {
+  div.header-summary-background {
+    background: url("/assets/landing-page-background-768x420.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  div.header-summary-background {
+    background: url("/assets/landing-page-background-992x420.jpg") no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 993px) {
+  div.header-summary-background {
+    background: url("/assets/landing-page-background.jpg") no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+section.summary-section {
+  min-height: 300px;
+  margin-bottom: 3em;
+}
+
+.summary-content-title {
+  font-size: 3em;
+  line-height: 1.1em;
+  margin-bottom: 50px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px #000;
+}
+
+.lead {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  line-height: 1.5em;
+  text-shadow: 2px 2px 4px #000;
+}
+
+.summary-content {
+  padding: 30px 0 10px 0;
+  color: #fff;
+}
+
+@media (min-width: 992px) {
+  section.summary-section {
+    margin-bottom: 3em;
+  }
+
+  .summary-content {
+    padding-top: 54px;
+    padding-bottom: 32px;
+    height: 220px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .summary-content-title {
+    font-size: 2em;
+  }
+
+  .lead {
+    font-size: 1.125em;
+  }
+}

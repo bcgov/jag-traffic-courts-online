@@ -2,8 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LoggerService } from "@core/services/logger.service";
 import { AppRoutes } from "app/app.routes";
-import { Subscription } from "rxjs";
-import { ticketTypes } from "../../shared/enums/ticket-type.enum";
+import { TicketTypes } from "../../shared/enums/ticket-type.enum";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { ViolationTicket } from "app/api";
 
@@ -14,10 +13,9 @@ import { ViolationTicket } from "app/api";
 })
 export class InitiateResolutionComponent implements OnInit {
   private params: any;
-  busy: Subscription;
   ticket: ViolationTicket;
   ticketType: string;
-  ticketTypes = ticketTypes;
+  ticketTypes = TicketTypes ;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,12 +36,12 @@ export class InitiateResolutionComponent implements OnInit {
       this.ticket = this.violationTicketService.ticket;
       this.ticketType = this.violationTicketService.ticketType;
     } else {
-      this.busy = this.violationTicketService.searchTicket().subscribe(res => res);
+      this.violationTicketService.searchTicket().subscribe(res => res);
     }
   }
 
   onDisputeTicket(): void {
     this.logger.info("InitiateResolutionComponent::onDisputeTicket", this.violationTicketService.ticket);
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)]);
+    this.router.navigate([AppRoutes.ticketPath(AppRoutes.STEPPER)]);
   }
 }

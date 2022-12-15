@@ -1,0 +1,53 @@
+@import "palette";
+
+.auth-container {
+  outline: #fcba19 solid 1px !important;
+  width: 100%;
+  padding: 2rem;
+
+  h2 {
+    margin-bottom: 1.5rem;
+  }
+  
+  p {
+    margin-bottom: 1rem;
+  }
+
+  .mat-button-base {
+    width: 100%;
+    height: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .two-line-btn {
+    line-height: 1rem;
+
+    .btn-small-text {
+      font-size: 0.7rem;
+      color: rgba(0, 0, 0, 0.54);
+    }
+
+    &:hover .btn-small-text {
+      color: white;
+    }
+  }
+}
+
+.text-black {
+  color: black;
+}
+
+.or-separator {
+  height: 100%;
+  position: relative;
+  padding: 0 2rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+
+  .mat-divider {
+    left: 50%;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    border-right-color: theme-palette(blue);
+  }
+}

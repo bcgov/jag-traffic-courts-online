@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { LoadingStore } from '@core/store';
+import { select, Store } from '@ngrx/store';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-page',
@@ -7,10 +9,21 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./page.component.scss'],
 })
 export class PageComponent {
-  @Input() public busy: Subscription;
   @Input() public mode: 'default' | 'full';
+  public busy: Subscription;
 
-  constructor() {
+  constructor(
+    private store: Store
+  ) {
     this.mode = 'default';
+    this.store.pipe(select(LoadingStore.Selectors.IsLoading), filter(i => !!i)).subscribe(() => {
+      if (!this.busy || this.busy.closed) {
+        this.busy = this.store.select(LoadingStore.Selectors.IsLoading).subscribe(isLoading => {
+          if (!isLoading) {
+            this.busy.unsubscribe();
+          }
+        });
+      }
+    })
   }
 }
