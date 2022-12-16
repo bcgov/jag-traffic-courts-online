@@ -9,6 +9,7 @@ export * from './disputeInterpreterRequired.model';
 export * from './disputeRepresentedByLawyer.model';
 export * from './disputeStatus.model';
 export * from './field.model';
+export * from './jJDisputeHearingType.model';
 export * from './jJDisputeStatus.model';
 export * from './language.model';
 export * from './noticeOfDispute.model';

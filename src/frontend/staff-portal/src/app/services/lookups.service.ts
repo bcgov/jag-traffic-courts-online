@@ -118,8 +118,8 @@ export class LookupsService implements ILookupsService {
   }
 
   public getLanguageDescription(code: string): string {
-    let found = this.languages?.filter(x => x.code.trim().toLowerCase() === code.trim().toLowerCase());
-    if (found && found.length > 0) return found[0].description;
+    let found = this.languages?.filter(x => x.code.trim().toLowerCase() === code.trim().toLowerCase()).shift();
+    if (found) return found.description;
     else return code;
   }
 }

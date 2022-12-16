@@ -8,14 +8,17 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
     public class SearchDisputeResult
     {
-        [JsonPropertyName("dispute_id")]
-        public string? DisputeId { get; set; }
+        [JsonPropertyName("identifier")]
+        public string? Identifier { get; set; }
 
         [JsonPropertyName("dispute_status")]
         public DisputeStatus? DisputeStatus { get; set; }
 
         [JsonPropertyName("jjdispute_status")]
         public JJDisputeStatus? JJDisputeStatus { get; set; }
+
+        [JsonPropertyName("hearing_type")]
+        public JJDisputeHearingType? HearingType { get; set; }
 
         [JsonPropertyName("is_error")]
         public bool IsError { get; set; }

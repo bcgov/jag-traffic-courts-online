@@ -1,691 +1,685 @@
-<div class="row">
-  <div class="col-lg-12">
-    <app-page [busy]="busy">
-      <app-tco-page-header>
-        <ng-container header>Start dispute ticket</ng-container>
-        <ng-container subHeader>
-          Enter your contact information, then <strong>choose the
-            action you would like to take for each ticket count.</strong>
-        </ng-container>
-      </app-tco-page-header>
+<app-page>
+  <app-page-header>
+    <ng-container header>Start dispute ticket</ng-container>
+    <ng-container subHeader>
+      Enter your contact information, then <strong>choose the
+        action you would like to take for each ticket count.</strong>
+    </ng-container>
+  </app-page-header>
 
-      <section class="mb-2">
-        <app-resolution-header [ticket]="ticket"></app-resolution-header>
-      </section>
+  <section class="mb-2">
+    <app-resolution-header [ticket]="ticket"></app-resolution-header>
+  </section>
 
-      <mat-vertical-stepper #disputeStepper linear *ngIf="form">
-        <ng-template matStepperIcon="edit">
-          <mat-icon>done</mat-icon>
+  <mat-vertical-stepper #disputeStepper linear *ngIf="form">
+    <ng-template matStepperIcon="edit">
+      <mat-icon>done</mat-icon>
+    </ng-template>
+
+    <!-- disputant -->
+    <mat-step [completed]="isValid()">
+      <ng-template matStepLabel>Contact information</ng-template>
+      <app-page>
+        <app-page-header>
+          <ng-container subHeader>
+            All fields are required.
+          </ng-container>
+        </app-page-header>
+
+        <div *ngIf="ticket; else noTicket">
+          <form [formGroup]="form" novalidate>
+            <section class="mb-2">
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Surname</mat-label>
+                    <input matInput formControlName="disputant_surname" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Given names</mat-label>
+                    <input matInput formControlName="disputant_given_names" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <section>
+                <app-address-form-autocomplete (autocompleteAddress)="onAddressAutocomplete($event)">
+                  <button *ngIf="showManualButton" mat-button type="button" color="primary"
+                    [disabled]="showAddressFields" (click)="showAddressFields = true">
+                    <mat-icon>add</mat-icon>
+                    Add address manually
+                  </button>
+                </app-address-form-autocomplete>
+              </section>
+
+              <section [ngClass]="{'hide-address': !showAddressFields}">
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Mailing address</mat-label>
+                      <input matInput formControlName="address" maxlength="300" />
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Country</mat-label>
+                      <mat-select (selectionChange)="onCountryChange($event?.value)"
+                        formControlName="address_country_id">
+                        <mat-option [value]="canada?.ctryId">{{ canada?.ctryLongNm }}</mat-option>
+                        <mat-option [value]="usa?.ctryId">{{ usa?.ctryLongNm }}</mat-option>
+                        <mat-option *ngFor="let country of countries" [value]="country.ctryId">{{ country.ctryLongNm
+                          }}</mat-option>
+                      </mat-select>
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>City</mat-label>
+                      <input matInput formControlName="address_city" />
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label *ngIf="form.get('address_country_id')?.value===canada?.ctryId">Province</mat-label>
+                      <mat-label *ngIf="form.get('address_country_id')?.value===usa?.ctryId">State</mat-label>
+                      <mat-select (selectionChange)="onAddressProvinceChange($event?.value)"
+                        formControlName="address_province_provId"
+                        *ngIf="form.get('address_country_id')?.value === canada?.ctryId || form.get('address_country_id')?.value === usa?.ctryId">
+                        <div *ngIf="form.get('address_country_id')?.value === canada?.ctryId">
+                          <mat-option [value]="bc?.provId">{{ bc?.provNm }}</mat-option>
+                          <mat-option *ngFor="let province of provinces" [value]="province.provId">{{ province.provNm }}
+                          </mat-option>
+                        </div>
+                        <div *ngIf="form.get('address_country_id')?.value === usa?.ctryId">
+                          <mat-option *ngFor="let state of states" [value]="state.provId">{{ state.provNm }}
+                          </mat-option>
+                        </div>
+                      </mat-select>
+                      <mat-label
+                        *ngIf="form.get('address_country_id')?.value!==usa?.ctryId && form.get('address_country_id')?.value !== canada?.ctryId">
+                        Province/State</mat-label>
+                      <input matInput formControlName="address_province"
+                        *ngIf="form.get('address_country_id')?.value !== usa?.ctryId && form.get('address_country_id')?.value !== canada?.ctryId"
+                        maxlength="30" />
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </section>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label *ngIf="form.get('address_country_id')?.value === canada?.ctryId">Postal Code</mat-label>
+                    <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
+                      formControlName="postal_code" [showMaskTyped]="true"
+                      *ngIf="form.get('address_country_id')?.value===canada?.ctryId" />
+                    <mat-label *ngIf="form.get('address_country_id')?.value===usa?.ctryId">Zip Code</mat-label>
+                    <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
+                      formControlName="postal_code" [showMaskTyped]="true"
+                      *ngIf="form.get('address_country_id')?.value===usa?.ctryId" />
+                    <mat-label
+                      *ngIf="form.get('address_country_id')?.value!==usa?.ctryId && form.get('address_country_id')?.value!==1">
+                      Postal/Zip Code</mat-label>
+                    <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
+                      formControlName="postal_code"
+                      *ngIf="form.get('address_country_id')?.value!==2 && form.get('address_country_id')?.value !== 1" />
+                    <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate
+                      }}</mat-error>
+                    <mat-error *ngIf="form.get('postal_code').hasError('pattern')">Must be a valid postal/zip code
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Birthdate</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="disputant_birthdate" readonly
+                      (click)="picker.open()" [max]="todayDate" />
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
+                    <mat-error *ngIf="form.get('disputant_birthdate')?.hasError('required')">{{"error.required" |
+                      translate}}</mat-error>
+                    <mat-error *ngIf="form.get('disputant_birthdate').hasError('matDatepickerMax')">No future
+                      birthdate
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Phone number</mat-label>
+                    <input matInput formControlName="home_phone_number" mask="(000) 000-0000"
+                      *ngIf="form.get('address_country_id')?.value === canada?.ctryId || form.get('address_country_id')?.value === usa?.ctryId"
+                      [showMaskTyped]="true" />
+                    <input matInput formControlName="home_phone_number" mask="00000000000000000000"
+                      *ngIf="form.get('address_country_id')?.value !== canada?.ctryId && form.get('address_country_id')?.value !== usa?.ctryId" />
+                    <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" |
+                      translate}}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('home_phone_number')?.hasError('phone')">Must be a valid phone number
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Email address</mat-label>
+                    <input matInput formControlName="email_address" autocomplete="off" />
+                    <mat-error *ngIf="form.get('email_address')?.hasError('required')">{{"error.required" |
+                      translate}}</mat-error>
+                    <mat-error *ngIf="form.get('email_address')?.hasError('email')">{{"error.email_address" |
+                      translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Province or state of driver's licence</mat-label>
+                    <mat-select (selectionChange)="onDLProvinceChange($event.value)"
+                      formControlName="drivers_licence_province_provId">
+                      <mat-option [value]="bc?.provId">British Columbia</mat-option>
+                      <mat-option *ngFor="let province of provincesAndStates" [value]="province.provId">
+                        {{ province.provNm }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Driver's licence number</mat-label>
+                    <input matInput formControlName="drivers_licence_number"
+                      (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
+                      *ngIf="form.get('drivers_licence_country_id')?.value === canada?.ctryId && form.get('drivers_licence_province_seq_no')?.value === bc?.provSeqNo" />
+                    <input matInput formControlName="drivers_licence_number" maxlength="20"
+                      *ngIf="form.get('drivers_licence_country_id')?.value !== canada?.ctryId || form.get('drivers_licence_province_seq_no')?.value !== bc?.provSeqNo" />
+                    <mat-error *ngIf="form.get('drivers_licence_number').hasError('required')">{{ "error.required" |
+                      translate }}</mat-error>
+                    <mat-error *ngIf="form.get('drivers_licence_number')?.errors?.minlength ||
+                              form.get('drivers_licence_number').hasError('maxlength')">
+                      Must be a valid driver's license number of seven to nine digits
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}"
+                  (change)="onOptOut()">
+                  I prefer to be contacted by regular mail.
+                </mat-checkbox>
+                <mat-error *ngIf="optOut">
+                  You have chosen to not be contacted by email about this dispute. It is recommended that you use
+                  email for online ticket disputes so that you can receive more information about your dispute.
+                </mat-error>
+              </div>
+            </section>
+          </form>
+        </div>
+
+        <ng-template #noTicket>
+          <h2>No current ticket</h2>
         </ng-template>
 
-        <!-- disputant -->
-        <mat-step [completed]="isValid()">
-          <ng-template matStepLabel>Contact information</ng-template>
-          <app-stepper-page>
-            <app-page-header>
-              <ng-container subHeader>
-                All fields are required.
-              </ng-container>
-            </app-page-header>
+        <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()" (back)="onStepCancel()"
+          [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.backReview'"
+          [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true"></app-stepper-footer>
+      </app-page>
+    </mat-step>
 
-            <div *ngIf="ticket; else noTicket">
-              <form [formGroup]="form" novalidate>
-                <section class="mb-2">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Surname</mat-label>
-                        <input matInput formControlName="disputant_surname" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Given names</mat-label>
-                        <input matInput formControlName="disputant_given_names" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
+    <!-- count -->
+    <ng-container *ngFor="let countForm of countForms?.controls; let i = index;">
+      <mat-step [completed]="isValid(i)">
+        <ng-template matStepLabel>Count {{ countForm.value.count_no }}: Review</ng-template>
+        <app-page>
+          <app-page-header>
+            <ng-container subHeader>
+              <div class="row mt-2">
+                <div class="col-md-8">
+                  <small class="d-block"> Description of offence </small>
+                  <strong>{{ countForm.value.description | titlecase }}</strong>
+                </div>
+                <div class="col-md-4">
+                  <small class="d-block">Offence amount</small>
+                  <strong>{{ countForm.value.ticketed_amount| currency:
+                    "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
+                </div>
+              </div>
+            </ng-container>
+          </app-page-header>
 
-                  <section>
-                    <app-address-form-autocomplete (autocompleteAddress)="onAddressAutocomplete($event)">
-                      <button *ngIf="showManualButton" mat-button type="button" color="primary"
-                        [disabled]="showAddressFields" (click)="showAddressFields = true">
-                        <mat-icon>add</mat-icon>
-                        Add address manually
-                      </button>
-                    </app-address-form-autocomplete>
-                  </section>
+          <form [formGroup]="countForm" novalidate>
+            <section>
+              <div class="row">
+                <div class="col">
+                  <app-alert type="info" icon="info">
+                    <ng-container class="alert-content" #alertContent>
+                      <strong>Did you know? </strong><br>
+                      You can make a dispute request by attending a court hearing in person, or you may supply
+                      written reasons requesting a fine reduction and/or time to pay without having to attend a
+                      court hearing.
+                    </ng-container>
+                  </app-alert>
+                  <mat-radio-group formControlName="request_court_appearance"
+                    (change)="onAttendHearingChange(countForm, $event)">
+                    <div>
+                      <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
+                        to attend a court hearing</span> <span
+                        matTooltip="Ask for a fine reduction or more time to pay for the count." #tooltip3="matTooltip">
+                        <mat-icon>info</mat-icon>
+                      </span>
+                    </div>
+                    <mat-radio-button [value]="RequestCourtAppearance.N">
+                      <span class="wrap-mat-radio-label">
+                        I agree I committed this offence and would like to request a fine reduction and/or time to
+                        pay and supply written reasons to a judicial justice to review.
+                      </span>
+                    </mat-radio-button>
 
-                  <section [ngClass]="{'hide-address': !showAddressFields}">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>Mailing address</mat-label>
-                          <input matInput formControlName="address" maxlength="300" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>Country</mat-label>
-                          <mat-select (selectionChange)="onCountryChange($event?.value)" formControlName="address_country_id">
-                            <mat-option [value]="canada?.ctryId">{{ canada?.ctryLongNm }}</mat-option>
-                            <mat-option [value]="usa?.ctryId">{{ usa?.ctryLongNm }}</mat-option>
-                            <mat-option *ngFor="let country of config.countries" [value]="country.ctryId">{{ country.ctryLongNm }}</mat-option>
-                          </mat-select>
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
+                    <div>
+                      <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> to
+                        attend a court hearing</span> <span
+                        matTooltip="Ask for a fine reduction or more time to pay for the count." #tooltip3="matTooltip">
+                        <mat-icon>info</mat-icon>
+                      </span>
                     </div>
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>City</mat-label>
-                          <input matInput formControlName="address_city" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label *ngIf="form.get('address_country_id')?.value===canada?.ctryId">Province</mat-label>
-                          <mat-label *ngIf="form.get('address_country_id')?.value===usa?.ctryId">State</mat-label>
-                          <mat-select (selectionChange)="onAddressProvinceChange($event?.value)" formControlName="address_province_provId"
-                            *ngIf="form.get('address_country_id')?.value === canada?.ctryId || form.get('address_country_id')?.value === usa?.ctryId">
-                            <div *ngIf="form.get('address_country_id')?.value === canada?.ctryId">
-                              <mat-option [value]="bc?.provId">{{ bc?.provNm }}</mat-option>
-                              <mat-option *ngFor="let province of provinces" [value]="province.provId">{{ province.provNm }}
-                              </mat-option>
-                            </div>
-                            <div *ngIf="form.get('address_country_id')?.value === usa?.ctryId">
-                              <mat-option *ngFor="let state of states" [value]="state.provId">{{ state.provNm }}
-                              </mat-option>
-                            </div>
-                          </mat-select>
-                          <mat-label
-                            *ngIf="form.get('address_country_id')?.value!==usa?.ctryId && form.get('address_country_id')?.value !== canada?.ctryId">
-                            Province/State</mat-label>
-                          <input matInput formControlName="address_province"
-                            *ngIf="form.get('address_country_id')?.value !== usa?.ctryId && form.get('address_country_id')?.value !== canada?.ctryId"
-                            maxlength="30" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                  </section>
-
-                  <div class="row">
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label *ngIf="form.get('address_country_id')?.value === canada?.ctryId">Postal Code</mat-label>
-                        <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
-                          formControlName="postal_code" [showMaskTyped]="true"
-                          *ngIf="form.get('address_country_id')?.value===canada?.ctryId" />
-                        <mat-label *ngIf="form.get('address_country_id')?.value===usa?.ctryId">Zip Code</mat-label>
-                        <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
-                          formControlName="postal_code" [showMaskTyped]="true"
-                          *ngIf="form.get('address_country_id')?.value===usa?.ctryId" />
-                        <mat-label
-                          *ngIf="form.get('address_country_id')?.value!==usa?.ctryId && form.get('address_country_id')?.value!==1">
-                          Postal/Zip Code</mat-label>
-                        <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
-                          formControlName="postal_code"
-                          *ngIf="form.get('address_country_id')?.value!==2 && form.get('address_country_id')?.value !== 1" />
-                        <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate
-                          }}</mat-error>
-                        <mat-error *ngIf="form.get('postal_code').hasError('pattern')">Must be a valid postal/zip code
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Birthdate</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="disputant_birthdate" readonly
-                          (click)="picker.open()" [max]="todayDate" />
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
-                        <mat-error *ngIf="form.get('disputant_birthdate')?.hasError('required')">{{"error.required" |
-                          translate}}</mat-error>
-                        <mat-error *ngIf="form.get('disputant_birthdate').hasError('matDatepickerMax')">No future
-                          birthdate
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Phone number</mat-label>
-                        <input matInput formControlName="home_phone_number" mask="(000) 000-0000"
-                          *ngIf="form.get('address_country_id')?.value === canada?.ctryId || form.get('address_country_id')?.value === usa?.ctryId"
-                          [showMaskTyped]="true" />
-                        <input matInput formControlName="home_phone_number" mask="00000000000000000000"
-                          *ngIf="form.get('address_country_id')?.value !== canada?.ctryId && form.get('address_country_id')?.value !== usa?.ctryId" />
-                        <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" |
-                          translate}}
-                        </mat-error>
-                        <mat-error *ngIf="form.get('home_phone_number')?.hasError('phone')">Must be a valid phone number
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Email address</mat-label>
-                        <input matInput formControlName="email_address" autocomplete="off" />
-                        <mat-error *ngIf="form.get('email_address')?.hasError('required')">{{"error.required" |
-                          translate}}</mat-error>
-                        <mat-error *ngIf="form.get('email_address')?.hasError('email')">{{"error.email_address" |
-                          translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Province or state of driver's licence</mat-label>
-                        <mat-select (selectionChange)="onDLProvinceChange($event.value)" formControlName="drivers_licence_province_provId">
-                          <mat-option [value]="bc?.provId">British Columbia</mat-option>
-                          <mat-option *ngFor="let province of config.provincesAndStates" [value]="province.provId">
-                            {{ province.provNm }}
-                          </mat-option>
-                        </mat-select>
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Driver's licence number</mat-label>
-                        <input matInput formControlName="drivers_licence_number"
-                          (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
-                          *ngIf="form.get('drivers_licence_country_id')?.value === canada?.ctryId && form.get('drivers_licence_province_seq_no')?.value === bc?.provSeqNo" />
-                        <input matInput formControlName="drivers_licence_number" maxlength="20"
-                          *ngIf="form.get('drivers_licence_country_id')?.value !== canada?.ctryId || form.get('drivers_licence_province_seq_no')?.value !== bc?.provSeqNo" />
-                        <mat-error *ngIf="form.get('drivers_licence_number').hasError('required')">{{ "error.required" |
-                          translate }}</mat-error>
-                        <mat-error *ngIf="form.get('drivers_licence_number')?.errors?.minlength ||
-                              form.get('drivers_licence_number').hasError('maxlength')">
-                          Must be a valid driver's license number of seven to nine digits
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}"
-                      (change)="onOptOut()">
-                      I prefer to be contacted by regular mail.
-                    </mat-checkbox>
-                    <mat-error *ngIf="optOut">
-                      You have chosen to not be contacted by email about this dispute. It is recommended that you use
-                      email for online ticket disputes so that you can receive more information about your dispute.
-                    </mat-error>
-                  </div>
-                </section>
-              </form>
-            </div>
-
-            <ng-template #noTicket>
-              <h2>No current ticket</h2>
-            </ng-template>
-
-            <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()" (back)="onStepCancel()"
-              [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.backReview'"
-              [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true"></app-stepper-footer>
-          </app-stepper-page>
-        </mat-step>
-
-        <!-- count -->
-        <ng-container *ngFor="let countForm of countForms?.controls; let i = index;">
-          <mat-step [completed]="isValid(i)">
-            <ng-template matStepLabel>Count {{ countForm.value.count_no }}: Review</ng-template>
-            <app-stepper-page>
-              <app-page-header>
-                <ng-container subHeader>
-                  <div class="row mt-2">
-                    <div class="col-md-8">
-                      <small class="d-block"> Description of offence </small>
-                      <strong>{{ countForm.value.description | titlecase }}</strong>
-                    </div>
-                    <div class="col-md-4">
-                      <small class="d-block">Offence amount</small>
-                      <strong>{{ countForm.value.ticketed_amount| currency:
-                        "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
-                    </div>
-                  </div>
-                </ng-container>
-              </app-page-header>
-
-              <form [formGroup]="countForm" novalidate>
-                <section>
-                  <div class="row">
-                    <div class="col">
-                      <app-alert type="info" icon="info">
-                        <ng-container class="alert-content" #alertContent>
-                          <strong>Did you know? </strong><br>
-                          You can make a dispute request by attending a court hearing in person, or you may supply
-                          written reasons requesting a fine reduction and/or time to pay without having to attend a
-                          court hearing.
-                        </ng-container>
-                      </app-alert>
-                      <mat-radio-group formControlName="request_court_appearance"
-                        (change)="onAttendHearingChange(countForm, $event)">
-                        <div>
-                          <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
-                            to attend a court hearing</span> <span
-                            matTooltip="Ask for a fine reduction or more time to pay for the count."
-                            #tooltip3="matTooltip">
-                            <mat-icon>info</mat-icon>
-                          </span>
-                        </div>
-                        <mat-radio-button [value]="RequestCourtAppearance.N">
-                          <span class="wrap-mat-radio-label">
-                            I agree I committed this offence and would like to request a fine reduction and/or time to
-                            pay and supply written reasons to a judicial justice to review.
-                          </span>
-                        </mat-radio-button>
-
-                        <div>
-                          <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> to
-                            attend a court hearing</span> <span
-                            matTooltip="Ask for a fine reduction or more time to pay for the count."
-                            #tooltip3="matTooltip">
-                            <mat-icon>info</mat-icon>
-                          </span>
-                        </div>
-                        <mat-radio-button [value]="RequestCourtAppearance.Y">
-                          <span class="wrap-mat-radio-label">
-                            I want to attend a court hearing in person and discuss my ticket with the police officer and
-                            judicial justice.
-                          </span>
-                        </mat-radio-button>
-                        <mat-error *ngIf="countForm.controls.request_court_appearance.touched
+                    <mat-radio-button [value]="RequestCourtAppearance.Y">
+                      <span class="wrap-mat-radio-label">
+                        I want to attend a court hearing in person and discuss my ticket with the police officer and
+                        judicial justice.
+                      </span>
+                    </mat-radio-button>
+                    <mat-error *ngIf="countForm.controls.request_court_appearance.touched
                           && countForm.controls.request_court_appearance.invalid
                           && countForm.controls.request_court_appearance.errors.required">
-                          {{ "error.required" | translate }}
-                        </mat-error>
-                      </mat-radio-group>
-                    </div>
-                  </div>
-                  <div class="row mt-4">
-                    <div
-                      [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
-                      <label class="w-100">
-                        Please provide additional selections below:
-                      </label>
-                      <mat-checkbox
-                        [checked]="countForm.get('request_reduction').value === RequestReduction.Y ? true:false"
-                        (change)="countForm.get('request_reduction').setValue($event.checked? RequestReduction.Y: RequestReduction.N)"
-                        color="primary" class="w-100"> I would like
-                        to request a fine reduction on this count.</mat-checkbox>
-                      <p> and/or</p>
-                      <mat-checkbox
-                        [checked]="countForm.get('request_time_to_pay').value === RequestTimeToPay.Y ? true:false"
-                        (change)="countForm.get('request_time_to_pay').setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
-                        color="primary" class="w-100"> I would
-                        like to request time to pay on this count.</mat-checkbox>
-                    </div>
-
-                    <div
-                      [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
-                      <label class="w-100">
-                        Please provide additional selections below:
-                      </label>
-                      <mat-radio-group formControlName="plea_cd">
-                        <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
-                          offence and would like to request a fine reduction and/or time to pay on this count.
-                        </mat-radio-button>
-                        <p> and/or</p>
-                        <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
-                          committed this offence and would like to dispute this count</mat-radio-button>
-                      </mat-radio-group>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <mat-checkbox *ngIf="countForm.value.count_no === 1 && countForms.controls.length > 1"
-                      formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
-                      selection to all counts on this violation ticket.</mat-checkbox>
-                    <mat-checkbox *ngIf="countForm.value.count_no === 2 && countForms.controls.length > 2"
-                      formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
-                      selection to remaining counts on ticket.
-                    </mat-checkbox>
-                    <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4"
-                      (change)="onSkipChecked()">
-                      Skip this count, no action required.
-                    </mat-checkbox>
-                  </div>
-                </section>
-              </form>
-
-              <div class="col mt-4"
-                *ngIf="countForm.value.request_reduction === RequestReduction.Y || countForm.value.request_time_to_pay === RequestTimeToPay.Y">
-                <app-alert type="warning" icon="info">
-                  <ng-container #alertContent class="alert-content">
-                    <span>
-                      <strong>You must provide written reasons in the Additional Information area of the form below for
-                        this option. If you do choose to appear in court to discuss you will not need to provide this
-                        information until the court hearing date. <br><br>
-
-                        If you provide written reasons, you will be notified in writing by the Court if your application
-                        was successful.</strong>
-                    </span>
-                  </ng-container>
-                </app-alert>
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                  </mat-radio-group>
+                </div>
               </div>
+              <div class="row mt-4">
+                <div
+                  [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
+                  <label class="w-100">
+                    Please provide additional selections below:
+                  </label>
+                  <mat-checkbox [checked]="countForm.get('request_reduction').value === RequestReduction.Y ? true:false"
+                    (change)="countForm.get('request_reduction').setValue($event.checked? RequestReduction.Y: RequestReduction.N)"
+                    color="primary" class="w-100"> I would like
+                    to request a fine reduction on this count.</mat-checkbox>
+                  <p> and/or</p>
+                  <mat-checkbox
+                    [checked]="countForm.get('request_time_to_pay').value === RequestTimeToPay.Y ? true:false"
+                    (change)="countForm.get('request_time_to_pay').setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
+                    color="primary" class="w-100"> I would
+                    like to request time to pay on this count.</mat-checkbox>
+                </div>
 
-              <div class="col mt-4 alert-info-text-color"
-                *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.N">
-                <app-alert type="warning" icon="info">
-                  <ng-container #alertContent class="alert-content">
-                    <span class="text-dark">
-                      <strong>You have selected that you do not want to attend a court hearing.</strong>
-                      You must provide written reasons in the Additional Information area of the form below for this
-                      option. You will be notified in writing to the address supplied above by the Court if your request
-                      was successful.
-                    </span>
-
-                  </ng-container>
-                </app-alert>
+                <div
+                  [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
+                  <label class="w-100">
+                    Please provide additional selections below:
+                  </label>
+                  <mat-radio-group formControlName="plea_cd">
+                    <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
+                      offence and would like to request a fine reduction and/or time to pay on this count.
+                    </mat-radio-button>
+                    <p> and/or</p>
+                    <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
+                      committed this offence and would like to dispute this count</mat-radio-button>
+                  </mat-radio-group>
+                </div>
               </div>
-              <div class="col mt-4 alert-info-text-color"
-                *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.Y">
-                <app-alert type="warning" icon="info">
-                  <ng-container #alertContent class="alert-content">
-                    <span class="text-dark">
-                      <strong>You have selected that you wish to attend a court hearing in person.
-                      </strong>
-                      A Notice of Hearing will be mailed to you – it will have the date, time and location of your
-                      hearing. If you fail to appear before the provincial court on your hearing date you will be found
-                      guilty and the full ticketed amount must be paid immediately.
-                    </span>
-                  </ng-container>
-                </app-alert>
+              <hr />
+              <div class="row">
+                <mat-checkbox *ngIf="countForm.value.count_no === 1 && countForms.controls.length > 1"
+                  formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
+                  selection to all counts on this violation ticket.</mat-checkbox>
+                <mat-checkbox *ngIf="countForm.value.count_no === 2 && countForms.controls.length > 2"
+                  formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
+                  selection to remaining counts on ticket.
+                </mat-checkbox>
+                <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked()">
+                  Skip this count, no action required.
+                </mat-checkbox>
               </div>
+            </section>
+          </form>
 
-              <div class="col mt-4"
-                *ngIf="(countForm.value.request_court_appearance === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
-                <app-alert type="warning" icon="info">
-                  <ng-container #alertContent class="alert-content">
-                    <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
-                      to explain the offence and provide evidence.</strong>
-                  </ng-container>
-                </app-alert>
-              </div>
+          <div class="col mt-4"
+            *ngIf="countForm.value.request_reduction === RequestReduction.Y || countForm.value.request_time_to_pay === RequestTimeToPay.Y">
+            <app-alert type="warning" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <span>
+                  <strong>You must provide written reasons in the Additional Information area of the form below for
+                    this option. If you do choose to appear in court to discuss you will not need to provide this
+                    information until the court hearing date. <br><br>
 
-              <app-stepper-footer [disableSave]="!isValid(i)" (save)="disputeStepper.next()"
-                (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
-                [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'"
-                [hasSecondaryAction]="true">
-              </app-stepper-footer>
-            </app-stepper-page>
-          </mat-step>
-        </ng-container>
-
-        <!-- additional -->
-        <mat-step [completed]="additionalForm?.valid">
-          <ng-template matStepLabel>Additional information</ng-template>
-          <app-stepper-page>
-            <app-page-header>
-              <ng-container subHeader class="subheader-desc">
-                The following additional information is required and will apply to all counts on this ticket made with
-                that selection.
+                    If you provide written reasons, you will be notified in writing by the Court if your application
+                    was successful.</strong>
+                </span>
               </ng-container>
-            </app-page-header>
+            </app-alert>
+          </div>
 
-            <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
-              <ng-container *ngIf="countsActions?.not_request_court_appearance?.length > 0">
-                <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
-                  <div>{{ countsActions?.request_reduction }}</div>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <mat-form-field class="w-100">
-                        <mat-label>
-                          Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
-                        </mat-label>
-                        <input matInput formControlName="fine_reduction_reason" [errorStateMatcher]="matcher" />
-                        <mat-error *ngIf="(additionalForm.get('fine_reduction_reason')?.dirty
+          <div class="col mt-4 alert-info-text-color"
+            *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.N">
+            <app-alert type="warning" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <span class="text-dark">
+                  <strong>You have selected that you do not want to attend a court hearing.</strong>
+                  You must provide written reasons in the Additional Information area of the form below for this
+                  option. You will be notified in writing to the address supplied above by the Court if your request
+                  was successful.
+                </span>
+
+              </ng-container>
+            </app-alert>
+          </div>
+          <div class="col mt-4 alert-info-text-color"
+            *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.Y">
+            <app-alert type="warning" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <span class="text-dark">
+                  <strong>You have selected that you wish to attend a court hearing in person.
+                  </strong>
+                  A Notice of Hearing will be mailed to you – it will have the date, time and location of your
+                  hearing. If you fail to appear before the provincial court on your hearing date you will be found
+                  guilty and the full ticketed amount must be paid immediately.
+                </span>
+              </ng-container>
+            </app-alert>
+          </div>
+
+          <div class="col mt-4"
+            *ngIf="(countForm.value.request_court_appearance === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
+            <app-alert type="warning" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
+                  to explain the offence and provide evidence.</strong>
+              </ng-container>
+            </app-alert>
+          </div>
+
+          <app-stepper-footer [disableSave]="!isValid(i)" (save)="disputeStepper.next()"
+            (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+            [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+          </app-stepper-footer>
+        </app-page>
+      </mat-step>
+    </ng-container>
+
+    <!-- additional -->
+    <mat-step [completed]="additionalForm?.valid">
+      <ng-template matStepLabel>Additional information</ng-template>
+      <app-page>
+        <app-page-header>
+          <ng-container subHeader class="subheader-desc">
+            The following additional information is required and will apply to all counts on this ticket made with
+            that selection.
+          </ng-container>
+        </app-page-header>
+
+        <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
+          <ng-container *ngIf="countsActions?.not_request_court_appearance?.length > 0">
+            <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
+              <div>{{ countsActions?.request_reduction }}</div>
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-form-field class="w-100">
+                    <mat-label>
+                      Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
+                    </mat-label>
+                    <input matInput formControlName="fine_reduction_reason" [errorStateMatcher]="matcher" />
+                    <mat-error *ngIf="(additionalForm.get('fine_reduction_reason')?.dirty
                         || additionalForm.get('fine_reduction_reason')?.touched)
                         && additionalForm.get('fine_reduction_reason')?.invalid
                         && additionalForm.get('fine_reduction_reason')?.hasError('required')">
-                          {{ "error.required" | translate }}
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
-                  <div>{{ countsActions?.request_time_to_pay }}</div>
-                </ng-container>
-                <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <mat-form-field class="w-100">
-                        <mat-label>
-                          Please enter your reasons for why you are requesting <strong>time to pay</strong>
-                        </mat-label>
-                        <input matInput formControlName="time_to_pay_reason" [errorStateMatcher]="matcher" />
-                        <mat-error *ngIf="(additionalForm.get('time_to_pay_reason')?.dirty
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
+              <div>{{ countsActions?.request_time_to_pay }}</div>
+            </ng-container>
+            <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
+              <div class="row">
+                <div class="col-md-12">
+                  <mat-form-field class="w-100">
+                    <mat-label>
+                      Please enter your reasons for why you are requesting <strong>time to pay</strong>
+                    </mat-label>
+                    <input matInput formControlName="time_to_pay_reason" [errorStateMatcher]="matcher" />
+                    <mat-error *ngIf="(additionalForm.get('time_to_pay_reason')?.dirty
                           || additionalForm.get('time_to_pay_reason')?.touched)
                           && additionalForm.get('time_to_pay_reason')?.invalid
                           && additionalForm.get('time_to_pay_reason')?.hasError('required')">
-                          {{ "error.required" | translate }}
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </ng-container>
-              </ng-container>
-
-              <section *ngIf="countsActions?.request_court_appearance?.length > 0">
-                <div>
-                  <div>{{ countsActions?.request_court_appearance }}</div>
-                </div>
-                <h3 class="mt-4 mb-2 reduction-text">
-                </h3>
-                <div class="row">
-                  <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary"
-                      [checked]="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y ? true:false"
-                      (change)="additionalForm.get('represented_by_lawyer')?.setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
-                      I intend to be represented by a lawyer in court.
-                      <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y"
-                        style="font-weight: lighter;">
-                        Enter lawyer contact details below.
-                      </span>
-                    </mat-checkbox>
-                  </div>
-                </div>
-                <ng-container *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
-                  <div [formGroup]="legalRepresentationForm">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>Name of law firm</mat-label>
-                          <input matInput formControlName="law_firm_name" [errorStateMatcher]="matcher" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>Full name of lawyer</mat-label>
-                          <input matInput formControlName="lawyer_full_name" [errorStateMatcher]="matcher" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <mat-form-field class="w-100">
-                          <mat-label>Address of law firm</mat-label>
-                          <input matInput formControlName="lawyer_address" [errorStateMatcher]="matcher" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>Contact phone number</mat-label>
-                          <input matInput formControlName="lawyer_phone_number" [errorStateMatcher]="matcher"
-                            mask="(000) 000-0000" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                          <mat-label>Contact email</mat-label>
-                          <input matInput formControlName="lawyer_email" autocomplete="off"
-                            [errorStateMatcher]="matcher" />
-                          <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('required')">
-                            {{"error.required" | translate}}</mat-error>
-                          <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('email')">
-                            {{"error.email_address" | translate }}</mat-error>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-
-                <div class="row">
-                  <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__interpreter_required">
-                      I require a language interpreter at the hearing.
-                    </mat-checkbox>
-                    <mat-error *ngIf="additionalForm.get('__interpreter_required')?.hasError('requiredIfTrue')">
-                      {{ 'error.required' | translate }}
+                      {{ "error.required" | translate }}
                     </mat-error>
-                  </div>
+                  </mat-form-field>
                 </div>
+              </div>
+            </ng-container>
+          </ng-container>
 
-                <div class="row" *ngIf="additionalForm.get('__interpreter_required')?.value">
-                  <div class="col interpreter-language">
-                    <mat-form-field class="w-25">
-                      <mat-label>
-                        {{ "stepper.additional.interpreter_language" | translate }}
-                      </mat-label>
-                      <mat-select formControlName="interpreter_language_cd"
-                        matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language_cd'))}}">
-                        <mat-option *ngFor="let language of languages" [value]="language.code">
-                          {{ language.description }}
-                        </mat-option>
-                      </mat-select>
-                      <mat-error *ngIf="additionalForm.get('interpreter_language_cd')?.hasError('requiredIfTrue')">
-                        {{ "error.required" | translate }}
-                      </mat-error>
-                    </mat-form-field>
-                  </div>
-                </div>
-
+          <section *ngIf="countsActions?.request_court_appearance?.length > 0">
+            <div>
+              <div>{{ countsActions?.request_court_appearance }}</div>
+            </div>
+            <h3 class="mt-4 mb-2 reduction-text">
+            </h3>
+            <div class="row">
+              <div class="col">
+                <mat-checkbox class="me-4 mb-2" color="primary"
+                  [checked]="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y ? true:false"
+                  (change)="additionalForm.get('represented_by_lawyer')?.setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
+                  I intend to be represented by a lawyer in court.
+                  <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y"
+                    style="font-weight: lighter;">
+                    Enter lawyer contact details below.
+                  </span>
+                </mat-checkbox>
+              </div>
+            </div>
+            <ng-container *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
+              <div [formGroup]="legalRepresentationForm">
                 <div class="row">
-                  <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witness_present"
-                      (change)="onChangeWitnessPresent($event)">
-                      I intend to call a witness(es).
-                    </mat-checkbox>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Name of law firm</mat-label>
+                      <input matInput formControlName="law_firm_name" [errorStateMatcher]="matcher" />
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
+                    </mat-form-field>
                   </div>
-                </div>
-
-                <div class="row" *ngIf="additionalForm.get('__witness_present')?.value">
-                  <div class="col">
-                    <mat-form-field class="pe-4 w-25">
-                      <mat-label>Number of witnesses</mat-label>
-                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
-                        formControlName="witness_no" [errorStateMatcher]="matcher" />
-                      <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('requiredIfTrue')">
-                        {{ "error.required" | translate }}
-                      </mat-error>
-                      <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('min')">
-                        {{ "error.positive_number" | translate }}
-                      </mat-error>
-                      <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('max')">
-                        {{ "error.max_number" | translate }}{{ maxWitnesses + 1 }}
-                      </mat-error>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Full name of lawyer</mat-label>
+                      <input matInput formControlName="lawyer_full_name" [errorStateMatcher]="matcher" />
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
                     </mat-form-field>
                   </div>
                 </div>
-
-                <div class="col" *ngIf="additionalForm.get('__witness_present')?.value">
-                  <app-alert type="warning" icon="warning">
-                    <ng-container #alertContent class="alert-content">
-                      <strong>If you are calling a witness please keep the following information in mind:</strong><br />
-                      If the disputant or the disputant’s agent does not attend the court hearing, the court will treat
-                      the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded
-                      against the record of the disputant.
-                    </ng-container>
-                  </app-alert>
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-form-field class="w-100">
+                      <mat-label>Address of law firm</mat-label>
+                      <input matInput formControlName="lawyer_address" [errorStateMatcher]="matcher" />
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
+                    </mat-form-field>
+                  </div>
                 </div>
-                <div class="col" *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
-                  <app-alert type="warning" icon="warning">
-                    <ng-container #alertContent class="alert-content">
-                      <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to
-                        submitting your Notice of Dispute. The lawyer’s schedule will have to be considered when a date
-                        is set for your hearing and many lawyers are not available on short notice.<br /> If you hire a
-                        lawyer they will generally give the Violation Ticket Center dates when they are available for
-                        your hearing.</strong>
-                    </ng-container>
-                  </app-alert>
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Contact phone number</mat-label>
+                      <input matInput formControlName="lawyer_phone_number" [errorStateMatcher]="matcher"
+                        mask="(000) 000-0000" />
+                      <mat-error>{{ "error.required" | translate }}</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Contact email</mat-label>
+                      <input matInput formControlName="lawyer_email" autocomplete="off" [errorStateMatcher]="matcher" />
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('required')">
+                        {{"error.required" | translate}}</mat-error>
+                      <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('email')">
+                        {{"error.email_address" | translate }}</mat-error>
+                    </mat-form-field>
+                  </div>
                 </div>
-                <div class="col" *ngIf="additionalForm.get('__interpreter_required')?.value">
-                  <app-alert type="warning" icon="warning">
-                    <ng-container #alertContent class="alert-content">
-                      <strong>The court also provides visual language interpreters (American Sign Language) and CART
-                        (Communication Access Realtime Translation - captioning services) for any court
-                        proceeding.</strong>
-                    </ng-container>
-                  </app-alert>
-                </div>
-                <div class="col" *ngIf="additionalForm.get('__witness_present')?.value">
-                  <app-alert type="warning" icon="warning">
-                    <ng-container #alertContent class="alert-content">
-                      <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing
-                        date and know the expectations of attending court.</strong>
-                    </ng-container>
-                  </app-alert>
-                </div>
-              </section>
-            </form>
+              </div>
+            </ng-container>
 
-            <app-stepper-footer [disableSave]="!additionalForm?.valid" (save)="disputeStepper.next()"
-              (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
-              [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
-            </app-stepper-footer>
-          </app-stepper-page>
-        </mat-step>
+            <div class="row">
+              <div class="col">
+                <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__interpreter_required">
+                  I require a language interpreter at the hearing.
+                </mat-checkbox>
+                <mat-error *ngIf="additionalForm.get('__interpreter_required')?.hasError('requiredIfTrue')">
+                  {{ 'error.required' | translate }}
+                </mat-error>
+              </div>
+            </div>
 
-        <!-- summary -->
-        <mat-step>
-          <ng-template matStepLabel>Ticket request overview</ng-template>
-          <app-stepper-page *ngIf="noticeOfDispute">
-            <app-page-header>
-              <ng-container subHeader>
-                Review the information for each count to ensure details are correct. <strong>Once request has been
-                  submitted you may not make changes.</strong>
-              </ng-container>
-            </app-page-header>
+            <div class="row" *ngIf="additionalForm.get('__interpreter_required')?.value">
+              <div class="col interpreter-language">
+                <mat-form-field class="w-25">
+                  <mat-label>
+                    {{ "stepper.additional.interpreter_language" | translate }}
+                  </mat-label>
+                  <mat-select formControlName="interpreter_language_cd"
+                    matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language_cd'))}}">
+                    <mat-option *ngFor="let language of languages" [value]="language.code">
+                      {{ language.description }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="additionalForm.get('interpreter_language_cd')?.hasError('requiredIfTrue')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
 
-            <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
+            <div class="row">
+              <div class="col">
+                <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witness_present"
+                  (change)="onChangeWitnessPresent($event)">
+                  I intend to call a witness(es).
+                </mat-checkbox>
+              </div>
+            </div>
 
-            <div class="col mb-2">
+            <div class="row" *ngIf="additionalForm.get('__witness_present')?.value">
+              <div class="col">
+                <mat-form-field class="pe-4 w-25">
+                  <mat-label>Number of witnesses</mat-label>
+                  <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
+                    formControlName="witness_no" [errorStateMatcher]="matcher" />
+                  <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('requiredIfTrue')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('min')">
+                    {{ "error.positive_number" | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('max')">
+                    {{ "error.max_number" | translate }}{{ maxWitnesses + 1 }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col" *ngIf="additionalForm.get('__witness_present')?.value">
               <app-alert type="warning" icon="warning">
                 <ng-container #alertContent class="alert-content">
-                  <strong>Once request has been submitted you may not make changes. Please
-                    review and ensure details are correct before submission.</strong>
+                  <strong>If you are calling a witness please keep the following information in mind:</strong><br />
+                  If the disputant or the disputant’s agent does not attend the court hearing, the court will treat
+                  the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded
+                  against the record of the disputant.
                 </ng-container>
               </app-alert>
             </div>
-            <mat-checkbox [(ngModel)]="declared" color="primary" class="w-100 mt-4">I declare all of the information
-              above is correct to the best of my knowledge.</mat-checkbox>
+            <div class="col" *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
+              <app-alert type="warning" icon="warning">
+                <ng-container #alertContent class="alert-content">
+                  <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to
+                    submitting your Notice of Dispute. The lawyer’s schedule will have to be considered when a date
+                    is set for your hearing and many lawyers are not available on short notice.<br /> If you hire a
+                    lawyer they will generally give the Violation Ticket Center dates when they are available for
+                    your hearing.</strong>
+                </ng-container>
+              </app-alert>
+            </div>
+            <div class="col" *ngIf="additionalForm.get('__interpreter_required')?.value">
+              <app-alert type="warning" icon="warning">
+                <ng-container #alertContent class="alert-content">
+                  <strong>The court also provides visual language interpreters (American Sign Language) and CART
+                    (Communication Access Realtime Translation - captioning services) for any court
+                    proceeding.</strong>
+                </ng-container>
+              </app-alert>
+            </div>
+            <div class="col" *ngIf="additionalForm.get('__witness_present')?.value">
+              <app-alert type="warning" icon="warning">
+                <ng-container #alertContent class="alert-content">
+                  <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing
+                    date and know the expectations of attending court.</strong>
+                </ng-container>
+              </app-alert>
+            </div>
+          </section>
+        </form>
 
-            <app-stepper-footer [disableSave]="!declared" (save)="submitDispute()" (back)="disputeStepper.previous()"
-              [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
-              [saveButtonKey]="'stepper.submit'" [hasSecondaryAction]="true">
-            </app-stepper-footer>
-          </app-stepper-page>
-        </mat-step>
-      </mat-vertical-stepper>
+        <app-stepper-footer [disableSave]="!additionalForm?.valid" (save)="disputeStepper.next()"
+          (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+          [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+        </app-stepper-footer>
+      </app-page>
+    </mat-step>
 
-      <app-resolution-footer></app-resolution-footer>
-    </app-page>
-  </div>
-</div>
+    <!-- summary -->
+    <mat-step>
+      <ng-template matStepLabel>Ticket request overview</ng-template>
+      <app-page *ngIf="noticeOfDispute">
+        <app-page-header>
+          <ng-container subHeader>
+            Review the information for each count to ensure details are correct. <strong>Once request has been
+              submitted you may not make changes.</strong>
+          </ng-container>
+        </app-page-header>
+
+        <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
+
+        <div class="col mb-2">
+          <app-alert type="warning" icon="warning">
+            <ng-container #alertContent class="alert-content">
+              <strong>Once request has been submitted you may not make changes. Please
+                review and ensure details are correct before submission.</strong>
+            </ng-container>
+          </app-alert>
+        </div>
+        <mat-checkbox [(ngModel)]="declared" color="primary" class="w-100 mt-4">I declare all of the information
+          above is correct to the best of my knowledge.</mat-checkbox>
+
+        <app-stepper-footer [disableSave]="!declared" (save)="submitDispute()" (back)="disputeStepper.previous()"
+          [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
+          [saveButtonKey]="'stepper.submit'" [hasSecondaryAction]="true">
+        </app-stepper-footer>
+      </app-page>
+    </mat-step>
+  </mat-vertical-stepper>
+
+  <app-resolution-footer></app-resolution-footer>
+</app-page>

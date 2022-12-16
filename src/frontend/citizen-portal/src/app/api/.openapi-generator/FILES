@@ -20,6 +20,7 @@ model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
 model/disputeStatus.model.ts
 model/field.model.ts
+model/jJDisputeHearingType.model.ts
 model/jJDisputeStatus.model.ts
 model/language.model.ts
 model/models.ts

@@ -1,13 +1,13 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { LookupService, Language} from 'app/api';
+import { LookupService, Language } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 export interface ILookupsService {
-  languages$: BehaviorSubject<Language[]>;
+  languages$: Observable<Language[]>;
   languages: Language[];
   getLanguages(): Observable<Language[]>;
   getLanguageDescription(code: string): string;
@@ -17,7 +17,7 @@ export interface ILookupsService {
   providedIn: 'root',
 })
 export class LookupsService implements ILookupsService {
-  private _languages: BehaviorSubject<Language[]>;
+  private _languages: BehaviorSubject<Language[]> = new BehaviorSubject<Language[]>(null);
 
   constructor(
     private toastService: ToastService,
@@ -25,8 +25,9 @@ export class LookupsService implements ILookupsService {
     private configService: ConfigService,
     private lookupService: LookupService
   ) {
-    this._languages = new BehaviorSubject<Language[]>(null);
-    this.getLanguages();
+    this.getLanguages().subscribe((response: Language[]) => {
+      this._languages.next(response);
+    });
   }
 
   /**
@@ -34,8 +35,7 @@ export class LookupsService implements ILookupsService {
      *
      * @param none
      */
-   public getLanguages(): Observable<Language[]> {
-
+  public getLanguages(): Observable<Language[]> {
     return this.lookupService.apiLookupLanguagesGet()
       .pipe(
         map((response: Language[]) =>
@@ -59,8 +59,8 @@ export class LookupsService implements ILookupsService {
       );
   }
 
-  public get languages$(): BehaviorSubject<Language[]> {
-    return this._languages;
+  public get languages$(): Observable<Language[]> {
+    return this._languages.asObservable();
   }
 
   public get languages(): Language[] {
@@ -68,8 +68,8 @@ export class LookupsService implements ILookupsService {
   }
 
   public getLanguageDescription(code: string): string {
-    let found = this.languages.filter(x => x.code.trim().toLowerCase() === code.trim().toLowerCase());
-    if (found && found.length > 0) return found[0].description;
+    let found = this.languages.filter(x => x.code.trim().toLowerCase() === code.trim().toLowerCase()).shift();
+    if (found) return found.description;
     else return code;
-}
+  }
 }

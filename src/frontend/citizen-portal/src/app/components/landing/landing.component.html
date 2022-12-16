@@ -1,53 +1,5 @@
-<app-header></app-header>
-
-<div class="landing-summary">
-  <div class="summary-header">
-    <div class="container">
-      <ul class="summary-header-links">
-        <li>
-          <a [attr.href]="understandYourTicketLink" class="primary-navigation understand-your-ticket" target="_blank"
-            rel="noopener">
-            Understand Your Ticket
-          </a>
-        </li>
-        <span class="divider">|</span>
-        <li>
-          <a [attr.href]="paymentOptionsLink" class="primary-navigation payment-options" target="_blank" rel="noopener">
-            Pay Options
-          </a>
-        </li>
-        <span class="divider">|</span>
-        <li>
-          <a routerLink="/ticket/" class="primary-navigation resolution-options">
-            Dispute Ticket
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="container">
-    <section class="summary-section">
-      <div class="summary-content">
-        <div>
-          <h1>Ticket information in British Columbia</h1>
-          <p class="lead">
-            Looking for information on your violation or traffic ticket?
-            Understand your ticket options and find out how to pay fines or
-            dispute.
-          </p>
-        </div>
-      </div>
-    </section>
-  </div>
-</div>
-
-<div class="container">
+<app-page>
   <section>
-    <!-- <div *appFeatureFlag="'dispute'" class="center my-4">
-      <button mat-flat-button type="button" class="large" color="primary" routerLink="/ticket/find">
-        TCO Ticket
-      </button>
-    </div> -->
     <div class="flex flex-first">
       <div class="flex-3-col flex-info">
         <a [attr.href]="understandYourTicketLink" class="main-body-navigation understand-your-ticket" target="_blank"
@@ -200,13 +152,11 @@
           </div>
         </mat-expansion-panel>
 
-        <button mat-button class="link-button" [routerLink]="['/ticket/findDispute']">
+        <button mat-button class="link-button" [routerLink]="['/dispute/find']">
           Manage or update my traffic dispute
         </button>
         <mat-divider class="divider"></mat-divider>
       </div>
     </div>
   </section>
-</div>
-
-<app-footer></app-footer>
+</app-page>

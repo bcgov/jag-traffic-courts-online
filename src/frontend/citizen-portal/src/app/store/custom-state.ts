@@ -1,3 +1,3 @@
 export interface CustomState {
-    loading: boolean,
+  loading?: boolean,
 }

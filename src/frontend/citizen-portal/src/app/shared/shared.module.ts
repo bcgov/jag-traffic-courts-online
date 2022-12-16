@@ -13,8 +13,6 @@ import { PageComponent } from './components/page/page.component';
 import { ResolutionFooterComponent } from './components/resolution-footer/resolution-footer.component';
 import { ResolutionHeaderComponent } from './components/resolution-header/resolution-header.component';
 import { StepperFooterComponent } from './components/stepper-footer/stepper-footer.component';
-import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
-import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
@@ -53,7 +51,6 @@ import { MatStepperModule } from '@angular/material/stepper';
         PageComponent,
         StepperFooterComponent,
         PageHeaderComponent,
-        TcoPageHeaderComponent,
         DialogContentDirective,
         AlertComponent,
         HeaderComponent,
@@ -65,7 +62,6 @@ import { MatStepperModule } from '@angular/material/stepper';
         ImageTicketNotFoundDialogComponent,
         DisputeNotFoundDialogComponent,
         DisputeStatusDialogComponent,
-        StepperPageComponent,
         ResolutionFooterComponent,
         ResolutionHeaderComponent,
         AddressAutocompleteComponent,
@@ -102,7 +98,6 @@ import { MatStepperModule } from '@angular/material/stepper';
         PageComponent,
         StepperFooterComponent,
         PageHeaderComponent,
-        TcoPageHeaderComponent,
         DialogContentDirective,
         AlertComponent,
         ConfigModule,
@@ -111,7 +106,6 @@ import { MatStepperModule } from '@angular/material/stepper';
         ResolutionFooterComponent,
         ResolutionHeaderComponent,
         FeatureFlagDirective,
-        StepperPageComponent,
         AddressAutocompleteComponent,
     ]
 })

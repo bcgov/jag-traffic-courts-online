@@ -2,10 +2,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
-import { NgProgress, NgProgressRef } from 'ngx-progressbar';
-import { filter, Subscription } from 'rxjs';
-import { DisputeStore, disputeLoadingSelector } from 'app/store';
-import { select, Store } from '@ngrx/store';
+import { DisputeStore } from 'app/store';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-find-dispute',
@@ -14,8 +12,6 @@ import { select, Store } from '@ngrx/store';
   encapsulation: ViewEncapsulation.None,
 })
 export class FindDisputeComponent implements OnInit {
-  private progressRef: NgProgressRef;
-  busy: Subscription;
   form: FormGroup;
 
   notFound = false;
@@ -23,15 +19,12 @@ export class FindDisputeComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
-    private ngProgress: NgProgress,
     private logger: LoggerService,
     private store: Store
   ) {
   }
 
   ngOnInit(): void {
-    this.progressRef = this.ngProgress.ref();
-
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       time: [null, [Validators.required]],
@@ -53,6 +46,5 @@ export class FindDisputeComponent implements OnInit {
       return;
     }
     this.store.dispatch(DisputeStore.Actions.Search({ params: this.form.value }));
-    this.busy = this.store.pipe(select(disputeLoadingSelector), filter(i => !i)).subscribe(() => this.busy.unsubscribe());
   }
 }

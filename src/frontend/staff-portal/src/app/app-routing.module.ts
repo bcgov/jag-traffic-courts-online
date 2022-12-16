@@ -47,7 +47,7 @@ let routes: Routes = [
   },
 ];
 
-// Replcae the starting "/" since it is not needed in RouterModule
+// Replace the starting "/" since it is not needed in RouterModule
 routes.forEach(route => {
   if (route.path?.startsWith("/")) {
     route.path = route.path.replace("/", "");

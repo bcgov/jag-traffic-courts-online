@@ -10,7 +10,7 @@ export const Search = createAction(
 
 export const SearchSuccess = createAction(
   ActionTypes.SEARCH_SUCCESS,
-  props<DisputeStore.StateData>()
+  props<{ payload?: DisputeStore.State}>()
 );
 
 export const SearchFailed = createAction(

@@ -1,6 +1,6 @@
 <app-busy-overlay [busy]="busy">
   <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12">
+    <div class="col-sm-12" [ngClass]="{ 'col-md-12 col-xl-12': mode === 'default', 'col-md-12': mode === 'full' }">
       <ng-content select="app-page-header"></ng-content>
 
       <ng-content select="app-progress-indicator"></ng-content>

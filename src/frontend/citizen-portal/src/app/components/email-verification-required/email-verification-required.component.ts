@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ticketTypes } from '@shared/enums/ticket-type.enum';
+import { TicketTypes } from '@shared/enums/ticket-type.enum';
 import { DisputeRepresentedByLawyer } from 'app/api';
 import { NoticeOfDisputeService, NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
@@ -15,7 +15,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
   
   email: string;
   ticketType;
-  ticketTypes = ticketTypes;
+  ticketTypes = TicketTypes ;
   countsActions: any;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
 

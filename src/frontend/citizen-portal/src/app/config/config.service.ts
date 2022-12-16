@@ -30,7 +30,6 @@ export class ConfigService {
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService
   ) {
-
     // import countries
     this._countries = [];
     CountriesListJSON.countryCodeValues.forEach(x => {
@@ -107,21 +106,15 @@ export class ConfigService {
   }
 
   private getBCCodeValue(): ProvinceCodeValue {
-    let found = this._provincesAndStates.filter(x => x.provAbbreviationCd === "BC");
-    if (found?.length > 0) return found[0];
-    else return null;
+    return this._provincesAndStates.filter(x => x.provAbbreviationCd === "BC").shift();
   }
 
   private getCanadaCodeValue(): CountryCodeValue {
-    let found = this._countries.filter(x => x.ctryLongNm === "Canada");
-    if (found?.length > 0) return found[0];
-    else return null;
+    return this._countries.filter(x => x.ctryLongNm === "Canada").shift();
   }
 
   private getUSACodeValue(): CountryCodeValue {
-    let found = this._countries.filter(x => x.ctryLongNm === "USA");
-    if (found?.length > 0) return found[0];
-    else return null;
+    return this._countries.filter(x => x.ctryLongNm === "USA").shift();
   }
 
   public get bcCodeValue(): ProvinceCodeValue {
@@ -137,21 +130,18 @@ export class ConfigService {
   }
 
   public getCtryLongNm(ctryId: number) {
-    let countriesFound = this._countries.filter(x => x.ctryId === ctryId);
-    if (countriesFound?.length > 0) return countriesFound[0].ctryLongNm;
-    else return "";
+    let countriesFound = this._countries.filter(x => x.ctryId === ctryId).shift();
+    return countriesFound?.ctryLongNm;
   }
 
   public getProvNm(ctryId: number, provSeqNo: number) {
-    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo);
-    if (provincesFound?.length > 0) return provincesFound[0].provNm;
-    else return
+    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo).shift();
+    return provincesFound?.provNm;
   }
 
   public getProvAbbreviationCd(ctryId: number, provSeqNo: number) {
-    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo);
-    if (provincesFound?.length > 0) return provincesFound[0].provAbbreviationCd;
-    else return "";
+    let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo).shift();
+    return provincesFound?.provAbbreviationCd;
   }
 
   public get statuses(): Config<number>[] {

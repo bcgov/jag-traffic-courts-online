@@ -12,6 +12,7 @@ namespace TrafficCourts.Workflow.Service.Services
         Task<ICollection<DisputeResult>> SearchDisputeAsync(string ticketNumber, string issuedTime, CancellationToken cancellationToken);
         Task<Dispute> GetDisputeByIdAsync(long disputeId, CancellationToken cancellationToken);
         Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken);
+        Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime, System.Threading.CancellationToken cancellationToken);
         Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long disputantUpdateRequestId, DisputantUpdateRequestStatus disputantUpdateRequestStatus, CancellationToken cancellationToken);
     }
 }

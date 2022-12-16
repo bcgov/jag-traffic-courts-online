@@ -229,7 +229,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   getJJDisputedCount(count: number) {
-    return this.lastUpdatedJJDispute.jjDisputedCounts.filter(x => x.count == count)[0];
+    return this.lastUpdatedJJDispute.jjDisputedCounts.filter(x => x.count == count).shift();
   }
 
   // get from child component

@@ -68,10 +68,22 @@ public class SearchDisputeConsumerTest
                 JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS
             }
         };
+
+        ICollection<JJDispute> jJDisputes = new List<JJDispute>
+        {
+            new()
+            {
+                HearingType = JJDisputeHearingType.COURT_APPEARANCE
+            }
+        };
+
+
         _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
-        _expectedResponse.DisputeId = "1";
+        _oracleDataApiService.Setup(_ => _.GetJJDisputesAsync("", _message.TicketNumber, _message.IssuedTime, It.IsAny<CancellationToken>())).Returns(Task.FromResult(jJDisputes));
+        _expectedResponse.NoticeOfDisputeGuid = "1";
         _expectedResponse.DisputeStatus = "VALIDATED";
         _expectedResponse.JJDisputeStatus = "IN_PROGRESS";
+        _expectedResponse.HearingType = "COURT_APPEARANCE";
 
         // Act 
         await _consumer.Consume(_context.Object);
@@ -83,9 +95,10 @@ public class SearchDisputeConsumerTest
     private void VerifyExpectedResponse()
     {
         _context.Verify(m => m.RespondAsync<SearchDisputeResponse>(It.Is<SearchDisputeResponse>(
-            a => a.DisputeId == _expectedResponse.DisputeId
+            a => a.NoticeOfDisputeGuid == _expectedResponse.NoticeOfDisputeGuid
                 && a.DisputeStatus == _expectedResponse.DisputeStatus
                 && a.JJDisputeStatus == _expectedResponse.JJDisputeStatus
+                && a.HearingType == _expectedResponse.HearingType
                 && a.IsError == _expectedResponse.IsError
             )), Times.Once);
     }

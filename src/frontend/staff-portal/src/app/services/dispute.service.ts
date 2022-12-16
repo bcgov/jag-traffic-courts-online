@@ -21,7 +21,6 @@ export class DisputeService implements IDisputeService {
   private _dispute: BehaviorSubject<Dispute>;
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
 
-
   constructor(
     private toastService: ToastService,
     private logger: LoggerService,

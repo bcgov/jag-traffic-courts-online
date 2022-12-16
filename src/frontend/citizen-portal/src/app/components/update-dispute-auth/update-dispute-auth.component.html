@@ -1,0 +1,47 @@
+<app-page>
+  <div style="margin-top: 8rem;">
+    <h1><b>British Columbia Citizen Portal</b></h1>
+    <p class="text-black">Enter your contact information, then <b>choose the type of request you'd like to make</b>.</p>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <div fxFlex class="auth-container" fxLayout="row">
+      <div fxFlex>
+        <h2><b>Set up the BC Services Card app</b></h2>
+        <p class="text-black">The app is your digital ID on your mobile device. It's goverment's trusted way to securely access services
+          online.
+        </p>
+        <button mat-flat-button color="primary"><b>Get set up</b></button>
+      </div>
+      <div fxLayout="column" class="or-separator">
+        <mat-divider fxFlex [vertical]="true"></mat-divider>
+        <div>OR</div>
+        <mat-divider fxFlex [vertical]="true"></mat-divider>
+      </div>
+      <div fxFlex>
+        <h2><b>Already set up?</b></h2>
+        <p class="text-black">Continue with:</p>
+        <button mat-stroked-button color="primary"><b>BC Services CardApp</b></button>
+        <button mat-stroked-button color="primary" class="two-line-btn">
+          <b>Email and password + BC Token</b><br>
+          <span class="btn-small-text">This option is in beta. It's only avaliable for some services.</span>
+        </button>
+      </div>
+    </div>
+    <!-- <div fxFlex="32">
+      <div *ngIf="isEditable | async" class="option">
+        <div class="option-content">
+          <h2><b>Change Address</b></h2>
+          <div>Update your content name, email, mailing address or phone number</div>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="32">
+      <div *ngIf="isEditable | async" class="option">
+        <div class="option-content">
+          <h2><b>Change Dispute</b></h2>
+          <div>Change your contact information, plea or court options</div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</app-page>

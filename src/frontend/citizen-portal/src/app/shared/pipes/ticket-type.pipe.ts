@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ticketTypes } from '@shared/enums/ticket-type.enum';
+import { TicketTypes } from '@shared/enums/ticket-type.enum';
 
 @Pipe({
   name: 'ticketType',
@@ -10,11 +10,11 @@ export class TicketTypePipe implements PipeTransform {
     // for an explicit yes or no if required
     let firstLetter = value ? value.charAt(0) : null;
     if (firstLetter === 'S') {
-      return ticketTypes.CAMERA_TICKET;
+      return TicketTypes.CAMERA_TICKET;
     } else if (firstLetter === 'E') {
-      return ticketTypes.ELECTRONIC_TICKET;
+      return TicketTypes.ELECTRONIC_TICKET;
     } else if (firstLetter === 'A') {
-      return ticketTypes.HANDWRITTEN_TICKET;
+      return TicketTypes.HANDWRITTEN_TICKET;
     }
     return null;
   }

@@ -5,7 +5,6 @@ import { NoticeOfDisputeService } from 'app/services/notice-of-dispute.service';
 @Component({
   selector: 'app-email-verification',
   templateUrl: './email-verification.component.html',
-  styleUrls: ['../ticket-page/ticket-page.component.scss']
 })
 export class EmailVerificationComponent {
   private token: string;
@@ -18,12 +17,15 @@ export class EmailVerificationComponent {
   ) {
     this.route.queryParams.subscribe((params) => {
       this.token = params.token;
-      this.noticeOfDisputeService.verifyEmail(this.token).subscribe(() => {
-        this.checking = false;
-        this.verified = true;
-      }, error => { 
-        this.checking = false; 
-      });
+      this.noticeOfDisputeService.verifyEmail(this.token).subscribe({
+        next: () => {
+          this.checking = false;
+          this.verified = true;
+        },
+        error: () => {
+          this.checking = false;
+        }
+      })
     });
   }
 }

@@ -117,6 +117,17 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
+    public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime, System.Threading.CancellationToken cancellationToken) {
+        try
+        {
+            return await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, violationTime, cancellationToken);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long disputantUpdateRequestId, DisputantUpdateRequestStatus disputantUpdateRequestStatus, CancellationToken cancellationToken)
     {
         try

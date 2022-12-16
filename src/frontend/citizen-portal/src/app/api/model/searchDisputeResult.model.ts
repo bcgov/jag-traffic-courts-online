@@ -9,14 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JJDisputeHearingType } from './jJDisputeHearingType.model';
 import { DisputeStatus } from './disputeStatus.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 
 export interface SearchDisputeResult { 
-    dispute_id?: string | null;
+    identifier?: string | null;
     dispute_status?: DisputeStatus;
     jjdispute_status?: JJDisputeStatus;
+    hearing_type?: JJDisputeHearingType;
     is_error?: boolean;
 }
 

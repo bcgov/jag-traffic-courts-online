@@ -17,9 +17,9 @@ export class DisputeStatusDialogComponent {
   selectedStep = 0;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private dialogData: DisputeStore.StateData,
+    @Inject(MAT_DIALOG_DATA) private dialogData: DisputeStore.State,
   ) {
-    this.dispute = this.dialogData.dispute;
+    this.dispute = this.dialogData.result;
     this.params = this.dialogData.params;
     Object.values(StatusStepType).forEach((type, index) => {
       let step: StatusStep = { seq: index, type, isCompleted: false };

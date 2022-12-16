@@ -7,7 +7,6 @@ import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirem
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { Configuration } from 'app/api';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
-import { Subscription } from 'rxjs';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -18,7 +17,6 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
 })
 export class FindTicketComponent implements OnInit {
   private progressRef: NgProgressRef;
-  busy: Subscription;
   form: FormGroup;
 
   notFound = false;
@@ -58,7 +56,7 @@ export class FindTicketComponent implements OnInit {
     if (!validity) {
       return;
     }
-    this.busy = this.violationTicketService.searchTicket(this.form.value).subscribe(res => res);
+    this.violationTicketService.searchTicket(this.form.value).subscribe(res => res);
   }
 
   onFileChange(event: any) {
