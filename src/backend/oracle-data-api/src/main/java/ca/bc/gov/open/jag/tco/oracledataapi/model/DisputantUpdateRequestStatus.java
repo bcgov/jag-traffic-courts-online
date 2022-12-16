@@ -4,6 +4,7 @@ public enum DisputantUpdateRequestStatus implements ShortNamedEnum {
 
 	PENDING("PEN"),
 	ACCEPTED("ACC"),
+	HOLD("HOL"),
 	REJECTED("REJ");
 
 	private String shortName;
