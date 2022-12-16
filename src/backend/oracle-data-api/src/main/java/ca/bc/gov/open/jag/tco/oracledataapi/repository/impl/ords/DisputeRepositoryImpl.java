@@ -18,17 +18,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
@@ -90,7 +90,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		// Convert Disputes to DisputeResult objects
 		List<DisputeResult> disputeResults = extractedDisputes.stream()
-				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getStatus()))
+				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(), dispute.getStatus()))
 				.collect(Collectors.toList());
 
 		return disputeResults;

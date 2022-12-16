@@ -7,6 +7,7 @@ using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
+using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 

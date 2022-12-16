@@ -28,12 +28,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
         {
             using var scope = _logger.BeginConsumeScope(context);
 
-            string ticketNumber = context.Message.TicketNumber;
-            string issuedTime = context.Message.IssuedTime;
+            string? ticketNumber = context.Message.TicketNumber;
+            string? issuedTime = context.Message.IssuedTime;
+            string? noticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid?.ToString();
             ICollection<DisputeResult> searchResult;
             try
             {
-                searchResult = await _oracleDataApiService.SearchDisputeAsync(context.Message.TicketNumber, context.Message.IssuedTime, context.CancellationToken);
+                searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken);
                 if (searchResult is null || searchResult.Count == 0)
                 {
                     _logger.LogError("Dispute not found");

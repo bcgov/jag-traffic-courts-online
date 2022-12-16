@@ -618,7 +618,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [ "PENDING", "ACCEPTED", "REJECTED" ]
+              "enum": [ "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
             },
             "example": "ACCEPTED"
           }
@@ -644,6 +644,47 @@
             "description": "Ok. DisputantUpdateRequest updated.",
             "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DisputantUpdateRequest" } } }
           }
+        }
+      }
+    },
+    "/api/v1.0/dispute/updateRequest/{ids}/pending": {
+      "put": {
+        "tags": [ "dispute-controller" ],
+        "summary": "An endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.",
+        "operationId": "updateDisputantUpdateRequestsStatusToPending",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "path",
+            "description": "The id of the DisputantUpdateRequest record to update.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "500": {
+            "description": "Internal Server Error. Status Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "DisputantUpdateRequest records could not be found.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A DisputantUpdateRequest status can only be set to PENDING iff status is HOLD. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "Ok. DisputantUpdateRequest records updated to status PENDING." }
         }
       }
     },
@@ -1159,16 +1200,16 @@
     "/api/v1.0/dispute/status": {
       "get": {
         "tags": [ "dispute-controller" ],
-        "summary": "Finds Dispute statuses by TicketNumber and IssuedTime.",
+        "summary": "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.",
         "operationId": "findDispute",
         "parameters": [
           {
             "name": "ticketNumber",
             "in": "query",
             "description": "The Dispute.ticketNumber to search for (of the format XX00000000)",
-            "required": true,
+            "required": false,
             "schema": {
-              "pattern": "[A-Z]{2}\\d{8}",
+              "pattern": "^$|([A-Z]{2}\\d{8})",
               "type": "string"
             },
             "example": "AX12345678"
@@ -1177,9 +1218,16 @@
             "name": "issuedTime",
             "in": "query",
             "description": "The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.",
-            "required": true,
+            "required": false,
             "schema": { "type": "string" },
             "example": "14:53"
+          },
+          {
+            "name": "noticeOfDisputeGuid",
+            "in": "query",
+            "description": "The noticeOfDisputeGuid of the Dispute to retreive.",
+            "required": false,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2297,7 +2345,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [ "PENDING", "ACCEPTED", "REJECTED" ]
+            "enum": [ "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
           },
           "updateType": {
             "type": "string",
@@ -2388,6 +2436,7 @@
             "type": "integer",
             "format": "int64"
           },
+          "noticeOfDisputeGuid": { "type": "string" },
           "disputeStatus": {
             "type": "string",
             "enum": [ "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
@@ -2396,6 +2445,10 @@
             "type": "string",
             "nullable": true,
             "enum": [ "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
+          },
+          "jjDisputeHearingType": {
+            "type": "string",
+            "enum": [ "COURT_APPEARANCE", "WRITTEN_REASONS" ]
           }
         }
       }

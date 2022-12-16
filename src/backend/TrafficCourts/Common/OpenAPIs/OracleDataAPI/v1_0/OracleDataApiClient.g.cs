@@ -232,6 +232,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long id, DisputantUpdateRequestStatus disputantUpdateRequestStatus, System.Threading.CancellationToken cancellationToken);
 
+        /// <summary>
+        /// An endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.
+        /// </summary>
+        /// <param name="ids">The id of the DisputantUpdateRequest record to update.</param>
+        /// <returns>Ok. DisputantUpdateRequest records updated to status PENDING.</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task UpdateDisputantUpdateRequestsStatusToPendingAsync(System.Collections.Generic.IEnumerable<long> ids);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// An endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.
+        /// </summary>
+        /// <param name="ids">The id of the DisputantUpdateRequest record to update.</param>
+        /// <returns>Ok. DisputantUpdateRequest records updated to status PENDING.</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task UpdateDisputantUpdateRequestsStatusToPendingAsync(System.Collections.Generic.IEnumerable<long> ids, System.Threading.CancellationToken cancellationToken);
+
         /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -394,23 +411,25 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves Dispute by the noticeOfDisputeGuid (UUID).
@@ -2314,6 +2333,127 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
             }
         }
 
+        /// <summary>
+        /// An endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.
+        /// </summary>
+        /// <param name="ids">The id of the DisputantUpdateRequest record to update.</param>
+        /// <returns>Ok. DisputantUpdateRequest records updated to status PENDING.</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task UpdateDisputantUpdateRequestsStatusToPendingAsync(System.Collections.Generic.IEnumerable<long> ids)
+        {
+            return UpdateDisputantUpdateRequestsStatusToPendingAsync(ids, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// An endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.
+        /// </summary>
+        /// <param name="ids">The id of the DisputantUpdateRequest record to update.</param>
+        /// <returns>Ok. DisputantUpdateRequest records updated to status PENDING.</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task UpdateDisputantUpdateRequestsStatusToPendingAsync(System.Collections.Generic.IEnumerable<long> ids, System.Threading.CancellationToken cancellationToken)
+        {
+            if (ids == null)
+                throw new System.ArgumentNullException("ids");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/v1.0/dispute/updateRequest/{ids}/pending");
+            urlBuilder_.Replace("{ids}", System.Uri.EscapeDataString(string.Join(",", System.Linq.Enumerable.Select(ids, s_ => ConvertToString(s_, System.Globalization.CultureInfo.InvariantCulture)))));
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    request_.Method = new System.Net.Http.HttpMethod("PUT");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Status Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 404)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("DisputantUpdateRequest records could not be found.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 405)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("A DisputantUpdateRequest status can only be set to PENDING iff status is HOLD. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 200)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
         /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -3707,37 +3847,43 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         }
 
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid)
         {
-            return FindDisputeAsync(ticketNumber, issuedTime, System.Threading.CancellationToken.None);
+            return FindDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Finds Dispute statuses by TicketNumber and IssuedTime.
+        /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
         /// </summary>
         /// <param name="ticketNumber">The Dispute.ticketNumber to search for (of the format XX00000000)</param>
         /// <param name="issuedTime">The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.</param>
+        /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken)
         {
-            if (ticketNumber == null)
-                throw new System.ArgumentNullException("ticketNumber");
-
-            if (issuedTime == null)
-                throw new System.ArgumentNullException("issuedTime");
-
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1.0/dispute/status?");
-            urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Append(System.Uri.EscapeDataString("issuedTime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(issuedTime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            if (ticketNumber != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (issuedTime != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("issuedTime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(issuedTime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (noticeOfDisputeGuid != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("noticeOfDisputeGuid") + "=").Append(System.Uri.EscapeDataString(ConvertToString(noticeOfDisputeGuid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             urlBuilder_.Length--;
 
             var client_ = _httpClient;
@@ -5237,6 +5383,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("disputeId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long DisputeId { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("noticeOfDisputeGuid", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NoticeOfDisputeGuid { get; set; }
+
         [Newtonsoft.Json.JsonProperty("disputeStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DisputeResultDisputeStatus DisputeStatus { get; set; }
@@ -5244,6 +5393,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("jjDisputeStatus", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DisputeResultJjDisputeStatus? JjDisputeStatus { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("jjDisputeHearingType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public DisputeResultJjDisputeHearingType JjDisputeHearingType { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -5260,14 +5413,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputantUpdateRequestStatus
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"PENDING")]
-        PENDING = 0,
-
         [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
-        ACCEPTED = 1,
+        ACCEPTED = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"HOLD")]
+        HOLD = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PENDING")]
+        PENDING = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
-        REJECTED = 2,
+        REJECTED = 3,
 
     }
 
@@ -5716,14 +5872,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputantUpdateRequestStatus2
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"PENDING")]
-        PENDING = 0,
-
         [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
-        ACCEPTED = 1,
+        ACCEPTED = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"HOLD")]
+        HOLD = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PENDING")]
+        PENDING = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
-        REJECTED = 2,
+        REJECTED = 3,
 
     }
 
@@ -5811,6 +5970,18 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [System.Runtime.Serialization.EnumMember(Value = @"HEARING_SCHEDULED")]
         HEARING_SCHEDULED = 8,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum DisputeResultJjDisputeHearingType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"COURT_APPEARANCE")]
+        COURT_APPEARANCE = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"WRITTEN_REASONS")]
+        WRITTEN_REASONS = 1,
 
     }
 

@@ -4,8 +4,9 @@ namespace TrafficCourts.Messaging.MessageContracts;
 
 public class SearchDisputeRequest
 {
-    public string TicketNumber { get; set; } = String.Empty;
-    public string IssuedTime { get; set; } = String.Empty;
+    public string? TicketNumber { get; set; } = String.Empty;
+    public string? IssuedTime { get; set; } = String.Empty;
+    public Guid? NoticeOfDisputeGuid { get; set; } = null!;
 }
 
 public class SearchDisputeResponse
