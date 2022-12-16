@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,7 @@ public class DisputeController {
 	 * @param issuedTime the time portion of the Dispute.issuedTs field
 	 * @return {@link Dispute}
 	 */
-	@Operation(summary = "Finds Dispute statuses by TicketNumber and IssuedTime.")
+	@Operation(summary = "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok."),
 		@ApiResponse(responseCode = "400", description = "Bad Request, check parameters."),
@@ -110,16 +111,28 @@ public class DisputeController {
 	})
 	@GetMapping("/dispute/status")
 	public ResponseEntity<List<DisputeResult>> findDispute(
-			@RequestParam
-			@Pattern(regexp = "[A-Z]{2}\\d{8}")
+			@RequestParam(required = false)
+			@Pattern(regexp = "^$|([A-Z]{2}\\d{8})")
 			@Parameter(description = "The Dispute.ticketNumber to search for (of the format XX00000000)", example = "AX12345678")
 			String ticketNumber,
-			@RequestParam
+			@RequestParam(required = false)
 			@DateTimeFormat(pattern="HH:mm")
 			@Parameter(description = "The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC.", example = "14:53", schema = @Schema(type="string"))
-			Date issuedTime) {
-		logger.debug("GET /disputes/status?ticketNumber={}&issuedTime={} called", ticketNumber, DateFormatUtils.format(issuedTime, DateUtil.TIME_FORMAT));
-		List<DisputeResult> results = disputeService.findDispute(ticketNumber, issuedTime);
+			Date issuedTime,
+			@RequestParam(required = false)
+			@Parameter(description = "The noticeOfDisputeGuid of the Dispute to retreive.")
+			String noticeOfDisputeGuid) {
+		logger.debug("GET /disputes/status?ticketNumber={}&issuedTime={}&noticeOfDisputeGuid={} called", ticketNumber, issuedTime == null ? "" : DateFormatUtils.format(issuedTime, DateUtil.TIME_FORMAT), noticeOfDisputeGuid);
+		if (StringUtils.isBlank(ticketNumber) && issuedTime == null && StringUtils.isBlank(noticeOfDisputeGuid)) {
+			throw new IllegalArgumentException("Either ticketNumber/time or noticeOfDisputeGuid must be specified.");
+		}
+		else if (!StringUtils.isBlank(ticketNumber) && issuedTime == null) {
+			throw new IllegalArgumentException("If ticketNumber is specified, so must issuedTime.");
+		}
+		else if (StringUtils.isBlank(ticketNumber) && issuedTime != null) {
+			throw new IllegalArgumentException("If issuedTime is specified, so must ticketNumber.");
+		}
+		List<DisputeResult> results = disputeService.findDispute(ticketNumber, issuedTime, noticeOfDisputeGuid);
 		logger.debug("  found {} record(s).", results.size());
 		return new ResponseEntity<List<DisputeResult>>(results, HttpStatus.OK);
 	}

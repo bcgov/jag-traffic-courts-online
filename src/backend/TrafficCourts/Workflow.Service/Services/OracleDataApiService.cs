@@ -81,11 +81,11 @@ public class OracleDataApiService : IOracleDataApiService
         await _client.VerifyDisputeEmailAsync(disputeId);
     }
 
-    public async Task<ICollection<DisputeResult>> SearchDisputeAsync(string ticketNumber, string issuedTime, CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
         try
         {
-            return await _client.FindDisputeAsync(ticketNumber, issuedTime, cancellationToken);
+            return await _client.FindDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, cancellationToken);
         }
         catch (Exception)
         {
