@@ -333,7 +333,9 @@ public class DisputeService {
 		// if noticeOfDisputeGuid is specified, use that
 		if (StringUtils.isNotBlank(noticeOfDisputeGuid)) {
 			for (Dispute dispute : disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid)) {
-				disputeResults.add(new DisputeResult(dispute.getDisputeId(), dispute.getStatus()));
+				disputeResults.add(new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(), dispute.getStatus()));
+				ticketNumber = dispute.getTicketNumber();
+				issuedTime = dispute.getIssuedTs();
 			}
 		}
 		// otherwise, find by ticketNumber and time
@@ -342,6 +344,7 @@ public class DisputeService {
 		}
 
 		if (CollectionUtils.isNotEmpty(disputeResults)) {
+			// If we have at least on Dispute, find the associated JJDispute to add the jjDisputeStatus and JJDisputeHearingType
 			List<JJDispute> jjDisputeResults = jjDisputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
 			if (CollectionUtils.isNotEmpty(jjDisputeResults)) {
 				if (jjDisputeResults.size() > 1) {
@@ -350,6 +353,7 @@ public class DisputeService {
 				JJDispute jjDispute = jjDisputeResults.get(0);
 				for (DisputeResult disputeResult : disputeResults) {
 					disputeResult.setJjDisputeStatus(jjDispute.getStatus());
+					disputeResult.setJjDisputeHearingType(jjDispute.getHearingType());
 				}
 			}
 		}
