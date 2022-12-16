@@ -37,6 +37,10 @@ internal class JsonUtils
 {
     private enum SeparatedCaseState
     {
+        /// <summary>
+        /// Unknown type (undefined). Must be index 0.
+        /// </summary>
+        Unknown,
         Start,
         Lower,
         Upper,
@@ -52,7 +56,7 @@ internal class JsonUtils
             return s;
         }
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new ();
         SeparatedCaseState state = SeparatedCaseState.Start;
 
         for (int i = 0; i < s.Length; i++)

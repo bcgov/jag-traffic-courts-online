@@ -5413,17 +5413,20 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputantUpdateRequestStatus
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
-        ACCEPTED = 0,
+        ACCEPTED = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"HOLD")]
-        HOLD = 1,
+        HOLD = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"PENDING")]
-        PENDING = 2,
+        PENDING = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
-        REJECTED = 3,
+        REJECTED = 4,
 
     }
 
@@ -5431,20 +5434,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum ExcludeStatus
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"NEW")]
-        NEW = 0,
+        NEW = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VALIDATED")]
-        VALIDATED = 1,
+        VALIDATED = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"PROCESSING")]
-        PROCESSING = 2,
+        PROCESSING = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
-        REJECTED = 3,
+        REJECTED = 4,
 
         [System.Runtime.Serialization.EnumMember(Value = @"CANCELLED")]
-        CANCELLED = 4,
+        CANCELLED = 5,
 
     }
 
@@ -5452,32 +5458,35 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputeStatus
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"NEW")]
-        NEW = 0,
+        NEW = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"IN_PROGRESS")]
-        IN_PROGRESS = 1,
+        IN_PROGRESS = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"DATA_UPDATE")]
-        DATA_UPDATE = 2,
+        DATA_UPDATE = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"CONFIRMED")]
-        CONFIRMED = 3,
+        CONFIRMED = 4,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REQUIRE_COURT_HEARING")]
-        REQUIRE_COURT_HEARING = 4,
+        REQUIRE_COURT_HEARING = 5,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REQUIRE_MORE_INFO")]
-        REQUIRE_MORE_INFO = 5,
+        REQUIRE_MORE_INFO = 6,
 
         [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
-        ACCEPTED = 6,
+        ACCEPTED = 7,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REVIEW")]
-        REVIEW = 7,
+        REVIEW = 8,
 
         [System.Runtime.Serialization.EnumMember(Value = @"HEARING_SCHEDULED")]
-        HEARING_SCHEDULED = 8,
+        HEARING_SCHEDULED = 9,
 
     }
 
@@ -5485,11 +5494,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputeHearingType
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"COURT_APPEARANCE")]
-        COURT_APPEARANCE = 0,
+        COURT_APPEARANCE = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"WRITTEN_REASONS")]
-        WRITTEN_REASONS = 1,
+        WRITTEN_REASONS = 2,
 
     }
 
@@ -5497,23 +5509,26 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputeDisputantAttendanceType
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"WRITTEN_REASONS")]
-        WRITTEN_REASONS = 0,
+        WRITTEN_REASONS = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VIDEO_CONFERENCE")]
-        VIDEO_CONFERENCE = 1,
+        VIDEO_CONFERENCE = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"TELEPHONE_CONFERENCE")]
-        TELEPHONE_CONFERENCE = 2,
+        TELEPHONE_CONFERENCE = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"MSTEAMS_AUDIO")]
-        MSTEAMS_AUDIO = 3,
+        MSTEAMS_AUDIO = 4,
 
         [System.Runtime.Serialization.EnumMember(Value = @"MSTEAMS_VIDEO")]
-        MSTEAMS_VIDEO = 4,
+        MSTEAMS_VIDEO = 5,
 
         [System.Runtime.Serialization.EnumMember(Value = @"IN_PERSON")]
-        IN_PERSON = 5,
+        IN_PERSON = 6,
 
     }
 
@@ -5521,8 +5536,26 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputeCourtAppearanceRoPApp
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"A")]
-        A = 0,
+        A = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"P")]
+        P = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputeCourtAppearanceRoPCrown
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
 
         [System.Runtime.Serialization.EnumMember(Value = @"P")]
         P = 1,
@@ -5533,26 +5566,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum JJDisputeCourtAppearanceRoPCrown
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"P")]
-        P = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum JJDisputedCountPlea
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"G")]
-        G = 0,
+        G = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5560,11 +5584,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRequestTimeToPay
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5572,11 +5599,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRequestReduction
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5584,11 +5614,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountAppearInCourt
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5596,11 +5629,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountIncludesSurcharge
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5623,11 +5659,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRoPJailIntermittent
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5635,11 +5674,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRoPDismissed
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5647,11 +5689,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRoPForWantOfProsecution
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5659,11 +5704,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRoPWithdrawn
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5671,11 +5719,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRoPAbatement
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5683,20 +5734,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeStatus
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"NEW")]
-        NEW = 0,
+        NEW = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VALIDATED")]
-        VALIDATED = 1,
+        VALIDATED = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"PROCESSING")]
-        PROCESSING = 2,
+        PROCESSING = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
-        REJECTED = 3,
+        REJECTED = 4,
 
         [System.Runtime.Serialization.EnumMember(Value = @"CANCELLED")]
-        CANCELLED = 4,
+        CANCELLED = 5,
 
     }
 
@@ -5704,11 +5758,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeRepresentedByLawyer
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5716,11 +5773,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeInterpreterRequired
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5728,11 +5788,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeDisputantDetectedOcrIssues
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5740,11 +5803,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeSystemDetectedOcrIssues
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5752,11 +5818,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeCountPleaCode
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"G")]
-        G = 0,
+        G = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5764,11 +5833,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeCountRequestTimeToPay
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5776,11 +5848,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeCountRequestReduction
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5788,11 +5863,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeCountRequestCourtAppearance
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5800,11 +5878,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum ViolationTicketIsYoungPerson
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5812,11 +5893,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum ViolationTicketIsChangeOfAddress
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5824,11 +5908,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum ViolationTicketIsDriver
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5836,11 +5923,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum ViolationTicketIsOwner
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5848,11 +5938,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum ViolationTicketCountIsAct
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5860,11 +5953,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum ViolationTicketCountIsRegulation
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5872,17 +5968,20 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputantUpdateRequestStatus2
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
-        ACCEPTED = 0,
+        ACCEPTED = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"HOLD")]
-        HOLD = 1,
+        HOLD = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"PENDING")]
-        PENDING = 2,
+        PENDING = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
-        REJECTED = 3,
+        REJECTED = 4,
 
     }
 
@@ -5890,20 +5989,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputantUpdateRequestUpdateType
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"DISPUTANT_ADDRESS")]
-        DISPUTANT_ADDRESS = 0,
+        DISPUTANT_ADDRESS = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"DISPUTANT_PHONE")]
-        DISPUTANT_PHONE = 1,
+        DISPUTANT_PHONE = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"DISPUTANT_NAME")]
-        DISPUTANT_NAME = 2,
+        DISPUTANT_NAME = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"COUNT")]
-        COUNT = 3,
+        COUNT = 4,
 
         [System.Runtime.Serialization.EnumMember(Value = @"COURT_OPTIONS")]
-        COURT_OPTIONS = 4,
+        COURT_OPTIONS = 5,
 
     }
 
@@ -5911,11 +6013,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum EmailHistorySuccessfullySent
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 0,
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 1,
+        N = 2,
 
     }
 
@@ -5923,20 +6028,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeResultDisputeStatus
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"NEW")]
-        NEW = 0,
+        NEW = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VALIDATED")]
-        VALIDATED = 1,
+        VALIDATED = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"PROCESSING")]
-        PROCESSING = 2,
+        PROCESSING = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
-        REJECTED = 3,
+        REJECTED = 4,
 
         [System.Runtime.Serialization.EnumMember(Value = @"CANCELLED")]
-        CANCELLED = 4,
+        CANCELLED = 5,
 
     }
 
@@ -5944,32 +6052,35 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeResultJjDisputeStatus
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"NEW")]
-        NEW = 0,
+        NEW = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"IN_PROGRESS")]
-        IN_PROGRESS = 1,
+        IN_PROGRESS = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"DATA_UPDATE")]
-        DATA_UPDATE = 2,
+        DATA_UPDATE = 3,
 
         [System.Runtime.Serialization.EnumMember(Value = @"CONFIRMED")]
-        CONFIRMED = 3,
+        CONFIRMED = 4,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REQUIRE_COURT_HEARING")]
-        REQUIRE_COURT_HEARING = 4,
+        REQUIRE_COURT_HEARING = 5,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REQUIRE_MORE_INFO")]
-        REQUIRE_MORE_INFO = 5,
+        REQUIRE_MORE_INFO = 6,
 
         [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
-        ACCEPTED = 6,
+        ACCEPTED = 7,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REVIEW")]
-        REVIEW = 7,
+        REVIEW = 8,
 
         [System.Runtime.Serialization.EnumMember(Value = @"HEARING_SCHEDULED")]
-        HEARING_SCHEDULED = 8,
+        HEARING_SCHEDULED = 9,
 
     }
 
@@ -5977,11 +6088,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum DisputeResultJjDisputeHearingType
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"COURT_APPEARANCE")]
-        COURT_APPEARANCE = 0,
+        COURT_APPEARANCE = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"WRITTEN_REASONS")]
-        WRITTEN_REASONS = 1,
+        WRITTEN_REASONS = 2,
 
     }
 

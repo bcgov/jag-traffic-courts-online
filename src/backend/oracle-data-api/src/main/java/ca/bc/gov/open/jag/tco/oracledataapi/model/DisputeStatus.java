@@ -5,6 +5,8 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
  */
 public enum DisputeStatus {
 
+	/** Unknown type (undefined). Must be index 0. */
+	UNKNOWN("UKN"),
 	NEW("NEW"),
 	VALIDATED("VALD"),
 	PROCESSING("PROC"),

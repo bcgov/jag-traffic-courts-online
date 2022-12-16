@@ -618,7 +618,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [ "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
+              "enum": [ "UNKNOWN", "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
             },
             "example": "ACCEPTED"
           }
@@ -1086,7 +1086,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [ "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
+              "enum": [ "UNKNOWN", "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
             },
             "example": "CANCELLED"
           }
@@ -1393,11 +1393,11 @@
           "ticketNumber": { "type": "string" },
           "status": {
             "type": "string",
-            "enum": [ "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
+            "enum": [ "UNKNOWN", "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
           },
           "hearingType": {
             "type": "string",
-            "enum": [ "COURT_APPEARANCE", "WRITTEN_REASONS" ]
+            "enum": [ "UNKNOWN", "COURT_APPEARANCE", "WRITTEN_REASONS" ]
           },
           "submittedTs": {
             "type": "string",
@@ -1496,7 +1496,7 @@
           "disputantAttendanceType": {
             "type": "string",
             "nullable": true,
-            "enum": [ "WRITTEN_REASONS", "VIDEO_CONFERENCE", "TELEPHONE_CONFERENCE", "MSTEAMS_AUDIO", "MSTEAMS_VIDEO", "IN_PERSON" ]
+            "enum": [ "UNKNOWN", "WRITTEN_REASONS", "VIDEO_CONFERENCE", "TELEPHONE_CONFERENCE", "MSTEAMS_AUDIO", "MSTEAMS_VIDEO", "IN_PERSON" ]
           },
           "remarks": {
             "type": "array",
@@ -1557,7 +1557,7 @@
           "app": {
             "type": "string",
             "nullable": true,
-            "enum": [ "A", "P", "N" ]
+            "enum": [ "UNKNOWN", "A", "P", "N" ]
           },
           "noAppTs": {
             "type": "string",
@@ -1575,7 +1575,7 @@
           "crown": {
             "type": "string",
             "nullable": true,
-            "enum": [ "P", "N" ]
+            "enum": [ "UNKNOWN", "P", "N" ]
           },
           "jjSeized": {
             "type": "string",
@@ -1649,7 +1649,7 @@
           },
           "plea": {
             "type": "string",
-            "enum": [ "G", "N" ]
+            "enum": [ "UNKNOWN", "G", "N" ]
           },
           "count": {
             "maximum": 3,
@@ -1659,15 +1659,15 @@
           },
           "requestTimeToPay": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "requestReduction": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "appearInCourt": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "description": {
             "type": "string",
@@ -1685,7 +1685,7 @@
           },
           "includesSurcharge": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "revisedDueDate": {
             "type": "string",
@@ -1747,7 +1747,7 @@
           "jailDuration": { "type": "string" },
           "jailIntermittent": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "probationDuration": { "type": "string" },
           "probationConditions": { "type": "string" },
@@ -1755,19 +1755,19 @@
           "drivingProhibitionMVASection": { "type": "string" },
           "dismissed": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "forWantOfProsecution": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "withdrawn": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "abatement": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "stayOfProceedingsBy": { "type": "string" },
           "other": { "type": "string" }
@@ -1863,7 +1863,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [ "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
+            "enum": [ "UNKNOWN", "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
           },
           "addressLine1": {
             "type": "string",
@@ -1930,7 +1930,7 @@
           "representedByLawyer": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "lawFirmName": {
             "type": "string",
@@ -1985,7 +1985,7 @@
           "interpreterRequired": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "witnessNo": {
             "type": "integer",
@@ -2020,7 +2020,7 @@
           "disputantDetectedOcrIssues": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "disputantOcrIssues": {
             "type": "string",
@@ -2028,7 +2028,7 @@
           },
           "systemDetectedOcrIssues": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "ocrTicketFilename": {
             "maxLength": 100,
@@ -2068,19 +2068,19 @@
           },
           "pleaCode": {
             "type": "string",
-            "enum": [ "G", "N" ]
+            "enum": [ "UNKNOWN", "G", "N" ]
           },
           "requestTimeToPay": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "requestReduction": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "requestCourtAppearance": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           }
         }
       },
@@ -2126,7 +2126,7 @@
           "isYoungPerson": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "disputantDriversLicenceNumber": {
             "maxLength": 30,
@@ -2210,17 +2210,17 @@
           "isChangeOfAddress": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "isDriver": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "isOwner": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "courtLocation": {
             "type": "string",
@@ -2273,12 +2273,12 @@
           "isAct": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "isRegulation": {
             "type": "string",
             "nullable": true,
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "section": {
             "maxLength": 10,
@@ -2345,11 +2345,11 @@
           },
           "status": {
             "type": "string",
-            "enum": [ "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
+            "enum": [ "UNKNOWN", "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
           },
           "updateType": {
             "type": "string",
-            "enum": [ "DISPUTANT_ADDRESS", "DISPUTANT_PHONE", "DISPUTANT_NAME", "COUNT", "COURT_OPTIONS" ]
+            "enum": [ "UNKNOWN", "DISPUTANT_ADDRESS", "DISPUTANT_PHONE", "DISPUTANT_NAME", "COUNT", "COURT_OPTIONS" ]
           },
           "updateJson": {
             "maxLength": 1000,
@@ -2424,7 +2424,7 @@
           },
           "successfullySent": {
             "type": "string",
-            "enum": [ "Y", "N" ]
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "ticketNumber": { "type": "string" }
         }
@@ -2439,16 +2439,16 @@
           "noticeOfDisputeGuid": { "type": "string" },
           "disputeStatus": {
             "type": "string",
-            "enum": [ "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
+            "enum": [ "UNKNOWN", "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
           },
           "jjDisputeStatus": {
             "type": "string",
             "nullable": true,
-            "enum": [ "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
+            "enum": [ "UNKNOWN", "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
           },
           "jjDisputeHearingType": {
             "type": "string",
-            "enum": [ "COURT_APPEARANCE", "WRITTEN_REASONS" ]
+            "enum": [ "UNKNOWN", "COURT_APPEARANCE", "WRITTEN_REASONS" ]
           }
         }
       }
