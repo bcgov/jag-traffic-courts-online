@@ -65,6 +65,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         [JsonRequired]
         public int Count { get; set; } = 0;
 
+        [Obsolete("No used in ARC file")]
         [JsonProperty("subparagraph")]
         public string? Subparagraph { get; set; }
         

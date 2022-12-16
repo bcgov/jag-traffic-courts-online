@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  description: This is an Oracle REST Data Services (ORDS) service for the Traffic Court Online schema.
+  title: Traffic Court Online
+  version: 1.0.0
+servers:
+  - description: local
+    url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca/tcoords/tco/'
+paths:
+  /v1/ping:
+    get:
+      operationId: ping
+      summary: Pings the server to test the connection
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResult'
+      tags:
+        - Health
+  /v1/jjDispute:
+    get:
+      parameters:
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JJDispute'
+      tags:
+        - JJDispute
+components:
+  schemas:
+    AuditBase:
+      type: object
+      properties:
+        entDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        entUserId:
+          type: string
+        updDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        updUserId:
+          type: string
+          format: nullable
+    JJDispute:
+      type: object
+      properties:
+        addressLine1Txt:
+          type: string
+        addressLine2Txt:
+          type: string
+          format: nullable
+        addressLine3Txt:       
+          type: string 
+          format: nullable
+        courtHearingTypeCd:  
+          type: string 
+          format: nullable
+        detachmentLocationTxt:
+          type: string
+        disputantBirthDt:
+          type: string
+          format: date  
+        disputantDrvLicNumberTxt:
+          type: string
+        disputantGiven1Nm:
+          type: string
+        disputantGiven2Nm:
+          type: string
+          format: nullable
+        disputantGiven3Nm:
+          type: string
+          format: nullable
+        disputantSurnameTxt:
+          type: string
+        disputeCounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/JJDisputeCount'
+        disputeId:
+          type: integer
+        disputeRemarks:
+          type: array
+          items:
+            $ref: '#/components/schemas/JJDisputeRemarks'
+        disputeStatusTypeCd:
+          type: string
+        drvLicIssuedCtryId:
+          type: string
+        drvLicIssuedProvSeqNo:
+          type: string
+        emailAddressTxt:
+          type: string
+        icbcReceivedDt:
+          type: string
+          format: date  
+        interpreterLanguageCd:
+          type: string
+          format: nullable
+        issuedTs:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
+        lawFirmNm:
+          type: string
+        lawyerGiven1Nm:
+          type: string
+          format: nullable
+        lawyerGiven2Nm:
+          type: string
+          format: nullable
+        lawyerGiven3Nm:
+          type: string
+          format: nullable
+        lawyerSurnameNm:
+          type: string
+          format: nullable
+        offenceLocationTxt:
+          type: string
+          format: nullable
+        submittedDt:
+          type: string
+          format: date  
+        ticketNumberTxt:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    JJDisputeCount:
+      type: object
+      properties:
+        adjustedAmt:
+          type: double
+        commentsTxt:
+          type: string
+        countNo:
+          type: string
+        disputeCountId:
+          type: integer
+        disputeId:
+          type: string
+        fineDueDt:
+          type: string
+        includesSurchargeYn:
+          type: string
+        pleaCd:
+          type: string
+        requestCourtAppearanceYn:
+          type: string
+        requestReductionYn:
+          type: string
+        requestTimeToPayYn:
+          type: string
+        revisedDueDt:
+          type: date
+        statuteId:
+          type: string
+        totalFineAmt:
+          type: double
+        violationDt:
+          type: date
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    JJDisputeRemarks:
+      type: object
+      properties:
+        disputeRemarkId:
+          type: string
+        disputeId:
+          type: string
+        disputeRemarkTxt:
+          type: string
+        fullUserNameTxt:
+          type: string
+        remarksMadeDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    PingResult:
+      type: object
+      properties:
+        status:
+          type: string
+        currentTimestamp:
+          type: string
+          format: date-time

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.opencsv.CSVReaderBuilder;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;

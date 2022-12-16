@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.LookupValuesApi;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.Language;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.LanguageListResult;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.Statute;
-import ca.bc.gov.open.jag.tco.oracledataapi.api.model.StatutesListResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.LanguageListResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Statute;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.StatutesListResult;
 
 public class LookupServiceTest extends BaseTestSuite {
 

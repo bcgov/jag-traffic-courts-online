@@ -24,12 +24,12 @@ public interface LookupMapper {
 	@Mapping(source = "statCode", target = "code")
 	@Mapping(source = "statShortDescriptionTxt", target = "shortDescriptionText")
 	@Mapping(source = "statDescriptionTxt", target = "descriptionText")
-	ca.bc.gov.open.jag.tco.oracledataapi.model.Statute convertStatute(ca.bc.gov.open.jag.tco.oracledataapi.api.model.Statute statute);
-	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Statute> convertStatutes(List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.Statute> statuteList);
+	ca.bc.gov.open.jag.tco.oracledataapi.model.Statute convertStatute(ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Statute statute);
+	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Statute> convertStatutes(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Statute> statuteList);
 
 	/** Map from ORDS Language to OracleDataAPI Language */
 	@Mapping(source = "cdlnLanguageCd", target = "code")
 	@Mapping(source = "cdlnLanguageDsc", target = "description")
-	ca.bc.gov.open.jag.tco.oracledataapi.model.Language convertLanguage(ca.bc.gov.open.jag.tco.oracledataapi.api.model.Language language);
-	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Language> convertLanguages(List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.Language> languages);
+	ca.bc.gov.open.jag.tco.oracledataapi.model.Language convertLanguage(ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language language);
+	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Language> convertLanguages(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language> languages);
 }

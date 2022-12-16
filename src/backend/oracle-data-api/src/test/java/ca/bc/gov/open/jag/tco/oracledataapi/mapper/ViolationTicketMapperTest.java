@@ -37,7 +37,7 @@ public class ViolationTicketMapperTest extends BaseTestSuite{
 				+ "Vivamus ornare ante nec eros luctus, non tincidunt ipsum interdum. Aliquam felis felis, ullamcorper non rutrum sit amet, sollicitudin sit amet lectus. "
 				+ "Quisque non massa dolor porttitor.");
 
-		ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket result = violationTicketMapper.convertDisputeToViolationTicketDto(testDispute);
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket result = violationTicketMapper.convertDisputeToViolationTicketDto(testDispute);
 
 		// Should return split out lawyer address string into 3 different fields each having 100 characters
 		assertEquals("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce accumsan nulla quam, non aliquam erat", result.getDispute().getLawFirmAddrLine1Txt());
