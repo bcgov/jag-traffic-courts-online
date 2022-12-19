@@ -6,6 +6,11 @@
     public enum Plea
     {
         /// <summary>
+        /// Unknown type (undefined). Must be index 0.
+        /// </summary>
+        Unknown,
+
+        /// <summary>
         /// If the dispuant is pleads guilty, plea will always be Guilty. The dispuant has choice to attend court or not.
         /// </summary>
         G,

@@ -6,6 +6,11 @@
     public enum MassTransitTransport
     {
         /// <summary>
+        /// Unknown type (undefined). Must be index 0.
+        /// </summary>
+        Unknown,
+
+        /// <summary>
         /// Use Rabbit MQ transport.
         /// </summary>
         RabbitMq,
