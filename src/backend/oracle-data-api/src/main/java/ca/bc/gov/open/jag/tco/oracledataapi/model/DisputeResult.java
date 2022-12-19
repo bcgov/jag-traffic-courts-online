@@ -1,8 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +21,7 @@ public class DisputeResult {
 	@Schema(nullable = true)
 	private JJDisputeStatus jjDisputeStatus;
 
-	@Enumerated(EnumType.STRING)
+	@Schema(nullable = true)
 	private JJDisputeHearingType jjDisputeHearingType;
 
 	public DisputeResult(Long disputeId, String noticeOfDisputeGuid, DisputeStatus disputeStatus) {

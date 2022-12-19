@@ -105,6 +105,18 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
+    public async Task<long> SaveDisputantUpdateRequestAsync(string guid, DisputantUpdateRequest disputantUpdateRequest, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _client.SaveDisputantUpdateRequestAsync(guid, disputantUpdateRequest, cancellationToken);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
         try

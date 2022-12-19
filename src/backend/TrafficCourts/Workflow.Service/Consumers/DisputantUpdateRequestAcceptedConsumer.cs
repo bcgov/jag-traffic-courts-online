@@ -108,18 +108,18 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                 TextContent = template.PlainContentTemplate,
                 HtmlContent = template.HtmlContentTemplate,
             }
-    };
+        };
 
-    await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
-}
+        await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
+    }
 
-private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
-{
-    SaveFileHistoryRecord fileHistoryRecord = new()
+    private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
     {
-        TicketNumber = dispute.TicketNumber,
-        Description = "Disputant update request accepted."
-    };
-    await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
-}
+        SaveFileHistoryRecord fileHistoryRecord = new()
+        {
+            TicketNumber = dispute.TicketNumber,
+            Description = "Disputant update request accepted."
+        };
+        await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+    }
 }
