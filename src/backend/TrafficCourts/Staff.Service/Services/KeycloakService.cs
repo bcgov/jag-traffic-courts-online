@@ -9,6 +9,8 @@ public class KeycloakService : IKeycloakService
     private readonly IKeycloakAdminApiClient _keycloakAdminClient;
     private readonly KeycloakOptions _options;
     private readonly ILogger<KeycloakService> _logger;
+    private const string _attributeIdirId = "idir_username";
+    private const string _attributePartId = "part_id";
 
     public KeycloakService(IKeycloakAdminApiClient keycloakAdminApiClient, KeycloakOptions options, ILogger<KeycloakService> logger)
     {
@@ -37,5 +39,25 @@ public class KeycloakService : IKeycloakService
         }
 
         return new List<UserRepresentation>();
+    }
+
+    public async Task<ICollection<UserRepresentation>> UsersByIdirAsync(string idirUsername, CancellationToken cancellationToken)
+    {
+        string? realm = _options.Realm;
+        string q = $"{_attributeIdirId}:{idirUsername}";
+
+        return await _keycloakAdminClient.UsersAll3Async(null, null, null, null, null, null, null, null, null, null, null, null, null, q, realm, cancellationToken);
+    }
+
+    public ICollection<string> TryGetPartIds(UserRepresentation userRepresentation)
+    {
+        if (userRepresentation.Attributes.TryGetValue(_attributePartId, out ICollection<string>? partIds))
+        {
+            return partIds;
+        }
+        else
+        {
+            return new List<string>();
+        }
     }
 }
