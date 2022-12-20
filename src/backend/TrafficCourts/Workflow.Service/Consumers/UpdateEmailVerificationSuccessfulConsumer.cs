@@ -9,24 +9,23 @@ using ApiException = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ApiExcepti
 namespace TrafficCourts.Workflow.Service.Consumers;
 
 /// <summary>
-/// Consumer for UpdateEmailVerificationSuccessful message (produced when a Disputant confirms their updated email address).
-/// This Consumer simply updates the status of DisputantUpdateRequest record(s) for the given NoticeOfDisputeGuid, setting their status from HOLD to PENDING.
-/// This Consumer also sends out an email to confirm Disputant's update request(s) are received.
+/// Consumer for UpdateRequestReceived message (produced when a Disputant's update request(s) are successfully received by the Oracle Data API).
+/// This Consumer sends out an email to confirm Disputant's update request(s) are received.
 /// </summary>
-public class SetDisputantUpdateRequestStatusInDatabase : IConsumer<UpdateEmailVerificationSuccessful>
+public class SetDisputantUpdateRequestStatusInDatabase : IConsumer<UpdateRequestReceived>
 {
-    private readonly ILogger<SetEmailVerifiedOnDisputeInDatabase> _logger;
+    private readonly ILogger<SetDisputantUpdateRequestStatusInDatabase> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IDisputantUpdateRequestReceivedTemplate _updateRequestReceivedTemplate;
 
-    public SetDisputantUpdateRequestStatusInDatabase(ILogger<SetEmailVerifiedOnDisputeInDatabase> logger, IOracleDataApiService oracleDataApiService, IDisputantUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
+    public SetDisputantUpdateRequestStatusInDatabase(ILogger<SetDisputantUpdateRequestStatusInDatabase> logger, IOracleDataApiService oracleDataApiService, IDisputantUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestReceivedTemplate = updateRequestReceivedTemplate ?? throw new ArgumentNullException(nameof(updateRequestReceivedTemplate));
     }
 
-    public async Task Consume(ConsumeContext<UpdateEmailVerificationSuccessful> context)
+    public async Task Consume(ConsumeContext<UpdateRequestReceived> context)
     {
         using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid);
 
@@ -40,18 +39,14 @@ public class SetDisputantUpdateRequestStatusInDatabase : IConsumer<UpdateEmailVe
                 return;
             }
 
-            // TODO: Enable the service call below once the method that updates status of DisputantUpdateRequest from HOLD to PENDING
-            // will be updated to process the operation based on NoticeOfDisputeGuid
-            // await _oracleDataApiService.UpdateDisputantUpdateRequestsStatusToPendingAsync(message.NoticeOfDisputeGuid, context.CancellationToken);
-
             // File History 
             SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
             fileHistoryRecord.TicketNumber = dispute.TicketNumber;
-            fileHistoryRecord.Description = "Update email verification complete";
+            fileHistoryRecord.Description = "Email sent to notify Disputant regarding their update request(s) received";
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // File History 
-            fileHistoryRecord.Description = "Update request submitted for staff review";
+            fileHistoryRecord.Description = "Update request(s) submitted for staff review";
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // Send email to disputant to confirm disputant's update request(s) are received and will be reviewed

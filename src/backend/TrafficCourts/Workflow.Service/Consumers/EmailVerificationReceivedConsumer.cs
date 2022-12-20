@@ -70,6 +70,20 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
                 TicketNumber = dispute.TicketNumber,
                 NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
             }, context.CancellationToken);
+
+            bool disputantHasUpdateRequestsPending = false;
+            // TODO: Call Oracle API to verify whether there are any other update requests associated
+            // to the same Dispute having PENDING status and update the flag disputantHasUpdateRequestsPending depending on that
+
+            // Send email with your update requests has been received content if there has been a pending request already
+            if (disputantHasUpdateRequestsPending)
+            {
+                UpdateRequestReceived updateRequestReceived = new()
+                {
+                    NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
+                };
+                await context.PublishWithLog(_logger, updateRequestReceived, context.CancellationToken);
+            }
         }
         catch (ApiException ex)
         {

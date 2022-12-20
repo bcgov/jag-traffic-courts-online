@@ -56,10 +56,6 @@ public class EmailVerificationSuccessful : EmailVerificationMessage
     public DateTimeOffset VerifiedAt { get; set; }
 }
 
-public class UpdateEmailVerificationSuccessful : EmailVerificationSuccessful
-{
-}
-
 /// <summary>
 /// Indicates a new dispute has been submitted (created).
 /// </summary>
@@ -70,18 +66,6 @@ public class NoticeOfDisputeSubmitted
     public string EmailAddress { get; set; } = string.Empty;
     public bool RequiresEmailVerification { get; set; } = true;
 }
-
-/// <summary>
-/// Indicates one or more disputant update request has been submitted (created).
-/// </summary>
-public class DisputantUpdateRequestSubmitted
-{
-    public long DisputeId { get; set; }
-    public Guid NoticeOfDisputeGuid { get; set; }
-    public string EmailAddress { get; set; } = string.Empty;
-    public bool RequiresEmailVerification { get; set; } = true;
-}
-
 
 /// <summary>
 /// This event is raised when we want to start or 
