@@ -65,6 +65,9 @@ public static class Startup
             config.AddSagaStateMachine<VerifyEmailAddressSagaStateMachine, VerifyEmailAddressSagaState, VerifyEmailAddressSagaDefinition>()
                 .RedisRepository(redis.ConnectionString);
 
+            config.AddSagaStateMachine<VerifyDisputantEmailAddressUpdateSagaStateMachine, VerifyDisputantEmailAddressUpdateSagaState, VerifyDisputantEmailAddressUpdateSagaDefinition>()
+                .RedisRepository(redis.ConnectionString);
+
             config.AddSagas(assembly);
         });
 

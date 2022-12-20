@@ -1,6 +1,6 @@
 ﻿namespace TrafficCourts.Workflow.Service.Sagas;
 
-public class VerifyEmailAddressSagaState : BaseStateMachineState
+public class VerifyDisputantEmailAddressUpdateSagaState : BaseStateMachineState
 {
     public Guid NoticeOfDisputeGuid { get; set; }
 

@@ -43,20 +43,38 @@ public abstract class EmailVerificationMessage
     /// The email address that is the target of verification.
     /// </summary>
     public string EmailAddress { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Is the message published for verification of a new email address as part of an update request.
+    /// </summary>
+    public bool IsUpdateEmailVerification { get; set; }
 }
 
 public class EmailVerificationSuccessful : EmailVerificationMessage
 {
     public long DisputeId { get; set; }
-
     public DateTimeOffset VerifiedAt { get; set; }
 }
 
+public class UpdateEmailVerificationSuccessful : EmailVerificationSuccessful
+{
+}
 
 /// <summary>
 /// Indicates a new dispute has been submitted (created).
 /// </summary>
 public class NoticeOfDisputeSubmitted
+{
+    public long DisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
+    public string EmailAddress { get; set; } = string.Empty;
+    public bool RequiresEmailVerification { get; set; } = true;
+}
+
+/// <summary>
+/// Indicates one or more disputant update request has been submitted (created).
+/// </summary>
+public class DisputantUpdateRequestSubmitted
 {
     public long DisputeId { get; set; }
     public Guid NoticeOfDisputeGuid { get; set; }
