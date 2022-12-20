@@ -17,12 +17,14 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
     private readonly ILogger<SetEmailVerifiedOnDisputeInDatabase> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IConfirmationEmailTemplate _confirmationEmailTemplate;
+    private readonly IDisputantEmailUpdateSuccessfulTemplate _emailUpdateSuccessfulTemplate;
 
-    public SetEmailVerifiedOnDisputeInDatabase(ILogger<SetEmailVerifiedOnDisputeInDatabase> logger, IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate)
+    public SetEmailVerifiedOnDisputeInDatabase(ILogger<SetEmailVerifiedOnDisputeInDatabase> logger, IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate, IDisputantEmailUpdateSuccessfulTemplate updateRequestReceivedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _confirmationEmailTemplate = confirmationEmailTemplate ?? throw new ArgumentNullException(nameof(confirmationEmailTemplate));
+        _emailUpdateSuccessfulTemplate = updateRequestReceivedTemplate ?? throw new ArgumentNullException(nameof(updateRequestReceivedTemplate));
     }
 
     public async Task Consume(ConsumeContext<EmailVerificationSuccessful> context)
@@ -53,14 +55,18 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
             EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
+
+            // Send email with email update successful content if this event is a result of email update process
+            if (message.IsUpdateEmailVerification)
+            {
+                emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
+            }
             await context.PublishWithLog(_logger, new SendDispuantEmail
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,
-                NoticeOfDisputeGuid = Guid.Empty   // TODO: set correct NoticeOfDisputeGuid
+                NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
             }, context.CancellationToken);
-
-            dispute.EmailAddressVerified = true;
         }
         catch (ApiException ex)
         {
