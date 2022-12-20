@@ -66,6 +66,14 @@ namespace TrafficCourts.Common.Features.Mail.Model
                 HtmlContentTemplate = "TBD",
                 PlainContentTemplate = "TBD"
             },
+        new MailTemplate()
+            {
+                TemplateName = "DisputantUpdateRequestPendingTemplate",
+                Sender = "DoNotReply@tickets.gov.bc.ca",
+                SubjectTemplate = "TBD (ie. Disputant contact information changes submitted - pending)",
+                HtmlContentTemplate = "TBD",
+                PlainContentTemplate = "TBD"
+            },
         };
 
         public List<MailTemplate> MailTemplates { get; set; } = new List<MailTemplate>();
