@@ -46,12 +46,15 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
             // File History 
             SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
             fileHistoryRecord.TicketNumber = dispute.TicketNumber;
-            fileHistoryRecord.Description = "Email verification complete";
+            fileHistoryRecord.Description = !message.IsUpdateEmailVerification ? "Email verification complete" : "Email update verification complete";
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
-            // File History 
-            fileHistoryRecord.Description = "Dispute submitted for staff review";
-            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+            if (!message.IsUpdateEmailVerification)
+            {
+                // File History 
+                fileHistoryRecord.Description = "Dispute submitted for staff review";
+                await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+            }
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
             EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
