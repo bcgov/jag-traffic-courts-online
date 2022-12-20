@@ -5,7 +5,6 @@ public enum DisputantUpdateRequestStatus implements ShortNamedEnum {
 	/** Unknown type (undefined). Must be index 0. */
 	UNKNOWN("UKN"),
 	ACCEPTED("ACC"),
-	HOLD("HOL"),
 	PENDING("PEN"),
 	REJECTED("REJ");
 

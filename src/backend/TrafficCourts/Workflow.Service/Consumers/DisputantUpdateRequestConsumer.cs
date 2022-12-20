@@ -32,10 +32,6 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
 
         if (message.EmailAddress is not null)
         {
-            // Set status to HOLD. This status will be used if there are any subsequent name, address, or phone update requests
-            // The status will move from HOLD to PENDING when the disputant's email has been verified.
-            disputantUpdateRequest.Status = DisputantUpdateRequestStatus2.HOLD;
-
             // TODO: Start email saga. TCVP-2009
         }
 
