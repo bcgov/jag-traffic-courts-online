@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using MassTransit;
+﻿using MassTransit;
 using Newtonsoft.Json;
-using System.Text.Json;
-using TrafficCourts.Common.Features.Mail;
-using TrafficCourts.Common.Features.Mail.Model;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
@@ -15,12 +12,16 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
 {
     private readonly ILogger<DisputantUpdateRequestAcceptedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private static readonly string _acceptedDisputantUpdateRequestEmailTemplateName = "DisputantUpdateRequestAcceptedTemplate";
+    private readonly IDisputantUpdateRequestAcceptedTemplate _updateRequestAcceptedTemplate;
 
-    public DisputantUpdateRequestAcceptedConsumer(ILogger<DisputantUpdateRequestAcceptedConsumer> logger, IOracleDataApiService oracleDataApiService)
+    public DisputantUpdateRequestAcceptedConsumer(
+        ILogger<DisputantUpdateRequestAcceptedConsumer> logger,
+        IOracleDataApiService oracleDataApiService,
+        IDisputantUpdateRequestAcceptedTemplate updateRequestAcceptedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
+        _updateRequestAcceptedTemplate = updateRequestAcceptedTemplate ?? throw new ArgumentNullException(nameof(updateRequestAcceptedTemplate));
     }
 
     public async Task Consume(ConsumeContext<DisputantUpdateRequestAccepted> context)
@@ -83,34 +84,13 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
 
     private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
     {
-        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _acceptedDisputantUpdateRequestEmailTemplateName);
-        if (template == null)
+        SendDispuantEmail message = new()
         {
-            _logger.LogError("Email {Template} not found", _acceptedDisputantUpdateRequestEmailTemplateName);
-            return;
-        }
-
-        if (dispute.EmailAddress is null)
-        {
-            _logger.LogError("EmailAddress is null on Dispute");
-            return;
-        }
-
-        SendDispuantEmail emailMessage = new()
-        {
-            NoticeOfDisputeGuid = new System.Guid(dispute.NoticeOfDisputeGuid),
-            TicketNumber = dispute.TicketNumber,
-            Message = new EmailMessage()
-            {
-                From = template.Sender,
-                To = dispute.EmailAddress,
-                Subject = template.SubjectTemplate,
-                TextContent = template.PlainContentTemplate,
-                HtmlContent = template.HtmlContentTemplate,
-            }
+            Message = _updateRequestAcceptedTemplate.Create(dispute),
+            NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
+            TicketNumber = dispute.TicketNumber
         };
-
-        await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
+        await context.PublishWithLog(_logger, message, context.CancellationToken);
     }
 
     private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
