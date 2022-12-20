@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -146,86 +145,11 @@ class DisputeServiceH2Test extends BaseTestSuite {
 		});
 	}
 
-	@Test
-	public void testUpdateDisputantUpdateRequestsStatusPending() throws Exception {
-		List<Long> updateRequestIds = new ArrayList<Long>();
-
-		Dispute dispute = createAndSaveDispute();
-		Long disputeId = dispute.getDisputeId();
-		String noticeOfDisputeGuid = dispute.getNoticeOfDisputeGuid();
-
-		Long updateDisputantUpdateRequestId1 = createDisputantUpdateRequestWithStatusAndDisputeId(noticeOfDisputeGuid, DisputantUpdateRequestStatus.HOLD, disputeId);
-		updateRequestIds.add(updateDisputantUpdateRequestId1);
-		Long updateDisputantUpdateRequestId2 = createDisputantUpdateRequestWithStatusAndDisputeId(noticeOfDisputeGuid, DisputantUpdateRequestStatus.HOLD, disputeId);
-		updateRequestIds.add(updateDisputantUpdateRequestId2);
-		Long updateDisputantUpdateRequestId3 = createDisputantUpdateRequestWithStatusAndDisputeId(noticeOfDisputeGuid, DisputantUpdateRequestStatus.HOLD, disputeId);
-		updateRequestIds.add(updateDisputantUpdateRequestId3);
-
-		disputeService.updateDisputantUpdateRequestsStatusPending(updateRequestIds);
-
-		List<DisputantUpdateRequest> updateRequests = disputeService.findDisputantUpdateRequestByDisputeId(disputeId);
-
-		assertEquals(3, updateRequests.size());
-
-		for (DisputantUpdateRequest disputantUpdateRequest : updateRequests) {
-			assertEquals(DisputantUpdateRequestStatus.PENDING, disputantUpdateRequest.getStatus());
-		}
-	}
-
-	@Test
-	public void testUpdateDisputantUpdateRequestsStatusPending_404() throws Exception {
-		List<Long> updateRequestIds = new ArrayList<Long>();
-
-		Dispute dispute = createAndSaveDispute();
-		Long disputeId = dispute.getDisputeId();
-		String noticeOfDisputeGuid = dispute.getNoticeOfDisputeGuid();
-
-		Long updateDisputantUpdateRequestId1 = createDisputantUpdateRequestWithStatusAndDisputeId(noticeOfDisputeGuid, DisputantUpdateRequestStatus.HOLD, disputeId);
-		updateRequestIds.add(updateDisputantUpdateRequestId1);
-		updateRequestIds.add(Long.valueOf(987L));
-		updateRequestIds.add(Long.valueOf(985L));
-
-		assertThrows(NoSuchElementException.class, () -> {
-			disputeService.updateDisputantUpdateRequestsStatusPending(updateRequestIds);
-		});
-	}
-
-	@Test
-	public void testUpdateDisputantUpdateRequestsStatusPending_405() throws Exception {
-		List<Long> updateRequestIds = new ArrayList<Long>();
-
-		Dispute dispute = createAndSaveDispute();
-		Long disputeId = dispute.getDisputeId();
-		String noticeOfDisputeGuid = dispute.getNoticeOfDisputeGuid();
-
-		Long updateDisputantUpdateRequestId1 = createDisputantUpdateRequestWithStatusAndDisputeId(noticeOfDisputeGuid, DisputantUpdateRequestStatus.HOLD, disputeId);
-		updateRequestIds.add(updateDisputantUpdateRequestId1);
-		Long updateDisputantUpdateRequestId2 = createDisputantUpdateRequestWithStatusAndDisputeId(noticeOfDisputeGuid, DisputantUpdateRequestStatus.PENDING, disputeId);
-		updateRequestIds.add(updateDisputantUpdateRequestId2);
-
-		assertThrows(NotAllowedException.class, () -> {
-			disputeService.updateDisputantUpdateRequestsStatusPending(updateRequestIds);
-		});
-	}
-
 	private Long saveDispute(DisputeStatus disputeStatus) {
 		Dispute dispute = new Dispute();
 		dispute.setStatus(disputeStatus);
 
 		return disputeRepository.save(dispute).getDisputeId();
-	}
-
-	private Long createDisputantUpdateRequestWithStatusAndDisputeId(String noticeOfDisputeGuid, DisputantUpdateRequestStatus status, Long disputeId) {
-
-		String json = "{ \"address_line1\": \"123 Main Street\", \"address_line2\": \"\", \"address_line3\": \"\" }";
-		DisputantUpdateRequest updateRequest = new DisputantUpdateRequest();
-		updateRequest.setDisputeId(disputeId);
-		updateRequest.setStatus(status);
-		updateRequest.setUpdateType(DisputantUpdateRequestType.DISPUTANT_ADDRESS);
-		updateRequest.setUpdateJson(json);
-		DisputantUpdateRequest savedUpdateReq = disputeService.saveDisputantUpdateRequest(noticeOfDisputeGuid, updateRequest);
-
-		return savedUpdateReq.getDisputantUpdateRequestId();
 	}
 
 	private Dispute createAndSaveDispute() {

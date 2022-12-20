@@ -618,7 +618,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": [ "UNKNOWN", "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
+              "enum": [ "UNKNOWN", "ACCEPTED", "PENDING", "REJECTED" ]
             },
             "example": "ACCEPTED"
           }
@@ -644,47 +644,6 @@
             "description": "Ok. DisputantUpdateRequest updated.",
             "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DisputantUpdateRequest" } } }
           }
-        }
-      }
-    },
-    "/api/v1.0/dispute/updateRequest/{ids}/pending": {
-      "put": {
-        "tags": [ "dispute-controller" ],
-        "summary": "An endpoint that updates the status of one or more DisputantUpdateRequest records to PENDING from HOLD.",
-        "operationId": "updateDisputantUpdateRequestsStatusToPending",
-        "parameters": [
-          {
-            "name": "ids",
-            "in": "path",
-            "description": "The id of the DisputantUpdateRequest record to update.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "500": {
-            "description": "Internal Server Error. Status Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "404": {
-            "description": "DisputantUpdateRequest records could not be found.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "405": {
-            "description": "A DisputantUpdateRequest status can only be set to PENDING iff status is HOLD. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "200": { "description": "Ok. DisputantUpdateRequest records updated to status PENDING." }
         }
       }
     },
@@ -2345,7 +2304,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [ "UNKNOWN", "ACCEPTED", "HOLD", "PENDING", "REJECTED" ]
+            "enum": [ "UNKNOWN", "ACCEPTED", "PENDING", "REJECTED" ]
           },
           "updateType": {
             "type": "string",
