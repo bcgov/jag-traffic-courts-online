@@ -12,13 +12,13 @@ namespace TrafficCourts.Workflow.Service.Consumers;
 /// Consumer for UpdateRequestReceived message (produced when a Disputant's update request(s) are successfully received by the Oracle Data API).
 /// This Consumer sends out an email to confirm Disputant's update request(s) are received.
 /// </summary>
-public class SetDisputantUpdateRequestStatusInDatabase : IConsumer<UpdateRequestReceived>
+public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestReceived>
 {
-    private readonly ILogger<SetDisputantUpdateRequestStatusInDatabase> _logger;
+    private readonly ILogger<SendUpdateRequestReceivedEmailConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IDisputantUpdateRequestReceivedTemplate _updateRequestReceivedTemplate;
 
-    public SetDisputantUpdateRequestStatusInDatabase(ILogger<SetDisputantUpdateRequestStatusInDatabase> logger, IOracleDataApiService oracleDataApiService, IDisputantUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
+    public SendUpdateRequestReceivedEmailConsumer(ILogger<SendUpdateRequestReceivedEmailConsumer> logger, IOracleDataApiService oracleDataApiService, IDisputantUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
@@ -40,9 +40,11 @@ public class SetDisputantUpdateRequestStatusInDatabase : IConsumer<UpdateRequest
             }
 
             // File History 
-            SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
-            fileHistoryRecord.TicketNumber = dispute.TicketNumber;
-            fileHistoryRecord.Description = "Email sent to notify Disputant regarding their update request(s) received";
+            SaveFileHistoryRecord fileHistoryRecord = new()
+            {
+                TicketNumber = dispute.TicketNumber,
+                Description = "Email sent to notify Disputant regarding their update request(s) received"
+            };
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // File History 
