@@ -74,9 +74,13 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (!this.form.value.address_country_id) {
       this.countryFormControl.setValue(this.canada);
+    } else {
+      this.countryFormControl.setValue(this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift());
     }
     if (!this.form.value.address_province) {
       this.provinceFormControl.setValue(this.bc);
+    } else {
+      this.provinceFormControl.setValue(this.provincesAndStates.filter(i => i.provAbbreviationCd === this.form.value.address_province).shift());
     }
 
     let form = this.form as NoticeOfDisputeFormGroup;
@@ -86,7 +90,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       if (foundProvinces) {
         this.driversLicenceProvinceFormControl.setValue(foundProvinces);
       }
-    } else if (form.controls.drivers_licence_province) {
+    } else if (form.controls.drivers_licence_province) { // have control but no value
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
   }
