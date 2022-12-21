@@ -48,8 +48,6 @@ namespace TrafficCourts.Test.Workflow.Service.Consumers
             {
                 await harness.Stop();
             }
-
         }
-
     }
 }

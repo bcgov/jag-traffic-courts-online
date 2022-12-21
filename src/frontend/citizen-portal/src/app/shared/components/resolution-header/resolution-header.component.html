@@ -1,22 +1,17 @@
-<h2 *ngIf="ticket"
-    class="my-2">
-  <div class="row">
-    <div class="col col-sm-2 col-lg-3">
+<h2 class="my-2">
+  <div fxLayout="row">
+    <div fxFlex="25">
       <small class="me-2 text-nowrap">Ticket #:</small>
-      <strong class="text-nowrap">{{ ticket.ticket_number }}</strong>
+      <b class="text-nowrap">{{ ticketNumber }}</b>
     </div>
-    <div class="col col-lg-3" style="text-align: end;">
+    <div fxFlex style="text-align: end;">
       <small class="me-2 text-nowrap">Violation time:</small>
-      <strong class="text-nowrap">{{ ticket.issued_date | date: "HH:mm" }}</strong>
-      <strong class="d-md-inline d-lg-none">{{
-        ticket.issued_date | date:" yyyy-MM-dd"
-      }}</strong>
+      <b class="text-nowrap">{{ time }}</b>
+      <b *ngIf="date" fxHide.gt-md="true" fxShow.lt-lg="true"> {{ date }}</b>
     </div>
-    <div class="d-xs-none d-sm-none d-md-none d-lg-block col-md-4 col-lg-6 violation-time">
+    <div *ngIf="date" fxFlex="50" fxHide.lt-lg="true" fxShow.gt-md="true" class="violation-time">
       <small class="me-2 text-nowrap">Violation date:</small>
-      <strong class="text-nowrap">{{
-        ticket.issued_date | date:"yyyy-MM-dd"
-      }}</strong>
+      <b class="text-nowrap">{{ date }}</b>
     </div>
   </div>
 </h2>

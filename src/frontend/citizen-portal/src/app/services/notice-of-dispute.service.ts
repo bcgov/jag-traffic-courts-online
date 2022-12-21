@@ -1,13 +1,14 @@
 import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { FormControlValidators } from "@core/validators/form-control.validators";
 import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
-import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, SearchDisputeResult, DisputeStatus } from "app/api";
+import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
+import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, DisputeStatus } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
@@ -25,34 +26,25 @@ export class NoticeOfDisputeService {
   RequestReduction = DisputeCountRequestReduction;
   RequestCourtAppearance = DisputeCountRequestCourtAppearance;
   PleaCode = DisputeCountPleaCode;
-  Status = DisputeStatus;
 
-  statusOfUpdatable = [
-    this.Status.New,
-    this.Status.Processing,
-  ]
-
-  ticketFormFields = {
-    disputant_surname: [null, [Validators.required]],
-    disputant_given_names: [null, [Validators.required]],
-    address: [null, [Validators.required, Validators.maxLength(300)]],
-    address_city: [null, [Validators.required]],
-    address_province: [null, [Validators.required, Validators.maxLength(30)]],
-    address_province_provId: [1],
-    address_province_country_id: [1],
-    address_province_seq_no: [1],
-    address_country_id: [1, [Validators.required]],
-    postal_code: [null, [Validators.required]],
-    home_phone_number: [null, [FormControlValidators.phone]],
-    work_phone_number: [null, [FormControlValidators.phone]], // not using now
-    email_address: [null, [Validators.required, Validators.email]],
-    disputant_birthdate: [null, [Validators.required]],
-    drivers_licence_number: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
-    drivers_licence_province: [null, [Validators.required]],
-    drivers_licence_province_provId: [null],
-    drivers_licence_country_id: [null],
-    drivers_licence_province_seq_no: [null],
-    dispute_counts: [],
+  ticketFormFields: NoticeOfDisputeFormControls = { // need to reset before using, all default value should be set in the component itself
+    disputant_surname: new FormControl<string | null>(null, [Validators.required]),
+    disputant_given_names: new FormControl<string | null>(null, [Validators.required]),
+    address: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(300)]),
+    address_city: new FormControl<string | null>(null, [Validators.required]),
+    address_province: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(30)]),
+    address_province_country_id: new FormControl<number | null>(null),
+    address_province_seq_no: new FormControl<number | null>(null),
+    address_country_id: new FormControl<number | null>(null, [Validators.required]),
+    postal_code: new FormControl<string | null>(null, [Validators.required]),
+    home_phone_number: new FormControl<string | null>(null, [FormControlValidators.phone]),
+    work_phone_number: new FormControl<string | null>(null, [FormControlValidators.phone]), // not using now
+    email_address: new FormControl<string | null>(null, [Validators.required, Validators.email]),
+    disputant_birthdate: new FormControl<string | null>(null, [Validators.required]),
+    drivers_licence_number: new FormControl<string | null>(null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]),
+    drivers_licence_province: new FormControl<string | null>(null, [Validators.required]),
+    drivers_licence_country_id: new FormControl<number | null>(null),
+    drivers_licence_province_seq_no: new FormControl<number | null>(null),
   }
 
   countFormFields = {
@@ -138,10 +130,11 @@ export class NoticeOfDisputeService {
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
             this._noticeOfDispute.next(input);
             if (input.email_address) {
-              this.router.navigate([AppRoutes.ticketPath(AppRoutes.EMAILVERIFICATIONREQUIRED)], {
+              this.router.navigate([AppRoutes.EMAILVERIFICATIONREQUIRED], {
                 queryParams: {
                   email: input.email_address,
-                  token: res.noticeOfDisputeId
+                  token: res.noticeOfDisputeId,
+                  mode: DisputeFormMode.CREATE
                 },
               });
             }
@@ -150,6 +143,7 @@ export class NoticeOfDisputeService {
                 queryParams: {
                   ticketNumber: input.ticket_number,
                   time: this.datePipe.transform(input.issued_date, "HH:mm"),
+                  mode: DisputeFormMode.CREATE
                 },
               });
             }
@@ -227,4 +221,13 @@ export interface NoticeOfDispute extends NoticeOfDisputeBase {
   disputant_given_names?: string;
   lawyer_full_name?: string;
   address?: string;
+}
+
+export type NoticeOfDisputeKeys = keyof NoticeOfDispute;
+export type NoticeOfDisputeFormControls = {
+  [key in NoticeOfDisputeKeys]?: AbstractControl;
+}
+export interface NoticeOfDisputeFormGroup extends FormGroup {
+  value: NoticeOfDispute;
+  controls: NoticeOfDisputeFormControls;
 }

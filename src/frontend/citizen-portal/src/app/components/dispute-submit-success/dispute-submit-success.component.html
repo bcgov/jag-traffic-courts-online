@@ -12,7 +12,7 @@
             <div class="d-flex justify-content-between d-print-none">
               <span>
                 <h1>Ticket request sent successfully</h1>
-               </span>
+              </span>
               <a class="print-link" (click)="onPrint()">
                 <img class="me-2" src="/assets/print-icon.svg" />
                 Print confirmation page
@@ -27,7 +27,7 @@
   <hr class="d-print-none">
   <div class="d-print-none">
     <strong>Next Steps</strong><br>
-    <p class="text-dark">
+    <p *ngIf="isCreate" class="text-dark">
       A member of the court registry will review your request and you will receive an email to the address you supplied
       which will inform you if the ticket request has been approved or rejected, and what to expect next.
       <br>
@@ -36,85 +36,97 @@
       <br>
       {{ noticeOfDispute.email_address }}
     </p>
+    <p *ngIf="!isCreate" class="text-dark">
+      A member of the court registry will review your request and you will receive an email to the address you supplied
+      which will inform you if the dsipute update request has been approved or rejected, and what to expect next.
+    </p>
     <hr class="d-print-none" />
   </div>
 
-  <strong class="d-print-none">Request details</strong>
+  <ng-container *ngIf="isCreate">
+    <strong class="d-print-none">Request details</strong>
 
-  <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
+    <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
 
-  <section class="mb-2 mt-4 d-print-none">
-    <div class="row" *ngIf="countsActions.request_court_appearance?.length > 0">
-      <div class="col">
-        <app-alert type="warning" icon="info">
-          <ng-container #alertContent class="alert-content">
-            You will be required to attend a hearing to defend your claim. A Notice of Hearing will be mailed to you –
-            it will have the date, time and location of your hearing. <br><br>
+    <section class="mb-2 mt-4 d-print-none">
+      <div class="row" *ngIf="countsActions.request_court_appearance?.length > 0">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              You will be required to attend a hearing to defend your claim. A Notice of Hearing will be mailed to you –
+              it will have the date, time and location of your hearing. <br><br>
 
-            If you fail to appear before the provincial court on your hearing date you will be found guilty and the full
-            ticketed amount must be paid immediately.
-          </ng-container>
-        </app-alert>
+              If you fail to appear before the provincial court on your hearing date you will be found guilty and the
+              full
+              ticketed amount must be paid immediately.
+            </ng-container>
+          </app-alert>
+        </div>
       </div>
-    </div>
-    <div class="row" *ngIf="countsActions.request_court_appearance?.length > 0 && ticketType === ticketTypes.CAMERA_TICKET">
-      <div class="col">
-        <app-alert type="warning" icon="info">
-          <ng-container #alertContent class="alert-content">
-            If you dispute the ticket, an intersection safety camera officer will always appear in court to explain the
-            offence and provide evidence.
-          </ng-container>
-        </app-alert>
+      <div class="row"
+        *ngIf="countsActions.request_court_appearance?.length > 0 && ticketType === ticketTypes.CAMERA_TICKET">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              If you dispute the ticket, an intersection safety camera officer will always appear in court to explain
+              the
+              offence and provide evidence.
+            </ng-container>
+          </app-alert>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="mb-2 mt-4 d-print-none">
-    <div class="row" *ngIf="noticeOfDispute.represented_by_lawyer === RepresentedByLawyer.Y">
-      <div class="col">
-        <app-alert type="warning" icon="info">
-          <ng-container #alertContent class="alert-content">
-            If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your
-            Notice of Dispute. The lawyer’s schedule will have to be considered when a date is set for your hearing and
-            many lawyers are not available on short notice.<br /> If you hire a lawyer they will generally give the
-            Violation Ticket Center dates when they are available for your hearing.
-          </ng-container>
-        </app-alert>
+    <section class="mb-2 mt-4 d-print-none">
+      <div class="row" *ngIf="noticeOfDispute.represented_by_lawyer === RepresentedByLawyer.Y">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your
+              Notice of Dispute. The lawyer’s schedule will have to be considered when a date is set for your hearing
+              and
+              many lawyers are not available on short notice.<br /> If you hire a lawyer they will generally give the
+              Violation Ticket Center dates when they are available for your hearing.
+            </ng-container>
+          </app-alert>
+        </div>
       </div>
-    </div>
-    <div class="row" *ngIf="noticeOfDispute.interpreter_language_cd">
-      <div class="col">
-        <app-alert type="warning" icon="info">
-          <ng-container #alertContent class="alert-content">
-            The court also provides visual language interpreters (American Sign Language) and CART (Communication Access
-            Realtime Translation - captioning services) for any court proceeding.
-          </ng-container>
-        </app-alert>
+      <div class="row" *ngIf="noticeOfDispute.interpreter_language_cd">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              The court also provides visual language interpreters (American Sign Language) and CART (Communication
+              Access
+              Realtime Translation - captioning services) for any court proceeding.
+            </ng-container>
+          </app-alert>
+        </div>
       </div>
-    </div>
-    <div class="row" *ngIf="noticeOfDispute.witness_no > 0">
-      <div class="col">
-        <app-alert type="warning" icon="info">
-          <ng-container #alertContent class="alert-content">
-            <strong>If you are calling a witness please keep the following information in mind:</strong><br />
-            If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the
-            violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record
-            of the disputant.
-          </ng-container>
-        </app-alert>
+      <div class="row" *ngIf="noticeOfDispute.witness_no > 0">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              <strong>If you are calling a witness please keep the following information in mind:</strong><br />
+              If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the
+              violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the
+              record
+              of the disputant.
+            </ng-container>
+          </app-alert>
+        </div>
       </div>
-    </div>
-    <div class="row" *ngIf="countsActions.request_court_appearance?.length !== noticeOfDispute.dispute_counts.length">
-      <div class="col">
-        <app-alert type="warning" icon="info">
-          <ng-container #alertContent class="alert-content">
-            <strong>You have selected that you do not want to attend a court hearing</strong>
-            You will be notified in writing to the address supplied above by the Court if your request was successful.
-          </ng-container>
-        </app-alert>
+      <div class="row" *ngIf="countsActions.request_court_appearance?.length !== noticeOfDispute.dispute_counts.length">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              <strong>You have selected that you do not want to attend a court hearing</strong>
+              You will be notified in writing to the address supplied above by the Court if your request was successful.
+            </ng-container>
+          </app-alert>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </ng-container>
 
   <app-resolution-footer></app-resolution-footer>
 </app-page>

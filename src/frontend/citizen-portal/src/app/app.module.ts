@@ -31,7 +31,7 @@ import { LandingComponent } from './components/landing/landing.component';
 import { TcoPageComponent } from './components/tco-page/tco-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
-import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
+import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { CountSummaryComponent } from './components/initiate-resolution/count-summary/count-summary.component';
 import { CountItemSummaryComponent } from './components/initiate-resolution/count-item-summary/count-item-summary.component';
 import { CountItemDisputeSummaryComponent } from './components/dispute-ticket-summary/count-item-dispute-summary/count-item-dispute-summary.component';
@@ -44,6 +44,8 @@ import { TicketLandingComponent } from './components/ticket-landing/ticket-landi
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
 import { UpdateDisputeAuthComponent } from '@components/update-dispute-auth/update-dispute-auth.component';
+import { DisputantFormComponent } from '@components/disputant-form/disputant-form.component';
+import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -59,7 +61,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     FindTicketComponent,
     DisputeSubmitSuccessComponent,
     InitiateResolutionComponent,
-    DisputeTicketStepperComponent,
+    DisputeStepperComponent,
     TcoPageComponent,
     DisputeTicketSummaryComponent,
     ScanTicketComponent,
@@ -72,6 +74,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     FindDisputeComponent,
     UpdateDisputeLandingComponent,
     UpdateDisputeAuthComponent,
+    DisputantFormComponent,
+    UpdateDisputeContactComponent,
   ],
   imports: [
     CommonModule,

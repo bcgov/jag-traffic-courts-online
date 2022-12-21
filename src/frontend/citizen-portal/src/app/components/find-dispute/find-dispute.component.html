@@ -18,43 +18,41 @@
 
   <div class="flex flex-last">
     <div class="flex-2-col info">
-      <div class="flex-last-info-content">
-        <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
-          <div class="row">
-            <span class="text-dark mx-2"><strong>If your ticket number starts with E or S:</strong></span>
+      <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
+        <div class="row">
+          <span class="text-dark mx-2"><strong>If your ticket number starts with E or S:</strong></span>
 
-            <div class="col">
-              <mat-form-field class="w-100">
-                <mat-label>Enter violation ticket number</mat-label>
-                <input formControlName="ticketNumber" placeholder="XX00000000" matInput type="text"
-                  oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off" />
-                <button mat-button matSuffix mat-icon-button aria-label="Clear"
-                  (click)="form.controls.ticketNumber.setValue('')">
-                  <mat-icon>close</mat-icon>
-                </button>
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-
-          <div class="row">
-            <mat-form-field style="width: 100%;">
-              <mat-label>Enter violation time</mat-label>
-              <input matInput hidden aria-label="default time" formControlName="time" />
-              <ngx-timepicker-field formControlName="time" [format]="24"></ngx-timepicker-field>
+          <div class="col">
+            <mat-form-field class="w-100">
+              <mat-label>Enter violation ticket number</mat-label>
+              <input formControlName="ticketNumber" placeholder="XX00000000" matInput type="text"
+                oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off" />
+              <button mat-button matSuffix mat-icon-button aria-label="Clear"
+                (click)="form.controls.ticketNumber.setValue('')">
+                <mat-icon>close</mat-icon>
+              </button>
               <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
-          <div class="row">
-            <div class="col">
-              <button type="submit" mat-flat-button color="primary" class="find-large">
-                <mat-icon class="me-2">search</mat-icon>
-                Find ticket
-              </button>
-            </div>
+        </div>
+
+        <div class="row">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Enter violation time</mat-label>
+            <input matInput hidden aria-label="default time" formControlName="time" />
+            <ngx-timepicker-field formControlName="time" [format]="24"></ngx-timepicker-field>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button type="submit" mat-flat-button color="primary" class="find-large">
+              <mat-icon class="me-2">search</mat-icon>
+              Find ticket
+            </button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 

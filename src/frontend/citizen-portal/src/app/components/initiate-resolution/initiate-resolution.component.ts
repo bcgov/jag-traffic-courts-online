@@ -25,9 +25,7 @@ export class InitiateResolutionComponent implements OnInit {
   ) {
     // always reconstruct current component
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
-    this.route.queryParams.subscribe((params) => {
-      this.params = params;
-    });
+    this.params = this.route.snapshot.queryParams;
   }
 
   ngOnInit(): void {
