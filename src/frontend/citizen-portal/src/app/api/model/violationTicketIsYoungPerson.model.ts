@@ -11,9 +11,10 @@
  */
 
 
-export type ViolationTicketIsYoungPerson = 'Y' | 'N';
+export type ViolationTicketIsYoungPerson = 'UNKNOWN' | 'Y' | 'N';
 
 export const ViolationTicketIsYoungPerson = {
+    Unknown: 'UNKNOWN' as ViolationTicketIsYoungPerson,
     Y: 'Y' as ViolationTicketIsYoungPerson,
     N: 'N' as ViolationTicketIsYoungPerson
 };

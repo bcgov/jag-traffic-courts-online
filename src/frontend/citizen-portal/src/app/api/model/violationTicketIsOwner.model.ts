@@ -11,9 +11,10 @@
  */
 
 
-export type ViolationTicketIsOwner = 'Y' | 'N';
+export type ViolationTicketIsOwner = 'UNKNOWN' | 'Y' | 'N';
 
 export const ViolationTicketIsOwner = {
+    Unknown: 'UNKNOWN' as ViolationTicketIsOwner,
     Y: 'Y' as ViolationTicketIsOwner,
     N: 'N' as ViolationTicketIsOwner
 };

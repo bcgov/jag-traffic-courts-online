@@ -11,9 +11,10 @@
  */
 
 
-export type DisputeDisputantDetectedOcrIssues = 'Y' | 'N';
+export type DisputeDisputantDetectedOcrIssues = 'UNKNOWN' | 'Y' | 'N';
 
 export const DisputeDisputantDetectedOcrIssues = {
+    Unknown: 'UNKNOWN' as DisputeDisputantDetectedOcrIssues,
     Y: 'Y' as DisputeDisputantDetectedOcrIssues,
     N: 'N' as DisputeDisputantDetectedOcrIssues
 };

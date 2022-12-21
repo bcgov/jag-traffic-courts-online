@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputedCountRoPDismissed = 'Y' | 'N';
+export type JJDisputedCountRoPDismissed = 'UNKNOWN' | 'Y' | 'N';
 
 export const JJDisputedCountRoPDismissed = {
+    Unknown: 'UNKNOWN' as JJDisputedCountRoPDismissed,
     Y: 'Y' as JJDisputedCountRoPDismissed,
     N: 'N' as JJDisputedCountRoPDismissed
 };
