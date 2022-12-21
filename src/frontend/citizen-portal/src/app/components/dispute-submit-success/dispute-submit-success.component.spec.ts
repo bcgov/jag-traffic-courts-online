@@ -28,6 +28,7 @@ describe('DisputeSubmitSuccessComponent', () => {
 
         RouterTestingModule.withRoutes([
           { path: 'ticket/find', component: BlankComponent },
+          { path: 'dsipute/find', component: BlankComponent },
         ]),
         BrowserAnimationsModule,
         NgxMaterialModule,

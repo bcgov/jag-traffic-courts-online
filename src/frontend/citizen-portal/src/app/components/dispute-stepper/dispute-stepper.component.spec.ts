@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
-import { DisputeTicketStepperComponent } from './dispute-ticket-stepper.component';
+import { DisputeStepperComponent } from './dispute-stepper.component';
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
@@ -15,9 +15,9 @@ import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 @Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
-describe('DisputeTicketStepperComponent', () => {
-  let component: DisputeTicketStepperComponent;
-  let fixture: ComponentFixture<DisputeTicketStepperComponent>;
+describe('DisputeStepperComponent', () => {
+  let component: DisputeStepperComponent;
+  let fixture: ComponentFixture<DisputeStepperComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -37,12 +37,12 @@ describe('DisputeTicketStepperComponent', () => {
         DatePipe,
         TicketTypePipe
       ],
-      declarations: [DisputeTicketStepperComponent, BlankComponent],
+      declarations: [DisputeStepperComponent, BlankComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisputeTicketStepperComponent);
+    fixture = TestBed.createComponent(DisputeStepperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

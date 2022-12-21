@@ -10,6 +10,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/boundingBox.model.ts
+model/disputantContactInformation.model.ts
 model/disputeCount.model.ts
 model/disputeCountPleaCode.model.ts
 model/disputeCountRequestCourtAppearance.model.ts

@@ -35,6 +35,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
 import { ImageTicketNotFoundDialogComponent } from './dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component';
 import { DisputeStatusDialogComponent } from './dialogs/dispute-status-dialog/dispute-status-dialog.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     declarations: [
@@ -77,6 +78,7 @@ import { MatStepperModule } from '@angular/material/stepper';
         ConfigModule,
         TranslateModule,
         MatStepperModule,
+        FlexLayoutModule,
     ],
     exports: [
         CommonModule,

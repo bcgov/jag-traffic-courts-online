@@ -1,109 +1,10 @@
 @import "palette";
 
-.or-separator {
-  display: flex;
-
-  span {
-    color: theme-palette(blue);
-    background:#fff;
-    padding:0 10px;
-    font-size: 24px;
-    font-weight: 700;
-  }
-
-  hr {
-    flex: 1;
-    background: #696969;
-    height: 2px;
-  }
-}
-.toggle-example{
-  display: flex
-  
-}
-.tool-tip{
-  color: deepskyblue;
-  transform: scale(0.70); 
-  vertical-align: middle;
-  cursor: pointer;
-}
-.time-picker-input{
-  width: 100%;
-  background: inherit;
-  border: none;
-  color: #0f48ae
-}
-.time-picker-wrapper{
-  padding: 5px;
-  font-size: 13px;
-  padding-left: 15px;
-}
-.time-picker{
-  background-color: rgba(0, 0, 0, 0.04);
-  padding-left: 0;
-  margin-left: 12px;
-  margin-bottom: 15px;
-  margin-right: 12px;
-  border-bottom: 1px solid;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-.subheader-desc {
-  font: 400 16px/22px BCSans, Noto Sans, Verdana, Arial, sans-serif;
-}
-
-@media (min-width: 751px) {
-  .subheader-desc {
-    font: 400 18px/26px BCSans, Noto Sans, Verdana, Arial, sans-serif;
-  }
-}
-
-.vertical-or-separator {
-  left: 48.5%;
-  top: 40%;
-  position: absolute;
-  color: theme-palette(blue);
-  background-color: white;
-  font-size: 24px;
-  font-weight: 700;
-}
-
 .find-large {
   width: 100%;
   height: 70px;
   font-size: 18px;
   font-weight: 700;
-}
-
-.find-xlarge {
-  width: 100%;
-  margin-bottom: 1em !important;
-
-  height: 62px;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.icon-large {
-  font-size: 32px !important;
-  height: 32px !important;
-  width: 32px !important;
-}
-
-.icon-xlarge {
-  font-size: 50px !important;
-  height: 50px !important;
-  width: 50px !important;
-}
-
-.view-link {
-  display: inline-flex;
-  height: 46px;
-  line-height: 25px;
-
-  & .view-link-text {
-   margin: auto;
-  }
 }
 
 .flex {
@@ -124,10 +25,6 @@
 
     &:first-child {
       padding-right: 50px;
-    }
-
-    .flex-last-info-content {
-      margin-bottom: -1em;
     }
   }
 
@@ -161,10 +58,6 @@
       &:first-child {
         padding-right: 0; //10px;
       }
-
-      .flex-last-info-content {
-        margin-bottom: 0;
-      }
     }
 
     &-2-col + &-2-col {
@@ -181,6 +74,7 @@
     }
   }
 }
+
 .ngx-timepicker-control__arrow{
   height: 10px;
 }

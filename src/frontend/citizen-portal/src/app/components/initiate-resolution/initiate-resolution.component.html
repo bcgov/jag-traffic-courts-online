@@ -44,7 +44,8 @@
                 <li>To speak to an officer at the Integrated Traffic Camera Unit please call <a
                     href="tel:1800-772-8120"><u>1-800-772-8120</u></a> toll-free. </li>
                 <li>You have 45 days from the violation date to submit your dispute request. If you are past the 45 days
-                  <a target="_blank" href="https://pay.gov.bc.ca/"><u>click here</u></a> for more information</li>
+                  <a target="_blank" href="https://pay.gov.bc.ca/"><u>click here</u></a> for more information
+                </li>
                 <li> If you don’t pay your fine you may not be able to get or renew licences and permits, including your
                   driver’s licence. </li>
                 <li>Intersection Safety Camera tickets are issued to the registered owner of a vehicle and registered
@@ -74,18 +75,14 @@
   <div *ngIf="ticket">
     <app-count-summary [ticket]="ticket"></app-count-summary>
 
-    <div class="row mt-4 d-print-none">
-      <div class="col-md-4">
-        <button id="secondaryButton" mat-stroked-button type="button" color="primary" class="large"
-          routerLink="/ticket/find">
-          Cancel and search again
-        </button>
-      </div>
-      <div class="col-md-6 start-button">
-        <button mat-flat-button color="primary" class="large" style="float: right;" (click)="onDisputeTicket()">
-          <strong>Start traffic ticket dispute request</strong>
-        </button>
-      </div>
+    <div fxLayout="row wrap" class="mt-4 d-print-none">
+      <button fxFlex="33" fxFlex.lt-md="100" mat-stroked-button type="button" color="primary" class="large" routerLink="/ticket/find">
+        Cancel and search again
+      </button>
+      <div fxFlex></div>
+      <button fxFlex="50" fxFlex.lt-md="100" mat-flat-button color="primary" class="large" (click)="onDisputeTicket()">
+        <strong>Start traffic ticket dispute request</strong>
+      </button>
     </div>
 
     <app-resolution-footer></app-resolution-footer>

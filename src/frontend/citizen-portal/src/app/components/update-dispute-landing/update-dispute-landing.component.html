@@ -4,7 +4,7 @@
   </div>
   <div fxLayout="row" fxLayoutAlign="space-between">
     <div fxFlex="32">
-      <div class="option" (click)="checkStatus()">
+      <div class="option" role="button" (click)="checkStatus()">
         <div class="option-content">
           <h2><b>Check Status</b></h2>
           <div>Track the status of your dispute from start to finish</div>
@@ -13,7 +13,7 @@
     </div>
     <ng-container *ngIf="isEditable | async">
       <div fxFlex="32">
-        <div class="option">
+        <div class="option" role="button" (click)="goToUpdateDisputeContact()">
           <div class="option-content">
             <h2><b>Change Address</b></h2>
             <div>Update your content name, email, mailing address or phone number</div>
@@ -22,7 +22,7 @@
       </div>
       <div fxFlex="32">
         <div class="option">
-          <div class="option-content" (click)="goToUpdateDisputeAuth()">
+          <div class="option-content" role="button" (click)="goToUpdateDisputeAuth()">
             <h2><b>Change Dispute</b></h2>
             <div>Change your contact information, plea or court options</div>
           </div>

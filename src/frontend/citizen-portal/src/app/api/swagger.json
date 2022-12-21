@@ -226,6 +226,91 @@
         }
       }
     },
+    "/api/dispute/{guidHash}/contact": {
+      "put": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "Submits an update request for a Disputant's contact information.",
+        "parameters": [
+          {
+            "name": "guidHash",
+            "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The requested fields to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputantContactInformation"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputantContactInformation"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputantContactInformation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lookup/statutes": {
       "get": {
         "tags": [
@@ -452,6 +537,103 @@
         },
         "additionalProperties": false
       },
+      "DisputantContactInformation": {
+        "type": "object",
+        "properties": {
+          "email_address": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The disputant's email address.",
+            "nullable": true
+          },
+          "disputant_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The first given name or corporate name continued.",
+            "nullable": true
+          },
+          "disputant_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The second given name",
+            "nullable": true
+          },
+          "disputant_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The third given name",
+            "nullable": true
+          },
+          "disputant_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "address_line1": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line2": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line3": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address city of the disputant.",
+            "nullable": true
+          },
+          "address_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address province of the disputant.",
+            "nullable": true
+          },
+          "address_province_country_id": {
+            "type": "integer",
+            "description": "The mailing address province's country code of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_province_seq_no": {
+            "type": "integer",
+            "description": "The mailing address province's sequence number of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_country_id": {
+            "type": "integer",
+            "description": "The mailing address country id of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "postal_code": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "The mailing address postal code or zip code of the disputant.",
+            "nullable": true
+          },
+          "home_phone_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The disputant's home phone number.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{guidhash}/contact endpoint."
+      },
       "DisputeCount": {
         "type": "object",
         "properties": {
@@ -477,6 +659,7 @@
       },
       "DisputeCountPleaCode": {
         "enum": [
+          "UNKNOWN",
           "G",
           "N"
         ],
@@ -484,6 +667,7 @@
       },
       "DisputeCountRequestCourtAppearance": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -491,6 +675,7 @@
       },
       "DisputeCountRequestReduction": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -498,6 +683,7 @@
       },
       "DisputeCountRequestTimeToPay": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -505,6 +691,7 @@
       },
       "DisputeDisputantDetectedOcrIssues": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -512,6 +699,7 @@
       },
       "DisputeInterpreterRequired": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -519,6 +707,7 @@
       },
       "DisputeRepresentedByLawyer": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -526,6 +715,7 @@
       },
       "DisputeStatus": {
         "enum": [
+          "UNKNOWN",
           "NEW",
           "VALIDATED",
           "PROCESSING",
@@ -569,6 +759,7 @@
       },
       "JJDisputeHearingType": {
         "enum": [
+          "UNKNOWN",
           "COURT_APPEARANCE",
           "WRITTEN_REASONS"
         ],
@@ -576,6 +767,7 @@
       },
       "JJDisputeStatus": {
         "enum": [
+          "UNKNOWN",
           "NEW",
           "IN_PROGRESS",
           "DATA_UPDATE",
@@ -1178,6 +1370,7 @@
       },
       "ViolationTicketCountIsAct": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -1185,6 +1378,7 @@
       },
       "ViolationTicketCountIsRegulation": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -1192,6 +1386,7 @@
       },
       "ViolationTicketIsChangeOfAddress": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -1199,6 +1394,7 @@
       },
       "ViolationTicketIsDriver": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -1206,6 +1402,7 @@
       },
       "ViolationTicketIsOwner": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -1213,6 +1410,7 @@
       },
       "ViolationTicketIsYoungPerson": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],

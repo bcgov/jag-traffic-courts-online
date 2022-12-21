@@ -44,4 +44,28 @@ describe('ConfigService', () => {
       expect(code).toBeDefined();
     }
   ));
+
+  it('should have CountryCodeValue of Canada', inject(
+    [ConfigService],
+    (service: ConfigService) => {
+      const code = service.canadaCodeValue;
+      expect(code).toBeDefined();
+    }
+  ));
+
+  it('should have CountryCodeValue of USA', inject(
+    [ConfigService],
+    (service: ConfigService) => {
+      const code = service.usaCodeValue;
+      expect(code).toBeDefined();
+    }
+  ));
+
+  it('should have ProvinceCodeValue of BC', inject(
+    [ConfigService],
+    (service: ConfigService) => {
+      const code = service.bcCodeValue;
+      expect(code).toBeDefined();
+    }
+  ));
 });
