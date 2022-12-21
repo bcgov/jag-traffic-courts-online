@@ -136,6 +136,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         state.NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid;
         state.EmailAddress = context.Message.EmailAddress;
         state.TicketNumber = context.Message.TicketNumber;
+        state.IsUpdateEmailVerification = context.Message.IsUpdateEmailVerification;
         state.Token = Guid.NewGuid();
 
         if (context.Message.DisputeId is not null)
@@ -242,7 +243,8 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
             NoticeOfDisputeGuid = state.NoticeOfDisputeGuid,
             TicketNumber = state.TicketNumber,
             EmailAddress = state.EmailAddress,
-            VerifiedAt = state.VerifiedAt.Value
+            VerifiedAt = state.VerifiedAt.Value,
+            IsUpdateEmailVerification = state.IsUpdateEmailVerification
         }, context.CancellationToken);
 
     }

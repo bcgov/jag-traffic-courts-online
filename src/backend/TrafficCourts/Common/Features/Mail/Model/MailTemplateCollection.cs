@@ -66,6 +66,31 @@ namespace TrafficCourts.Common.Features.Mail.Model
                 HtmlContentTemplate = "TBD",
                 PlainContentTemplate = "TBD"
             },
+        new MailTemplate()
+            {
+                TemplateName = "DisputantUpdateRequestReceivedTemplate",
+                Sender = "DoNotReply@tickets.gov.bc.ca",
+                SubjectTemplate = "Dispute update requests received",
+                HtmlContentTemplate = "TBD",
+                PlainContentTemplate = "Your request to update dispute information was received."
+            },
+        new MailTemplate()
+            {
+                TemplateName = "DisputantEmailUpdateSuccessfulTemplate",
+                Sender = "DoNotReply@tickets.gov.bc.ca",
+                SubjectTemplate = "Email verification successful",
+                HtmlContentTemplate = "TBD",
+                PlainContentTemplate = "Your email address has been updated successfully."
+            },
+        new MailTemplate()
+            {
+                TemplateName = "UpdateEmailVerificationTemplate",
+                Sender = "DoNotReply@tickets.gov.bc.ca",
+                SubjectTemplate = "Verify your email update for traffic violation ticket {ticketid}.",
+                HtmlContentTemplate = "TBD (ie. In order to confirm your email update click on the following link.)" +
+                    "<br/><br/><a href='{emailVerificationUrl}?uuid={emailVerificationToken}'>{emailVerificationUrl}?uuid={emailVerificationToken}</a>" +
+                    "<br/><br/>If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
+            },
         };
 
         public List<MailTemplate> MailTemplates { get; set; } = new List<MailTemplate>();

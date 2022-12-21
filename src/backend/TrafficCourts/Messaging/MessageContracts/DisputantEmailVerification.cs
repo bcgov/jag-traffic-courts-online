@@ -43,15 +43,18 @@ public abstract class EmailVerificationMessage
     /// The email address that is the target of verification.
     /// </summary>
     public string EmailAddress { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Is the message published for verification of a new email address as part of an update request.
+    /// </summary>
+    public bool IsUpdateEmailVerification { get; set; }
 }
 
 public class EmailVerificationSuccessful : EmailVerificationMessage
 {
     public long DisputeId { get; set; }
-
     public DateTimeOffset VerifiedAt { get; set; }
 }
-
 
 /// <summary>
 /// Indicates a new dispute has been submitted (created).
@@ -63,7 +66,6 @@ public class NoticeOfDisputeSubmitted
     public string EmailAddress { get; set; } = string.Empty;
     public bool RequiresEmailVerification { get; set; } = true;
 }
-
 
 /// <summary>
 /// This event is raised when we want to start or 
