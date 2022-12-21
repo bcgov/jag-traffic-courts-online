@@ -11,9 +11,10 @@
  */
 
 
-export type DisputeRepresentedByLawyer = 'Y' | 'N';
+export type DisputeRepresentedByLawyer = 'UNKNOWN' | 'Y' | 'N';
 
 export const DisputeRepresentedByLawyer = {
+    Unknown: 'UNKNOWN' as DisputeRepresentedByLawyer,
     Y: 'Y' as DisputeRepresentedByLawyer,
     N: 'N' as DisputeRepresentedByLawyer
 };

@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputedCountRequestTimeToPay = 'Y' | 'N';
+export type JJDisputedCountRequestTimeToPay = 'UNKNOWN' | 'Y' | 'N';
 
 export const JJDisputedCountRequestTimeToPay = {
+    Unknown: 'UNKNOWN' as JJDisputedCountRequestTimeToPay,
     Y: 'Y' as JJDisputedCountRequestTimeToPay,
     N: 'N' as JJDisputedCountRequestTimeToPay
 };

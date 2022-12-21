@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputeStatus = 'NEW' | 'IN_PROGRESS' | 'DATA_UPDATE' | 'CONFIRMED' | 'REQUIRE_COURT_HEARING' | 'REQUIRE_MORE_INFO' | 'ACCEPTED' | 'REVIEW' | 'HEARING_SCHEDULED';
+export type JJDisputeStatus = 'UNKNOWN' | 'NEW' | 'IN_PROGRESS' | 'DATA_UPDATE' | 'CONFIRMED' | 'REQUIRE_COURT_HEARING' | 'REQUIRE_MORE_INFO' | 'ACCEPTED' | 'REVIEW' | 'HEARING_SCHEDULED';
 
 export const JJDisputeStatus = {
+    Unknown: 'UNKNOWN' as JJDisputeStatus,
     New: 'NEW' as JJDisputeStatus,
     InProgress: 'IN_PROGRESS' as JJDisputeStatus,
     DataUpdate: 'DATA_UPDATE' as JJDisputeStatus,

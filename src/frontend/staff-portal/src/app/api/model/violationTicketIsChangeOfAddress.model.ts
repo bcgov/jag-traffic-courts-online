@@ -11,9 +11,10 @@
  */
 
 
-export type ViolationTicketIsChangeOfAddress = 'Y' | 'N';
+export type ViolationTicketIsChangeOfAddress = 'UNKNOWN' | 'Y' | 'N';
 
 export const ViolationTicketIsChangeOfAddress = {
+    Unknown: 'UNKNOWN' as ViolationTicketIsChangeOfAddress,
     Y: 'Y' as ViolationTicketIsChangeOfAddress,
     N: 'N' as ViolationTicketIsChangeOfAddress
 };

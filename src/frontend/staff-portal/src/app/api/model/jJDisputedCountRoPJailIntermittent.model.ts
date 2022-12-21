@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputedCountRoPJailIntermittent = 'Y' | 'N';
+export type JJDisputedCountRoPJailIntermittent = 'UNKNOWN' | 'Y' | 'N';
 
 export const JJDisputedCountRoPJailIntermittent = {
+    Unknown: 'UNKNOWN' as JJDisputedCountRoPJailIntermittent,
     Y: 'Y' as JJDisputedCountRoPJailIntermittent,
     N: 'N' as JJDisputedCountRoPJailIntermittent
 };

@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputedCountIncludesSurcharge = 'Y' | 'N';
+export type JJDisputedCountIncludesSurcharge = 'UNKNOWN' | 'Y' | 'N';
 
 export const JJDisputedCountIncludesSurcharge = {
+    Unknown: 'UNKNOWN' as JJDisputedCountIncludesSurcharge,
     Y: 'Y' as JJDisputedCountIncludesSurcharge,
     N: 'N' as JJDisputedCountIncludesSurcharge
 };

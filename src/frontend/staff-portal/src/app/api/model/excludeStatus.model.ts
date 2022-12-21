@@ -11,9 +11,10 @@
  */
 
 
-export type ExcludeStatus = 'NEW' | 'VALIDATED' | 'PROCESSING' | 'REJECTED' | 'CANCELLED';
+export type ExcludeStatus = 'UNKNOWN' | 'NEW' | 'VALIDATED' | 'PROCESSING' | 'REJECTED' | 'CANCELLED';
 
 export const ExcludeStatus = {
+    Unknown: 'UNKNOWN' as ExcludeStatus,
     New: 'NEW' as ExcludeStatus,
     Validated: 'VALIDATED' as ExcludeStatus,
     Processing: 'PROCESSING' as ExcludeStatus,

@@ -3029,6 +3029,7 @@
       },
       "DisputeCountPleaCode": {
         "enum": [
+          "UNKNOWN",
           "G",
           "N"
         ],
@@ -3036,6 +3037,7 @@
       },
       "DisputeCountRequestCourtAppearance": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3043,6 +3045,7 @@
       },
       "DisputeCountRequestReduction": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3050,6 +3053,7 @@
       },
       "DisputeCountRequestTimeToPay": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3057,6 +3061,7 @@
       },
       "DisputeDisputantDetectedOcrIssues": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3064,6 +3069,7 @@
       },
       "DisputeInterpreterRequired": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3071,6 +3077,7 @@
       },
       "DisputeRepresentedByLawyer": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3078,6 +3085,7 @@
       },
       "DisputeStatus": {
         "enum": [
+          "UNKNOWN",
           "NEW",
           "VALIDATED",
           "PROCESSING",
@@ -3088,6 +3096,7 @@
       },
       "DisputeSystemDetectedOcrIssues": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3154,6 +3163,7 @@
       },
       "EmailHistorySuccessfullySent": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3161,6 +3171,7 @@
       },
       "ExcludeStatus": {
         "enum": [
+          "UNKNOWN",
           "NEW",
           "VALIDATED",
           "PROCESSING",
@@ -3509,6 +3520,7 @@
       },
       "JJDisputeCourtAppearanceRoPApp": {
         "enum": [
+          "UNKNOWN",
           "A",
           "P",
           "N"
@@ -3517,6 +3529,7 @@
       },
       "JJDisputeCourtAppearanceRoPCrown": {
         "enum": [
+          "UNKNOWN",
           "P",
           "N"
         ],
@@ -3524,6 +3537,7 @@
       },
       "JJDisputeDisputantAttendanceType": {
         "enum": [
+          "UNKNOWN",
           "WRITTEN_REASONS",
           "VIDEO_CONFERENCE",
           "TELEPHONE_CONFERENCE",
@@ -3535,6 +3549,7 @@
       },
       "JJDisputeHearingType": {
         "enum": [
+          "UNKNOWN",
           "COURT_APPEARANCE",
           "WRITTEN_REASONS"
         ],
@@ -3584,6 +3599,7 @@
       },
       "JJDisputeStatus": {
         "enum": [
+          "UNKNOWN",
           "NEW",
           "IN_PROGRESS",
           "DATA_UPDATE",
@@ -3688,6 +3704,7 @@
       },
       "JJDisputedCountAppearInCourt": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3695,6 +3712,7 @@
       },
       "JJDisputedCountIncludesSurcharge": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3702,6 +3720,7 @@
       },
       "JJDisputedCountPlea": {
         "enum": [
+          "UNKNOWN",
           "G",
           "N"
         ],
@@ -3709,6 +3728,7 @@
       },
       "JJDisputedCountRequestReduction": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3716,6 +3736,7 @@
       },
       "JJDisputedCountRequestTimeToPay": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3813,6 +3834,7 @@
       },
       "JJDisputedCountRoPAbatement": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3820,6 +3842,7 @@
       },
       "JJDisputedCountRoPDismissed": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3835,6 +3858,7 @@
       },
       "JJDisputedCountRoPForWantOfProsecution": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3842,6 +3866,7 @@
       },
       "JJDisputedCountRoPJailIntermittent": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -3849,6 +3874,7 @@
       },
       "JJDisputedCountRoPWithdrawn": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -4429,6 +4455,7 @@
       },
       "ViolationTicketCountIsAct": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -4436,6 +4463,7 @@
       },
       "ViolationTicketCountIsRegulation": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -4458,6 +4486,7 @@
       },
       "ViolationTicketIsChangeOfAddress": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -4465,6 +4494,7 @@
       },
       "ViolationTicketIsDriver": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -4472,6 +4502,7 @@
       },
       "ViolationTicketIsOwner": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],
@@ -4479,6 +4510,7 @@
       },
       "ViolationTicketIsYoungPerson": {
         "enum": [
+          "UNKNOWN",
           "Y",
           "N"
         ],

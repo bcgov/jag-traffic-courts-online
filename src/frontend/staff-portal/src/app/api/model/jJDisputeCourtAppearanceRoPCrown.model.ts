@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputeCourtAppearanceRoPCrown = 'P' | 'N';
+export type JJDisputeCourtAppearanceRoPCrown = 'UNKNOWN' | 'P' | 'N';
 
 export const JJDisputeCourtAppearanceRoPCrown = {
+    Unknown: 'UNKNOWN' as JJDisputeCourtAppearanceRoPCrown,
     P: 'P' as JJDisputeCourtAppearanceRoPCrown,
     N: 'N' as JJDisputeCourtAppearanceRoPCrown
 };

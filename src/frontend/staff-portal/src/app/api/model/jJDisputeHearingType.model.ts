@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputeHearingType = 'COURT_APPEARANCE' | 'WRITTEN_REASONS';
+export type JJDisputeHearingType = 'UNKNOWN' | 'COURT_APPEARANCE' | 'WRITTEN_REASONS';
 
 export const JJDisputeHearingType = {
+    Unknown: 'UNKNOWN' as JJDisputeHearingType,
     CourtAppearance: 'COURT_APPEARANCE' as JJDisputeHearingType,
     WrittenReasons: 'WRITTEN_REASONS' as JJDisputeHearingType
 };
