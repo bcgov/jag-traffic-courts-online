@@ -17,12 +17,14 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
     private readonly ILogger<SetEmailVerifiedOnDisputeInDatabase> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IConfirmationEmailTemplate _confirmationEmailTemplate;
+    private readonly IDisputantEmailUpdateSuccessfulTemplate _emailUpdateSuccessfulTemplate;
 
-    public SetEmailVerifiedOnDisputeInDatabase(ILogger<SetEmailVerifiedOnDisputeInDatabase> logger, IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate)
+    public SetEmailVerifiedOnDisputeInDatabase(ILogger<SetEmailVerifiedOnDisputeInDatabase> logger, IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate, IDisputantEmailUpdateSuccessfulTemplate updateRequestReceivedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _confirmationEmailTemplate = confirmationEmailTemplate ?? throw new ArgumentNullException(nameof(confirmationEmailTemplate));
+        _emailUpdateSuccessfulTemplate = updateRequestReceivedTemplate ?? throw new ArgumentNullException(nameof(updateRequestReceivedTemplate));
     }
 
     public async Task Consume(ConsumeContext<EmailVerificationSuccessful> context)
@@ -44,23 +46,44 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
             // File History 
             SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
             fileHistoryRecord.TicketNumber = dispute.TicketNumber;
-            fileHistoryRecord.Description = "Email verification complete";
+            fileHistoryRecord.Description = !message.IsUpdateEmailVerification ? "Email verification complete" : "Email update verification complete";
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
-            // File History 
-            fileHistoryRecord.Description = "Dispute submitted for staff review";
-            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+            if (!message.IsUpdateEmailVerification)
+            {
+                // File History 
+                fileHistoryRecord.Description = "Dispute submitted for staff review";
+                await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+            }
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
             EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
+
+            // Send email with email update successful content if this event is a result of email update process
+            if (message.IsUpdateEmailVerification)
+            {
+                emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
+            }
             await context.PublishWithLog(_logger, new SendDispuantEmail
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,
-                NoticeOfDisputeGuid = Guid.Empty   // TODO: set correct NoticeOfDisputeGuid
+                NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
             }, context.CancellationToken);
 
-            dispute.EmailAddressVerified = true;
+            bool disputantHasUpdateRequestsPending = false;
+            // TODO: Call Oracle API to verify whether there are any other update requests associated
+            // to the same Dispute having PENDING status and update the flag disputantHasUpdateRequestsPending depending on that
+
+            // Send email with your update requests has been received content if there has been a pending request already
+            if (disputantHasUpdateRequestsPending)
+            {
+                UpdateRequestReceived updateRequestReceived = new()
+                {
+                    NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
+                };
+                await context.PublishWithLog(_logger, updateRequestReceived, context.CancellationToken);
+            }
         }
         catch (ApiException ex)
         {

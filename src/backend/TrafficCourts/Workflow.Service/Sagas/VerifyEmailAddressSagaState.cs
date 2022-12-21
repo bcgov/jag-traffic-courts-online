@@ -23,4 +23,9 @@ public class VerifyEmailAddressSagaState : BaseStateMachineState
     /// Have we been notified that the notice of dispute has been submitted?
     /// </summary>
     public long? DisputeId { get; set; }
+
+    /// <summary>
+    /// Is the message published for verification of a new email address as part of an update request.
+    /// </summary>
+    public bool IsUpdateEmailVerification { get; set; }
 }
