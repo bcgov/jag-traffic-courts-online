@@ -44,7 +44,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
                 {
-                    NoticeOfDisputeGuid = noticeOfDisputeGuid, // TODO: change this to NoticeOfDisputeGuid
+                    NoticeOfDisputeGuid = result?.NoticeOfDisputeGuid,
                     DisputeStatus = result?.DisputeStatus.ToString(),
                     JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
                     HearingType = result?.JjDisputeHearingType?.ToString()
