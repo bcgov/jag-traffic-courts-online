@@ -42,16 +42,12 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 }
                 DisputeResult? result = searchResult?.OrderByDescending(d => d.DisputeId).FirstOrDefault();
 
-                // TODO: get value from DisputeResult
-                ICollection<JJDispute> jJDisputes = await _oracleDataApiService.GetJJDisputesAsync("", ticketNumber, issuedTime, context.CancellationToken);
-                JJDisputeHearingType? hearingType = jJDisputes.Select(i => i.HearingType).FirstOrDefault();
-
                 await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
                 {
-                    NoticeOfDisputeGuid = result?.DisputeId.ToString(), // TODO: change this to NoticeOfDisputeGuid
+                    NoticeOfDisputeGuid = noticeOfDisputeGuid, // TODO: change this to NoticeOfDisputeGuid
                     DisputeStatus = result?.DisputeStatus.ToString(),
                     JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
-                    HearingType = hearingType?.ToString()
+                    HearingType = result?.JjDisputeHearingType?.ToString()
                 });
             }
             catch (Exception ex)

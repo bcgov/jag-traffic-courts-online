@@ -24,6 +24,7 @@ public class SearchDisputeConsumerTest
     private readonly Mock<ConsumeContext<SearchDisputeRequest>> _context;
     private readonly SearchDisputeRequest _message;
     private readonly SearchDisputeResponse _expectedResponse;
+    private readonly String _mockGuid;
 
     public SearchDisputeConsumerTest()
     {
@@ -40,6 +41,7 @@ public class SearchDisputeConsumerTest
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
         _context.Setup(_ => _.RespondAsync<SearchDisputeResponse>(_expectedResponse));
+        _mockGuid = Guid.NewGuid().ToString();
     }
 
     [Fact]
@@ -63,22 +65,14 @@ public class SearchDisputeConsumerTest
         {
             new()
             {
-                NoticeOfDisputeGuid = Guid.NewGuid().ToString(),
+                NoticeOfDisputeGuid = _mockGuid,
                 DisputeStatus = DisputeResultDisputeStatus.VALIDATED,
-                JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS
+                JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS,
+                JjDisputeHearingType = DisputeResultJjDisputeHearingType.COURT_APPEARANCE
             }
         };
 
-        ICollection<JJDispute> jJDisputes = new List<JJDispute>
-        {
-            new()
-            {
-                HearingType = JJDisputeHearingType.COURT_APPEARANCE
-            }
-        };
-
-        _oracleDataApiService.Setup(_ => _.GetJJDisputesAsync("", _message.TicketNumber, _message.IssuedTime, It.IsAny<CancellationToken>())).Returns(Task.FromResult(jJDisputes));
-        _expectedResponse.NoticeOfDisputeGuid = "1";
+        _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, _message.NoticeOfDisputeGuid.ToString(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
         _expectedResponse.DisputeStatus = "VALIDATED";
         _expectedResponse.JJDisputeStatus = "IN_PROGRESS";
         _expectedResponse.HearingType = "COURT_APPEARANCE";
@@ -93,7 +87,7 @@ public class SearchDisputeConsumerTest
     private void VerifyExpectedResponse()
     {
         _context.Verify(m => m.RespondAsync<SearchDisputeResponse>(It.Is<SearchDisputeResponse>(
-            a => a.NoticeOfDisputeGuid == _expectedResponse.NoticeOfDisputeGuid
+            a => a.NoticeOfDisputeGuid == _mockGuid
                 && a.DisputeStatus == _expectedResponse.DisputeStatus
                 && a.JJDisputeStatus == _expectedResponse.JJDisputeStatus
                 && a.HearingType == _expectedResponse.HearingType
