@@ -20,17 +20,9 @@ import { DisputeCount } from './disputeCount.model';
  */
 export interface NoticeOfDispute { 
     /**
-     * The violation ticket number.
+     * The disputant\'s email address.
      */
-    ticket_number?: string | null;
-    /**
-     * The date and time the violation ticket was issue. Time must only be hours and minutes.
-     */
-    issued_date?: string;
-    /**
-     * The surname or corporate name.
-     */
-    disputant_surname?: string | null;
+    email_address?: string | null;
     /**
      * The first given name or corporate name continued.
      */
@@ -44,25 +36,9 @@ export interface NoticeOfDispute {
      */
     disputant_given_name3?: string | null;
     /**
-     * The disputant\'s birthdate.
+     * The surname or corporate name.
      */
-    disputant_birthdate?: string;
-    /**
-     * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
-     */
-    drivers_licence_number?: string | null;
-    /**
-     * The province or state the drivers licence was issued by.
-     */
-    drivers_licence_province?: string | null;
-    /**
-     * The province sequence number of the drivers licence was issued by.
-     */
-    drivers_licence_province_seq_no?: number | null;
-    /**
-     * The country code of the drivers licence was issued by.
-     */
-    drivers_licence_country_id?: number | null;
+    disputant_surname?: string | null;
     /**
      * The mailing address of the disputant.
      */
@@ -104,13 +80,33 @@ export interface NoticeOfDispute {
      */
     home_phone_number?: string | null;
     /**
+     * The violation ticket number.
+     */
+    ticket_number?: string | null;
+    /**
+     * The disputant\'s birthdate.
+     */
+    disputant_birthdate?: string;
+    /**
+     * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
+     */
+    drivers_licence_number?: string | null;
+    /**
+     * The province or state the drivers licence was issued by.
+     */
+    drivers_licence_province?: string | null;
+    /**
+     * The province sequence number of the drivers licence was issued by.
+     */
+    drivers_licence_province_seq_no?: number | null;
+    /**
+     * The country code of the drivers licence was issued by.
+     */
+    drivers_licence_country_id?: number | null;
+    /**
      * The disputant\'s work phone number.
      */
     work_phone_number?: string | null;
-    /**
-     * The disputant\'s email address.
-     */
-    email_address?: string | null;
     represented_by_lawyer?: DisputeRepresentedByLawyer;
     /**
      * Name of the law firm that will represent the disputant at the hearing.
@@ -161,6 +157,14 @@ export interface NoticeOfDispute {
      * The reason that disputant declares for requesting more time to pay the amount on the violation ticket.
      */
     time_to_pay_reason?: string | null;
+    /**
+     * Dispute Counts
+     */
+    dispute_counts?: Array<DisputeCount> | null;
+    /**
+     * The date and time the violation ticket was issue. Time must only be hours and minutes.
+     */
+    issued_date?: string;
     disputant_detected_ocr_issues?: DisputeDisputantDetectedOcrIssues;
     /**
      * The description of the issue with OCR ticket if the citizen has detected any.
@@ -174,9 +178,5 @@ export interface NoticeOfDispute {
      * Detachment Location
      */
     detachment_location?: string | null;
-    /**
-     * Dispute Counts
-     */
-    dispute_counts?: Array<DisputeCount> | null;
 }
 

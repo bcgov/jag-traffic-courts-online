@@ -30,8 +30,7 @@ public class SearchDisputeConsumerTest
         _message = new()
         {
             TicketNumber = "AX00000000",
-            IssuedTime = "17:54",
-            NoticeOfDisputeGuid = Guid.NewGuid(),
+            IssuedTime = "17:54"
         };
         _expectedResponse = new();
         _mockLogger = new();
@@ -70,7 +69,6 @@ public class SearchDisputeConsumerTest
             }
         };
 
-        // FIXME: remove jDdisputes here as the hearingType is already included in the DisputeResult response.
         ICollection<JJDispute> jJDisputes = new List<JJDispute>
         {
             new()
@@ -79,8 +77,6 @@ public class SearchDisputeConsumerTest
             }
         };
 
-
-        _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, _message.NoticeOfDisputeGuid.ToString(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
         _oracleDataApiService.Setup(_ => _.GetJJDisputesAsync("", _message.TicketNumber, _message.IssuedTime, It.IsAny<CancellationToken>())).Returns(Task.FromResult(jJDisputes));
         _expectedResponse.NoticeOfDisputeGuid = "1";
         _expectedResponse.DisputeStatus = "VALIDATED";

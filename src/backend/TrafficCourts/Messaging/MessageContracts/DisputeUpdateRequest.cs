@@ -3,7 +3,7 @@
 /// <summary>
 /// A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{uuidhash}/contact endpoint.
 /// </summary>
-public class DisputantUpdateRequest
+public class DisputeUpdateRequest
 {
     /// <summary>
     /// The notice of dispute identifer.

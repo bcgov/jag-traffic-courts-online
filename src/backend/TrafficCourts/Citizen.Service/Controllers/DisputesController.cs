@@ -4,15 +4,16 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Threading;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Features.Tickets;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
-using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Dispute.DisputantContactInformation;
+using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Disputes.DisputantContactInformation;
 using DisputantUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputantUpdateRequest;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
@@ -58,7 +59,7 @@ public class DisputesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] Models.Dispute.NoticeOfDispute dispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync([FromBody] Models.Disputes.NoticeOfDispute dispute, CancellationToken cancellationToken)
     {
         Create.Request request = new Create.Request(dispute);
         Create.Response response = await _mediator.Send(request, cancellationToken);
@@ -75,19 +76,19 @@ public class DisputesController : ControllerBase
     /// <summary>
     /// An endpoint for resending an email to a Disputant.
     /// </summary>
-    /// <param name="uuidHash"></param>
+    /// <param name="guidHash"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>
     /// <response code="202">Resend email acknowledged.</response>
     /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="500">There was a internal server error when triggering an email to resend.</response>
     /// </returns>
-    [HttpPut("/api/disputes/email/{uuidHash}/resend")]
+    [HttpPut("/api/disputes/email/{guidHash}/resend")]
     [ProducesResponseType((int)HttpStatusCode.Accepted)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> ResendEmailAsync(string uuidHash, CancellationToken cancellationToken)
+    public async Task<IActionResult> ResendEmailAsync(string guidHash, CancellationToken cancellationToken)
     {
-        var hex = _hashids.DecodeHex(uuidHash);
+        var hex = _hashids.DecodeHex(guidHash);
         if (hex == String.Empty || hex.Length != 32 || !Guid.TryParse(hex, out Guid noticeOfDisputeGuid))
         {
             return BadRequest("Invalid noticeOfDisputeGuid");
@@ -182,14 +183,14 @@ public class DisputesController : ControllerBase
             if (!string.IsNullOrEmpty(response.Message.NoticeOfDisputeGuid))
             {
                 _logger.LogDebug("Dispute found");
-                var identifier = _hashids.EncodeHex(response.Message.NoticeOfDisputeGuid);
+                var token = _hashids.EncodeHex(response.Message.NoticeOfDisputeGuid);
                 _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
                 _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
                 _ = Enum.TryParse(response.Message.HearingType, out JJDisputeHearingType hearingType);
 
                 SearchDisputeResult searchResult = new()
                 {
-                    Identifier = identifier,
+                    NoticeOfDisputeGuid = token,
                     DisputeStatus = disputeStatus,
                     JJDisputeStatus = jjDisputeStatus,
                     HearingType = hearingType
@@ -287,6 +288,70 @@ public class DisputesController : ControllerBase
         {
             _logger.LogError(ex, "Unknown Error");
             throw;
+        }
+    }
+
+    /// <summary>
+    /// Submits an update request for a Dispute.
+    /// </summary>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="dispute">The requested fields to update.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    //[HttpPut("/api/dispute/{guidHash}")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //public async Task<IActionResult> UpdateDisputeAsync([Required] string guidHash, [FromBody] Models.Disputes.Dispute dispute, CancellationToken cancellationToken)
+    //{
+    //    try
+    //    {
+    //        // await UpdateDisputeContactInfoAsync(guidHash, dispute, cancellationToken);
+    //        // // Attempt to decode the hashed noticeOfDisputeGuid
+    //        // var hex = Guid.TryParse(_hashids.DecodeHex(guidHash), out Guid noticeOfDisputeGuid); // should pass the checking
+    //        // SearchDisputeRequest searchRequest = new() { NoticeOfDisputeGuid = noticeOfDisputeGuid };
+    //        // Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
+
+    //        // await _bus.PublishWithLog(_logger, message, cancellationToken);
+
+    //        return Ok();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Unknown Error");
+    //        throw;
+    //    }
+    //}
+
+    private async Task<IActionResult> checkUpdateDisputeInput([Required] string guidHash, CancellationToken cancellationToken)
+    {
+        // Attempt to decode the hashed noticeOfDisputeGuid
+        var hex = _hashids.DecodeHex(guidHash);
+        if (hex == String.Empty || hex.Length != 32 || !Guid.TryParse(hex, out Guid noticeOfDisputeGuid))
+        {
+            return BadRequest("Invalid guidHash");
+        }
+
+        // Verify Dispute exists and whose status is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
+        string[] validStatuses = { DisputeStatus.NEW.ToString(), DisputeStatus.VALIDATED.ToString(), DisputeStatus.PROCESSING.ToString() };
+        SearchDisputeRequest searchRequest = new() { NoticeOfDisputeGuid = noticeOfDisputeGuid };
+        Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
+        if (response.Message?.NoticeOfDisputeGuid is null)
+        {
+            return NotFound("Dispute not found");
+        }
+        else if (response.Message?.DisputeStatus is not null && !validStatuses.Contains(response.Message.DisputeStatus))
+        {
+            return BadRequest($"Dispute has a status of {response.Message.DisputeStatus}. Expecting one of NEW, VALIDATED, or PROCESSING.");
+        }
+        else if (response.Message?.JJDisputeStatus is not null)
+        {
+            return BadRequest($"JJDispute has status of {response.Message?.JJDisputeStatus}. Must be blank.");
+        }
+        else
+        {
+            return Ok();
         }
     }
 }

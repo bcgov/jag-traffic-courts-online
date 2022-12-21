@@ -20,7 +20,7 @@ export const SearchFailed = createAction(
 
 export const UpdateContact = createAction(
   ActionTypes.UPDATE_CONTACT,
-  props<{ uuid: string, payload: DisputantContactInformation }>()
+  props<{ guid: string, payload: DisputantContactInformation }>()
 );
 
 export const UpdateContactSuccess = createAction(

@@ -76,11 +76,11 @@ export class DisputeService {
     return this.disputesService.apiDisputesSearchGet(params.ticketNumber, params.time);
   }
 
-  updateDisputeContact(uuid: string, input: DisputantContactInformation) {
+  updateDisputeContact(guid: string, input: DisputantContactInformation) {
     let payload = { ...input }; // state data cannot be changed, need to create a new one
     payload = this.noticeOfDisputesService.splitGivenNames(payload);  // break disputant names into first, second, third
     payload = this.noticeOfDisputesService.splitAddressLines(payload); // break address into line 1,2,3 by comma
-    return this.disputesService.apiDisputeGuidHashContactPut(uuid, payload);
+    return this.disputesService.apiDisputeGuidHashContactPut(guid, payload);
   }
 
   openDisputeNotFoundDialog() {

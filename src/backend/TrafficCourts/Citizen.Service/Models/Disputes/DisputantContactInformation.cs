@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace TrafficCourts.Citizen.Service.Models.Dispute;
+namespace TrafficCourts.Citizen.Service.Models.Disputes;
 
 /// <summary>
 /// A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{guidhash}/contact endpoint.

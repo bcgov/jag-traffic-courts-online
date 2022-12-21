@@ -42,7 +42,7 @@ export class UpdateDisputeContactComponent implements OnInit {
   }
 
   updateContact() {
-    let input = { uuid: this.state.result.identifier, payload: this.form.value };
+    let input = { guid: this.state.result.token, payload: this.form.value };
     this.store.dispatch(DisputeStore.Actions.UpdateContact(input));
   }
 
