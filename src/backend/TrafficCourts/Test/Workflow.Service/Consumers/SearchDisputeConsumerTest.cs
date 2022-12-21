@@ -30,7 +30,7 @@ public class SearchDisputeConsumerTest
         _message = new()
         {
             TicketNumber = "AX00000000",
-            IssuedTime = "17:54"
+            IssuedTime = "17:54",
         };
         _expectedResponse = new();
         _mockLogger = new();
@@ -63,7 +63,7 @@ public class SearchDisputeConsumerTest
         {
             new()
             {
-                DisputeId = 1,
+                NoticeOfDisputeGuid = Guid.NewGuid().ToString(),
                 DisputeStatus = DisputeResultDisputeStatus.VALIDATED,
                 JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS
             }
