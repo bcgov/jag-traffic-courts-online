@@ -25,8 +25,15 @@ INSERT INTO JJDISPUTE (TICKET_NUMBER, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIF
   ('EA09998887', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Pemberton Provincial Court', 'John', 'Doe', 'Victoria', 'Just started a new job', '', 'Steven Allan', null, 'West Shore', LOCALTIMESTAMP, 'NEW', LOCALTIMESTAMP, LOCALTIMESTAMP, 'WRITTEN_REASONS', '', '', '', '', '', '', 0, 'WRITTEN_REASONS'),
   ('EA01288745', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Pemberton Provincial Court', 'John', 'Doe', 'Victoria', 'Just started a new job', '', 'Steven Allan', null, 'West Shore', LOCALTIMESTAMP, 'NEW', LOCALTIMESTAMP, LOCALTIMESTAMP, 'WRITTEN_REASONS', '', '', '', '', '', '', 0, 'WRITTEN_REASONS'),
   ('EA03665215', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Pemberton Provincial Court', 'John', 'Doe', 'Victoria', 'Just started a new job', 'Need my salary to be deposited', 'Steven Allan', null, 'West Shore', LOCALTIMESTAMP, 'NEW', LOCALTIMESTAMP, LOCALTIMESTAMP, 'WRITTEN_REASONS', '', '', '', '', '', '', 0, 'WRITTEN_REASONS'),
-  ('EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Francois Robert', 'Hodge', 'Victoria', '', '', 'Steven Allan', 'ldame', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', 'Bartwell Law & Associates', 'BARTWELL', 'BART', '', '', 'Polish', 4, 'IN_PERSON');
-  
+  ('EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Francois Robert', 'Hodge', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', 'Bartwell Law & Associates', 'BARTWELL', 'BART', '', '', 'Polish', 4, 'IN_PERSON'),
+  ('EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Chex', 'Mulligan', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', '', '', '', '', '', '', 0, 'IN_PERSON'),
+  ('EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Hamza', 'Ben Adder', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', 'McGriff & Sons', 'McGriff', 'Dirk', '', '', 'Arabic', 4, 'IN_PERSON'),
+  ('EA04788953', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Yusuf', 'Mohammed', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', '', '', '', '', '', 'Arabic', 0, 'IN_PERSON'),
+  ('EA05888444', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Ho-Jong', 'Kim', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', '', '', '', '', '', 'Korean', 0, 'IN_PERSON'),
+  ('AO38375806', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Charles', 'LaRoque', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', '', '', '', '', '', 'French', 10, 'IN_PERSON'),
+  ('AU46117416', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Rebecca', 'Klein', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', '', '', '', '', '', '', 3, 'IN_PERSON'),
+  ('ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Robson Square Provincial Court', 'Brian', 'McIntosh', 'Victoria', '', '', 'Steven Allan', 'colmohig', 'West Shore', LOCALTIMESTAMP, 'HEARING_SCHEDULED', LOCALTIMESTAMP, LOCALTIMESTAMP, 'COURT_APPEARANCE', 'Lional Hutz Storage Facility', 'Hutz', 'Lionel', '', '', '', 0, 'IN_PERSON');
+ 
  
 INSERT INTO DISPUTANT_CONTACT_INFORMATION (ID, JJDISPUTE_ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, ADDRESS, BIRTHDATE, DRIVERS_LICENCE_NUMBER, EMAIL_ADDRESS, GIVEN_NAMES, PROVINCE, SURNAME) VALUES 
 	(1, 'EA07789631', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '3-1409 Camosun Street', '1965-07-01', '1234567', 'colm.ohiggins@nttdata.com', 'John', 'BC', 'Doe'),
@@ -48,7 +55,14 @@ INSERT INTO DISPUTANT_CONTACT_INFORMATION (ID, JJDISPUTE_ID, CREATED_BY, CREATED
 	(17, 'EA09998887', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '3-1409 Camosun Street', '1965-07-01', '1234567', 'colm.ohiggins@nttdata.com', 'John', 'BC', 'Doe'),
 	(18, 'EA01288745', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '3-1409 Camosun Street', '1965-07-01', '1234567', 'colm.ohiggins@nttdata.com', 'John', 'BC', 'Doe'),
 	(19, 'EA03665215', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '3-1409 Camosun Street', '1965-07-01', '1234567', 'colm.ohiggins@nttdata.com', 'John', 'BC', 'Doe'),
-	(20, 'EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Francois Robert', 'BC', 'Hodge');
+	(20, 'EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Francois Robert', 'BC', 'Hodge'),
+	(21, 'EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Chex', 'BC', 'Mulligan'),
+	(22, 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Hamza', 'BC', 'Ben Adder'),
+	(23, 'EA04788953', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Yusuf', 'BC', 'Mohammed'),
+	(24, 'EA05888444', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Ho-Jong', 'BC', 'Kim'),
+	(25, 'AO38375806', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Charles', 'BC', 'Laroque'),
+	(26, 'AU46117416', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Rebecca', 'BC', 'Klein'),
+	(27, 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1298 Mapleview Place', '1976-03-15', '6455895', 'colm.ohiggins@nttdata.com', 'Brian', 'BC', 'McIntosh');
 	
 INSERT INTO JJDISPUTED_COUNT (ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, JJ_DISPUTE_TICKET_NUMBER, JJDISPUTE_ID, COUNT, APPEAR_IN_COURT, COMMENTS, DESCRIPTION, PLEA, REQUEST_REDUCTION, TICKETED_FINE_AMOUNT, LESSER_OR_GREATER_AMOUNT, INCLUDES_SURCHARGE, REQUEST_TIME_TO_PAY, DUE_DATE, REVISED_DUE_DATE) VALUES 
 (1, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA07789631', 'EA07789631', 1, 'N', '', '146(1) Speed in/outside municipality', 0, 'N', 196.00, 196.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
@@ -70,26 +84,60 @@ INSERT INTO JJDISPUTED_COUNT (ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_
 (17, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA02000460', 'EA02000460', 1, 'N', '', '220(4) Fail to wear seatbelt', 0, 'N', 167.00, 167.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
 (18, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA02000460', 'EA02000460', 2, 'N', '', '220(6) Permit passenger without seatbelt', 0, 'N', 167.00, 167.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
 (19, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA02216655', 'EA02216655', 1, 'N', '', '24(1) No drivers licence/wrong class', 0, 'Y', 276.00, 276.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
-(20, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'AE44379079', 'AE44379079', 2, 'N', '', '146(3) Spped against highway sign', 0, 'Y', 138.00, 138.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
+(20, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'AE44379079', 'AE44379079', 2, 'N', '', '146(3) Speed against highway sign', 0, 'Y', 138.00, 138.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
 (21, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'ST04635407', 'ST04635407', 1, 'N', '', '24(1) No drivers license/wrong class', 0, 'N', 276.00, 276.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
-(22, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'ST04635407', 'ST04635407', 2, 'N', '', '146(3) Spped against highway sign', 0, 'N', 368.00, 368.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
+(22, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'ST04635407', 'ST04635407', 2, 'N', '', '146(3) Speed against highway sign', 0, 'N', 368.00, 368.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
 (23, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'ST04635407', 'ST04635407', 3, 'N', '', '214.2(1) Using Electronic device while driving', 0, 'N', 368.00, 368.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
 (24, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA04567891', 'EA04567891', 1, 'N', '', '146(1) Speed in/outside Municipality', 0, 'N', 150.00, 150.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
-(25, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA09998887', 'EA09998887', 1, 'N', '', '146(3) Spped against highway sign', 0, 'Y', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
-(26, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA01288745', 'EA01288745', 1, 'N', '', '146(3) Spped against highway sign', 0, 'Y', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
-(27, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA03665215', 'EA03665215', 2, 'N', '', '146(3) Spped against highway sign', 0, 'Y', 368.00, 368.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
+(25, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA09998887', 'EA09998887', 1, 'N', '', '146(3) Speed against highway sign', 0, 'Y', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(26, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA01288745', 'EA01288745', 1, 'N', '', '146(3) Speed against highway sign', 0, 'Y', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(27, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA03665215', 'EA03665215', 2, 'N', '', '146(3) Speed against highway sign', 0, 'Y', 368.00, 368.00, 'Y', 'Y', DATEADD('DAY', 30, CURRENT_DATE), null),
 (28, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA00241528', 'EA00241528', 1, 'Y', '', '92.1(1) MVA - Fail to stop resulting in pursuit', 1, 'N', 380.00, 380.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
 (29, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA00241528', 'EA00241528', 2, 'Y', '', '146(5) MVA 0 Speed against area sign', 1, 'Y', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
-(30, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA00241528', 'EA00241528', 3, 'Y', '', '92.1(1) MVA - Fail to stop resulting in pursuit', 1, 'N', 380.00, 380.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null);
+(30, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA00241528', 'EA00241528', 3, 'Y', '', '92.1(1) MVA - Fail to stop resulting in pursuit', 1, 'N', 380.00, 380.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(31, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA07789632', 'EA07789632', 1, 'Y', '', '146(1) Speed in/outside Municipality', 0, 'N', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(32, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA01115462', 'EA01115462', 1, 'Y', '', '146(3) Speed against highway sign', 0, 'N', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(33, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA04788953', 'EA04788953', 1, 'Y', '', '146(3) Speed against highway sign', 0, 'N', 196.00, 196.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(34, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA04788953', 'EA04788953', 2, 'Y', '', '214.2(1) Using Electronic device while driving', 0, 'N', 368.00, 368.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(35, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA04788953', 'EA04788953', 3, 'Y', '', '214.2(2) Emailing or texting while driving', 1, 'N', 368.00, 368.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(36, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'EA05888444', 'EA05888444', 1, 'Y', '', '146(3) Speed against highway sign', 0, 'N', 138.00, 138.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(37, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'AO38375806', 'AO38375806', 1, 'Y', '', '194(3) Ride motorcycle without required helmet', 1, 'N', 138.00, 138.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(38, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'AO38375806', 'AO38375806', 2, 'Y', '', '148(1) Excessive speed', 1, 'N', 483.00, 483.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(39, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'AU46117416', 'AU46117416', 1, 'Y', '', '147(1) Speed in School zone', 0, 'N', 253.00, 253.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(40, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'AU46117416', 'AU46117416', 2, 'Y', '', '220(4) Fail to wear seatbelt', 0, 'N', 167.00, 167.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null),
+(41, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'ST04605408', 'ST04605408', 1, 'Y', '', '129(1) Red light at intersection', 0, 'N', 167.00, 167.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null);
 
 INSERT INTO JJDISPUTE_COURT_APPEARANCE_ROP (ID, JJ_DISPUTE_TICKET_NUMBER, JJDISPUTE_ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, APPEARANCE_TS, ROOM, REASON, APP, NO_APP_TS, CLERK_RECORD, 
 DEFENSE_COUNSEL, CROWN, JJ_SEIZED, ADJUDICATOR, COMMENTS, DURATION) VALUES 
-(1, 'EA00241528', 'EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, LOCALTIMESTAMP, '304', 'HR', 'N', LOCALTIMESTAMP, '', '', 'P', '', 'I.BLACKSTONE', '', 15);
+(1, 'EA00241528', 'EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, LOCALTIMESTAMP, '304', 'HR', NULL, NULL, '', '', 'P', '', 'I.BLACKSTONE', '', 15),
+(2, 'EA07789632', 'EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T08:00:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'I.BLACKSTONE', '', 15),
+(3, 'EA07789632', 'EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-10-22T08:00:00', 'n/a', 'HR', 'P', NULL, '', '', 'P', '', 'I.BLACKSTONE', 'Continuation, could not reach decision before court closure', 15),
+(4, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T08:15:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'I.BLACKSTONE', '', 15),
+(5, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-08-08T08:15:00', 'n/a', 'HR', 'A', NULL, '', 'D. McGriff', 'P', 'Yes', 'C. O''HIGGINS', 'Adjourned. Witnesses were unable to attend.', 15),
+(6, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-04-01T10:15:00', 'n/a', 'HR', 'A', NULL, '', 'D. McGriff', 'P', 'Yes', 'C. O''HIGGINS', 'Adjourned. Additional Exhibits requested by the Crown.', 15),
+(7, 'EA04788953', 'EA04788953', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:15:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
+(8, 'EA05888444', 'EA05888444', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:30:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
+(9, 'AO38375806', 'AO38375806', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:45:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
+(10, 'AU46117416', 'AU46117416', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T10:00:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
+(11, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T10:45:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
+(12, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-11-01T10:45:00', 'n/a', 'HR', 'P', NULL, '', 'L. Hutz', 'P', 'Yes', 'L. DAME', 'Lionel Hutz requested a conitinuation because the disputant forgot their exhibits on the bus. ', 15),
+(13, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-02-08T09:45:00', 'n/a', 'HR', 'P', NULL, '', 'L. Hutz', 'P', 'Yes', 'L. DAME', 'Rescheduled due to COVID-19. ', 15);
 
 INSERT INTO JJDISPUTED_COUNT_ROP (ID, JJDISPUTEDCOUNT_ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, FINDING, LESSER_DESCRIPTION, SS_PROBATION_DURATION, SS_PROBATION_CONDITIONS,
 JAIL_DURATION, JAIL_INTERMITTENT, PROBATION_DURATION, PROBATION_CONDITIONS, DRIVING_PROHIBITION, DRIVING_PROHIBITIONMVASECTION, DISMISSED, FOR_WANT_OF_PROSECUTION, WITHDRAWN,
 ABATEMENT, STAY_OF_PROCEEDINGS_BY, OTHER) VALUES
 (1, 28, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
 (2, 29, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
-(3, 30, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', '');
+(3, 30, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(4, 31, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(5, 32, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(6, 33, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(7, 34, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(8, 35, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(9, 36, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(10, 37, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(11, 38, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(12, 39, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(13, 40, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(14, 41, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', '');
 

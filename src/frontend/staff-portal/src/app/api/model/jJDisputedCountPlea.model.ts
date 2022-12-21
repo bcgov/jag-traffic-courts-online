@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputedCountPlea = 'G' | 'N';
+export type JJDisputedCountPlea = 'UNKNOWN' | 'G' | 'N';
 
 export const JJDisputedCountPlea = {
+    Unknown: 'UNKNOWN' as JJDisputedCountPlea,
     G: 'G' as JJDisputedCountPlea,
     N: 'N' as JJDisputedCountPlea
 };

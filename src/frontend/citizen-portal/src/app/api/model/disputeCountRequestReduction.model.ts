@@ -11,9 +11,10 @@
  */
 
 
-export type DisputeCountRequestReduction = 'Y' | 'N';
+export type DisputeCountRequestReduction = 'UNKNOWN' | 'Y' | 'N';
 
 export const DisputeCountRequestReduction = {
+    Unknown: 'UNKNOWN' as DisputeCountRequestReduction,
     Y: 'Y' as DisputeCountRequestReduction,
     N: 'N' as DisputeCountRequestReduction
 };

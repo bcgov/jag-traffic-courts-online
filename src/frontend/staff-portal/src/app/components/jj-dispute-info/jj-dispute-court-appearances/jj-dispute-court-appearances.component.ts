@@ -33,7 +33,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
 
   ngOnInit(): void {
     this.data = this.data?.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
-      return Date.parse(a.appearanceTs) - Date.parse(b.appearanceTs)
+      return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
     });
     this.data.shift(); // exclude most recent
     this.data?.forEach(appearance => {

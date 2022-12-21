@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputeCourtAppearanceRoPApp = 'A' | 'P' | 'N';
+export type JJDisputeCourtAppearanceRoPApp = 'UNKNOWN' | 'A' | 'P' | 'N';
 
 export const JJDisputeCourtAppearanceRoPApp = {
+    Unknown: 'UNKNOWN' as JJDisputeCourtAppearanceRoPApp,
     A: 'A' as JJDisputeCourtAppearanceRoPApp,
     P: 'P' as JJDisputeCourtAppearanceRoPApp,
     N: 'N' as JJDisputeCourtAppearanceRoPApp

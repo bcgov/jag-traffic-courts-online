@@ -11,9 +11,10 @@
  */
 
 
-export type DisputeCountPleaCode = 'G' | 'N';
+export type DisputeCountPleaCode = 'UNKNOWN' | 'G' | 'N';
 
 export const DisputeCountPleaCode = {
+    Unknown: 'UNKNOWN' as DisputeCountPleaCode,
     G: 'G' as DisputeCountPleaCode,
     N: 'N' as DisputeCountPleaCode
 };

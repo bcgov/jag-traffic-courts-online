@@ -99,7 +99,7 @@
   </ng-container>
 
   <ng-container matColumnDef="comments">
-    <td mat-cell *matCellDef="let element">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="11">
       <span><b>Comments:&nbsp;</b>{{ element.comments }}</span>
     </td>
   </ng-container>

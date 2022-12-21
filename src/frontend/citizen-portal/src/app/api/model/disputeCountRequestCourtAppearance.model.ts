@@ -11,9 +11,10 @@
  */
 
 
-export type DisputeCountRequestCourtAppearance = 'Y' | 'N';
+export type DisputeCountRequestCourtAppearance = 'UNKNOWN' | 'Y' | 'N';
 
 export const DisputeCountRequestCourtAppearance = {
+    Unknown: 'UNKNOWN' as DisputeCountRequestCourtAppearance,
     Y: 'Y' as DisputeCountRequestCourtAppearance,
     N: 'N' as DisputeCountRequestCourtAppearance
 };

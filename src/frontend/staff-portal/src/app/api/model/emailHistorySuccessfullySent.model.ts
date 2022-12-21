@@ -11,9 +11,10 @@
  */
 
 
-export type EmailHistorySuccessfullySent = 'Y' | 'N';
+export type EmailHistorySuccessfullySent = 'UNKNOWN' | 'Y' | 'N';
 
 export const EmailHistorySuccessfullySent = {
+    Unknown: 'UNKNOWN' as EmailHistorySuccessfullySent,
     Y: 'Y' as EmailHistorySuccessfullySent,
     N: 'N' as EmailHistorySuccessfullySent
 };

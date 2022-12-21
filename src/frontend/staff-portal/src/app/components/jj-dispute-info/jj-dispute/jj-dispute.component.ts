@@ -221,7 +221,7 @@ export class JJDisputeComponent implements OnInit {
 
       if (this.lastUpdatedJJDispute?.jjDisputeCourtAppearanceRoPs?.length > 0) {
         this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => {
-          return Date.parse(a.appearanceTs) - Date.parse(b.appearanceTs)
+          return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
         });
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
       }

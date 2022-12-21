@@ -11,9 +11,10 @@
  */
 
 
-export type DisputeInterpreterRequired = 'Y' | 'N';
+export type DisputeInterpreterRequired = 'UNKNOWN' | 'Y' | 'N';
 
 export const DisputeInterpreterRequired = {
+    Unknown: 'UNKNOWN' as DisputeInterpreterRequired,
     Y: 'Y' as DisputeInterpreterRequired,
     N: 'N' as DisputeInterpreterRequired
 };

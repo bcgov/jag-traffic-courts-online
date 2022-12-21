@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputeDisputantAttendanceType = 'WRITTEN_REASONS' | 'VIDEO_CONFERENCE' | 'TELEPHONE_CONFERENCE' | 'MSTEAMS_AUDIO' | 'MSTEAMS_VIDEO' | 'IN_PERSON';
+export type JJDisputeDisputantAttendanceType = 'UNKNOWN' | 'WRITTEN_REASONS' | 'VIDEO_CONFERENCE' | 'TELEPHONE_CONFERENCE' | 'MSTEAMS_AUDIO' | 'MSTEAMS_VIDEO' | 'IN_PERSON';
 
 export const JJDisputeDisputantAttendanceType = {
+    Unknown: 'UNKNOWN' as JJDisputeDisputantAttendanceType,
     WrittenReasons: 'WRITTEN_REASONS' as JJDisputeDisputantAttendanceType,
     VideoConference: 'VIDEO_CONFERENCE' as JJDisputeDisputantAttendanceType,
     TelephoneConference: 'TELEPHONE_CONFERENCE' as JJDisputeDisputantAttendanceType,
