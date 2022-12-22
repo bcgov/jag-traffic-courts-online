@@ -72,7 +72,7 @@ public class SearchDisputeConsumerTest
             }
         };
 
-        _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, _message.NoticeOfDisputeGuid.ToString(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
+        _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, null, It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
         _expectedResponse.DisputeStatus = "VALIDATED";
         _expectedResponse.JJDisputeStatus = "IN_PROGRESS";
         _expectedResponse.HearingType = "COURT_APPEARANCE";

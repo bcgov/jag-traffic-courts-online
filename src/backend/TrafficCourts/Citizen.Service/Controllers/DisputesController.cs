@@ -80,7 +80,7 @@ public class DisputesController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns>
     /// <response code="202">Resend email acknowledged.</response>
-    /// <response code="400">The guid doesn't appear to be a valid GUID.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="500">There was a internal server error when triggering an email to resend.</response>
     /// </returns>
     [HttpPut("/api/disputes/email/{guidHash}/resend")]
@@ -183,7 +183,12 @@ public class DisputesController : ControllerBase
             if (!string.IsNullOrEmpty(response.Message.NoticeOfDisputeGuid))
             {
                 _logger.LogDebug("Dispute found");
-                var token = _hashids.EncodeHex(response.Message.NoticeOfDisputeGuid);
+                var hex = response.Message.NoticeOfDisputeGuid;
+                if (hex == String.Empty || hex.Length != 36 || !Guid.TryParse(hex, out Guid noticeOfDisputeGuid))
+                {
+                    return BadRequest("Invalid guidHash");
+                }
+                var token = _hashids.EncodeHex(noticeOfDisputeGuid.ToString("n"));
                 _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
                 _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
                 _ = Enum.TryParse(response.Message.HearingType, out JJDisputeHearingType hearingType);
