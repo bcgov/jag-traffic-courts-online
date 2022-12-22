@@ -384,8 +384,8 @@ public class DisputeService {
 	 * Retrieves all DisputantUpdateRequests by disputeId
 	 * @param disputeId must not be null
 	 */
-	public List<DisputantUpdateRequest> findDisputantUpdateRequestByDisputeId(Long disputeId) {
-		return disputantUpdateRequestRepository.findByDisputeId(disputeId);
+	public List<DisputantUpdateRequest> findDisputantUpdateRequestByDisputeIdAndStatus(Long disputeId, DisputantUpdateRequestStatus status) {
+		return disputantUpdateRequestRepository.findByDisputeIdAndOptionalStatus(disputeId, status);
 	}
 
 	/**

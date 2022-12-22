@@ -377,21 +377,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task UnassignDisputesAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute.
+        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.
         /// </summary>
         /// <param name="id">The disputeId of the Dispute.</param>
+        /// <param name="status">If specified, filter request by status</param>
         /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, Status? status);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute.
+        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.
         /// </summary>
         /// <param name="id">The disputeId of the Dispute.</param>
+        /// <param name="status">If specified, filter request by status</param>
         /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, Status? status, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
@@ -3583,31 +3585,38 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         }
 
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute.
+        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.
         /// </summary>
         /// <param name="id">The disputeId of the Dispute.</param>
+        /// <param name="status">If specified, filter request by status</param>
         /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, Status? status)
         {
-            return GetDisputantUpdateRequestsAsync(id, System.Threading.CancellationToken.None);
+            return GetDisputantUpdateRequestsAsync(id, status, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute.
+        /// An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.
         /// </summary>
         /// <param name="id">The disputeId of the Dispute.</param>
+        /// <param name="status">If specified, filter request by status</param>
         /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long id, Status? status, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/dispute/{id}/updateRequest");
+            urlBuilder_.Append("api/v1.0/dispute/{id}/updateRequest?");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
+            if (status != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("status") + "=").Append(System.Uri.EscapeDataString(ConvertToString(status, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -5310,6 +5319,24 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [System.Runtime.Serialization.EnumMember(Value = @"CANCELLED")]
         CANCELLED = 5,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum Status
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
+        ACCEPTED = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PENDING")]
+        PENDING = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"REJECTED")]
+        REJECTED = 3,
 
     }
 

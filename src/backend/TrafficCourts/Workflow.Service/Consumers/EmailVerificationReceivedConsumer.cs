@@ -5,6 +5,7 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
 using ApiException = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ApiException;
+using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 
@@ -71,12 +72,10 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
                 NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
             }, context.CancellationToken);
 
-            bool disputantHasUpdateRequestsPending = false;
-            // TODO: Call Oracle API to verify whether there are any other update requests associated
-            // to the same Dispute having PENDING status and update the flag disputantHasUpdateRequestsPending depending on that
-
-            // Send email with your update requests has been received content if there has been a pending request already
-            if (disputantHasUpdateRequestsPending)
+            // TCVP-2009
+            // Send acknowledgement email if there are pending update requests
+            ICollection<DisputantUpdateRequest> disputantUpdateRequests = await _oracleDataApiService.GetDisputantUpdateRequestsAsync(dispute.DisputeId, Status.PENDING, context.CancellationToken);
+            if (disputantUpdateRequests.Count > 0)
             {
                 UpdateRequestReceived updateRequestReceived = new()
                 {

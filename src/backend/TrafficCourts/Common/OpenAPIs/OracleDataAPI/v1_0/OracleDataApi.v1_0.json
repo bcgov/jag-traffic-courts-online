@@ -1111,7 +1111,7 @@
     "/api/v1.0/dispute/{id}/updateRequest": {
       "get": {
         "tags": [ "dispute-controller" ],
-        "summary": "An endpoint that retrieves all DisputantUpdateRequest for a given Dispute.",
+        "summary": "An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.",
         "operationId": "getDisputantUpdateRequests",
         "parameters": [
           {
@@ -1123,6 +1123,17 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "If specified, filter request by status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [ "UNKNOWN", "ACCEPTED", "PENDING", "REJECTED" ]
+            },
+            "example": "PENDING"
           }
         ],
         "responses": {

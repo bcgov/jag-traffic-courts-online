@@ -124,7 +124,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 
 		assertNotNull(disputantUpdateRequestId);
 
-		List<DisputantUpdateRequest> updateRequests = disputeService.findDisputantUpdateRequestByDisputeId(dispute.getDisputeId());
+		List<DisputantUpdateRequest> updateRequests = disputeService.findDisputantUpdateRequestByDisputeIdAndStatus(dispute.getDisputeId(), null);
 
 		assertEquals(1, updateRequests.size());
 		savedUpdateReq = updateRequests.get(0);
