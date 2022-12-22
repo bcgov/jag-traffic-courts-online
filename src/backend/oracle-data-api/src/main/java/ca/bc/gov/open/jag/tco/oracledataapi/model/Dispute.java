@@ -83,6 +83,7 @@ public class Dispute extends Auditable<String> {
 	 * The surname or corporate name.
 	 */
 	@Column(length = 30)
+	@Schema(nullable = true) // needs to be nullable to provide a patch update (which may or may not include a surname)
 	private String disputantSurname;
 
 	/**
@@ -225,7 +226,7 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Size(max = 10)
 	@Column(length = 10)
-	@Schema(maxLength = 10)
+	@Schema(maxLength = 10, nullable = true) // needs to be nullable to provide a patch update (which may or may not include a surname)
 	private String postalCode;
 
 	/**

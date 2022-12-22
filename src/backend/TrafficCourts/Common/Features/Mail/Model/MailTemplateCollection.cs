@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TrafficCourts.Common.Features.Mail.Model
+﻿namespace TrafficCourts.Common.Features.Mail.Model
 {
     public class MailTemplateCollection
     {
@@ -55,32 +49,32 @@ namespace TrafficCourts.Common.Features.Mail.Model
                 TemplateName = "DisputantUpdateRequestAcceptedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Disputant contact information changes approved)",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "TBD"
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your requested contact changes have been approved.)"
             },
         new MailTemplate()
             {
                 TemplateName = "DisputantUpdateRequestRejectedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Disputant contact information changes rejected)",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "TBD"
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your requested contact changes have been rejected.)"
             },
         new MailTemplate()
             {
                 TemplateName = "DisputantUpdateRequestReceivedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
-                SubjectTemplate = "Dispute update requests received",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "Your request to update dispute information was received."
+                SubjectTemplate = "TBD (ie. Dispute update request(s) received)",
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your request to update dispute information was received.)"
             },
         new MailTemplate()
             {
                 TemplateName = "DisputantEmailUpdateSuccessfulTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Email verification successful",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "Your email address has been updated successfully."
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your email address has been updated successfully.)"
             },
         new MailTemplate()
             {

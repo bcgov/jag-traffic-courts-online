@@ -1,6 +1,5 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Features.Mail;
-using TrafficCourts.Common.Features.Mail.Model;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
@@ -13,11 +12,16 @@ public class DisputantUpdateRequestRejectedConsumer : IConsumer<DisputantUpdateR
     private readonly ILogger<DisputantUpdateRequestRejectedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private static readonly string _rejectedDisputantUpdateRequestEmailTemplateName = "DisputantUpdateRequestRejectedTemplate";
+    private readonly IDisputantUpdateRequestRejectedTemplate _updateRequestRejectedTemplate;
 
-    public DisputantUpdateRequestRejectedConsumer(ILogger<DisputantUpdateRequestRejectedConsumer> logger, IOracleDataApiService oracleDataApiService)
+    public DisputantUpdateRequestRejectedConsumer(
+        ILogger<DisputantUpdateRequestRejectedConsumer> logger,
+        IOracleDataApiService oracleDataApiService,
+        IDisputantUpdateRequestRejectedTemplate updateRequestRejectedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
+        _updateRequestRejectedTemplate = updateRequestRejectedTemplate ?? throw new ArgumentNullException(nameof(updateRequestRejectedTemplate));
     }
 
     public async Task Consume(ConsumeContext<DisputantUpdateRequestRejected> context)
@@ -48,34 +52,13 @@ public class DisputantUpdateRequestRejectedConsumer : IConsumer<DisputantUpdateR
 
     private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputantUpdateRequestRejected> context)
     {
-        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _rejectedDisputantUpdateRequestEmailTemplateName);
-        if (template == null)
+        SendDispuantEmail message = new()
         {
-            _logger.LogError("Email {Template} not found", _rejectedDisputantUpdateRequestEmailTemplateName);
-            return;
-        }
-
-        if (dispute.EmailAddress is null)
-        {
-            _logger.LogError("EmailAddress is null on Dispute");
-            return;
-        }
-
-        SendDispuantEmail emailMessage = new()
-        {
-            NoticeOfDisputeGuid = new System.Guid(dispute.NoticeOfDisputeGuid),
-            TicketNumber = dispute.TicketNumber,
-            Message = new EmailMessage()
-            {
-                From = template.Sender,
-                To = dispute.EmailAddress,
-                Subject = template.SubjectTemplate,
-                TextContent = template.PlainContentTemplate,
-                HtmlContent = template.HtmlContentTemplate,
-            }
+            Message = _updateRequestRejectedTemplate.Create(dispute),
+            NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
+            TicketNumber = dispute.TicketNumber
         };
-
-        await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
+        await context.PublishWithLog(_logger, message, context.CancellationToken);
     }
 
     private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputantUpdateRequestRejected> context)
