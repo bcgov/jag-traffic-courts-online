@@ -20,6 +20,8 @@ citizen-api:
     "FormRecognizer__ApiVersion": "2022-06-30-preview"
     "FormRecognizer__ModelId": "ViolationTicket"
     "Swagger__Enabled": "true"
+    "TicketSearch__SearchType": "Mock"
+    "MassTransit__Transport": "RabbitMq"
 
 citizen-web:
   image:
@@ -46,7 +48,8 @@ oracle-data-api:
     tag: "1.51.0"
     pullPolicy: Always
   env:
-    "ORDS_API_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam"
+    "ORDS_API_OCCAM_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam"
+    "ORDS_API_TCO_URL": "https://dev.jag.gov.bc.ca/ords/devj/tcoords/tco"
     "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG"
     "TZ": "America/Vancouver"
     "LOOKUP_REPOSITORY_SRC": "ords"
@@ -65,6 +68,7 @@ staff-api:
     "KeycloakAdminApi__Realm": "traffic-court"
     "OAuth__TokenUri": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
     "Swagger__Enabled": "true"
+    "MassTransit__Transport": "RabbitMq"
 
 staff-web:
   image:
@@ -100,3 +104,4 @@ workflow-service:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
     "EmailConfiguration__AllowList": ""
     "EmailConfiguration__EmailVerificationURL": "https://test.tickets.gov.bc.ca/email/verify"
+    "MassTransit__Transport": "RabbitMq"
