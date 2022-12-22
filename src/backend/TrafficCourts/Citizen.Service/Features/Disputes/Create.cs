@@ -1,7 +1,7 @@
 using MassTransit;
 using MediatR;
 using TrafficCourts.Common.Features.FilePersistence;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Messaging.MessageContracts;
 using AutoMapper;

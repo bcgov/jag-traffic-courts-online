@@ -37,21 +37,16 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken);
                 if (searchResult is null || searchResult.Count == 0)
                 {
-                    _logger.LogError("Dispute not found");
-                    await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse());
+                    throw new Exception("Dispute not found");
                 }
                 DisputeResult? result = searchResult?.OrderByDescending(d => d.DisputeId).FirstOrDefault();
 
-                // TODO: get value from DisputeResult
-                ICollection<JJDispute> jJDisputes = await _oracleDataApiService.GetJJDisputesAsync("", ticketNumber, issuedTime, context.CancellationToken);
-                JJDisputeHearingType? hearingType = jJDisputes.Select(i => i.HearingType).FirstOrDefault();
-
                 await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
                 {
-                    NoticeOfDisputeGuid = result?.DisputeId.ToString(), // TODO: change this to NoticeOfDisputeGuid
+                    NoticeOfDisputeGuid = result?.NoticeOfDisputeGuid,
                     DisputeStatus = result?.DisputeStatus.ToString(),
                     JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
-                    HearingType = hearingType?.ToString()
+                    HearingType = result?.JjDisputeHearingType?.ToString()
                 });
             }
             catch (Exception ex)

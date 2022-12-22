@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
 using System.Text.RegularExpressions;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Validators

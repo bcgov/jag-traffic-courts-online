@@ -4,12 +4,12 @@ using System.Text.Json.Serialization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 
-namespace TrafficCourts.Citizen.Service.Models.Dispute
+namespace TrafficCourts.Citizen.Service.Models.Disputes
 {
     public class SearchDisputeResult
     {
-        [JsonPropertyName("identifier")]
-        public string? Identifier { get; set; }
+        [JsonPropertyName("token")]
+        public string? NoticeOfDisputeGuid { get; set; }
 
         [JsonPropertyName("dispute_status")]
         public DisputeStatus? DisputeStatus { get; set; }

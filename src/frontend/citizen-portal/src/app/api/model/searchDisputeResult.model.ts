@@ -15,7 +15,7 @@ import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 
 export interface SearchDisputeResult { 
-    identifier?: string | null;
+    token?: string | null;
     dispute_status?: DisputeStatus;
     jjdispute_status?: JJDisputeStatus;
     hearing_type?: JJDisputeHearingType;

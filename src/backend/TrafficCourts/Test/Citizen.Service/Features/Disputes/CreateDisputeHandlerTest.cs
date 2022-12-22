@@ -4,7 +4,7 @@ using MassTransit;
 using System;
 using System.Threading;
 using TrafficCourts.Citizen.Service.Features.Disputes;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Messaging.MessageContracts;

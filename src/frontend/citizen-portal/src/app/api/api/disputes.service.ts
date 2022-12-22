@@ -235,16 +235,16 @@ export class DisputesService {
 
     /**
      * An endpoint for resending an email to a Disputant.
-     * @param uuidHash 
+     * @param guidHash 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
-        if (uuidHash === null || uuidHash === undefined) {
-            throw new Error('Required parameter uuidHash was null or undefined when calling apiDisputesEmailUuidHashResendPut.');
+    public apiDisputesEmailGuidHashResendPut(guidHash: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputesEmailGuidHashResendPut(guidHash: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputesEmailGuidHashResendPut(guidHash: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputesEmailGuidHashResendPut(guidHash: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (guidHash === null || guidHash === undefined) {
+            throw new Error('Required parameter guidHash was null or undefined when calling apiDisputesEmailGuidHashResendPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -280,7 +280,7 @@ export class DisputesService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/disputes/email/${this.configuration.encodeParam({name: "uuidHash", value: uuidHash, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/resend`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/disputes/email/${this.configuration.encodeParam({name: "guidHash", value: guidHash, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/resend`,
             null,
             {
                 context: localVarHttpContext,

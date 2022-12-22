@@ -7,7 +7,7 @@ using Moq;
 using System.Threading;
 using TrafficCourts.Citizen.Service.Controllers;
 using TrafficCourts.Citizen.Service.Features.Disputes;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.Features.EmailVerificationToken;
 using Xunit;
 
