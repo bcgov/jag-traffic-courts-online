@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
@@ -65,6 +66,7 @@ public class SearchDisputeConsumerTest
         {
             new()
             {
+                DisputeId = 1,
                 NoticeOfDisputeGuid = _mockGuid,
                 DisputeStatus = DisputeResultDisputeStatus.VALIDATED,
                 JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS,
