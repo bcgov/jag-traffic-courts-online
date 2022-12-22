@@ -55,7 +55,9 @@ public class SearchDisputeConsumerTest
         await _consumer.Consume(_context.Object);
 
         // Assert - expect response to be valid, but fields null. 
-        VerifyExpectedResponse();
+        _context.Verify(m => m.RespondAsync<SearchDisputeResponse>(It.Is<SearchDisputeResponse>(
+            a => a.IsError == true
+            )), Times.Once);
     }
 
     [Fact]
@@ -95,6 +97,6 @@ public class SearchDisputeConsumerTest
                 && a.JJDisputeStatus == _expectedResponse.JJDisputeStatus
                 && a.HearingType == _expectedResponse.HearingType
                 && a.IsError == _expectedResponse.IsError
-            )), Times.Exactly(2));
+            )), Times.Once);
     }
 }
