@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Workflow.Service.Services;
 
@@ -45,7 +44,7 @@ public class OracleDataApiService : IOracleDataApiService
         try
         {
             return await _client.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory, cancellationToken);
-        } 
+        }
         catch (Exception)
         {
             throw;
@@ -129,7 +128,8 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime, System.Threading.CancellationToken cancellationToken) {
+    public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime, System.Threading.CancellationToken cancellationToken)
+    {
         try
         {
             return await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, violationTime, cancellationToken);
@@ -145,6 +145,18 @@ public class OracleDataApiService : IOracleDataApiService
         try
         {
             return await _client.UpdateDisputantUpdateRequestStatusAsync(disputantUpdateRequestId, disputantUpdateRequestStatus, cancellationToken);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long disputeId, Status? disputantUpdateRequestStatus, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _client.GetDisputantUpdateRequestsAsync(disputeId, disputantUpdateRequestStatus);
         }
         catch (Exception)
         {
