@@ -296,39 +296,6 @@ public class DisputesController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Submits an update request for a Dispute.
-    /// </summary>
-    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
-    /// <param name="dispute">The requested fields to update.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <response code="200">The Dispute is updated.</response>
-    //[HttpPut("/api/dispute/{guidHash}")]
-    //[ProducesResponseType(StatusCodes.Status200OK)]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //public async Task<IActionResult> UpdateDisputeAsync([Required] string guidHash, [FromBody] Models.Disputes.Dispute dispute, CancellationToken cancellationToken)
-    //{
-    //    try
-    //    {
-    //        // await UpdateDisputeContactInfoAsync(guidHash, dispute, cancellationToken);
-    //        // // Attempt to decode the hashed noticeOfDisputeGuid
-    //        // var hex = Guid.TryParse(_hashids.DecodeHex(guidHash), out Guid noticeOfDisputeGuid); // should pass the checking
-    //        // SearchDisputeRequest searchRequest = new() { NoticeOfDisputeGuid = noticeOfDisputeGuid };
-    //        // Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
-
-    //        // await _bus.PublishWithLog(_logger, message, cancellationToken);
-
-    //        return Ok();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Unknown Error");
-    //        throw;
-    //    }
-    //}
-
     private async Task<IActionResult> checkUpdateDisputeInput([Required] string guidHash, CancellationToken cancellationToken)
     {
         // Attempt to decode the hashed noticeOfDisputeGuid
