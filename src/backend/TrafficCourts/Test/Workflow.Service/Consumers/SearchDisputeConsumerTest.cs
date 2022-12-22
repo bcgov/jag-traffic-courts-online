@@ -95,6 +95,6 @@ public class SearchDisputeConsumerTest
                 && a.JJDisputeStatus == _expectedResponse.JJDisputeStatus
                 && a.HearingType == _expectedResponse.HearingType
                 && a.IsError == _expectedResponse.IsError
-            )), Times.Once);
+            )), Times.Exactly(2));
     }
 }
