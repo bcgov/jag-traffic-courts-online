@@ -249,7 +249,7 @@ public class Field
 
     public bool IsPopulated()
     {
-        return !String.IsNullOrEmpty(Value);
+        return !string.IsNullOrEmpty(Value);
     }
 }
 

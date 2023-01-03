@@ -19,7 +19,10 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
     public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket)
     {
+        Sanitize(violationTicket);
+
         ApplyGlobalRules(violationTicket);
+
         // abort validation if this is not a valid Violation Ticket.
         if (violationTicket.GlobalValidationErrors.Count > 0)
         {
@@ -30,6 +33,52 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
         // TCVP-932 Reject ticket if certain fields have a low confidence value (this is determined after all the fields have been validated and their datatype confirmed)
         LowConfidenceGlobalRule.Run(violationTicket);
+    }
+
+    /// <summary>
+    /// Cleans up the scanned data from a poor OCR scan.
+    /// </summary>
+    /// <param name="violationTicket"></param>
+    public static void Sanitize(OcrViolationTicket violationTicket)
+    {
+        // It can happen that if adjacent text fields has content too close to the common dividing line, the OCR tool can misread both fields thinking one is blank and the other starts with the blank field's text.
+
+        // If the Acts/Regs section is blank (should be MVA) and the adjacent Section text starts with "MVA" (shouldn't start with MVA), then move the MVA text to the correct field.
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count1Section)
+            && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count1ActRegs))
+        {
+            string count1Section = violationTicket.Fields[OcrViolationTicket.Count1Section].Value ?? "";
+            if (!violationTicket.Fields[OcrViolationTicket.Count1ActRegs].IsPopulated()
+                && count1Section.StartsWith("MVA"))
+            {
+                violationTicket.Fields[OcrViolationTicket.Count1ActRegs].Value = "MVA";
+                violationTicket.Fields[OcrViolationTicket.Count1Section].Value = count1Section.Replace("MVA", "");
+            }
+        }
+
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count2Section)
+            && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count2ActRegs))
+        {
+            string count2Section = violationTicket.Fields[OcrViolationTicket.Count2Section].Value ?? "";
+            if (!violationTicket.Fields[OcrViolationTicket.Count2ActRegs].IsPopulated()
+                && count2Section.StartsWith("MVA"))
+            {
+                violationTicket.Fields[OcrViolationTicket.Count2ActRegs].Value = "MVA";
+                violationTicket.Fields[OcrViolationTicket.Count2Section].Value = count2Section.Replace("MVA", "");
+            }
+        }
+
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count3Section)
+            && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count3ActRegs))
+        {
+            string count3Section = violationTicket.Fields[OcrViolationTicket.Count3Section].Value ?? "";
+            if (!violationTicket.Fields[OcrViolationTicket.Count3ActRegs].IsPopulated()
+                && count3Section.StartsWith("MVA"))
+            {
+                violationTicket.Fields[OcrViolationTicket.Count3ActRegs].Value = "MVA";
+                violationTicket.Fields[OcrViolationTicket.Count3Section].Value = count3Section.Replace("MVA", "");
+            }
+        }
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
