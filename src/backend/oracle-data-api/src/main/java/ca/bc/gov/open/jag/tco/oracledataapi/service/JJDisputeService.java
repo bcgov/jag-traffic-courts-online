@@ -215,6 +215,7 @@ public class JJDisputeService {
 	 *
 	 * @param id
 	 * @param JJDisputeStatus
+	 * @param principal
 	 * @param remark note by the staff if the status is REVIEW.
 	 * @return the saved JJDispute
 	 */
