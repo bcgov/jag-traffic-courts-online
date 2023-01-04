@@ -141,7 +141,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		JJDispute updatedJJDispute = RandomUtil.createJJDispute();
 		updatedJJDispute.setCourthouseLocation("Victoria");
 		updatedJJDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
-		jjDisputeController.updateJJDispute(ticketNumber, false, null, updatedJJDispute);
+		jjDisputeController.updateJJDispute(ticketNumber, false, this.getPrincipal(), updatedJJDispute);
 
 		// Assert db contains only the updated JJ Dispute record.
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, null).getBody();
