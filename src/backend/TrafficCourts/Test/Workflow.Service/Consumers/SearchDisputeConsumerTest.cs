@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
@@ -24,6 +25,7 @@ public class SearchDisputeConsumerTest
     private readonly Mock<ConsumeContext<SearchDisputeRequest>> _context;
     private readonly SearchDisputeRequest _message;
     private readonly SearchDisputeResponse _expectedResponse;
+    private readonly String _mockGuid;
 
     public SearchDisputeConsumerTest()
     {
@@ -31,7 +33,6 @@ public class SearchDisputeConsumerTest
         {
             TicketNumber = "AX00000000",
             IssuedTime = "17:54",
-            NoticeOfDisputeGuid = Guid.NewGuid(),
         };
         _expectedResponse = new();
         _mockLogger = new();
@@ -41,6 +42,7 @@ public class SearchDisputeConsumerTest
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
         _context.Setup(_ => _.RespondAsync<SearchDisputeResponse>(_expectedResponse));
+        _mockGuid = Guid.NewGuid().ToString();
     }
 
     [Fact]
@@ -53,7 +55,9 @@ public class SearchDisputeConsumerTest
         await _consumer.Consume(_context.Object);
 
         // Assert - expect response to be valid, but fields null. 
-        VerifyExpectedResponse();
+        _context.Verify(m => m.RespondAsync<SearchDisputeResponse>(It.Is<SearchDisputeResponse>(
+            a => a.IsError == true
+            )), Times.Once);
     }
 
     [Fact]
@@ -65,24 +69,15 @@ public class SearchDisputeConsumerTest
             new()
             {
                 DisputeId = 1,
+                NoticeOfDisputeGuid = _mockGuid,
                 DisputeStatus = DisputeResultDisputeStatus.VALIDATED,
-                JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS
+                JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS,
+                JjDisputeHearingType = DisputeResultJjDisputeHearingType.COURT_APPEARANCE
             }
         };
 
-        // FIXME: remove jDdisputes here as the hearingType is already included in the DisputeResult response.
-        ICollection<JJDispute> jJDisputes = new List<JJDispute>
-        {
-            new()
-            {
-                HearingType = JJDisputeHearingType.COURT_APPEARANCE
-            }
-        };
-
-
-        _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, _message.NoticeOfDisputeGuid.ToString(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
-        _oracleDataApiService.Setup(_ => _.GetJJDisputesAsync("", _message.TicketNumber, _message.IssuedTime, It.IsAny<CancellationToken>())).Returns(Task.FromResult(jJDisputes));
-        _expectedResponse.NoticeOfDisputeGuid = "1";
+        _oracleDataApiService.Setup(_ => _.SearchDisputeAsync(_message.TicketNumber, _message.IssuedTime, null, It.IsAny<CancellationToken>())).Returns(Task.FromResult(searchResult));
+        _expectedResponse.NoticeOfDisputeGuid = _mockGuid;
         _expectedResponse.DisputeStatus = "VALIDATED";
         _expectedResponse.JJDisputeStatus = "IN_PROGRESS";
         _expectedResponse.HearingType = "COURT_APPEARANCE";

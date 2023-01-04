@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
-namespace TrafficCourts.Citizen.Service.Models.Dispute;
+namespace TrafficCourts.Citizen.Service.Models.Disputes;
 
 public class DisputeCount
 {

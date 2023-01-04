@@ -153,7 +153,7 @@ export class NoticeOfDisputeService {
   }
 
   resendVerificationEmail(noticeOfDisputeId: string): Observable<any> {
-    return this.disputesService.apiDisputesEmailUuidHashResendPut(noticeOfDisputeId);
+    return this.disputesService.apiDisputesEmailGuidHashResendPut(noticeOfDisputeId);
   }
 
   verifyEmail(token: string): Observable<any> {

@@ -62,7 +62,7 @@
         }
       }
     },
-    "/api/disputes/email/{uuidHash}/resend": {
+    "/api/disputes/email/{guidHash}/resend": {
       "put": {
         "tags": [
           "Disputes"
@@ -70,7 +70,7 @@
         "summary": "An endpoint for resending an email to a Disputant.",
         "parameters": [
           {
-            "name": "uuidHash",
+            "name": "guidHash",
             "in": "path",
             "description": "",
             "required": true,
@@ -797,35 +797,100 @@
       "NoticeOfDispute": {
         "type": "object",
         "properties": {
-          "ticket_number": {
-            "maxLength": 12,
+          "email_address": {
+            "maxLength": 100,
             "type": "string",
-            "description": "The violation ticket number.",
-            "nullable": true
-          },
-          "issued_date": {
-            "type": "string",
-            "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
-            "format": "date-time"
-          },
-          "disputant_surname": {
-            "type": "string",
-            "description": "The surname or corporate name.",
+            "description": "The disputant's email address.",
             "nullable": true
           },
           "disputant_given_name1": {
+            "maxLength": 30,
             "type": "string",
             "description": "The first given name or corporate name continued.",
             "nullable": true
           },
           "disputant_given_name2": {
+            "maxLength": 30,
             "type": "string",
             "description": "The second given name",
             "nullable": true
           },
           "disputant_given_name3": {
+            "maxLength": 30,
             "type": "string",
             "description": "The third given name",
+            "nullable": true
+          },
+          "disputant_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "address_line1": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line2": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line3": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address city of the disputant.",
+            "nullable": true
+          },
+          "address_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address province of the disputant.",
+            "nullable": true
+          },
+          "address_province_country_id": {
+            "type": "integer",
+            "description": "The mailing address province's country code of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_province_seq_no": {
+            "type": "integer",
+            "description": "The mailing address province's sequence number of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_country_id": {
+            "type": "integer",
+            "description": "The mailing address country id of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "postal_code": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "The mailing address postal code or zip code of the disputant.",
+            "nullable": true
+          },
+          "home_phone_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The disputant's home phone number.",
+            "nullable": true
+          },
+          "ticket_number": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "The violation ticket number.",
             "nullable": true
           },
           "disputant_birthdate": {
@@ -855,67 +920,9 @@
             "format": "int32",
             "nullable": true
           },
-          "address_line1": {
-            "type": "string",
-            "description": "The mailing address of the disputant.",
-            "nullable": true
-          },
-          "address_line2": {
-            "type": "string",
-            "description": "The mailing address of the disputant.",
-            "nullable": true
-          },
-          "address_line3": {
-            "type": "string",
-            "description": "The mailing address of the disputant.",
-            "nullable": true
-          },
-          "address_city": {
-            "type": "string",
-            "description": "The mailing address city of the disputant.",
-            "nullable": true
-          },
-          "address_province": {
-            "type": "string",
-            "description": "The mailing address province of the disputant.",
-            "nullable": true
-          },
-          "address_province_country_id": {
-            "type": "integer",
-            "description": "The mailing address province's country code of the disputant.",
-            "format": "int32",
-            "nullable": true
-          },
-          "address_province_seq_no": {
-            "type": "integer",
-            "description": "The mailing address province's sequence number of the disputant.",
-            "format": "int32",
-            "nullable": true
-          },
-          "address_country_id": {
-            "type": "integer",
-            "description": "The mailing address country id of the disputant.",
-            "format": "int32",
-            "nullable": true
-          },
-          "postal_code": {
-            "type": "string",
-            "description": "The mailing address postal code or zip code of the disputant.",
-            "nullable": true
-          },
-          "home_phone_number": {
-            "type": "string",
-            "description": "The disputant's home phone number.",
-            "nullable": true
-          },
           "work_phone_number": {
             "type": "string",
             "description": "The disputant's work phone number.",
-            "nullable": true
-          },
-          "email_address": {
-            "type": "string",
-            "description": "The disputant's email address.",
             "nullable": true
           },
           "represented_by_lawyer": {
@@ -984,6 +991,19 @@
             "description": "The reason that disputant declares for requesting more time to pay the amount on the violation ticket.",
             "nullable": true
           },
+          "dispute_counts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DisputeCount"
+            },
+            "description": "Dispute Counts",
+            "nullable": true
+          },
+          "issued_date": {
+            "type": "string",
+            "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
+            "format": "date-time"
+          },
           "disputant_detected_ocr_issues": {
             "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
           },
@@ -1000,14 +1020,6 @@
           "detachment_location": {
             "type": "string",
             "description": "Detachment Location",
-            "nullable": true
-          },
-          "dispute_counts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DisputeCount"
-            },
-            "description": "Dispute Counts",
             "nullable": true
           }
         },
@@ -1079,7 +1091,7 @@
       "SearchDisputeResult": {
         "type": "object",
         "properties": {
-          "identifier": {
+          "token": {
             "type": "string",
             "nullable": true
           },

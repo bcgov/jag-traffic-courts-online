@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TrafficCourts.Common.Features.Mail.Model
+﻿namespace TrafficCourts.Common.Features.Mail.Model
 {
     public class MailTemplateCollection
     {
@@ -47,7 +41,7 @@ namespace TrafficCourts.Common.Features.Mail.Model
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Verify your email for traffic violation ticket {ticketid}.",
                 HtmlContentTemplate = "In order to confirm submission of your intent to dispute traffic violation ticket {ticketid} click on the following link." +
-                    "<br/><br/><a href='{emailVerificationUrl}?uuid={emailVerificationToken}'>{emailVerificationUrl}?uuid={emailVerificationToken}</a>" +
+                    "<br/><br/><a href='{emailVerificationUrl}?guid={emailVerificationToken}'>{emailVerificationUrl}?guid={emailVerificationToken}</a>" +
                     "<br/><br/>If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
             },
         new MailTemplate()
@@ -55,32 +49,32 @@ namespace TrafficCourts.Common.Features.Mail.Model
                 TemplateName = "DisputantUpdateRequestAcceptedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Disputant contact information changes approved)",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "TBD"
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your requested contact changes have been approved.)"
             },
         new MailTemplate()
             {
                 TemplateName = "DisputantUpdateRequestRejectedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Disputant contact information changes rejected)",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "TBD"
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your requested contact changes have been rejected.)"
             },
         new MailTemplate()
             {
                 TemplateName = "DisputantUpdateRequestReceivedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
-                SubjectTemplate = "Dispute update requests received",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "Your request to update dispute information was received."
+                SubjectTemplate = "TBD (ie. Dispute update request(s) received)",
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your request to update dispute information was received.)"
             },
         new MailTemplate()
             {
                 TemplateName = "DisputantEmailUpdateSuccessfulTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Email verification successful",
-                HtmlContentTemplate = "TBD",
-                PlainContentTemplate = "Your email address has been updated successfully."
+                HtmlContentTemplate = "",
+                PlainContentTemplate = "TBD (ie. Your email address has been updated successfully.)"
             },
         new MailTemplate()
             {
@@ -88,7 +82,7 @@ namespace TrafficCourts.Common.Features.Mail.Model
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Verify your email update for traffic violation ticket {ticketid}.",
                 HtmlContentTemplate = "TBD (ie. In order to confirm your email update click on the following link.)" +
-                    "<br/><br/><a href='{emailVerificationUrl}?uuid={emailVerificationToken}'>{emailVerificationUrl}?uuid={emailVerificationToken}</a>" +
+                    "<br/><br/><a href='{emailVerificationUrl}?guid={emailVerificationToken}'>{emailVerificationUrl}?guid={emailVerificationToken}</a>" +
                     "<br/><br/>If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
             },
         };

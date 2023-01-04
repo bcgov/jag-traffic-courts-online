@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Validators
@@ -7,7 +7,7 @@ namespace TrafficCourts.Citizen.Service.Validators
     /// <summary>
     /// Fluent Validator for Disputed Count model
     /// </summary>
-    public class DisputeCountValidator : AbstractValidator<TrafficCourts.Citizen.Service.Models.Dispute.DisputeCount>
+    public class DisputeCountValidator : AbstractValidator<TrafficCourts.Citizen.Service.Models.Disputes.DisputeCount>
     {
         public DisputeCountValidator()
         {

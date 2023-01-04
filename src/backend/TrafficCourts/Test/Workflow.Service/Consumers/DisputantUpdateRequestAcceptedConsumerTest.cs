@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
@@ -24,7 +25,7 @@ public class DisputantUpdateRequestAcceptedConsumerTest
 
     public DisputantUpdateRequestAcceptedConsumerTest()
     {
-        _message = new(1); 
+        _message = new(1);
         _dispute = new()
         {
             DisputeId = 1,
@@ -44,7 +45,7 @@ public class DisputantUpdateRequestAcceptedConsumerTest
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
 
-        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object);
+        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputantUpdateRequestAcceptedTemplate());
     }
 
     [Fact]
@@ -53,7 +54,7 @@ public class DisputantUpdateRequestAcceptedConsumerTest
         // Arrange
         _updateRequest.Status = DisputantUpdateRequestStatus2.ACCEPTED;
         _updateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_ADDRESS;
-        _updateRequest.UpdateJson = "{ \"addressLine1\": \"addr1\", \"addressLine2\": \"addr2\", \"addressLine3\": \"addr3\", \"addressCity\": \"city\", \"addressProvince\": \"BC\", \"postalCode\": \"A1B2C3\"}";        
+        _updateRequest.UpdateJson = "{ \"addressLine1\": \"addr1\", \"addressLine2\": \"addr2\", \"addressLine3\": \"addr3\", \"addressCity\": \"city\", \"addressProvince\": \"BC\", \"postalCode\": \"A1B2C3\"}";
 
         // Act
         await _consumer.Consume(_context.Object);
@@ -74,7 +75,7 @@ public class DisputantUpdateRequestAcceptedConsumerTest
         _updateRequest.Status = DisputantUpdateRequestStatus2.ACCEPTED;
         _updateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_NAME;
         _updateRequest.UpdateJson = "{ \"disputantGivenName1\": \"fname1\", \"disputantGivenName2\": \"fname2\", \"disputantGivenName3\": \"fname3\", \"disputantSurname\": \"lname\" }";
-        
+
         // Act
         await _consumer.Consume(_context.Object);
 

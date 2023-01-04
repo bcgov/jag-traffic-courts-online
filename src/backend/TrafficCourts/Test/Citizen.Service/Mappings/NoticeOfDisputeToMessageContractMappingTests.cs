@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using TrafficCourts.Citizen.Service.Mappings;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
@@ -84,7 +84,7 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             var fixture = new Fixture();
             var mapper = CreateMapper();
 
-            var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Dispute.DisputeCount>();
+            var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Disputes.DisputeCount>();
 
             var actual = mapper.Map<Messaging.MessageContracts.DisputeCount>(expected);
 

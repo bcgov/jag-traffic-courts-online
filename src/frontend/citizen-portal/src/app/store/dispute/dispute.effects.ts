@@ -29,7 +29,7 @@ export class DisputeEffects {
       return this.disputeService.searchDispute(params)
         .pipe(
           map(result => {
-            if (result.identifier) {
+            if (result.token) {
               let path = AppRoutes.disputePath("");
               let findPagePath = AppRoutes.disputePath(AppRoutes.FIND_DISPUTE);
               if (this.router.url.indexOf(path) !== 0 || this.router.url.indexOf(findPagePath) === 0) {
@@ -55,14 +55,14 @@ export class DisputeEffects {
     ofType(Actions.UpdateContact),
     withLatestFrom(this.store.select(DisputeStore.Selectors.Params)),
     mergeMap(([action, params]) => {
-      return this.disputeService.updateDisputeContact(action.uuid, action.payload)
+      return this.disputeService.updateDisputeContact(action.guid, action.payload)
         .pipe(
           map(result => {
             if (action.payload.email_address) {
               this.router.navigate([AppRoutes.EMAILVERIFICATIONREQUIRED], {
                 queryParams: {
                   email: action.payload.email_address,
-                  token: action.uuid
+                  token: action.guid
                 },
               });
             }
