@@ -243,7 +243,7 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/confirm")
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
-		logger.debug("PUT /dispute/{id}/accept called");
+		logger.debug("PUT /dispute/{id}/confirm called");
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null), HttpStatus.OK);
 	}
