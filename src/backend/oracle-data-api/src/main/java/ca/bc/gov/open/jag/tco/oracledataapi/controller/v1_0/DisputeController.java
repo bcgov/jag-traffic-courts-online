@@ -409,6 +409,27 @@ public class DisputeController {
 		logger.debug("GET /dispute/{}/updateRequest called", id);
 		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByDisputeId(id), HttpStatus.OK);
 	}
+	
+	/**
+	 * Get endpoint that retrieves all <code>DisputantUpdateRequest</code>s from persistent storage optionally that have a status.
+	 *
+	 * @param disputantUpdateRequest status to be retrieved
+	 * @return list of saved {@link DisputantUpdateRequest}
+	 */
+	@GetMapping("/dispute/updateRequestByStatus")
+	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest that optionally have the given status.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest records retrieved."),
+		@ApiResponse(responseCode = "404", description = "Dispute update requests could not be found."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
+	})
+	public ResponseEntity<List<DisputantUpdateRequest>> getDisputantUpdateRequestsByStatus(
+			@RequestParam(required = false)
+			@Parameter(description = "The status of the disputant update requests.") 
+			DisputantUpdateRequestStatus status) {
+		logger.debug("GET /dispute/updateRequestByStatus called {}", status);
+		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByStatus(status), HttpStatus.OK);
+	}
 
 	/**
 	 * PUT endpoint that updates the status of a DisputantUpdateRequest record.

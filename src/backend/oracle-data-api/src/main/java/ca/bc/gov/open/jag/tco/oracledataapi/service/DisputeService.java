@@ -387,6 +387,16 @@ public class DisputeService {
 	public List<DisputantUpdateRequest> findDisputantUpdateRequestByDisputeId(Long disputeId) {
 		return disputantUpdateRequestRepository.findByDisputeId(disputeId);
 	}
+	
+	/**
+	 * Retrieves all DisputantUpdateRequests by optional status
+	 * @param status must not be null
+	 */
+	public List<DisputantUpdateRequest> findDisputantUpdateRequestByStatus(DisputantUpdateRequestStatus status) {
+		if (status == null) {
+			return disputantUpdateRequestRepository.findAll();
+		} else return disputantUpdateRequestRepository.findByStatus(status);
+	}
 
 	/**
 	 * Updates the status of the given DisputantUpdateStatus record
