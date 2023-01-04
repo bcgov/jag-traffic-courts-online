@@ -2,7 +2,7 @@
 using RichardSzalay.MockHttp;
 using System.Net;
 
-namespace TrafficCourts.Coms.Client.Test.ComService;
+namespace TrafficCourts.Coms.Client.Test.ClientTests;
 
 public class ReadObject : ObjectManagementBase
 {

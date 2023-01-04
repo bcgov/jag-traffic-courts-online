@@ -3,7 +3,7 @@ using RichardSzalay.MockHttp;
 using System.Net;
 using System.Text.Json;
 
-namespace TrafficCourts.Coms.Client.Test.ComService;
+namespace TrafficCourts.Coms.Client.Test.ClientTests;
 
 public class DeleteObject : ObjectManagementBase
 {

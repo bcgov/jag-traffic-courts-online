@@ -3,7 +3,7 @@ using RichardSzalay.MockHttp;
 using System.Net;
 using TrafficCourts.Coms.Client;
 
-namespace TrafficCourts.Coms.Client.Test.ComService;
+namespace TrafficCourts.Coms.Client.Test.ClientTests;
 
 public class HeadObject : ObjectManagementBase
 {

@@ -1,4 +1,4 @@
-﻿namespace TrafficCourts.Coms.Client.Test.ObjectManagementServiceTests;
+﻿namespace TrafficCourts.Coms.Client.Test.ServiceTests;
 
 public class Constructor : ObjectManagementServiceTest
 {

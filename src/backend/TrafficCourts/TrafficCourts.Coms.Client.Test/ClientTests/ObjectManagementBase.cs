@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using RichardSzalay.MockHttp;
 
-namespace TrafficCourts.Coms.Client.Test.ComService;
+namespace TrafficCourts.Coms.Client.Test.ClientTests;
 
 public abstract class ObjectManagementBase
 {
