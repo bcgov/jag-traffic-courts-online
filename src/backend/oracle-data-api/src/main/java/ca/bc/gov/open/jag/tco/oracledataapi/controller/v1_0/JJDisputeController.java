@@ -206,7 +206,7 @@ public class JJDisputeController {
 	 * @param principal, the logged-in user
 	 * @return {@link JJDispute}
 	 */
-	@Operation(summary = "Updates the status of a particular JJDispute record to REVIEW.")
+	@Operation(summary = "Updates the status of a particular JJDispute record to ACCEPTED.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
@@ -223,5 +223,28 @@ public class JJDisputeController {
 		}
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null), HttpStatus.OK);
+	}
+
+	/**
+	 * PUT endpoint that updates the JJDispute, setting the status to CONFIRMED.
+	 *
+	 * @param ticketNumber, id of the saved {@link JJDispute} to update
+	 * @param principal, the logged-in user
+	 * @return {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJDispute record to CONFIRMED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to CONFIRMED iff status is one of the following: "
+				+ "REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{ticketNumber}/confirm")
+	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
+		logger.debug("PUT /dispute/{id}/accept called");
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null), HttpStatus.OK);
 	}
 }
