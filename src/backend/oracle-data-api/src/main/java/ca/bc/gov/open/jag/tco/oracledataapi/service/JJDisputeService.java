@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
@@ -37,7 +36,7 @@ public class JJDisputeService {
 	JJDisputeRepository jjDisputeRepository;
 
 	@PersistenceContext
-    private EntityManager entityManager;
+	private EntityManager entityManager;
 
 	/**
 	 * Retrieves a {@link JJDispute} record by ID, delegating to CrudRepository
@@ -66,7 +65,7 @@ public class JJDisputeService {
 	}
 
 	/**
-	 * Assigns a specific {@link Dispute} to the IDIR username of the Staff with a timestamp
+	 * Assigns a specific {@link JJDispute} to the IDIR username of the Staff with a timestamp
 	 *
 	 * @param ticketNumber
 	 * @param principal the current user of the system
@@ -225,6 +224,11 @@ public class JJDisputeService {
 			throw new NotAllowedException("Cannot set JJDispute status to null");
 		}
 
+		if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
+			logger.error("Attempting to set the status with no user data - bad method call.");
+			throw new NotAllowedException("Cannot set the status from unknown user");
+		}
+
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
 
 		// TCVP-1435 - business rules
@@ -240,7 +244,7 @@ public class JJDisputeService {
 			if (!List.of(JJDisputeStatus.REQUIRE_COURT_HEARING, JJDisputeStatus.HEARING_SCHEDULED).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
-			break;			
+			break;
 		case IN_PROGRESS:
 			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.HEARING_SCHEDULED, JJDisputeStatus.IN_PROGRESS).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
@@ -287,32 +291,17 @@ public class JJDisputeService {
 			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
 		}
 
-		jjDisputeToUpdate.setStatus(jjDisputeStatus);
+		jjDisputeRepository.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, principal.getName());
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
 		if(!StringUtils.isBlank(remark)) {
-			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
-				logger.error("Attempting to save a remark with no user data - bad method call.");
-				throw new NotAllowedException("Cannot set a remark from unknown user");
-			}
 
-			JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
-			jjDisputeRemark.setNote(remark);
-
-			PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
-			CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();
-			jjDisputeRemark.setUserFullName(user.getFullName());
-
-			jjDisputeRemark.setJjDispute(jjDisputeToUpdate);
-
-			List<JJDisputeRemark> remarks = jjDisputeToUpdate.getRemarks();
-			remarks.add(jjDisputeRemark);
-			jjDisputeToUpdate.setRemarks(remarks);
+			return addRemark(id, remark, principal);
 		}
 
-		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
+		return jjDisputeRepository.findById(id).orElseThrow();
 	}
-	
+
 	/**
 	 * Updates the status of a specific {@link JJDispute} to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE
 	 *
@@ -323,9 +312,38 @@ public class JJDisputeService {
 	public JJDispute requireCourtHearing(String id, Principal principal, String remark) {
 
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
-		
-		this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark);
+
+		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark);
 		jjDisputeToUpdate.setHearingType(JJDisputeHearingType.COURT_APPEARANCE);
+
+		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
+	}
+
+
+	/**
+	 * Creates a new remark with the user name and surname who added the remark and adds it to the given {@link JJDispute}
+	 *
+	 * @param id
+	 * @param remark
+	 * @param principal
+	 * @return the saved JJDispute
+	 */
+	private JJDispute addRemark(String id, String remark, Principal principal) {
+
+		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+
+		JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
+		jjDisputeRemark.setNote(remark);
+
+		PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
+		CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();
+		jjDisputeRemark.setUserFullName(user.getFullName());
+
+		jjDisputeRemark.setJjDispute(jjDisputeToUpdate);
+
+		List<JJDisputeRemark> remarks = jjDisputeToUpdate.getRemarks();
+		remarks.add(jjDisputeRemark);
+		jjDisputeToUpdate.setRemarks(remarks);
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
