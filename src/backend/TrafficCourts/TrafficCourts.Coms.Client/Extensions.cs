@@ -10,24 +10,41 @@ public static partial class Extensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="section">The section containing <see cref="ObjectManagementServiceConfiguration"/></param>
+    /// <param name="memoryStreamFactory">
+    /// Optional function used to create new memory streams, 
+    /// allows using Microsoft.IO.RecyclableMemoryStreamManager to create instances of returned streams.
+    /// </param>
     /// <returns></returns>
-    public static IServiceCollection AddObjectManagementService(this IServiceCollection services, string section)
+    public static IServiceCollection AddObjectManagementService(this IServiceCollection services, string section, Func<MemoryStream>? memoryStreamFactory = null)
     {
-        if (services is null)
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(section);
+
+        if (memoryStreamFactory is null)
         {
-            throw new ArgumentNullException(nameof(services));
+            memoryStreamFactory = () => new MemoryStream();
         }
 
+        // register IMemoryStreamFactory
+        services.AddSingleton<IMemoryStreamFactory, MemoryStreamFactory>(serviceProvider => new MemoryStreamFactory(memoryStreamFactory));
+
+        // register HttpClient for client ObjectManagementClient
         services.AddHttpClient<ObjectManagementClient>((provider, client) =>
         {
             ObjectManagementServiceConfiguration options = GetConfiguration(provider, section);
 
+            // TODO: check that Username and Password are not empty
+
+            // username and password are required in this client
             client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(options.Username, options.Password);
         });
 
+        // register how to create IObjectManagementClient
         services.AddTransient<IObjectManagementClient>(provider =>
         {
             ObjectManagementServiceConfiguration options = GetConfiguration(provider, section);
+
+            // TODO: check that BaseUrl is not empty and is valid uri
 
             var clientFactory = provider.GetRequiredService<IHttpClientFactory>();
             var httpClient = clientFactory.CreateClient(nameof(ObjectManagementClient));
@@ -40,6 +57,7 @@ public static partial class Extensions
             return client;
         });
 
+        // register the public interface
         services.AddTransient<IObjectManagementService, ObjectManagementService>();
 
         return services;

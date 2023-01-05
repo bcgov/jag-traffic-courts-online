@@ -4,7 +4,6 @@ using Xunit.Abstractions;
 
 namespace TrafficCourts.Coms.Client.Test
 {
-    [ExcludeFromCodeCoverage(Justification = "Integration Test")]
     public class IntegrationTest
     {
         // This test requires user secrets in this format. Also, you need to define INTEGRATION_TEST 

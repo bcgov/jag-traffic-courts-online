@@ -99,8 +99,8 @@ public class CreateFileAsync : ObjectManagementServiceTest
         // verify the client called with correct values
         _mockClient.Verify(_ =>
             _.CreateObjectsAsync(
-                It.Is<IDictionary<string, string>>((_) => Equal(new Dictionary<string, string>(), _)),
-                It.Is<IDictionary<string, string>>((_) => Equal(new Dictionary<string, string>(), _)),
+                It.Is<IDictionary<string, string>>((_) => _ == file.Metadata),
+                It.Is<IDictionary<string, string>>((_) => _ == file.Tags),
                 It.Is<FileParameter>((_) => _.Data == expectedStream && _.FileName == expectedFilename && _.ContentType == expectedContentType),
                 It.Is<CancellationToken>((cancellationToken) => cancellationToken == cts.Token))
             );
@@ -109,21 +109,4 @@ public class CreateFileAsync : ObjectManagementServiceTest
     // TODO: add test when create returns 0 items
     // TODO: add test when create returns more than 1 item
 
-    private static bool Equal(IDictionary<string, string> expected, IDictionary<string, string> actual)
-    {
-        if (expected.Count != actual.Count)
-        { 
-            return false; 
-        }
-
-        foreach (var item in expected)
-        {
-            if (!actual.ContainsKey(item.Key) || actual[item.Key] != item.Value) 
-            { 
-                return false; 
-            }
-        }
-
-        return true;
-    }
 }

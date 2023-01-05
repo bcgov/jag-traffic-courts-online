@@ -1,41 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-    <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-    <PackageReference Include="coverlet.msbuild" Version="3.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MediatR" Version="11.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
-    <PackageReference Include="Moq" Version="4.18.2" />
-    <PackageReference Include="NodaTime.Testing" Version="3.1.5" />
-    <PackageReference Include="SshKeyGenerator" Version="1.1.50" />
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.2.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
+		<PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
+		<PackageReference Include="coverlet.msbuild" Version="3.2.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MediatR" Version="11.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+		<PackageReference Include="Moq" Version="4.18.2" />
+		<PackageReference Include="NodaTime.Testing" Version="3.1.5" />
+		<PackageReference Include="SshKeyGenerator" Version="1.1.50" />
+		<PackageReference Include="xunit" Version="2.4.2" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector" Version="3.2.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../Citizen.Service/TrafficCourts.Citizen.Service.csproj" />
-    <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
-    <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
-    <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj" />
-	<ProjectReference Include="..\Workflow.Service\TrafficCourts.Workflow.Service.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="../Citizen.Service/TrafficCourts.Citizen.Service.csproj" />
+		<ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
+		<ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
+		<ProjectReference Include="..\TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj" />
+		<ProjectReference Include="..\Workflow.Service\TrafficCourts.Workflow.Service.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"/>
+	</ItemGroup>
 
 </Project>
