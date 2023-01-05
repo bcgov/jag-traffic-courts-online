@@ -174,19 +174,19 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
         if (this.getOcrViolationErrors(fields.court_location)) { return true; }
         if (this.getOcrViolationErrors(fields.detachment_location)) { return true; }
+        return false;
       }
+      else return null;
     } catch (e) {
-      return true;
+      return null;
     }
-
-    // step through fields in deserialized object and look for validation errors
-    return false;
   }
 
   // return number of validation errors
   getOcrViolationErrors(field?: Field): boolean {
+    console.log(field?.fieldConfidence);
     if (field == undefined || field == null) return false;
-    if (field?.fieldConfidence && field.fieldConfidence < 1) {
+    if (field?.fieldConfidence != null && field.fieldConfidence < 0.8) {
       return true;
     } else return false;
   }

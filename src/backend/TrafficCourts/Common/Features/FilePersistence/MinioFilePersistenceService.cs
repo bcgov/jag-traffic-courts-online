@@ -243,7 +243,8 @@ public class MinioFilePersistenceService : FilePersistenceService
         catch (ObjectNotFoundException exception)
         {
             _logger.LogInformation(exception, "Object not found");
-            throw new FileNotFoundException("File not found", filename, exception);
+            if (_bucketName != "traffic-ticket-dev") throw new FileNotFoundException("File not found", filename, exception); // allow this in dev and docker-compose
+            else return null;
         }
         catch (DirectoryNotFoundException exception)
         {
