@@ -18,21 +18,28 @@ public static class MockHttpExtensions
         return request;
     }
 
-    public static MockedRequest WithHeaders(this MockedRequest request, BasicAuthenticationHeaderValue? authorization = null, IDictionary<string, string>? items = null)
+    public static MockedRequest WithPath(this MockedRequest request, string path)
     {
         Dictionary<string, string> values = new()
         {
-            { "Accept", "application/json" }
+            { "path", path }
         };
 
-        if (authorization is not null)
-        {
-            values.Add("Authorization", $"{authorization.Scheme} {authorization.Parameter}");
-        }
+        request.WithQueryString(values);
 
-        if (items is not null)
+        return request;
+    }
+
+    public static MockedRequest WithHeaders(
+        this MockedRequest request, 
+        bool acceptJson = true, 
+        IDictionary<string, string>? metadata = null)
+    {
+        Dictionary<string, string> values = new();
+        if (acceptJson) values.Add("Accept", "application/json");
+        if (metadata is not null)
         {
-            foreach (var item in items)
+            foreach (var item in metadata)
             {
                 values.Add($"x-amz-meta-{item.Key.ToLower()}", item.Value);
             }

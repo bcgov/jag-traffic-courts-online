@@ -25,18 +25,23 @@ public class CreateObjects : ObjectManagementBase
     {
         var expected = _fixture.Create<Anonymous>();
 
+        Dictionary<string, string> meta = CreateMetadata(2);
+        Dictionary<string, string> tags = CreateTags(2);
+
+        string filename = _fixture.Create<string>();
         // if request doesnt go to the method and url, the call will return 404 and ApiException
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
             .Expect(HttpMethod.Post, OperationUrl)
-            .WithHeaders()
+            .WithHeaders(acceptJson: true, meta)
+            .WithTags(tags)
             .Respond(HttpStatusCode.Created, "application/json", JsonSerializer.Serialize(new[] { expected }));
 
-        var file = new FileParameter(new MemoryStream(Guid.Empty.ToByteArray()));
+        var file = new FileParameter(GetRandomStream(), filename);
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        var actual = await sut.CreateObjectsAsync(null, null, file, CancellationToken.None);
+        var actual = await sut.CreateObjectsAsync(meta, tags, file, CancellationToken.None);
         Assert.NotNull(actual);
         mockHttp.VerifyNoOutstandingExpectation();
     }
@@ -46,26 +51,22 @@ public class CreateObjects : ObjectManagementBase
     {
         var expected = _fixture.Create<Anonymous>();
 
-        Dictionary<string, string> tags = new Dictionary<string, string>
-            {
-                { "tag1", "value with space" },
-                { "tag2", "other-value" }
-            };
-
+        Dictionary<string, string> meta = CreateMetadata(2);
+        Dictionary<string, string> tags = CreateTags(2);
 
         // if request doesnt go to the method and url, the call will return 404 and ApiException
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
             .Expect(HttpMethod.Post, OperationUrl)
+            .WithHeaders(acceptJson: true, meta)
             .WithTags(tags)
-            .WithHeaders()
             .Respond(HttpStatusCode.Created, "application/json", JsonSerializer.Serialize(new[] { expected }));
 
-        var file = new FileParameter(new MemoryStream(Guid.Empty.ToByteArray()));
+        var file = new FileParameter(GetRandomStream());
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        var actual = await sut.CreateObjectsAsync(null, tags, file, CancellationToken.None);
+        var actual = await sut.CreateObjectsAsync(meta, tags, file, CancellationToken.None);
         Assert.NotNull(actual);
         mockHttp.VerifyNoOutstandingExpectation();
     }
@@ -75,25 +76,22 @@ public class CreateObjects : ObjectManagementBase
     {
         var expected = _fixture.Create<Anonymous>();
 
-        Dictionary<string, string> meta = new Dictionary<string, string>
-            {
-                { "meta1", "value with space" },
-                { "meta2", "other-value" }
-            };
-
+        Dictionary<string, string> meta = CreateMetadata(2);
+        Dictionary<string, string> tags = CreateTags(2);
 
         // if request doesnt go to the method and url, the call will return 404 and ApiException
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
             .Expect(HttpMethod.Post, OperationUrl)
-            .WithHeaders(null, meta)
+            .WithHeaders(acceptJson: true, meta)
+            .WithTags(tags)
             .Respond(HttpStatusCode.Created, "application/json", JsonSerializer.Serialize(new[] { expected }));
 
-        var file = new FileParameter(new MemoryStream(Guid.Empty.ToByteArray()));
+        var file = new FileParameter(GetRandomStream());
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        var actual = await sut.CreateObjectsAsync(meta, null, file, CancellationToken.None);
+        var actual = await sut.CreateObjectsAsync(meta, tags, file, CancellationToken.None);
         Assert.NotNull(actual);
         mockHttp.VerifyNoOutstandingExpectation();
     }
