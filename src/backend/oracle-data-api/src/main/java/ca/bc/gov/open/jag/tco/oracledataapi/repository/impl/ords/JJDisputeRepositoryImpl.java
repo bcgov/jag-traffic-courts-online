@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
 @ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = false)
@@ -58,6 +59,11 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public JJDispute saveAndFlush(JJDispute entity) {
+		throw new NotYetImplementedException();
+	}
+
+	@Override
+	public void setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, String userName) {
 		throw new NotYetImplementedException();
 	}
 
