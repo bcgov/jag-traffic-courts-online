@@ -1,0 +1,23 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: citizen-web-for-jag-proxy
+  namespace: 0198bb-prod
+  labels:
+    app.kubernetes.io/instance: traffic-court-online
+    app.kubernetes.io/name: citizen-web
+    app.kubernetes.io/version: 1.16.0
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: 142.34.133.71 99.79.165.63
+spec:
+  host: citizen-web-0198bb-prod.apps.silver.devops.gov.bc.ca
+  to:
+    kind: Service
+    name: traffic-court-online-citizen-web
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

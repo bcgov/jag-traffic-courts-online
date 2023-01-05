@@ -1,0 +1,29 @@
+image:
+  tag: 0.3.0
+
+route:
+  enabled: false
+
+features:
+  basicAuth: true
+  oidcAuth: false
+config:
+  enabled: true
+
+  configMap:
+    BASICAUTH_ENABLED: "true"
+    DB_ENABLED: "true"
+    OBJECTSTORAGE_BUCKET: "ag-pssg-tco-trafficticket-dev-bkt"
+    OBJECTSTORAGE_TEMP_EXPIRESIN: "300"
+    OBJECTSTORAGE_ENDPOINT: "https://ag-pssg-sharedservices.objectstore.gov.bc.ca/"
+    OBJECTSTORAGE_KEY: "/"
+    KC_IDENTITYKEY: ""
+    KC_PUBLICKEY: ""
+    KC_REALM: ""
+    KC_SERVERURL: ""
+    
+patroni:
+  enabled: true
+
+  persistentVolume:
+    enabled: true

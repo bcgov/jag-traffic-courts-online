@@ -5,7 +5,6 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.Features.Mail;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -39,7 +38,22 @@ public class DisputeService : IDisputeService
 
     public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
+        ICollection<Dispute> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
+
+        foreach(Dispute dispute in disputes)
+        {
+            // When reviewing the list of tickets, the JSON is needed to compute SystemDetectedOCRIssues
+            OcrViolationTicket? ocrViolationTicket = null;
+            if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
+            {
+                // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
+                ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
+                dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
+            }
+        }
+
+        return disputes;
+
     }
 
     public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)

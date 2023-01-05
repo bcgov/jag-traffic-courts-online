@@ -32,6 +32,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputantUpdateRequestRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
@@ -90,6 +91,10 @@ public class DisputeService {
 	public Dispute save(Dispute dispute) {
 		// Ensure a new record is created, not updating an existing record. Updates are controlled by specific endpoints.
 		dispute.setDisputeId(null);
+
+		// FIXME: remove me - this field will get removed from the model entirely as it's not used.
+		dispute.setSystemDetectedOcrIssues(YesNo.N);
+
 		for (DisputeCount disputeCount : dispute.getDisputeCounts()) {
 			disputeCount.setDisputeCountId(null);
 		}

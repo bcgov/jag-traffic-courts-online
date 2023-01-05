@@ -6,7 +6,6 @@ using Xunit;
 
 namespace TrafficCourts.Common.Test;
 
-[ExcludeFromCodeCoverage]
 public class HashidsExtensionsTest
 {
     [Fact]

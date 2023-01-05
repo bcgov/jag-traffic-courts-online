@@ -1,3 +1,10 @@
+{{- define "tco.connectsTo" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "citizen-api.fullname" . }}
+{{- end }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,6 +12,8 @@ metadata:
   labels:
     app.openshift.io/runtime: nginx
     {{- include "citizen-web.labels" . | nindent 4 }}
+  annotations:
+    app.openshift.io/connects-to: '[{{ include "tco.connectsTo" . | fromYaml | toJson }}]'
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
