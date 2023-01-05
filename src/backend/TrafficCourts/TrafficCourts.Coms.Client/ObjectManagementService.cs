@@ -2,14 +2,16 @@
 
 namespace TrafficCourts.Coms.Client;
 
-public class ObjectManagementService : IObjectManagementService
+internal class ObjectManagementService : IObjectManagementService
 {
     private readonly IObjectManagementClient _client;
+    private readonly IMemoryStreamFactory _memoryStreamFactory;
     private readonly ILogger<ObjectManagementService> _logger;
 
-    public ObjectManagementService(IObjectManagementClient client, ILogger<ObjectManagementService> logger)
+    public ObjectManagementService(IObjectManagementClient client, IMemoryStreamFactory memoryStreamFactory, ILogger<ObjectManagementService> logger)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        _memoryStreamFactory = memoryStreamFactory ?? throw new ArgumentNullException(nameof(memoryStreamFactory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -84,7 +86,11 @@ public class ObjectManagementService : IObjectManagementService
                 tags = await GetTagsAsync(id, cancellationToken);
             }
 
-            var file = new File(response.Stream, fileName, contentType, metadata, tags);
+            // make a copy of the stream because the FileResponse will dispose of the stream
+            var stream = _memoryStreamFactory.GetStream();
+            await response.Stream.CopyToAsync(stream, cancellationToken);
+
+            var file = new File(stream, fileName, contentType, metadata, tags);
             return file;
         }
         catch (Exception exception)
@@ -148,9 +154,11 @@ public class ObjectManagementService : IObjectManagementService
 
     public async Task UpdateFileAsync(Guid id, File file, CancellationToken cancellationToken)
     {
-        if (file is null)
+        ArgumentNullException.ThrowIfNull(file);
+        
+        if (file.Data is null)
         {
-            throw new ArgumentNullException(nameof(file));
+            throw new ArgumentException("Data is required for updating a file", nameof(file));
         }
 
         MetadataValidator.Validate(file.Metadata);

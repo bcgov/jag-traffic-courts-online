@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace TrafficCourts.Coms.Client;
 
 /// <summary>
 /// HTTP Basic Authentication authorization header

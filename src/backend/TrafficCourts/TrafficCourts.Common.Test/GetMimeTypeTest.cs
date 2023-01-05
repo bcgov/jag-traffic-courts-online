@@ -6,7 +6,6 @@ using Xunit;
 
 namespace TrafficCourts.Common.Test;
 
-[ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
 public class GetMimeTypeTest
 {
     [Theory(Skip = "Supply your own files")]

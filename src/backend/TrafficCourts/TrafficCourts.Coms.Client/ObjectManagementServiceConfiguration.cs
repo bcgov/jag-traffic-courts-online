@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Extensions.DependencyInjection;
+﻿namespace TrafficCourts.Coms.Client;
 
 public class ObjectManagementServiceConfiguration
 {
