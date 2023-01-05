@@ -5,8 +5,6 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.Features.Mail;
-using Minio.Exceptions;
 
 namespace TrafficCourts.Staff.Service.Services;
 

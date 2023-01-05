@@ -184,7 +184,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   // return number of validation errors
   getOcrViolationErrors(field?: Field): boolean {
-    console.log(field?.fieldConfidence);
     if (field == undefined || field == null) return false;
     if (field?.fieldConfidence != null && field.fieldConfidence < 0.8) {
       return true;
