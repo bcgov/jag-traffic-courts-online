@@ -7,6 +7,8 @@ using NodaTime;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
+using TrafficCourts.Common.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace TrafficCourts.Common.Features.FilePersistence;
 
@@ -22,6 +24,8 @@ public class MinioFilePersistenceService : FilePersistenceService
     private const string CreatedAtDateTimeFormat = "yyyy-MM-ddTHH:mm";
     private const string CreatedAtHeader = "createdAt";
     private const string TypeHeader = "type";
+    private bool isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == Environments.Development;
+
 
     public MinioFilePersistenceService(
         IObjectOperations objectOperations,
@@ -243,7 +247,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         catch (ObjectNotFoundException exception)
         {
             _logger.LogInformation(exception, "Object not found");
-            if (_bucketName != "traffic-ticket-dev") throw new FileNotFoundException("File not found", filename, exception); // allow this in dev and docker-compose
+            if (!isDevelopment) throw new FileNotFoundException("File not found", filename, exception); // allow this in dev and docker-compose
             else return null;
         }
         catch (DirectoryNotFoundException exception)
