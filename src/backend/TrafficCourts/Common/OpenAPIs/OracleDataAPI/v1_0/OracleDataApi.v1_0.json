@@ -163,10 +163,47 @@
         }
       }
     },
+    "/api/v1.0/jj/dispute/{ticketNumber}/confirm": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates the status of a particular JJDispute record to CONFIRMED.",
+        "operationId": "confirmJJDispute",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "500": {
+            "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          }
+        }
+      }
+    },
     "/api/v1.0/jj/dispute/{ticketNumber}/accept": {
       "put": {
         "tags": [ "jj-dispute-controller" ],
-        "summary": "Updates the status of a particular JJDispute record to REVIEW.",
+        "summary": "Updates the status of a particular JJDispute record to ACCEPTED.",
         "operationId": "acceptJJDispute",
         "parameters": [
           {
@@ -1108,17 +1145,17 @@
         }
       }
     },
-    "/api/v1.0/dispute/{id}/updateRequest": {
+    "/api/v1.0/dispute/updateRequest": {
       "get": {
         "tags": [ "dispute-controller" ],
-        "summary": "An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.",
+        "summary": "An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by status.",
         "operationId": "getDisputantUpdateRequests",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
+            "in": "query",
             "description": "The disputeId of the Dispute.",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1155,54 +1192,6 @@
           },
           "200": {
             "description": "Ok. DisputantUpdateRequest record saved.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/DisputantUpdateRequest" }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1.0/dispute/updateRequestByStatus": {
-      "get": {
-        "tags": [ "dispute-controller" ],
-        "summary": "An endpoint that retrieves all DisputantUpdateRequest that optionally have the given status.",
-        "operationId": "getDisputantUpdateRequestsByStatus",
-        "parameters": [
-          {
-            "name": "status",
-            "in": "query",
-            "description": "The status of the disputant update requests.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [ "UNKNOWN", "ACCEPTED", "PENDING", "REJECTED" ]
-            }
-          }
-        ],
-        "responses": {
-          "404": {
-            "description": "Dispute update requests could not be found.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "500": {
-            "description": "Internal Server Error. Save failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "200": {
-            "description": "Ok. DisputantUpdateRequest records retrieved.",
             "content": {
               "*/*": {
                 "schema": {

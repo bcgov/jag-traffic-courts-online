@@ -12,10 +12,8 @@ public interface DisputantUpdateRequestRepository extends JpaRepository<Disputan
 
 	/** Fetch all records that match the DisputeId. */
 	public List<DisputantUpdateRequest> findByDisputeId(Long disputeId);
-	/** Fetch all records that matches the DisputeId, optionally filtered by status. */
-	@Query("from DisputantUpdateRequest where disputeId = :disputeId and (:status is null or status = :status)")
-	public List<DisputantUpdateRequest> findByDisputeIdAndOptionalStatus(Long disputeId, DisputantUpdateRequestStatus status);
-
-	/** Fetch all records that match the Status. */
-	public List<DisputantUpdateRequest> findByStatus(DisputantUpdateRequestStatus status);
+	
+	/** Fetch all records that matches the optional DisputeId, optionally filtered by status. */
+	@Query("from DisputantUpdateRequest where (:disputeId is null or disputeId = :disputeId) and (:status is null or status = :status)")
+	public List<DisputantUpdateRequest> findByOptionalDisputeIdAndOptionalStatus(Long disputeId, DisputantUpdateRequestStatus status);
 }
