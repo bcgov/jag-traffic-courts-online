@@ -7,7 +7,6 @@ using NodaTime;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
-using TrafficCourts.Common.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace TrafficCourts.Common.Features.FilePersistence;
