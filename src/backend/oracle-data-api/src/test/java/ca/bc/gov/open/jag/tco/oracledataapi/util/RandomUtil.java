@@ -330,10 +330,11 @@ public class RandomUtil {
 		dispute.setAddressLine1(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressLine2(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressLine3(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
-		dispute.setAddressProvince(randomAlphabetic(30));
+//		dispute.setAddressProvince(randomAlphabetic(30));
 		// Fields below are commented out in order to test the addressProvince string field
-		//dispute.setAddressProvinceCountryId(1);
-		//dispute.setAddressProvinceSeqNo(2);
+		dispute.setAddressCountryId(1);
+		dispute.setAddressProvinceCountryId(1);
+		dispute.setAddressProvinceSeqNo(2);
 		dispute.setDetachmentLocation(randomAlphabetic(150));
 		dispute.setDisputantBirthdate(randomDate());
 		dispute.setDisputantClientId(randomNumeric(5));
@@ -348,9 +349,10 @@ public class RandomUtil {
 		dispute.setDisputeCounts(createDisputeCounts(dispute));
 		dispute.setDisputeStatusType(createDisputeStatusType());
 		dispute.setDriversLicenceNumber(randomAlphanumeric(30));
-		dispute.setDriversLicenceProvince(randomAlphabetic(30));
+//		dispute.setDriversLicenceProvince(randomAlphabetic(30));
 		// Field below is commented out in order to test the driversLicenceProvince string field
-		//dispute.setDriversLicenceIssuedProvinceSeqNo(2);
+		dispute.setDriversLicenceIssuedCountryId(1);
+		dispute.setDriversLicenceIssuedProvinceSeqNo(2);
 		dispute.setEmailAddress(randomAlphanumeric(100));
 		dispute.setFilingDate(randomDate());
 		dispute.setFineReductionReason(randomAlphabetic(500));

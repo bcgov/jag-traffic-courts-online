@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 
 public interface JJDisputeRepository {
 
@@ -54,5 +55,14 @@ public interface JJDisputeRepository {
 	 * @return the saved entity
 	 */
 	public JJDispute saveAndFlush(JJDispute entity);
+
+	/**
+	 * Sets the status field on the given JJDispute.
+	 *
+	 * @param ticketNumber
+	 * @param jjDisputeStatus
+	 * @param userName
+	 */
+	public void setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, String userName);
 
 }

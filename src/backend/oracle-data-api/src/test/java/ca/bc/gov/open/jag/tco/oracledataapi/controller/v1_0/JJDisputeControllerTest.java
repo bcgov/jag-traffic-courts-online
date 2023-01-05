@@ -63,13 +63,13 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(0, allDisputes.size());
 
 		// Create a JJDisputes with different assignedTo
-		 JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				 .jjAssignedTo("Steven Strange")
-				 .build());
-		 JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				 .jjAssignedTo("Tony Stark")
-				 .build());
-		 List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
+		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
+				.jjAssignedTo("Steven Strange")
+				.build());
+		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
+				.jjAssignedTo("Tony Stark")
+				.build());
+		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
 		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null, null));
@@ -95,17 +95,17 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(0, allDisputes.size());
 
 		// Create a JJDisputes with different assignedTo
-		 JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				 .jjAssignedTo("Steven Strange")
-				 .ticketNumber("AX12345678")
-				 .violationDate(DateUtils.parseDate("12:45", DateUtil.TIME_FORMAT))
-				 .build());
-		 JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				 .jjAssignedTo("Tony Stark")
-				 .ticketNumber("AX00000000")
-				 .violationDate(DateUtils.parseDate("14:32", DateUtil.TIME_FORMAT))
-				 .build());
-		 List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
+		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
+				.jjAssignedTo("Steven Strange")
+				.ticketNumber("AX12345678")
+				.violationDate(DateUtils.parseDate("12:45", DateUtil.TIME_FORMAT))
+				.build());
+		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
+				.jjAssignedTo("Tony Stark")
+				.ticketNumber("AX00000000")
+				.violationDate(DateUtils.parseDate("14:32", DateUtil.TIME_FORMAT))
+				.build());
+		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
 		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null, null));
@@ -141,7 +141,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		JJDispute updatedJJDispute = RandomUtil.createJJDispute();
 		updatedJJDispute.setCourthouseLocation("Victoria");
 		updatedJJDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
-		jjDisputeController.updateJJDispute(ticketNumber, false, null, updatedJJDispute);
+		jjDisputeController.updateJJDispute(ticketNumber, false, this.getPrincipal(), updatedJJDispute);
 
 		// Assert db contains only the updated JJ Dispute record.
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, null).getBody();
@@ -157,8 +157,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		// Create a couple of JJDisputes (one unassigned and one assigned to a JJ)
 		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());
 		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				 .jjAssignedTo("Tony Stark")
-				 .build());
+				.jjAssignedTo("Tony Stark")
+				.build());
 
 		// Get the ids of the jj disputes and call the AssignJJ endpoint to assign all jj disputes to a new JJ
 		List<String> ticketNumbers = new ArrayList<>();
@@ -189,7 +189,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		String ticketNumber = jjDispute.getTicketNumber();
 		// Add the required authority role
 		List<GrantedAuthority> authority = new ArrayList<>();
-        authority.add(new SimpleGrantedAuthority("User"));
+		authority.add(new SimpleGrantedAuthority("User"));
 		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
@@ -218,7 +218,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		String ticketNumber = jjDispute.getTicketNumber();
 		// Add the required authority role
 		List<GrantedAuthority> authority = new ArrayList<>();
-        authority.add(new SimpleGrantedAuthority("User"));
+		authority.add(new SimpleGrantedAuthority("User"));
 		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
@@ -233,9 +233,34 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		// Set the status to ACCEPTED
 		jjDisputeController.acceptJJDispute(ticketNumber, false, principal);
 
-		// Assert status and remark are set.
+		// Assert status is set correctly.
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
 		assertEquals(JJDisputeStatus.ACCEPTED, jjDispute.getStatus());
+	}
+
+	@Test
+	public void testSetJJDisputeStatusToConfirmed() {
+		// Create a single JJ Dispute with status NEW
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		// Add the required authority role
+		List<GrantedAuthority> authority = new ArrayList<>();
+		authority.add(new SimpleGrantedAuthority("User"));
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
+		Principal principal = new PreAuthenticatedToken(user);
+		jjDisputeRepository.save(jjDispute);
+
+		// Retrieve it from the controller's endpoint
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
+		assertEquals(JJDisputeStatus.NEW, jjDispute.getStatus());
+
+		// Set the status to ACCEPTED
+		jjDisputeController.confirmJJDispute(ticketNumber, principal);
+
+		// Assert status is set correctly.
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
 	}
 
 }
