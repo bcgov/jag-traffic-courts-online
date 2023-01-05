@@ -539,7 +539,6 @@ export class TicketInfoComponent implements OnInit {
 
   // use violationTicket Service
   setFieldsFromJSON(dispute: Dispute): Dispute {
-    console.log("setFieldsFromJSON", dispute);
     if (dispute.violationTicket?.ocrViolationTicket && dispute.violationTicket?.ocrViolationTicket?.fields) {
       var fields = dispute.violationTicket?.ocrViolationTicket.fields;
 
@@ -702,7 +701,6 @@ export class TicketInfoComponent implements OnInit {
     this.initialDisputeValues = null;
     this.lastUpdatedDispute = null;
 
-    console.log(this.disputeInfo.disputeId);
     this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId)
       .subscribe((response: Dispute) => {
         this.retrieving = false;

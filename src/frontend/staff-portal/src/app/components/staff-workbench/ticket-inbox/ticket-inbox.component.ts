@@ -84,7 +84,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
       response.forEach(d => {
         if (d.status != "CANCELLED") { // do not show cancelled
-          console.log(d.disputeId, d.ticketNumber, d.ocrTicketFilename, d.violationTicket.ocrViolationTicket);
           var newDispute: Dispute = {
             ticketNumber: d.ticketNumber,
             disputantSurname: d.disputantSurname,
@@ -186,7 +185,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   // return number of validation errors
   getOcrViolationErrors(field?: Field): boolean {
-    console.log(field, field?.fieldConfidence, field?.fieldConfidence < 1);
     if (field == undefined || field == null) return false;
     if (field?.fieldConfidence && field.fieldConfidence < 1) {
       return true;
