@@ -351,4 +351,5 @@ export interface Dispute extends DisputeBase {
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   __CourtHearing: boolean, // if at least one count requests court hearing
   __UserAssignedTs?: Date,
+  __SystemDetectedOcrIssues: boolean // if at least one OCR's field has a confidence level below 80% threshold
 }
