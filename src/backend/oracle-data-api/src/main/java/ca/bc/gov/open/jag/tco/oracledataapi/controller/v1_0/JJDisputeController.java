@@ -192,7 +192,7 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/requirecourthearing")
 	public ResponseEntity<JJDispute> requireCourtHearingJJDispute(@PathVariable String ticketNumber,
-			@RequestParam (required = false) String remark,
+			@RequestParam (required = false) @Size(max = 256) String remark,
 			Principal principal) {
 		logger.debug("PUT /dispute/{}/requirecourthearing called", ticketNumber);
 
