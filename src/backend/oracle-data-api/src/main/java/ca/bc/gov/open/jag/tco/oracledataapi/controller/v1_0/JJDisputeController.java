@@ -186,12 +186,13 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: "
+				+ "NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be <= 256 characters. Update failed."),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@PutMapping("/dispute/{ticketNumber}/requirecourthearing")
 	public ResponseEntity<JJDispute> requireCourtHearingJJDispute(@PathVariable String ticketNumber,
-			@RequestBody @Size(max = 256) String remark,
+			@RequestParam (required = false) String remark,
 			Principal principal) {
 		logger.debug("PUT /dispute/{}/requirecourthearing called", ticketNumber);
 

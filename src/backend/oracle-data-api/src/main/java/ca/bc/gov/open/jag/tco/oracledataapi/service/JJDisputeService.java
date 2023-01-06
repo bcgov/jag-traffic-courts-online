@@ -295,7 +295,7 @@ public class JJDisputeService {
 		jjDisputeRepository.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, principal.getName());
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
-		if(!StringUtils.isBlank(remark)) {
+		if(remark != null && !StringUtils.isBlank(remark)) {
 
 			return addRemark(id, remark, principal);
 		}
