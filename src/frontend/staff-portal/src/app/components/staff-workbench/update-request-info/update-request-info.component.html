@@ -1,0 +1,95 @@
+<div class="contact-info">
+  <a (click)="onBack()" style="color: #48afe5">
+    <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
+  </a>
+  <app-ticket-status [dispute]="initialDisputeValues" *ngIf="initialDisputeValues"></app-ticket-status>
+  <div *ngIf="conflict === true">
+    <span>
+      <h3>This ticket is already assigned.</h3>
+    </span>
+  </div>
+  <div *ngIf="conflict === false && !initialDisputeValues && retrieving === false">
+    <span>
+      <h3>Error retrieving ticket information.</h3>
+    </span>
+  </div>
+  <div *ngIf="conflict === false && retrieving === true">
+    <span>
+      <h3>Retrieving ticket information...</h3>
+    </span>
+  </div>
+  <div class="contact-info" *ngIf="initialDisputeValues && conflict === false && retrieving === false">
+    <span style="float:right">
+      <h1><b>Ticket Number: {{ initialDisputeValues.ticketNumber }} </b></h1>
+    </span>
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Ticket Information</h3>
+        </span>
+      </ng-container>
+      <div style="display: grid; grid-template-columns: auto auto auto auto auto; width:100%">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Surname</p>
+          <p class="section-grid-text">{{ initialDisputeValues.disputantSurname }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Given Name(s)</p>
+          <p class="section-grid-text">{{ initialDisputeValues.disputantGivenNames }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Address</p>
+          <p class="section-grid-text">{{ getFormattedAddress() }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Home Phone</p>
+          <p class="section-grid-text" *ngIf="initialDisputeValues.addressCountryId === 1 || initialDisputeValues.addressCountryId === 2">{{ initialDisputeValues.homePhoneNumber | phone }}</p>
+          <p class="section-grid-text" *ngIf="initialDisputeValues.addressCountryId !== 1 && initialDisputeValues.addressCountryId !== 2">{{ initialDisputeValues.homePhoneNumber }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Email Address</p>
+          <p class="section-grid-text">{{ initialDisputeValues.emailAddress }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Court Location</p>
+          <p class="section-grid-text">{{ initialDisputeValues.violationTicket.courtLocation }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Organization/Detachment/Location</p>
+          <p class="section-grid-text">{{ initialDisputeValues.detachmentLocation }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Violation Date</p>
+          <p class="section-grid-text">{{ violationDate | date: "MMM dd, yyyy" }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Violation Time</p>
+          <p class="section-grid-text">{{ violationTime }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Online Submission Date</p>
+          <p class="section-grid-text">{{ initialDisputeValues.submittedTs | date: "MMM dd, yyyy" }}</p>
+        </span>
+      </div>
+    </section><br />
+    <section>
+      <div *ngFor="let disputantUpdateRequest of disputeUpdateRequests">
+        <app-phone-update-request-info *ngIf="disputantUpdateRequest.updateType === 'DISPUTANT_PHONE'" [disputeInfo]="initialDisputeValues" [disputantUpdateRequest]="disputantUpdateRequest" (disputantUpdateRequestStatusChange)="onDisputantUpdateRequestStatusChange($event)"></app-phone-update-request-info><br />
+        <app-name-update-request-info *ngIf="disputantUpdateRequest.updateType === 'DISPUTANT_NAME'" [disputeInfo]="initialDisputeValues" [disputantUpdateRequest]="disputantUpdateRequest" (disputantUpdateRequestStatusChange)="onDisputantUpdateRequestStatusChange($event)"></app-name-update-request-info><br />
+        <app-address-update-request-info *ngIf="disputantUpdateRequest.updateType === 'DISPUTANT_ADDRESS'" [disputeInfo]="initialDisputeValues" [disputantUpdateRequest]="disputantUpdateRequest" (disputantUpdateRequestStatusChange)="onDisputantUpdateRequestStatusChange($event)"></app-address-update-request-info><br />
+      </div>
+    </section><br />
+    <div style="float: right; width: 100%;" *ngIf="(initialDisputeValues.emailAddressVerified === true || !(initialDisputeValues.emailAddress))">
+      <button class="large" mat-flat-button type="button" color="primary"
+        (click)="onSubmit()" style="background-color:  #2ba242;">
+        Submit
+      </button>
+      <button class="large" mat-flat-button type="button" color="primary" (click)="onBack()">
+        Cancel
+      </button>
+    </div>
+    <div style="float: right; width: 100%;" *ngIf="(initialDisputeValues.emailAddressVerified === false && initialDisputeValues.emailAddress)">
+      Email address must be validated if present to process requests.
+    </div>
+  </div>
+</div>
