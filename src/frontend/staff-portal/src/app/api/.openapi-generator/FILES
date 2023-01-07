@@ -15,6 +15,9 @@ index.ts
 model/boundingBox.model.ts
 model/credentialRepresentation.model.ts
 model/disputantContactInformation.model.ts
+model/disputantUpdateRequest.model.ts
+model/disputantUpdateRequestStatus2.model.ts
+model/disputantUpdateRequestUpdateType.model.ts
 model/dispute.model.ts
 model/disputeCount.model.ts
 model/disputeCountPleaCode.model.ts

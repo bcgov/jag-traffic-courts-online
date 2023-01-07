@@ -398,8 +398,8 @@ public class DisputeController {
 	 * @param disputantUpdateRequest id to be retrieved
 	 * @return id of the saved {@link DisputantUpdateRequest}
 	 */
-	@GetMapping("/dispute/updateRequest")
-	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by status.")
+	@GetMapping("/dispute/updateRequests")
+	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest record saved."),
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
@@ -407,12 +407,12 @@ public class DisputeController {
 	})
 	public ResponseEntity<List<DisputantUpdateRequest>> getDisputantUpdateRequests(
 			@RequestParam(required=false)
-			@Parameter(description = "The disputeId of the Dispute.")
+			@Parameter(description = "If specified, filter request by the disputeId of the Dispute.")
 			Long id,
 			@RequestParam(required = false)
-			@Parameter(description = "If specified, filter request by status", example = "PENDING")
+			@Parameter(description = "If specified, filter request by DisputantUpdateRequestStatus", example = "PENDING")
 			DisputantUpdateRequestStatus status) {
-		logger.debug("GET /dispute/{}/updateRequest called", id);
+		logger.debug("GET /dispute/updateRequests called", id, status);
 		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
 	}
 	

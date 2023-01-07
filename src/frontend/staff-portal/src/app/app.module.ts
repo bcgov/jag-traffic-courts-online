@@ -25,8 +25,13 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketInboxComponent } from '@components/staff-workbench/ticket-inbox/ticket-inbox.component';
+import { UpdateRequestInboxComponent } from '@components/staff-workbench/update-request-inbox/update-request-inbox.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { TicketInfoComponent } from '@components/staff-workbench/ticket-info/ticket-info.component';
+import { UpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/update-request-info.component';
+import { PhoneUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/phone-update-request-info/phone-update-request-info.component';
+import { NameUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/name-update-request-info/name-update-request-info.component';
+import { AddressUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/address-update-request-info/address-update-request-info.component';
 import { DisputeDecisionInfoComponent } from '@components/staff-workbench/dispute-decision-info/dispute-decision-info.component';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { ContactInfoComponent } from './components/staff-workbench/contact-info/contact-info.component';
@@ -69,8 +74,13 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     AppComponent,
     LandingComponent,
     TicketInboxComponent,
+    UpdateRequestInboxComponent,
     UnauthorizedComponent,
     TicketInfoComponent,
+    UpdateRequestInfoComponent,
+    PhoneUpdateRequestInfoComponent,
+    NameUpdateRequestInfoComponent,
+    AddressUpdateRequestInfoComponent,
     DisputeDecisionInfoComponent,
     ContactInfoComponent,
     TicketStatusComponent,
