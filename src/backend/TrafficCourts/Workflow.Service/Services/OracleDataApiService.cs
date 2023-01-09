@@ -77,7 +77,12 @@ public class OracleDataApiService : IOracleDataApiService
 
     public async Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken)
     {
-        await _client.VerifyDisputeEmailAsync(disputeId);
+        await _client.VerifyDisputeEmailAsync(disputeId, cancellationToken);
+    }
+
+    public async Task<Dispute> ResetDisputeEmailAsync(long disputeId, string emailAddress, CancellationToken cancellationToken)
+    {
+        return await _client.ResetDisputeEmailAsync(disputeId, emailAddress, cancellationToken);
     }
 
     public async Task<ICollection<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, CancellationToken cancellationToken)

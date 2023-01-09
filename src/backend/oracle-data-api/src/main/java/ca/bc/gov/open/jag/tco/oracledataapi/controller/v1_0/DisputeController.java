@@ -256,13 +256,13 @@ public class DisputeController {
 
 	@Operation(summary = "Updates the email address of a particular Dispute.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok. Email unverified."),
+		@ApiResponse(responseCode = "200", description = "Ok. Email reset."),
 		@ApiResponse(responseCode = "400", description = "If the email address is > 100 characters"),
 		@ApiResponse(responseCode = "404", description = "Dispute with specified id not found"),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@PutMapping("/dispute/{id}/email/reset")
-	public ResponseEntity<Void> resetDisputeEmail(
+	public ResponseEntity<Dispute> resetDisputeEmail(
 			@PathVariable(name="id")
 			@Parameter(description = "The id of the Dispute to update.")
 			Long id,
@@ -271,8 +271,7 @@ public class DisputeController {
 			@Parameter(description = "The new email address of the Disputant.")
 			String email) {
 		logger.debug("PUT /dispute/{}/email/reset called", id);
-		disputeService.resetEmail(id, email);
-		return ResponseEntity.ok().build();
+		return new ResponseEntity<Dispute>(disputeService.resetEmail(id, email), HttpStatus.OK);
 	}
 
 	/**
@@ -427,7 +426,7 @@ public class DisputeController {
 		logger.debug("GET /dispute/updateRequests called", id, status);
 		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * PUT endpoint that updates the status of a DisputantUpdateRequest record.
 	 *

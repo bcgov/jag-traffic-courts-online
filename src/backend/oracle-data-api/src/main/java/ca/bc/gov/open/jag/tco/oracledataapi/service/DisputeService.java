@@ -301,7 +301,7 @@ public class DisputeService {
 	 * @param emailAddress Dispute.emailAddress will be updated with this value
 	 * @throws NoSuchElementException if the Dispute could not be found.
 	 */
-	public void resetEmail(Long id, String emailAddress) {
+	public Dispute resetEmail(Long id, String emailAddress) {
 		Dispute dispute = disputeRepository.findById(id).orElseThrow();
 
 		// permit setting the emailAddress to null
@@ -314,7 +314,7 @@ public class DisputeService {
 			dispute.setEmailAddressVerified(Boolean.FALSE);
 		}
 
-		disputeRepository.update(dispute);
+		return disputeRepository.update(dispute);
 	}
 
 	/**
