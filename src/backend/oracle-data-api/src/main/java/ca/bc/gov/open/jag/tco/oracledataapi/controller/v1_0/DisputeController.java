@@ -254,6 +254,27 @@ public class DisputeController {
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "Updates the email address of a particular Dispute.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Email unverified."),
+		@ApiResponse(responseCode = "400", description = "If the email address is > 100 characters"),
+		@ApiResponse(responseCode = "404", description = "Dispute with specified id not found"),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{id}/email/reset")
+	public ResponseEntity<Void> resetDisputeEmail(
+			@PathVariable(name="id")
+			@Parameter(description = "The id of the Dispute to update.")
+			Long id,
+			@RequestParam(name="email", required = false)
+			@Size(min = 1, max = 100)
+			@Parameter(description = "The new email address of the Disputant.")
+			String email) {
+		logger.debug("PUT /dispute/{}/email/reset called", id);
+		disputeService.resetEmail(id, email);
+		return ResponseEntity.ok().build();
+	}
+
 	/**
 	 * PUT endpoint that updates the dispute detail, setting the status to CANCELLED.
 	 *
