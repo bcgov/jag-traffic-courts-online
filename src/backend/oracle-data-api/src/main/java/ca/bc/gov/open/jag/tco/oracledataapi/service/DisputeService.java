@@ -295,6 +295,29 @@ public class DisputeService {
 	}
 
 	/**
+	 * Sets the email address of the specified Dispute
+	 *
+	 * @param id the Dispute record to update
+	 * @param emailAddress Dispute.emailAddress will be updated with this value
+	 * @throws NoSuchElementException if the Dispute could not be found.
+	 */
+	public void resetEmail(Long id, String emailAddress) {
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+
+		// permit setting the emailAddress to null
+		if (StringUtils.isBlank(emailAddress)) {
+			dispute.setEmailAddress(null);
+			dispute.setEmailAddressVerified(Boolean.TRUE);
+		}
+		else {
+			dispute.setEmailAddress(emailAddress);
+			dispute.setEmailAddressVerified(Boolean.FALSE);
+		}
+
+		disputeRepository.update(dispute);
+	}
+
+	/**
 	 * Flips the Dispute.emailAddressVerified flag to true where on the target dispute if it exists
 	 * @param token the Dispute record to update
 	 */

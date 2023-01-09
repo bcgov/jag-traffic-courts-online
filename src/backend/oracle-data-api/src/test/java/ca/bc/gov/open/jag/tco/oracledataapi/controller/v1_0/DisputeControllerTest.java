@@ -328,6 +328,69 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
+	public void testResetEmail_200() throws Exception {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setEmailAddress("oldaddress@somewhere.com");
+		dispute.setEmailAddressVerified(Boolean.TRUE);
+		Long disputeId = saveDispute(dispute);
+
+		// Load the dispute to confirm the database values are correct
+		dispute = getDispute(disputeId);
+		assertEquals("oldaddress@somewhere.com", dispute.getEmailAddress());
+		assertEquals(Boolean.TRUE, dispute.getEmailAddressVerified());
+
+		// attempt to reset the email address
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/{id}/email/reset", disputeId)
+				.param("email", "newaddress@somewhere.com"))
+				.andExpect(status().isOk());
+
+		// reload the dispute to confirm the emailAddress has been updated.
+		Dispute updatedDispute = getDispute(disputeId);
+		assertEquals("newaddress@somewhere.com", updatedDispute.getEmailAddress());
+		assertEquals(Boolean.FALSE, updatedDispute.getEmailAddressVerified());
+	}
+
+	@Test
+	public void testResetEmail_400() throws Exception {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setEmailAddress("oldaddress@somewhere.com");
+		dispute.setEmailAddressVerified(Boolean.TRUE);
+		Long disputeId = saveDispute(dispute);
+
+		// Load the dispute to confirm the database values are correct
+		dispute = getDispute(disputeId);
+		assertEquals("oldaddress@somewhere.com", dispute.getEmailAddress());
+		assertEquals(Boolean.TRUE, dispute.getEmailAddressVerified());
+
+		// attempt to reset with an overly long email address
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/{id}/email/reset", disputeId)
+				.param("email", RandomUtil.randomAlphabetic(101))) // create a string 101 characters long - should fail.
+				.andExpect(status().isBadRequest());
+
+		// attempt to reset with a missing email address - should be permitted to set the email to blank.
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/{id}/email/reset", disputeId))
+				.andExpect(status().isOk());
+
+		dispute = getDispute(disputeId);
+		assertNull(dispute.getEmailAddress());
+		assertEquals(Boolean.TRUE, dispute.getEmailAddressVerified());
+	}
+
+	@Test
+	public void testResetEmail_404() throws Exception {
+		// attempt to reset the email address on an invalid Dispute
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/{id}/email/reset", Long.valueOf(1l))
+				.param("email", "newaddress@somewhere.com"))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
 	public void testVerifyEmail_200() throws Exception {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
