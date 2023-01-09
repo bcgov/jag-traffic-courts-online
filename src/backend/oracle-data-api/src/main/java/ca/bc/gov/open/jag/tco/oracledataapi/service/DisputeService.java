@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -299,17 +298,10 @@ public class DisputeService {
 	 * Flips the Dispute.emailAddressVerified flag to true where on the target dispute if it exists
 	 * @param token the Dispute record to update
 	 */
-	public boolean verifyEmail(Long id) {
-		Optional<Dispute> findDispute = disputeRepository.findById(id);
-
-		if (findDispute.isPresent()) {
-			Dispute dispute = findDispute.get();
-			dispute.setEmailAddressVerified(Boolean.TRUE);
-			disputeRepository.update(dispute);
-			return true;
-		}
-
-		return false;
+	public void verifyEmail(Long id) {
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+		dispute.setEmailAddressVerified(Boolean.TRUE);
+		disputeRepository.update(dispute);
 	}
 
 	/**

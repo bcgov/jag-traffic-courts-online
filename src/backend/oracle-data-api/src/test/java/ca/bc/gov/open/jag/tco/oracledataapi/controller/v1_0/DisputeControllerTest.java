@@ -323,6 +323,38 @@ class DisputeControllerTest extends BaseTestSuite {
 				.andExpect(status().isBadRequest());
 	}
 
+	@Test
+	public void testVerifyEmail_200() throws Exception {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setEmailAddress("myaddress@somewhere.com");
+		dispute.setEmailAddressVerified(Boolean.FALSE);
+		Long disputeId = saveDispute(dispute);
+
+		// Load the dispute to confirm the database values are correct
+		dispute = getDispute(disputeId);
+		assertEquals("myaddress@somewhere.com", dispute.getEmailAddress());
+		assertEquals(Boolean.FALSE, dispute.getEmailAddressVerified());
+
+		// attempt to verify the email address
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/{id}/email/verify", disputeId))
+				.andExpect(status().isOk());
+
+		// reload the dispute to confirm the emailAddress has been updated.
+		Dispute updatedDispute = getDispute(disputeId);
+		assertEquals("myaddress@somewhere.com", updatedDispute.getEmailAddress());
+		assertEquals(Boolean.TRUE, updatedDispute.getEmailAddressVerified());
+	}
+
+	@Test
+	public void testVerifyEmail_404() throws Exception {
+		// attempt to verify the email address with an invalid dispute id
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/{id}/email/verify", Long.valueOf(-1L)))
+				.andExpect(status().isNotFound());
+	}
+
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
 	private Long saveDispute(Dispute dispute) {
 		return postForObject(fromUriString("/dispute"), dispute, Long.class);
