@@ -91,4 +91,21 @@ public interface IDisputeService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Returns all the existing disputes from the database with pending update requests.
+    /// </summary>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A collection of Dispute objects</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task<ICollection<Dispute>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Returns all the existing dispute update requests from the database for a given dispute id
+    /// </summary>
+    /// <param name="disputeId">Dispute Id</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A collection of DisputantUpdateRequest objects</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task<ICollection<DisputantUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken);
 }

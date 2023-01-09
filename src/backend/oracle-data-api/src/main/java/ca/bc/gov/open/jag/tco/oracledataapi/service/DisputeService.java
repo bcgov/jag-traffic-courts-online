@@ -382,7 +382,7 @@ public class DisputeService {
 	 * @param disputeId must not be null
 	 */
 	public List<DisputantUpdateRequest> findDisputantUpdateRequestByDisputeIdAndStatus(Long disputeId, DisputantUpdateRequestStatus status) {
-		return disputantUpdateRequestRepository.findByDisputeIdAndOptionalStatus(disputeId, status);
+		return disputantUpdateRequestRepository.findByOptionalDisputeIdAndOptionalStatus(disputeId, status);
 	}
 
 	/**

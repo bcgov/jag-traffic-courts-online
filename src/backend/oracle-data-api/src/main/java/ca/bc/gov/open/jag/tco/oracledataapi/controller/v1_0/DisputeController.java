@@ -384,29 +384,29 @@ public class DisputeController {
 	}
 
 	/**
-	 * Get endpoint that retrieves all <code>DisputantUpdateRequest</code>s from persistent storage that is associated with the given Dispute via disputeId.
+	 * Get endpoint that retrieves all <code>DisputantUpdateRequest</code>s from persistent storage that is associated with the optionally given Dispute via optional disputeId.
 	 *
 	 * @param disputantUpdateRequest id to be retrieved
 	 * @return id of the saved {@link DisputantUpdateRequest}
 	 */
-	@GetMapping("/dispute/{id}/updateRequest")
-	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.")
+	@GetMapping("/dispute/updateRequests")
+	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest record saved."),
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
 	})
 	public ResponseEntity<List<DisputantUpdateRequest>> getDisputantUpdateRequests(
-			@PathVariable
-			@Parameter(description = "The disputeId of the Dispute.")
+			@RequestParam(required=false)
+			@Parameter(description = "If specified, filter request by the disputeId of the Dispute.")
 			Long id,
 			@RequestParam(required = false)
-			@Parameter(description = "If specified, filter request by status", example = "PENDING")
+			@Parameter(description = "If specified, filter request by DisputantUpdateRequestStatus", example = "PENDING")
 			DisputantUpdateRequestStatus status) {
-		logger.debug("GET /dispute/{}/updateRequest called", id);
+		logger.debug("GET /dispute/updateRequests called", id, status);
 		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
 	}
-
+	
 	/**
 	 * PUT endpoint that updates the status of a DisputantUpdateRequest record.
 	 *

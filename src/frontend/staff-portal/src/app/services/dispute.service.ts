@@ -1,15 +1,18 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputantUpdateRequest as DisputantUpdateRequestBase, DisputantUpdateRequestStatus2 } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
+import { number } from 'yargs';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
   disputes: Dispute[];
+  disputantUpdateRequests$: Observable<DisputantUpdateRequest[]>;
+  disputantUpdateRequests: DisputantUpdateRequest[];
   getDisputes(): Observable<Dispute[]>;
 }
 
@@ -18,6 +21,7 @@ export interface IDisputeService {
 })
 export class DisputeService implements IDisputeService {
   private _disputes: BehaviorSubject<Dispute[]>;
+  private _disputantUpdateRequests: BehaviorSubject<DisputantUpdateRequest[]>;
   private _dispute: BehaviorSubject<Dispute>;
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
 
@@ -29,6 +33,63 @@ export class DisputeService implements IDisputeService {
     private datePipe: DatePipe
   ) {
     this._disputes = new BehaviorSubject<Dispute[]>(null);
+  }
+
+    /**
+     * Get the disputes with pending update requests
+     *
+     * @param none
+     */
+    public getDisputesWithPendingUpdates(): Observable<Dispute[]> {
+      return this.disputeApiService.apiDisputeDisputeswithupdaterequestsGet()
+        .pipe(
+          map((response: Dispute[]) => {
+            this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
+            this._disputes.next(response);
+            response.forEach(dispute => {
+              dispute = this.joinGivenNames(dispute);
+              dispute = this.joinLawyerNames(dispute);
+              dispute = this.joinAddressLines(dispute);
+            });
+
+            return response;
+          }),
+          catchError((error: any) => {
+            this.toastService.openErrorToast(this.configService.dispute_error);
+            this.logger.error(
+              'DisputeService::getDisputesWithPendingUpdates error has occurred: ',
+              error
+            );
+            throw error;
+          })
+        );
+    }
+
+  /**
+     * Get the dispute update requests for a particular dispute
+     *
+     * @param none
+     */
+  public getDisputeUpdateRequests(disputeId: number): Observable<DisputantUpdateRequest[]> {
+    return this.disputeApiService.apiDisputeDisputeIdDisputeupdaterequestsGet(disputeId)
+      .pipe(
+        map((response: DisputantUpdateRequest[]) => {
+          this.logger.info('DisputeService::getDisputeUpdateRequests', response);
+          this._disputantUpdateRequests?.next(response);
+          response.forEach(disputantUpdateRequest => {
+            disputantUpdateRequest.newStatus = disputantUpdateRequest.status;
+          });
+          return response;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::getDisputeUpdateRequests error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 
   /**
@@ -59,6 +120,14 @@ export class DisputeService implements IDisputeService {
           throw error;
         })
       );
+  }
+
+  public get disputantUpdateRequests$(): Observable<DisputantUpdateRequest[]> {
+    return this._disputantUpdateRequests.asObservable();
+  }
+
+  public get disputantUpdateRequests(): DisputantUpdateRequest[] {
+    return this._disputantUpdateRequests.value;
   }
 
   public get disputes$(): Observable<Dispute[]> {
@@ -243,6 +312,59 @@ export class DisputeService implements IDisputeService {
   }
 
  /**
+ * Accept the dispute update request
+ *
+ * @param disputeId
+ */
+    public acceptDisputeUpdateRequest(updateStatusId: number): Observable<any> {
+
+      return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdAcceptPut(updateStatusId)
+        .pipe(
+          map((response: any) => {
+            this.logger.info('DisputeService::acceptDisputeUpdateRequest', response)
+            return response ? response : null
+          }),
+          catchError((error: any) => {
+            var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+            this.toastService.openErrorToast(errorMsg);
+            this.toastService.openErrorToast(this.configService.dispute_error);
+            this.logger.error(
+              'DisputeService::acceptDisputeUpdateRequest error has occurred: ',
+              error
+            );
+            throw error;
+          })
+        );
+    }
+
+     /**
+ * Accept the dispute update request
+ *
+ * @param disputeId
+ */
+     public rejectDisputeUpdateRequest(updateStatusId: number): Observable<any> {
+
+      return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdRejectPut(updateStatusId)
+        .pipe(
+          map((response: any) => {
+            this.logger.info('DisputeService::rejectDisputeUpdateRequest', response)
+            return response ? response : null
+          }),
+          catchError((error: any) => {
+            var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+            this.toastService.openErrorToast(errorMsg);
+            this.toastService.openErrorToast(this.configService.dispute_error);
+            this.logger.error(
+              'DisputeService::rejectDisputeUpdateRequest error has occurred: ',
+              error
+            );
+            throw error;
+          })
+        );
+    }
+
+
+ /**
  * Put to Resend Email Verification
  *
  * @param emailVerificationToken
@@ -351,5 +473,9 @@ export interface Dispute extends DisputeBase {
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   __CourtHearing: boolean, // if at least one count requests court hearing
   __UserAssignedTs?: Date,
-  __SystemDetectedOcrIssues: boolean // if at least one OCR's field has a confidence level below 80% threshold
+  __SystemDetectedOcrIssues?: boolean // if at least one OCR's field has a confidence level below 80% threshold
+}
+
+export interface DisputantUpdateRequest extends DisputantUpdateRequestBase {
+  newStatus: DisputantUpdateRequestStatus2;
 }

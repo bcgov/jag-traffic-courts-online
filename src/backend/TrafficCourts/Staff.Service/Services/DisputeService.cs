@@ -5,6 +5,7 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
+using System.Collections.ObjectModel;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -262,5 +263,45 @@ public class DisputeService : IDisputeService
         // - populate file/email history records
         DisputantUpdateRequestRejected message = new(updateStatusId);
         await _bus.PublishWithLog(_logger, message, cancellationToken);
+    }
+
+    /// <summary>
+    /// Returns a list of all disputes with pending update requests.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<ICollection<Dispute>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
+    {
+        ICollection<Dispute> disputes = new Collection<Dispute>();
+        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputantUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
+
+        foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest disputantUpdateRequest in pendingDisputeUpdateRequests)
+        {
+            if (disputes.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId) is null)
+            {
+                try
+                {
+                    Dispute pendingDispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId, cancellationToken);
+                    disputes.Add(pendingDispute);
+                }
+                catch (Exception ex) {  
+                    // dont crash carry on
+                }
+            }
+        }
+
+        return disputes;
+
+    }
+
+    /// <summary>
+    /// Returns a list of all dispute update requests for a given dispute id.
+    /// </summary>
+    /// <param name="disputeId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
+    {
+        return await _oracleDataApi.GetDisputantUpdateRequestsAsync(disputeId, null, cancellationToken);
     }
 }

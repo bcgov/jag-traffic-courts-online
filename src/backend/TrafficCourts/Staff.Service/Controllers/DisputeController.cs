@@ -488,4 +488,68 @@ public class DisputeController : StaffControllerBase<DisputeController>
         await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
         return Ok();
     }
+
+    /// <summary>
+    /// Returns all Disputes that have pending update requests from the Oracle Data API
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">The Disputes were found.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires dispute:read permission.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+    /// <returns>A collection of Dispute records</returns>
+    [HttpGet("disputesWithUpdateRequests")]
+    [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
+    public async Task<IActionResult> GetDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving all Disputes from oracle-data-api with pending update requests");
+
+        try
+        {
+            ICollection<Dispute> disputes = await _disputeService.GetAllDisputesWithPendingUpdateRequestsAsync(cancellationToken);
+            return Ok(disputes);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving Disputes with pending update requests from oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+
+    /// <summary>
+    /// Returns all update requests for a specific dispute 
+    /// </summary>
+    /// <param name="disputeId">Dispute Id</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">The Update requests were found.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires dispute:read permission.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+    /// <returns>A collection of Dispute update request records</returns>
+    [HttpGet("{disputeId}/disputeUpdateRequests")]
+    [ProducesResponseType(typeof(IList<DisputantUpdateRequest>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
+    public async Task<IActionResult> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving all Dispute update requests from oracle-data-api for a dispute id");
+
+        try
+        {
+            ICollection<DisputantUpdateRequest> disputeUpdateRequests = await _disputeService.GetDisputeUpdateRequestsAsync(disputeId, cancellationToken);
+            return Ok(disputeUpdateRequests);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving Dispute update requests for a dispute from oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
 }
