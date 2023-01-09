@@ -58,8 +58,11 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
                 }
                 else
                 {
-                    // TCVP-2009: Start email saga to update email address
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    // Set the emailAddress and reset the verified flag to false in the database
+                    dispute = await _oracleDataApiService.ResetDisputeEmailAsync(dispute.DisputeId, message.EmailAddress, context.CancellationToken);
+
+                    // TCVP-2009: Start email saga to update email address
                     await context.PublishWithLog(_logger, new RequestEmailVerification()
                     {
                         EmailAddress = message.EmailAddress,

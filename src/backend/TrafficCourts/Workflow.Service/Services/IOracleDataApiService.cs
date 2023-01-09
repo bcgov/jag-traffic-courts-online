@@ -9,6 +9,7 @@ namespace TrafficCourts.Workflow.Service.Services
         Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory, CancellationToken cancellationToken);
         Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken);
         Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken);
+        Task<Dispute> ResetDisputeEmailAsync(long disputeId, string emailAddress, CancellationToken cancellationToken);
         Task<ICollection<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, CancellationToken cancellationToken);
         Task<Dispute> GetDisputeByIdAsync(long disputeId, CancellationToken cancellationToken);
         Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken);

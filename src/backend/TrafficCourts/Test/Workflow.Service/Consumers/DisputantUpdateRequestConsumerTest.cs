@@ -42,6 +42,7 @@ public class DisputantUpdateRequestConsumerTest
         _oracleDataApiService.Setup(_ => _.GetDisputeByNoticeOfDisputeGuidAsync(_message.NoticeOfDisputeGuid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
         _oracleDataApiService.Setup(_ => _.SaveDisputantUpdateRequestAsync(_message.NoticeOfDisputeGuid.ToString(), _updateRequest, It.IsAny<CancellationToken>())).Returns(Task.FromResult<long>(1));
+        _oracleDataApiService.Setup(_ => _.ResetDisputeEmailAsync(_dispute.DisputeId, It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _context = new();
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
@@ -58,6 +59,19 @@ public class DisputantUpdateRequestConsumerTest
 
         // Assert the oracle service was never called.
         _oracleDataApiService.Verify(m => m.SaveDisputantUpdateRequestAsync(It.IsAny<string>(), It.IsAny<Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task TestDisputantUpdateRequestConsumer_Email()
+    {
+        // Arrange
+        _message.EmailAddress = "new-email@somewhere.com";
+
+        // Act
+        await _consumer.Consume(_context.Object);
+
+        // Assert the oracle service was called to save the email address.
+        _oracleDataApiService.Verify(m => m.ResetDisputeEmailAsync(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Theory]
