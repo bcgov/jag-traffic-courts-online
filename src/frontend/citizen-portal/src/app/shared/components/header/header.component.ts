@@ -15,7 +15,7 @@ import { AppConfigService } from 'app/services/app-config.service';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   public fullName: string;
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
@@ -39,9 +39,6 @@ export class HeaderComponent implements OnInit {
 
     this.environment = this.appConfigService.environment;
     this.version = this.appConfigService.version;
-  }
-
-  ngOnInit() {
   }
 
   toggleSidenav(): void {

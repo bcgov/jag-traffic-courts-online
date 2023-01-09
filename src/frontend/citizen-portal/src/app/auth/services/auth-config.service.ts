@@ -56,7 +56,6 @@ export class AuthConfigService {
     return this.http.get("/assets/oidc.config.json").pipe(
       map((res: any) => {
         this.authWellKnownDocument = res;
-        // this.store.dispatch(AuthStore.Actions.Init());
       })
     );
   }
