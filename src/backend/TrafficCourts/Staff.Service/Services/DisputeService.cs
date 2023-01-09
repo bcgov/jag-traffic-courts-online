@@ -279,8 +279,14 @@ public class DisputeService : IDisputeService
         {
             if (disputes.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId) is null)
             {
-                Dispute pendingDispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId, cancellationToken);
-                disputes.Add(pendingDispute);
+                try
+                {
+                    Dispute pendingDispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId, cancellationToken);
+                    disputes.Add(pendingDispute);
+                }
+                catch (Exception ex) {  
+                    // dont crash carry on
+                }
             }
         }
 
