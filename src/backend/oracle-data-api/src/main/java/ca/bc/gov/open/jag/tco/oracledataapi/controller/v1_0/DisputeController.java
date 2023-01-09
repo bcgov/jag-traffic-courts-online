@@ -250,17 +250,28 @@ public class DisputeController {
 	@PutMapping("/dispute/{id}/email/verify")
 	public ResponseEntity<Void> verifyDisputeEmail(@PathVariable(name="id") @Parameter(description = "The id of the Dispute to update.") Long id) {
 		logger.debug("PUT /dispute/{}/email/verify called", id);
-		try {
-			if (disputeService.verifyEmail(id)) {
-				ResponseEntity.ok().build();
-			} else {
-				ResponseEntity.notFound().build();
-			}
-		} catch (Exception e) {
-			logger.error("ERROR validating email for id {}", id, e);
-			return ResponseEntity.internalServerError().build();
-		}
+		disputeService.verifyEmail(id);
 		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "Updates the email address of a particular Dispute.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Email reset."),
+		@ApiResponse(responseCode = "400", description = "If the email address is > 100 characters"),
+		@ApiResponse(responseCode = "404", description = "Dispute with specified id not found"),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{id}/email/reset")
+	public ResponseEntity<Dispute> resetDisputeEmail(
+			@PathVariable(name="id")
+			@Parameter(description = "The id of the Dispute to update.")
+			Long id,
+			@RequestParam(name="email", required = false)
+			@Size(min = 1, max = 100)
+			@Parameter(description = "The new email address of the Disputant.")
+			String email) {
+		logger.debug("PUT /dispute/{}/email/reset called", id);
+		return new ResponseEntity<Dispute>(disputeService.resetEmail(id, email), HttpStatus.OK);
 	}
 
 	/**
@@ -393,26 +404,26 @@ public class DisputeController {
 	}
 
 	/**
-	 * Get endpoint that retrieves all <code>DisputantUpdateRequest</code>s from persistent storage that is associated with the given Dispute via disputeId.
+	 * Get endpoint that retrieves all <code>DisputantUpdateRequest</code>s from persistent storage that is associated with the optionally given Dispute via optional disputeId.
 	 *
 	 * @param disputantUpdateRequest id to be retrieved
 	 * @return id of the saved {@link DisputantUpdateRequest}
 	 */
-	@GetMapping("/dispute/{id}/updateRequest")
-	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest for a given Dispute, optionally filtered by status.")
+	@GetMapping("/dispute/updateRequests")
+	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest record saved."),
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
 	})
 	public ResponseEntity<List<DisputantUpdateRequest>> getDisputantUpdateRequests(
-			@PathVariable
-			@Parameter(description = "The disputeId of the Dispute.")
+			@RequestParam(required=false)
+			@Parameter(description = "If specified, filter request by the disputeId of the Dispute.")
 			Long id,
 			@RequestParam(required = false)
-			@Parameter(description = "If specified, filter request by status", example = "PENDING")
+			@Parameter(description = "If specified, filter request by DisputantUpdateRequestStatus", example = "PENDING")
 			DisputantUpdateRequestStatus status) {
-		logger.debug("GET /dispute/{}/updateRequest called", id);
+		logger.debug("GET /dispute/updateRequests called", id, status);
 		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
 	}
 

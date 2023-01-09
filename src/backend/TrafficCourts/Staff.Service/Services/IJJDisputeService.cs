@@ -56,7 +56,7 @@ public interface IJJDisputeService
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
-    Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string remark, CancellationToken cancellationToken);
+    Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string? remark, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular JJDispute record to ACCEPTED.</summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
@@ -66,4 +66,12 @@ public interface IJJDisputeService
     /// <exception cref="ApiException">A server side error occurred.</exception>
     /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
     Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken);
+
+    /// <summary>Updates the status of a particular JJDispute record to CONFIRMED.</summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
+    Task<JJDispute> ConfirmJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken);
 }

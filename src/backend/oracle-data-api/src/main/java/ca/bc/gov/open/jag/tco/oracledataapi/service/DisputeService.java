@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -296,20 +295,36 @@ public class DisputeService {
 	}
 
 	/**
+	 * Sets the email address of the specified Dispute
+	 *
+	 * @param id the Dispute record to update
+	 * @param emailAddress Dispute.emailAddress will be updated with this value
+	 * @throws NoSuchElementException if the Dispute could not be found.
+	 */
+	public Dispute resetEmail(Long id, String emailAddress) {
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+
+		// permit setting the emailAddress to null
+		if (StringUtils.isBlank(emailAddress)) {
+			dispute.setEmailAddress(null);
+			dispute.setEmailAddressVerified(Boolean.TRUE);
+		}
+		else {
+			dispute.setEmailAddress(emailAddress);
+			dispute.setEmailAddressVerified(Boolean.FALSE);
+		}
+
+		return disputeRepository.update(dispute);
+	}
+
+	/**
 	 * Flips the Dispute.emailAddressVerified flag to true where on the target dispute if it exists
 	 * @param token the Dispute record to update
 	 */
-	public boolean verifyEmail(Long id) {
-		Optional<Dispute> findDispute = disputeRepository.findById(id);
-
-		if (findDispute.isPresent()) {
-			Dispute dispute = findDispute.get();
-			dispute.setEmailAddressVerified(Boolean.TRUE);
-			disputeRepository.update(dispute);
-			return true;
-		}
-
-		return false;
+	public void verifyEmail(Long id) {
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+		dispute.setEmailAddressVerified(Boolean.TRUE);
+		disputeRepository.update(dispute);
 	}
 
 	/**
@@ -390,7 +405,7 @@ public class DisputeService {
 	 * @param disputeId must not be null
 	 */
 	public List<DisputantUpdateRequest> findDisputantUpdateRequestByDisputeIdAndStatus(Long disputeId, DisputantUpdateRequestStatus status) {
-		return disputantUpdateRequestRepository.findByDisputeIdAndOptionalStatus(disputeId, status);
+		return disputantUpdateRequestRepository.findByOptionalDisputeIdAndOptionalStatus(disputeId, status);
 	}
 
 	/**

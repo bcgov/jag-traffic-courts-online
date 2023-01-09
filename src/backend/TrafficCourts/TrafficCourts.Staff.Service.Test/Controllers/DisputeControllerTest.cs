@@ -241,7 +241,71 @@ public class DisputeControllerTest
         // Assert
         disputeService.VerifyAll();
     }
+    
+    [Fact]
+    public async void TestGetDisputesWithUpdateRequests200Result()
+    {
+        // Mock the IDisputeService to return a Disputes, confirm controller returns them.
 
+        // Arrange
+        Dispute dispute1 = new();
+        dispute1.DisputeId = 1;
+        Dispute dispute2 = new();
+        dispute2.DisputeId = 2;
+        List<Dispute> disputes = new() { dispute1, dispute2 };
+
+        var disputeService = new Mock<IDisputeService>();
+        disputeService
+            .Setup(_ => _.GetAllDisputesWithPendingUpdateRequestsAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(disputes);
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await disputeController.GetDisputesWithPendingUpdateRequestsAsync(CancellationToken.None);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        var actual = okResult.Value as List<Dispute>;
+        Assert.NotNull(actual);
+        Assert.Equal(2, actual!.Count);
+        Assert.Equal(dispute1, actual[0]);
+        Assert.Equal(dispute2, actual[1]);
+    }
+
+
+    [Fact]
+    public async void TestGetDisputeUpdateRequestsAsync200Result()
+    {
+        // Mock the IDisputeService to return a DisputantUpdateRequests, confirm controller returns them.
+
+        // Arrange
+        DisputantUpdateRequest updateRequest1 = new();
+        updateRequest1.DisputantUpdateRequestId = 1;
+        DisputantUpdateRequest updateRequest2 = new();
+        updateRequest2.DisputantUpdateRequestId = 2;
+        List<DisputantUpdateRequest> updateRequests = new() { updateRequest1, updateRequest2 };
+
+        var disputeService = new Mock<IDisputeService>();
+        disputeService
+            .Setup(_ => _.GetDisputeUpdateRequestsAsync(1, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(updateRequests);
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await disputeController.GetDisputeUpdateRequestsAsync(1, CancellationToken.None);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(okResult.Value);
+        var actual = okResult.Value as List<DisputantUpdateRequest>;
+        Assert.NotNull(actual);
+        Assert.Equal(2, actual!.Count);
+        Assert.Equal(updateRequest1, actual[0]);
+        Assert.Equal(updateRequest2, actual[1]);
+    }
     [Fact]
     public void AllEndpointsShouldImplementAuthorizeAttribute()
     {
