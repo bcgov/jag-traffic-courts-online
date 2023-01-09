@@ -4,7 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeCountRequestCourtAppearance, DisputeStatus, OcrViolationTicket, Field } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
-import { Subscription } from 'rxjs';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
 @Component({
@@ -16,7 +15,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   @Output() public disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   dataSource = new MatTableDataSource();
-  busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',
     '__DateSubmitted',
@@ -73,13 +71,13 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
       return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
-    this.busy = this.disputeService.getDisputesWithPendingUpdates().subscribe((response) => {
+    this.disputeService.getDisputesWithPendingUpdates().subscribe((response) => {
       this.logger.info(
         'UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates response',
         response
       );
 
-      response.forEach(d => {
+      response.forEach((d:Dispute) => {
         if (d.status != "CANCELLED") { // do not show cancelled
           var newDispute: Dispute = {
             ticketNumber: d.ticketNumber,
@@ -137,18 +135,4 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     this.disputeInfo.emit(element);
   }
 
-}
-
-export interface Point {
-  x?: number;
-  y?: number;
-}
-
-export interface OcrCount {
-  description?: Field;
-  act_or_regulation_name_code?: Field;
-  is_act?: Field;
-  is_regulation?: Field;
-  section?: Field;
-  ticketed_amount?: Field;
 }

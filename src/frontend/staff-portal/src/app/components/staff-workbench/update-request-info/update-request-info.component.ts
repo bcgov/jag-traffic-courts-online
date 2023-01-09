@@ -1,12 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { UtilsService } from '@core/services/utils.service';
 import { ConfigService } from '@config/config.service';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
-import { Subscription } from 'rxjs';
-import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { DisputantUpdateRequestUpdateType, DisputantUpdateRequestStatus2 } from 'app/api';
 import { DisputantUpdateRequest } from '../../../services/dispute.service';
 
@@ -18,10 +13,7 @@ import { DisputantUpdateRequest } from '../../../services/dispute.service';
 export class UpdateRequestInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
-  public isMobile: boolean;
-  public busy: Subscription;
   public initialDisputeValues: Dispute;
-  public todayDate: Date = new Date();
   public retrieving: boolean = true;
   public violationDate: string = "";
   public violationTime: string = "";
@@ -34,14 +26,10 @@ export class UpdateRequestInfoComponent implements OnInit {
   public RequestUpdateStatus = DisputantUpdateRequestStatus2;
 
   constructor(
-    protected route: ActivatedRoute,
-    protected formBuilder: FormBuilder,
-    private utilsService: UtilsService,
     public config: ConfigService,
     private disputeService: DisputeService,
     private logger: LoggerService,
   ) {
-    this.isMobile = this.utilsService.isMobile();
 
   }
 
@@ -53,7 +41,7 @@ export class UpdateRequestInfoComponent implements OnInit {
     // process accepts and rejects
     this.disputeUpdateRequests.forEach(disputeUpdateRequest => {
       if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Accepted) {
-        this.busy = this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
+        this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
           next: response => {
             disputeUpdateRequest.status = this.RequestUpdateStatus.Accepted;
           },
@@ -61,7 +49,7 @@ export class UpdateRequestInfoComponent implements OnInit {
           complete: () => { }
         });
       } else if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Rejected) {
-        this.busy = this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
+        this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
           next: response => {
             disputeUpdateRequest.status = this.RequestUpdateStatus.Rejected;
           },
@@ -76,7 +64,7 @@ export class UpdateRequestInfoComponent implements OnInit {
   getDispute(): void {
     this.logger.log('UpdateRequestInfoComponent::getDispute');
 
-    this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
+    this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
       this.logger.info(
         'UpdateRequestInfoComponent::getDispute response',
         response
@@ -99,7 +87,7 @@ export class UpdateRequestInfoComponent implements OnInit {
   getDisputeUpdateRequests(disputeId: number) {
     this.logger.log('UpdateRequestInfoComponent::getDisputeUpdateRequests');
 
-    this.busy = this.disputeService.getDisputeUpdateRequests(disputeId).subscribe((response) => {
+    this.disputeService.getDisputeUpdateRequests(disputeId).subscribe((response) => {
       this.retrieving = false;
       this.logger.info(
         'UpdateRequestInfoComponent::getDisputeUpdateRequests response',
@@ -147,9 +135,5 @@ export class UpdateRequestInfoComponent implements OnInit {
 
   public onBack() {
     this.backInbox.emit();
-  }
-
-  public handleCollapse(name: string) {
-    this.collapseObj[name] = !this.collapseObj[name]
   }
 }

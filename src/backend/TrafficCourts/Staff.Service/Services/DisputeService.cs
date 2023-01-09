@@ -273,13 +273,13 @@ public class DisputeService : IDisputeService
     public async Task<ICollection<Dispute>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
     {
         ICollection<Dispute> disputes = new Collection<Dispute>();
-        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputantUpdateRequestsAsync(null, Status.PENDING);
+        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputantUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
 
         foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest disputantUpdateRequest in pendingDisputeUpdateRequests)
         {
             if (disputes.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId) is null)
             {
-                Dispute pendingDispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId);
+                Dispute pendingDispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId, cancellationToken);
                 disputes.Add(pendingDispute);
             }
         }
@@ -296,6 +296,6 @@ public class DisputeService : IDisputeService
     /// <returns></returns>
     public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetDisputantUpdateRequestsAsync(disputeId, null);
+        return await _oracleDataApi.GetDisputantUpdateRequestsAsync(disputeId, null, cancellationToken);
     }
 }
