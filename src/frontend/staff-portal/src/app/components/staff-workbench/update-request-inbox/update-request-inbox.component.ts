@@ -63,14 +63,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
     this.dataSource.data = this.disputes;
 
-    // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
-
-    // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = function (record: Dispute, filter) {
-      return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-    }
-
     this.disputeService.getDisputesWithPendingUpdates().subscribe((response) => {
       this.logger.info(
         'UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates response',
