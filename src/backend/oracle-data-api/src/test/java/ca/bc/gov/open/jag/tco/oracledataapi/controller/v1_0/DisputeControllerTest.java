@@ -20,16 +20,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
+import io.swagger.v3.oas.annotations.Parameter;
 
 class DisputeControllerTest extends BaseTestSuite {
 
@@ -372,6 +376,29 @@ class DisputeControllerTest extends BaseTestSuite {
 		return result;
 	}
 
+	/**
+	 * Issues a GET request to /api/v1.0/dispute/updateRequests. The appropriate controller is automatically called by the DispatchServlet
+	 * @throws Exception
+	 */
+	public List<DisputantUpdateRequest> getDisputantUpdateRequests(Long id, DisputantUpdateRequestStatus status) {
+		ResultActions resultActions;
+		try {
+			resultActions = mvc.perform(MockMvcRequestBuilders
+					.get("/api/v1.0/dispute/updateRequests")
+					.param("id", Long.toString(id))
+					.param("status", status == null ? null : status.name())
+					.principal(getPrincipal()))
+					.andExpect(status().isOk());
+			List<DisputantUpdateRequest> result = mapResult(resultActions, new TypeReference<List<DisputantUpdateRequest>>() {});
+			return result;
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	/**
 	 * Issues a DELETE request to /api/v1.0/dispute/{id}. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
