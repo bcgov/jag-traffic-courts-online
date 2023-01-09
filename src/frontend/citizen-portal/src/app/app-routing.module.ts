@@ -14,7 +14,6 @@ import { EmailVerificationComponent } from '@components/email-verification/email
 import { TicketLandingComponent } from '@components/ticket-landing/ticket-landing.component';
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
-import { UpdateDisputeAuthComponent } from '@components/update-dispute-auth/update-dispute-auth.component';
 import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
 
 const routes: Routes = [
@@ -77,10 +76,6 @@ const routes: Routes = [
           {
             path: AppRoutes.UPDATE_DISPUTE,
             component: UpdateDisputeLandingComponent,
-          },
-          {
-            path: AppRoutes.UPDATE_DISPUTE_AUTH,
-            component: UpdateDisputeAuthComponent,
           },
           {
             path: AppRoutes.UPDATE_DISPUTE_CONTACT,

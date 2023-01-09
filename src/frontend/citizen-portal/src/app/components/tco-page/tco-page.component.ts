@@ -15,14 +15,15 @@ export class TcoPageComponent implements OnInit {
 
   constructor(
     private appConfigService: AppConfigService,
-    private router: Router
+    private router: Router,
   ) {
     this.understandYourTicketLink = this.appConfigService.understandYourTicketLink;
     this.paymentOptionsLink = this.appConfigService.paymentOptionsLink;
   }
 
   ngOnInit(): void {
-    this.detectUrl(this.router.url);
+    let url = window.location.pathname;
+    this.detectUrl(url);
     this.router.events.pipe(
       filter(event => event instanceof NavigationStart)
     ).subscribe((event: NavigationStart) => {

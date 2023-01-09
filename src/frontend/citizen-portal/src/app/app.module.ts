@@ -43,9 +43,9 @@ import { EmailVerificationComponent } from './components/email-verification/emai
 import { TicketLandingComponent } from './components/ticket-landing/ticket-landing.component';
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
-import { UpdateDisputeAuthComponent } from '@components/update-dispute-auth/update-dispute-auth.component';
 import { DisputantFormComponent } from '@components/disputant-form/disputant-form.component';
 import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
+import { AuthModule } from './auth/auth.module';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -73,7 +73,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketLandingComponent,
     FindDisputeComponent,
     UpdateDisputeLandingComponent,
-    UpdateDisputeAuthComponent,
     DisputantFormComponent,
     UpdateDisputeContactComponent,
   ],
@@ -103,6 +102,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     }),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([DisputeStore.Effects]),
+    AuthModule,
   ],
   exports: [
     NgBusyModule,

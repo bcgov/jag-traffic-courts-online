@@ -6,7 +6,6 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfigService } from 'app/services/app-config.service';
 
@@ -29,10 +28,8 @@ export class HeaderComponent implements OnInit {
   public version: string;
 
   constructor(
-    // private authService: AuthService,
-    private logger: LoggerService,
     private appConfigService: AppConfigService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
@@ -44,11 +41,10 @@ export class HeaderComponent implements OnInit {
     this.version = this.appConfigService.version;
   }
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
-  public async ngOnInit() {
+  ngOnInit() {
   }
 
-  public toggleSidenav(): void {
+  toggleSidenav(): void {
     this.toggle.emit();
   }
 
@@ -63,7 +59,7 @@ export class HeaderComponent implements OnInit {
     };
   }
 
-  public onLanguage(): void {
+  onLanguage(): void {
     this.translateService.setDefaultLang(this.languageCode);
     const { languageCode, languageDesc } = this.toggleLanguage(
       this.languageCode
