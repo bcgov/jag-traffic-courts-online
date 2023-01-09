@@ -250,16 +250,7 @@ public class DisputeController {
 	@PutMapping("/dispute/{id}/email/verify")
 	public ResponseEntity<Void> verifyDisputeEmail(@PathVariable(name="id") @Parameter(description = "The id of the Dispute to update.") Long id) {
 		logger.debug("PUT /dispute/{}/email/verify called", id);
-		try {
-			if (disputeService.verifyEmail(id)) {
-				ResponseEntity.ok().build();
-			} else {
-				ResponseEntity.notFound().build();
-			}
-		} catch (Exception e) {
-			logger.error("ERROR validating email for id {}", id, e);
-			return ResponseEntity.internalServerError().build();
-		}
+		disputeService.verifyEmail(id);
 		return ResponseEntity.ok().build();
 	}
 
