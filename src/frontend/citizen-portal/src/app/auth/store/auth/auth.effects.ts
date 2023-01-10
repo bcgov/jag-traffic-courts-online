@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions as StoreActions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Actions } from '.';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -23,28 +23,18 @@ export class AuthEffects {
     }))
   );
 
-  CheckAuthorized$ = createEffect(() => this.actions$.pipe(
-    ofType(Actions.CheckAuthorize),
-    switchMap(() => {
-      return this.oidcSecurityService.checkAuth()
-        .pipe(
-          map(({ isAuthenticated, accessToken }) => {
-            if (isAuthenticated) {
-              let url = localStorage.getItem("url");
-              if (url) {
-                this.router.navigateByUrl(url);
-                localStorage.removeItem("url");
-              }
-              return Actions.Authorized({ payload: { isAuthenticated, accessToken } });
-            }
-            else {
-              return Actions.CheckAuthorizeFinished();
-            }
-          }),
-          catchError(err => {
-            return of(Actions.CheckAuthorizeFinished());
-          })
-        )
+  Authorized$ = createEffect(() => this.actions$.pipe(
+    ofType(Actions.Authorized),
+    switchMap((action) => {
+      if (action.payload.isAuthenticated) {
+        let url = localStorage.getItem("url");
+        if (url) {
+          this.router.navigateByUrl(url);
+          localStorage.removeItem("url");
+        }
+        return of(Actions.Redirect());
+      }
+      return of();
     }))
   );
 }

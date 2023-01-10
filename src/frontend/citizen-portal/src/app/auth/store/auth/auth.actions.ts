@@ -10,15 +10,11 @@ export const Authorizing = createAction(
   ActionTypes.AUTHORIZING
 );
 
-export const CheckAuthorize = createAction(
-  ActionTypes.CHECK_AUTHORIZE
-);
-
-export const CheckAuthorizeFinished = createAction(
-  ActionTypes.CHECK_AUTHORIZE_FINISHED
-);
-
 export const Authorized = createAction(
   ActionTypes.AUTHORIZED,
   props<{ payload?: AuthStore.State }>()
+);
+
+export const Redirect = createAction(
+  ActionTypes.REDIRECT
 );

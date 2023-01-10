@@ -9,7 +9,5 @@ export function AuthReducer(state: AuthState = initialState, action: Action): Au
 const authReducer = createReducer(initialState,
   on(Actions.Authorize, state => ({ ...state, isLoading: true })),
   on(Actions.Authorizing, state => ({ ...state, isLoading: true })),
-  on(Actions.CheckAuthorize, state => ({ ...state, isLoading: true })),
-  on(Actions.CheckAuthorizeFinished, state => ({ ...state, isLoading: false })),
-  on(Actions.Authorized, (state, output) => ({ ...state, ...output.payload, isLoading: false })),
+  on(Actions.Authorized, (state, response) => ({ ...state, ...response.payload, isLoading: false })),
 )
