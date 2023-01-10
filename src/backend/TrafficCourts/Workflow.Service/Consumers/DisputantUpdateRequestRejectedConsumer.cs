@@ -11,7 +11,6 @@ public class DisputantUpdateRequestRejectedConsumer : IConsumer<DisputantUpdateR
 {
     private readonly ILogger<DisputantUpdateRequestRejectedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private static readonly string _rejectedDisputantUpdateRequestEmailTemplateName = "DisputantUpdateRequestRejectedTemplate";
     private readonly IDisputantUpdateRequestRejectedTemplate _updateRequestRejectedTemplate;
 
     public DisputantUpdateRequestRejectedConsumer(

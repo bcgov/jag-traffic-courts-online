@@ -236,6 +236,7 @@ services:
   #############################################################################################
   coms:
     image: bcgovimages/common-object-management-service:latest
+    container_name: coms
     ports:
       - 3000:3000
     environment:
@@ -255,6 +256,7 @@ services:
 
   coms-init:
     image: bcgovimages/common-object-management-service:latest
+    container_name: coms-init
     environment:
       DB_ENABLED: "true"
       DB_HOST: "coms-db"
@@ -270,6 +272,7 @@ services:
   #############################################################################################
   coms-db:
     image: postgres
+    container_name: coms-db
     ports:
       - 5432:5432
     environment:
