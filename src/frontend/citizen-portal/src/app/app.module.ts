@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule,} from '@angular/common/http';
+import { HttpClient, HttpClientModule, } from '@angular/common/http';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from './shared/shared.module';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
-import { AppConfigService } from './services/app-config.service';
+import { AppConfig, AppConfigService } from './services/app-config.service';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DisputeStore, reducers } from './store';
@@ -112,7 +112,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   providers: [
     DatePipe,
     CurrencyPipe,
-    AppConfigService,
     TicketTypePipe,
     {
       provide: STEPPER_GLOBAL_OPTIONS,
@@ -127,7 +126,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 export class AppModule {
   private availableLanguages = ['en', 'fr'];
 
-  constructor(private translateService: TranslateService) {
+  constructor(
+    private translateService: TranslateService,
+    private appConfigService: AppConfigService,
+    private appConfig: AppConfig
+  ) {
+    // Get from main.ts, no need to fetch again
+    this.appConfigService.setAppConfig(this.appConfig);
     this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);

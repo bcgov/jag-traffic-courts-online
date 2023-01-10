@@ -37,14 +37,6 @@ describe('ConfigService', () => {
     }
   ));
 
-  it('should get statuses code', inject(
-    [ConfigService],
-    (service: ConfigService) => {
-      const code = service.statuses[0].code;
-      expect(code).toBeDefined();
-    }
-  ));
-
   it('should have CountryCodeValue of Canada', inject(
     [ConfigService],
     (service: ConfigService) => {

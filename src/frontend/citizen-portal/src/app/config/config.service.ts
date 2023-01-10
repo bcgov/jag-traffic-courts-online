@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Config, Configuration, CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
-import { SortWeight, UtilsService } from '@core/services/utils.service';
+import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
+import { UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import CanadaProvincesJSON from 'assets/canada_provinces_list.json';
 import USStatesJSON from 'assets/us_states_list.json';
 import CountriesListJSON from 'assets/countries_list.json';
@@ -11,8 +11,6 @@ import CountriesListJSON from 'assets/countries_list.json';
   providedIn: 'root',
 })
 export class ConfigService {
-  protected configuration: Configuration;
-
   private disputeSubmitted: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeValidationError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -142,33 +140,5 @@ export class ConfigService {
   public getProvAbbreviationCd(ctryId: number, provSeqNo: number) {
     let provincesFound = this._provincesAndStates.filter(x => x.ctryId === ctryId && x.provSeqNo === provSeqNo).shift();
     return provincesFound?.provAbbreviationCd;
-  }
-
-  public get statuses(): Config<number>[] {
-    return [...this.configuration.statuses].sort(this.sortConfigByName());
-  }
-
-  /**
-   * @description
-   * Load the runtime configuration.
-   */
-  public load(): Observable<Configuration> {
-    if (!this.configuration) {
-      return this.appConfigService.loadAppConfig()
-    }
-
-    return of({ ...this.configuration });
-  }
-
-  /**
-   * @description
-   * Sort the configuration by name.
-   */
-  private sortConfigByName(): (
-    a: Config<number | string>,
-    b: Config<number | string>
-  ) => SortWeight {
-    return (a: Config<number | string>, b: Config<number | string>) =>
-      this.utilsService.sortByKey<Config<number | string>>(a, b, 'name');
   }
 }
