@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { AuthWellKnownEndpoints, OidcSecurityService, OpenIdConfiguration, StsConfigHttpLoader } from 'angular-auth-oidc-client';
+import { OidcSecurityService, OpenIdConfiguration, StsConfigHttpLoader } from 'angular-auth-oidc-client';
 import { Store } from '@ngrx/store';
 import { AuthStore } from '../store';
 
