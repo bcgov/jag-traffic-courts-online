@@ -1,29 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { OidcSecurityService, OpenIdConfiguration, StsConfigHttpLoader } from 'angular-auth-oidc-client';
-import { Store } from '@ngrx/store';
 import { AuthStore } from '../store';
+import { Store } from '@ngrx/store';
 
-export function AuthServiceInit(authConfigService: AuthConfigService, oidcSecurityService: OidcSecurityService, store: Store) {
+export class AuthConfig {
+  config: OpenIdConfiguration;
+  authWellKnownDocument: any;
+}
+
+export function AuthServiceInit(oidcSecurityService: OidcSecurityService, store: Store) {
   return () => {
-    let observables = [
-      authConfigService.loadConfig(),
-      authConfigService.loadAuthWellKnownDocument()
-    ];
-
-    return forkJoin(observables)
-      .pipe(
-        map(() => {
-          oidcSecurityService.preloadAuthWellKnownDocument().subscribe(res => {
-            oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, accessToken }) => {
-              store.dispatch(AuthStore.Actions.Authorized({ payload: { isAuthenticated, accessToken } }));
-              return;
-            })
-          })
-        })
-      );
+    return oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, accessToken }) => {
+      store.dispatch(AuthStore.Actions.Authorized({ payload: { isAuthenticated, accessToken } }));
+      return;
+    })
   };
 }
 
@@ -35,41 +26,23 @@ export const AuthConfigLoader = (authConfigService: AuthConfigService) => {
   providedIn: 'root',
 })
 export class AuthConfigService {
-  private _config: BehaviorSubject<OpenIdConfiguration> = new BehaviorSubject<OpenIdConfiguration>(null);
-  private _authWellKnownDocument: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  private _authConfig: BehaviorSubject<AuthConfig> = new BehaviorSubject<AuthConfig>(null);
 
-  constructor(
-    private http: HttpClient,
-  ) {
-  }
-
-  loadConfig(): Observable<void> {
-    return this.http.get("/assets/auth.config.json").pipe(
-      map((config: OpenIdConfiguration) => {
-        config.redirectUrl = window.location.origin;
-        config.postLogoutRedirectUri = window.location.origin;
-        this._config.next(config);
-      })
-    );
-  }
-
-  loadAuthWellKnownDocument(): Observable<void> {
-    return this.http.get("/assets/oidc.config.json").pipe(
-      map((res: string) => {
-        this._authWellKnownDocument.next(res);
-      })
-    );
+  setAuthConfig(authConfig: AuthConfig): void {
+    authConfig.config.redirectUrl = window.location.origin;
+    authConfig.config.postLogoutRedirectUri = window.location.origin;
+    this._authConfig.next(authConfig);
   }
 
   get config(): OpenIdConfiguration {
-    return this._config.value;
+    return this._authConfig.value?.config;
   }
 
   get config$(): Observable<OpenIdConfiguration> {
-    return this._config.asObservable();
+    return this._authConfig.pipe(map(i => i?.config));
   }
 
   get authWellKnownDocument(): string {
-    return this._authWellKnownDocument.value;
+    return this._authConfig.value?.authWellKnownDocument;
   }
 }

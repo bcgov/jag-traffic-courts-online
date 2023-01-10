@@ -3,7 +3,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { AuthModule as OidcModule, OidcSecurityService, StsConfigLoader } from 'angular-auth-oidc-client';
-import { AuthConfigLoader, AuthConfigService, AuthServiceInit } from './services/auth-config.service';
+import { AuthConfig, AuthConfigLoader, AuthConfigService, AuthServiceInit } from './services/auth-config.service';
 import { AuthHttpInterceptor } from './interceptors/auth-http.interceptor';
 import { AuthStore } from './store';
 
@@ -23,7 +23,7 @@ import { AuthStore } from './store';
     {
       provide: APP_INITIALIZER,
       useFactory: AuthServiceInit,
-      deps: [AuthConfigService, OidcSecurityService, Store],
+      deps: [OidcSecurityService, Store],
       multi: true,
     },
     {
@@ -34,4 +34,12 @@ import { AuthStore } from './store';
   ],
   exports: [OidcModule],
 })
-export class AuthModule { }
+export class AuthModule {
+  constructor(
+    private authConfigService: AuthConfigService,
+    private authConfig: AuthConfig
+  ) {
+    // Get from main.ts, no need to fetch again
+    this.authConfigService.setAuthConfig(this.authConfig);
+  }
+}
