@@ -69,6 +69,9 @@ public static class Startup
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
 
+        // Add COMS (Object Management Service) Client
+        builder.Services.AddObjectManagementService("COMS");
+
         builder.Services.AddMediatR(assembly);
 
         AddSwagger(builder, assembly, logger);
