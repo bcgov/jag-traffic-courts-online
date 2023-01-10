@@ -14,7 +14,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +26,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
-import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 class JJDisputeControllerTest extends BaseTestSuite {
@@ -42,7 +40,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testGetJJDisputeById() {
 		// Assert db is empty and clean
-		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null, null));
+		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null));
 		assertEquals(0, allDisputes.size());
 
 		// Create a couple of JJDisputes
@@ -59,7 +57,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testGetJJDisputes_Name() {
 		// Assert db is empty and clean
-		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null, null));
+		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null));
 		assertEquals(0, allDisputes.size());
 
 		// Create a JJDisputes with different assignedTo
@@ -72,55 +70,54 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null, null));
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null));
 		assertEquals(2, allDisputes.size());
 		assertTrue(ticketNumbers.contains(allDisputes.get(0).getTicketNumber()));
 		assertTrue(ticketNumbers.contains(allDisputes.get(1).getTicketNumber()));
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes("Steven Strange", null, null));
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes("Steven Strange", null));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute1.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes("Tony Stark", null, null));
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes("Tony Stark", null));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute2.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 	}
 
 	@Test
-	public void testGetJJDisputes_TicketNumberAndTime() throws ParseException {
+	public void testGetJJDisputes_TicketNumber() throws ParseException {
 		// Assert db is empty and clean
-		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null, null));
+		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null));
 		assertEquals(0, allDisputes.size());
 
 		// Create a JJDisputes with different assignedTo
 		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
 				.jjAssignedTo("Steven Strange")
 				.ticketNumber("AX12345678")
-				.violationDate(DateUtils.parseDate("12:45", DateUtil.TIME_FORMAT))
 				.build());
 		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
 				.jjAssignedTo("Tony Stark")
 				.ticketNumber("AX00000000")
-				.violationDate(DateUtils.parseDate("14:32", DateUtil.TIME_FORMAT))
 				.build());
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null, null));
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null));
 		assertEquals(2, allDisputes.size());
 		assertTrue(ticketNumbers.contains(allDisputes.get(0).getTicketNumber()));
 		assertTrue(ticketNumbers.contains(allDisputes.get(1).getTicketNumber()));
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX12345678", DateUtils.parseDate("12:45", DateUtil.TIME_FORMAT)));
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX12345678"));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute1.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX12345678", DateUtils.parseDate("14:32", DateUtil.TIME_FORMAT)));
-		assertEquals(0, allDisputes.size()); // mismatched terms - search should return nothing
+		allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, "AX00000000"));
+		assertEquals(1, allDisputes.size());
+		assertEquals(dispute2.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 	}
 
 	@Test
@@ -147,7 +144,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, null).getBody();
 		assertEquals("Victoria", jjDispute.getCourthouseLocation());
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
-		List<JJDispute> allJJDisputes = jjDisputeController.getJJDisputes(null, null, null);
+		List<JJDispute> allJJDisputes = jjDisputeController.getJJDisputes(null, null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
 	}
 

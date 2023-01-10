@@ -89,7 +89,7 @@ public class OracleDataApiService : IOracleDataApiService
     {
         try
         {
-            return await _client.FindDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, cancellationToken);
+            return await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, cancellationToken);
         }
         catch (Exception)
         {
@@ -133,11 +133,11 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime, System.Threading.CancellationToken cancellationToken)
+    public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, System.Threading.CancellationToken cancellationToken)
     {
         try
         {
-            return await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, violationTime, cancellationToken);
+            return await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, cancellationToken);
         }
         catch (Exception)
         {

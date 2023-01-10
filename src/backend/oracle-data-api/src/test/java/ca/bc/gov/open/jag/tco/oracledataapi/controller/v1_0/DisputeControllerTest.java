@@ -14,19 +14,17 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -37,6 +35,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
@@ -281,28 +282,93 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
-	public void testFindByTicketNumberAndTime() throws Exception {
-		// Happy path. Expect results on a valid match.
+	public void testGetDisputeById() throws Exception {
+		assertEquals(0, IterableUtils.toList(disputeRepository.findAll()).size());
 
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		dispute.setTicketNumber("AX12345678");
+		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setIssuedTs(DateUtils.parseDate("14:54", DateUtil.TIME_FORMAT));
 		dispute.setViolationTicket(null);
-		Long disputeId = saveDispute(dispute);
+		disputeRepository.save(dispute);
 
-		// try searching for exact match. Expect to find the dispute
-		List<DisputeResult> findResults = findDispute("AX12345678", "14:54");
+		assertEquals(1, IterableUtils.toList(disputeRepository.findAll()).size());
+
+		// Retrieve the Dispute via the Controller
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/dispute/{id}", dispute.getDisputeId())
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+		Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
+		assertNotNull(result);
+	}
+
+	@Test
+	public void testGetJJDisputeByTicketNumber() throws Exception {
+		assertEquals(0, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Create a single Dispute
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		jjDispute.setTicketNumber("AX12345678");
+		jjDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
+		jjDispute.setHearingType(JJDisputeHearingType.WRITTEN_REASONS);
+		jjDisputeRepository.save(jjDispute);
+
+		assertEquals(1, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Retrieve the Dispute via the Controller
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/jj/disputes")
+				.param("ticketNumber", "AX12345678")
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+		List<JJDispute> result = mapResult(resultActions, new TypeReference<List<JJDispute>>() {});
+		assertNotNull(result);
+		assertEquals(1, result.size());
+	}
+
+	@Test
+	public void testFindDisputeStatuses() throws Exception {
+		assertEquals(0, IterableUtils.toList(disputeRepository.findAll()).size());
+		assertEquals(0, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setTicketNumber("AX12345678");
+		dispute.setStatus(DisputeStatus.NEW);
+		dispute.setIssuedTs(DateUtils.parseDate("14:54", DateUtil.TIME_FORMAT));
+		dispute.setViolationTicket(null);
+		disputeRepository.save(dispute);
+
+		// Create a single JJDispute
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		jjDispute.setTicketNumber("AX12345678");
+		jjDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
+		jjDispute.setHearingType(JJDisputeHearingType.WRITTEN_REASONS);
+		jjDisputeRepository.save(jjDispute);
+
+		// Assert records exist in repo
+		assertEquals(1, IterableUtils.toList(disputeRepository.findAll()).size());
+		assertEquals(1, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Assert jjDisputeRepository.findByTicketNumber() works
+		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber("AX12345678");
+		assertEquals(1, jjDisputes.size());
+
+		// Test the same jjDisputeRepository.findByTicketNumber(), but via /api/v1.0/dispute/status endpoint.
+		List<DisputeResult> findResults = findDisputeStatuses("AX12345678", "14:54");
 		assertEquals(1, findResults.size());
-		assertEquals(disputeId, findResults.get(0).getDisputeId());
 		assertEquals(DisputeStatus.NEW, findResults.get(0).getDisputeStatus());
+		assertEquals(JJDisputeStatus.IN_PROGRESS, findResults.get(0).getJjDisputeStatus());
+		assertEquals(JJDisputeHearingType.WRITTEN_REASONS, findResults.get(0).getJjDisputeHearingType());
 
 		// try searching for a different ticketNumber. Expect no records.
-		findResults = findDispute("AX00000000", "14:54");
+		findResults = findDisputeStatuses("AX00000000", "14:54");
 		assertEquals(0, findResults.size());
 
 		// try searching for a different time. Expect no records.
-		findResults = findDispute("AX12345678", "14:55");
+		findResults = findDisputeStatuses("AX12345678", "14:55");
 		assertEquals(0, findResults.size());
 	}
 
@@ -626,13 +692,18 @@ class DisputeControllerTest extends BaseTestSuite {
 		return result;
 	}
 
-	/** Issues a GET request to /api/v1.0/dispute with the required ticketNumber and time to find a Dispute. */
-	private List<DisputeResult> findDispute(String ticketNumber, String issuedTime) {
-		UriComponentsBuilder uriBuilder = fromUriString("/dispute/status")
-				.queryParam("ticketNumber", ticketNumber)
-				.queryParam("issuedTime", issuedTime);
-		ResponseEntity<List<DisputeResult>> results = getForEntity(uriBuilder, new ParameterizedTypeReference<List<DisputeResult>>() {});
-		return results.getBody();
+	/** Issues a GET request to /api/v1.0/dispute/status with the required ticketNumber and time to find a Dispute.
+	 * @throws Exception */
+	private List<DisputeResult> findDisputeStatuses(String ticketNumber, String issuedTime) throws Exception {
+
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/dispute/status")
+				.param("ticketNumber", ticketNumber)
+				.param("issuedTime", issuedTime)
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+		List<DisputeResult> result = mapResult(resultActions, new TypeReference<List<DisputeResult>>() {});
+		return result;
 	}
 
 	/** Issues a POST request to /api/v1.0/dispute/{guid}/updateRequest to persist a new DisputantUpdateRequest in the database */

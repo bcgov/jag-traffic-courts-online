@@ -24,7 +24,7 @@ public class JJDisputeService : IJJDisputeService
 
     public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetJJDisputesAsync(jjAssignedTo, null, null, cancellationToken);
+        return await _oracleDataApi.GetJJDisputesAsync(jjAssignedTo, null, cancellationToken);
     }
 
     public async Task<JJDispute> GetJJDisputeAsync(string disputeId, bool assignVTC, CancellationToken cancellationToken)
@@ -42,7 +42,7 @@ public class JJDisputeService : IJJDisputeService
         {
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details saved for later.");
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
-        } 
+        }
         else if (dispute.Status == JJDisputeStatus.CONFIRMED)
         {
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details confirmed / submitted by JJ.");
@@ -57,10 +57,10 @@ public class JJDisputeService : IJJDisputeService
         await _oracleDataApi.AssignJJDisputesToJJAsync(ticketNumbers, username, cancellationToken);
 
         // Publish file history
-        foreach(string ticketNumber in ticketNumbers)
+        foreach (string ticketNumber in ticketNumbers)
         {
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute assigned to JJ.");
-            await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken); 
+            await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
     }
 
