@@ -17,7 +17,6 @@ export function AuthServiceInit(authConfigService: AuthConfigService, oidcSecuri
       .pipe(
         map(() => {
           oidcSecurityService.preloadAuthWellKnownDocument().subscribe(res => {
-            authConfigService.authWellKnownEndpoints = res;
             oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, accessToken }) => {
               store.dispatch(AuthStore.Actions.Authorized({ payload: { isAuthenticated, accessToken } }));
               return;
@@ -38,7 +37,6 @@ export const AuthConfigLoader = (authConfigService: AuthConfigService) => {
 export class AuthConfigService {
   private _config: BehaviorSubject<OpenIdConfiguration> = new BehaviorSubject<OpenIdConfiguration>(null);
   private _authWellKnownDocument: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-  authWellKnownEndpoints: AuthWellKnownEndpoints;
 
   constructor(
     private http: HttpClient,
