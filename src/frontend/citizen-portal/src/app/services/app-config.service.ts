@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 export interface IAppConfig {
   production: boolean;
@@ -43,7 +40,7 @@ export class AppConfig implements IAppConfig {
   providedIn: 'root',
 })
 export class AppConfigService {
-  private appConfig: AppConfig;
+  private appConfig: AppConfig
 
   private UNDERSTAND_YOUR_TICKET_DEFAULT =
     'https://understandmyticket.gov.bc.ca/' as const;
@@ -63,14 +60,12 @@ export class AppConfigService {
   private CTH_SERV_VISIT_US_DEFAULT =
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments' as const;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+  ) {
+  }
 
-  public loadAppConfig(): Observable<any> {
-    return this.http.get('/assets/app.config.json').pipe(
-      map((config: AppConfig) => {
-        this.appConfig = config;
-      })
-    );
+  setAppConfig(appConfig: AppConfig) {
+    this.appConfig = appConfig;
   }
 
   get production(): boolean {

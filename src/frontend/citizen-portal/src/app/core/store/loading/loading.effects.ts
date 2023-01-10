@@ -10,12 +10,12 @@ import { LoadingStore } from '..';
 export class LoadingEffects {
   constructor(
     private actions$: StoreActions,
-    private store$: Store,
+    private store: Store,
   ) { }
 
   removeLoadingitem$ = createEffect(() => this.actions$.pipe(
     ofType(Actions.Remove),
-    withLatestFrom(this.store$.select(LoadingStore.Selectors.NumberOfLoadingItems)),
+    withLatestFrom(this.store.select(LoadingStore.Selectors.NumberOfLoadingItems)),
     switchMap(([action, numberOfLoadingItems]) => {
       if (numberOfLoadingItems === 0) {
         return of(Actions.LoadingDone());

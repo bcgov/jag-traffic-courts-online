@@ -9,12 +9,6 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { LoadingStore } from './store';
 
-export function initConfig(config: ConfigService) {
-  return () => {
-    return config.load();
-  };
-}
-
 @NgModule({
   declarations: [],
   imports: [
@@ -36,13 +30,7 @@ export function initConfig(config: ConfigService) {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initConfig,
-      deps: [ConfigService],
-      multi: true,
-    },
+    }
   ],
 })
 export class CoreModule { }

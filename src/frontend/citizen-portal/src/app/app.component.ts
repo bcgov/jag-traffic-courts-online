@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     private metaTagService: Meta,
     private router: Router,
     private utilsService: UtilsService,
-    private snowplow: SnowplowService
+    private snowplow: SnowplowService,
   ) {
     this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
