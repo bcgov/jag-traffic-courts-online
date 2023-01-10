@@ -80,8 +80,6 @@ export class UpdateRequestInfoComponent implements OnInit {
       }
 
       if (this.retrieving === true) this.getDisputeUpdateRequests(this.initialDisputeValues.disputeId);
-      console.log(this.initialDisputeValues.emailAddressVerified, this.initialDisputeValues.emailAddressVerified === true, this.initialDisputeValues.emailAddress? true : false);
-
     });
   }
 
