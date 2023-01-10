@@ -13,6 +13,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
@@ -184,6 +187,7 @@ public class RandomUtil {
 
 	public static Dispute createDispute() {
 		Dispute dispute = new Dispute();
+		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
 		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setDisputantGivenName1(randomGivenName());
 		dispute.setDisputantSurname(randomSurname());
@@ -461,6 +465,19 @@ public class RandomUtil {
 		disputeCounts.add(count);
 
 		return disputeCounts;
+	}
+
+	public static DisputantUpdateRequest createDisputantUpdateRequest(Long disputeId) {
+		return createDisputantUpdateRequest(disputeId, DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestType.DISPUTANT_NAME);
+	}
+
+	public static DisputantUpdateRequest createDisputantUpdateRequest(Long disputeId, DisputantUpdateRequestStatus status, DisputantUpdateRequestType type) {
+		DisputantUpdateRequest disputantUpdateRequest = new DisputantUpdateRequest();
+		disputantUpdateRequest.setDisputeId(disputeId);
+		disputantUpdateRequest.setStatus(status);
+		disputantUpdateRequest.setUpdateType(type);
+		disputantUpdateRequest.setUpdateJson("{\"email_address\":\"someone@somewhere.com\",\"disputant_given_name1\":\"fname1\",\"disputant_given_name2\":\"fname2\",\"disputant_given_name3\":\"fname3\",\"disputant_surname\":\"lname\",\"address_line1\":\"addr1\",\"address_line2\":\"addr2\",\"address_line3\":\"addr3\",\"address_city\":\"city\",\"address_province\":\"prov\",\"address_province_country_id\":1,\"address_province_seq_no\":1,\"address_country_id\":1,\"postal_code\":\"v9a1l8\",\"home_phone_number\":\"2505556666\"}");
+		return disputantUpdateRequest;
 	}
 
 }
