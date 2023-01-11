@@ -43,7 +43,7 @@ public class GetFileAsync : ObjectManagementServiceTest
         Assert.Equal("filename.png", actualFile.FileName);
 
         // should be only 1 meta data field
-        Assert.Equal(1, actualFile.Metadata.Count);
+        Assert.Single(actualFile.Metadata);
         Assert.Equal("picture", actualFile.Metadata["type"]);
 
         var expected = Assert.IsAssignableFrom<MemoryStream>(stream).ToArray();

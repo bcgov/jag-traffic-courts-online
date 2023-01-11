@@ -1,11 +1,16 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -18,9 +23,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,12 +33,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
-import io.swagger.v3.oas.annotations.Parameter;
 
 class DisputeControllerTest extends BaseTestSuite {
 
@@ -422,6 +427,94 @@ class DisputeControllerTest extends BaseTestSuite {
 				.andExpect(status().isNotFound());
 	}
 
+	@Test
+	public void testSaveDisputantUpdateRequest_200() throws Exception {
+		// Setup - persist a new random Dispute to the database
+		Long disputeId = saveDispute(RandomUtil.createDispute());
+		DisputantUpdateRequest disputantUpdateRequest = RandomUtil.createDisputantUpdateRequest(disputeId);
+
+		// issue a POST request, expect 200
+		Long disputantUpdateRequestId = saveDisputantUpdateRequest(disputantUpdateRequest);
+		assertNotNull(disputantUpdateRequestId);
+	}
+
+	@Test
+	public void testSaveDisputantUpdateRequest_404() throws Exception {
+		// Try to issue a POST request to create a DisputantUpdateRequest for a Dispute that doesn't exist
+		mvc.perform(MockMvcRequestBuilders
+				.post("/api/v1.0/dispute/{guid}/updateRequest", UUID.randomUUID().toString()) // random guid that doesn't exist
+				.principal(getPrincipal())
+				.content(asJsonString(RandomUtil.createDisputantUpdateRequest(Long.valueOf(1))))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	@SuppressWarnings("unused")
+	public void testGetDisputantUpdateRequests_200() throws Exception {
+		// Setup - persist a couple new random Disputes to the database along with a few DisputantUpdateRequests
+		Long disputeId1 = saveDispute(RandomUtil.createDispute());
+		Long disputeId2 = saveDispute(RandomUtil.createDispute());
+
+		Long disputantUpdateRequest1 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId1, DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestType.DISPUTANT_NAME));
+		Long disputantUpdateRequest2 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId1, DisputantUpdateRequestStatus.ACCEPTED, DisputantUpdateRequestType.DISPUTANT_ADDRESS));
+		Long disputantUpdateRequest3 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId2, DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestType.DISPUTANT_NAME));
+		Long disputantUpdateRequest4 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId2, DisputantUpdateRequestStatus.REJECTED, DisputantUpdateRequestType.DISPUTANT_PHONE));
+
+		List<DisputantUpdateRequest> results;
+
+		// Fetching for dispute 1 (filtered by status) should return the single disputantUpdateRequest1 record
+		results = getGetDisputantUpdateRequests(disputeId1, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(1, results.size());
+		assertEquals(disputantUpdateRequest1, results.get(0).getDisputantUpdateRequestId());
+
+		// Fetching for dispute 2 (filtered by status) should return the single disputantUpdateRequest3 record
+		results = getGetDisputantUpdateRequests(disputeId2, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(1, results.size());
+		assertEquals(disputantUpdateRequest3, results.get(0).getDisputantUpdateRequestId());
+
+		// Fetching for any dispute (filtered by status) should return the both disputantUpdateRequests 1 and 3 records
+		results = getGetDisputantUpdateRequests(null, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(2, results.size());
+		assertTrue(Arrays.asList(disputantUpdateRequest1, disputantUpdateRequest3).contains(results.get(0).getDisputantUpdateRequestId()));
+
+		// Fetching for a dispute that doesn't exist should just return an empty list.
+		assertFalse(Arrays.asList(disputeId1, disputeId1).contains(Long.valueOf(-1))); // assert the new ids are not -1
+		results = getGetDisputantUpdateRequests(Long.valueOf(-1), DisputantUpdateRequestStatus.PENDING);
+		assertEquals(0, results.size());
+	}
+
+	@Test
+	public void testUpdateDisputantUpdateRequest_200() throws Exception {
+		// Setup - persist a new random Dispute to the database
+		Long disputeId = saveDispute(RandomUtil.createDispute());
+		DisputantUpdateRequest disputantUpdateRequest = RandomUtil.createDisputantUpdateRequest(disputeId, DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestType.DISPUTANT_NAME);
+		Long disputantUpdateRequestId = saveDisputantUpdateRequest(disputantUpdateRequest);
+		assertNotNull(disputantUpdateRequestId);
+
+		// assert the DisputantUpdateRequest was property persisted
+		List<DisputantUpdateRequest> disputantUpdateRequests = getGetDisputantUpdateRequests(disputeId, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(1, disputantUpdateRequests.size());
+		assertEquals(disputantUpdateRequestId, disputantUpdateRequests.get(0).getDisputantUpdateRequestId());
+		assertEquals(DisputantUpdateRequestStatus.PENDING, disputantUpdateRequests.get(0).getStatus());
+		assertEquals(DisputantUpdateRequestType.DISPUTANT_NAME, disputantUpdateRequests.get(0).getUpdateType());
+
+		// issue a PUT request to update the record to ACCEPTED, expect 200
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/updateRequest/{id}", disputantUpdateRequestId)
+				.param("disputantUpdateRequestStatus", DisputantUpdateRequestStatus.ACCEPTED.toString())
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+
+		// reissue request, the returned result should have been updated.
+		disputantUpdateRequests = getGetDisputantUpdateRequests(disputeId, DisputantUpdateRequestStatus.ACCEPTED);
+		assertEquals(1, disputantUpdateRequests.size());
+		assertEquals(disputantUpdateRequestId, disputantUpdateRequests.get(0).getDisputantUpdateRequestId());
+		assertEquals(DisputantUpdateRequestStatus.ACCEPTED, disputantUpdateRequests.get(0).getStatus());
+		assertEquals(DisputantUpdateRequestType.DISPUTANT_NAME, disputantUpdateRequests.get(0).getUpdateType());
+	}
+
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
 	private Long saveDispute(Dispute dispute) {
 		return postForObject(fromUriString("/dispute"), dispute, Long.class);
@@ -471,29 +564,6 @@ class DisputeControllerTest extends BaseTestSuite {
 		return result;
 	}
 
-	/**
-	 * Issues a GET request to /api/v1.0/dispute/updateRequests. The appropriate controller is automatically called by the DispatchServlet
-	 * @throws Exception
-	 */
-	public List<DisputantUpdateRequest> getDisputantUpdateRequests(Long id, DisputantUpdateRequestStatus status) {
-		ResultActions resultActions;
-		try {
-			resultActions = mvc.perform(MockMvcRequestBuilders
-					.get("/api/v1.0/dispute/updateRequests")
-					.param("id", Long.toString(id))
-					.param("status", status == null ? null : status.name())
-					.principal(getPrincipal()))
-					.andExpect(status().isOk());
-			List<DisputantUpdateRequest> result = mapResult(resultActions, new TypeReference<List<DisputantUpdateRequest>>() {});
-			return result;
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	/**
 	 * Issues a DELETE request to /api/v1.0/dispute/{id}. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
@@ -563,6 +633,36 @@ class DisputeControllerTest extends BaseTestSuite {
 				.queryParam("issuedTime", issuedTime);
 		ResponseEntity<List<DisputeResult>> results = getForEntity(uriBuilder, new ParameterizedTypeReference<List<DisputeResult>>() {});
 		return results.getBody();
+	}
+
+	/** Issues a POST request to /api/v1.0/dispute/{guid}/updateRequest to persist a new DisputantUpdateRequest in the database */
+	private Long saveDisputantUpdateRequest(DisputantUpdateRequest disputantUpdateRequest) throws Exception {
+		// Get the guid of the corresponding Disputeid
+		Dispute dispute = getDispute(disputantUpdateRequest.getDisputeId());
+
+		// perform a POST to the controller to create an updateRequest object
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
+				.post("/api/v1.0/dispute/{guid}/updateRequest", dispute.getNoticeOfDisputeGuid())
+				.principal(getPrincipal())
+				.content(asJsonString(disputantUpdateRequest))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		return Long.valueOf(mvcResult.getResponse().getContentAsString());
+	}
+
+	/** Issues a GET request to /api/v1.0/dispute/updateRequests to retrieve all DisputantUpdateRequests per for a Dispute */
+	private List<DisputantUpdateRequest> getGetDisputantUpdateRequests(Long disputeId, DisputantUpdateRequestStatus status) throws Exception {
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/dispute/updateRequests")
+				.param("id", disputeId == null ? null : disputeId.toString())
+				.param("status", status.toString())
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+
+		List<DisputantUpdateRequest> disputantUpdateRequests = mapResult(resultActions, new TypeReference<List<DisputantUpdateRequest>>() {});
+		return disputantUpdateRequests;
 	}
 
 }

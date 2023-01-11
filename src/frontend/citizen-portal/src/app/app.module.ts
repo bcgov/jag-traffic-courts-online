@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule,} from '@angular/common/http';
+import { HttpClient, HttpClientModule, } from '@angular/common/http';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from './shared/shared.module';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
-import { AppConfigService } from './services/app-config.service';
+import { AppConfig, AppConfigService } from './services/app-config.service';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DisputeStore, reducers } from './store';
@@ -43,9 +43,9 @@ import { EmailVerificationComponent } from './components/email-verification/emai
 import { TicketLandingComponent } from './components/ticket-landing/ticket-landing.component';
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
-import { UpdateDisputeAuthComponent } from '@components/update-dispute-auth/update-dispute-auth.component';
 import { DisputantFormComponent } from '@components/disputant-form/disputant-form.component';
 import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
+import { AuthModule } from './auth/auth.module';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -73,7 +73,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketLandingComponent,
     FindDisputeComponent,
     UpdateDisputeLandingComponent,
-    UpdateDisputeAuthComponent,
     DisputantFormComponent,
     UpdateDisputeContactComponent,
   ],
@@ -103,6 +102,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     }),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([DisputeStore.Effects]),
+    AuthModule,
   ],
   exports: [
     NgBusyModule,
@@ -112,7 +112,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   providers: [
     DatePipe,
     CurrencyPipe,
-    AppConfigService,
     TicketTypePipe,
     {
       provide: STEPPER_GLOBAL_OPTIONS,
@@ -127,7 +126,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 export class AppModule {
   private availableLanguages = ['en', 'fr'];
 
-  constructor(private translateService: TranslateService) {
+  constructor(
+    private translateService: TranslateService,
+    private appConfigService: AppConfigService,
+    private appConfig: AppConfig
+  ) {
+    // Get from main.ts, no need to fetch again
+    this.appConfigService.setAppConfig(this.appConfig);
     this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);

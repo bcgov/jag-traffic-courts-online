@@ -1,9 +1,3 @@
-export interface Configuration {
-  countries: CountryCodeValue[];
-  provincesAndStates: ProvinceCodeValue[];
-  statuses: Config<number>[];
-}
-
 export class Config<T> {
   code: T;
   name: string;

@@ -1,18 +1,25 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppConfigService } from 'app/services/app-config.service';
+import { AppConfig } from 'app/services/app-config.service';
+import { AuthConfig } from 'app/auth/services/auth-config.service';
+import { forkJoin } from 'rxjs';
 
 import { AppModule } from './app/app.module';
 
-fetch('/assets/app.config.json')
-  .then((response) => response.json())
-  .then((config) => {
-    console.log('Is production?', config.production);
-    if (config.production) {
-      enableProdMode();
-    }
+forkJoin([
+  fetch('/assets/app.config.json').then((response) => response.json()),
+  fetch('/assets/auth.config.json').then((response) => response.json()),
+  fetch('/assets/oidc.config.json').then((response) => response.json()),
+]).subscribe(([appConfig, authConfig, authWellKnownDocument]) => {
+  console.log('Is production?', appConfig.production);
+  if (appConfig.production) {
+    enableProdMode();
+  }
 
-    platformBrowserDynamic([{ provide: AppConfigService, useValue: config }])
-      .bootstrapModule(AppModule)
-      .catch((err) => console.error(err));
-  });
+  platformBrowserDynamic([
+    { provide: AppConfig, useValue: appConfig },
+    { provide: AuthConfig, useValue: { config: authConfig, authWellKnownDocument } },
+  ])
+    .bootstrapModule(AppModule)
+    .catch((err) => console.error(err));
+})

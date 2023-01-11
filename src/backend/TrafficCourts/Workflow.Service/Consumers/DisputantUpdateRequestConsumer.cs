@@ -68,7 +68,8 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
                         EmailAddress = message.EmailAddress,
                         IsUpdateEmailVerification = true,
                         NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
-                        TicketNumber = dispute.TicketNumber
+                        TicketNumber = dispute.TicketNumber,
+                        DisputeId = dispute.DisputeId
                     }, context.CancellationToken);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }

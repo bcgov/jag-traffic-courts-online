@@ -100,12 +100,6 @@ export class DisputeService {
     });
   }
 
-  goToUpdateDisputeAuth(params: QueryParamsForSearch): void {
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE_AUTH)], {
-      queryParams: params,
-    })
-  }
-
   goToUpdateDisputeContact(params: QueryParamsForSearch): void {
     this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE_CONTACT)], {
       queryParams: params,
