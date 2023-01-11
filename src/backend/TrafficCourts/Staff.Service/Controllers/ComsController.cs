@@ -5,6 +5,7 @@ using System.Net;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
@@ -28,29 +29,28 @@ public class ComsController : StaffControllerBase<ComsController>
     /// <summary>
     /// Uploads and saves the provided document file in the common object management service along with metadata.
     /// </summary>
-    /// <param name="file">The file to save in the common object management service</param>
-    /// <param name="metadata">The metadata of the uploaded file to be saved including the document type</param>
+    /// <param name="fileUploadRequest">The file to save in the common object management service and the metadata of the uploaded file to be saved including the document type</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The document is successfully uploaded and saved.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
-    /// <response code="403">Forbidden, requires dispute:create permission.</response>
-    /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
+    /// <response code="403">Forbidden, requires jjdispute:update permission.</response>
+    /// <response code="500">There was a server error that prevented the file upload from completing successfully.</response>
     /// <returns>The ID of the uploaded file</returns>
-    [HttpPost]
+    [HttpPost("UploadDocument")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.Dispute, Scopes.Create)]
-    public async Task<IActionResult> UploadDocumentAsync([Required] IFormFile file, [FromBody] Dictionary<string, string> metadata, CancellationToken cancellationToken)
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
+    public async Task<IActionResult> UploadDocumentAsync([FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Uploading the document to the object storage");
 
         try
         {
-            Guid id = await _comsService.SaveFileAsync(file, metadata, cancellationToken);
+            Guid id = await _comsService.SaveFileAsync(fileUploadRequest.File, fileUploadRequest.Metadata, cancellationToken);
             return Ok(id);
         }
         catch (Coms.Client.MetadataInvalidKeyException e)
