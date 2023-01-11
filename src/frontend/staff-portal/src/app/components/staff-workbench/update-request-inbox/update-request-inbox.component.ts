@@ -123,7 +123,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   }
 
   backWorkbench(element) {
-    console.log("backworkbench");
     this.disputeInfo.emit(element);
   }
 
