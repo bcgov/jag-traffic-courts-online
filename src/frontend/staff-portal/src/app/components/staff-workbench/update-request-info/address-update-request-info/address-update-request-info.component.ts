@@ -28,7 +28,7 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.logger.log('AddressUpdateRequestInfoComponent::Constructor', this.disputantUpdateRequest);
+    this.logger.log('AddressUpdateRequestInfoComponent::Init', this.disputantUpdateRequest);
 
     try {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
@@ -36,22 +36,22 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
 
       // Get old province name
       if (this.disputeInfo.addressProvinceCountryId !== null) {
-        let oldProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.address_province_country_id && x.provSeqNo === this.updateRequested.address_province_seq_no);
+        let oldProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.AddressProvinceCountryId && x.provSeqNo === this.updateRequested.AddressProvinceSeqNo);
         if (oldProv.length >0) this.oldProvince = oldProv[0].provNm;
       } else if (this.disputeInfo.addressProvince !== null) this.oldProvince = this.disputeInfo.addressProvince;
 
       // Get new province name if needed
-      if (this.updateRequested.address_province_country_id !== null) {
-        let newProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.address_province_country_id && x.provSeqNo === this.updateRequested.address_province_seq_no);
+      if (this.updateRequested.AddressProvinceCountryId !== null) {
+        let newProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.AddressProvinceCountryId && x.provSeqNo === this.updateRequested.AddressProvinceSeqNo);
         if (newProv.length > 0) this.newProvince = newProv[0].provNm;
-      } else if (this.updateRequested.address_province !== null) this.newProvince = this.updateRequested.address_province;
+      } else if (this.updateRequested.AddressProvince !== null) this.newProvince = this.updateRequested.AddressProvince;
 
       let oldCountry = this.config.countries.filter(x => x.ctryId == this.disputeInfo.addressCountryId);
       if (oldCountry.length > 0) this.oldCountry = oldCountry[0].ctryLongNm;
 
       // Get new country name if needed
-      if (this.updateRequested.address_country_id !== null) {
-        let newCountry = this.config.countries.filter(x => x.ctryId === this.updateRequested.address_country_id);
+      if (this.updateRequested.AddressCountryId !== null) {
+        let newCountry = this.config.countries.filter(x => x.ctryId === this.updateRequested.AddressCountryId);
         if (newCountry.length > 0) this.newCountry = newCountry[0].ctryLongNm;
       }
 
@@ -59,6 +59,7 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
     catch (ex) {
       // Just dont crash, fail gracefully
       this.requestReadable = false;
+      console.error("Could not parse", this.disputantUpdateRequest.updateJson);
     }
   }
 
@@ -70,13 +71,13 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
 }
 
 export interface addressUpdateJSON {
-  address_line1?: string;
-  address_line2?: string;
-  address_line3?: string;
-  address_city?: string;
-  address_province?: string;
-  address_province_country_id?: number;
-  address_province_seq_no?: number;
-  address_country_id?: number;
-  postal_code?: string;
+  AddressLine1?: string;
+  AddressLine2?: string;
+  AddressLine3?: string;
+  AddressCity?: string;
+  AddressProvince?: string;
+  AddressProvinceCountryId?: number;
+  AddressProvinceSeqNo?: number;
+  AddressCountryId?: number;
+  PostalCode?: string;
 }

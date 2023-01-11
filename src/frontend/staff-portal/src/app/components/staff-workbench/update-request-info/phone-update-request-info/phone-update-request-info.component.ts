@@ -22,7 +22,7 @@ export class PhoneUpdateRequestInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.logger.log('PhoneUpdateRequestInfoComponent::Constructor', this.disputantUpdateRequest);
+    this.logger.log('PhoneUpdateRequestInfoComponent::Init', this.disputantUpdateRequest);
 
     try {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
@@ -42,5 +42,5 @@ export class PhoneUpdateRequestInfoComponent implements OnInit {
 }
 
 export interface phoneUpdateJSON {
-  home_phone_number: string;
+  HomePhoneNumber: string;
 }

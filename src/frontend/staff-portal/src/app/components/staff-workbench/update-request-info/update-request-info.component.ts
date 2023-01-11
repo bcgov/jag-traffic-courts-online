@@ -80,7 +80,6 @@ export class UpdateRequestInfoComponent implements OnInit {
       }
 
       if (this.retrieving === true) this.getDisputeUpdateRequests(this.initialDisputeValues.disputeId);
-
     });
   }
 

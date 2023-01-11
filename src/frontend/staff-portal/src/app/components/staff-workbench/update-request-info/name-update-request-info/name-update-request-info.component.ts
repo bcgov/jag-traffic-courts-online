@@ -22,7 +22,7 @@ export class NameUpdateRequestInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.logger.log('NameUpdateRequestInfoComponent::Constructor', this.disputantUpdateRequest);
+    this.logger.log('NameUpdateRequestInfoComponent::Init', this.disputantUpdateRequest);
 
     try {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
@@ -42,8 +42,8 @@ export class NameUpdateRequestInfoComponent implements OnInit {
 }
 
 export interface nameUpdateJSON {
-  disputant_surname?: string;
-  disputant_given_name1?: string;
-  disputant_given_name2?: string;
-  disputant_given_name3?: string;
+  DisputantSurname?: string;
+  DisputantGivenName1?: string;
+  DisputantGivenName2?: string;
+  DisputantGivenName3?: string;
 }
