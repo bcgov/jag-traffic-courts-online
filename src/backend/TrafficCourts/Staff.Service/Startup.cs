@@ -62,6 +62,7 @@ public static class Startup
         builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
         builder.Services.AddTransient<IEmailHistoryService, EmailHistoryService>();
         builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
+        builder.Services.AddTransient<IComsService, ComsService>();
 
         // staff service should not be creating emails, should send messages for workflow
         builder.Services.AddEmailTemplates();
