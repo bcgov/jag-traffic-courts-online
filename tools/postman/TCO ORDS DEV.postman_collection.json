@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "61624821-f33b-4889-9ae0-e74fa85fb468",
+		"_postman_id": "c9512c6f-66f5-4409-9a2d-430520063056",
 		"name": "TCO ORDS DEV",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "535849"
 	},
 	"item": [
 		{
@@ -33,6 +34,108 @@
 			"response": []
 		},
 		{
+			"name": "AppearanceChargeCountList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/appearanceChargeCountList?ticketNumber=EA90100004",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"appearanceChargeCountList"
+					],
+					"query": [
+						{
+							"key": "ticketNumber",
+							"value": "EA90100004"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AppearanceChargeCount",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"appearanceChargeCountId\": 25,\r\n    \"courtAppearanceId\": 5,\r\n    \"disputeCountId\": 1,\r\n    \"findingResultCd\": \"findingResultCd\",\r\n    \"lesserChargeDescTxt\": \"lesserChargeDescTxt\",\r\n    \"suspSntcProbationDurtnTxt\": \"suspSntcProbationDurtnTxt\",\r\n    \"suspSntcProbationCondsTxt\": \"suspSntcProbationCondsTxt\",\r\n    \"jailDurationTxt\": \"jailDurationTxt\",\r\n    \"jailIntermittentYn\": \"Y\",\r\n    \"probationDurationTxt\": \"probationDurationTxt\",\r\n    \"probationConditionsTxt\": \"probationConditionsTxt\",\r\n    \"drivingProhibDurationTxt\": \"drivingProhibDurationTxt\",\r\n    \"drivingProhibMvaSectionTxt\": \"drivingProhibMvaSectionTxt\",\r\n    \"dismissedYn\": \"Y\",\r\n    \"dismissedForWantProsecYn\": \"Y\",\r\n    \"withdrawnYn\": \"N\",\r\n    \"abatementYn\": \"N\",\r\n    \"stayOfProceedingsByTxt\": \"stayOfProceedingsByTxt\",\r\n    \"otherTxt\": \"otherTxt\",\r\n    \"remarksTxt\": \"remarksTxt\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/updateAppearanceChargeCount",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"updateAppearanceChargeCount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CourtAppearanceList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/courtAppearanceList?disputeId=13",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"courtAppearanceList"
+					],
+					"query": [
+						{
+							"key": "disputeId",
+							"value": "13"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CourtAppearanceUpdate",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"courtAppearanceId\": 5,\r\n    \"appearanceDtm\": \"2022-12-14T07:12:27Z\",\r\n    \"courtroomNumberTxt\": \"courtroomNumberTxt\",\r\n    \"appearanceReasonTxt\": \"appearanceReasonTxt\",\r\n    \"disputantPresenceCd\": \"disputantPresenceCd\",\r\n    \"disputantNotPresentDtm\": \"2022-12-14T07:12:27Z\",\r\n    \"recordingClerkNameTxt\": \"recordingClerkNameTxt\",\r\n    \"defenceCounselNameTxt\": \"defenceCounselNameTxt\",\r\n    \"crownPresenceCd\": \"C\",\r\n    \"seizedYn\": \"Y\",\r\n    \"judgeOrJjNameTxt\": \"judgeOrJjNameTxt\",\r\n    \"commentsTxt\": \"commentsTxt\",\r\n    \"defenceCounselPresenceCd\": \"C\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/updateCourtAppearance",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"updateCourtAppearance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "jjDisputeList",
 			"request": {
 				"method": "GET",
@@ -49,15 +152,15 @@
 					"query": [
 						{
 							"key": "justinRccId",
-							"value": null
+							"value": ""
 						},
 						{
 							"key": "violationTicketId",
-							"value": null
+							"value": ""
 						},
 						{
 							"key": "ticketNumber",
-							"value": null
+							"value": ""
 						}
 					]
 				}
@@ -83,6 +186,33 @@
 							"key": "ticketNumber",
 							"value": "EA90100004"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "jjDisputeRemark",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"disputeId\": 25,\r\n    \"disputeRemarkTxt\": \"This is a test remark\",\r\n    \"fullUserNameTxt\": \"John Smith\",\r\n    \"remarksMadeDtm\": \"2022-12-14T07:12:27Z\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/processDisputeRemark",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"processDisputeRemark"
 					]
 				}
 			},
@@ -132,15 +262,15 @@
 					"query": [
 						{
 							"key": "disputeId",
-							"value": null
+							"value": ""
 						},
 						{
 							"key": "statusCd",
-							"value": null
+							"value": ""
 						},
 						{
 							"key": "userId",
-							"value": null
+							"value": ""
 						}
 					]
 				}
@@ -164,11 +294,11 @@
 					"query": [
 						{
 							"key": "disputeId",
-							"value": null
+							"value": ""
 						},
 						{
 							"key": "userId",
-							"value": null
+							"value": ""
 						}
 					]
 				}
@@ -192,11 +322,11 @@
 					"query": [
 						{
 							"key": "disputeId",
-							"value": null
+							"value": ""
 						},
 						{
 							"key": "userId",
-							"value": null
+							"value": ""
 						}
 					]
 				}
