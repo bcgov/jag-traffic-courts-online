@@ -25,7 +25,7 @@ public class ComsService : IComsService
     {
         _logger.LogDebug("Saving file through COMS");
 
-        var stream = GetStreamForFile(file);
+        using var stream = GetStreamForFile(file);
 
         Coms.Client.File comsFile = new(stream, file.FileName, file.ContentType, metadata, null);
 
