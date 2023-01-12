@@ -24,6 +24,8 @@ internal class ObjectManagementService : IObjectManagementService
             throw new ArgumentException("Data is required for creating file", nameof(file));
         }
 
+        _logger.LogDebug("Creating file");
+
         MetadataValidator.Validate(file.Metadata);
         TagValidator.Validate(file.Tags);
 
@@ -45,7 +47,9 @@ internal class ObjectManagementService : IObjectManagementService
                 _logger.LogWarning("{Count} created objects were returned, expecting only 1. Returning the first object id.", created.Count);
             }
 
-            return created[0].Id;
+            Guid id = created[0].Id;
+            _logger.LogDebug("Created file {FileId}", id);
+            return id;
         }
         catch (Exception exception)
         {
@@ -55,10 +59,19 @@ internal class ObjectManagementService : IObjectManagementService
 
     public async Task DeleteFileAsync(Guid id, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("Deleting file {FileId}", id);
+
         try
         {
             ResponseObjectDeleted response = await _client.DeleteObjectAsync(id, versionId: null, cancellationToken)
                 .ConfigureAwait(false);
+
+            _logger.LogDebug("File deleted {FileId}", id);
+        }
+        catch (ApiException<ResponseError> exception) when (exception.Result.Detail == "NotFoundError")
+        {
+            // it is ok if the specific file not found
+            _logger.LogDebug("File not found {FileId}", id);
         }
         catch (Exception exception)
         {
@@ -70,6 +83,8 @@ internal class ObjectManagementService : IObjectManagementService
 
     public async Task<File> GetFileAsync(Guid id, bool includeTags, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("Getting file {FileId}", id);
+
         try
         {
             FileResponse response = await _client.ReadObjectAsync(id, DownloadMode.Proxy, expiresIn: null, versionId: null, cancellationToken)
@@ -102,6 +117,8 @@ internal class ObjectManagementService : IObjectManagementService
     public async Task<List<FileSearchResult>> FileSearchAsync(FileSearchParameters parameters, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(parameters);
+
+        _logger.LogDebug("Searching for files");
 
         MetadataValidator.Validate(parameters.Metadata);
         TagValidator.Validate(parameters.Tags);
@@ -136,7 +153,7 @@ internal class ObjectManagementService : IObjectManagementService
                     file.Public,
                     file.CreatedBy,
                     file.CreatedAt,
-                    file.UpdatedBy,
+                    file.UpdatedBy ?? Guid.Empty,
                     file.UpdatedAt,
                     metadata,
                     tags);
@@ -160,6 +177,9 @@ internal class ObjectManagementService : IObjectManagementService
         {
             throw new ArgumentException("Data is required for updating a file", nameof(file));
         }
+
+        _logger.LogDebug("Updating file");
+
 
         MetadataValidator.Validate(file.Metadata);
         TagValidator.Validate(file.Tags);
