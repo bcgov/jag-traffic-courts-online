@@ -173,7 +173,7 @@ namespace TrafficCourts.Coms.Client
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UpdatedBy { get; set; } = default!;
+        public System.Guid? UpdatedBy { get; set; } = default!;
 
         /// <summary>
         /// Time when this record was last updated
