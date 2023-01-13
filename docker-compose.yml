@@ -59,7 +59,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       ASPNETCORE_URLS: http://*:8080
       ORACLEDATAAPI__BASEURL: ${ORACLEDATAAPI__BASEURL:-http://oracle-data-api:8080/}
-      COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000/api/v1}
+      COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
       COMS__USERNAME: ${COMS__USERNAME:-username}
       COMS__PASSWORD: ${COMS__PASSWORD:-password}
       MASSTRANSIT__TRANSPORT: ${MASSTRANSIT__TRANSPORT:-RabbitMq}
