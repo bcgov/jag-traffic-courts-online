@@ -30,6 +30,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(guid);
@@ -45,12 +46,33 @@ public class ComsControllerTest
     }
 
     [Fact]
+    public async void TestUploadDocumentMissingTicketnumberMetadataThrows400result()
+    {
+        // Arrange
+        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var comsService = new Mock<IComsService>();
+        Guid guid = Guid.NewGuid();
+        var mockLogger = new Mock<ILogger<ComsController>>();
+        ComsController comsController = new(comsService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+
+        // Assert
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        Assert.Equal((int)HttpStatusCode.BadRequest, problemDetails.Status);
+        Assert.True(problemDetails?.Title?.Contains("Metadata Key does not contain ticketnumber"));
+    }
+
+    [Fact]
     public async void TestUploadDocumentThrowsMetadataInvalidKeyException400result()
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataInvalidKeyException(It.IsAny<string>()));
@@ -74,6 +96,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataTooLongException());
@@ -97,6 +120,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyEmptyException(It.IsAny<string>()));
@@ -120,6 +144,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyTooLongException(It.IsAny<string>()));
@@ -143,6 +168,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagValueTooLongException(It.IsAny<string>(), It.IsAny<string>()));
@@ -166,6 +192,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TooManyTagsException(It.IsAny<int>()));
@@ -189,6 +216,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
+        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
