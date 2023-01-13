@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Staff.Service.Authentication;
@@ -40,10 +41,22 @@ public class ComsController : StaffControllerBase<ComsController>
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
+    //[KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
+    [AllowAnonymous]
     public async Task<IActionResult> UploadDocumentAsync([FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Uploading the document to the object storage");
+
+        if (!fileUploadRequest.Metadata.ContainsKey("ticketnumber"))
+        {
+            _logger.LogError("Could not upload a document because metadata does not contain the key: ticketnumber");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.BadRequest;
+            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticketnumber";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+
+            return new ObjectResult(problemDetails);
+        }
 
         try
         {
@@ -52,11 +65,12 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Coms.Client.MetadataInvalidKeyException e)
         {
-            _logger.LogError(e, "Coms.Client.MetadataInvalidKeyException");
+            var key = e.Key ?? "is null";
+            _logger.LogError(e, "Could not upload a document because a metadata {Key} was invalid", key);
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
             problemDetails.Title = e.Source + ": Exception Invoking COMS - Invalid Metadata Key";
-            problemDetails.Detail = "Invalid Key: " + e.Key;
+            problemDetails.Detail = "Invalid Key: " + key;
             problemDetails.Instance = HttpContext?.Request?.Path;
             problemDetails.Extensions.Add("errors", e.Message);
 
@@ -64,7 +78,7 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Coms.Client.MetadataTooLongException e)
         {
-            _logger.LogError(e, "Coms.Client.MetadataTooLongException");
+            _logger.LogError(e, "Could not upload a document because metadata was too long");
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
             problemDetails.Title = e.Source + ": Exception Invoking COMS - Metadata Too Long";
@@ -75,7 +89,7 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Coms.Client.TagKeyEmptyException e)
         {
-            _logger.LogError(e, "Coms.Client.TagKeyEmptyException");
+            _logger.LogError(e, "Could not upload a document because tag key was empty");
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
             problemDetails.Title = e.Source + ": Exception Invoking COMS - Tag Key Empty";
@@ -86,11 +100,12 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Coms.Client.TagKeyTooLongException e)
         {
-            _logger.LogError(e, "Coms.Client.TagKeyTooLongException");
+            var key = e.Key ?? "is null";
+            _logger.LogError(e, "Could not upload a document because a tag {Key} was too long", key);
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
             problemDetails.Title = e.Source + ": Exception Invoking COMS - Tag Key Too Long";
-            problemDetails.Detail = "Invalid Key: " + e.Key;
+            problemDetails.Detail = "Invalid Key: " + key;
             problemDetails.Instance = HttpContext?.Request?.Path;
             problemDetails.Extensions.Add("errors", e.Message);
 
@@ -98,11 +113,13 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Coms.Client.TagValueTooLongException e)
         {
-            _logger.LogError(e, "Coms.Client.TagValueTooLongException");
+            var key = e.Key ?? "is null";
+            var value = e.Value ?? "is null";
+            _logger.LogError(e, "Could not upload a document because tag {Value} was too long", value);
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
             problemDetails.Title = e.Source + ": Exception Invoking COMS - Tag Value Too Long";
-            problemDetails.Detail = "Tag value: " + e.Value + " is too long for Key: " + e.Key;
+            problemDetails.Detail = "Tag value: " + value + " is too long for Key: " + key;
             problemDetails.Instance = HttpContext?.Request?.Path;
             problemDetails.Extensions.Add("errors", e.Message);
 
@@ -110,7 +127,7 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Coms.Client.TooManyTagsException e)
         {
-            _logger.LogError(e, "Coms.Client.TooManyTagsException");
+            _logger.LogError(e, "Could not upload a document because there were too many tags. TagCount: {Count}", e.TagCount);
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
             problemDetails.Title = e.Source + ": Exception Invoking COMS - Too Many Tags";
@@ -122,7 +139,7 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Coms.Client.ObjectManagementServiceException e)
         {
-            _logger.LogError(e, "Coms.Client.ObjectManagementServiceException");
+            _logger.LogError(e, "Could not upload a document because of ObjectManagementServiceException");
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.InternalServerError;
             problemDetails.Title = e.Source + ": Error Invoking COMS";
