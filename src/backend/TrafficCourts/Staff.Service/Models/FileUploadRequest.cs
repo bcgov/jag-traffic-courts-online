@@ -39,7 +39,9 @@ public class DictionaryBinder<TKey, TValue> : IModelBinder
         if (bindingContext.HttpContext.Request.HasFormContentType)
         {
             var form = bindingContext.HttpContext.Request.Form;
-            var data = JsonSerializer.Deserialize<Dictionary<TKey, TValue>>(form[bindingContext.FieldName]);
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+            var data = JsonSerializer.Deserialize<Dictionary<TKey, TValue>>(form[bindingContext.FieldName]!);
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
             bindingContext.Result = ModelBindingResult.Success(data);
         }
 
