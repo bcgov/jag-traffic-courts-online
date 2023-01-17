@@ -1,6 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.h2;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,8 +19,8 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaRepository<JJDispute, String> {
 
 	@Override
-	@Query("select jj from JJDispute jj where jj.ticketNumber = :ticketNumber and hour(jj.violationDate) = hour(:violationTime) and minute(jj.violationDate) = minute(:violationTime)")
-	public List<JJDispute> findByTicketNumberAndTime(@Param(value = "ticketNumber") String ticketNumber, @Param(value = "violationTime") Date violationTime);
+	@Query("select jj from JJDispute jj where jj.ticketNumber = :ticketNumber")
+	public List<JJDispute> findByTicketNumber(@Param(value = "ticketNumber") String ticketNumber);
 
 	@Override
 	@Modifying(clearAutomatically = true)

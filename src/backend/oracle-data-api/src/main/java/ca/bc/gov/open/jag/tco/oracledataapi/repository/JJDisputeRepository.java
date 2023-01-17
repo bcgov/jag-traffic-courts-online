@@ -36,8 +36,8 @@ public interface JJDisputeRepository {
 	 */
 	public Optional<JJDispute> findById(String id);
 
-	/** Fetch all records that match by JJDispute.ticketNumber and the time portion of the JJDispute.violationDate. */
-	public List<JJDispute> findByTicketNumberAndTime(String ticketNumber, Date violationTime);
+	/** Fetch all records that match by JJDispute.ticketNumber (should only ever be one). */
+	public List<JJDispute> findByTicketNumber(String ticketNumber);
 
 	/**
 	 * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the entity instance completely.

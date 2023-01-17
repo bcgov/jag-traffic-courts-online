@@ -43,7 +43,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
-	public List<JJDispute> findByTicketNumberAndTime(String ticketNumber, Date violationTime) {
+	public List<JJDispute> findByTicketNumber(String ticketNumber) {
 		throw new NotYetImplementedException();
 	}
 

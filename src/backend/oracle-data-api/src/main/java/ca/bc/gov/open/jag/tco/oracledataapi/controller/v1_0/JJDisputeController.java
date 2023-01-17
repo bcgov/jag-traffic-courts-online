@@ -1,7 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Pattern;
@@ -10,7 +9,6 @@ import javax.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +24,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -66,7 +63,6 @@ public class JJDisputeController {
 	 * GET endpoint that retrieves all the jj disputes optionally filtered by jjAssignedTo from the database
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
 	 * @param ticketNumber (Optional). Used with ViolationTime, if specified will filter by TicketNumber. (Format is XX00000000)
-	 * @param violationTime (Optional). Used with TicketNumber, if specified, will filter by the time portion of the ViolationDate field. (Format is HH:mm)
 	 * @return list of all jj disputes
 	 */
 	@GetMapping("/disputes")
@@ -76,15 +72,11 @@ public class JJDisputeController {
 			String jjAssignedTo,
 			@RequestParam(required = false)
 			@Pattern(regexp = "[A-Z]{2}\\d{8}")
-			@Parameter(description = "(Optional) Used with ViolationTime, if specified will filter by TicketNumber. (Format is XX00000000)", example = "AX12345678")
-			String ticketNumber,
-			@RequestParam(required = false)
-			@DateTimeFormat(pattern="HH:mm")
-			@Parameter(description = "(Optional) Used with TicketNumber, if specified, will filter by the time portion of the ViolationDate field. (Format is HH:mm)", example = "14:53", schema = @Schema(type="string"))
-			Date violationTime) {
+			@Parameter(description = "If specified will filter by TicketNumber. (Format is XX00000000)", example = "AX12345678")
+			String ticketNumber) {
 		logger.debug("getAllJJDisputes called");
 
-		return jjDisputeService.getJJDisputes(jjAssignedTo, ticketNumber, violationTime);
+		return jjDisputeService.getJJDisputes(jjAssignedTo, ticketNumber);
 	}
 
 	/**
