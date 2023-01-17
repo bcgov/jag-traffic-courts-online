@@ -188,10 +188,14 @@ public class RandomUtil {
 	public static Dispute createDispute() {
 		Dispute dispute = new Dispute();
 		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
+		dispute.setTicketNumber(randomTicketNumber());
 		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setDisputantGivenName1(randomGivenName());
 		dispute.setDisputantSurname(randomSurname());
-		dispute.setViolationTicket(new ViolationTicket());
+
+		ViolationTicket violationTicket = new ViolationTicket();
+		violationTicket.setTicketNumber(dispute.getTicketNumber());
+		dispute.setViolationTicket(violationTicket);
 		return dispute;
 	}
 

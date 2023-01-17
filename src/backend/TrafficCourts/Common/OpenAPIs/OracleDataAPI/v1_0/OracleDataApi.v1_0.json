@@ -1017,21 +1017,13 @@
           {
             "name": "ticketNumber",
             "in": "query",
-            "description": "(Optional) Used with ViolationTime, if specified will filter by TicketNumber. (Format is XX00000000)",
+            "description": "If specified will filter by TicketNumber. (Format is XX00000000)",
             "required": false,
             "schema": {
               "pattern": "[A-Z]{2}\\d{8}",
               "type": "string"
             },
             "example": "AX12345678"
-          },
-          {
-            "name": "violationTime",
-            "in": "query",
-            "description": "(Optional) Used with TicketNumber, if specified, will filter by the time portion of the ViolationDate field. (Format is HH:mm)",
-            "required": false,
-            "schema": { "type": "string" },
-            "example": "14:53"
           }
         ],
         "responses": {
@@ -1258,7 +1250,7 @@
       "get": {
         "tags": [ "dispute-controller" ],
         "summary": "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.",
-        "operationId": "findDispute",
+        "operationId": "findDisputeStatuses",
         "parameters": [
           {
             "name": "ticketNumber",

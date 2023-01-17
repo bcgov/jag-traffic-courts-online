@@ -22,9 +22,9 @@ export class AppRoutes {
 
   // Base
   public static EMAILVERIFICATIONREQUIRED = 'email/verification';
-  public static EMAILVERIFICATION = 'email/verify';
+  public static EMAILVERIFICATION = 'email/verify/:token'; //start from external, better use angular route params instead of query string
   public static SUBMIT_SUCCESS = 'submitted';
-
+  
   public static disputePath(route: string): string {
     return `/${AppRoutes.DISPUTE_MODULE_PATH}/${route}`;
   }

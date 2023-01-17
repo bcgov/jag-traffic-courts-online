@@ -42,7 +42,7 @@
 
 //    private Uri CreateEmailVerificationUrl(SendEmailVerificationEmail data)
 //    {
-//        // https://tickets.gov.bc.ca/email/verify?token={token}
+//        // https://tickets.gov.bc.ca/email/verify/{token}
 
 //        var format = _emailConfiguration.EmailVerificationUrl;
 //        if (string.IsNullOrEmpty(format))
@@ -53,7 +53,7 @@
 //        }
 
 //        var token = _encoder.Encode(new DisputeEmailVerificationToken { NoticeOfDisputeGuid = data.NoticeOfDisputeGuid, Token = data.Token });
-//        string uri = format + "?token=" + token;
+//        string uri = format + "/" + token;
 
 //        return new Uri(uri);
 //    }

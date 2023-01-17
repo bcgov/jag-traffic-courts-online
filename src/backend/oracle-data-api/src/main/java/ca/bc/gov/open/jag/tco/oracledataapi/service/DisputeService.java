@@ -347,7 +347,7 @@ public class DisputeService {
 	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs, or by noticeOfDisputeGuid if specified.
 	 * @param noticeOfDisputeGuid
 	 */
-	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime, String noticeOfDisputeGuid) {
+	public List<DisputeResult> findDisputeStatuses(String ticketNumber, Date issuedTime, String noticeOfDisputeGuid) {
 		List<DisputeResult> disputeResults = new ArrayList<DisputeResult>();
 
 		// if noticeOfDisputeGuid is specified, use that
@@ -364,11 +364,11 @@ public class DisputeService {
 		}
 
 		if (CollectionUtils.isNotEmpty(disputeResults)) {
-			// If we have at least on Dispute, find the associated JJDispute to add the jjDisputeStatus and JJDisputeHearingType
-			List<JJDispute> jjDisputeResults = jjDisputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
+			// If we have at least one Dispute, find the associated JJDispute to add the jjDisputeStatus and JJDisputeHearingType
+			List<JJDispute> jjDisputeResults = jjDisputeRepository.findByTicketNumber(ticketNumber);
 			if (CollectionUtils.isNotEmpty(jjDisputeResults)) {
 				if (jjDisputeResults.size() > 1) {
-					logger.error("More than one JJDispute found for TicketNumber '{}' and IssuedTime '{}'", ticketNumber, DateUtil.formatAsHourMinuteUTC(issuedTime));
+					logger.error("More than one JJDispute found for TicketNumber '{}'", ticketNumber, DateUtil.formatAsHourMinuteUTC(issuedTime));
 				}
 				JJDispute jjDispute = jjDisputeResults.get(0);
 				for (DisputeResult disputeResult : disputeResults) {

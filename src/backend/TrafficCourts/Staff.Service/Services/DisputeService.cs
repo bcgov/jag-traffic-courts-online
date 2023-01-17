@@ -301,7 +301,7 @@ public class DisputeService : IDisputeService
 
                     // Check for future court hearing date
                     disputeWithUpdates.HearingDate = null;
-                    ICollection<JJDispute> jjDisputes = await _oracleDataApi.GetJJDisputesAsync(null, dispute.TicketNumber, null, cancellationToken);
+                    ICollection<JJDispute> jjDisputes = await _oracleDataApi.GetJJDisputesAsync(null, dispute.TicketNumber, cancellationToken);
                     if (jjDisputes != null && jjDisputes.Count > 0)
                     {
                         // review first one

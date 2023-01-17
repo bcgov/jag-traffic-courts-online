@@ -51,14 +51,13 @@ public class JJDisputeService {
 	 * Retrieves all {@link JJDispute} records, delegating to CrudRepository
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
 	 * @param ticketNumber if specified, will filter results by JJDispute.ticketNumber
-	 * @param violationTime if specified, will filter results by the time portion of JJDispute.violationDate
 	 * @return
 	 */
-	public List<JJDispute> getJJDisputes(String jjAssignedTo, String ticketNumber, Date violationTime) {
+	public List<JJDispute> getJJDisputes(String jjAssignedTo, String ticketNumber) {
 		if (!StringUtils.isBlank(jjAssignedTo)) {
 			return jjDisputeRepository.findByJjAssignedToIgnoreCase(jjAssignedTo);
-		} else if (!StringUtils.isBlank(ticketNumber) || violationTime != null) {
-			return jjDisputeRepository.findByTicketNumberAndTime(ticketNumber, violationTime);
+		} else if (!StringUtils.isBlank(ticketNumber)) {
+			return jjDisputeRepository.findByTicketNumber(ticketNumber);
 		} else {
 			return (List<JJDispute>) jjDisputeRepository.findAll();
 		}

@@ -345,19 +345,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task<long> SaveDisputantUpdateRequestAsync(string guid, DisputantUpdateRequest body, System.Threading.CancellationToken cancellationToken);
 
         /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
-        /// <param name="ticketNumber">(Optional) Used with ViolationTime, if specified will filter by TicketNumber. (Format is XX00000000)</param>
-        /// <param name="violationTime">(Optional) Used with TicketNumber, if specified, will filter by the time portion of the ViolationDate field. (Format is HH:mm)</param>
+        /// <param name="ticketNumber">If specified will filter by TicketNumber. (Format is XX00000000)</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
-        /// <param name="ticketNumber">(Optional) Used with ViolationTime, if specified will filter by TicketNumber. (Format is XX00000000)</param>
-        /// <param name="violationTime">(Optional) Used with TicketNumber, if specified, will filter by the time portion of the ViolationDate field. (Format is HH:mm)</param>
+        /// <param name="ticketNumber">If specified will filter by TicketNumber. (Format is XX00000000)</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, System.Threading.CancellationToken cancellationToken);
 
         /// <param name="id">The primary key of the jj dispute to retrieve</param>
         /// <returns>OK</returns>
@@ -437,7 +435,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -448,7 +446,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves Dispute by the noticeOfDisputeGuid (UUID).
@@ -3367,22 +3365,20 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         }
 
         /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
-        /// <param name="ticketNumber">(Optional) Used with ViolationTime, if specified will filter by TicketNumber. (Format is XX00000000)</param>
-        /// <param name="violationTime">(Optional) Used with TicketNumber, if specified, will filter by the time portion of the ViolationDate field. (Format is HH:mm)</param>
+        /// <param name="ticketNumber">If specified will filter by TicketNumber. (Format is XX00000000)</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber)
         {
-            return GetJJDisputesAsync(jjAssignedTo, ticketNumber, violationTime, System.Threading.CancellationToken.None);
+            return GetJJDisputesAsync(jjAssignedTo, ticketNumber, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
-        /// <param name="ticketNumber">(Optional) Used with ViolationTime, if specified will filter by TicketNumber. (Format is XX00000000)</param>
-        /// <param name="violationTime">(Optional) Used with TicketNumber, if specified, will filter by the time portion of the ViolationDate field. (Format is HH:mm)</param>
+        /// <param name="ticketNumber">If specified will filter by TicketNumber. (Format is XX00000000)</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, string violationTime, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1.0/jj/disputes?");
@@ -3393,10 +3389,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
             if (ticketNumber != null)
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            }
-            if (violationTime != null)
-            {
-                urlBuilder_.Append(System.Uri.EscapeDataString("violationTime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(violationTime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 
@@ -4017,9 +4009,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid)
         {
-            return FindDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, System.Threading.CancellationToken.None);
+            return FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -4031,7 +4023,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="noticeOfDisputeGuid">The noticeOfDisputeGuid of the Dispute to retreive.</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1.0/dispute/status?");

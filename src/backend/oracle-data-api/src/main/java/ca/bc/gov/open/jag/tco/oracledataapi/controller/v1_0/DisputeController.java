@@ -110,7 +110,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Search failed.")
 	})
 	@GetMapping("/dispute/status")
-	public ResponseEntity<List<DisputeResult>> findDispute(
+	public ResponseEntity<List<DisputeResult>> findDisputeStatuses(
 			@RequestParam(required = false)
 			@Pattern(regexp = "^$|([A-Z]{2}\\d{8})")
 			@Parameter(description = "The Dispute.ticketNumber to search for (of the format XX00000000)", example = "AX12345678")
@@ -132,7 +132,7 @@ public class DisputeController {
 		else if (StringUtils.isBlank(ticketNumber) && issuedTime != null) {
 			throw new IllegalArgumentException("If issuedTime is specified, so must ticketNumber.");
 		}
-		List<DisputeResult> results = disputeService.findDispute(ticketNumber, issuedTime, noticeOfDisputeGuid);
+		List<DisputeResult> results = disputeService.findDisputeStatuses(ticketNumber, issuedTime, noticeOfDisputeGuid);
 		logger.debug("  found {} record(s).", results.size());
 		return new ResponseEntity<List<DisputeResult>>(results, HttpStatus.OK);
 	}
