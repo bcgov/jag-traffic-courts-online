@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit.Abstractions;
 
 namespace TrafficCourts.Coms.Client.Test
@@ -18,6 +19,7 @@ namespace TrafficCourts.Coms.Client.Test
         private readonly ITestOutputHelper _output;
         private ObjectManagementClient _client;
         private CancellationToken _cancellationToken = CancellationToken.None;
+        private ObjectManagementService _service;
 
         public IntegrationTest(ITestOutputHelper output)
         {
@@ -32,14 +34,25 @@ namespace TrafficCourts.Coms.Client.Test
             var httpClient = new HttpClient { BaseAddress = new Uri(baseUrl) };
             httpClient.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(username, password);
 
+            // create client 
             _client = new ObjectManagementClient(httpClient);
             _client.BaseUrl = baseUrl;
+            _client.ReadResponseAsString = true; // make it easier to debug
             _output = output;
+
+            // create service 
+            var factory = new MemoryStreamFactory(() => new MemoryStream());
+            _service = new ObjectManagementService(_client, factory, Mock.Of<ILogger<ObjectManagementService>>());
         }
 
-        [IntegrationTestFact]
-        public async Task create_and_delete()
+        #region ObjectManagementClient
+        [IntegrationTestTheory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task create_and_delete(bool readResponseAsString)
         {
+            _client.ReadResponseAsString = readResponseAsString;
+
             Guid expected = Guid.NewGuid();
 
             var file = new FileParameter(new MemoryStream(expected.ToByteArray()), "integration.test");
@@ -60,15 +73,22 @@ namespace TrafficCourts.Coms.Client.Test
         [MemberData(nameof(ObjectsToDelete))]
         public async Task delete_objects(Guid id)
         {
+            // this should throw ApiException<ResponseError> with Detail = "NotFoundError"
+            // if the source file does not exist
             await _client.DeleteObjectAsync(id, null, _cancellationToken);
         }
 
-        [IntegrationTestFact]
-        public async Task create_read_and_delete()
+        [IntegrationTestTheory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task create_read_and_delete(bool readResponseAsString)
         {
+            _client.ReadResponseAsString = readResponseAsString;           
+
             Guid expected = Guid.NewGuid();
 
             var file = new FileParameter(new MemoryStream(expected.ToByteArray()), "integration.test");
+            _client.ReadResponseAsString = true; // make it easier troubleshoot reading the responses
             ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, file, CancellationToken.None);
 
             _output.WriteLine("Created: ");
@@ -83,7 +103,7 @@ namespace TrafficCourts.Coms.Client.Test
 
                 Assert.Equal(expected, actual);
 
-                await _client.DeleteObjectAsync(item.Id, null, _cancellationToken);
+                //await _client.DeleteObjectAsync(item.Id, null, _cancellationToken);
             }
         }
 
@@ -91,8 +111,45 @@ namespace TrafficCourts.Coms.Client.Test
         {
             get
             {
-                yield return new object[] { new Guid("300f1a55-66f3-40dc-a1f6-326b05ccbbd2") };
+                yield return new object[] { new Guid("a56bd633-c826-4043-a29c-a40f1529f57b") };
             }
         }
+        #endregion
+
+        #region ObjectManagementService
+        [IntegrationTestFact]
+        public async Task create_file_from_service()
+        {
+            Guid expectedData = Guid.NewGuid();
+
+            string filename = $"test-{expectedData.ToString("n")[0..6]}.bin";
+            File expectedFile = new File(new MemoryStream(expectedData.ToByteArray()), filename, "a/b");
+
+            for (int i = 0; i < 5; i++)
+            {
+                expectedFile.Metadata.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
+                expectedFile.Tags.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
+            }
+
+            var id = await _service.CreateFileAsync(expectedFile, _cancellationToken);
+
+            using var actualFile = await _service.GetFileAsync(id, false, _cancellationToken);
+
+            await _service.DeleteFileAsync(id, _cancellationToken);
+
+            //Assert.Equal(expectedData.ToByteArray(), actualFile.Data);
+        }
+
+
+        [IntegrationTestTheory]
+        [MemberData(nameof(ObjectsToDelete))]
+        public async Task delete_objects_from_service(Guid id)
+        {
+            await _service.DeleteFileAsync(id, _cancellationToken);
+        }
+
+
+
+        #endregion
     }
 }

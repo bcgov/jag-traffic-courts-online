@@ -1,39 +1,45 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
-import io.swagger.v3.oas.annotations.Parameter;
 
 class DisputeControllerTest extends BaseTestSuite {
 
@@ -276,28 +282,93 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
-	public void testFindByTicketNumberAndTime() throws Exception {
-		// Happy path. Expect results on a valid match.
+	public void testGetDisputeById() throws Exception {
+		assertEquals(0, IterableUtils.toList(disputeRepository.findAll()).size());
 
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		dispute.setTicketNumber("AX12345678");
+		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setIssuedTs(DateUtils.parseDate("14:54", DateUtil.TIME_FORMAT));
 		dispute.setViolationTicket(null);
-		Long disputeId = saveDispute(dispute);
+		disputeRepository.save(dispute);
 
-		// try searching for exact match. Expect to find the dispute
-		List<DisputeResult> findResults = findDispute("AX12345678", "14:54");
+		assertEquals(1, IterableUtils.toList(disputeRepository.findAll()).size());
+
+		// Retrieve the Dispute via the Controller
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/dispute/{id}", dispute.getDisputeId())
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+		Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
+		assertNotNull(result);
+	}
+
+	@Test
+	public void testGetJJDisputeByTicketNumber() throws Exception {
+		assertEquals(0, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Create a single Dispute
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		jjDispute.setTicketNumber("AX12345678");
+		jjDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
+		jjDispute.setHearingType(JJDisputeHearingType.WRITTEN_REASONS);
+		jjDisputeRepository.save(jjDispute);
+
+		assertEquals(1, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Retrieve the Dispute via the Controller
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/jj/disputes")
+				.param("ticketNumber", "AX12345678")
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+		List<JJDispute> result = mapResult(resultActions, new TypeReference<List<JJDispute>>() {});
+		assertNotNull(result);
+		assertEquals(1, result.size());
+	}
+
+	@Test
+	public void testFindDisputeStatuses() throws Exception {
+		assertEquals(0, IterableUtils.toList(disputeRepository.findAll()).size());
+		assertEquals(0, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setTicketNumber("AX12345678");
+		dispute.setStatus(DisputeStatus.NEW);
+		dispute.setIssuedTs(DateUtils.parseDate("14:54", DateUtil.TIME_FORMAT));
+		dispute.setViolationTicket(null);
+		disputeRepository.save(dispute);
+
+		// Create a single JJDispute
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		jjDispute.setTicketNumber("AX12345678");
+		jjDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
+		jjDispute.setHearingType(JJDisputeHearingType.WRITTEN_REASONS);
+		jjDisputeRepository.save(jjDispute);
+
+		// Assert records exist in repo
+		assertEquals(1, IterableUtils.toList(disputeRepository.findAll()).size());
+		assertEquals(1, IterableUtils.toList(jjDisputeRepository.findAll()).size());
+
+		// Assert jjDisputeRepository.findByTicketNumber() works
+		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber("AX12345678");
+		assertEquals(1, jjDisputes.size());
+
+		// Test the same jjDisputeRepository.findByTicketNumber(), but via /api/v1.0/dispute/status endpoint.
+		List<DisputeResult> findResults = findDisputeStatuses("AX12345678", "14:54");
 		assertEquals(1, findResults.size());
-		assertEquals(disputeId, findResults.get(0).getDisputeId());
 		assertEquals(DisputeStatus.NEW, findResults.get(0).getDisputeStatus());
+		assertEquals(JJDisputeStatus.IN_PROGRESS, findResults.get(0).getJjDisputeStatus());
+		assertEquals(JJDisputeHearingType.WRITTEN_REASONS, findResults.get(0).getJjDisputeHearingType());
 
 		// try searching for a different ticketNumber. Expect no records.
-		findResults = findDispute("AX00000000", "14:54");
+		findResults = findDisputeStatuses("AX00000000", "14:54");
 		assertEquals(0, findResults.size());
 
 		// try searching for a different time. Expect no records.
-		findResults = findDispute("AX12345678", "14:55");
+		findResults = findDisputeStatuses("AX12345678", "14:55");
 		assertEquals(0, findResults.size());
 	}
 
@@ -422,6 +493,94 @@ class DisputeControllerTest extends BaseTestSuite {
 				.andExpect(status().isNotFound());
 	}
 
+	@Test
+	public void testSaveDisputantUpdateRequest_200() throws Exception {
+		// Setup - persist a new random Dispute to the database
+		Long disputeId = saveDispute(RandomUtil.createDispute());
+		DisputantUpdateRequest disputantUpdateRequest = RandomUtil.createDisputantUpdateRequest(disputeId);
+
+		// issue a POST request, expect 200
+		Long disputantUpdateRequestId = saveDisputantUpdateRequest(disputantUpdateRequest);
+		assertNotNull(disputantUpdateRequestId);
+	}
+
+	@Test
+	public void testSaveDisputantUpdateRequest_404() throws Exception {
+		// Try to issue a POST request to create a DisputantUpdateRequest for a Dispute that doesn't exist
+		mvc.perform(MockMvcRequestBuilders
+				.post("/api/v1.0/dispute/{guid}/updateRequest", UUID.randomUUID().toString()) // random guid that doesn't exist
+				.principal(getPrincipal())
+				.content(asJsonString(RandomUtil.createDisputantUpdateRequest(Long.valueOf(1))))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	@SuppressWarnings("unused")
+	public void testGetDisputantUpdateRequests_200() throws Exception {
+		// Setup - persist a couple new random Disputes to the database along with a few DisputantUpdateRequests
+		Long disputeId1 = saveDispute(RandomUtil.createDispute());
+		Long disputeId2 = saveDispute(RandomUtil.createDispute());
+
+		Long disputantUpdateRequest1 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId1, DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestType.DISPUTANT_NAME));
+		Long disputantUpdateRequest2 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId1, DisputantUpdateRequestStatus.ACCEPTED, DisputantUpdateRequestType.DISPUTANT_ADDRESS));
+		Long disputantUpdateRequest3 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId2, DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestType.DISPUTANT_NAME));
+		Long disputantUpdateRequest4 = saveDisputantUpdateRequest(RandomUtil.createDisputantUpdateRequest(disputeId2, DisputantUpdateRequestStatus.REJECTED, DisputantUpdateRequestType.DISPUTANT_PHONE));
+
+		List<DisputantUpdateRequest> results;
+
+		// Fetching for dispute 1 (filtered by status) should return the single disputantUpdateRequest1 record
+		results = getGetDisputantUpdateRequests(disputeId1, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(1, results.size());
+		assertEquals(disputantUpdateRequest1, results.get(0).getDisputantUpdateRequestId());
+
+		// Fetching for dispute 2 (filtered by status) should return the single disputantUpdateRequest3 record
+		results = getGetDisputantUpdateRequests(disputeId2, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(1, results.size());
+		assertEquals(disputantUpdateRequest3, results.get(0).getDisputantUpdateRequestId());
+
+		// Fetching for any dispute (filtered by status) should return the both disputantUpdateRequests 1 and 3 records
+		results = getGetDisputantUpdateRequests(null, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(2, results.size());
+		assertTrue(Arrays.asList(disputantUpdateRequest1, disputantUpdateRequest3).contains(results.get(0).getDisputantUpdateRequestId()));
+
+		// Fetching for a dispute that doesn't exist should just return an empty list.
+		assertFalse(Arrays.asList(disputeId1, disputeId1).contains(Long.valueOf(-1))); // assert the new ids are not -1
+		results = getGetDisputantUpdateRequests(Long.valueOf(-1), DisputantUpdateRequestStatus.PENDING);
+		assertEquals(0, results.size());
+	}
+
+	@Test
+	public void testUpdateDisputantUpdateRequest_200() throws Exception {
+		// Setup - persist a new random Dispute to the database
+		Long disputeId = saveDispute(RandomUtil.createDispute());
+		DisputantUpdateRequest disputantUpdateRequest = RandomUtil.createDisputantUpdateRequest(disputeId, DisputantUpdateRequestStatus.PENDING, DisputantUpdateRequestType.DISPUTANT_NAME);
+		Long disputantUpdateRequestId = saveDisputantUpdateRequest(disputantUpdateRequest);
+		assertNotNull(disputantUpdateRequestId);
+
+		// assert the DisputantUpdateRequest was property persisted
+		List<DisputantUpdateRequest> disputantUpdateRequests = getGetDisputantUpdateRequests(disputeId, DisputantUpdateRequestStatus.PENDING);
+		assertEquals(1, disputantUpdateRequests.size());
+		assertEquals(disputantUpdateRequestId, disputantUpdateRequests.get(0).getDisputantUpdateRequestId());
+		assertEquals(DisputantUpdateRequestStatus.PENDING, disputantUpdateRequests.get(0).getStatus());
+		assertEquals(DisputantUpdateRequestType.DISPUTANT_NAME, disputantUpdateRequests.get(0).getUpdateType());
+
+		// issue a PUT request to update the record to ACCEPTED, expect 200
+		mvc.perform(MockMvcRequestBuilders
+				.put("/api/v1.0/dispute/updateRequest/{id}", disputantUpdateRequestId)
+				.param("disputantUpdateRequestStatus", DisputantUpdateRequestStatus.ACCEPTED.toString())
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+
+		// reissue request, the returned result should have been updated.
+		disputantUpdateRequests = getGetDisputantUpdateRequests(disputeId, DisputantUpdateRequestStatus.ACCEPTED);
+		assertEquals(1, disputantUpdateRequests.size());
+		assertEquals(disputantUpdateRequestId, disputantUpdateRequests.get(0).getDisputantUpdateRequestId());
+		assertEquals(DisputantUpdateRequestStatus.ACCEPTED, disputantUpdateRequests.get(0).getStatus());
+		assertEquals(DisputantUpdateRequestType.DISPUTANT_NAME, disputantUpdateRequests.get(0).getUpdateType());
+	}
+
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
 	private Long saveDispute(Dispute dispute) {
 		return postForObject(fromUriString("/dispute"), dispute, Long.class);
@@ -471,29 +630,6 @@ class DisputeControllerTest extends BaseTestSuite {
 		return result;
 	}
 
-	/**
-	 * Issues a GET request to /api/v1.0/dispute/updateRequests. The appropriate controller is automatically called by the DispatchServlet
-	 * @throws Exception
-	 */
-	public List<DisputantUpdateRequest> getDisputantUpdateRequests(Long id, DisputantUpdateRequestStatus status) {
-		ResultActions resultActions;
-		try {
-			resultActions = mvc.perform(MockMvcRequestBuilders
-					.get("/api/v1.0/dispute/updateRequests")
-					.param("id", Long.toString(id))
-					.param("status", status == null ? null : status.name())
-					.principal(getPrincipal()))
-					.andExpect(status().isOk());
-			List<DisputantUpdateRequest> result = mapResult(resultActions, new TypeReference<List<DisputantUpdateRequest>>() {});
-			return result;
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	/**
 	 * Issues a DELETE request to /api/v1.0/dispute/{id}. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
@@ -556,13 +692,48 @@ class DisputeControllerTest extends BaseTestSuite {
 		return result;
 	}
 
-	/** Issues a GET request to /api/v1.0/dispute with the required ticketNumber and time to find a Dispute. */
-	private List<DisputeResult> findDispute(String ticketNumber, String issuedTime) {
-		UriComponentsBuilder uriBuilder = fromUriString("/dispute/status")
-				.queryParam("ticketNumber", ticketNumber)
-				.queryParam("issuedTime", issuedTime);
-		ResponseEntity<List<DisputeResult>> results = getForEntity(uriBuilder, new ParameterizedTypeReference<List<DisputeResult>>() {});
-		return results.getBody();
+	/** Issues a GET request to /api/v1.0/dispute/status with the required ticketNumber and time to find a Dispute.
+	 * @throws Exception */
+	private List<DisputeResult> findDisputeStatuses(String ticketNumber, String issuedTime) throws Exception {
+
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/dispute/status")
+				.param("ticketNumber", ticketNumber)
+				.param("issuedTime", issuedTime)
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+		List<DisputeResult> result = mapResult(resultActions, new TypeReference<List<DisputeResult>>() {});
+		return result;
+	}
+
+	/** Issues a POST request to /api/v1.0/dispute/{guid}/updateRequest to persist a new DisputantUpdateRequest in the database */
+	private Long saveDisputantUpdateRequest(DisputantUpdateRequest disputantUpdateRequest) throws Exception {
+		// Get the guid of the corresponding Disputeid
+		Dispute dispute = getDispute(disputantUpdateRequest.getDisputeId());
+
+		// perform a POST to the controller to create an updateRequest object
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
+				.post("/api/v1.0/dispute/{guid}/updateRequest", dispute.getNoticeOfDisputeGuid())
+				.principal(getPrincipal())
+				.content(asJsonString(disputantUpdateRequest))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		return Long.valueOf(mvcResult.getResponse().getContentAsString());
+	}
+
+	/** Issues a GET request to /api/v1.0/dispute/updateRequests to retrieve all DisputantUpdateRequests per for a Dispute */
+	private List<DisputantUpdateRequest> getGetDisputantUpdateRequests(Long disputeId, DisputantUpdateRequestStatus status) throws Exception {
+		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/dispute/updateRequests")
+				.param("id", disputeId == null ? null : disputeId.toString())
+				.param("status", status.toString())
+				.principal(getPrincipal()))
+				.andExpect(status().isOk());
+
+		List<DisputantUpdateRequest> disputantUpdateRequests = mapResult(resultActions, new TypeReference<List<DisputantUpdateRequest>>() {});
+		return disputantUpdateRequests;
 	}
 
 }

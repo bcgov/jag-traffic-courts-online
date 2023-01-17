@@ -23,8 +23,8 @@
       <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ disputeInfo.homePhoneNumber }}</p>
     </span>
     <span class="section-grid-cell">
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ updateRequested.home_phone_number | phone }}</p>
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ updateRequested.home_phone_number }}</p>
+      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ updateRequested.HomePhoneNumber | phone }}</p>
+      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ updateRequested.HomePhoneNumber }}</p>
     </span>
     <br />
   </div>
@@ -39,8 +39,8 @@
       <p class="section-grid-header">Home Phone Number</p>
     </span>
     <span class="section-grid-cell">
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ updateRequested.home_phone_number | phone }}</p>
-      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ updateRequested.home_phone_number }}</p>
+      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId === 1 || disputeInfo.addressCountryId === 2">{{ updateRequested.HomePhoneNumber | phone }}</p>
+      <p class="section-grid-text" *ngIf="disputeInfo.addressCountryId !== 1 && disputeInfo.addressCountryId !== 2">{{ updateRequested.HomePhoneNumber }}</p>
     </span>
     <br />
   </div>

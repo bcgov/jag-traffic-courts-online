@@ -23,7 +23,7 @@
         </mat-tab>
       </mat-tab-group>
     </div>
-    <div *ngIf="showTicket" style="padding-left:5%; padding-right:5%">
+    <div *ngIf="showTicket" style="padding-left:5%; padding-right:5%; margin-bottom:15vh">
       <app-contact-info *ngIf="decidePopup == 'A' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-contact-info>
       <app-ticket-info *ngIf="decidePopup == 'E' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-ticket-info>
       <app-update-request-info *ngIf="tabSelected.value === 2" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-update-request-info>
