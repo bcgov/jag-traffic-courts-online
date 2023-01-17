@@ -1,7 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputantUpdateRequest as DisputantUpdateRequestBase, DisputantUpdateRequestStatus2 } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputantUpdateRequest as DisputantUpdateRequestBase, DisputantUpdateRequestStatus2 } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
@@ -11,6 +11,8 @@ import { number } from 'yargs';
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
   disputes: Dispute[];
+  disputesWithUpdates$: Observable<DisputeWithUpdates[]>;
+  disputesWithUpdates: DisputeWithUpdates[];
   disputantUpdateRequests$: Observable<DisputantUpdateRequest[]>;
   disputantUpdateRequests: DisputantUpdateRequest[];
   getDisputes(): Observable<Dispute[]>;
@@ -23,6 +25,7 @@ export class DisputeService implements IDisputeService {
   private _disputes: BehaviorSubject<Dispute[]>;
   private _disputantUpdateRequests: BehaviorSubject<DisputantUpdateRequest[]>;
   private _dispute: BehaviorSubject<Dispute>;
+  private _disputesWithUpdates: BehaviorSubject<DisputeWithUpdates[]>;
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -40,18 +43,12 @@ export class DisputeService implements IDisputeService {
      *
      * @param none
      */
-    public getDisputesWithPendingUpdates(): Observable<Dispute[]> {
+    public getDisputesWithPendingUpdates(): Observable<DisputeWithUpdates[]> {
       return this.disputeApiService.apiDisputeDisputeswithupdaterequestsGet()
         .pipe(
-          map((response: Dispute[]) => {
+          map((response: DisputeWithUpdates[]) => {
             this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
-            this._disputes.next(response);
-            response.forEach(dispute => {
-              dispute = this.joinGivenNames(dispute);
-              dispute = this.joinLawyerNames(dispute);
-              dispute = this.joinAddressLines(dispute);
-            });
-
+            this._disputesWithUpdates.next(response);
             return response;
           }),
           catchError((error: any) => {
@@ -136,6 +133,14 @@ export class DisputeService implements IDisputeService {
 
   public get disputes(): Dispute[] {
     return this._disputes.value;
+  }
+
+  public get disputesWithUpdates$(): Observable<DisputeWithUpdates[]> {
+    return this._disputesWithUpdates;
+  }
+
+  public get disputesWithUpdates(): DisputeWithUpdates[] {
+    return this._disputesWithUpdates.value;
   }
 
   /**
@@ -474,6 +479,12 @@ export interface Dispute extends DisputeBase {
   __CourtHearing: boolean, // if at least one count requests court hearing
   __UserAssignedTs?: Date,
   __SystemDetectedOcrIssues?: boolean // if at least one OCR's field has a confidence level below 80% threshold
+}
+
+export interface DisputeWithUpdates extends DisputeWithUpdatesBase {
+  disputantGivenNames?: string;
+  __DateSubmitted?: Date,
+  __UserAssignedTs?: Date,
 }
 
 export interface DisputantUpdateRequest extends DisputantUpdateRequestBase {

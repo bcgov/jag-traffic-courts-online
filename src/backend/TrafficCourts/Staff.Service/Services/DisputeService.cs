@@ -296,6 +296,8 @@ public class DisputeService : IDisputeService
                     disputeWithUpdates.Status = dispute.Status;
                     disputeWithUpdates.TicketNumber = dispute.TicketNumber;
                     disputeWithUpdates.SubmittedTs = dispute.SubmittedTs;
+                    disputeWithUpdates.EmailAddress = dispute.EmailAddress;
+                    disputeWithUpdates.EmailAddressVerified = dispute.EmailAddressVerified; 
 
                     // Check for future court hearing date
                     disputeWithUpdates.HearingDate = null;
@@ -329,11 +331,13 @@ public class DisputeService : IDisputeService
                 disputeWithUpdates = disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId);
             }
             // check whether this udpate request is for an adjournment document
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             disputeWithUpdates.AdjournmentDocument = false;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
             {
                 DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputantUpdateRequest.UpdateJson);
-                if (documentUpdateJSON is not null && documentUpdateJSON.AdjournmentDocumentId is not null)
+                if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment") ;
                 {
                     disputeWithUpdates.AdjournmentDocument = true;
                 }
