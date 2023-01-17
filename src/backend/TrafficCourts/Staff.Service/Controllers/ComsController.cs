@@ -41,8 +41,7 @@ public class ComsController : StaffControllerBase<ComsController>
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //[KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    [AllowAnonymous]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
     public async Task<IActionResult> UploadDocumentAsync([FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Uploading the document to the object storage");
