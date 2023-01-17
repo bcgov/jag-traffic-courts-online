@@ -1,7 +1,7 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AuthConfig } from 'app/auth/models/auth-config.model';
 import { AppConfig } from 'app/services/app-config.service';
-import { AuthConfig } from 'app/auth/services/auth-config.service';
 import { forkJoin } from 'rxjs';
 
 import { AppModule } from './app/app.module';

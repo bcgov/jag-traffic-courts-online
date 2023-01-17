@@ -2,10 +2,23 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
-import { AuthModule as OidcModule, OidcSecurityService, StsConfigLoader } from 'angular-auth-oidc-client';
-import { AuthConfig, AuthConfigLoader, AuthConfigService, AuthServiceInit } from './services/auth-config.service';
+import { AuthModule as OidcModule, OidcSecurityService, StsConfigLoader, StsConfigStaticLoader } from 'angular-auth-oidc-client';
 import { AuthHttpInterceptor } from './interceptors/auth-http.interceptor';
 import { AuthStore } from './store';
+import { AuthConfig } from './models/auth-config.model';
+
+export function AuthServiceInit(oidcSecurityService: OidcSecurityService, store: Store) {
+  return () => {
+    return oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, accessToken }) => {
+      store.dispatch(AuthStore.Actions.Authorized({ payload: { isAuthenticated, accessToken } }));
+      return;
+    })
+  };
+}
+
+export const AuthConfigLoader = (authConfig: AuthConfig) => {
+  return new StsConfigStaticLoader(authConfig.config);
+};
 
 @NgModule({
   imports: [
@@ -13,7 +26,7 @@ import { AuthStore } from './store';
       loader: {
         provide: StsConfigLoader,
         useFactory: AuthConfigLoader,
-        deps: [AuthConfigService],
+        deps: [AuthConfig],
       },
     }),
     StoreModule.forFeature(AuthStore.StoreName, AuthStore.Reducer),
@@ -36,10 +49,10 @@ import { AuthStore } from './store';
 })
 export class AuthModule {
   constructor(
-    private authConfigService: AuthConfigService,
     private authConfig: AuthConfig
   ) {
-    // Get from main.ts, no need to fetch again
-    this.authConfigService.setAuthConfig(this.authConfig);
+    // Alter the injected valuables here
+    this.authConfig.config.redirectUrl = window.location.origin;
+    this.authConfig.config.postLogoutRedirectUri = window.location.origin;
   }
 }
