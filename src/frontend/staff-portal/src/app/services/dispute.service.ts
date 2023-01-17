@@ -48,7 +48,7 @@ export class DisputeService implements IDisputeService {
         .pipe(
           map((response: DisputeWithUpdates[]) => {
             this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
-            this._disputesWithUpdates.next(response);
+            if (response.length > 1) this._disputesWithUpdates.next(response);
             return response;
           }),
           catchError((error: any) => {
