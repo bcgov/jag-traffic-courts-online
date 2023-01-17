@@ -1,4 +1,5 @@
 ﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Staff.Service.Models;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -98,7 +99,7 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A collection of Dispute objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<Dispute>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken);
+    Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all the existing dispute update requests from the database for a given dispute id

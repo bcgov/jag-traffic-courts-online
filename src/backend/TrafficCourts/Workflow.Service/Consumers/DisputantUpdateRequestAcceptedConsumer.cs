@@ -64,6 +64,40 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.DisputantGivenName3 = patch?.DisputantGivenName3;
                     dispute.DisputantSurname = patch?.DisputantSurname;
                     break;
+                case DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
+                    // TODO: update document metadata set StaffReviewStatus to Accepted
+                    break;
+                case DisputantUpdateRequestUpdateType.COUNT:
+                    foreach(Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount disputeCount in dispute.DisputeCounts)
+                    {
+                        Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount? patchCount = patch?.DisputeCounts.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
+                        if (patchCount != null)
+                        {
+                            disputeCount.RequestCourtAppearance = patchCount.RequestCourtAppearance;
+                            disputeCount.RequestReduction = patchCount.RequestReduction;
+                            disputeCount.RequestTimeToPay = patchCount.RequestTimeToPay;
+                        }
+                    }
+                    break;
+                case DisputantUpdateRequestUpdateType.COURT_OPTIONS:
+                    dispute.RepresentedByLawyer = patch?.RepresentedByLawyer;
+                    dispute.LawFirmName = patch?.LawFirmName;
+                    dispute.LawyerSurname = patch?.LawyerSurname;
+                    dispute.LawyerGivenName1 = patch?.LawyerGivenName1;
+                    dispute.LawyerGivenName2 = patch?.LawyerGivenName2;
+                    dispute.LawyerGivenName3 = patch?.LawyerGivenName3;
+                    dispute.LawyerAddress = patch?.LawyerAddress;
+                    dispute.LawyerPhoneNumber = patch?.LawyerPhoneNumber;
+                    dispute.LawyerEmail = patch?.LawyerEmail;
+                    dispute.InterpreterLanguageCd = patch?.InterpreterLanguageCd;
+                    dispute.InterpreterRequired = patch?.InterpreterRequired;   
+                    dispute.WitnessNo = patch?.WitnessNo;
+                    dispute.FineReductionReason = patch?.FineReductionReason;
+                    dispute.TimeToPayReason = patch?.TimeToPayReason; 
+                    break;
+                case DisputantUpdateRequestUpdateType.DISPUTANT_EMAIL:
+                    // nothing to do here except record in file history (down further)
+                    break;
                 default:
                     break;
             }

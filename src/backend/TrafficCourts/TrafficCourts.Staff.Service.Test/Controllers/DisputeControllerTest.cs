@@ -14,6 +14,7 @@ using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
+using TrafficCourts.Staff.Service.Models;
 using Xunit;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
@@ -248,11 +249,11 @@ public class DisputeControllerTest
         // Mock the IDisputeService to return a Disputes, confirm controller returns them.
 
         // Arrange
-        Dispute dispute1 = new();
+        DisputeWithUpdates dispute1 = new();
         dispute1.DisputeId = 1;
-        Dispute dispute2 = new();
+        DisputeWithUpdates dispute2 = new();
         dispute2.DisputeId = 2;
-        List<Dispute> disputes = new() { dispute1, dispute2 };
+        List<DisputeWithUpdates> disputes = new() { dispute1, dispute2 };
 
         var disputeService = new Mock<IDisputeService>();
         disputeService
@@ -267,7 +268,7 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        var actual = okResult.Value as List<Dispute>;
+        var actual = okResult.Value as List<DisputeWithUpdates>;
         Assert.NotNull(actual);
         Assert.Equal(2, actual!.Count);
         Assert.Equal(dispute1, actual[0]);

@@ -28,7 +28,7 @@
 
   <ng-container matColumnDef="__DateSubmitted">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Date Submitted
+        Dispute Submitted
       </th>
       <td mat-cell *matCellDef="let element">
         <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.__DateSubmitted ? (element.__DateSubmitted | date: "yyyy/MM/dd") : "" }}</span>

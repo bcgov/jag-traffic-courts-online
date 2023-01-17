@@ -4,6 +4,7 @@ using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
+using TrafficCourts.Staff.Service.Models;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
@@ -499,7 +500,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
     [HttpGet("disputesWithUpdateRequests")]
-    [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<DisputeWithUpdates>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -510,7 +511,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            ICollection<Dispute> disputes = await _disputeService.GetAllDisputesWithPendingUpdateRequestsAsync(cancellationToken);
+            ICollection<DisputeWithUpdates> disputes = await _disputeService.GetAllDisputesWithPendingUpdateRequestsAsync(cancellationToken);
             return Ok(disputes);
         }
         catch (Exception e)
