@@ -6,13 +6,10 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
-import { number } from 'yargs';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
   disputes: Dispute[];
-  disputesWithUpdates$: Observable<DisputeWithUpdates[]>;
-  disputesWithUpdates: DisputeWithUpdates[];
   disputantUpdateRequests$: Observable<DisputantUpdateRequest[]>;
   disputantUpdateRequests: DisputantUpdateRequest[];
   getDisputes(): Observable<Dispute[]>;
@@ -25,7 +22,6 @@ export class DisputeService implements IDisputeService {
   private _disputes: BehaviorSubject<Dispute[]>;
   private _disputantUpdateRequests: BehaviorSubject<DisputantUpdateRequest[]>;
   private _dispute: BehaviorSubject<Dispute>;
-  private _disputesWithUpdates: BehaviorSubject<DisputeWithUpdates[]>;
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -48,7 +44,6 @@ export class DisputeService implements IDisputeService {
         .pipe(
           map((response: DisputeWithUpdates[]) => {
             this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
-            if (response.length > 1) this._disputesWithUpdates.next(response);
             return response;
           }),
           catchError((error: any) => {
@@ -133,14 +128,6 @@ export class DisputeService implements IDisputeService {
 
   public get disputes(): Dispute[] {
     return this._disputes.value;
-  }
-
-  public get disputesWithUpdates$(): Observable<DisputeWithUpdates[]> {
-    return this._disputesWithUpdates;
-  }
-
-  public get disputesWithUpdates(): DisputeWithUpdates[] {
-    return this._disputesWithUpdates.value;
   }
 
   /**
