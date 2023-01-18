@@ -52,7 +52,7 @@ internal static class RequestBuilder
     /// <exception cref="TagKeyEmptyException"><paramref name="tags"/> one of the keys is an empty string.</exception>
     /// <exception cref="TagKeyTooLongException"><paramref name="tags"/> one of the keys is too long.</exception>
     /// <exception cref="TagValueTooLongException"><paramref name="tags"/> one of the key values is too long.</exception>
-    public static void AppendQueryTagSet(StringBuilder urlBuilder, IDictionary<string, string>? tags)
+    public static void AppendQueryTagSet(StringBuilder urlBuilder, IReadOnlyDictionary<string, string>? tags)
     {
         if (urlBuilder is null)
         {
@@ -93,7 +93,7 @@ internal static class RequestBuilder
     /// <param name="metadata"></param>
     /// <exception cref="ArgumentNullException"><paramref name="request"/> is null.</exception>
     /// <exception cref="MetadataInvalidKeyException"><paramref name="metadata"/> contains keys with invalid  values.</exception>
-    public static void AppendHeaderMetadata(HttpRequestMessage request, IDictionary<string, string>? metadata)
+    public static void AppendHeaderMetadata(HttpRequestMessage request, IReadOnlyDictionary<string, string>? metadata)
     {
         if (request is null)
         {

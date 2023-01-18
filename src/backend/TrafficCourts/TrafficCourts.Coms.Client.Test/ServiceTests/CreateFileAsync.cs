@@ -77,8 +77,8 @@ public class CreateFileAsync : ObjectManagementServiceTest
 
         // simulate success
         _mockClient.Setup(_ => _.CreateObjectsAsync(
-            It.IsAny<IDictionary<string, string>>(),
-            It.IsAny<IDictionary<string, string>>(),
+            It.IsAny<IReadOnlyDictionary<string, string>>(),
+            It.IsAny<IReadOnlyDictionary<string, string>>(),
             It.IsAny<FileParameter>(),
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(() =>
@@ -99,8 +99,8 @@ public class CreateFileAsync : ObjectManagementServiceTest
         // verify the client called with correct values
         _mockClient.Verify(_ =>
             _.CreateObjectsAsync(
-                It.Is<IDictionary<string, string>>((_) => _ == file.Metadata),
-                It.Is<IDictionary<string, string>>((_) => _ == file.Tags),
+                It.Is<IReadOnlyDictionary<string, string>>((_) => _ == file.Metadata),
+                It.Is<IReadOnlyDictionary<string, string>>((_) => _ == file.Tags),
                 It.Is<FileParameter>((_) => _.Data == expectedStream && _.FileName == expectedFilename && _.ContentType == expectedContentType),
                 It.Is<CancellationToken>((cancellationToken) => cancellationToken == cts.Token))
             );

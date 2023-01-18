@@ -12,7 +12,7 @@ public class SearchObjectsAsync : ObjectManagementBase
 
     [Theory]
     [MemberData(nameof(TestCases))]
-    public async Task X(IDictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, IDictionary<string, string>? tags)
+    public async Task calls_client_with_correct_parameters(Dictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, Dictionary<string, string>? tags)
     {
         List<DBObject> expected = _fixture.CreateMany<DBObject>().ToList();
 

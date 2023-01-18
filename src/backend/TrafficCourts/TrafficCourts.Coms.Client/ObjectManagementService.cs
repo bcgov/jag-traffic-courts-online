@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace TrafficCourts.Coms.Client;
 
@@ -15,6 +16,14 @@ internal class ObjectManagementService : IObjectManagementService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    /// <summary>
+    /// Creates a file. On successful creation, the file's <see cref="File.Id"/> will be set.
+    /// </summary>
+    /// <param name="file"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ObjectManagementServiceException"></exception>
     public async Task<Guid> CreateFileAsync(File file, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(file);
@@ -48,6 +57,7 @@ internal class ObjectManagementService : IObjectManagementService
             }
 
             Guid id = created[0].Id;
+            file.Id = id;
             _logger.LogDebug("Created file {FileId}", id);
             return id;
         }
@@ -93,7 +103,9 @@ internal class ObjectManagementService : IObjectManagementService
             string? contentType = GetHeader(response.Headers, "Content-Type");
             string? fileName = GetHeader(response.Headers, "x-amz-meta-name");
 
-            IDictionary<string, string>? metadata = GetMetadata(response);
+            var metadataValues = await GetMetadataAsync(id, cancellationToken);
+            IDictionary<string, string>? metadata = Factory.CreateMetadata(metadataValues[id]);
+
             IDictionary<string, string>? tags = null;
 
             if (includeTags)
@@ -105,7 +117,7 @@ internal class ObjectManagementService : IObjectManagementService
             var stream = _memoryStreamFactory.GetStream();
             await response.Stream.CopyToAsync(stream, cancellationToken);
 
-            var file = new File(stream, fileName, contentType, metadata, tags);
+            var file = new File(id, stream, fileName, contentType, metadata, tags);
             return file;
         }
         catch (Exception exception)
@@ -138,12 +150,15 @@ internal class ObjectManagementService : IObjectManagementService
 
             _logger.LogDebug("Found {Count} files", files.Count);
 
+            // fetch all of the metadata for found files at once
+            var foundIds = files.Select(_ => _.Id).ToList();
+            var objectMetadataById = await GetMetadataAsync(foundIds, cancellationToken);
+
             List<FileSearchResult> results = new(files.Count);
 
             foreach (var file in files)
             {
-                // fetch the meta data and tags
-                var metadata = await GetMetadataAsync(file.Id, cancellationToken);
+                var metadata = new Dictionary<string, string>(objectMetadataById[file.Id]);
                 var tags = await GetTagsAsync(file.Id, cancellationToken);
 
                 var result = new FileSearchResult(
@@ -210,16 +225,15 @@ internal class ObjectManagementService : IObjectManagementService
         return value;
     }
 
-    private async Task<IDictionary<string, string>> GetMetadataAsync(Guid id, CancellationToken cancellationToken)
+    private async Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
     {
         try
         {
-            // use the url mode to avoid downloading the file contents
-            FileResponse response = await _client.ReadObjectAsync(id, DownloadMode.Url, expiresIn: null, versionId: null, cancellationToken)
-                .ConfigureAwait(false);
-
-            IDictionary<string, string> metadata = GetMetadata(response);
-            return metadata;
+            IList<ObjectMetadata> objectsMetadata = await _client.GetObjectMetadataAsync(ids, cancellationToken).ConfigureAwait(false);
+            
+            // not great we have to flatten out the data, but it makes using a ILookup easier to process on the caller
+            var lookup = Flatten(objectsMetadata).ToLookup(_ => _.Item1, _ => _.Item2);
+            return lookup;
         }
         catch (Exception exception)
         {
@@ -227,32 +241,27 @@ internal class ObjectManagementService : IObjectManagementService
         }
     }
 
-    private IDictionary<string, string> GetMetadata(FileResponse response)
+    private async Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(Guid id, CancellationToken cancellationToken)
     {
-        var metadata = new Dictionary<string,string>();
-
-        bool IsMetadataHeader(KeyValuePair<string, IEnumerable<string>> header)
-        {
-            return header.Key.StartsWith("x-amz-meta-", StringComparison.OrdinalIgnoreCase);
-        }
-
-        foreach (var header in response.Headers.Where(IsMetadataHeader))
-        {
-            // header is KeyValuePair<string, IEnumerable<string>>
-            // extract the meta data key without the prefix
-            var key = header.Key["x-amz-meta-".Length..];
-
-            if (key == "id" || key == "name")
-            {                
-                continue; // skip internal meta data properties
-            }
-
-            var value = header.Value.FirstOrDefault() ?? string.Empty;
-            metadata.Add(key, value);
-        }
-
-        return metadata;
+        return await GetMetadataAsync(new[] { id }, cancellationToken).ConfigureAwait(false);
     }
+
+    private IEnumerable<Tuple<Guid, KeyValuePair<string, string>>> Flatten(IList<ObjectMetadata> items)
+    {
+        foreach (var objectItem in items)
+        {
+            foreach (var metaDataItem in objectItem.Metadata)
+            {
+                // do not return internal metadata
+                if (!IsInternalMetadata(metaDataItem.Key))
+                {
+                    yield return Tuple.Create(objectItem.Id, new KeyValuePair<string, string>(metaDataItem.Key, metaDataItem.Value));
+                }
+            }
+        }
+    }
+
+    private static bool IsInternalMetadata(string key) => key == "id" || key == "name";
 
     private Task<IDictionary<string, string>> GetTagsAsync(Guid id, CancellationToken cancellationToken)
     {
