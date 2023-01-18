@@ -1,18 +1,12 @@
-﻿using FluentAssertions;
-using FluentAssertions.Types;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Threading;
-using TrafficCourts.Common.Authorization;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Models;
@@ -231,5 +225,83 @@ public class ComsControllerTest
         var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
         Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
         Assert.True(problemDetails?.Title?.Contains("Error Invoking COMS"));
+    }
+
+    [Fact]
+    public async void TestDownloadDocument200Result()
+    {
+        // Arrange
+        var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
+        Coms.Client.File mockFile = new(fileStream, "testFile");
+        var comsService = new Mock<IComsService>();
+        Guid guid = Guid.NewGuid();
+        mockFile.Metadata.Add("ticketnumber", "AO38375804");
+        mockFile.Metadata.Add("virus-scan-status", "clean");
+        var filename = mockFile.FileName;
+        comsService
+            .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(mockFile);
+        var mockLogger = new Mock<ILogger<ComsController>>();
+        ComsController comsController = new(comsService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await comsController.DownloadDocumentAsync(guid, CancellationToken.None);
+
+        // Assert
+        var fileResult = Assert.IsType<FileStreamResult>(result);
+        Assert.Equal(filename, fileResult.FileDownloadName);
+    }
+
+    [Fact]
+    public async void TestDownloadDocumentMissingMetadataKeyThrowsObjectManagementServiceException500result()
+    {
+        // Arrange
+        var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
+        Coms.Client.File mockFile = new(fileStream, "testFile");
+        var comsService = new Mock<IComsService>();
+        Guid guid = Guid.NewGuid();
+        mockFile.Metadata.Add("ticketnumber", "AO38375804");
+        var filename = mockFile.FileName;
+        comsService
+            .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+            .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
+        var mockLogger = new Mock<ILogger<ComsController>>();
+        ComsController comsController = new(comsService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await comsController.DownloadDocumentAsync(guid, CancellationToken.None);
+
+        // Assert
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
+        Assert.True(problemDetails?.Title?.Contains("Error getting file from COMS"));
+    }
+
+    [Fact]
+    public async void TestDownloadDocumentInvalidScanStatusThrowsObjectManagementServiceException500result()
+    {
+        // Arrange
+        var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
+        Coms.Client.File mockFile = new(fileStream, "testFile");
+        var comsService = new Mock<IComsService>();
+        Guid guid = Guid.NewGuid();
+        mockFile.Metadata.Add("ticketnumber", "AO38375804");
+        mockFile.Metadata.Add("virus-scan-status", "unscanned");
+        var filename = mockFile.FileName;
+        comsService
+            .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+            .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
+        var mockLogger = new Mock<ILogger<ComsController>>();
+        ComsController comsController = new(comsService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await comsController.DownloadDocumentAsync(guid, CancellationToken.None);
+
+        // Assert
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
+        Assert.True(problemDetails?.Title?.Contains("Error getting file from COMS"));
     }
 }

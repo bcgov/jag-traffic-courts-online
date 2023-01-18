@@ -162,4 +162,62 @@ public class ComsController : StaffControllerBase<ComsController>
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
+
+    /// <summary>
+    /// Downloads a document for the given unique file ID if the virus scan staus is clean.
+    /// </summary>
+    /// <param name="fileId">Unique identifier for a specific document.</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">The document is successfully downloaded.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, requires jjdispute:read permission.</response>
+    /// <response code="500">There was a server error that prevented the file to be downloaded successfully.</response>
+    /// <returns>The document</returns>
+    [HttpGet("DownloadDocument")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
+    public async Task<IActionResult> DownloadDocumentAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Downloading the document from the object storage");
+
+        try
+        {
+            Coms.Client.File file = await _comsService.GetFileAsync(fileId, cancellationToken);
+
+            var stream = file.Data;
+            // Reset position to the beginning of the stream
+            stream.Position = 0;
+
+            return File(stream, file.ContentType ?? "application/octet-stream", file.FileName ?? "download");
+        }
+        catch (Coms.Client.ObjectManagementServiceException e)
+        {
+            _logger.LogError(e, "Could not download the document because of ObjectManagementServiceException");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+            problemDetails.Title = e.Source + ": Error getting file from COMS";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error downloading the document");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
 }
