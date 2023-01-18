@@ -22,4 +22,13 @@ public interface IComsService
     /// <exception cref="ObjectManagementServiceException">Other error.</exception>
     Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Retrieves a file with data and details through COMS service for the given unique file ID
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>COMS File Object</returns>
+    /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
+    Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken);
+
 }
