@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } fro
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, DisputeWithUpdates } from 'app/services/dispute.service';
-import { DisputeCountRequestCourtAppearance, DisputeStatus, OcrViolationTicket, Field, Dispute } from 'app/api';
+import { Dispute } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
@@ -16,19 +16,17 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
-    '__DateSubmitted',
+    'submittedTs',
     'ticketNumber',
     'disputantSurname',
-    'disputantGivenNames',
-     'hearingDate',
-     'changeOfPlea',
-     'adjournmentDocument',
-     'status',
-     'userAssignedTo'
+    'disputantGivenName1',
+    'hearingDate',
+    'changeOfPlea',
+    'adjournmentDocument',
+    'status',
+    'userAssignedTo'
   ];
-  disputesWithUpdates: DisputeWithUpdates[] = [];
   public userProfile: KeycloakProfile = {};
-  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -55,9 +53,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   getAllDisputesWithPendingUpdates(): void {
     this.logger.log('UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates');
 
-    this.disputesWithUpdates = [];
-
-    this.dataSource.data = this.disputesWithUpdates;
+    this.dataSource.data = [];
 
     this.disputeService.getDisputesWithPendingUpdates().subscribe((response) => {
       this.logger.info(
@@ -65,33 +61,13 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
         response
       );
 
-      response.forEach((d:DisputeWithUpdates) => {
-        var newDispute: DisputeWithUpdates = {
-          ticketNumber: d.ticketNumber,
-          disputantSurname: d.disputantSurname,
-          disputantGivenNames: `${d.disputantGivenName1} ${d.disputantGivenName2} ${d.disputantGivenName3}`,
-          disputeId: d.disputeId,
-          userAssignedTo: d.userAssignedTo,
-          emailAddressVerified: d.emailAddressVerified,
-          emailAddress: d.emailAddress,
-          __DateSubmitted: new Date(d.submittedTs),
-          __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
-          status: d.status,
-          userAssignedTs: d.userAssignedTs,
-          hearingDate: d.hearingDate,
-          changeOfPlea: d.changeOfPlea,
-          adjournmentDocument: d.adjournmentDocument
-        }
-
-        this.disputesWithUpdates = this.disputesWithUpdates.concat(newDispute);
-      });
-      this.dataSource.data = this.disputesWithUpdates;
+      this.dataSource.data = response as DisputeWithUpdates[];
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: DisputeWithUpdates, b: DisputeWithUpdates) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: Dispute, filter) {
+      this.dataSource.filterPredicate = function (record: DisputeWithUpdates, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
     });

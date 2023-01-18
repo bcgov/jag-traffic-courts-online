@@ -26,12 +26,12 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="__DateSubmitted">
+  <ng-container matColumnDef="submittedTs">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Dispute Submitted
       </th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.__DateSubmitted ? (element.__DateSubmitted | date: "yyyy/MM/dd") : "" }}</span>
+        <span>{{ element.submittedTs | date: 'yyyy/MM/dd' }}</span>
       </td>
     </ng-container>
 
@@ -54,12 +54,12 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="disputantGivenNames">
+    <ng-container matColumnDef="disputantGivenName1">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Given Name(s)
       </th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.disputantGivenNames}} </span>
+        <span>{{element.disputantGivenName1}}{{element.disputantGivenName2 ? &nbsp;element.disputantGivenName2 : ''}}{{element.disputantGivenName3 ? &nbsp;element.disputantGivenName3 : ''}} </span>
       </td>
     </ng-container>
 
@@ -105,7 +105,7 @@
         Assigned
       </th>
       <td mat-cell *matCellDef="let element">
-        <span title="{{element.__UserAssignedTs}}">{{ element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
+        <span>{{ element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
       </td>
     </ng-container>
 
