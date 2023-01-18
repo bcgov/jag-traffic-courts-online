@@ -248,7 +248,7 @@ internal class ObjectManagementService : IObjectManagementService
 
     private IEnumerable<Tuple<Guid, KeyValuePair<string, string>>> Flatten(IList<ObjectMetadata> items)
     {
-        foreach (var objectItem in items)
+        foreach (var objectItem in items.Where(_ => _.Metadata != null))
         {
             foreach (var metaDataItem in objectItem.Metadata)
             {

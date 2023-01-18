@@ -5,8 +5,23 @@ namespace TrafficCourts.Coms.Client;
 
 public partial class ObjectManagementClient : IObjectManagementClient
 {
+    private ComsJsonContext? _jsonContext = null;
+
+    /// <summary>
+    /// Gets the <see cref="JsonSerializerContext"/> with our JsonSerializerSettings
+    /// </summary>
+    private ComsJsonContext JsonSerializerContext
+    {
+        get
+        {
+            _jsonContext ??= new ComsJsonContext(JsonSerializerSettings);
+            return _jsonContext;
+        }
+    }
+    
     public async Task<IList<ObjectMetadata>> GetObjectMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
     {
+        
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/metadata?");
 
@@ -44,7 +59,7 @@ public partial class ObjectManagementClient : IObjectManagementClient
                     var status_ = (int)response_.StatusCode;
                     if (status_ == 200)
                     {
-                        var objectResponse_ = await ReadObjectResponseAsync(response_, ComsJsonContext.Default.ObjectMetadataCollection, headers_, cancellationToken);
+                        var objectResponse_ = await ReadObjectResponseAsync(response_, JsonSerializerContext.ObjectMetadataCollection, headers_, cancellationToken);
                         if (objectResponse_.Object == null)
                         {
                             throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);

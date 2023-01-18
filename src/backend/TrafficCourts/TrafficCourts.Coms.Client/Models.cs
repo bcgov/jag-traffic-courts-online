@@ -8,6 +8,11 @@ public class ObjectMetadataCollection : List<ObjectMetadata>
 
 public class ObjectMetadata
 {
+    public ObjectMetadata()
+    {
+        Metadata = new List<MetadataItem>();
+    }
+
     public string? VersionId { get; set; }
 
     [JsonPropertyName("objectId")]
