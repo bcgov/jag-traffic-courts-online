@@ -31,4 +31,12 @@ public interface IComsService
     /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
     Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Deletes the specified file through COMS service for the given unique file ID
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectManagementServiceException">Unable to delete the file through COMS</exception>
+    Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken);
 }

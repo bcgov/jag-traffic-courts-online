@@ -51,6 +51,11 @@ public class ComsService : IComsService
         return comsFile;
     }
 
+    public Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
