@@ -60,13 +60,16 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null));
 		assertEquals(0, allDisputes.size());
 
+		JJDispute jjDispute1 = RandomUtil.createJJDispute();
+		jjDispute1.setJjAssignedTo("Steven Strange");
+
+		JJDispute jjDispute2 = RandomUtil.createJJDispute();
+		jjDispute2.setJjAssignedTo("Tony Stark");
+
 		// Create a JJDisputes with different assignedTo
-		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				.jjAssignedTo("Steven Strange")
-				.build());
-		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				.jjAssignedTo("Tony Stark")
-				.build());
+		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
+
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
@@ -92,15 +95,17 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getJJDisputes(null, null));
 		assertEquals(0, allDisputes.size());
 
+		JJDispute jjDispute1 = RandomUtil.createJJDispute();
+		jjDispute1.setJjAssignedTo("Steven Strange");
+		jjDispute1.setTicketNumber("AX12345678");
+
+		JJDispute jjDispute2 = RandomUtil.createJJDispute();
+		jjDispute2.setJjAssignedTo("Tony Stark");
+		jjDispute2.setTicketNumber("AX00000000");
+
 		// Create a JJDisputes with different assignedTo
-		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				.jjAssignedTo("Steven Strange")
-				.ticketNumber("AX12345678")
-				.build());
-		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				.jjAssignedTo("Tony Stark")
-				.ticketNumber("AX00000000")
-				.build());
+		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
@@ -151,11 +156,13 @@ class JJDisputeControllerTest extends BaseTestSuite {
 	@Test
 	@Transactional
 	public void testAssignJJDisputesToJJ() {
+		JJDispute jjDispute1 = RandomUtil.createJJDispute();
+		JJDispute jjDispute2 = RandomUtil.createJJDispute();
+		jjDispute2.setJjAssignedTo("Tony Stark");
+
 		// Create a couple of JJDisputes (one unassigned and one assigned to a JJ)
-		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());
-		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				.jjAssignedTo("Tony Stark")
-				.build());
+		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
 
 		// Get the ids of the jj disputes and call the AssignJJ endpoint to assign all jj disputes to a new JJ
 		List<String> ticketNumbers = new ArrayList<>();
@@ -164,9 +171,9 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDisputeController.assignJJDisputesToJJ(ticketNumbers, "Steven Strange");
 
 		// Assert JJ disputes updated with new assigned JJ
-		JJDispute jjDispute1 = jjDisputeController.getJJDispute(dispute1.getTicketNumber(), false, null).getBody();
+		jjDispute1 = jjDisputeController.getJJDispute(dispute1.getTicketNumber(), false, null).getBody();
 		assertEquals("Steven Strange", jjDispute1.getJjAssignedTo());
-		JJDispute jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
+		jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
 		assertEquals("Steven Strange", jjDispute2.getJjAssignedTo());
 
 		// Unassign all disputes by calling the AssignJJ endpoint with null username
