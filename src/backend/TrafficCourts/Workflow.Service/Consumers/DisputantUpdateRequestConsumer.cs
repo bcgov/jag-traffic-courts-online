@@ -131,7 +131,7 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
         }
 
         // If some or all count fields have data, send a DISPUTE_COUNT request
-        if (message.DisputeCounts.Count > 0)
+        if (message.DisputeCounts != null && message.DisputeCounts.Count > 0)
         {
             disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.COUNT;
             await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);

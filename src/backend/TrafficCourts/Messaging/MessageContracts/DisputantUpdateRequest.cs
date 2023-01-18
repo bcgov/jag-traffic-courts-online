@@ -159,7 +159,7 @@ public class DisputantUpdateRequest
     /// <summary>
     /// Dispute Counts
     /// </summary>
-    public ICollection<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount> DisputeCounts { get; set; } = null!;
+    public ICollection<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount>? DisputeCounts { get; set; } = null!;
 
     // TODO: Add document request fields
 }
