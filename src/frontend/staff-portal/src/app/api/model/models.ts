@@ -15,6 +15,7 @@ export * from './disputeInterpreterRequired.model';
 export * from './disputeRepresentedByLawyer.model';
 export * from './disputeStatus.model';
 export * from './disputeSystemDetectedOcrIssues.model';
+export * from './disputeWithUpdates.model';
 export * from './emailHistory.model';
 export * from './emailHistorySuccessfullySent.model';
 export * from './excludeStatus.model';

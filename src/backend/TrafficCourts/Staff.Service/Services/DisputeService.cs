@@ -5,6 +5,7 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Staff.Service.Models;
 using System.Collections.ObjectModel;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -270,27 +271,91 @@ public class DisputeService : IDisputeService
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ICollection<Dispute>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
     {
-        ICollection<Dispute> disputes = new Collection<Dispute>();
+        ICollection<DisputeWithUpdates> disputesWithUpdates = new Collection<DisputeWithUpdates>();
         ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputantUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
 
         foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest disputantUpdateRequest in pendingDisputeUpdateRequests)
         {
-            if (disputes.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId) is null)
+            DisputeWithUpdates? disputeWithUpdates = new DisputeWithUpdates();
+            if (disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId) is null)
             {
                 try
                 {
-                    Dispute pendingDispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId, cancellationToken);
-                    disputes.Add(pendingDispute);
+                    Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId, cancellationToken);
+
+                    // Fill in record to return
+                    disputeWithUpdates.DisputeId = dispute.DisputeId;
+                    disputeWithUpdates.DisputantGivenName1 = dispute.DisputantGivenName1;
+                    disputeWithUpdates.DisputantGivenName2 = dispute.DisputantGivenName2;
+                    disputeWithUpdates.DisputantGivenName3 = dispute.DisputantGivenName3;
+                    disputeWithUpdates.DisputantSurname = dispute.DisputantSurname;
+                    disputeWithUpdates.UserAssignedTo = dispute.UserAssignedTo;
+                    disputeWithUpdates.UserAssignedTs = dispute.UserAssignedTs;
+                    disputeWithUpdates.Status = dispute.Status;
+                    disputeWithUpdates.TicketNumber = dispute.TicketNumber;
+                    disputeWithUpdates.SubmittedTs = dispute.SubmittedTs;
+                    disputeWithUpdates.EmailAddress = dispute.EmailAddress;
+                    disputeWithUpdates.EmailAddressVerified = dispute.EmailAddressVerified; 
+
+                    // Check for future court hearing date
+                    disputeWithUpdates.HearingDate = null;
+                    ICollection<JJDispute> jjDisputes = await _oracleDataApi.GetJJDisputesAsync(null, dispute.TicketNumber, cancellationToken);
+                    if (jjDisputes != null && jjDisputes.Count > 0)
+                    {
+                        // review first one
+                        foreach(var jjDispute in jjDisputes)
+                        {
+                            if (jjDispute.JjDisputeCourtAppearanceRoPs.Count() > 0)
+                            {
+                                foreach (var courtAppearance in jjDispute.JjDisputeCourtAppearanceRoPs)
+                                {
+                                    if (courtAppearance.AppearanceTs > DateTimeOffset.Now && (disputeWithUpdates.HearingDate is null || disputeWithUpdates.HearingDate > courtAppearance.AppearanceTs))
+                                    {
+                                        disputeWithUpdates.HearingDate = courtAppearance.AppearanceTs;
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    disputesWithUpdates.Add(disputeWithUpdates);
                 }
                 catch (Exception ex) {  
                     // dont crash carry on
                 }
+            } else
+            {
+                disputeWithUpdates = disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId);
+            }
+            // check whether this udpate request is for an adjournment document
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            disputeWithUpdates.AdjournmentDocument = false;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
+            {
+                DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputantUpdateRequest.UpdateJson);
+                if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment") ;
+                {
+                    disputeWithUpdates.AdjournmentDocument = true;
+                }
+            }
+
+            // check whether this update request is for a change of plea
+            disputeWithUpdates.ChangeOfPlea = false;
+            if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.COUNT)
+            {
+                CountUpdateJSON? countUpdateJSON = JsonSerializer.Deserialize<CountUpdateJSON>(disputantUpdateRequest.UpdateJson);
+                if (countUpdateJSON is not null && countUpdateJSON.pleaCode is not null)
+                {
+                    disputeWithUpdates.ChangeOfPlea = true;
+                }
             }
         }
 
-        return disputes;
+        return disputesWithUpdates;
 
     }
 

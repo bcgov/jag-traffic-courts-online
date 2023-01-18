@@ -9,6 +9,8 @@ public enum DisputantUpdateRequestType implements ShortNamedEnum {
 	DISPUTANT_PHONE("PHN"),
 	DISPUTANT_NAME("NAM"),
 	COUNT("CNT"),
+	DISPUTANT_EMAIL("EML"),
+	DISPUTANT_DOCUMENT("DOC"),
 	COURT_OPTIONS("COP");
 
 	private String shortName;

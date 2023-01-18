@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeCountRequestCourtAppearance, DisputeStatus, OcrViolationTicket, Field } from 'app/api';
+import { DisputeService, DisputeWithUpdates } from 'app/services/dispute.service';
+import { Dispute } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
@@ -16,19 +16,17 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
-    '__RedGreenAlert',
-    '__DateSubmitted',
+    'submittedTs',
     'ticketNumber',
     'disputantSurname',
     'disputantGivenNames',
+    'hearingDate',
+    'changeOfPlea',
+    'adjournmentDocument',
     'status',
-    '__FilingDate',
-    '__CourtHearing',
-     'userAssignedTo',
+    'userAssignedTo'
   ];
-  disputes: Dispute[] = [];
   public userProfile: KeycloakProfile = {};
-  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -52,16 +50,10 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     this.getAllDisputesWithPendingUpdates();
   }
 
-  isNew(d: Dispute): boolean {
-    return d.status == DisputeStatus.New && (d.emailAddressVerified === true || !d.emailAddress);
-  }
-
   getAllDisputesWithPendingUpdates(): void {
     this.logger.log('UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates');
 
-    this.disputes = [];
-
-    this.dataSource.data = this.disputes;
+    this.dataSource.data = [];
 
     this.disputeService.getDisputesWithPendingUpdates().subscribe((response) => {
       this.logger.info(
@@ -69,44 +61,13 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
         response
       );
 
-      response.forEach((d:Dispute) => {
-        if (d.status != "CANCELLED") { // do not show cancelled
-          var newDispute: Dispute = {
-            ticketNumber: d.ticketNumber,
-            disputantSurname: d.disputantSurname,
-            disputantGivenNames: d.disputantGivenNames,
-            disputeId: d.disputeId,
-            userAssignedTo: d.userAssignedTo,
-            emailAddressVerified: d.emailAddressVerified,
-            emailAddress: d.emailAddress,
-            __CourtHearing: false,
-            __DateSubmitted: new Date(d.submittedTs),
-            __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
-            __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
-            additionalProperties: d.additionalProperties,
-            status: d.status,
-            __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
-            userAssignedTs: d.userAssignedTs
-          }
-
-          // set court hearing to true if its true for any one of the three possible counts
-          // otherwise false
-          if (d.disputeCounts) d.disputeCounts.forEach(c => {
-            if (c.requestCourtAppearance === this.RequestCourtAppearance.Y) {
-              newDispute.__CourtHearing = true;
-            }
-          });
-
-          this.disputes = this.disputes.concat(newDispute);
-        }
-      });
-      this.dataSource.data = this.disputes;
+      this.dataSource.data = response as DisputeWithUpdates[];
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: DisputeWithUpdates, b: DisputeWithUpdates) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: Dispute, filter) {
+      this.dataSource.filterPredicate = function (record: DisputeWithUpdates, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
     });

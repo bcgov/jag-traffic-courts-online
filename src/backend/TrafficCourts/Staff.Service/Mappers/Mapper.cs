@@ -1,6 +1,5 @@
 ﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
-
 namespace TrafficCourts.Staff.Service.Mappers;
 
 public class Mapper

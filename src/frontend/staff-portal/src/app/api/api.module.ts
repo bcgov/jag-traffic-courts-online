@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
+import { ComsService } from './api/coms.service';
 import { DisputeService } from './api/dispute.service';
 import { EmailHistoryService } from './api/emailHistory.service';
 import { FileHistoryService } from './api/fileHistory.service';

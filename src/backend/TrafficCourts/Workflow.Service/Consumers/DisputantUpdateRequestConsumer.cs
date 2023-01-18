@@ -110,6 +110,36 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
             await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
         }
 
+        // If some or all court options fields have data, send a COURT_OPTIONS update request
+        if (!string.IsNullOrEmpty(message.InterpreterLanguageCd)
+            || message.RepresentedByLawyer != null
+            || !string.IsNullOrEmpty(message.LawFirmName)
+            || !string.IsNullOrEmpty(message.LawyerSurname)
+            || !string.IsNullOrEmpty(message.LawyerGivenName1)
+            || !string.IsNullOrEmpty(message.LawyerGivenName2)
+            || !string.IsNullOrEmpty(message.LawyerGivenName3)
+            || !string.IsNullOrEmpty(message.LawyerAddress)
+            || !string.IsNullOrEmpty(message.LawyerPhoneNumber)
+            || !string.IsNullOrEmpty(message.LawyerEmail)
+            || message.InterpreterRequired != null
+            || message.WitnessNo != null
+            || !string.IsNullOrEmpty(message.FineReductionReason)
+            || !string.IsNullOrEmpty(message.TimeToPayReason))
+        {
+            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.COURT_OPTIONS;
+            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+        }
+
+        // If some or all count fields have data, send a DISPUTE_COUNT request
+        if (message.DisputeCounts != null && message.DisputeCounts.Count > 0)
+        {
+            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.COUNT;
+            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+        }
+
+        // TODO: ensure security so only requests authenticated with BCSC can do COURT_OPTIONS, COUNT, DOCUMENTS
+        // TODO: add document updates requests
+
         // If at least one disputantUpdateRequest was saved ...
         if (disputantUpdateRequest.UpdateType != DisputantUpdateRequestUpdateType.UNKNOWN)
         {

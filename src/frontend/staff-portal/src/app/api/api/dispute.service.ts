@@ -23,6 +23,8 @@ import { DisputantUpdateRequest } from '../model/disputantUpdateRequest.model';
 // @ts-ignore
 import { Dispute } from '../model/dispute.model';
 // @ts-ignore
+import { DisputeWithUpdates } from '../model/disputeWithUpdates.model';
+// @ts-ignore
 import { ExcludeStatus } from '../model/excludeStatus.model';
 // @ts-ignore
 import { ProblemDetails } from '../model/problemDetails.model';
@@ -749,9 +751,9 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<Dispute>>;
-    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<Dispute>>>;
-    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<Dispute>>>;
+    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<DisputeWithUpdates>>;
+    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<DisputeWithUpdates>>>;
+    public apiDisputeDisputeswithupdaterequestsGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<DisputeWithUpdates>>>;
     public apiDisputeDisputeswithupdaterequestsGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -794,7 +796,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/dispute/disputeswithupdaterequests`,
+        return this.httpClient.get<Array<DisputeWithUpdates>>(`${this.configuration.basePath}/api/dispute/disputeswithupdaterequests`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

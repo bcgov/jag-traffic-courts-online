@@ -6,6 +6,135 @@
     "version": "v1"
   },
   "paths": {
+    "/api/coms/uploaddocument": {
+      "post": {
+        "tags": [
+          "Coms"
+        ],
+        "summary": "Uploads and saves the provided document file in the common object management service along with metadata.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "File",
+                  "Metadata"
+                ],
+                "type": "object",
+                "properties": {
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "File": {
+                  "style": "form"
+                },
+                "Metadata": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The document is successfully uploaded and saved.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:update permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file upload from completing successfully."
+          }
+        }
+      }
+    },
     "/api/dispute/disputes": {
       "get": {
         "tags": [
@@ -1197,7 +1326,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Dispute"
+                    "$ref": "#/components/schemas/DisputeWithUpdates"
                   }
                 }
               },
@@ -1205,7 +1334,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Dispute"
+                    "$ref": "#/components/schemas/DisputeWithUpdates"
                   }
                 }
               },
@@ -1213,7 +1342,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Dispute"
+                    "$ref": "#/components/schemas/DisputeWithUpdates"
                   }
                 }
               }
@@ -3238,6 +3367,8 @@
           "DISPUTANT_PHONE",
           "DISPUTANT_NAME",
           "COUNT",
+          "DISPUTANT_EMAIL",
+          "DISPUTANT_DOCUMENT",
           "COURT_OPTIONS"
         ],
         "type": "string"
@@ -3643,6 +3774,89 @@
           "N"
         ],
         "type": "string"
+      },
+      "DisputeWithUpdates": {
+        "type": "object",
+        "properties": {
+          "disputeId": {
+            "type": "integer",
+            "description": "ID",
+            "format": "int64"
+          },
+          "ticketNumber": {
+            "type": "string",
+            "description": "Ticket Number",
+            "nullable": true
+          },
+          "submittedTs": {
+            "type": "string",
+            "description": "Timestamp that disputant submitted the notice of dispute",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputantSurname": {
+            "type": "string",
+            "description": "Disputant Surname",
+            "nullable": true
+          },
+          "disputantGivenName1": {
+            "type": "string",
+            "description": "Disputant Given Name 1",
+            "nullable": true
+          },
+          "disputantGivenName2": {
+            "type": "string",
+            "description": "Disputant Given Name 2",
+            "nullable": true
+          },
+          "disputantGivenName3": {
+            "type": "string",
+            "description": "Disputant Given Name 3",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/DisputeStatus"
+          },
+          "userAssignedTo": {
+            "type": "string",
+            "description": "VTC Staff assigned to dispute",
+            "nullable": true
+          },
+          "userAssignedTs": {
+            "type": "string",
+            "description": "Timestamp that VTC Staff was assigned to dispute",
+            "format": "date-time",
+            "nullable": true
+          },
+          "adjournmentDocument": {
+            "type": "boolean",
+            "description": "Whether or Not there is a pending request for an adjournment from the Disputant",
+            "nullable": true
+          },
+          "changeOfPlea": {
+            "type": "boolean",
+            "description": "Whether or not there is a pending request for a change of Plea from the Disputant",
+            "nullable": true
+          },
+          "hearingDate": {
+            "type": "string",
+            "description": "Date of next upcoming hearing (if there is one)",
+            "format": "date-time",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "Email address",
+            "nullable": true
+          },
+          "emailAddressVerified": {
+            "type": "boolean",
+            "description": "Email address verified",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a violation ticket notice of dispute."
       },
       "EmailHistory": {
         "type": "object",

@@ -96,7 +96,7 @@ export class UpdateRequestInfoComponent implements OnInit {
       this.disputeUpdateRequests = response;
 
       // sort oldest to newest
-      this.disputeUpdateRequests = this.disputeUpdateRequests.sort((a,b) => {if (a.createdTs < b.createdTs) return -1});
+      this.disputeUpdateRequests = this.disputeUpdateRequests.sort((a,b) => {if (b.createdTs < a.createdTs) return -1});
 
     });
   }
