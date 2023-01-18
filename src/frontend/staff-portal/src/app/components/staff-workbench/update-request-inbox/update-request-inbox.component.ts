@@ -19,7 +19,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'submittedTs',
     'ticketNumber',
     'disputantSurname',
-    'disputantGivenName1',
+    'disputantGivenNames',
     'hearingDate',
     'changeOfPlea',
     'adjournmentDocument',

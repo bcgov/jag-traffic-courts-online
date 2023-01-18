@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
+import { NgBusyComponent } from 'ng-busy';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
@@ -44,6 +45,9 @@ export class DisputeService implements IDisputeService {
         .pipe(
           map((response: DisputeWithUpdates[]) => {
             this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
+            response.forEach(x => {
+              x.disputantGivenNames = `${x.disputantGivenName1}${x.disputantGivenName2 ? ' ' + x.disputantGivenName2 : ''}${x.disputantGivenName3 ? ' ' + x.disputantGivenName3 : ''}`;
+            });
             return response;
           }),
           catchError((error: any) => {
@@ -470,8 +474,6 @@ export interface Dispute extends DisputeBase {
 
 export interface DisputeWithUpdates extends DisputeWithUpdatesBase {
   disputantGivenNames?: string;
-  __DateSubmitted?: Date,
-  __UserAssignedTs?: Date,
 }
 
 export interface DisputantUpdateRequest extends DisputantUpdateRequestBase {
