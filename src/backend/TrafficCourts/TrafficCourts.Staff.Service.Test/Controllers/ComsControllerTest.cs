@@ -304,4 +304,44 @@ public class ComsControllerTest
         Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
         Assert.True(problemDetails?.Title?.Contains("Error getting file from COMS"));
     }
+
+    [Fact]
+    public async void TestRemoveDocument200Result()
+    {
+        // Arrange
+        var comsService = new Mock<IComsService>();
+        Guid guid = Guid.NewGuid();
+        comsService
+            .Setup(_ => _.DeleteFileAsync(guid, It.IsAny<CancellationToken>()));
+        var mockLogger = new Mock<ILogger<ComsController>>();
+        ComsController comsController = new(comsService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await comsController.RemoveDocumentAsync(guid, CancellationToken.None);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+    }
+
+    [Fact]
+    public async void TestRemoveDocumentThrowsObjectManagementServiceException500result()
+    {
+        // Arrange
+        var comsService = new Mock<IComsService>();
+        Guid guid = Guid.NewGuid();
+        comsService
+            .Setup(_ => _.DeleteFileAsync(guid, It.IsAny<CancellationToken>()))
+            .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
+        var mockLogger = new Mock<ILogger<ComsController>>();
+        ComsController comsController = new(comsService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await comsController.RemoveDocumentAsync(guid, CancellationToken.None);
+
+        // Assert
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
+        Assert.True(problemDetails?.Title?.Contains("Error removing file from COMS"));
+    }
 }
