@@ -90,7 +90,7 @@ components:
           items:
             $ref: '#/components/schemas/JJDisputeCount'
         disputeId:
-          type: integer
+          type: string
         disputeRemarks:
           type: array
           items:
@@ -147,11 +147,11 @@ components:
         countNo:
           type: string
         disputeCountId:
-          type: integer
+          type: string
         disputeId:
           type: string
         fineDueDt:
-          type: string
+          type: date
         includesSurchargeYn:
           type: string
         pleaCd:
