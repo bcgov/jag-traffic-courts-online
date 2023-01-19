@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "c9512c6f-66f5-4409-9a2d-430520063056",
+		"_postman_id": "55789d7b-07c1-420d-8ab3-e668ef4b00cc",
 		"name": "TCO ORDS DEV",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "535849"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -141,7 +140,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/jjDisputeList?justinRccId&violationTicketId&ticketNumber",
+					"raw": "{{JUSTIN-TCO}}/v1/jjDisputeList?justinRccId=&violationTicketId=&ticketNumber=",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -251,7 +250,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/disputeStatus?disputeId&statusCd&userId",
+					"raw": "{{JUSTIN-TCO}}/v1/disputeStatus?disputeId=&statusCd=&userId=&courtAppearanceId&seizedYn&adjudicatorPartId&aattCd&dattCd&staffPartId",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -271,6 +270,30 @@
 						{
 							"key": "userId",
 							"value": ""
+						},
+						{
+							"key": "courtAppearanceId",
+							"value": null
+						},
+						{
+							"key": "seizedYn",
+							"value": null
+						},
+						{
+							"key": "adjudicatorPartId",
+							"value": null
+						},
+						{
+							"key": "aattCd",
+							"value": null
+						},
+						{
+							"key": "dattCd",
+							"value": null
+						},
+						{
+							"key": "staffPartId",
+							"value": null
 						}
 					]
 				}
@@ -283,7 +306,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeJj?disputeId&userId",
+					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeJj?disputeId=&userId=",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -311,7 +334,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeVtc?disputeId&userId",
+					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeVtc?disputeId=&userId=",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
