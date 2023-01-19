@@ -13,12 +13,17 @@ public class GetFileAsync : ObjectManagementServiceTest
         Dictionary<string, IEnumerable<string>> headers = new()
         {
             { "x-amz-meta-id", new string[] { id.ToString("d") } },
-            { "x-amz-meta-name", new string[] { "filename.png" } },
-            { "x-amz-meta-type", new string[] { "picture" } }
+            { "x-amz-meta-name", new string[] { "filename.png" } }
+        };
+
+        List<MetadataItem> metadataItems = new List<MetadataItem>
+        {
+            new MetadataItem { Key = "type", Value = "picture" }
         };
 
         var stream = GetRandomStream();
         SetupReadObjectReturn(new FileResponse(200, headers, stream, null, null));
+        SetupGetObjectMetadataAsync(new[] { new ObjectMetadata { Id = id, Metadata = metadataItems } });
 
         CancellationTokenSource cts = new CancellationTokenSource();
 

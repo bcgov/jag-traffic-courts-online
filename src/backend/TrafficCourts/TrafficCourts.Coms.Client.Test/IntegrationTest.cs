@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit.Abstractions;
@@ -131,7 +131,12 @@ namespace TrafficCourts.Coms.Client.Test
                 expectedFile.Tags.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
             }
 
+            // expect the file id to be null before creation
+            Assert.Null(expectedFile.Id);
             var id = await _service.CreateFileAsync(expectedFile, _cancellationToken);
+
+            // expect the file id to set after creation
+            Assert.Equal(id, expectedFile.Id);
 
             using var actualFile = await _service.GetFileAsync(id, false, _cancellationToken);
 
