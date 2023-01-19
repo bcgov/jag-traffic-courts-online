@@ -48,7 +48,6 @@ public class JJDispute extends Auditable<String>{
     @Enumerated(EnumType.STRING)
 	private JJDisputeStatus status;
 
-    @Enumerated(EnumType.STRING)
     private JJDisputeHearingType hearingType;
 
     /**
