@@ -94,7 +94,7 @@ components:
         disputeRemarks:
           type: array
           items:
-            $ref: '#/components/schemas/JJDisputeRemarks'
+            $ref: '#/components/schemas/JJDisputeRemark'
         disputeStatusTypeCd:
           type: string
         drvLicIssuedCtryId:
@@ -172,7 +172,7 @@ components:
           type: date
       allOf:
         - $ref: '#/components/schemas/AuditBase'
-    JJDisputeRemarks:
+    JJDisputeRemark:
       type: object
       properties:
         disputeRemarkId:

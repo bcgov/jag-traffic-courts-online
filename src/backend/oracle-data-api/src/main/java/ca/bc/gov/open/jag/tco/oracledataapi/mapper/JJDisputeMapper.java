@@ -10,6 +10,7 @@ import org.mapstruct.Named;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 
@@ -38,6 +39,7 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "interpreterLanguageCd", target = "interpreterLanguageCd")
 	@Mapping(source = "courtHearingTypeCd", target = "hearingType", qualifiedByName="mapHearingType")
 	@Mapping(source = "disputeCounts", target = "jjDisputedCounts")
+	@Mapping(source = "disputeRemarks", target = "remarks")
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "updDtm", target = "modifiedTs")
@@ -45,6 +47,7 @@ public abstract class JJDisputeMapper {
 	public abstract JJDispute convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute jjDispute);
 
 	@Mapping(source = "disputeCountId", target = "id")
+//	@Mapping(source = "disputeId", target = "jjDispute.disputeId")                      // TODO: field missing in model but exists in database
 	@Mapping(source = "countNo", target = "count")
 	@Mapping(source = "statuteId", target = "description")                              // TODO: adjust mapping to statuteId
 	@Mapping(source = "pleaCd", target = "plea", qualifiedByName="mapPlea")
@@ -64,6 +67,17 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "updDtm", target = "modifiedTs")
 	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDisputedCount convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount jjDisputeCount);
+
+	@Mapping(source = "disputeRemarkId", target = "id")
+//	@Mapping(source = "disputeId", target = "jjDispute.disputeId")                      // TODO: field missing in model but exists in database
+	@Mapping(source = "disputeRemarkTxt", target = "note")
+	@Mapping(source = "fullUserNameTxt", target = "userFullName")
+//	@Mapping(source = "remarksMadeDtm", target = "remarksMadeDtm")                      // TODO: field missing in model but exists in database
+	@Mapping(source = "entDtm", target = "createdTs")
+	@Mapping(source = "entUserId", target = "createdBy")
+	@Mapping(source = "updDtm", target = "modifiedTs")
+	@Mapping(source = "updUserId", target = "modifiedBy")
+	public abstract JJDisputeRemark convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeRemark jjDisputeRemark);
 
 	@Named("mapHearingType")
 	public JJDisputeHearingType mapHearingType(String statusShortCd) {
