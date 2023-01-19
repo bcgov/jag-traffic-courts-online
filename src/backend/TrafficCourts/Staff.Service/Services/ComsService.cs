@@ -51,6 +51,26 @@ public class ComsService : IComsService
         return comsFile;
     }
 
+    public async Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Deleting the file through COMS");
+
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
+
+        file.Metadata.TryGetValue("ticketnumber", out string? ticketNumber);
+        if (string.IsNullOrEmpty(ticketNumber))
+        {
+            ticketNumber = "unknown";
+            _logger.LogDebug("ticketnumber value from metadata is empty");
+        }
+
+        await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
+
+        // Save file delete event to file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, $"File: {file.FileName} was deleted by the Staff.");
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+    }
+
     public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
