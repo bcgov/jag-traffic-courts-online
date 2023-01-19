@@ -39,7 +39,7 @@ public class JJDisputeService : IJJDisputeService
         // TODO: Add search parameter "notice-of-dispute-id" for returning other documents for the associated dispute that were uploaded by the citizen
         // when there will be an endpoint to return disputes by ticket number.
 
-        dispute.FileIds = await _comsService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
+        dispute.FileData = await _comsService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
 
         return dispute;
     }

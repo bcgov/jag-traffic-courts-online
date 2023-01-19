@@ -71,25 +71,31 @@ public class ComsService : IComsService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task<List<Guid>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
+    public async Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
-        List<Guid> documentIds = new();
+        Dictionary<Guid, string> fileData = new();
 
         FileSearchParameters searchParameters = new(null, metadata, tags);
 
         List<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        if(searchResult != null && searchResult.Any())
+        if (searchResult != null && searchResult.Any())
         {
             foreach (var result in searchResult)
             {
-                documentIds.Add(result.Id);
+                result.Metadata.TryGetValue("name", out string? filename);
+                if (string.IsNullOrEmpty(filename))
+                {
+                    filename = "unknown";
+                    _logger.LogDebug("name value from metadata is empty");
+                }
+                fileData.Add(result.Id, filename);
             }
         }
 
-        return documentIds;
+        return fileData;
     }
 
     public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
