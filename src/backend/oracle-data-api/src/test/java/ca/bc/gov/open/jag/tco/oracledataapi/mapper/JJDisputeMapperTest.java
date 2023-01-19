@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
@@ -25,7 +26,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 	private JJDisputeMapper jjDisputeMapper;
 
 	@Test
-	void testMapper_old() throws Exception {
+	public void testJJDispute() throws Exception {
 		String disputeId = "42";
 		String ticketNumber = "EA90100004";
 		JJDisputeStatus disputeStatus = JJDisputeStatus.NEW;
@@ -57,25 +58,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String createdBy = "1";
 		Date modifiedTs =  RandomUtil.randomDate();
 		String modifiedBy = "2";
-
-		String disputeCountId = "42";
-		String countNo = "5";
-		String statuteId = "77";
-		Plea pleaCd = Plea.G;
-		Date fineDueDt =  RandomUtil.randomDate();
-		Date violationDt =  RandomUtil.randomDate();
-		Double adjustedAmt = Double.valueOf("10.53");
-		YesNo includesSurchargeYn = YesNo.Y;
-		Date revisedDueDt =  RandomUtil.randomDate();
-		Double totalFineAmt = Double.valueOf("123.45");
-		String comments = "comments and more comments";
-		YesNo requestTimeToPayYn = YesNo.Y;
-		YesNo requestReductionYn = YesNo.Y;
-		YesNo requestCourtAppearanceYn = YesNo.Y;
-		Date countCreatedTs =  RandomUtil.randomDate();
-		String countCreatedBy = "3";
-		Date countModifedTs =  RandomUtil.randomDate();
-		String countModifiedBy = "4";
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
 		source.setDisputeId(disputeId);
@@ -110,28 +92,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setUpdDtm(modifiedTs);
 		source.setUpdUserId(modifiedBy);
 
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount disputeCount = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount();
-		disputeCount.setDisputeCountId(disputeCountId);
-		disputeCount.setDisputeId(disputeId);
-		disputeCount.setCountNo(countNo);
-		disputeCount.setStatuteId(statuteId);
-		disputeCount.setPleaCd(pleaCd.getShortName());
-		disputeCount.setFineDueDt(fineDueDt);
-		disputeCount.setViolationDt(violationDt);
-		disputeCount.setAdjustedAmt(adjustedAmt);
-		disputeCount.setIncludesSurchargeYn(includesSurchargeYn.toString());
-		disputeCount.setRevisedDueDt(revisedDueDt);
-		disputeCount.setTotalFineAmt(totalFineAmt);
-		disputeCount.setCommentsTxt(comments);
-		disputeCount.setRequestTimeToPayYn(requestTimeToPayYn.toString());
-		disputeCount.setRequestReductionYn(requestReductionYn.toString());
-		disputeCount.setRequestCourtAppearanceYn(requestCourtAppearanceYn.toString());
-		disputeCount.setEntDtm(countCreatedTs);
-		disputeCount.setEntUserId(countCreatedBy);
-		disputeCount.setUpdDtm(countModifedTs);
-		disputeCount.setUpdUserId(countModifiedBy);
-		source.setDisputeCounts(Arrays.asList(disputeCount));
-
 		JJDispute target = jjDisputeMapper.convert(source);
 //		assertEquals(disputeId, target.getDisputeId());                                                 // TODO: field missing in model but exists in database
 		assertEquals(ticketNumber, target.getTicketNumber());
@@ -160,8 +120,57 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(createdBy, target.getCreatedBy());
 		assertEquals(modifiedTs, target.getModifiedTs());
 		assertEquals(modifiedBy, target.getModifiedBy());
+	}
 
+	@Test
+	public void testJJDisputeCount() throws Exception {
+		String disputeCountId = "42";
+		String disputeId = "142";
+		String countNo = "5";
+		String statuteId = "77";
+		Plea pleaCd = Plea.G;
+		Date fineDueDt =  RandomUtil.randomDate();
+		Date violationDt =  RandomUtil.randomDate();
+		Double adjustedAmt = Double.valueOf("10.53");
+		YesNo includesSurchargeYn = YesNo.Y;
+		Date revisedDueDt =  RandomUtil.randomDate();
+		Double totalFineAmt = Double.valueOf("123.45");
+		String comments = "comments and more comments";
+		YesNo requestTimeToPayYn = YesNo.Y;
+		YesNo requestReductionYn = YesNo.Y;
+		YesNo requestCourtAppearanceYn = YesNo.Y;
+		Date countCreatedTs =  RandomUtil.randomDate();
+		String countCreatedBy = "3";
+		Date countModifedTs =  RandomUtil.randomDate();
+		String countModifiedBy = "4";
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount disputeCount = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount();
+		disputeCount.setDisputeCountId(disputeCountId);
+		disputeCount.setDisputeId(disputeId);
+		disputeCount.setCountNo(countNo);
+		disputeCount.setStatuteId(statuteId);
+		disputeCount.setPleaCd(pleaCd.getShortName());
+		disputeCount.setFineDueDt(fineDueDt);
+		disputeCount.setViolationDt(violationDt);
+		disputeCount.setAdjustedAmt(adjustedAmt);
+		disputeCount.setIncludesSurchargeYn(includesSurchargeYn.toString());
+		disputeCount.setRevisedDueDt(revisedDueDt);
+		disputeCount.setTotalFineAmt(totalFineAmt);
+		disputeCount.setCommentsTxt(comments);
+		disputeCount.setRequestTimeToPayYn(requestTimeToPayYn.toString());
+		disputeCount.setRequestReductionYn(requestReductionYn.toString());
+		disputeCount.setRequestCourtAppearanceYn(requestCourtAppearanceYn.toString());
+		disputeCount.setEntDtm(countCreatedTs);
+		disputeCount.setEntUserId(countCreatedBy);
+		disputeCount.setUpdDtm(countModifedTs);
+		disputeCount.setUpdUserId(countModifiedBy);
+		source.setDisputeCounts(Arrays.asList(disputeCount));
+
+		JJDispute target = jjDisputeMapper.convert(source);
 		JJDisputedCount jjDisputedCount = target.getJjDisputedCounts().get(0);
+
 		assertEquals(Long.valueOf(disputeCountId), jjDisputedCount.getId());
 //		assertEquals(disputeId, jjDisputedCount.getJjDispute().getDisputeId());                         // TODO: field missing in model but exists in database
 		assertEquals(Integer.valueOf(countNo).intValue(), jjDisputedCount.getCount());
@@ -181,6 +190,43 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(countCreatedBy, jjDisputedCount.getCreatedBy());
 		assertEquals(countModifedTs, jjDisputedCount.getModifiedTs());
 		assertEquals(countModifiedBy, jjDisputedCount.getModifiedBy());
+	}
+
+	@Test
+	public void testJJDisputeRemark() throws Exception {
+		String disputeRemarkId = "142";
+		String disputeRemarkTxt = "This is a test remark";
+		String fullUserNameTxt = "John Smith";
+		Date remarksMadeDtm = RandomUtil.randomDate();
+		Date remarkCreatedTs =  RandomUtil.randomDate();
+		String remarkCreatedBy = "5";
+		Date remarkModifedTs =  RandomUtil.randomDate();
+		String remarkModifiedBy = "6";
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeRemark disputeRemark = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeRemark();
+		disputeRemark.setDisputeRemarkId(disputeRemarkId);
+		disputeRemark.setDisputeRemarkTxt(disputeRemarkTxt);
+		disputeRemark.setFullUserNameTxt(fullUserNameTxt);
+		disputeRemark.setRemarksMadeDtm(remarksMadeDtm);
+		disputeRemark.setEntDtm(remarkCreatedTs);
+		disputeRemark.setEntUserId(remarkCreatedBy);
+		disputeRemark.setUpdDtm(remarkModifedTs);
+		disputeRemark.setUpdUserId(remarkModifiedBy);
+		source.setDisputeRemarks(Arrays.asList(disputeRemark));
+
+		JJDispute target = jjDisputeMapper.convert(source);
+		JJDisputeRemark jjDisputeRemark = target.getRemarks().get(0);
+
+		assertEquals(Long.valueOf(disputeRemarkId ), jjDisputeRemark.getId());
+		assertEquals(disputeRemarkTxt, jjDisputeRemark.getNote());
+		assertEquals(fullUserNameTxt, jjDisputeRemark.getUserFullName());
+//		assertEquals(remarksMadeDtm, jjDisputeRemark.getRemarksMadeDtm());                              // TODO: field missing in model but exists in database
+		assertEquals(remarkCreatedTs, jjDisputeRemark.getCreatedTs());
+		assertEquals(remarkCreatedBy, jjDisputeRemark.getCreatedBy());
+		assertEquals(remarkModifedTs, jjDisputeRemark.getModifiedTs());
+		assertEquals(remarkModifiedBy, jjDisputeRemark.getModifiedBy());
 	}
 
 	@ParameterizedTest()
