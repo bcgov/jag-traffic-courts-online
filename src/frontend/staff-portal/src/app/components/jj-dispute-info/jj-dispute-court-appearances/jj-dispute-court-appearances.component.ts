@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeCourtAppearanceRoP as JJDisputeCourtAppearanceRoPBase } from 'app/api';
+import { JJDisputeService } from 'app/services/jj-dispute.service';
+import { UserRepresentation } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-jj-dispute-court-appearances',
@@ -22,13 +24,25 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
     "noAppTs",
     "clerkRecord",
     "defenseCounsel",
+    "dattCd",
     "crown",
     "jjSeized",
     "adjudicator"
-  ]
+  ];
+  jjList: UserRepresentation[];
 
-  constructor(
+
+  constructor(private jjDisputeService: JJDisputeService
   ) {
+    this.jjDisputeService.jjList$.subscribe(result => {
+      this.jjList = result;
+    });
+  }
+
+  getJJName(jjIDIR: string) {
+    let foundJJ = this.jjList.filter(x => x.idir === jjIDIR);
+    if (foundJJ.length > 0) return foundJJ[0].fullName;
+    else return jjIDIR;
   }
 
   ngOnInit(): void {

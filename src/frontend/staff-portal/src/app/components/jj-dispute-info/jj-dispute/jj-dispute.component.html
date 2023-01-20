@@ -160,25 +160,21 @@
         </span>
       </ng-container>
       <form [formGroup]="courtAppearanceForm" novalidate>
-        <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto">
+        <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
           <span class="section-grid-cell">
             <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">{{ courtAppearanceForm.get('appearanceTs').value | date: "MM/dd/YYYY HH:mm"
-              }}&nbsp;<button *ngIf="!isViewOnly" style="background:#fffee6" type="button"
-                (click)="updateAppearanceTs()">Now</button></p>
+            <p class="section-grid-text">{{ courtAppearanceForm.get('appearanceTs').value | date: "MM/dd/YYYY HH:mm"}}</p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Room</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="room" style="width:75px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('room').value }}</span>
+              <span>{{ courtAppearanceForm.get('room').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Reason</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="reason" style="width:75px; background:#777775" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('room').value }}</span>
+              <span>{{ courtAppearanceForm.get('room').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
@@ -213,6 +209,17 @@
             </p>
           </span>
           <span class="section-grid-cell">
+            <p class="section-grid-header">Def Att</p>
+            <p class="section-grid-text">
+              <mat-select *ngIf="!isViewOnly" formControlName="dattCd" style="background:#fffee6">
+                <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
+                <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
+                <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
+              </mat-select>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('dattCd').value }}</span>
+            </p>
+          </span>
+          <span class="section-grid-cell">
             <p class="section-grid-header">Crown</p>
             <p class="section-grid-text">
               <mat-select *ngIf="!isViewOnly" formControlName="crown" style="background:#fffee6">
@@ -225,18 +232,20 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">Seized</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="jjSeized" style="width:75px; background:#fffee6" />
+              <mat-select *ngIf="!isViewOnly" formControlName="jjSeized" style="background:#fffee6">
+                <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
+                <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
+              </mat-select>
               <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('jjSeized').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Judicial Justice</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="adjudicator" style="width:150px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('adjudicator').value }}</span>
+              <span>{{ courtAppearanceForm.get('adjudicatorName').value }}</span>
             </p>
           </span>
-          <span class="section-grid-cell" style="grid-column: span 10">
+          <span class="section-grid-cell" style="grid-column: span 11">
             <p class="section-grid-header">Comments:</p>
             <p class="section-grid-text">
               <input *ngIf="!isViewOnly" formControlName="comments" style="width:95%; background:#fffee6" />

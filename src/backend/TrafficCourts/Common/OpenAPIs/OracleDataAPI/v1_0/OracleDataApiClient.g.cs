@@ -4709,12 +4709,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("defenseCounsel", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string DefenseCounsel { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("dattCd", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputeCourtAppearanceRoPDattCd? DattCd { get; set; }
+
         [Newtonsoft.Json.JsonProperty("crown", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public JJDisputeCourtAppearanceRoPCrown? Crown { get; set; }
 
         [Newtonsoft.Json.JsonProperty("jjSeized", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string JjSeized { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputeCourtAppearanceRoPJjSeized? JjSeized { get; set; }
 
         [Newtonsoft.Json.JsonProperty("adjudicator", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Adjudicator { get; set; }
@@ -5721,6 +5726,24 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputeCourtAppearanceRoPDattCd
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"A")]
+        A = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"C")]
+        C = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum JJDisputeCourtAppearanceRoPCrown
     {
 
@@ -5729,6 +5752,21 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [System.Runtime.Serialization.EnumMember(Value = @"P")]
         P = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputeCourtAppearanceRoPJjSeized
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
         N = 2,

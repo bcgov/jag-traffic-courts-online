@@ -1621,6 +1621,11 @@
             "type": "string",
             "nullable": true
           },
+          "dattCd": {
+            "type": "string",
+            "nullable": true,
+            "enum": [ "UNKNOWN", "A", "C", "N" ]
+          },
           "crown": {
             "type": "string",
             "nullable": true,
@@ -1628,7 +1633,8 @@
           },
           "jjSeized": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "adjudicator": {
             "type": "string",

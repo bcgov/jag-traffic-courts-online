@@ -100,6 +100,14 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
     private String defenseCounsel;
 	
 	/**
+	 * Defense Counsel Attendance
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private JJDisputeCourtAppearanceDATT dattCd;
+	
+	/**
 	 * Crown present (P) or not present (N)
 	 */
 	@Column
@@ -111,8 +119,9 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 	 * JJ Seized
 	 */
 	@Column
+	@Enumerated(EnumType.STRING)
 	@Schema(nullable = true)
-    private String jjSeized;
+    private YesNo jjSeized;
 	
 	/**
 	 * Adjudicator

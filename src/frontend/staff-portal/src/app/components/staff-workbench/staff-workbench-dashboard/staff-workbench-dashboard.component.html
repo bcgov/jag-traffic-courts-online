@@ -1,9 +1,9 @@
-<app-page [busy]="busy">
+<app-page [busy]="busy" class="container">
   <div class="flex-wrapper">
     <div class="flex-header d-print-none mb-40">
       <app-header></app-header>
     </div>
-    <div *ngIf="!showTicket" style="padding-left:5%; padding-right:5%">
+    <div *ngIf="!showTicket" class="dashBody">
       <br /><br />
       <mat-tab-group mat-align-tabs="start" [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)" >
         <mat-tab>
@@ -23,7 +23,7 @@
         </mat-tab>
       </mat-tab-group>
     </div>
-    <div *ngIf="showTicket" style="padding-left:5%; padding-right:5%; margin-bottom:15vh">
+    <div *ngIf="showTicket" class="dashBody">
       <app-contact-info *ngIf="decidePopup == 'A' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-contact-info>
       <app-ticket-info *ngIf="decidePopup == 'E' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-ticket-info>
       <app-update-request-info *ngIf="tabSelected.value === 2" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-update-request-info>

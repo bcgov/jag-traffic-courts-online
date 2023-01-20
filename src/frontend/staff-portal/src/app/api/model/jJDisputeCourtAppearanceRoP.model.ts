@@ -11,6 +11,8 @@
  */
 import { JJDisputeCourtAppearanceRoPApp } from './jJDisputeCourtAppearanceRoPApp.model';
 import { JJDisputeCourtAppearanceRoPCrown } from './jJDisputeCourtAppearanceRoPCrown.model';
+import { JJDisputeCourtAppearanceRoPDattCd } from './jJDisputeCourtAppearanceRoPDattCd.model';
+import { JJDisputeCourtAppearanceRoPJjSeized } from './jJDisputeCourtAppearanceRoPJjSeized.model';
 
 
 export interface JJDisputeCourtAppearanceRoP { 
@@ -27,8 +29,9 @@ export interface JJDisputeCourtAppearanceRoP {
     noAppTs?: string | null;
     clerkRecord?: string | null;
     defenseCounsel?: string | null;
+    dattCd?: JJDisputeCourtAppearanceRoPDattCd;
     crown?: JJDisputeCourtAppearanceRoPCrown;
-    jjSeized?: string | null;
+    jjSeized?: JJDisputeCourtAppearanceRoPJjSeized;
     adjudicator?: string | null;
     comments?: string | null;
     additionalProperties?: { [key: string]: any; } | null;

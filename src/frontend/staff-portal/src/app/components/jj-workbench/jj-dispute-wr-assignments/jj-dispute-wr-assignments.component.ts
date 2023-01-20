@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { CourthouseConfig } from '@config/config.model';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
@@ -22,6 +22,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort = new MatSort();
 
   busy: Subscription;
+  tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   courtLocations: CourthouseConfig[];
@@ -31,8 +32,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   HearingType = JJDisputeHearingType;
   teamCounts: teamCounts[] = [];
   jjList: UserRepresentation[];
-  assignedDataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
-  unassignedDataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
+  dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "assignedIcon",
     "jjAssignedTo",
@@ -68,15 +68,52 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getAll("A");
+    // override the default sortData with our custom sort function
+    this.dataSource.sortData = this.customSortData('jjAssignedTo');
   }
 
   ngAfterViewInit() {
-    this.assignedDataSource.sort = this.sort;
-    this.unassignedDataSource.sort = this.sort;
+    this.dataSource.sort = null;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sort.active = 'ticketNumber';
   }
 
-  sortData(event: Sort) {
-    this.assignedDataSource.sort = this.sort;
+  // custom sort function
+  customSortData(firstKey: string) {
+    let sortFunction = (items: JJDispute[], sort: MatSort): JJDispute[] => {
+      if (!sort.active || sort.direction === '') {
+        return items;
+      }
+      return this.sortDataByTwoKeys(
+        items,
+        firstKey,
+        sort.active,
+        sort.direction
+      );
+    };
+    return sortFunction;
+  }
+
+  // Compare logic
+  sortDataByTwoKeys(
+    data: JJDispute[],
+    firstKey: string,
+    secondKey: string,
+    orderBy: 'asc' | 'desc' = 'asc'
+  ) {
+  return data.sort((item1, item2) => {
+    if (((item1[firstKey] === this.valueOfUnassigned || !item1[firstKey]) && (item2[firstKey] === this.valueOfUnassigned || !item2[firstKey]))
+     || (item1[firstKey] !== this.valueOfUnassigned && item2[firstKey] !== this.valueOfUnassigned)) {
+
+      if (orderBy === 'asc' && item1[secondKey] <= item2[secondKey]) return -1;
+      if (orderBy === 'asc' && item1[secondKey] > item2[secondKey]) return 1;
+      if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return 1;
+      if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return -1;
+    }
+    let firstKeyResult = 1;
+    if (item1[firstKey] == this.valueOfUnassigned || !item1[firstKey]) firstKeyResult = -1;
+    return firstKeyResult;
+  });
   }
 
   backWorkbench(element) {
@@ -93,8 +130,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   filterByTeam(team: string) {
     let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
-    this.assignedDataSource.data = this.data.filter(x => x.jjAssignedTo && x.jjAssignedTo !== this.valueOfUnassigned && teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
-    this.unassignedDataSource.data = this.data.filter(x => (!x.jjAssignedTo || x.jjAssignedTo === this.valueOfUnassigned) && teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
+    this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
     this.currentTeam = team;
   }
 
@@ -119,24 +155,33 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   getAll(team: string): void {
     // filter jj disputes only show new, review, in_progress
     this.data = this.data.filter(x => (this.jjDisputeService.jjDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
-    this.data = this.data.sort((a, b) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
-    this.resetAssignedUnassigned();
+    this.data = this.data.sort((a, b) => {
+      if (((a.jjAssignedTo === this.valueOfUnassigned || !a.jjAssignedTo) && (b.jjAssignedTo === this.valueOfUnassigned || !b.jjAssignedTo))
+     || (a.jjAssignedTo !== this.valueOfUnassigned && b.jjAssignedTo !== this.valueOfUnassigned)) {
+
+      if (a.submittedTs <= b.submittedTs) return -1;
+      else return 1;
+    }
+      let firstKeyResult = 1;
+      if (a.jjAssignedTo == this.valueOfUnassigned || !a.jjAssignedTo) firstKeyResult = -1;
+      return firstKeyResult;
+    });
+
+    this.dataSource.data = this.data;
+    this.dataSource.data.forEach(jjDispute => {
+      if (!jjDispute.jjAssignedTo) {
+        let index = this.dataSource.data.indexOf(jjDispute);
+        jjDispute.jjAssignedTo = this.valueOfUnassigned;
+        this.dataSource.data[index] = jjDispute;
+      }
+    });
+    this.dataSource.data = [... this.dataSource.data]; // trigger sort
+    this.resetCounts();
 
     this.filterByTeam(team); // initialize
   }
 
-  resetAssignedUnassigned() {
-    this.assignedDataSource.data = null;
-    this.unassignedDataSource.data = null;
-
-    this.assignedDataSource.data = this.data.filter(x => x.jjAssignedTo && x.jjAssignedTo !== this.valueOfUnassigned);
-    this.unassignedDataSource.data = this.data.filter(x => !x.jjAssignedTo || x.jjAssignedTo === this.valueOfUnassigned);
-    this.unassignedDataSource.data.forEach(jjDispute => {
-      let index = this.unassignedDataSource.data.indexOf(jjDispute);
-      jjDispute.jjAssignedTo = this.valueOfUnassigned;
-      this.unassignedDataSource.data[index] = jjDispute;
-    });
-
+  resetCounts() {
     this.teamCounts = [];
     this.teamCounts.push(this.getTeamCount("A"));
     this.teamCounts.push(this.getTeamCount("B"));
@@ -152,11 +197,9 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   onSelectAll(event: MatCheckboxChange) {
     if (event.checked) {
-      this.assignedDataSource.data.forEach(x => x.bulkAssign);
-      this.unassignedDataSource.data.forEach(x => x.bulkAssign);
+      this.dataSource.data.forEach(x => x.bulkAssign);
     } else {
-      this.assignedDataSource.data.forEach(x => !x.bulkAssign);
-      this.unassignedDataSource.data.forEach(x => !x.bulkAssign);
+      this.dataSource.data.forEach(x => !x.bulkAssign);
     }
   }
 
@@ -173,18 +216,14 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   getBulkButtonDisabled() {
-    if (this.assignedDataSource.data.filter(x => x.bulkAssign)?.length == 0 &&
-      this.unassignedDataSource.data.filter(x => x.bulkAssign)?.length === 0)
+    if (this.dataSource.data.filter(x => x.bulkAssign)?.length == 0)
       return true;
     else return false;
   }
 
   onBulkAssign() {
     let ticketNumbers = [];
-    this.assignedDataSource.data.forEach(jjDispute => {
-      if (jjDispute.bulkAssign) ticketNumbers.push(jjDispute.ticketNumber);
-    })
-    this.unassignedDataSource.data.forEach(jjDispute => {
+    this.dataSource.data.forEach(jjDispute => {
       if (jjDispute.bulkAssign) ticketNumbers.push(jjDispute.ticketNumber);
     });
     this.bulkUpdateJJAssignedTo(ticketNumbers, this.bulkjjAssignedTo);

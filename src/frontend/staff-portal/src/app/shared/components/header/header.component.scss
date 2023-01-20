@@ -2,6 +2,9 @@
 
 .header {
   background-color: theme-palette(blue);
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
 
 .mat-toolbar {

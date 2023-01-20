@@ -108,20 +108,20 @@ INSERT INTO JJDISPUTED_COUNT (ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_
 (41, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'ST04605408', 'ST04605408', 1, 'Y', '', '129(1) Red light at intersection', 0, 'N', 167.00, 167.00, 'Y', 'N', DATEADD('DAY', 30, CURRENT_DATE), null);
 
 INSERT INTO JJDISPUTE_COURT_APPEARANCE_ROP (ID, JJ_DISPUTE_TICKET_NUMBER, JJDISPUTE_ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, APPEARANCE_TS, ROOM, REASON, APP, NO_APP_TS, CLERK_RECORD, 
-DEFENSE_COUNSEL, CROWN, JJ_SEIZED, ADJUDICATOR, COMMENTS, DURATION) VALUES 
-(1, 'EA00241528', 'EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, LOCALTIMESTAMP, '304', 'HR', NULL, NULL, '', '', 'P', '', 'I.BLACKSTONE', '', 15),
-(2, 'EA07789632', 'EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T08:00:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'I.BLACKSTONE', '', 15),
-(3, 'EA07789632', 'EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-10-22T08:00:00', 'n/a', 'HR', 'P', NULL, '', '', 'P', '', 'I.BLACKSTONE', 'Continuation, could not reach decision before court closure', 15),
-(4, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T08:15:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'I.BLACKSTONE', '', 15),
-(5, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-08-08T08:15:00', 'n/a', 'HR', 'A', NULL, '', 'D. McGriff', 'P', 'Yes', 'C. O''HIGGINS', 'Adjourned. Witnesses were unable to attend.', 15),
-(6, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-04-01T10:15:00', 'n/a', 'HR', 'A', NULL, '', 'D. McGriff', 'P', 'Yes', 'C. O''HIGGINS', 'Adjourned. Additional Exhibits requested by the Crown.', 15),
-(7, 'EA04788953', 'EA04788953', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:15:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
-(8, 'EA05888444', 'EA05888444', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:30:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
-(9, 'AO38375806', 'AO38375806', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:45:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
-(10, 'AU46117416', 'AU46117416', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T10:00:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
-(11, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T10:45:00', 'n/a', 'HR', NULL, NULL, '', '', NULL, '', 'C. O''HIGGINS', '', 15),
-(12, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-11-01T10:45:00', 'n/a', 'HR', 'P', NULL, '', 'L. Hutz', 'P', 'Yes', 'L. DAME', 'Lionel Hutz requested a conitinuation because the disputant forgot their exhibits on the bus. ', 15),
-(13, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-02-08T09:45:00', 'n/a', 'HR', 'P', NULL, '', 'L. Hutz', 'P', 'Yes', 'L. DAME', 'Rescheduled due to COVID-19. ', 15);
+DEFENSE_COUNSEL, DATT_CD, CROWN, JJ_SEIZED, ADJUDICATOR, COMMENTS, DURATION) VALUES 
+(1, 'EA00241528', 'EA00241528', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, LOCALTIMESTAMP, '304', 'HR', NULL, NULL, '', '', 'N', 'P', 'N', 'LDAME', '', 15),
+(2, 'EA07789632', 'EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T08:00:00', 'n/a', 'HR', NULL, NULL, '', '', 'N', NULL, 'N', 'COLMOHIG', '', 15),
+(3, 'EA07789632', 'EA07789632', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-10-22T08:00:00', 'n/a', 'HR', 'P', NULL, '', '', 'N', 'P', 'N', 'LDAME', 'Continuation, could not reach decision before court closure', 15),
+(4, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T08:15:00', 'n/a', 'HR', NULL, NULL, '', '', 'N', NULL, 'N', 'COLMOHIG', '', 15),
+(5, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-08-08T08:15:00', 'n/a', 'HR', 'A', NULL, '', 'D. McGriff', 'N', 'P', 'N', 'LDAME', 'Adjourned. Witnesses were unable to attend.', 15),
+(6, 'EA01115462', 'EA01115462', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-04-01T10:15:00', 'n/a', 'HR', 'A', NULL, '', 'D. McGriff', 'N', 'P', 'N', 'LDAME', 'Adjourned. Additional Exhibits requested by the Crown.', 15),
+(7, 'EA04788953', 'EA04788953', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:15:00', 'n/a', 'HR', NULL, NULL, '', '', 'N', NULL, 'N', 'COLMOHIG', '', 15),
+(8, 'EA05888444', 'EA05888444', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:30:00', 'n/a', 'HR', NULL, NULL, '', '', 'N', NULL, 'N', 'COLMOHIG', '', 15),
+(9, 'AO38375806', 'AO38375806', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T09:45:00', 'n/a', 'HR', NULL, NULL, '', '', 'N', NULL, 'N', 'COLMOHIG', '', 15),
+(10, 'AU46117416', 'AU46117416', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T10:00:00', 'n/a', 'HR', NULL, NULL, '', '', 'N', NULL, 'N', 'LDAME', '', 15),
+(11, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2023-03-03T10:45:00', 'n/a', 'HR', NULL, NULL, '', '', 'N', NULL, 'N', 'COLMOHIG', '', 15),
+(12, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-11-01T10:45:00', 'n/a', 'HR', 'P', NULL, '', 'L. Hutz', 'C', 'P', 'Y', 'LDAME', 'Lionel Hutz requested a conitinuation because the disputant forgot their exhibits on the bus. ', 15),
+(13, 'ST04605408', 'ST04605408', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '2022-02-08T09:45:00', 'n/a', 'HR', 'P', NULL, '', 'L. Hutz', 'N', 'P', 'Y', 'COLMOHIG', 'Rescheduled due to COVID-19. ', 15);
 
 INSERT INTO JJDISPUTED_COUNT_ROP (ID, JJDISPUTEDCOUNT_ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, FINDING, LESSER_DESCRIPTION, SS_PROBATION_DURATION, SS_PROBATION_CONDITIONS,
 JAIL_DURATION, JAIL_INTERMITTENT, PROBATION_DURATION, PROBATION_CONDITIONS, DRIVING_PROHIBITION, DRIVING_PROHIBITIONMVASECTION, DISMISSED, FOR_WANT_OF_PROSECUTION, WITHDRAWN,

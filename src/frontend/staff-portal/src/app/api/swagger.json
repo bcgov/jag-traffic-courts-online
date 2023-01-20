@@ -4249,12 +4249,14 @@
             "type": "string",
             "nullable": true
           },
+          "dattCd": {
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPDattCd"
+          },
           "crown": {
             "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPCrown"
           },
           "jjSeized": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPJjSeized"
           },
           "adjudicator": {
             "type": "string",
@@ -4287,6 +4289,23 @@
         "enum": [
           "UNKNOWN",
           "P",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputeCourtAppearanceRoPDattCd": {
+        "enum": [
+          "UNKNOWN",
+          "A",
+          "C",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputeCourtAppearanceRoPJjSeized": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
           "N"
         ],
         "type": "string"

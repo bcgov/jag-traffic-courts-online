@@ -3,10 +3,10 @@ import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
-import { UserRepresentation } from 'app/services/auth.service';
+import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -26,6 +26,8 @@ export class JJDisputeComponent implements OnInit {
   busy: Subscription;
   courtAppearanceForm: FormGroup;
   lastUpdatedJJDispute: JJDispute;
+  jjIDIR: string;
+  jjName: string;
   todayDate: Date = new Date();
   retrieving: boolean = true;
   violationDate: string = "";
@@ -40,12 +42,15 @@ export class JJDisputeComponent implements OnInit {
   HearingType = JJDisputeHearingType;
   RoPApp = JJDisputeCourtAppearanceRoPApp;
   RoPCrown = JJDisputeCourtAppearanceRoPCrown;
+  RoPDatt = JJDisputeCourtAppearanceRoPDattCd;
+  RoPSeized = JJDisputeCourtAppearanceRoPJjSeized;
   DisputeStatus = JJDisputeStatus;
   requireCourtHearingReason: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
+    private authService: AuthService,
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
@@ -74,8 +79,17 @@ export class JJDisputeComponent implements OnInit {
       crown: [null],
       jjSeized: [null],
       adjudicator: [null],
-      comments: [null]
-    });;
+      comments: [null],
+      dattCd: [null],
+      adjudicatorName: [null]
+    });
+
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
+        this.jjIDIR = userProfile.idir;
+        this.jjName = userProfile.fullName;
+      }
+    })
   }
 
   public onSubmit(): void {
@@ -224,6 +238,10 @@ export class JJDisputeComponent implements OnInit {
           return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
         });
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
+        if (!this.isViewOnly) {
+          this.courtAppearanceForm.get('adjudicator').setValue(this.jjIDIR);
+          this.courtAppearanceForm.get('adjudicatorName').setValue(this.jjName);
+        }
       }
     });
   }

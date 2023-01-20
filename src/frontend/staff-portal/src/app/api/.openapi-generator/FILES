@@ -41,6 +41,8 @@ model/jJDispute.model.ts
 model/jJDisputeCourtAppearanceRoP.model.ts
 model/jJDisputeCourtAppearanceRoPApp.model.ts
 model/jJDisputeCourtAppearanceRoPCrown.model.ts
+model/jJDisputeCourtAppearanceRoPDattCd.model.ts
+model/jJDisputeCourtAppearanceRoPJjSeized.model.ts
 model/jJDisputeDisputantAttendanceType.model.ts
 model/jJDisputeHearingType.model.ts
 model/jJDisputeRemark.model.ts

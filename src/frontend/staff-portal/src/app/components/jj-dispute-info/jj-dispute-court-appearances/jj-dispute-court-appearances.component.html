@@ -71,7 +71,16 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="crown">
+  <ng-container matColumnDef="dattCd">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      DEF ATT
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{ element.dattCd }}</span>
+    </td>
+  </ng-container>
+
+    <ng-container matColumnDef="crown">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       CROWN
     </th>
@@ -94,7 +103,7 @@
       Judicial Justice
     </th>
     <td mat-cell *matCellDef="let element">
-      <span>{{ element.adjudicator }}</span>
+      <span>{{ getJJName(element.adjudicator) }}</span>
     </td>
   </ng-container>
 
