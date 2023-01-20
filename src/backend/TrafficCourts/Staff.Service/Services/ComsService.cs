@@ -81,18 +81,15 @@ public class ComsService : IComsService
 
         List<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        if (searchResult != null && searchResult.Any())
+        foreach (var result in searchResult)
         {
-            foreach (var result in searchResult)
+            result.Metadata.TryGetValue("name", out string? filename);
+            if (string.IsNullOrEmpty(filename))
             {
-                result.Metadata.TryGetValue("name", out string? filename);
-                if (string.IsNullOrEmpty(filename))
-                {
-                    filename = "unknown";
-                    _logger.LogDebug("name value from metadata is empty");
-                }
-                fileData.Add(result.Id, filename);
+                filename = "unknown";
+                _logger.LogDebug("name value from metadata is empty");
             }
+            fileData.Add(result.Id, filename);
         }
 
         return fileData;
