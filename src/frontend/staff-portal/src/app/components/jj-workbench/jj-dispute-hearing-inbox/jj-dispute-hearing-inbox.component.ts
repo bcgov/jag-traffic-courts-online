@@ -27,6 +27,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     appearanceTs: new Date()
   }
   appearanceDateFilter = new FormControl(new Date());
+  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   jjAssignedToFilter = new FormControl('');
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
   statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;

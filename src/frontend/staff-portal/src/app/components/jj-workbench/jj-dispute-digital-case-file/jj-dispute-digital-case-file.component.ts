@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { Observable } from 'rxjs';
 
@@ -17,8 +16,8 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   @ViewChild(MatSort) sort = new MatSort();
 
   HearingType = JJDisputeHearingType;
-  statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
   jjAssignedToFilter: string;
+  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   filterText: string;
   data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
@@ -61,9 +60,9 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   refreshData(jjDisputes: JJDispute[]): void {
     this.data = jjDisputes;
     // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
-    this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1 && x.hearingType === this.HearingType.CourtAppearance);
+    this.data = this.data.filter(x => x.status);
     this.dataSource.data = this.data;
-
+    console.log(this.data, this.dataSource.data);
     // initially sort by submitted date within status
     this.dataSource.data = this.dataSource.data.sort((a, b) => {
       // if they have the same status

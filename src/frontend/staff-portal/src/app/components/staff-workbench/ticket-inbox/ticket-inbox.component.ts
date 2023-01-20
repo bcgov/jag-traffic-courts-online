@@ -16,6 +16,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   @Output() public disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   dataSource = new MatTableDataSource();
+  tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',

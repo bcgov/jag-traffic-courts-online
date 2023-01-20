@@ -15,94 +15,96 @@
     </mat-select>
   </div>
 </div>
-<table mat-table [dataSource]="dataSource" style="margin-bottom:30px; width:97%" class="mat-elevation-z8" matSort>
-  <ng-container matColumnDef="jjAssignedTo">
-    <th mat-header-cell *matHeaderCellDef style="width:200px !important" mat-sort-header>
-      <div>
-        ASSIGNED TO
-      </div>
-    </th>
-    <td mat-cell *matCellDef="let element" style="width:200px !important">
-      JJ&nbsp;{{ element.jjAssignedToName }}
-    </td>
-  </ng-container>
+<div class="row" style="overflow: auto;" [ngStyle]="{'height.px': tableHeight}">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <ng-container matColumnDef="jjAssignedTo">
+      <th mat-header-cell *matHeaderCellDef style="width:200px !important;" mat-sort-header>
+        <div>
+          &nbsp;&nbsp;ASSIGNED TO
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let element" style="width:200px !important;" >
+        &nbsp;&nbsp;JJ&nbsp;{{ element.jjAssignedToName }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="ticketNumber">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      VT NUMBER
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span *ngIf="element.isEditable"><a (click)="backWorkbench(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
-      <span *ngIf="!element.isEditable">{{ element.ticketNumber }}</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="ticketNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        VT NUMBER
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.isEditable"><a (click)="backWorkbench(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
+        <span *ngIf="!element.isEditable">{{ element.ticketNumber }}</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="dateSubmitted">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      SUBMITTED DATE
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span>{{ element.submittedTs | date: "dd-MMM-yyyy" }}</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="dateSubmitted">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        SUBMITTED DATE
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.submittedTs | date: "dd-MMM-yyyy" }}</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="violationDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      VIOLATION DATE
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="violationDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        VIOLATION DATE
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="courthouseLocation">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      COURT HOUSE
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span>{{ element.courthouseLocation }}</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="courthouseLocation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        COURT HOUSE
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.courthouseLocation }}</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="appearanceTs">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      DATE / TIME
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span>{{ element.appearanceTs | date:"MM/dd/YYYY HH:mm" }}</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="appearanceTs">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        DATE / TIME
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.appearanceTs | date:"MM/dd/YYYY HH:mm" }}</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="duration">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      DURATION (min)
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span>{{ element.duration }}</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        DURATION (min)
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.duration }}</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="room">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      COURT ROOM
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span>{{ element.room }}</span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="room">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        COURT ROOM
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.room }}</span>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      STATUS
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span *ngIf="element.status==='HEARING_SCHEDULED'"><button mat-rounded-button style="color:white; background-color:#8fd08f; width:150px; border-radius: 10px;" disabled="true">Scheduled</button></span>
-      <span *ngIf="element.status==='IN_PROGRESS'"><button mat-rounded-button style="color:white; background-color:#fcba19; width:150px; border-radius: 10px;" disabled="true">In Progress</button></span>
-      <span *ngIf="element.status==='REVIEW'"><button mat-rounded-button style="color:white; background-color:#f63f3f; width:150px; border-radius: 10px;" disabled="true">Review</button></span>
-      <span *ngIf="statusComplete.indexOf(element.status) > -1"><button mat-rounded-button style="color:white; background-color:#c5c5c5; width:150px; border-radius: 10px;" disabled="true">Complete</button></span>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        STATUS
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.status==='HEARING_SCHEDULED'"><button mat-rounded-button style="color:white; background-color:#8fd08f; width:150px; border-radius: 10px;" disabled="true">Scheduled</button></span>
+        <span *ngIf="element.status==='IN_PROGRESS'"><button mat-rounded-button style="color:white; background-color:#fcba19; width:150px; border-radius: 10px;" disabled="true">In Progress</button></span>
+        <span *ngIf="element.status==='REVIEW'"><button mat-rounded-button style="color:white; background-color:#f63f3f; width:150px; border-radius: 10px;" disabled="true">Review</button></span>
+        <span *ngIf="statusComplete.indexOf(element.status) > -1"><button mat-rounded-button style="color:white; background-color:#c5c5c5; width:150px; border-radius: 10px;" disabled="true">Complete</button></span>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

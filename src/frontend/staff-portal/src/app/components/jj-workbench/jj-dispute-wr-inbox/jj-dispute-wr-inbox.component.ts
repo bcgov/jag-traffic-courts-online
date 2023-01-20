@@ -20,6 +20,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   busy: Subscription;
 
   jjIDIR: string;
+  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   HearingType = JJDisputeHearingType;
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
   statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
