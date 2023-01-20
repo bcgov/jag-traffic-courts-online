@@ -41,7 +41,7 @@ public static class MetadataValidator
     /// <param name="items"></param>
     /// <exception cref="MetadataInvalidKeyException">A key contains an invalid character</exception>
     /// <exception cref="MetadataTooLongException">The total length of the metadata is too long</exception>
-    public static void Validate(IReadOnlyDictionary<string, string>? items)
+    public static void Validate(IReadOnlyDictionary<string, string>? items, bool allowInternal = false)
     {
         // no metadata is ok
         if (items is null)
@@ -49,17 +49,22 @@ public static class MetadataValidator
             return;
         }
 
-        ValidateKeys(items);
+        ValidateKeys(items, allowInternal);
         ValidateLength(items);
     }
 
-    private static void ValidateKeys(IReadOnlyDictionary<string, string> items)
+    private static void ValidateKeys(IReadOnlyDictionary<string, string> items, bool allowInternal)
     {
         foreach (var item in items)
         {
             string key = item.Key;
 
             if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new MetadataInvalidKeyException(key);
+            }
+
+            if (!allowInternal && Metadata.IsInternal(key))
             {
                 throw new MetadataInvalidKeyException(key);
             }

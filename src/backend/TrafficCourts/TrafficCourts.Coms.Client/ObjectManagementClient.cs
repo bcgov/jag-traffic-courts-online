@@ -14,7 +14,8 @@ public partial class ObjectManagementClient : IObjectManagementClient
     {
         get
         {
-            _jsonContext ??= new ComsJsonContext(JsonSerializerSettings);
+            var copy = new JsonSerializerOptions(JsonSerializerSettings);
+            _jsonContext ??= new ComsJsonContext(copy);
             return _jsonContext;
         }
     }

@@ -34,7 +34,7 @@ public partial class File : IDisposable
         FileName = fileName;
         ContentType = contentType;
 
-        Metadata = Factory.CreateMetadata(metadata);
+        Metadata = Client.Metadata.Create(metadata);
         Tags = Factory.CreateTags(tags);
     }
 

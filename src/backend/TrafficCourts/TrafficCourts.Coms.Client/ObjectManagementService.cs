@@ -104,7 +104,7 @@ internal class ObjectManagementService : IObjectManagementService
             string? fileName = GetHeader(response.Headers, "x-amz-meta-name");
 
             var metadataValues = await GetMetadataAsync(id, cancellationToken);
-            IDictionary<string, string>? metadata = Factory.CreateMetadata(metadataValues[id]);
+            IDictionary<string, string>? metadata = Client.Metadata.Create(metadataValues[id]);
 
             IDictionary<string, string>? tags = null;
 
@@ -154,15 +154,26 @@ internal class ObjectManagementService : IObjectManagementService
             var foundIds = files.Select(_ => _.Id).ToList();
             var objectMetadataById = await GetMetadataAsync(foundIds, cancellationToken);
 
+            // allocate list with the correct size based on the number of found files
             List<FileSearchResult> results = new(files.Count);
 
             foreach (var file in files)
             {
-                var metadata = new Dictionary<string, string>(objectMetadataById[file.Id]);
+                IEnumerable<KeyValuePair<string, string>> pairs = objectMetadataById[file.Id];
+
+                // filename will be returned in the metadata pairs
+                string filename = GetFileName(pairs);
+
+                // create user metadata without the internal metadata
+                var metadata = Metadata.Create(pairs.Where(Metadata.IsNotInternal));
+
+                // get tags for this file
                 var tags = await GetTagsAsync(file.Id, cancellationToken);
 
+                // creat end user search results
                 var result = new FileSearchResult(
                     file.Id,
+                    filename,
                     file.Path,
                     file.Active,
                     file.Public,
@@ -225,6 +236,19 @@ internal class ObjectManagementService : IObjectManagementService
         return value;
     }
 
+    private string GetFileName(IEnumerable<KeyValuePair<string, string>> metadata)
+    {
+        foreach (var item in metadata)
+        {
+            if (Metadata.IsName(item))
+            {
+                return item.Value;
+            }
+        }
+
+        return string.Empty;
+    }
+
     private async Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
     {
         try
@@ -232,6 +256,7 @@ internal class ObjectManagementService : IObjectManagementService
             IList<ObjectMetadata> objectsMetadata = await _client.GetObjectMetadataAsync(ids, cancellationToken).ConfigureAwait(false);
             
             // not great we have to flatten out the data, but it makes using a ILookup easier to process on the caller
+            // lookup is like a Dictionary<key,IEnumerable<value>> but if the key does not exist, the enumerable is empty
             var lookup = Flatten(objectsMetadata).ToLookup(_ => _.Item1, _ => _.Item2);
             return lookup;
         }
@@ -246,22 +271,19 @@ internal class ObjectManagementService : IObjectManagementService
         return await GetMetadataAsync(new[] { id }, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Flattens the collection of object metadata into something that can be converted to a lookup
+    /// </summary>
     private IEnumerable<Tuple<Guid, KeyValuePair<string, string>>> Flatten(IList<ObjectMetadata> items)
     {
-        foreach (var objectItem in items.Where(_ => _.Metadata != null))
+        foreach (var objectItem in items.Where(_ => _.Metadata != null && _.Metadata.Count > 0))
         {
             foreach (var metaDataItem in objectItem.Metadata)
             {
-                // do not return internal metadata
-                if (!IsInternalMetadata(metaDataItem.Key))
-                {
-                    yield return Tuple.Create(objectItem.Id, new KeyValuePair<string, string>(metaDataItem.Key, metaDataItem.Value));
-                }
+                yield return Tuple.Create(objectItem.Id, new KeyValuePair<string, string>(metaDataItem.Key, metaDataItem.Value));
             }
         }
     }
-
-    private static bool IsInternalMetadata(string key) => key == "id" || key == "name";
 
     private Task<IDictionary<string, string>> GetTagsAsync(Guid id, CancellationToken cancellationToken)
     {
