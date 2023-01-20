@@ -7,6 +7,11 @@ public class FileSearchParameters
     {
     }
 
+    public FileSearchParameters(Guid id)
+        : this(new List<Guid> { id }, null, null)
+    {
+    }
+
     public FileSearchParameters(IEnumerable<Guid>? ids, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
     {
         Ids = ids is not null
