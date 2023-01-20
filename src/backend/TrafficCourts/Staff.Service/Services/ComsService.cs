@@ -83,13 +83,7 @@ public class ComsService : IComsService
 
         foreach (var result in searchResult)
         {
-            result.Metadata.TryGetValue("name", out string? filename);
-            if (string.IsNullOrEmpty(filename))
-            {
-                filename = "unknown";
-                _logger.LogDebug("name value from metadata is empty");
-            }
-            fileData.Add(result.Id, filename);
+            fileData.Add(result.Id, result.FileName);
         }
 
         return fileData;
