@@ -13,7 +13,7 @@ public class FileSearchParameters
             ? new List<Guid>(ids)
             : new List<Guid>();
 
-        Metadata = Factory.CreateMetadata(metadata);
+        Metadata = Client.Metadata.Create(metadata);
         Tags = Factory.CreateTags(tags);
     }
 

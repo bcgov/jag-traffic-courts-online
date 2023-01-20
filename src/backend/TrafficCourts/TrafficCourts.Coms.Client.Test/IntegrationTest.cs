@@ -140,6 +140,18 @@ namespace TrafficCourts.Coms.Client.Test
 
             using var actualFile = await _service.GetFileAsync(id, false, _cancellationToken);
 
+            // search for the file by the first metadata property
+            FileSearchParameters parameters = new FileSearchParameters();
+            string key = expectedFile.Metadata.Keys.First();
+            parameters.Metadata.Add(key, expectedFile.Metadata[key]);
+
+            var fileSearchResults = await _service.FileSearchAsync(parameters, _cancellationToken);
+
+            FileSearchResult actualFound = Assert.Single(fileSearchResults);
+            Assert.Equal(id, actualFound.Id);
+            Assert.Equal(filename, actualFound.FileName);
+            Assert.Equal(expectedFile.Metadata.Count, actualFound.Metadata.Count);
+
             await _service.DeleteFileAsync(id, _cancellationToken);
 
             //Assert.Equal(expectedData.ToByteArray(), actualFile.Data);
