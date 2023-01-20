@@ -24,7 +24,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(guid);
@@ -56,7 +56,7 @@ public class ComsControllerTest
         var objectResult = Assert.IsType<ObjectResult>(result);
         var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
         Assert.Equal((int)HttpStatusCode.BadRequest, problemDetails.Status);
-        Assert.True(problemDetails?.Title?.Contains("Metadata Key does not contain ticketnumber"));
+        Assert.True(problemDetails?.Title?.Contains("Metadata Key does not contain ticket-number"));
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataInvalidKeyException(It.IsAny<string>()));
@@ -90,7 +90,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataTooLongException());
@@ -114,7 +114,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyEmptyException(It.IsAny<string>()));
@@ -138,7 +138,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyTooLongException(It.IsAny<string>()));
@@ -162,7 +162,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagValueTooLongException(It.IsAny<string>(), It.IsAny<string>()));
@@ -186,7 +186,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TooManyTagsException(It.IsAny<int>()));
@@ -210,7 +210,7 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticketnumber", "AO38375804");
+        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
@@ -235,7 +235,7 @@ public class ComsControllerTest
         Coms.Client.File mockFile = new(fileStream, "testFile");
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFile.Metadata.Add("ticketnumber", "AO38375804");
+        mockFile.Metadata.Add("ticket-number", "AO38375804");
         mockFile.Metadata.Add("virus-scan-status", "clean");
         var filename = mockFile.FileName;
         comsService
@@ -260,7 +260,7 @@ public class ComsControllerTest
         Coms.Client.File mockFile = new(fileStream, "testFile");
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFile.Metadata.Add("ticketnumber", "AO38375804");
+        mockFile.Metadata.Add("ticket-number", "AO38375804");
         var filename = mockFile.FileName;
         comsService
             .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
@@ -286,7 +286,7 @@ public class ComsControllerTest
         Coms.Client.File mockFile = new(fileStream, "testFile");
         var comsService = new Mock<IComsService>();
         Guid guid = Guid.NewGuid();
-        mockFile.Metadata.Add("ticketnumber", "AO38375804");
+        mockFile.Metadata.Add("ticket-number", "AO38375804");
         mockFile.Metadata.Add("virus-scan-status", "unscanned");
         var filename = mockFile.FileName;
         comsService

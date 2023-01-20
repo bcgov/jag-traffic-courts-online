@@ -41,18 +41,17 @@ public class ComsController : StaffControllerBase<ComsController>
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //[KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    [AllowAnonymous]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
     public async Task<IActionResult> UploadDocumentAsync([FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Uploading the document to the object storage");
 
-        if (!fileUploadRequest.Metadata.ContainsKey("ticketnumber"))
+        if (!fileUploadRequest.Metadata.ContainsKey("ticket-number"))
         {
-            _logger.LogError("Could not upload a document because metadata does not contain the key: ticketnumber");
+            _logger.LogError("Could not upload a document because metadata does not contain the key: ticket-number");
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
-            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticketnumber";
+            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticket-number";
             problemDetails.Instance = HttpContext?.Request?.Path;
 
             return new ObjectResult(problemDetails);
