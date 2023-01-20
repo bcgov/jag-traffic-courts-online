@@ -46,12 +46,12 @@ public class ComsController : StaffControllerBase<ComsController>
     {
         _logger.LogDebug("Uploading the document to the object storage");
 
-        if (!fileUploadRequest.Metadata.ContainsKey("ticketnumber"))
+        if (!fileUploadRequest.Metadata.ContainsKey("ticket-number"))
         {
-            _logger.LogError("Could not upload a document because metadata does not contain the key: ticketnumber");
+            _logger.LogError("Could not upload a document because metadata does not contain the key: ticket-number");
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
-            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticketnumber";
+            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticket-number";
             problemDetails.Instance = HttpContext?.Request?.Path;
 
             return new ObjectResult(problemDetails);

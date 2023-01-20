@@ -57,11 +57,11 @@ public class ComsService : IComsService
 
         Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
 
-        file.Metadata.TryGetValue("ticketnumber", out string? ticketNumber);
+        file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
         if (string.IsNullOrEmpty(ticketNumber))
         {
             ticketNumber = "unknown";
-            _logger.LogDebug("ticketnumber value from metadata is empty");
+            _logger.LogDebug("ticket-number value from metadata is empty");
         }
 
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
@@ -108,11 +108,11 @@ public class ComsService : IComsService
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
-        metadata.TryGetValue("ticketnumber", out string? ticketNumber);
+        metadata.TryGetValue("ticket-number", out string? ticketNumber);
         if (string.IsNullOrEmpty(ticketNumber))
         {
             ticketNumber = "unknown";
-            _logger.LogDebug("ticketnumber value from metadata is empty");
+            _logger.LogDebug("ticket-number value from metadata is empty");
         }
         
         // Save file upload event to file history

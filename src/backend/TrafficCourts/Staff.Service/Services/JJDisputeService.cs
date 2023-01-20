@@ -34,7 +34,7 @@ public class JJDisputeService : IJJDisputeService
         JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(disputeId, assignVTC, cancellationToken);
 
         Dictionary<string, string> documentSearchParam = new();
-        documentSearchParam.Add("ticketnumber", disputeId);
+        documentSearchParam.Add("ticket-number", disputeId);
 
         // TODO: Add search parameter "notice-of-dispute-id" for returning other documents for the associated dispute that were uploaded by the citizen
         // when there will be an endpoint to return disputes by ticket number.
