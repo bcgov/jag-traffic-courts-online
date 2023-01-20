@@ -50,8 +50,16 @@ public abstract class ObjectManagementServiceTest
             .ReturnsAsync(() => response);
     }
 
+    protected void SetupGetObjectMetadataAsync(IList<ObjectMetadata> response)
+    {
+        _mockClient.Setup(_ => _.GetObjectMetadataAsync(
+                It.IsAny<IList<Guid>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => response);
+    }
 
-    protected static bool Equal(IDictionary<string, string> expected, IDictionary<string, string> actual)
+
+    protected static bool Equal(IReadOnlyDictionary<string, string> expected, IReadOnlyDictionary<string, string> actual)
     {
         if (expected.Count != actual.Count)
         {

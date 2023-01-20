@@ -26,7 +26,8 @@ import lombok.Setter;
  */
 @TypeDefs({
 	@TypeDef(name = "disputantUpdateStatus", defaultForType = DisputantUpdateRequestStatus.class, typeClass = ShortNamedEnumType.class),
-	@TypeDef(name = "disputantUpdateType", defaultForType = DisputantUpdateRequestType.class, typeClass = ShortNamedEnumType.class)
+	@TypeDef(name = "disputantUpdateType", defaultForType = DisputantUpdateRequestType.class, typeClass = ShortNamedEnumType.class),
+	@TypeDef(name = "jjDisputeHearingType", defaultForType = JJDisputeHearingType.class, typeClass = ShortNamedEnumType.class)
 })
 @MappedSuperclass
 @Getter

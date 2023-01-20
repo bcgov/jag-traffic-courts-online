@@ -45,7 +45,7 @@ public partial class ObjectManagementClient
     /// <param name="anyKey">This endpoint can accept an arbitrary number of form-data keys. There must be at least one key present, and every key must be unique. All keys shall contain a binary representation of the file to upload. In the response, each successfully uploaded file shall contain a 'fieldName' property corresponding to your custom defined keys.</param>
     /// <returns>Returns an array of created object data</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<Anonymous>> CreateObjectsAsync(IDictionary<string, string>? meta, IDictionary<string, string>? tags, FileParameter anyKey)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<Anonymous>> CreateObjectsAsync(IReadOnlyDictionary<string, string>? meta, IReadOnlyDictionary<string, string>? tags, FileParameter anyKey)
     {
         return CreateObjectsAsync(meta, tags, anyKey, System.Threading.CancellationToken.None);
     }
@@ -62,7 +62,7 @@ public partial class ObjectManagementClient
     /// <param name="anyKey">This endpoint can accept an arbitrary number of form-data keys. There must be at least one key present, and every key must be unique. All keys shall contain a binary representation of the file to upload. In the response, each successfully uploaded file shall contain a 'fieldName' property corresponding to your custom defined keys.</param>
     /// <returns>Returns an array of created object data</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<Anonymous>> CreateObjectsAsync(IDictionary<string, string>? meta, IDictionary<string, string>? tags, FileParameter anyKey, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<Anonymous>> CreateObjectsAsync(IReadOnlyDictionary<string, string>? meta, IReadOnlyDictionary<string, string>? tags, FileParameter anyKey, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object?");
@@ -185,7 +185,7 @@ public partial class ObjectManagementClient
     /// <param name="tagset*">Tags for the object, defined as a Key/Value tag. The query must be formatted in deepObject style notation, where a tag-set made out of multiple tags would be encoded something similar to `tagset[Public]=a&amp;tagset[y]=b`. Only one value can exist for a given tag key.</param>
     /// <returns>Returns and array of objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<DBObject>> SearchObjectsAsync(IDictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, IDictionary<string, string>? tags)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<DBObject>> SearchObjectsAsync(IReadOnlyDictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, IReadOnlyDictionary<string, string>? tags)
     {
         return SearchObjectsAsync(meta, objIds, path, active, @public, mimeType, name, tags, System.Threading.CancellationToken.None);
     }
@@ -207,7 +207,7 @@ public partial class ObjectManagementClient
     /// <param name="tagset*">Tags for the object, defined as a Key/Value tag. The query must be formatted in deepObject style notation, where a tag-set made out of multiple tags would be encoded something similar to `tagset[Public]=a&amp;tagset[y]=b`. Only one value can exist for a given tag key.</param>
     /// <returns>Returns and array of objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<DBObject>> SearchObjectsAsync(IDictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, IDictionary<string, string>? tags, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<DBObject>> SearchObjectsAsync(IReadOnlyDictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, IReadOnlyDictionary<string, string>? tags, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object?");
@@ -600,7 +600,7 @@ public partial class ObjectManagementClient
     /// <param name="anyKey">This endpoint will accept only one arbitrary form-data key. That key shall contain a binary representation of the file to upload. In the response, the successfully uploaded file shall contain a 'fieldName' property corresponding to your custom defined key.</param>
     /// <returns>Returns the updated object data</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<Response> UpdateObjectAsync(IDictionary<string, string>? meta, System.Guid objId, IDictionary<string, string>? tags, FileParameter anyKey)
+    public virtual System.Threading.Tasks.Task<Response> UpdateObjectAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, IReadOnlyDictionary<string, string>? tags, FileParameter anyKey)
     {
         return UpdateObjectAsync(meta, objId, tags, anyKey, System.Threading.CancellationToken.None);
     }
@@ -618,7 +618,7 @@ public partial class ObjectManagementClient
     /// <param name="anyKey">This endpoint will accept only one arbitrary form-data key. That key shall contain a binary representation of the file to upload. In the response, the successfully uploaded file shall contain a 'fieldName' property corresponding to your custom defined key.</param>
     /// <returns>Returns the updated object data</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<Response> UpdateObjectAsync(IDictionary<string, string>? meta, System.Guid objId, IDictionary<string, string>? tags, FileParameter anyKey, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<Response> UpdateObjectAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, IReadOnlyDictionary<string, string>? tags, FileParameter anyKey, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/{objId}?");
@@ -1088,7 +1088,7 @@ public partial class ObjectManagementClient
     /// <param name="x_amz_meta_*">An arbitrary metadata key/value pair. Must contain the Public-amz-meta- prefix to be valid. Multiple metadata pairs can be defined. keys must be unique and will be converted to lowercase.</param>
     /// <returns>Returns an array of matching key/value pairs.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetMetadataAsync(IDictionary<string, string>? meta)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetMetadataAsync(IReadOnlyDictionary<string, string>? meta)
     {
         return GetMetadataAsync(meta, System.Threading.CancellationToken.None);
     }
@@ -1103,7 +1103,7 @@ public partial class ObjectManagementClient
     /// <param name="x_amz_meta_*">An arbitrary metadata key/value pair. Must contain the Public-amz-meta- prefix to be valid. Multiple metadata pairs can be defined. keys must be unique and will be converted to lowercase.</param>
     /// <returns>Returns an array of matching key/value pairs.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetMetadataAsync(IDictionary<string, string>? meta, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetMetadataAsync(IReadOnlyDictionary<string, string>? meta, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/metadata");
@@ -1193,7 +1193,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task AddMetadataAsync(IDictionary<string, string>? meta, System.Guid objId, string? versionId)
+    public virtual System.Threading.Tasks.Task AddMetadataAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, string? versionId)
     {
         return AddMetadataAsync(meta, objId, versionId, System.Threading.CancellationToken.None);
     }
@@ -1210,7 +1210,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task AddMetadataAsync(IDictionary<string, string>? meta, System.Guid objId, string? versionId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task AddMetadataAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, string? versionId, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/{objId}/metadata?");
@@ -1322,7 +1322,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task ReplaceMetadataAsync(IDictionary<string, string>? meta, System.Guid objId, string? versionId)
+    public virtual System.Threading.Tasks.Task ReplaceMetadataAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, string? versionId)
     {
         return ReplaceMetadataAsync(meta, objId, versionId, System.Threading.CancellationToken.None);
     }
@@ -1339,7 +1339,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task ReplaceMetadataAsync(IDictionary<string, string>? meta, System.Guid objId, string? versionId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task ReplaceMetadataAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, string? versionId, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/{objId}/metadata?");
@@ -1450,7 +1450,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task DeleteMetadataAsync(IDictionary<string, string>? meta, System.Guid objId, string? versionId)
+    public virtual System.Threading.Tasks.Task DeleteMetadataAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, string? versionId)
     {
         return DeleteMetadataAsync(meta, objId, versionId, System.Threading.CancellationToken.None);
     }
@@ -1467,7 +1467,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task DeleteMetadataAsync(IDictionary<string, string>? meta, System.Guid objId, string? versionId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task DeleteMetadataAsync(IReadOnlyDictionary<string, string>? meta, System.Guid objId, string? versionId, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/{objId}/metadata?");
@@ -1565,7 +1565,7 @@ public partial class ObjectManagementClient
     /// <param name="tagset*">Tags for the object, defined as a Key/Value tag. The query must be formatted in deepObject style notation, where a tag-set made out of multiple tags would be encoded something similar to `tagset[Public]=a&amp;tagset[y]=b`. Only one value can exist for a given tag key.</param>
     /// <returns>Returns an array of matching key/value pairs.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetTaggingAsync(IDictionary<string, string>? tags)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetTaggingAsync(IReadOnlyDictionary<string, string>? tags)
     {
         return GetTaggingAsync(tags, System.Threading.CancellationToken.None);
     }
@@ -1580,7 +1580,7 @@ public partial class ObjectManagementClient
     /// <param name="tagset*">Tags for the object, defined as a Key/Value tag. The query must be formatted in deepObject style notation, where a tag-set made out of multiple tags would be encoded something similar to `tagset[Public]=a&amp;tagset[y]=b`. Only one value can exist for a given tag key.</param>
     /// <returns>Returns an array of matching key/value pairs.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetTaggingAsync(IDictionary<string, string>? tags, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<S3TagSet>> GetTaggingAsync(IReadOnlyDictionary<string, string>? tags, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/tagging?");
@@ -1671,7 +1671,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task AddTaggingAsync(System.Guid objId, IDictionary<string, string>? tags, string? versionId)
+    public virtual System.Threading.Tasks.Task AddTaggingAsync(System.Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId)
     {
         return AddTaggingAsync(objId, tags, versionId, System.Threading.CancellationToken.None);
     }
@@ -1688,7 +1688,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task AddTaggingAsync(System.Guid objId, IDictionary<string, string>? tags, string? versionId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task AddTaggingAsync(System.Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/{objId}/tagging?");
@@ -1800,7 +1800,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task ReplaceTaggingAsync(System.Guid objId, IDictionary<string, string>? tags, string? versionId)
+    public virtual System.Threading.Tasks.Task ReplaceTaggingAsync(System.Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId)
     {
         return ReplaceTaggingAsync(objId, tags, versionId, System.Threading.CancellationToken.None);
     }
@@ -1817,7 +1817,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task ReplaceTaggingAsync(System.Guid objId, IDictionary<string, string>? tags, string? versionId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task ReplaceTaggingAsync(System.Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/{objId}/tagging?");
@@ -1928,7 +1928,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task DeleteTaggingAsync(System.Guid objId, IDictionary<string, string>? tags, string? versionId)
+    public virtual System.Threading.Tasks.Task DeleteTaggingAsync(System.Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId)
     {
         return DeleteTaggingAsync(objId, tags, versionId, System.Threading.CancellationToken.None);
     }
@@ -1945,7 +1945,7 @@ public partial class ObjectManagementClient
     /// <param name="versionId">Request a specified version</param>
     /// <returns>Accepted and no content</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task DeleteTaggingAsync(System.Guid objId, IDictionary<string, string>? tags, string? versionId, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task DeleteTaggingAsync(System.Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object/{objId}/tagging?");

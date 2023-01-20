@@ -51,6 +51,50 @@ public class ComsService : IComsService
         return comsFile;
     }
 
+    public async Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Deleting the file through COMS");
+
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
+
+        file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
+        if (string.IsNullOrEmpty(ticketNumber))
+        {
+            ticketNumber = "unknown";
+            _logger.LogDebug("ticket-number value from metadata is empty");
+        }
+
+        await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
+
+        // Save file delete event to file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, $"File: {file.FileName} was deleted by the Staff.");
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+    }
+
+    public async Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Searching files through COMS");
+
+        Dictionary<Guid, string> fileData = new();
+
+        FileSearchParameters searchParameters = new(null, metadata, tags);
+
+        List<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
+
+        foreach (var result in searchResult)
+        {
+            result.Metadata.TryGetValue("name", out string? filename);
+            if (string.IsNullOrEmpty(filename))
+            {
+                filename = "unknown";
+                _logger.LogDebug("name value from metadata is empty");
+            }
+            fileData.Add(result.Id, filename);
+        }
+
+        return fileData;
+    }
+
     public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
@@ -61,11 +105,11 @@ public class ComsService : IComsService
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
-        metadata.TryGetValue("ticketnumber", out string? ticketNumber);
+        metadata.TryGetValue("ticket-number", out string? ticketNumber);
         if (string.IsNullOrEmpty(ticketNumber))
         {
             ticketNumber = "unknown";
-            _logger.LogDebug("ticketnumber value from metadata is empty");
+            _logger.LogDebug("ticket-number value from metadata is empty");
         }
         
         // Save file upload event to file history

@@ -17,9 +17,9 @@ public class UpdateFileAsync : ObjectManagementServiceTest
 
         // simulate success
         _mockClient.Setup(_ => _.UpdateObjectAsync(
-            It.IsAny<IDictionary<string, string>?>(),
+            It.IsAny<IReadOnlyDictionary<string, string>?>(),
             It.IsAny<Guid>(),
-            It.IsAny<IDictionary<string, string>?>(),
+            It.IsAny<IReadOnlyDictionary<string, string>?>(),
             It.IsAny<FileParameter>(),
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(() =>
@@ -38,9 +38,9 @@ public class UpdateFileAsync : ObjectManagementServiceTest
         // verify the client called with correct values
         _mockClient.Verify(_ =>
             _.UpdateObjectAsync(
-                It.Is<IDictionary<string, string>>((_) => Equal(file.Metadata, _)),
+                It.Is<IReadOnlyDictionary<string, string>>((_) => Equal(file.Metadata, _)),
                 It.Is<Guid>((_) => _ == expectedId),
-                It.Is<IDictionary<string, string>>((_) => Equal(file.Tags, _)),
+                It.Is<IReadOnlyDictionary<string, string>>((_) => Equal(file.Tags, _)),
                 It.Is<FileParameter>((_) => _.Data == expectedStream && _.FileName == expectedFilename && _.ContentType == expectedContentType),
                 It.Is<CancellationToken>((cancellationToken) => cancellationToken == cts.Token))
             );

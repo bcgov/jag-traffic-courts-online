@@ -21,8 +21,6 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,9 +36,7 @@ import lombok.Setter;
 @Table
 @Getter
 @Setter
-@Builder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor
 public class JJDispute extends Auditable<String>{
 
     /**
@@ -52,7 +48,6 @@ public class JJDispute extends Auditable<String>{
     @Enumerated(EnumType.STRING)
 	private JJDisputeStatus status;
 
-    @Enumerated(EnumType.STRING)
     private JJDisputeHearingType hearingType;
 
     /**
@@ -229,8 +224,7 @@ public class JJDispute extends Auditable<String>{
 	 */
 	@JsonManagedReference
 	@OneToMany(targetEntity = JJDisputeRemark.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "jjDispute")
-	@Builder.Default
-	private List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
+	public List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
 
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "jjDispute")
@@ -240,8 +234,7 @@ public class JJDispute extends Auditable<String>{
 	@JsonManagedReference(value="jj_dispute_count_reference")
 	@OneToMany(targetEntity = JJDisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
-	@Builder.Default
-	private List<JJDisputedCount> jjDisputedCounts = new ArrayList<JJDisputedCount>();
+	public List<JJDisputedCount> jjDisputedCounts = new ArrayList<JJDisputedCount>();
 
 	public void addJJDisputedCounts(List<JJDisputedCount> disputedCounts) {
 		for (JJDisputedCount disputedCount : disputedCounts) {
@@ -260,8 +253,7 @@ public class JJDispute extends Auditable<String>{
 	@JsonManagedReference(value="jj_dispute_court_appearance_rop_reference")
 	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
-	@Builder.Default
-	private List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
+	public List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
 
 	public void addJJDisputeCourtAppearances(List<JJDisputeCourtAppearanceRoP> disputeCourtAppearanceRoPs) {
 		for (JJDisputeCourtAppearanceRoP disputeCourtAppearanceRoP : disputeCourtAppearanceRoPs) {

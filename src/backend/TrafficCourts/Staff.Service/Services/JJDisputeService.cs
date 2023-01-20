@@ -13,12 +13,14 @@ public class JJDisputeService : IJJDisputeService
 {
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
+    private readonly IComsService _comsService;
     private readonly ILogger<JJDisputeService> _logger;
 
-    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, ILogger<JJDisputeService> logger)
+    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IComsService comsService, ILogger<JJDisputeService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        _comsService = comsService ?? throw new ArgumentNullException(nameof(comsService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -30,6 +32,14 @@ public class JJDisputeService : IJJDisputeService
     public async Task<JJDispute> GetJJDisputeAsync(string disputeId, bool assignVTC, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(disputeId, assignVTC, cancellationToken);
+
+        Dictionary<string, string> documentSearchParam = new();
+        documentSearchParam.Add("ticket-number", disputeId);
+
+        // TODO: Add search parameter "notice-of-dispute-id" for returning other documents for the associated dispute that were uploaded by the citizen
+        // when there will be an endpoint to return disputes by ticket number.
+
+        dispute.FileData = await _comsService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
 
         return dispute;
     }

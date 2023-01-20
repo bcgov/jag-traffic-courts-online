@@ -13,6 +13,7 @@ public class FileSearchAsync : ObjectManagementServiceTest
 
         // setup return value
         SetupSearchObjectsReturn(new List<DBObject>());
+        SetupGetObjectMetadataAsync(Array.Empty<ObjectMetadata>());
 
         ObjectManagementService sut = GetService();
 
@@ -23,14 +24,14 @@ public class FileSearchAsync : ObjectManagementServiceTest
         // verify the client called with correct values
         _mockClient.Verify(_ =>
             _.SearchObjectsAsync(
-                It.Is<IDictionary<string, string>?>((actual) => actual == parameters.Metadata),
+                It.Is<IReadOnlyDictionary<string, string>?>((actual) => actual == parameters.Metadata),
                 It.Is<IList<Guid>?>((actual) => actual == parameters.Ids),
                 It.Is<string?>((actual) => actual == parameters.Path),
                 It.Is<bool?>((actual) => actual == parameters.Active),
                 It.Is<bool?>((actual) => actual == parameters.Public),
                 It.Is<string?>((actual) => actual == parameters.MimeType),
                 It.Is<string?>((actual) => actual == parameters.Name),
-                It.Is<IDictionary<string, string>?>((actual) => actual == parameters.Tags),
+                It.Is<IReadOnlyDictionary<string, string>?>((actual) => actual == parameters.Tags),
                 It.Is<CancellationToken>((actual) => actual == cts.Token)
             ));
     }
@@ -45,9 +46,7 @@ public class FileSearchAsync : ObjectManagementServiceTest
 
         // setup return value
         SetupSearchObjectsReturn(new List<DBObject> { new DBObject { Id = expected } });
-
-        IReadOnlyDictionary<string, IEnumerable<string>> headers = new Dictionary<string, IEnumerable<string>>();
-        SetupReadObjectReturn(new FileResponse(200, headers, GetRandomStream(), null, null));
+        SetupGetObjectMetadataAsync(new ObjectMetadata[] { new ObjectMetadata { Id = expected } });
 
         ObjectManagementService sut = GetService();
 
@@ -56,39 +55,35 @@ public class FileSearchAsync : ObjectManagementServiceTest
 
         // verify the client called with correct values
         _mockClient.Verify(_ => _.SearchObjectsAsync(
-                It.Is<IDictionary<string, string>?>((actual) => actual == parameters.Metadata),
+                It.Is<IReadOnlyDictionary<string, string>?>((actual) => actual == parameters.Metadata),
                 It.Is<IList<Guid>?>((actual) => actual == parameters.Ids),
                 It.Is<string?>((actual) => actual == parameters.Path),
                 It.Is<bool?>((actual) => actual == parameters.Active),
                 It.Is<bool?>((actual) => actual == parameters.Public),
                 It.Is<string?>((actual) => actual == parameters.MimeType),
                 It.Is<string?>((actual) => actual == parameters.Name),
-                It.Is<IDictionary<string, string>?>((actual) => actual == parameters.Tags),
+                It.Is<IReadOnlyDictionary<string, string>?>((actual) => actual == parameters.Tags),
                 It.Is<CancellationToken>((actual) => actual == cts.Token)
             ));
 
         // should have read the object to get the expected found object
-        _mockClient.Verify(_ => _.ReadObjectAsync(
-             It.Is<Guid>((actual) => actual == expected),
-             It.Is<DownloadMode?>((actual) => actual == DownloadMode.Url),
-             It.Is<int?>((actual) => actual == null),
-             It.Is<string?>((actual) => actual == null),
+        _mockClient.Verify(_ => _.GetObjectMetadataAsync(
+            It.Is<IList<Guid>>((actual) => actual.Count == 1 && actual[0] == expected),
             It.Is<CancellationToken>((actual) => actual == cts.Token)
         ));
     }
 
-
     private void SetupSearchObjectsReturn(List<DBObject> values)
     {
         _mockClient.Setup(_ => _.SearchObjectsAsync(
-            It.IsAny<IDictionary<string, string>?>(),
+            It.IsAny<IReadOnlyDictionary<string, string>?>(),
             It.IsAny<IList<Guid>?>(),
             It.IsAny<string?>(),
             It.IsAny<bool?>(),
             It.IsAny<bool?>(),
             It.IsAny<string?>(),
             It.IsAny<string?>(),
-            It.IsAny<IDictionary<string, string>?>(),
+            It.IsAny<IReadOnlyDictionary<string, string>?>(),
             It.IsAny<CancellationToken>()))
         .ReturnsAsync(() => values);
     }

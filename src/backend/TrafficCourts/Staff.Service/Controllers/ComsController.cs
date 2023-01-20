@@ -41,18 +41,17 @@ public class ComsController : StaffControllerBase<ComsController>
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //[KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    [AllowAnonymous]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
     public async Task<IActionResult> UploadDocumentAsync([FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Uploading the document to the object storage");
 
-        if (!fileUploadRequest.Metadata.ContainsKey("ticketnumber"))
+        if (!fileUploadRequest.Metadata.ContainsKey("ticket-number"))
         {
-            _logger.LogError("Could not upload a document because metadata does not contain the key: ticketnumber");
+            _logger.LogError("Could not upload a document because metadata does not contain the key: ticket-number");
             ProblemDetails problemDetails = new();
             problemDetails.Status = (int)HttpStatusCode.BadRequest;
-            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticketnumber";
+            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticket-number";
             problemDetails.Instance = HttpContext?.Request?.Path;
 
             return new ObjectResult(problemDetails);
@@ -216,7 +215,61 @@ public class ComsController : StaffControllerBase<ComsController>
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error downloading the document");
+            _logger.LogError(e, "Error retrieving the document");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Removes the specified document for the given unique file ID.
+    /// </summary>
+    /// <param name="fileId">Unique identifier for a specific document.</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">The document is successfully removed.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, requires jjdispute:delete permission.</response>
+    /// <response code="500">There was a server error that prevented the file to be removed successfully.</response>
+    /// <returns></returns>
+    [HttpGet("RemoveDocument")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Delete)]
+    public async Task<IActionResult> RemoveDocumentAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Removing the document from the object storage");
+
+        try
+        {
+            await _comsService.DeleteFileAsync(fileId, cancellationToken);
+
+            return Ok();
+        }
+        catch (Coms.Client.ObjectManagementServiceException e)
+        {
+            _logger.LogError(e, "Could not remove the document because of ObjectManagementServiceException");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+            problemDetails.Title = e.Source + ": Error removing file from COMS";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error removing the document");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

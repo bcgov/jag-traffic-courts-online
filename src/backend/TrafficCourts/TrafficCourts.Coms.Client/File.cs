@@ -23,14 +23,25 @@ public partial class File : IDisposable
     }
 
     public File(Stream data, string? fileName, string? contentType, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
+        : this(null, data, fileName, contentType, metadata, tags)
     {
+    }
+
+    public File(Guid? id, Stream data, string? fileName, string? contentType, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
+    {
+        Id = id;
         Data = data;
         FileName = fileName;
         ContentType = contentType;
 
-        Metadata = Factory.CreateMetadata(metadata);
+        Metadata = Client.Metadata.Create(metadata);
         Tags = Factory.CreateTags(tags);
     }
+
+    /// <summary>
+    /// The id of the document. Only set when getting documents.
+    /// </summary>
+    public Guid? Id { get; internal set; }
 
     public Stream Data { get; private set; }
 

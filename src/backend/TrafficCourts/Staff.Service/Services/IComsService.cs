@@ -31,4 +31,22 @@ public interface IComsService
     /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
     Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Deletes the specified file through COMS service for the given unique file ID
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ObjectManagementServiceException">Unable to delete the file through COMS</exception>
+    Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Returns the IDs of the documents found in object storage through COMS service based on the search parameters provided
+    /// </summary>
+    /// <param name="metadata"></param>
+    /// <param name="tags"></param>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="ObjectManagementServiceException">There was an error searching files in COMS</exception>
+    /// <returns></returns>
+    Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken);
 }

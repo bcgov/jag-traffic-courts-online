@@ -35,7 +35,7 @@ public abstract class ObjectManagementBase
 
     protected Dictionary<string, string> CreateMetadata(int count = 0)
     {
-        Dictionary<string, string> items = Factory.CreateMetadata();
+        Dictionary<string, string> items = Metadata.Create();
         CreateItems(items, count);
         return items;
     }
