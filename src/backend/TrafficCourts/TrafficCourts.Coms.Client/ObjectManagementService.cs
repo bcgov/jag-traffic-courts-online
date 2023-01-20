@@ -126,7 +126,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
     }
 
-    public async Task<List<FileSearchResult>> FileSearchAsync(FileSearchParameters parameters, CancellationToken cancellationToken)
+    public async Task<IList<FileSearchResult>> FileSearchAsync(FileSearchParameters parameters, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
@@ -147,6 +147,12 @@ internal class ObjectManagementService : IObjectManagementService
                 parameters.Name,
                 parameters.Tags,
                 cancellationToken).ConfigureAwait(false);
+
+            if (files.Count == 0)
+            {
+                _logger.LogDebug("No files found");
+                return Array.Empty<FileSearchResult>();
+            }
 
             _logger.LogDebug("Found {Count} files", files.Count);
 

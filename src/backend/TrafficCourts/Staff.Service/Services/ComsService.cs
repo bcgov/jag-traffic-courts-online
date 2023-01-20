@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Minio.DataModel.Tags;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
@@ -55,7 +56,17 @@ public class ComsService : IComsService
     {
         _logger.LogDebug("Deleting the file through COMS");
 
-        Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
+        // find the file so we can get the ticket number
+        FileSearchParameters searchParameters = new FileSearchParameters(fileId);
+
+        IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
+
+        if (searchResults.Count == 0)
+        {
+            return; // file not found
+        }
+
+        FileSearchResult file = searchResults[0];
 
         file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
         if (string.IsNullOrEmpty(ticketNumber))
@@ -75,22 +86,12 @@ public class ComsService : IComsService
     {
         _logger.LogDebug("Searching files through COMS");
 
-        Dictionary<Guid, string> fileData = new();
-
         FileSearchParameters searchParameters = new(null, metadata, tags);
 
-        List<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
+        IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        foreach (var result in searchResult)
-        {
-            result.Metadata.TryGetValue("name", out string? filename);
-            if (string.IsNullOrEmpty(filename))
-            {
-                filename = "unknown";
-                _logger.LogDebug("name value from metadata is empty");
-            }
-            fileData.Add(result.Id, filename);
-        }
+        Dictionary<Guid, string> fileData = searchResult
+            .ToDictionary(file => file.Id, file => file.FileName ?? "unknown");
 
         return fileData;
     }
@@ -99,9 +100,7 @@ public class ComsService : IComsService
     {
         _logger.LogDebug("Saving file through COMS");
 
-        using var stream = GetStreamForFile(file);
-
-        Coms.Client.File comsFile = new(stream, file.FileName, file.ContentType, metadata, null);
+        using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
