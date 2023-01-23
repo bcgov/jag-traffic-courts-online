@@ -60,7 +60,7 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 50)
 	@Schema(nullable = false)
 	private String ticketNumber;
-
+	
 	/**
 	 * The date and time the violation ticket was issue. Time must only be hours and
 	 * minutes. This should always be in UTC date-time (ISO 8601) format

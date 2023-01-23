@@ -53,7 +53,7 @@ public class ViolationTicket extends Auditable<String> {
 	@Column(length = 50)
 	@Schema(nullable = true)
 	private String ticketNumber;
-
+	
 	/**
 	 * Name of the organization of the disputant
 	 */

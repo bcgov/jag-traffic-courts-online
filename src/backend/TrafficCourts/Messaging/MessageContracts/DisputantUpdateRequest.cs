@@ -161,6 +161,14 @@ public class DisputantUpdateRequest
     /// </summary>
     public ICollection<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount>? DisputeCounts { get; set; } = null!;
 
-    // TODO: Add document request fields
+    /// <summary>
+    /// Id of the document uploaded by the disputant
+    /// </summary>
+    public Guid? DocumentId { get; set; }
+
+    /// <summary>
+    /// The type of the document uploaded by the disputant ('Other / Supporting Document' OR 'Application for Adjournment')
+    /// </summary>
+    public string? DocumentType { get; set; }
 }
 

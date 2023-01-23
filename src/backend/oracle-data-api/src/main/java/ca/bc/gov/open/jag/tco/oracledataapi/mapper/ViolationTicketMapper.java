@@ -58,6 +58,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.noticeOfDisputeGuid", source = "noticeOfDisputeGuid")
 	@Mapping(target = "dispute.emailVerifiedYn", source = "emailAddressVerified", qualifiedByName="mapBooleanToYn")
 	@Mapping(target = "dispute.filingDt", source = "filingDate")
+	@Mapping(target = "dispute.courtAgenId", constant = "19227.0734") // TODO: this field should be moved to ViolationTicket table 
 	@Mapping(target = "dispute.representedByLawyerYn", source = "representedByLawyer")
 	@Mapping(target = "dispute.lawFirmNm", source = "lawFirmName")
 	// After mapping method to parse address source into multiple address fields
@@ -85,7 +86,6 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputantOcrIssuesTxt", source = "disputantOcrIssues")
 	@Mapping(target = "dispute.systemDetectOcrIssuesYn", source = "systemDetectedOcrIssues")
 	@Mapping(target = "dispute.ocrTicketJsonFilenameTxt", source = "ocrTicketFilename")
-	// Only setting Country IDs to 1 (Canada) as default for now, other IDs must be set from the actual dispute model source from request
 	// If these IDs are passed as null, then the actual string value of the field such as (drvLicIssuedIntlProvTxt) will be saved based on the logic in the database
 	@Mapping(target = "dispute.drvLicIssuedCtryId", source = "driversLicenceIssuedCountryId")
 	@Mapping(target = "dispute.drvLicIssuedProvSeqNo", source = "driversLicenceIssuedProvinceSeqNo")

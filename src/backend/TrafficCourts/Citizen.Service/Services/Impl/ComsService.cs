@@ -1,10 +1,8 @@
 ﻿using MassTransit;
-using Minio.DataModel.Tags;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Staff.Service.Mappers;
 
-namespace TrafficCourts.Staff.Service.Services;
+namespace TrafficCourts.Citizen.Service.Services.Impl;
 
 /// <summary>
 /// A service for file operations utilizing common object management service client
@@ -28,36 +26,12 @@ public class ComsService : IComsService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken)
-    {
-        _logger.LogDebug("Getting the file through COMS");
-
-        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
-
-        Dictionary<string, string> metadata = comsFile.Metadata;
-
-        if (!metadata.ContainsKey("virus-scan-status"))
-        {
-            _logger.LogError("Could not download the document because metadata does not contain the key: virus-scan-status");
-            throw new ObjectManagementServiceException("File could not be downloaded due to the missing metadata key: virus-scan-status");
-        }
-
-        metadata.TryGetValue("virus-scan-status", out string? scanStatus);
-        if (!string.IsNullOrEmpty(scanStatus) && scanStatus != "clean")
-        {
-            _logger.LogDebug("Trying to download unscanned or virus detected file");
-            throw new ObjectManagementServiceException($"File could not be downloaded due to virus scan status. Virus scan status of the file is {scanStatus}");
-        }
-
-        return comsFile;
-    }
-
     public async Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Deleting the file through COMS");
 
-        // find the file so we can get the ticket number
-        FileSearchParameters searchParameters = new FileSearchParameters(fileId);
+        // find the file so we can get the ticket number and notice of dispute id
+        FileSearchParameters searchParameters = new(fileId);
 
         IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
@@ -67,6 +41,13 @@ public class ComsService : IComsService
         }
 
         FileSearchResult file = searchResults[0];
+
+        file.Metadata.TryGetValue("notice-of-dispute-id", out string? noticeOfDisputeId);
+        if (string.IsNullOrEmpty(noticeOfDisputeId))
+        {
+            _logger.LogDebug("notice-of-dispute-id value from metadata is empty. Cannot delete the file since it was not uploaded by a disputant");
+            return;
+        }
 
         file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
         if (string.IsNullOrEmpty(ticketNumber))
@@ -78,27 +59,17 @@ public class ComsService : IComsService
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
         // Save file delete event to file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, $"File: {file.FileName} was deleted by the Staff.");
+        SaveFileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.TicketNumber = ticketNumber;
+        fileHistoryRecord.Description = $"File: {file.FileName} was deleted by the Disputant.";
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
-    }
-
-    public async Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
-    {
-        _logger.LogDebug("Searching files through COMS");
-
-        FileSearchParameters searchParameters = new(null, metadata, tags);
-
-        IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
-
-        Dictionary<Guid, string> fileData = searchResult
-            .ToDictionary(file => file.Id, file => file.FileName ?? "unknown");
-
-        return fileData;
     }
 
     public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
+
+        metadata.Add("staff-review-status", "pending");
 
         using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
 
@@ -110,9 +81,13 @@ public class ComsService : IComsService
             ticketNumber = "unknown";
             _logger.LogDebug("ticket-number value from metadata is empty");
         }
-        
+
+        // TODO: Publish a message to virus scan the uploaded document when the virus scan consumer would be added
+
         // Save file upload event to file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, $"File: {file.FileName} was uploaded by the Staff.");
+        SaveFileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.TicketNumber = ticketNumber;
+        fileHistoryRecord.Description = $"File: {file.FileName} was uploaded by the Disputant.";
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return id;
@@ -130,5 +105,4 @@ public class ComsService : IComsService
 
         return memoryStream;
     }
-
 }

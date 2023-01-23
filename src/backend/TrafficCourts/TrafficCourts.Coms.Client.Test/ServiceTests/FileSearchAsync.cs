@@ -18,7 +18,7 @@ public class FileSearchAsync : ObjectManagementServiceTest
         ObjectManagementService sut = GetService();
 
         // act
-        List<FileSearchResult> results = await sut.FileSearchAsync(parameters, cts.Token);
+        IList<FileSearchResult> results = await sut.FileSearchAsync(parameters, cts.Token);
 
         // assert
         // verify the client called with correct values
@@ -51,7 +51,7 @@ public class FileSearchAsync : ObjectManagementServiceTest
         ObjectManagementService sut = GetService();
 
         // act
-        List<FileSearchResult> results = await sut.FileSearchAsync(parameters, cts.Token);
+        IList<FileSearchResult> results = await sut.FileSearchAsync(parameters, cts.Token);
 
         // verify the client called with correct values
         _mockClient.Verify(_ => _.SearchObjectsAsync(
