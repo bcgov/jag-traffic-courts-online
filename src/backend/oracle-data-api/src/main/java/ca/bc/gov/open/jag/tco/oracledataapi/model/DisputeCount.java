@@ -50,7 +50,6 @@ public class DisputeCount extends Auditable<String> {
 	 */
 	@Column(length = 3)
 	@Schema(nullable = false)
-	@Enumerated(EnumType.STRING)
 	private Plea pleaCode;
 
 	/**

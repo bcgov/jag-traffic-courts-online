@@ -4490,61 +4490,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class DisputantContactInformation
-    {
-        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string CreatedBy { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedTs { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string ModifiedBy { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ModifiedTs { get; set; }
-
-        /// <summary>
-        /// ID
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Id { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("surname", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Surname { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("givenNames", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string GivenNames { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("birthdate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset Birthdate { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("driversLicenceNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(20)]
-        public string DriversLicenceNumber { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("province", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(30)]
-        public string Province { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Address { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("emailAddress", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EmailAddress { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class JJDispute
     {
         [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -4562,6 +4507,42 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("ticketNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string TicketNumber { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("addressLine1", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AddressLine1 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("addressLine2", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AddressLine2 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("addressLine3", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AddressLine3 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("addressCity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AddressCity { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("addressProvince", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AddressProvince { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("addressCountry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AddressCountry { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("addressPostalCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AddressPostalCode { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("disputantBirthdate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset DisputantBirthdate { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("disputantDrvLicNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DisputantDrvLicNumber { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("drvLicIssuedProvSeqNo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DrvLicIssuedProvSeqNo { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("drvLicIssuedCtryId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DrvLicIssuedCtryId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("emailAddress", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string EmailAddress { get; set; }
+
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public JJDisputeStatus Status { get; set; }
@@ -4570,8 +4551,32 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public JJDisputeHearingType HearingType { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("noticeOfDisputeGuid", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NoticeOfDisputeGuid { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("occamDisputantGiven1Nm", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputantGiven1Nm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("occamDisputantGiven2Nm", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputantGiven2Nm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("occamDisputantGiven3Nm", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputantGiven3Nm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("occamDisputantSurnameNm", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputantSurnameNm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("occamDisputeId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamDisputeId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("occamViolationTicketUpldId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OccamViolationTicketUpldId { get; set; }
+
         [Newtonsoft.Json.JsonProperty("submittedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? SubmittedTs { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("issuedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? IssuedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("violationDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? ViolationDate { get; set; }
@@ -4615,6 +4620,28 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("timeToPayReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string TimeToPayReason { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("contactLawFirmName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactLawFirmName { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactGivenName1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactGivenName1 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactGivenName2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactGivenName2 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactGivenName3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactGivenName3 { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactSurname", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactSurname { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputeContactType? ContactType { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("courtAgenId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CourtAgenId { get; set; }
+
         [Newtonsoft.Json.JsonProperty("lawFirmName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LawFirmName { get; set; }
 
@@ -4630,6 +4657,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("lawyerGivenName3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LawyerGivenName3 { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("justinRccId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string JustinRccId { get; set; }
+
         [Newtonsoft.Json.JsonProperty("interpreterLanguageCd", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string InterpreterLanguageCd { get; set; }
 
@@ -4642,9 +4672,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [Newtonsoft.Json.JsonProperty("remarks", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<JJDisputeRemark> Remarks { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("contactInformation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public DisputantContactInformation ContactInformation { get; set; }
 
         [Newtonsoft.Json.JsonProperty("jjDisputedCounts", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<JJDisputedCount> JjDisputedCounts { get; set; }
@@ -5672,6 +5699,24 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [System.Runtime.Serialization.EnumMember(Value = @"WRITTEN_REASONS")]
         WRITTEN_REASONS = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputeContactType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"INDIVIDUAL")]
+        INDIVIDUAL = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"LAWYER")]
+        LAWYER = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"OTHER")]
+        OTHER = 3,
 
     }
 
