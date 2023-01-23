@@ -16,6 +16,7 @@ public class VersionEndpoint : EndpointWithoutRequest<VersionResponse>
     public override void Configure()
     {
         Get("version");
+        Options(_ => _.WithTags("ClamAV"));
 
         if (AuthenticationConfiguration.AllowAnonymous)
         {

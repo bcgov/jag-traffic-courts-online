@@ -6,7 +6,8 @@ public class PingEndpointSummary : Summary<PingEndpoint>
 {
     public PingEndpointSummary()
     {
-        Description = "Pings the ClamAV server";
+        Summary = "Pings the ClamAV server";     
+        Description = "Sends a PING command to the ClamAV server";
         Response(StatusCodes.Status200OK, "Ping was successful");
         Response(StatusCodes.Status500InternalServerError);
     }

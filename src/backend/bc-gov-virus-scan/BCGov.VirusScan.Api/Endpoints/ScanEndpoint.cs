@@ -4,6 +4,8 @@ using BCGov.VirusScan.Api.Contracts.Scan;
 using BCGov.VirusScan.Api.Contracts.Version;
 using BCGov.VirusScan.Api.Security;
 using BCGov.VirusScan.Api.Services;
+using Microsoft.AspNetCore.WebUtilities;
+using BCGov.VirusScan.Api.Models;
 
 namespace BCGov.VirusScan.Api.Endpoints;
 
@@ -22,6 +24,7 @@ public class ScanEndpoint : Endpoint<ScanRequest, ScanResponse>
     {
         Post("scan");
         AllowFileUploads(dontAutoBindFormData: true); // turns off buffering
+        Options(_ => _.WithTags("ClamAV"));
 
         if (AuthenticationConfiguration.AllowAnonymous)
         {
@@ -31,24 +34,32 @@ public class ScanEndpoint : Endpoint<ScanRequest, ScanResponse>
 
     public override async Task HandleAsync(ScanRequest req, CancellationToken cancellationToken)
     {
-        // the the virus scanner version
-        var version = await _virusScanService.GetVersionAsync(cancellationToken);
-        var versionResponse = new VersionResponse(version.SoftwareVersion, version.DatabaseVersion, version.DatabaseDate);
-
         IAsyncEnumerable<MemoryStream> streams = GetFormFileStreams(cancellationToken);
-        await _virusScanService.ScanFileAsync(streams, cancellationToken);
+        var scanResponse = await _virusScanService.ScanFileAsync(streams, cancellationToken);
 
-       await SendOkAsync(cancellationToken);
+        var response = new ScanResponse
+        {
+            Status = scanResponse.Status,
+            VirusName = scanResponse.VirusName
+        };
+
+        await SendOkAsync(response, cancellationToken);
     }
 
+    /// <summary>
+    /// Gets the enumerator that gets the multi-part sections of the uploaded file. This prevents buffering the entire
+    /// file into memory.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     private async IAsyncEnumerable<MemoryStream> GetFormFileStreams([EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        await foreach (var section in FormFileSectionsAsync(cancellationToken))
+        await foreach (FileMultipartSection? section in FormFileSectionsAsync(cancellationToken))
         {
             if (section is not null)
             {
                 MemoryStream buffer = _streamManager.GetStream("Scan File Section", 1024 * 1024); // by default, get 1MB buffer
-                await section.Section.Body.CopyToAsync(buffer, 1024 * 64, cancellationToken);
+                await section.Section.Body.CopyToAsync(buffer, cancellationToken);
                 buffer.Position = 0; // rewind this stream position
                 yield return buffer;
             }

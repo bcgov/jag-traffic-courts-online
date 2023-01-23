@@ -1,4 +1,5 @@
 ﻿using BCGov.VirusScan.Api.Contracts.Version;
+using BCGov.VirusScan.Api.Models;
 
 namespace BCGov.VirusScan.Api.Contracts.Scan;
 
@@ -13,5 +14,6 @@ public class ScanRequest
 
 public class ScanResponse
 {
-    public VersionResponse? Version { get; set; }
+    public VirusScanStatus Status { get; set; }
+    public string? VirusName { get; set; }
 }

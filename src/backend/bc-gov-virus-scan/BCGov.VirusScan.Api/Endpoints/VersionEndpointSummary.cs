@@ -8,7 +8,8 @@ public class VersionEndpointSummary : Summary<VersionEndpoint>
     public VersionEndpointSummary()
     {
         Description = "Gets the ClamAV server and databas version";
-        Response<VersionResponse>(200);
-        Response<VersionResponse>(500);
+        Description = "Sends a VERSION command to the ClamAV server and returns the ClamAV and virus defintion versions.";
+        Response<VersionResponse>(StatusCodes.Status200OK);
+        Response<VersionResponse>(StatusCodes.Status500InternalServerError);
     }
 }

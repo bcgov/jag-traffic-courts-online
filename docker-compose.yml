@@ -342,7 +342,7 @@ services:
     container_name: clamav
     image: 'clamav/clamav:latest_base'
     environment:
-      - CLAMAV_NO_MILTERD=true # no sendmail filter
+      CLAMAV_NO_MILTERD: "true" # no sendmail filter
     ports:
       - 3310:3310
     volumes:

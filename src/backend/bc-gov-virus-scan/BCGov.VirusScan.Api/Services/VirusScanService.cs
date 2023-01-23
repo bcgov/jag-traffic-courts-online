@@ -5,8 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using BCGov.VirusScan.Api.Network;
 using BCGov.VirusScan.Api.Models;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.Extensions.Logging;
+using BCGov.VirusScan.Api.Monitoring;
 
 namespace BCGov.VirusScan.Api.Services;
 
@@ -53,34 +52,61 @@ public sealed class VirusScanService : IVirusScanService
 
     public async Task<bool> PingAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Sending ping command to ClamAV");
+        using var operation = Instrumentation.BeginPing();
 
-        await SendCommandAsync(PingCommand, cancellationToken);
+        try
+        {
+            _logger.LogDebug("Sending ping command to ClamAV");
 
-        var response = await ReadResponseAsync(cancellationToken);
+            await SendCommandAsync(PingCommand, cancellationToken);
 
-        _logger.LogDebug("Ping response {Response}", response);
+            var response = await ReadResponseAsync(cancellationToken);
 
-        response = ParsePingResponse(response);
+            _logger.LogDebug("Ping response {Response}", response);
 
-        return response == "PONG";
+            response = ParsePingResponse(response);
+
+            var pong = StringComparer.OrdinalIgnoreCase.Equals(response, "PONG");
+
+            Instrumentation.EndPing();
+
+            return pong;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndPing(operation, exception);
+            throw;
+        }
     }
 
     public async Task<VirusScanResult> ScanFileAsync(MemoryStream source, CancellationToken cancellationToken)
     {
-        await SendCommandAsync(InStreamCommand, cancellationToken);
+        using var operation = Instrumentation.BeginVirusScan();
 
-        NetworkStream stream = _client.GetStream();
+        try
+        {
+            await SendCommandAsync(InStreamCommand, cancellationToken);
 
-        await StreamChunkAsync(stream, source, cancellationToken);
+            NetworkStream stream = _client.GetStream();
 
-        // write zero length chunk 
-        await stream.WriteAsync(ZeroLengthChunk, 0, ZeroLengthChunk.Length, cancellationToken);
+            await StreamChunkAsync(stream, source, cancellationToken);
 
-        string response = await ReadResponseAsync(cancellationToken);
+            // write zero length chunk 
+            await stream.WriteAsync(ZeroLengthChunk, 0, ZeroLengthChunk.Length, cancellationToken);
 
-        VirusScanResult result = ParseScanResponse(response);
-        return result;
+            string response = await ReadResponseAsync(cancellationToken);
+
+            VirusScanResult result = ParseScanResponse(response);
+
+            Instrumentation.EndVirusScan(result.Status);
+
+            return result;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndVirusScan(operation, exception);
+            return new VirusScanResult { Status = VirusScanStatus.Error };
+        }
     }
 
     public async Task<VirusScanResult> ScanFileAsync(IAsyncEnumerable<MemoryStream> sourceSections, CancellationToken cancellationToken)
@@ -111,7 +137,6 @@ public sealed class VirusScanService : IVirusScanService
         VirusScannerVersion version = ParseVersionResponse(response);
         return version;
     }
-
 
     private string ParsePingResponse(string response)
     {
@@ -221,7 +246,7 @@ public sealed class VirusScanService : IVirusScanService
         var start = "stream: ".Length;
         var fromEnd = " FOUND".Length;
 
-        var virus = response[start..-fromEnd];
+        var virus = response.Substring(start, response.Length - start - fromEnd);
 
         var hashSizeStart = virus.IndexOf('(');
         if (hashSizeStart > 0)
@@ -290,8 +315,10 @@ public sealed class VirusScanService : IVirusScanService
     /// <param name="cancellationToken"></param>
     private async Task StreamChunkAsync(NetworkStream stream, MemoryStream source, CancellationToken cancellationToken)
     {
-        // send the file in 8k chunks (todo: determine if 8k is correct size)
-        int bufferSize = 8 * 1024;
+        int bufferSize = 4 * 1024; // stream the file in 4k chunks, if this is bigger, ClamAV appears to close the connection
+        // avoid computing the buffer size repeatedly
+        byte[] bufferSizeAsNetworkOrder = HostToNetworkOrder(bufferSize);
+
         byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
 
         try
@@ -313,7 +340,10 @@ public sealed class VirusScanService : IVirusScanService
 
                 // write chunk size
                 _logger.LogDebug("Writing chunk size: {ChunkSize}", bytes);
-                byte[] chunkSize = HostToNetworkOrder(bytes);
+                byte[] chunkSize = bytes == bufferSize 
+                    ? bufferSizeAsNetworkOrder
+                    : HostToNetworkOrder(bytes);
+
                 await stream.WriteAsync(chunkSize, 0, chunkSize.Length, cancellationToken).ConfigureAwait(false);
 
                 // write chunk contents

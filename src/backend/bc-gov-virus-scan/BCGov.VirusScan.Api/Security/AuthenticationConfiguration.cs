@@ -9,5 +9,5 @@ public static class AuthenticationConfiguration
     /// <summary>
     /// Should anonymous access be allowed?
     /// </summary>
-    public static bool AllowAnonymous => true;
+    public const bool AllowAnonymous = true;
 }
