@@ -22,9 +22,9 @@ public class ScanEndpoint : Endpoint<ScanRequest, ScanResponse>
 
     public override void Configure()
     {
-        Post("scan");
+        Post("v1/clamav/scan");
         AllowFileUploads(dontAutoBindFormData: true); // turns off buffering
-        Options(_ => _.WithTags("ClamAV"));
+        Description(x => x.WithName("scanFile"));
 
         if (AuthenticationConfiguration.AllowAnonymous)
         {

@@ -13,10 +13,7 @@ builder.AddOpenTelemetry();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerDoc(_ =>
-{
-    _.TagDescriptions(new OpenApiTag() { Name = "ClamAV", Description = "Operations against ClamAV" });
-}, shortSchemaNames: true);
+builder.Services.AddSwaggerDoc(shortSchemaNames: true, tagIndex: 2);
 
 builder.Services.AddFastEndpoints();
 

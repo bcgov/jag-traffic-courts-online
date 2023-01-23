@@ -17,8 +17,8 @@ public class PingEndpoint : EndpointWithoutRequest
 
     public override void Configure()
     {
-        Get("ping");
-        Options(_ => _.WithTags("ClamAV"));
+        Get("v1/clamav/ping");
+        Description(x => x.WithName("ping"));
 
         if (AuthenticationConfiguration.AllowAnonymous)
         {
