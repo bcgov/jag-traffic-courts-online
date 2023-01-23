@@ -30,7 +30,7 @@ public class ComsService : IComsService
     {
         _logger.LogDebug("Deleting the file through COMS");
 
-        // find the file so we can get the ticket number
+        // find the file so we can get the ticket number and notice of dispute id
         FileSearchParameters searchParameters = new(fileId);
 
         IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
