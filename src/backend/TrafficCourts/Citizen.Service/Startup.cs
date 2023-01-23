@@ -76,6 +76,10 @@ public static class Startup
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
         builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
+        builder.Services.AddTransient<IComsService, ComsService>();
+
+        // Add COMS (Object Management Service) Client
+        builder.Services.AddObjectManagementService("COMS");
 
         // MassTransit
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
