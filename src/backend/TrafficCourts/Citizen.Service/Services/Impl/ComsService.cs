@@ -26,6 +26,45 @@ public class ComsService : IComsService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
+    public async Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Deleting the file through COMS");
+
+        // find the file so we can get the ticket number
+        FileSearchParameters searchParameters = new(fileId);
+
+        IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
+
+        if (searchResults.Count == 0)
+        {
+            return; // file not found
+        }
+
+        FileSearchResult file = searchResults[0];
+
+        file.Metadata.TryGetValue("notice-of-dispute-id", out string? noticeOfDisputeId);
+        if (string.IsNullOrEmpty(noticeOfDisputeId))
+        {
+            _logger.LogDebug("notice-of-dispute-id value from metadata is empty. Cannot delete the file since it was not uploaded by a disputant");
+            return;
+        }
+
+        file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
+        if (string.IsNullOrEmpty(ticketNumber))
+        {
+            ticketNumber = "unknown";
+            _logger.LogDebug("ticket-number value from metadata is empty");
+        }
+
+        await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
+
+        // Save file delete event to file history
+        SaveFileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.TicketNumber = ticketNumber;
+        fileHistoryRecord.Description = $"File: {file.FileName} was deleted by the Disputant.";
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+    }
+
     public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
