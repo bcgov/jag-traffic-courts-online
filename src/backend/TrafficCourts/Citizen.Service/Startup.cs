@@ -6,6 +6,7 @@ using OpenTelemetry.Trace;
 using Serilog;
 using System.Configuration;
 using System.Reflection;
+using TrafficCourts.Citizen.Service.Authentication;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
@@ -13,11 +14,9 @@ using TrafficCourts.Citizen.Service.Services.Impl;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
-using FluentValidation.AspNetCore;
 using TrafficCourts.Common.Features.FilePersistence;
-using HashidsNet;
-using OpenTelemetry.Metrics;
 using FluentValidation;
+using Microsoft.OpenApi.Models;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -90,10 +89,18 @@ public static class Startup
         // use lowercase routes
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
+        builder.Services.ConfigureValidatableSetting<OAuthOptions>(builder.Configuration.GetRequiredSection(OAuthOptions.Section));
+        builder.Services.AddTransient<IOAuthUserService, OAuthUserService>();
+
+        builder.Services.AddAuthentication(builder.Configuration);
+
+        builder.Services.AddAuthorization();
+
         builder.Services.AddTransient<IConfigureOptions<JsonOptions>, ConfigureJsonOptions>();
 
         // simple reversible hashing for passing information back and forth to client using salt from parameters
         builder.Services.AddHashids(builder.Configuration);
+
         builder.Services.AddEmailVerificationTokens();
 
         builder.Services.AddSingleton<IClock>(SystemClock.Instance);
@@ -135,6 +142,23 @@ public static class Startup
                     Description = "An API for creating violation ticket disputes",
                 });
 
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
+                        Array.Empty<string>()
+                    }
+                });
+
+                options.EnableAnnotations();
                 options.UseDateOnlyTimeOnlyStringConverters();
 
                 var xmlFilename = $"{assembly.GetName().Name}.xml";

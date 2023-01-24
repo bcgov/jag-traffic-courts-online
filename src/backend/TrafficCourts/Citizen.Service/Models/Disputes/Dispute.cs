@@ -18,6 +18,12 @@ public class Dispute : DisputantContactInformation
     public string? TicketNumber { get; set; } = null!;
 
     /// <summary>
+    /// The date and time the violation ticket was issue. Time must only be hours and minutes.
+    /// </summary>
+    [JsonPropertyName("issued_date")]
+    public DateTime IssuedTs { get; set; }
+
+    /// <summary>
     /// The disputant's birthdate.
     /// </summary>
     [JsonPropertyName("disputant_birthdate")]
