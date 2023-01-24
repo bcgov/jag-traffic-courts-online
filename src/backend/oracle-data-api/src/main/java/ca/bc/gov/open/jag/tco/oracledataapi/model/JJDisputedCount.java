@@ -29,7 +29,7 @@ import lombok.Setter;
 //mark class as an Entity
 /**
  * @author 237563
- * 
+ *
  * Represents JJ Written Reasons for each count
  *
  */
@@ -56,7 +56,7 @@ public class JJDisputedCount extends Auditable<String> {
 	 */
 	@Column
 	@Min(1) @Max(3)
-	private int count;
+	private Integer count;
 
 	/**
 	 * The disputant is requesting time to pay the ticketed amount.
@@ -81,15 +81,89 @@ public class JJDisputedCount extends Auditable<String> {
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo appearInCourt;
-	
+
+	@Column
+	private Long appearanceChargeCountId;
+
+	@Column
+	private Long courtAppearanceId;
+
+	@Column
+	private JJDisputedCountFinding findingResultCd;
+
+	@Column(length = 500)
+	private String lesserChargeDesc;
+
+	@Column(length = 500)
+	private String suspSntcProbationDurtn;
+
+	@Column(length = 500)
+	private String suspSntcProbationConds;
+
+	@Column(length = 500)
+	private String jailDuration;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private YesNo jailIntermittent;
+
+	@Column(length = 500)
+	private String probationDuration;
+
+	@Column(length = 1000)
+	private String probationConditions;
+
+	@Column(length = 500)
+	private String drivingProhibDuration;
+
+	@Column(length = 240)
+	private String drivingProhibMvaSection;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private YesNo dismissed;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private YesNo dismissedForWantProsec;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private YesNo withdrawn;
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private YesNo abatement;
+
+	@Column(length = 500)
+	private String stayOfProceedingsBy;
+
+	@Column(length = 500)
+	private String otherTxt;
+
+	@Column(length = 500)
+	private String remarksTxt;
+
+	@Column
+	private Date accEntDtm;
+
+	@Column(length = 30)
+	private String accEntUserId;
+
+	@Column
+	private Date accUpdDtm;
+
+	@Column(length = 30)
+	private String accUpdUserId;
+
 	/**
-	 * The description of the offence including the statute and act. 
+	 * The description of the offence including the statute and act.
 	 * Example: 92.1(1) MVA - Fail to stop resulting in pursuit
 	 */
 	@Column
 	@Schema(nullable = true)
     private String description;
-	
+
 	/**
      * The due date for the offence to be paid.
      */
@@ -97,21 +171,21 @@ public class JJDisputedCount extends Auditable<String> {
     @Schema(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
-    
+
     /**
 	 * The original fine amount from reconciled ticket data.
 	 */
 	@Column
 	@Schema(nullable = true)
     private Float ticketedFineAmount;
-	
+
 	/**
 	 * The amount that JJ may enter to overwrite the ticketed fine amount.
 	 */
 	@Column
 	@Schema(nullable = true)
 	private Float LesserOrGreaterAmount;
-	
+
 	/**
 	 * JJ's decision whether to include surcharge in the calculated fine or not.
 	 * Surcharge is always 15% of the original fine amount.
@@ -120,7 +194,7 @@ public class JJDisputedCount extends Auditable<String> {
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo includesSurcharge;
-	
+
 	/**
      * Revised due date of the original due date for the offence to be paid.
      */
@@ -128,14 +202,22 @@ public class JJDisputedCount extends Auditable<String> {
     @Schema(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date revisedDueDate;
-    
+
     /**
 	 * The final fine amount to be paid by the disputant.
 	 */
 	@Column
 	@Schema(nullable = true)
     private Float totalFineAmount;
-	
+
+    /**
+     * The date and time the violation ticket was issued.
+     */
+    @Column
+    @Schema(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date violationDate;
+
 	/**
 	 * JJ's comments that will be shared to disputant.
 	 */
@@ -148,7 +230,7 @@ public class JJDisputedCount extends Auditable<String> {
 	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
 	private JJDispute jjDispute;
-	
+
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "jjDisputedCount")
 	@Schema(nullable = true)
