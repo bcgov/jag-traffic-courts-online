@@ -204,7 +204,7 @@ services:
       ASPNETCORE_URLS: http://*:8080
       CLAMAV__SERVER: ${CLAMAV__SERVER:-clamav}
     ports:
-      - "5025:8080"
+      - "5030:8080"
     depends_on: [clamav]
     
   #############################################################################################
