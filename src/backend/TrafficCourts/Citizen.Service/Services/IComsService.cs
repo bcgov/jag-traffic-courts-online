@@ -29,4 +29,20 @@ public interface IComsService
     /// <returns></returns>
     /// <exception cref="ObjectManagementServiceException">Unable to delete the file through COMS</exception>
     Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Returns a dictionary of IDs and file names of the documents found in object storage through COMS service based on the search parameters provided
+    /// </summary>
+    /// <param name="metadata"></param>
+    /// <param name="tags"></param>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="ArgumentNullException">Parameters is null.</exception>
+    /// <exception cref="MetadataInvalidKeyException">An invalid metadata key was supplied.</exception>
+    /// <exception cref="MetadataTooLongException">The total length of the metadata was too long.</exception>
+    /// <exception cref="TooManyTagsException">Too many tags were supplied. Only 10 tags are allowed.</exception>
+    /// <exception cref="TagKeyTooLongException">A tag key was too long. Maximum length of a tag key is 128.</exception>
+    /// <exception cref="TagValueTooLongException">A tag value was too long. Maximum length of a tag value is 256.</exception>
+    /// <exception cref="ObjectManagementServiceException">There was an error searching files in COMS</exception>
+    /// <returns></returns>
+    Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken);
 }
