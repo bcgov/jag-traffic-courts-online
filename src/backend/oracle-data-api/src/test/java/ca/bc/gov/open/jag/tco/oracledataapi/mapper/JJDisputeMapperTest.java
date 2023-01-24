@@ -375,7 +375,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(Long.valueOf(disputeRemarkId ), jjDisputeRemark.getId());
 		assertEquals(disputeRemarkTxt, jjDisputeRemark.getNote());
 		assertEquals(fullUserNameTxt, jjDisputeRemark.getUserFullName());
-//		assertEquals(remarksMadeDtm, jjDisputeRemark.getRemarksMadeDtm());                              // TODO: field missing in model but exists in database
+		assertEquals(remarksMadeDtm, jjDisputeRemark.getRemarksMadeTs());
 		assertEquals(remarkCreatedTs, jjDisputeRemark.getCreatedTs());
 		assertEquals(remarkCreatedBy, jjDisputeRemark.getCreatedBy());
 		assertEquals(remarkModifedTs, jjDisputeRemark.getModifiedTs());

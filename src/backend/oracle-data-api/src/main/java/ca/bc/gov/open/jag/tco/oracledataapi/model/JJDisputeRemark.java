@@ -1,5 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +22,7 @@ import lombok.Setter;
 //mark class as an Entity
 /**
  * @author 237563
- * 
+ *
  * Represents a note/comment on a JJ dispute that is for internal use of JJs.
  *
  */
@@ -36,13 +38,13 @@ public class JJDisputeRemark extends Auditable<String> {
 	@Id
 	@GeneratedValue
     private Long id;
-	
+
 	/**
 	 * Name and surname of the JJ/Staff who adds the remark for the dispute.
 	 */
 	@Column
     private String userFullName;
-	
+
 	/**
 	 * JJ's remark notes that will be added to the dispute.
 	 */
@@ -50,6 +52,9 @@ public class JJDisputeRemark extends Auditable<String> {
 	@Column(length = 500)
 	@Schema(maxLength = 500)
 	private String note;
+
+	@Column
+	private Date remarksMadeTs;
 
 	@JsonBackReference
 	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)

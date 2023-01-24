@@ -129,7 +129,7 @@ public abstract class JJDisputeMapper {
 //	@Mapping(source = "disputeId", target = "jjDispute.disputeId")                      // TODO: field missing in model but exists in database
 	@Mapping(source = "disputeRemarkTxt", target = "note")
 	@Mapping(source = "fullUserNameTxt", target = "userFullName")
-//	@Mapping(source = "remarksMadeDtm", target = "remarksMadeDtm")                      // TODO: field missing in model but exists in database
+	@Mapping(source = "remarksMadeDtm", target = "remarksMadeTs")
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "updDtm", target = "modifiedTs")

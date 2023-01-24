@@ -1682,6 +1682,10 @@
             "maxLength": 500,
             "minLength": 0,
             "type": "string"
+          },
+          "remarksMadeTs": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -1730,6 +1734,59 @@
             "type": "string",
             "enum": [ "UNKNOWN", "Y", "N" ]
           },
+          "appearanceChargeCountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "courtAppearanceId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "findingResultCd": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "GUILTY", "NOT_GUILTY", "GUILTY_LESSER" ]
+          },
+          "lesserChargeDesc": { "type": "string" },
+          "suspSntcProbationDurtn": { "type": "string" },
+          "suspSntcProbationConds": { "type": "string" },
+          "jailDuration": { "type": "string" },
+          "jailIntermittent": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "probationDuration": { "type": "string" },
+          "probationConditions": { "type": "string" },
+          "drivingProhibDuration": { "type": "string" },
+          "drivingProhibMvaSection": { "type": "string" },
+          "dismissed": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "dismissedForWantProsec": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "withdrawn": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "abatement": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "stayOfProceedingsBy": { "type": "string" },
+          "otherTxt": { "type": "string" },
+          "remarksTxt": { "type": "string" },
+          "accEntDtm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accEntUserId": { "type": "string" },
+          "accUpdDtm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accUpdUserId": { "type": "string" },
           "description": {
             "type": "string",
             "nullable": true
@@ -1756,6 +1813,11 @@
           "totalFineAmount": {
             "type": "number",
             "format": "float",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "comments": {
@@ -1797,7 +1859,7 @@
           "finding": {
             "type": "string",
             "nullable": true,
-            "enum": [ "GUILTY", "NOT_GUILTY", "GUILTY_LESSER" ]
+            "enum": [ "UNKNOWN", "GUILTY", "NOT_GUILTY", "GUILTY_LESSER" ]
           },
           "lesserDescription": {
             "type": "string",
