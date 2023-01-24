@@ -1,0 +1,183 @@
+{
+  "x-generator": "NSwag v13.18.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v10.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "BCGov.VirusScan.Api",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:7022"
+    }
+  ],
+  "paths": {
+    "/v1/clamav/ping": {
+      "get": {
+        "tags": [
+          "Clamav"
+        ],
+        "summary": "Pings the ClamAV server",
+        "description": "Sends a PING command to the ClamAV server",
+        "operationId": "ping",
+        "responses": {
+          "200": {
+            "description": "Ping was successful."
+          },
+          "500": {
+            "description": "There was an error pinging ClamAV."
+          }
+        }
+      }
+    },
+    "/v1/clamav/scan": {
+      "post": {
+        "tags": [
+          "Clamav"
+        ],
+        "summary": "Scans a file for viruses",
+        "description": "Sends an INSTREAM command to the ClamAV server and streams the upload file for scanning.",
+        "operationId": "scanFile",
+        "requestBody": {
+          "x-name": "ScanRequest",
+          "description": "",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ScanRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "The virus scan operation completed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScanResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was an internal error virus scanning the file."
+          }
+        }
+      }
+    },
+    "/v1/clamav/version": {
+      "get": {
+        "tags": [
+          "Clamav"
+        ],
+        "summary": "Gets the ClamAV server and databas version",
+        "description": "Sends a VERSION command to the ClamAV server and returns the ClamAV and virus defintion versions.",
+        "operationId": "version",
+        "responses": {
+          "200": {
+            "description": "The version of ClamAV was retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was an error getting the version from ClamAV.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ScanResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "description": "The virus scan status.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/VirusScanStatus"
+              }
+            ]
+          },
+          "virusName": {
+            "type": "string",
+            "description": "The virus name if the status is Infected.",
+            "nullable": true
+          }
+        }
+      },
+      "VirusScanStatus": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "NotInfected",
+          "Infected",
+          "Error"
+        ],
+        "enum": [
+          "Unknown",
+          "NotInfected",
+          "Infected",
+          "Error"
+        ]
+      },
+      "ScanRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "The file to scan for viruses",
+            "format": "binary",
+            "nullable": true
+          }
+        }
+      },
+      "VersionResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "softwareVersion": {
+            "type": "string",
+            "description": "The version of the Clam AV server."
+          },
+          "databaseVersion": {
+            "type": "string",
+            "description": "The version of the signatures.",
+            "nullable": true
+          },
+          "databaseDate": {
+            "type": "string",
+            "description": "The date of the signatures.",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWTBearerAuth": {
+        "type": "http",
+        "description": "Enter a JWT token to authorize the requests...",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
