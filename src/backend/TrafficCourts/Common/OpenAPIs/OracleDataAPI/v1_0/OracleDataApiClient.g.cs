@@ -4789,6 +4789,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [System.ComponentModel.DataAnnotations.StringLength(500)]
         public string Note { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("remarksMadeTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset RemarksMadeTs { get; set; }
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
         [Newtonsoft.Json.JsonExtensionData]
@@ -4841,6 +4844,81 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public JJDisputedCountAppearInCourt AppearInCourt { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("appearanceChargeCountId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long AppearanceChargeCountId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("courtAppearanceId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long CourtAppearanceId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("findingResultCd", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountFindingResultCd FindingResultCd { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("lesserChargeDesc", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string LesserChargeDesc { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("suspSntcProbationDurtn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string SuspSntcProbationDurtn { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("suspSntcProbationConds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string SuspSntcProbationConds { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("jailDuration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string JailDuration { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("jailIntermittent", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountJailIntermittent JailIntermittent { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("probationDuration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ProbationDuration { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("probationConditions", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ProbationConditions { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("drivingProhibDuration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DrivingProhibDuration { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("drivingProhibMvaSection", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DrivingProhibMvaSection { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("dismissed", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountDismissed Dismissed { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("dismissedForWantProsec", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountDismissedForWantProsec DismissedForWantProsec { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("withdrawn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountWithdrawn Withdrawn { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("abatement", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountAbatement Abatement { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("stayOfProceedingsBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string StayOfProceedingsBy { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("otherTxt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string OtherTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("remarksTxt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RemarksTxt { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("accEntDtm", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset AccEntDtm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("accEntUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AccEntUserId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("accUpdDtm", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset AccUpdDtm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("accUpdUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AccUpdUserId { get; set; }
+
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
 
@@ -4859,6 +4937,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [Newtonsoft.Json.JsonProperty("totalFineAmount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public float? TotalFineAmount { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("violationDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? ViolationDate { get; set; }
 
         [Newtonsoft.Json.JsonProperty("comments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(500)]
@@ -5841,6 +5922,99 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountFindingResultCd
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"GUILTY")]
+        GUILTY = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"NOT_GUILTY")]
+        NOT_GUILTY = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"GUILTY_LESSER")]
+        GUILTY_LESSER = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountJailIntermittent
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountDismissed
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountDismissedForWantProsec
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountWithdrawn
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountAbatement
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum JJDisputedCountIncludesSurcharge
     {
 
@@ -5859,14 +6033,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     public enum JJDisputedCountRoPFinding
     {
 
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
         [System.Runtime.Serialization.EnumMember(Value = @"GUILTY")]
-        GUILTY = 0,
+        GUILTY = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"NOT_GUILTY")]
-        NOT_GUILTY = 1,
+        NOT_GUILTY = 2,
 
         [System.Runtime.Serialization.EnumMember(Value = @"GUILTY_LESSER")]
-        GUILTY_LESSER = 2,
+        GUILTY_LESSER = 3,
 
     }
 
