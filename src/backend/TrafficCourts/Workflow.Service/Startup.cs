@@ -10,6 +10,7 @@ using NodaTime;
 using TrafficCourts.Workflow.Service.Sagas;
 using TrafficCourts.Common;
 using TrafficCourts.Workflow.Service.Services.EmailTemplates;
+using TrafficCourts.Common.OpenAPIs.VirusScan;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -48,6 +49,10 @@ public static class Startup
         // add the Arc Dispute Client
         builder.Services.AddArcDisputeClient(builder.Configuration, section: "ArcApiConfiguration");
 
+        // add the Virus Scan Client
+        builder.Services.AddVirusScanClient(builder.Configuration);
+
+        builder.Services.AddTransient<IVirusScanService, VirusScanService>();
         builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
         builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
         builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
