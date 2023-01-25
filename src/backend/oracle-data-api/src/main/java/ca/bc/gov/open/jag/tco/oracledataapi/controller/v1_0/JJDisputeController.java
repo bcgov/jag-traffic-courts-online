@@ -37,26 +37,26 @@ public class JJDisputeController {
 	private Logger logger = LoggerFactory.getLogger(JJDisputeController.class);
 
 	/**
-	 * GET endpoint that retrieves a jj dispute by id from the database
+	 * GET endpoint that retrieves a jj dispute by ticketNumber from the database
 	 * without assigning it to a VTC for review
 	 * @param ticketNumber the primary key of the jj dispute to retrieve
 	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
 	 * @param principal logged in user to assign
 	 * @return a single jj dispute
 	 */
-	@GetMapping("/dispute/{id}/{assignVTC}")
+	@GetMapping("/dispute/{ticketNumber}/{assignVTC}")
 	public ResponseEntity<JJDispute> getJJDispute(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
-			@PathVariable("id") String ticketNumber,
+			@PathVariable("ticketNumber") String ticketNumber,
 			@PathVariable("assignVTC") boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("getJJDispute called");
+		logger.debug("GET /dispute/{}/{} called", ticketNumber, checkVTCAssigned);
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.getJJDisputeById(ticketNumber), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.getJJDisputeByTicketNumber(ticketNumber), HttpStatus.OK);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class JJDisputeController {
 			@Pattern(regexp = "[A-Z]{2}\\d{8}")
 			@Parameter(description = "If specified will filter by TicketNumber. (Format is XX00000000)", example = "AX12345678")
 			String ticketNumber) {
-		logger.debug("getAllJJDisputes called");
+		logger.debug("GET /disputes called");
 
 		return jjDisputeService.getJJDisputes(jjAssignedTo, ticketNumber);
 	}
@@ -83,7 +83,7 @@ public class JJDisputeController {
 	 * PUT endpoint that updates the JJ Dispute detail with administrative resolution details for each JJ Disputed Count, setting the new value for the fields passed in the body.
 	 *
 	 * @param jj dispute to be updated
-	 * @param id (ticket number) of the saved {@link JJDispute} to update
+	 * @param ticketNumber unique key of the saved {@link JJDispute} to update
 	 * @param principal user doing the updating
 	 * @param boolean (optional) check assignment to VTC
 	 * @return updated {@link JJDispute}
@@ -101,7 +101,7 @@ public class JJDisputeController {
 			boolean checkVTCAssigned,
 			Principal principal,
 			@RequestBody JJDispute jjDispute) {
-		logger.debug("PUT /dispute/{ticketNumber}/{checkVTCAssigned} called");
+		logger.debug("PUT /dispute/{} called", ticketNumber);
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -111,12 +111,12 @@ public class JJDisputeController {
 	}
 
 	/**
-	 * PUT endpoint that updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.
+	 * PUT endpoint that updates each JJ Dispute based on the passed in ticket number to assign them to a specific JJ or unassign them if JJ not specified.
 	 *
-	 * @param ID(s) (ticket number) of JJ Dispute(s) to be updated/assigned
-	 * @param IDIR username of the JJ that JJ Dispute(s) will be assigned to, if specified. Otherwise JJ Disputes will be unassigned
+	 * @param ticketNumberList unique keys of JJ Dispute(s) to be updated/assigned
+	 * @param jjUsername IDIR username of the JJ that JJ Dispute(s) will be assigned to, if specified. Otherwise JJ Disputes will be unassigned
 	 */
-	@Operation(summary = "Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.")
+	@Operation(summary = "Updates each JJ Dispute based on the passed in ticket numbers to assign them to a specific JJ or unassign them if JJ not specified.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok"),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
@@ -137,7 +137,7 @@ public class JJDisputeController {
 	/**
 	 * PUT endpoint that updates the JJDispute, setting the status to REVIEW.
 	 *
-	 * @param ticketNumber, id of the saved {@link JJDispute} to update
+	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
 	 * @param remark, the note explaining why the status was set to REVIEW.
 	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
 	 * @param principal, the logged-in user
@@ -156,7 +156,7 @@ public class JJDisputeController {
 			@RequestBody @Size(max = 256) String remark,
 			boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("PUT /dispute/{id}/review called");
+		logger.debug("PUT /dispute/{}/review called", ticketNumber);
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -168,7 +168,7 @@ public class JJDisputeController {
 	/**
 	 * PUT endpoint that updates the JJDispute, setting the status to REQUIRE_COURT_HEARING and hearing Type to COURT_APPEARANCE.
 	 *
-	 * @param ticketNumber, id of the saved {@link JJDispute} to update
+	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
 	 * @param remark, the note explaining why the status was set
 	 * @param principal, the logged-in user
 	 * @return {@link JJDispute}
@@ -194,7 +194,7 @@ public class JJDisputeController {
 	/**
 	 * PUT endpoint that updates the JJDispute, setting the status to ACCEPTED.
 	 *
-	 * @param ticketNumber, id of the saved {@link JJDispute} to update
+	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
 	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
 	 * @param principal, the logged-in user
 	 * @return {@link JJDispute}
@@ -209,7 +209,7 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/accept")
 	public ResponseEntity<JJDispute> acceptJJDispute(@PathVariable String ticketNumber, boolean checkVTCAssigned, Principal principal) {
-		logger.debug("PUT /dispute/{id}/accept called");
+		logger.debug("PUT /dispute/{}/accept called", ticketNumber);
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -221,7 +221,7 @@ public class JJDisputeController {
 	/**
 	 * PUT endpoint that updates the JJDispute, setting the status to CONFIRMED.
 	 *
-	 * @param ticketNumber, id of the saved {@link JJDispute} to update
+	 * @param ticketNumber, a unique key of the saved {@link JJDispute} to update
 	 * @param principal, the logged-in user
 	 * @return {@link JJDispute}
 	 */
@@ -236,7 +236,7 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/confirm")
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
-		logger.debug("PUT /dispute/{id}/confirm called");
+		logger.debug("PUT /dispute/{}/confirm called", ticketNumber);
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null), HttpStatus.OK);
 	}

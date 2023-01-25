@@ -34,7 +34,7 @@ public interface JJDisputeRepository {
 	 * @return the entity with the given id or {@literal Optional#empty()} if none found.
 	 * @throws IllegalArgumentException if {@literal id} is {@literal null}.
 	 */
-	public Optional<JJDispute> findById(String id);
+	public Optional<JJDispute> findById(Long id);
 
 	/** Fetch all records that match by JJDispute.ticketNumber (should only ever be one). */
 	public List<JJDispute> findByTicketNumber(String ticketNumber);

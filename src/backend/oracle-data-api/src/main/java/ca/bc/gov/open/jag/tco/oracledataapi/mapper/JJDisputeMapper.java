@@ -42,7 +42,7 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "disputantGiven1Nm", target = "givenNames")
 	@Mapping(source = "disputantSurnameTxt", target = "surname")
 	@Mapping(source = "disputeCounts", target = "jjDisputedCounts")
-//	 @Mapping(source = "disputeId", target = "jjDisputeId")                            // TODO: create new PK
+	@Mapping(source = "disputeId", target = "id")
 	@Mapping(source = "disputeRemarks", target = "remarks")
 	@Mapping(source = "disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
 	@Mapping(source = "drvLicIssuedProvSeqNo", target = "drvLicIssuedProvSeqNo")
@@ -126,7 +126,7 @@ public abstract class JJDisputeMapper {
 	public abstract JJDisputedCount convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount jjDisputeCount);
 
 	@Mapping(source = "disputeRemarkId", target = "id")
-//	@Mapping(source = "disputeId", target = "jjDispute.disputeId")                      // TODO: field missing in model but exists in database
+	@Mapping(source = "disputeId", target = "jjDispute.id")
 	@Mapping(source = "disputeRemarkTxt", target = "note")
 	@Mapping(source = "fullUserNameTxt", target = "userFullName")
 	@Mapping(source = "remarksMadeDtm", target = "remarksMadeTs")

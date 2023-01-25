@@ -140,6 +140,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
 		});
 	}
+
 	@ParameterizedTest
 	@EnumSource(value = JJDisputeStatus.class, names = { "CONFIRMED", "ACCEPTED" })
 	void testSetStatusToACCEPTED_200(JJDisputeStatus jjDisputeStatus) {
@@ -157,6 +158,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
 		});
 	}
+
 	private JJDispute saveDispute(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDispute = RandomUtil.createJJDispute();
 		jjDispute.setStatus(jjDisputeStatus);
