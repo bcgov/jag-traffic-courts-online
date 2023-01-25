@@ -47,6 +47,8 @@ public class DisputesController : ControllerBase
     /// <param name="logger"></param>
     /// <param name="hashids"></param>
     /// <param name="tokenEncoder"></param>
+    /// <param name="oAuthUserService"></param>
+    /// <param name="mapper"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
     public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper)
     {
@@ -250,7 +252,7 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers.Authorization.First();
+            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
             if (String.IsNullOrEmpty(token)) {
                 throw new Exception("Invalid access_token");
             }
@@ -297,7 +299,7 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers.Authorization.First();
+            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
             if (String.IsNullOrEmpty(token))
             {
                 throw new Exception("Invalid access_token");
