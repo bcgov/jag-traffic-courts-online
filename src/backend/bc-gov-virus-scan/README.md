@@ -17,6 +17,20 @@ ClamAV® is an open source antivirus engine for detecting trojans, viruses, malw
 
 ![image](https://user-images.githubusercontent.com/1844480/214445980-a214c6bc-6d5e-42fe-bd9c-f8ec1922dc65.png)
 
+### Large Files
+
+This API uses ClamAV's INSTREAM command to scan files for viruses. ClamAV limits the maximum stream size to 25M.
+The maximum can be changed by setting [StreamMaxLength](https://github.com/Cisco-Talos/clamav/blob/ebe59ef7dd31ab5c00071d3eee6f11fed1a00fd2/etc/clamd.conf.sample#L133)
+configuration setting in ClamAV.
+
+.NET sets the maximum allowed size of any request body in bytes. The default is 30,000,000 bytes, which is approximately 28.6MB. This can be changed using the `Kestrel:Limits:MaxRequestBodySize` configuration setting. See [Maximum request body size](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options?view=aspnetcore-7.0)
+
+To be able to scan larger files, both these limits need to be adjusted.
+
+TIP: Do not attempt to post a large file in one chunk. This service supports [chunked transfer encoding](https://en.wikipedia.org/wiki/Chunked_transfer_encoding).
+
+
+
 ## Version
 
 ![image](https://user-images.githubusercontent.com/1844480/214446050-7f94f633-730d-44a7-8cf5-6cd48568c2d8.png)
