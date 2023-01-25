@@ -41,7 +41,7 @@ public class DisputeCount extends Auditable<String> {
 	/**
 	 * The count number.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Min(1) @Max(3)
 	private int countNo;
 

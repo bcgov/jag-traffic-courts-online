@@ -16,7 +16,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
 @ConditionalOnProperty(name = "repository.jjdispute", havingValue = "h2", matchIfMissing = true)
 @Qualifier("jjDisputeRepository")
-public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaRepository<JJDispute, String> {
+public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaRepository<JJDispute, Long> {
 
 	@Override
 	@Query("select jj from JJDispute jj where jj.ticketNumber = :ticketNumber")

@@ -1,11 +1,8 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
-import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
@@ -38,11 +35,10 @@ public abstract class JJDisputeMapper {
 //	@Mapping(source = "courtAppearances", target = "courtAppearances")                 // TODO: map courtAppearances
 	@Mapping(source = "detachmentLocationTxt", target = "policeDetachment")
 	@Mapping(source = "disputantBirthDt", target = "disputantBirthdate")
-	@Mapping(source = "disputantDrvLicNumberTxt", target = "disputantDrvLicNumber")
-	@Mapping(source = "disputantGiven1Nm", target = "givenNames")
+	@Mapping(source = "disputantDrvLicNumberTxt", target = "driversLicenceNumber")
 	@Mapping(source = "disputantSurnameTxt", target = "surname")
 	@Mapping(source = "disputeCounts", target = "jjDisputedCounts")
-//	 @Mapping(source = "disputeId", target = "jjDisputeId")                            // TODO: create new PK
+	@Mapping(source = "disputeId", target = "id")
 	@Mapping(source = "disputeRemarks", target = "remarks")
 	@Mapping(source = "disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
 	@Mapping(source = "drvLicIssuedProvSeqNo", target = "drvLicIssuedProvSeqNo")
@@ -126,7 +122,7 @@ public abstract class JJDisputeMapper {
 	public abstract JJDisputedCount convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount jjDisputeCount);
 
 	@Mapping(source = "disputeRemarkId", target = "id")
-//	@Mapping(source = "disputeId", target = "jjDispute.disputeId")                      // TODO: field missing in model but exists in database
+	@Mapping(source = "disputeId", target = "jjDispute.id")
 	@Mapping(source = "disputeRemarkTxt", target = "note")
 	@Mapping(source = "fullUserNameTxt", target = "userFullName")
 	@Mapping(source = "remarksMadeDtm", target = "remarksMadeTs")
@@ -191,30 +187,4 @@ public abstract class JJDisputeMapper {
 		return null;
 	}
 
-	/**
-	 * Given Names in TCO are stored as 3 separate fields, but the application requires this to be a single field.
-	 * @param source data coming from TCO oracle schema
-	 * @param target data mapped to the application's model
-	 */
-	@AfterMapping
-	protected void mapGivenNames(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source, @MappingTarget JJDispute target) {
-		StringBuffer givenNames = new StringBuffer();
-
-		if (!StringUtils.isBlank(source.getDisputantGiven1Nm())) {
-			givenNames.append(source.getDisputantGiven1Nm().trim());
-			givenNames.append(" ");
-		}
-
-		if (!StringUtils.isBlank(source.getDisputantGiven2Nm())) {
-			givenNames.append(source.getDisputantGiven2Nm().trim());
-			givenNames.append(" ");
-		}
-
-		if (!StringUtils.isBlank(source.getDisputantGiven3Nm())) {
-			givenNames.append(source.getDisputantGiven3Nm().trim());
-			givenNames.append(" ");
-		}
-
-		target.setGivenNames(givenNames.toString().trim());
-	}
 }

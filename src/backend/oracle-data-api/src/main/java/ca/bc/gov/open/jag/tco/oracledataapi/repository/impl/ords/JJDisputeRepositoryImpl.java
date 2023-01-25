@@ -65,7 +65,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
-	public Optional<JJDispute> findById(String id) {
+	public Optional<JJDispute> findById(Long id) {
 		throw new NotYetImplementedException();
 	}
 
