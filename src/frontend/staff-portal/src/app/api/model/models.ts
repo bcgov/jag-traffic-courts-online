@@ -1,6 +1,5 @@
 export * from './boundingBox.model';
 export * from './credentialRepresentation.model';
-export * from './disputantContactInformation.model';
 export * from './disputantUpdateRequest.model';
 export * from './disputantUpdateRequestStatus2.model';
 export * from './disputantUpdateRequestUpdateType.model';
@@ -23,6 +22,7 @@ export * from './federatedIdentityRepresentation.model';
 export * from './field.model';
 export * from './fileHistory.model';
 export * from './jJDispute.model';
+export * from './jJDisputeContactType.model';
 export * from './jJDisputeCourtAppearanceRoP.model';
 export * from './jJDisputeCourtAppearanceRoPApp.model';
 export * from './jJDisputeCourtAppearanceRoPCrown.model';

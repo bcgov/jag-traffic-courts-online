@@ -53,51 +53,56 @@ public class JJDisputedCountRoP extends Auditable<String> {
 	/**
 	 * Suspended sentence Probation Duration
 	 */
+	@Column(length = 500)
 	private String ssProbationDuration;
 	
 	/**
 	 * Suspended sentence Probation Conditions
 	 */
+	@Column(length = 500)
 	private String ssProbationConditions;
 	
 	/**
 	 * Jail Duration
 	 */
+	@Column(length = 500)
 	private String jailDuration;
 	
 	/**
 	 * Jail Intermittent
 	 */
 	@Column
-	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo jailIntermittent;
 	
 	/**
 	 * Probation Duration
 	 */
+	@Column(length = 500)
 	private String probationDuration;
 	
 	/**
 	 * Probation Conditions
 	 */
+	@Column(length = 1000)
 	private String probationConditions;
 	
 	/**
 	 * Driving Prohibition
 	 */
+	@Column(length = 500)
 	private String drivingProhibition;
 	
 	/**
 	 * Driving Prohibition MVA Section
 	 */
+	@Column(length = 240)
 	private String drivingProhibitionMVASection;
 	
 	/**
 	 * Dismissed
 	 */
 	@Column
-	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo dismissed;
 	
@@ -105,7 +110,6 @@ public class JJDisputedCountRoP extends Auditable<String> {
 	 * For want of prosecution
 	 */
 	@Column
-	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo forWantOfProsecution;
 	
@@ -113,7 +117,6 @@ public class JJDisputedCountRoP extends Auditable<String> {
 	 * Withdrawn
 	 */
 	@Column
-	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo withdrawn;
 	
@@ -121,19 +124,19 @@ public class JJDisputedCountRoP extends Auditable<String> {
 	 * Abatement
 	 */
 	@Column
-	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo abatement;
 	
 	/**
 	 * Stay of Proceedings By
 	 */
-	@Column
+	@Column(length = 500)
 	private String stayOfProceedingsBy;
 	
 	/**
 	 * Other
 	 */
+	@Column(length = 500)
 	private String other;
 	
 	@JsonBackReference

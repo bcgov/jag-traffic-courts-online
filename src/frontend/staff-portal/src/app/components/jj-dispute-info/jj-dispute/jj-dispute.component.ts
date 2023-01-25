@@ -104,12 +104,6 @@ export class JJDisputeComponent implements OnInit {
     })
   }
 
-  public onSubmit(): void {
-    this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;  // Send to VTC Staff for review
-    this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-    this.putJJDispute();
-  }
-
   public onConfirm(): void {
     const data: DialogOptions = {
       titleKey: "Submit to VTC Staff?",
@@ -123,6 +117,8 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
+            this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
+            this.putJJDispute();
             this.onBackClicked();
           });
         }
@@ -131,11 +127,11 @@ export class JJDisputeComponent implements OnInit {
 
   onRequireCourtHearing() {
     const data: DialogOptions = {
-      titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Require court hearing?" : "Require another court hearing?",
+      titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Require court hearing?" : "Adjourn / Continue?",
       messageKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ?
         "Please enter the reason this request requires a court hearing. This information will be shared with staff only."
         : "Please enter the reason this request requires an additional court hearing. This information will be shared with staff only.",
-      actionTextKey: "Require court hearing",
+      actionTextKey: "OK",
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",

@@ -19,6 +19,7 @@ export interface JJDisputeRemark {
     id?: number;
     userFullName?: string | null;
     note?: string | null;
+    remarksMadeTs?: string;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

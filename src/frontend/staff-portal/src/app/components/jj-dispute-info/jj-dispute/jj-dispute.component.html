@@ -100,32 +100,32 @@
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.surname }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.surname }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.givenNames }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.givenNames }}</p>
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">Address</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.address }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.addressLine1 }}&nbsp;{{ lastUpdatedJJDispute.addressLine2 }}&nbsp;{{ lastUpdatedJJDispute.addressLine3 }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Birthdate</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.birthdate | date: "MMM dd, yyyy" }}
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantBirthdate | date: "MMM dd, yyyy" }}
           </p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Prov / State of DL</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.province }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.addressProvince }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Driver's Licence #</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.driversLicenceNumber }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantDrvLicNumber }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Email</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.emailAddress }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
         </span>
       </div>
     </section><br />
@@ -398,15 +398,15 @@
       </div>
       <div fxFlex>
       </div>
-      <button fxFlex="30" *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
-        style="margin-right: 20px;" (click)="onRequireCourtHearing()">
-        Require Court Hearing
+      <button fxFlex="30" class="large" mat-flat-button type="button" color="primary"
+        style="margin-right: 20px;" (click)="onRequireCourtHearing()" *ngIf="type !== 'ticket' && lastUpdatedJJDispute.status != DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status != DisputeStatus.Accepted">
+        {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Require Court Hearing' : 'Adjourn/Continue' }}
       </button>
-      <button fxFlex="30" *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
-        style="margin-right: 20px;" (click)="onSave()">
+      <button fxFlex="30" class="large" mat-flat-button type="button" color="primary"
+        style="margin-right: 20px;" (click)="onSave()" *ngIf="type !== 'ticket' && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled].indexOf(lastUpdatedJJDispute.status) > 0">
         Save & Finish Later
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()" *ngIf="lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status !== DisputeStatus.Confirmed">
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()" *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) > 0">
         Confirm
       </button>
       <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed">
@@ -415,6 +415,7 @@
       <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing">
         Back
       </button>
+      <div *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing"><h2>Waiting for another court hearing to be scheduled in JUSTIN</h2></div>
     </div><br /><br />
   </div>
   <br />

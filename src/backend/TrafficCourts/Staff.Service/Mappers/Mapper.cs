@@ -24,7 +24,9 @@ public class Mapper
 
         target.StreetAddress = FormatStreetAddress(dispute);
         target.City = dispute.AddressCity;
-        target.Province = dispute.AddressProvince;
+        // only need two character code (province may be more than two chars if not USA or Canada)
+        if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
+        else target.Province = dispute.AddressProvince;
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;
 
@@ -94,6 +96,7 @@ public class Mapper
         return fileHistoryRecord;
     }
 
+   
     public static EmailVerificationSend ToEmailVerification(Guid guid)
     {
         EmailVerificationSend emailVerificationSend = new(guid);
