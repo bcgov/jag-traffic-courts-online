@@ -4,6 +4,13 @@ h3 {
   font-weight: bold;
 }
 
+.info-component {
+  overflow: auto;
+  position: fixed;
+  top: 70px;
+  width:90%
+}
+
 .text {
   font-weight: 700;
   line-height: 1.5em;
@@ -50,19 +57,13 @@ h3 {
 }
 
 .contact-info {
-  margin-bottom: 12%;
   .contact-info {
-    // margin-bottom: 60px;
-    .contact-body{
-        margin-top: 20px;
-    }
     button {
       width: 167px;
       border-radius: inherit;
     }
-    // :host
   }
-  
+
   mat-expansion-panel {
     box-shadow: none !important;
     padding-bottom: 1em;

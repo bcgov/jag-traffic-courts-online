@@ -27,6 +27,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'userAssignedTo'
   ];
   public userProfile: KeycloakProfile = {};
+  tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false

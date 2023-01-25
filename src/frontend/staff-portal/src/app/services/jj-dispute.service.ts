@@ -203,6 +203,27 @@ export class JJDisputeService {
       );
   }
 
+
+  public apiJjTicketNumberConfirmPut(ticketNumber: string): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberConfirmPut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberConfirmPut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
   public get jjList$(): Observable<UserRepresentation[]> {
     return this._jjList.asObservable();
   }

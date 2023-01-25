@@ -25,7 +25,7 @@ import lombok.Setter;
 
 /**
  * @author 237563
- * 
+ *
  * Represents the contact information section of a JJ dispute.
  *
  */
@@ -39,7 +39,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DisputantContactInformation extends Auditable<String>{
-	
+
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
     private Long id;
@@ -72,7 +72,7 @@ public class DisputantContactInformation extends Auditable<String>{
 	private String driversLicenceNumber;
 
 	/**
-	 * The mailing address province of the disputant from reconciled ticket data.
+	 * The mailing address province of the disputant from reconciled ticket data as free form text.
 	 */
 	@Size(max = 30)
 	@Column(length = 30)
@@ -84,14 +84,14 @@ public class DisputantContactInformation extends Auditable<String>{
 	 */
 	@Column
 	private String address;
-	
+
 	/**
 	 * The disputant's email address from reconciled ticket data.
 	 */
 	@Column
 	@Email(regexp = ".+@.+\\..+")
 	private String emailAddress;
-	
+
 	@JsonBackReference
 	@OneToOne
 	@JoinColumn(name = "jjdispute_id", referencedColumnName = "ticketNumber")

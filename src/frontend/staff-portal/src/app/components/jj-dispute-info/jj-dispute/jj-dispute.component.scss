@@ -9,6 +9,13 @@ p {
   line-height: 1.1;
 }
 
+.info-component {
+  overflow-y: auto;
+  position: fixed;
+  top: 120px;
+  width:90%;
+}
+
 .text {
   font-weight: 700;
   line-height: 1.5em;

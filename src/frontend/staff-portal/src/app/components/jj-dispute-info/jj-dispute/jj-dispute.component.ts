@@ -23,8 +23,15 @@ export class JJDisputeComponent implements OnInit {
   @Input() isViewOnly = false;
   @Output() onBack: EventEmitter<any> = new EventEmitter();
 
+  public printDispute: boolean = true;
+  public printUploadedDocuments: boolean = true;
+  public printFileHistory: boolean = true;
+  public printFileRemarks: boolean = true;
+
   busy: Subscription;
   courtAppearanceForm: FormGroup;
+  infoHeight: number = window.innerHeight - 125; // less size of other fixed elements
+  infoWidth: number = window.innerWidth;
   lastUpdatedJJDispute: JJDispute;
   jjIDIR: string;
   jjName: string;
@@ -65,6 +72,11 @@ export class JJDisputeComponent implements OnInit {
     });
   }
 
+  public goTo(id: string) {
+    const element = document.getElementById(id);
+    element?.scrollIntoView(true);
+  }
+
   ngOnInit() {
     this.getJJDispute();
 
@@ -98,11 +110,31 @@ export class JJDisputeComponent implements OnInit {
     this.putJJDispute();
   }
 
+  public onConfirm(): void {
+    const data: DialogOptions = {
+      titleKey: "Submit to VTC Staff?",
+      messageKey: "Are you sure this dispute is ready to be submitted to VTC Staff?",
+      actionTextKey: "Confirm",
+      actionType: "primary",
+      cancelTextKey: "Go back",
+      icon: ""
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
+            this.onBackClicked();
+          });
+        }
+      });
+  }
+
   onRequireCourtHearing() {
     const data: DialogOptions = {
-      titleKey: "Require court hearing?",
-      messageKey:
-        "Please enter the reason this request requires a court hearing. This information will be shared with staff only.",
+      titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Require court hearing?" : "Require another court hearing?",
+      messageKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ?
+        "Please enter the reason this request requires a court hearing. This information will be shared with staff only."
+        : "Please enter the reason this request requires an additional court hearing. This information will be shared with staff only.",
       actionTextKey: "Require court hearing",
       actionType: "warn",
       cancelTextKey: "Go back",
@@ -114,7 +146,7 @@ export class JJDisputeComponent implements OnInit {
         if (action?.output?.response) {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances
 
-          // udate the reason entered, reject dispute and return to TRM home
+          // update the reason entered, reject dispute and return to TRM home
           this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.requireCourtHearingReason).subscribe({
             next: response => {
               this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
@@ -145,11 +177,11 @@ export class JJDisputeComponent implements OnInit {
     }
   }
 
-  private onAccept(): void {
+  public onAccept(): void {
     const data: DialogOptions = {
       titleKey: "Submit to JUSTIN?",
       messageKey: "Are you sure this dispute is ready to be submitted to JUSTIN?",
-      actionTextKey: "Submit",
+      actionTextKey: "Accept",
       actionType: "primary",
       cancelTextKey: "Go back",
       icon: ""

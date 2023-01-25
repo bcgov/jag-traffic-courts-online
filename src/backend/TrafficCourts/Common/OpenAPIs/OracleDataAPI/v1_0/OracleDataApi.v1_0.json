@@ -1378,50 +1378,6 @@
   },
   "components": {
     "schemas": {
-      "DisputantContactInformation": {
-        "type": "object",
-        "properties": {
-          "createdBy": { "type": "string" },
-          "createdTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "modifiedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "id": {
-            "type": "integer",
-            "description": "ID",
-            "format": "int64",
-            "readOnly": true
-          },
-          "surname": { "type": "string" },
-          "givenNames": { "type": "string" },
-          "birthdate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "driversLicenceNumber": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string"
-          },
-          "province": {
-            "maxLength": 30,
-            "minLength": 0,
-            "type": "string"
-          },
-          "address": { "type": "string" },
-          "emailAddress": { "type": "string" }
-        },
-        "nullable": true
-      },
       "JJDispute": {
         "type": "object",
         "properties": {
@@ -1440,6 +1396,21 @@
             "nullable": true
           },
           "ticketNumber": { "type": "string" },
+          "addressLine1": { "type": "string" },
+          "addressLine2": { "type": "string" },
+          "addressLine3": { "type": "string" },
+          "addressCity": { "type": "string" },
+          "addressProvince": { "type": "string" },
+          "addressCountry": { "type": "string" },
+          "addressPostalCode": { "type": "string" },
+          "disputantBirthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disputantDrvLicNumber": { "type": "string" },
+          "drvLicIssuedProvSeqNo": { "type": "string" },
+          "drvLicIssuedCtryId": { "type": "string" },
+          "emailAddress": { "type": "string" },
           "status": {
             "type": "string",
             "enum": [ "UNKNOWN", "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
@@ -1448,7 +1419,19 @@
             "type": "string",
             "enum": [ "UNKNOWN", "COURT_APPEARANCE", "WRITTEN_REASONS" ]
           },
+          "noticeOfDisputeGuid": { "type": "string" },
+          "occamDisputantGiven1Nm": { "type": "string" },
+          "occamDisputantGiven2Nm": { "type": "string" },
+          "occamDisputantGiven3Nm": { "type": "string" },
+          "occamDisputantSurnameNm": { "type": "string" },
+          "occamDisputeId": { "type": "string" },
+          "occamViolationTicketUpldId": { "type": "string" },
           "submittedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "issuedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -1513,6 +1496,35 @@
             "type": "string",
             "nullable": true
           },
+          "contactLawFirmName": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactType": {
+            "type": "string",
+            "nullable": true,
+            "enum": [ "UNKNOWN", "INDIVIDUAL", "LAWYER", "OTHER" ]
+          },
+          "courtAgenId": {
+            "type": "string",
+            "nullable": true
+          },
           "lawFirmName": {
             "type": "string",
             "nullable": true
@@ -1533,6 +1545,7 @@
             "type": "string",
             "nullable": true
           },
+          "justinRccId": { "type": "string" },
           "interpreterLanguageCd": {
             "type": "string",
             "nullable": true
@@ -1551,7 +1564,6 @@
             "type": "array",
             "items": { "$ref": "#/components/schemas/JJDisputeRemark" }
           },
-          "contactInformation": { "$ref": "#/components/schemas/DisputantContactInformation" },
           "jjDisputedCounts": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/JJDisputedCount" }
@@ -1676,6 +1688,10 @@
             "maxLength": 500,
             "minLength": 0,
             "type": "string"
+          },
+          "remarksMadeTs": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -1724,6 +1740,59 @@
             "type": "string",
             "enum": [ "UNKNOWN", "Y", "N" ]
           },
+          "appearanceChargeCountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "courtAppearanceId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "findingResultCd": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "GUILTY", "NOT_GUILTY", "GUILTY_LESSER" ]
+          },
+          "lesserChargeDesc": { "type": "string" },
+          "suspSntcProbationDurtn": { "type": "string" },
+          "suspSntcProbationConds": { "type": "string" },
+          "jailDuration": { "type": "string" },
+          "jailIntermittent": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "probationDuration": { "type": "string" },
+          "probationConditions": { "type": "string" },
+          "drivingProhibDuration": { "type": "string" },
+          "drivingProhibMvaSection": { "type": "string" },
+          "dismissed": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "dismissedForWantProsec": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "withdrawn": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "abatement": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "stayOfProceedingsBy": { "type": "string" },
+          "otherTxt": { "type": "string" },
+          "remarksTxt": { "type": "string" },
+          "accEntDtm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accEntUserId": { "type": "string" },
+          "accUpdDtm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accUpdUserId": { "type": "string" },
           "description": {
             "type": "string",
             "nullable": true
@@ -1750,6 +1819,11 @@
           "totalFineAmount": {
             "type": "number",
             "format": "float",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "comments": {
@@ -1791,7 +1865,7 @@
           "finding": {
             "type": "string",
             "nullable": true,
-            "enum": [ "GUILTY", "NOT_GUILTY", "GUILTY_LESSER" ]
+            "enum": [ "UNKNOWN", "GUILTY", "NOT_GUILTY", "GUILTY_LESSER" ]
           },
           "lesserDescription": {
             "type": "string",

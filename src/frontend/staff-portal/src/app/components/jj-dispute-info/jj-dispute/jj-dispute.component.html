@@ -1,4 +1,22 @@
-<div [ngClass]="{'contact-info' : type === 'ticket'}" style="padding-top: 2rem;">
+<div style="display:flex; margin-top: 40px" [ngStyle]="{'width.px': infoWidth}">
+  <button mat-raised-button [matMenuTriggerFor]="printMenu" style="float: right;">Print Options</button>&nbsp;
+    <mat-menu #printMenu="matMenu" yPosition="below">
+      <button mat-menu-item (click)="printDispute=!printDispute"><mat-icon *ngIf="printDispute">check</mat-icon><mat-icon *ngIf="!printDispute">close</mat-icon>Dispute Details</button>
+      <button mat-menu-item (click)="printUploadedDocuments=!printUploadedDocuments"><mat-icon *ngIf="printUploadedDocuments">check</mat-icon><mat-icon *ngIf="!printUploadedDocuments">close</mat-icon>Uploaded Documents</button>
+      <button mat-menu-item (click)="printFileHistory=!printFileHistory"><mat-icon *ngIf="printFileHistory">check</mat-icon><mat-icon *ngIf="!printFileHistory">close</mat-icon>File History</button>
+      <button mat-menu-item (click)="printFileRemarks=!printFileRemarks"><mat-icon *ngIf="printFileRemarks">check</mat-icon><mat-icon *ngIf="!printFileRemarks">close</mat-icon>File Remarks</button>
+    </mat-menu>
+  <button mat-raised-button style="float:right;">Print</button>&nbsp;
+  <button mat-raised-button [matMenuTriggerFor]="gotoMenu" style="float:right;">Go to</button>
+    <mat-menu #gotoMenu="matMenu" yPosition="below">
+      <button mat-menu-item (click)="goTo('dispute-details')">Dispute Details</button>
+      <button mat-menu-item (click)="goTo('uploaded-documents')">Uploaded Documents</button>
+      <button mat-menu-item (click)="goTo('file-history')">File History</button>
+      <button mat-menu-item (click)="goTo('file-remarks')">File Remarks</button>
+    </mat-menu>
+</div><br />
+<div [ngClass]="{'contact-info' : type === 'ticket'}" class="info-component"  [ngStyle]="{'height.px': infoHeight}">
+
   <a (click)="onBackClicked()" style="color: #48afe5">
     <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
   </a>
@@ -7,6 +25,7 @@
       <h3>Retrieving ticket information...</h3>
     </span>
   </div>
+  <a id="dispute-details"></a>
   <div *ngIf="lastUpdatedJJDispute && retrieving === false">
     <div style="float:inline">
       <span style="float:left">
@@ -379,7 +398,7 @@
       </div>
       <div fxFlex>
       </div>
-      <button fxFlex="30" *ngIf="type !== 'ticket' && lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons" class="large" mat-flat-button type="button" color="primary"
+      <button fxFlex="30" *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
         style="margin-right: 20px;" (click)="onRequireCourtHearing()">
         Require Court Hearing
       </button>
@@ -387,8 +406,11 @@
         style="margin-right: 20px;" (click)="onSave()">
         Save & Finish Later
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" *ngIf="lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing">
-        Submit
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()" *ngIf="lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status !== DisputeStatus.Confirmed">
+        Confirm
+      </button>
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed">
+        Accept
       </button>
       <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing">
         Back

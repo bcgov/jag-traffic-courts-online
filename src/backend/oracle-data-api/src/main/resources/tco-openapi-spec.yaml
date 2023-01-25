@@ -56,7 +56,7 @@ components:
           format: nullable
     JJDispute:
       type: object
-      properties:
+      properties:          
         addressLine1Txt:
           type: string
         addressLine2Txt:
@@ -65,18 +65,55 @@ components:
         addressLine3Txt:       
           type: string 
           format: nullable
+        addressCityTxt:
+          type: string
+          format: nullable
+        addressProvinceTxt:
+          type: string
+          format: nullable
+        addressCountryTxt:
+          type: string
+          format: nullable
+        addressPostalCodeTxt:
+          type: string
+          format: nullable
         courtHearingTypeCd:  
           type: string 
+        contactLawFirmNm:
+          type: string
           format: nullable
+        contactGiven1Nm:
+          type: string
+          format: nullable
+        contactGiven2Nm:
+          type: string
+          format: nullable
+        contactGiven3Nm:
+          type: string
+          format: nullable
+        contactSurnameNm:
+          type: string
+          format: nullable
+        contactTypeCd:
+          type: string
+        courtAgenId:
+          type: string
+        courtAppearances:
+          type: array
+          items:
+            $ref: '#/components/schemas/JJCourtAppearance'
         detachmentLocationTxt:
           type: string
+          format: nullable
         disputantBirthDt:
           type: string
           format: date  
         disputantDrvLicNumberTxt:
           type: string
+          format: nullable
         disputantGiven1Nm:
           type: string
+          format: nullable
         disputantGiven2Nm:
           type: string
           format: nullable
@@ -85,6 +122,7 @@ components:
           format: nullable
         disputantSurnameTxt:
           type: string
+          format: nullable
         disputeCounts:
           type: array
           items:
@@ -99,9 +137,23 @@ components:
           type: string
         drvLicIssuedCtryId:
           type: string
+          format: nullable
         drvLicIssuedProvSeqNo:
           type: string
+          format: nullable
         emailAddressTxt:
+          type: string
+          format: nullable
+        fineReductionReasonTxt:
+          type: string
+          format: nullable
+        jjAssignedTo:
+          type: string
+          format: nullable
+        jjDecisionDt:
+          type: string
+          format: date
+        justinRccId:
           type: string
         icbcReceivedDt:
           type: string
@@ -115,6 +167,7 @@ components:
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
         lawFirmNm:
           type: string
+          format: nullable
         lawyerGiven1Nm:
           type: string
           format: nullable
@@ -127,6 +180,24 @@ components:
         lawyerSurnameNm:
           type: string
           format: nullable
+        noticeOfDisputeGuid:
+          type: string
+        occamDisputantGiven1Nm:
+          type: string
+          format: nullable
+        occamDisputantGiven2Nm:
+          type: string
+          format: nullable
+        occamDisputantGiven3Nm:
+          type: string
+          format: nullable
+        occamDisputantSurnameNm:
+          type: string
+          format: nullable
+        occamDisputeId:
+          type: string
+        occamViolationTicketUpldId:
+          type: string
         offenceLocationTxt:
           type: string
           format: nullable
@@ -135,26 +206,85 @@ components:
           format: date  
         ticketNumberTxt:
           type: string
+        timeToPayReasonTxt:
+          type: string
+          format: nullable
+        violationDt:
+          type: string
+          format: date
+        vtcAssignedTo:
+          type: string
+          format: nullable
+        vtcAssignedDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
+        witnessNo:
+          type: string
+          format: nullable
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     JJDisputeCount:
       type: object
       properties:
+        abatementYn:
+          type: string
+        accEntDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
+        accEntUserId:
+          type: string
+        accUpdDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
+        accUpdUserId:
+          type: string
         adjustedAmt:
           type: double
+        appearanceChargeCountId:
+          type: string
         commentsTxt:
           type: string
         countNo:
+          type: string
+        courtAppearanceId:
+          type: string
+        dismissedForWantProsecYn:
+          type: string
+        dismissedYn:
           type: string
         disputeCountId:
           type: string
         disputeId:
           type: string
+        drivingProhibDurationTxt:
+          type: string
+        drivingProhibMvaSectionTxt:
+          type: string
+        findingResultCd:
+          type: string
         fineDueDt:
-          type: date
+          type: string
+          format: date
         includesSurchargeYn:
           type: string
+        jailDurationTxt:
+          type: string
+        jailIntermittentYn:
+          type: string
+        lesserChargeDescTxt:
+          type: string
+        otherTxt:
+          type: string
         pleaCd:
+          type: string
+        probationConditionsTxt:
+          type: string
+        probationDurationTxt:
+          type: string
+        remarksTxt:
           type: string
         requestCourtAppearanceYn:
           type: string
@@ -163,13 +293,32 @@ components:
         requestTimeToPayYn:
           type: string
         revisedDueDt:
-          type: date
+          type: string
+          format: date
         statuteId:
           type: string
+        stayOfProceedingsByTxt:
+          type: string
+        suspSntcProbationCondsTxt:
+          type: string
+        suspSntcProbationDurtnTxt:
+          type: string
+        ticketedAmt:
+          type: double
         totalFineAmt:
           type: double
         violationDt:
-          type: date
+          type: string
+          format: date
+        withdrawnYn:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    JJCourtAppearance:
+      type: object
+      properties:
+        courtAppearanceId:
+          type: string
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     JJDisputeRemark:

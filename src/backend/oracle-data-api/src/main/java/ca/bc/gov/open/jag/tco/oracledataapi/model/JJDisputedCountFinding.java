@@ -3,8 +3,23 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 /**
  * An enumeration of Finding Type on a TicketCount record with a court appearance.
  */
-public enum JJDisputedCountFinding {
-	GUILTY,
-	NOT_GUILTY,
-	GUILTY_LESSER
+public enum JJDisputedCountFinding implements ShortNamedEnum {
+
+	/** Unknown type (undefined). Must be index 0. */
+	UNKNOWN("UKN"),
+	GUILTY("GU"),
+	NOT_GUILTY("NG"),
+	GUILTY_LESSER("GL");
+
+	private String shortName;
+
+	private JJDisputedCountFinding(String shortName) {
+		this.shortName = shortName;
+	}
+
+	@Override
+	public String getShortName() {
+		return shortName;
+	}
+
 }

@@ -18,6 +18,8 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
+  tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
+
   busy: Subscription;
   courtLocations: CourthouseConfig[];
   IDIR: string = "";
