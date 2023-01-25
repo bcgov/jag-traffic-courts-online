@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
@@ -167,7 +165,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(detachmentLocation, target.getPoliceDetachment());
 		assertEquals(disputantBirthDt, target.getDisputantBirthdate());
 		assertEquals(disputantDrvLicNumber, target.getDriversLicenceNumber());
-		assertEquals(disputantGiven1Nm + " " + disputantGiven2Nm + " " + disputantGiven3Nm, target.getGivenNames());
 		assertEquals(disputantSurname, target.getSurname());
 		assertEquals(disputeStatus, target.getStatus());
 		assertEquals(drvLicIssuedCtryId, target.getDrvLicIssuedCtryId());
@@ -380,26 +377,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(remarkCreatedBy, jjDisputeRemark.getCreatedBy());
 		assertEquals(remarkModifedTs, jjDisputeRemark.getModifiedTs());
 		assertEquals(remarkModifiedBy, jjDisputeRemark.getModifiedBy());
-	}
-
-	@ParameterizedTest()
-	@CsvSource({
-		"Given1, Given2, Given3, Given1 Given2 Given3",
-		"Given1, , , Given1",
-		", Given2, , Given2",
-		", , Given3, Given3",
-		"Given1, Given2, , Given1 Given2",
-		", Given2, Given3, Given2 Given3",
-		"Given1, , Given3, Given1 Given3",
-		})
-	public void testGivenNames(String given1, String given2, String given3, String expectedGivenNames) {
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
-		source.setDisputantGiven1Nm(given1);
-		source.setDisputantGiven2Nm(given2);
-		source.setDisputantGiven3Nm(given3);
-
-		JJDispute target = jjDisputeMapper.convert(source);
-		assertEquals(expectedGivenNames, target.getGivenNames());
 	}
 
 }

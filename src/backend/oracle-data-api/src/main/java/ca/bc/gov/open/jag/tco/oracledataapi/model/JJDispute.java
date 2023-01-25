@@ -188,13 +188,6 @@ public class JJDispute extends Auditable<String> {
 	private String surname;
 
 	/**
-	 * The given name of the disputant.
-	 */
-	@Column
-	@Schema(nullable = true)
-	private String givenNames;
-
-	/**
 	 * The enforcement officer associated to the disputed violation ticket.
 	 */
 	@Column

@@ -1,11 +1,8 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
-import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
@@ -39,7 +36,6 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "detachmentLocationTxt", target = "policeDetachment")
 	@Mapping(source = "disputantBirthDt", target = "disputantBirthdate")
 	@Mapping(source = "disputantDrvLicNumberTxt", target = "driversLicenceNumber")
-	@Mapping(source = "disputantGiven1Nm", target = "givenNames")
 	@Mapping(source = "disputantSurnameTxt", target = "surname")
 	@Mapping(source = "disputeCounts", target = "jjDisputedCounts")
 	@Mapping(source = "disputeId", target = "id")
@@ -191,30 +187,4 @@ public abstract class JJDisputeMapper {
 		return null;
 	}
 
-	/**
-	 * Given Names in TCO are stored as 3 separate fields, but the application requires this to be a single field.
-	 * @param source data coming from TCO oracle schema
-	 * @param target data mapped to the application's model
-	 */
-	@AfterMapping
-	protected void mapGivenNames(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source, @MappingTarget JJDispute target) {
-		StringBuffer givenNames = new StringBuffer();
-
-		if (!StringUtils.isBlank(source.getDisputantGiven1Nm())) {
-			givenNames.append(source.getDisputantGiven1Nm().trim());
-			givenNames.append(" ");
-		}
-
-		if (!StringUtils.isBlank(source.getDisputantGiven2Nm())) {
-			givenNames.append(source.getDisputantGiven2Nm().trim());
-			givenNames.append(" ");
-		}
-
-		if (!StringUtils.isBlank(source.getDisputantGiven3Nm())) {
-			givenNames.append(source.getDisputantGiven3Nm().trim());
-			givenNames.append(" ");
-		}
-
-		target.setGivenNames(givenNames.toString().trim());
-	}
 }
