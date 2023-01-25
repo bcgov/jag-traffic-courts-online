@@ -97,9 +97,9 @@ services:
     depends_on:
       - oracle-data-api    
         
-  # ---------------------------------------------------------------------------------------------
-  # ARC Dispute API
-  # ---------------------------------------------------------------------------------------------
+  # ###########################################################################################
+  # ARC Dispute API                                                                         ###
+  # ###########################################################################################
   arc-dispute-api:
     container_name: arc-dispute-api
     build:
@@ -130,9 +130,9 @@ services:
       - ./.docker/sftp.json:/app/config/sample/sftp.json:ro
       - ./sftp-in:/home/demo/sftp
       
-  # ---------------------------------------------------------------------------------------------
-  # Workflow Service
-  # ---------------------------------------------------------------------------------------------
+  # ###########################################################################################
+  # Workflow Service                                                                        ###
+  # ###########################################################################################
   workflow-service:
     container_name: workflow-service
     build:
@@ -193,6 +193,23 @@ services:
     volumes:
       - data-oracle:/data
 
+
+  # ---------------------------------------------------------------------------------------------
+  # Virus Scanner
+  # ---------------------------------------------------------------------------------------------
+  virus-scan-service:
+    container_name: virus-scan-service
+    build:
+      context: ./src/backend/bc-gov-virus-scan
+      dockerfile: ./BCGov.VirusScan.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: http://*:8080
+      CLAMAV__SERVER: ${CLAMAV__SERVER:-clamav}
+    ports:
+      - "5030:8080"
+    depends_on: [clamav]
+    
   #############################################################################################
   ###                                 TrafficCourt FRONTEND                                 ###
   #############################################################################################
@@ -322,6 +339,19 @@ services:
       "
 
   #############################################################################################
+  ###                                 ClamAV                                                ###
+  #############################################################################################
+  clamav:
+    container_name: clamav
+    image: 'clamav/clamav:latest_base'
+    environment:
+      CLAMAV_NO_MILTERD: "true" # no sendmail filter
+    ports:
+      - 3310:3310
+    volumes:
+      - data-clamav:/var/lib/clamav
+      
+  #############################################################################################
   ###                                 REDIS server and UI                                   ###
   #############################################################################################
   redis:
@@ -331,7 +361,7 @@ services:
       - REDIS_PASSWORD=password
     ports:
       - 6379:6379
-      
+
   redis-ui:
     container_name: redis-ui
     hostname: redis-commander
@@ -363,3 +393,4 @@ volumes:
   data-rabbit:
   data-redis:
   data-oracle:
+  data-clamav:

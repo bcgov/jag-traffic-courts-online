@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>d393efc4-4a0f-4ebf-b438-a34df0fa706e</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>CS1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FastEndpoints" Version="5.6.0" />
+		<PackageReference Include="FastEndpoints.Swagger" Version="5.6.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2" />
+		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="OpenTelemetry" Version="1.4.0-rc.2" />
+		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.4.0-rc.2" />
+		<PackageReference Include="OpenTelemetry.Extensions.DependencyInjection" Version="1.4.0-rc.2" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0-rc.2" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.11" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="1.0.0-alpha.4" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.1.0-beta.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	</ItemGroup>
+
+</Project>
