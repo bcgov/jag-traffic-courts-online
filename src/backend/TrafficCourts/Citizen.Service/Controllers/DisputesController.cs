@@ -101,7 +101,7 @@ public class DisputesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ResendEmailAsync(string guidHash, CancellationToken cancellationToken)
     {
-        if (!CheckGuid(guidHash, out Guid noticeOfDisputeGuid))
+        if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
         {
             return BadRequest("Invalid guidHash");
         }
@@ -255,7 +255,7 @@ public class DisputesController : ControllerBase
                 throw new Exception("Invalid access_token");
             }
 
-            if (!CheckGuid(guidHash, out Guid noticeOfDisputeGuid))
+            if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
                 return BadRequest("Invalid guidHash");
             }
@@ -303,7 +303,7 @@ public class DisputesController : ControllerBase
                 throw new Exception("Invalid access_token");
             }
 
-            if (!CheckGuid(guidHash, out Guid noticeOfDisputeGuid))
+            if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
                 return BadRequest("Invalid guidHash");
             }
@@ -356,7 +356,7 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            if (!CheckGuid(guidHash, out Guid noticeOfDisputeGuid))
+            if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
                 return BadRequest("Invalid guidHash");
             }
@@ -378,18 +378,6 @@ public class DisputesController : ControllerBase
             _logger.LogError(ex, "Unknown Error");
             throw;
         }
-    }
-
-    private Boolean CheckGuid([Required] string guidHash, out Guid noticeOfDisputeGuid)
-    {
-        // Attempt to decode the hashed noticeOfDisputeGuid
-        noticeOfDisputeGuid = new Guid();
-        var hex = _hashids.DecodeHex(guidHash);
-        if (hex == String.Empty || hex.Length != 32 || !Guid.TryParse(hex, out noticeOfDisputeGuid))
-        {
-            return false;
-        }
-        return true;
     }
 
     private async Task<IActionResult> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
