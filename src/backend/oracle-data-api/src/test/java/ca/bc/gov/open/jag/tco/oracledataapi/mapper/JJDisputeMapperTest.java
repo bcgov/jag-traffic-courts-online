@@ -166,7 +166,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(courtAgenId, target.getCourtAgenId());
 		assertEquals(detachmentLocation, target.getPoliceDetachment());
 		assertEquals(disputantBirthDt, target.getDisputantBirthdate());
-		assertEquals(disputantDrvLicNumber, target.getDisputantDrvLicNumber());
+		assertEquals(disputantDrvLicNumber, target.getDriversLicenceNumber());
 		assertEquals(disputantGiven1Nm + " " + disputantGiven2Nm + " " + disputantGiven3Nm, target.getGivenNames());
 		assertEquals(disputantSurname, target.getSurname());
 		assertEquals(disputeStatus, target.getStatus());

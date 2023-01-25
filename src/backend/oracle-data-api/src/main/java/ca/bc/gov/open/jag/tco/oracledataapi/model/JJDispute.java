@@ -103,7 +103,7 @@ public class JJDispute extends Auditable<String> {
 	 * The drivers licence number from reconciled ticket data.
 	 */
 	@Column(length = 30)
-	private String disputantDrvLicNumber;
+	private String driversLicenceNumber;
 
 	/**
 	 * The province lookup sequence number from the reconciled ticket data.
