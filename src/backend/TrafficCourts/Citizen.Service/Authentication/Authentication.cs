@@ -22,7 +22,7 @@ public static class AuthenticationExtensions
 
         if (jwtOptions is null)
         {
-            throw new SettingsValidationException($"Required configuration section not found {_jwtBearerOptionsSection}");
+            throw SettingsValidationException.RequiredSectionNotFound(_jwtBearerOptionsSection);
         }
 
         if (string.IsNullOrEmpty(jwtOptions.Authority)) throw new SettingsValidationException(_jwtBearerOptionsSection, nameof(JwtBearerOptions.Authority), "is required");
