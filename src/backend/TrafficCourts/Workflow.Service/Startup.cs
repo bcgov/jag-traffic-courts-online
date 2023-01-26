@@ -59,6 +59,7 @@ public static class Startup
         builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
         builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
         builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
+        builder.Services.AddTransient<IComsService, ComsService>();
 
         builder.Services.AddEmailTemplates();
 
