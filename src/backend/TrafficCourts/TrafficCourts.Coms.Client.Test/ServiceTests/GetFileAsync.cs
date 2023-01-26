@@ -51,6 +51,9 @@ public class GetFileAsync : ObjectManagementServiceTest
         Assert.Single(actualFile.Metadata);
         Assert.Equal("picture", actualFile.Metadata["type"]);
 
+        // expect the file position to be at the beginning of the stream
+        Assert.Equal(0L, actualFile.Data.Position);
+
         var expected = Assert.IsAssignableFrom<MemoryStream>(stream).ToArray();
         var actual = Assert.IsAssignableFrom<MemoryStream>(actualFile.Data).ToArray();
 

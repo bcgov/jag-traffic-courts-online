@@ -120,6 +120,15 @@ internal class ObjectManagementService : IObjectManagementService
             var file = new File(id, stream, fileName, contentType, metadata, tags);
             return file;
         }
+        catch (ApiException exception)
+        {
+            // Error calling the COMS service
+            // - ReadObjectAsync failed, or
+            // - GetMetadataAsync failed, or
+            // - GetTagsAsync failed
+            _logger.LogInformation(exception, "Could not get file by id, FileId={FileId}", id);
+            throw new ObjectManagementServiceException("API error getting file", exception);
+        }
         catch (Exception exception)
         {
             throw ExceptionHandler("getting file", exception);
