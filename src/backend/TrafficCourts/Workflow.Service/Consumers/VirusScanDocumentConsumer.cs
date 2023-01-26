@@ -52,23 +52,24 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     _logger.LogDebug("No viruses detected as a result of the scan");
                     // Add a "clean" metadata tag to the document if no viruses detected
-                    file.Metadata.Add("virus-scan-status", "clean");
+                    file.Metadata["virus-scan-status"] = "clean";
+                    // In case the document re-scanned and it used to be infected then remove virus-name
+                    file.Metadata.Remove("virus-name");
                 }
                 else if (VirusScanStatus.Infected.Equals(scanResult.Status))
                 {
                     string virusName = scanResult.VirusName;
                     _logger.LogDebug("The document with id {documentId} is infected with virus {virusName}", documentId, virusName);
                     // Virus detected so add "infected" as virus-scan-status metadata as well as the virus name to the document
-                    file.Metadata.Add("virus-scan-status", "infected");
-                    file.Metadata.Add("virus-name", virusName);
-
-                    // TODO: Determine when/how to remove infected files from the storage
+                    file.Metadata["virus-scan-status"] = "infected";
+                    file.Metadata["virus-name"] = virusName;
                 }
                 else
                 {
                     _logger.LogDebug("Could not determine the virus status of the document");
                     string status = scanResult.Status.ToString();
-                    file.Metadata.Add("virus-scan-status", status);
+                    file.Metadata["virus-scan-status"] = status;
+                    file.Metadata.Remove("virus-name");
                 }
                 // Update document's metadata
                 await _comsService.UpdateFileAsync(documentId, file, cancellationToken);
