@@ -64,10 +64,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   refreshData(jjDisputes: JJDispute[]): void {
     this.data = jjDisputes;
-    // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
-    this.data = this.data.filter(x => x.status);
     this.dataSource.data = this.data;
-    console.log(this.data, this.dataSource.data);
     // initially sort by submitted date within status
     this.dataSource.data = this.dataSource.data.sort((a, b) => {
       // if they have the same status
