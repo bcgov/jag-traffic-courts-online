@@ -16,5 +16,5 @@ public class VirusScanDocument
     /// <summary>
     /// Id of the document uploaded to be virus scanned
     /// </summary>
-    public Guid? DocumentId { get; set; }
+    public Guid DocumentId { get; set; }
 }
