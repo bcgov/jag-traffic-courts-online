@@ -12,5 +12,5 @@ public interface IVirusScanService
     /// <param name="cancellationToken"></param>
     /// <returns>Document scan completed <see cref="ScanResponse"/></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ScanResponse> ScanDocument(Stream file, CancellationToken cancellationToken);
+    Task<ScanResponse> ScanDocumentAsync(Stream file, CancellationToken cancellationToken);
 }

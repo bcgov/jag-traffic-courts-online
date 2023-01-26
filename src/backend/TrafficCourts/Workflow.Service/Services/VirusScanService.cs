@@ -14,7 +14,7 @@ namespace TrafficCourts.Workflow.Service.Services
             _virusScanClient = virusScanClient ?? throw new ArgumentNullException(nameof(virusScanClient));
         }
 
-        public async Task<ScanResponse> ScanDocument(Stream file, CancellationToken cancellationToken)
+        public async Task<ScanResponse> ScanDocumentAsync(Stream file, CancellationToken cancellationToken)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Services
             catch (ApiException ex)
             {
                 _logger.LogError(ex, "Could not scan the file for viruses");
-                throw;
+                throw ex;
             }
         }
     }
