@@ -30,7 +30,7 @@ import lombok.Setter;
 /**
  * @author 237563
  *
- * Represents JJ Written Reasons for each count
+ *         Represents JJ Written Reasons for each count
  *
  */
 @Entity
@@ -43,7 +43,7 @@ public class JJDisputedCount extends Auditable<String> {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
-    private Long id;
+	private Long id;
 
 	/**
 	 * Represents the disputant plea on count.
@@ -55,7 +55,8 @@ public class JJDisputedCount extends Auditable<String> {
 	 * The count number.
 	 */
 	@Column
-	@Min(1) @Max(3)
+	@Min(1)
+	@Max(3)
 	private Integer count;
 
 	/**
@@ -83,27 +84,26 @@ public class JJDisputedCount extends Auditable<String> {
 	private YesNo appearInCourt;
 
 	/**
-	 * The description of the offence including the statute and act.
-	 * Example: 92.1(1) MVA - Fail to stop resulting in pursuit
+	 * The description of the offence including the statute and act. Example: 92.1(1) MVA - Fail to stop resulting in pursuit
 	 */
 	@Column
 	@Schema(nullable = true)
-    private String description;
+	private String description;
 
 	/**
-     * The due date for the offence to be paid.
-     */
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dueDate;
+	 * The due date for the offence to be paid.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dueDate;
 
-    /**
+	/**
 	 * The original fine amount from reconciled ticket data.
 	 */
 	@Column
 	@Schema(nullable = true)
-    private Float ticketedFineAmount;
+	private Float ticketedFineAmount;
 
 	/**
 	 * The amount that JJ may enter to overwrite the ticketed fine amount.
@@ -113,8 +113,7 @@ public class JJDisputedCount extends Auditable<String> {
 	private Float LesserOrGreaterAmount;
 
 	/**
-	 * JJ's decision whether to include surcharge in the calculated fine or not.
-	 * Surcharge is always 15% of the original fine amount.
+	 * JJ's decision whether to include surcharge in the calculated fine or not. Surcharge is always 15% of the original fine amount.
 	 */
 	@Column
 	@Schema(nullable = false)
@@ -122,27 +121,27 @@ public class JJDisputedCount extends Auditable<String> {
 	private YesNo includesSurcharge;
 
 	/**
-     * Revised due date of the original due date for the offence to be paid.
-     */
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date revisedDueDate;
+	 * Revised due date of the original due date for the offence to be paid.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date revisedDueDate;
 
-    /**
+	/**
 	 * The final fine amount to be paid by the disputant.
 	 */
 	@Column
 	@Schema(nullable = true)
-    private Float totalFineAmount;
+	private Float totalFineAmount;
 
-    /**
-     * The date and time the violation ticket was issued.
-     */
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date violationDate;
+	/**
+	 * The date and time the violation ticket was issued.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date violationDate;
 
 	/**
 	 * JJ's comments that will be shared to disputant.
@@ -152,8 +151,8 @@ public class JJDisputedCount extends Auditable<String> {
 	@Schema(nullable = true, maxLength = 500)
 	private String comments;
 
-	@JsonBackReference(value="jj_dispute_count_reference")
-	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)
+	@JsonBackReference(value = "jj_dispute_count_reference")
+	@ManyToOne(targetEntity = JJDispute.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
 	private JJDispute jjDispute;
 

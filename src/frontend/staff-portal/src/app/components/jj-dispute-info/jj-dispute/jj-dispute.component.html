@@ -33,8 +33,7 @@
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
-            - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
-          </b></h1>
+            - {{ lastUpdatedJJDispute.occamDisputantGiven1Nm }}{{ lastUpdatedJJDispute.occamDisputantGiven2Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven2Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantGiven3Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven3Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantSurnameNm}}         </b></h1>
       </span>
       <span style="float:right">
         <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
@@ -49,11 +48,11 @@
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.surname }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.givenNames }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantGiven1Nm }}{{lastUpdatedJJDispute.occamDisputantGiven2Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven2Nm : ''}}{{lastUpdatedJJDispute.occamDisputantGiven3Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven3Nm : ''}}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Location of Offence</p>
@@ -104,7 +103,7 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.givenNames }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactGivenName1 }}{{lastUpdatedJJDispute.contactGivenName2 ? ' ' + lastUpdatedJJDispute.contactGivenName2 : ''}}{{lastUpdatedJJDispute.contactGivenName3 ? ' ' + lastUpdatedJJDispute.contactGivenName3 : ''}}</p>
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">Address</p>
@@ -121,7 +120,7 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Driver's Licence #</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantDrvLicNumber }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Email</p>

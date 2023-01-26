@@ -24,6 +24,7 @@ export interface JJDispute {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string | null;
+    id?: number;
     ticketNumber?: string | null;
     addressLine1?: string | null;
     addressLine2?: string | null;
@@ -33,7 +34,7 @@ export interface JJDispute {
     addressCountry?: string | null;
     addressPostalCode?: string | null;
     disputantBirthdate?: string;
-    disputantDrvLicNumber?: string | null;
+    driversLicenceNumber?: string | null;
     drvLicIssuedProvSeqNo?: string | null;
     drvLicIssuedCtryId?: string | null;
     emailAddress?: string | null;
@@ -51,7 +52,6 @@ export interface JJDispute {
     violationDate?: string | null;
     icbcReceivedDate?: string | null;
     surname?: string | null;
-    givenNames?: string | null;
     enforcementOfficer?: string | null;
     policeDetachment?: string | null;
     courthouseLocation?: string | null;

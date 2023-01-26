@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -26,8 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * @author 237563
- * Represents a violation ticket dispute for JJ Workbench
+ * @author 237563 Represents a violation ticket dispute for JJ Workbench
  *
  */
 //mark class as an Entity
@@ -37,13 +37,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JJDispute extends Auditable<String>{
+public class JJDispute extends Auditable<String> {
 
-    /**
-     * The violation ticket number as unique identifier.
-     */
-    @Id
-    private String ticketNumber;
+	@Id
+	@GeneratedValue
+	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
+	private Long id;
+
+	/**
+	 * The violation ticket number as unique identifier.
+	 */
+	@Column(length = 100)
+	private String ticketNumber;
 
 	/**
 	 * The mailing address line1 of the disputant from contact information submitted via TCO as free form text.
@@ -55,36 +60,42 @@ public class JJDispute extends Auditable<String>{
 	 * The mailing address line2 of the disputant from contact information submitted via TCO as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressLine2;
 
 	/**
 	 * The mailing address line3 of the disputant from contact information submitted via TCO as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressLine3;
 
 	/**
 	 * The mailing address city of the disputant from contact information submitted via TCO as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressCity;
 
 	/**
 	 * The mailing address province of the disputant from reconciled ticket data as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressProvince;
 
 	/**
 	 * The mailing address country of the disputant from reconciled ticket data as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressCountry;
 
 	/**
 	 * The mailing address postal code of the disputant from reconciled ticket data as free form text.
 	 */
 	@Column(length = 10)
+	@Schema(nullable = true)
 	private String addressPostalCode;
 
 	/**
@@ -98,18 +109,20 @@ public class JJDispute extends Auditable<String>{
 	 * The drivers licence number from reconciled ticket data.
 	 */
 	@Column(length = 30)
-	private String disputantDrvLicNumber;
+	private String driversLicenceNumber;
 
 	/**
 	 * The province lookup sequence number from the reconciled ticket data.
 	 */
 	@Column(length = 4)
+	@Schema(nullable = true)
 	private String drvLicIssuedProvSeqNo;
 
 	/**
 	 * The country lookup sequence number from the reconciled ticket data.
 	 */
 	@Column(length = 4)
+	@Schema(nullable = true)
 	private String drvLicIssuedCtryId;
 
 	/**
@@ -117,105 +130,99 @@ public class JJDispute extends Auditable<String>{
 	 */
 	@Column(length = 100)
 	@Email(regexp = ".+@.+\\..+")
+	@Schema(nullable = true)
 	private String emailAddress;
 
 	@Column
 	private JJDisputeStatus status;
 
-    @Column
-    private JJDisputeHearingType hearingType;
+	@Column
+	private JJDisputeHearingType hearingType;
 
-    @Column(length = 36)
-    private String noticeOfDisputeGuid;
+	@Column(length = 36)
+	@Schema(nullable = true)
+	private String noticeOfDisputeGuid;
 
-    @Column(length = 30)
-    private String occamDisputantGiven1Nm;
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String occamDisputantGiven1Nm;
 
-    @Column(length = 30)
-    private String occamDisputantGiven2Nm;
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String occamDisputantGiven2Nm;
 
-    @Column(length = 30)
-    private String occamDisputantGiven3Nm;
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String occamDisputantGiven3Nm;
 
-    @Column(length = 30)
-    private String occamDisputantSurnameNm;
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String occamDisputantSurnameNm;
 
-    @Column(length = 15)
-    private String occamDisputeId;
+	@Column(length = 15)
+	@Schema(nullable = true)
+	private String occamDisputeId;
 
-    @Column(length = 15)
-    private String occamViolationTicketUpldId;
+	@Column(length = 15)
+	@Schema(nullable = true)
+	private String occamViolationTicketUpldId;
 
-    /**
-     * The date submitted by disputant in TCO.
-     */
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date submittedTs;
-
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date issuedTs;
-
-    /**
-     * The date and time the violation ticket was issued.
-     */
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date violationDate;
-
-    /**
-     * The date received in TRM from ICBC.
-     */
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date icbcReceivedDate;
-
-    /**
-	 * The surname or corporate name of the disputant.
+	/**
+	 * The date submitted by disputant in TCO.
 	 */
 	@Column
 	@Schema(nullable = true)
-	private String surname;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date submittedTs;
 
-    /**
-     * The given name of the disputant.
-     */
-    @Column
-    @Schema(nullable = true)
-    private String givenNames;
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date issuedTs;
 
-    /**
-     * The enforcement officer associated to the disputed violation ticket.
-     */
-    @Column
-    @Schema(nullable = true)
-    private String enforcementOfficer;
+	/**
+	 * The date and time the violation ticket was issued.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date violationDate;
 
-    /**
-     * The police detachment location.
-     */
-    @Column
-    @Schema(nullable = true)
-    private String policeDetachment;
+	/**
+	 * The date received in TRM from ICBC.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date icbcReceivedDate;
 
-    /**
-     * The provincial court hearing location named on the violation ticket.
-     */
-    @Column
-    @Schema(nullable = true)
-    private String courthouseLocation;
+	/**
+	 * The enforcement officer associated to the disputed violation ticket.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String enforcementOfficer;
 
-    /**
-     * The location where the offence took place.
-     */
-    @Column
-    @Schema(nullable = true)
-    private String offenceLocation;
+	/**
+	 * The police detachment location.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String policeDetachment;
+
+	/**
+	 * The provincial court hearing location named on the violation ticket.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String courthouseLocation;
+
+	/**
+	 * The location where the offence took place.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String offenceLocation;
 
 	/**
 	 * The ID of the Staff whom the dispute is assigned to be reviewed on JJ Workbench.
@@ -255,8 +262,7 @@ public class JJDispute extends Auditable<String>{
 	private String fineReductionReason;
 
 	/**
-	 * Reason indicating why the disputant needs more time in order to make payment
-	 * for the ticket.
+	 * Reason indicating why the disputant needs more time in order to make payment for the ticket.
 	 */
 	@Column(length = 256)
 	@Schema(nullable = true)
@@ -267,7 +273,6 @@ public class JJDispute extends Auditable<String>{
 	private String contactLawFirmName;
 
 	@Column
-	@Schema(nullable = true)
 	private String contactGivenName1;
 
 	@Column
@@ -279,7 +284,6 @@ public class JJDispute extends Auditable<String>{
 	private String contactGivenName3;
 
 	@Column
-	@Schema(nullable = true)
 	private String contactSurname;
 
 	@Column
@@ -326,12 +330,11 @@ public class JJDispute extends Auditable<String>{
 	private String lawyerGivenName3;
 
 	@Column
-	@Schema
+	@Schema(nullable = true)
 	private String justinRccId;
 
 	/**
-	 * The disputant requires spoken language interpreter. The language name is
-	 * indicated in this field.
+	 * The disputant requires spoken language interpreter. The language name is indicated in this field.
 	 */
 	@Column
 	@Schema(nullable = true)
@@ -359,7 +362,7 @@ public class JJDispute extends Auditable<String>{
 	@OneToMany(targetEntity = JJDisputeRemark.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "jjDispute")
 	public List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
 
-	@JsonManagedReference(value="jj_dispute_count_reference")
+	@JsonManagedReference(value = "jj_dispute_count_reference")
 	@OneToMany(targetEntity = JJDisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
 	public List<JJDisputedCount> jjDisputedCounts = new ArrayList<JJDisputedCount>();
@@ -378,7 +381,7 @@ public class JJDispute extends Auditable<String>{
 		this.remarks.addAll(remarks);
 	}
 
-	@JsonManagedReference(value="jj_dispute_court_appearance_rop_reference")
+	@JsonManagedReference(value = "jj_dispute_court_appearance_rop_reference")
 	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
 	public List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();

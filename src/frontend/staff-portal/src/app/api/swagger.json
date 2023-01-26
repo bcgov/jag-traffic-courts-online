@@ -4170,6 +4170,10 @@
             "format": "date-time",
             "nullable": true
           },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
           "ticketNumber": {
             "type": "string",
             "nullable": true
@@ -4206,7 +4210,7 @@
             "type": "string",
             "format": "date-time"
           },
-          "disputantDrvLicNumber": {
+          "driversLicenceNumber": {
             "type": "string",
             "nullable": true
           },
@@ -4277,10 +4281,6 @@
             "nullable": true
           },
           "surname": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
             "type": "string",
             "nullable": true
           },

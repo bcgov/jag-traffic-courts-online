@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,12 +40,12 @@ public class JJDisputeService {
 	private EntityManager entityManager;
 
 	/**
-	 * Retrieves a {@link JJDispute} record by ID, delegating to CrudRepository
+	 * Retrieves a {@link JJDispute} record by ticketNumber, delegating to CrudRepository
 	 * @param ticketNumber the id (primary key) of the JJDispute to retrieve
 	 * @return
 	 */
-	public JJDispute getJJDisputeById(String ticketNumber) {
-		return jjDisputeRepository.findById(ticketNumber).orElseThrow();
+	public JJDispute getJJDisputeByTicketNumber(String ticketNumber) {
+		return findByTicketNumberUnique(ticketNumber).orElseThrow();
 	}
 
 	/**
@@ -69,18 +70,13 @@ public class JJDisputeService {
 	 * @param ticketNumber
 	 * @param principal the current user of the system
 	 */
-	public boolean assignJJDisputeToVtc(String id, Principal principal) {
+	public boolean assignJJDisputeToVtc(String ticketNumber, Principal principal) {
 		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
 			logger.error("Attempting to set JJDispute to null username - bad method call.");
 			throw new NotAllowedException("Cannot set vtc assigned user to null");
 		}
 
-		// Find the jj-dispute to be assigned to the username
-		JJDispute jjDispute = jjDisputeRepository.findById(id).orElseThrow();
-		if (jjDispute == null) {
-			logger.error("Cant find JJDispute for setting vtc assigned - bad method call.");
-			throw new NotAllowedException("Cannot set vtc assigned for ticket not found.");
-		}
+		JJDispute jjDispute = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
 
@@ -88,7 +84,7 @@ public class JJDisputeService {
 			jjDispute.setVtcAssignedTs(new Date());
 			jjDisputeRepository.save(jjDispute);
 
-			logger.debug("JJDispute with ticket Number {} has been assigned to {}", id, principal.getName());
+			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
 
 			return true;
 		}
@@ -119,20 +115,20 @@ public class JJDisputeService {
 	/**
 	 * Updates the properties of a specific {@link JJDispute}
 	 *
-	 * @param id
+	 * @param ticketNumber
 	 * @param {@link JJDispute}
 	 * @return
 	 */
 	@Transactional
-	public JJDispute updateJJDispute(String id, JJDispute jjDispute, Principal principal) {
-		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+	public JJDispute updateJJDispute(String ticketNumber, JJDispute jjDispute, Principal principal) {
+		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 		// Update the status of the JJ Dispute if the status is not the same as current one
 		if (jjDispute.getStatus() != null &&  jjDisputeToUpdate.getStatus() != jjDispute.getStatus()) {
-			jjDisputeToUpdate = setStatus(id, jjDispute.getStatus(), principal, null);
+			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null);
 		}
 
-		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
+		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "id", "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
 		// Remove all existing jj disputed counts that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
 			jjDisputeToUpdate.getJjDisputedCounts().clear();
@@ -180,18 +176,19 @@ public class JJDisputeService {
 	 * @param List of ticketNumber
 	 * @param IDIR username of the JJ
 	 */
-	public void assignJJDisputesToJJ(List<String> ids, String username) {
-		if (ids == null || ids.isEmpty()) {
-			logger.error("No JJDispute ids (ticket numbers) passed to assign to a username - bad method call.");
+	public void assignJJDisputesToJJ(List<String> ticketNumbers, String username) {
+		if (ticketNumbers == null || ticketNumbers.isEmpty()) {
+			logger.error("No JJDispute ticket numbers passed to assign to a username - bad method call.");
 			throw new ConstraintViolationException("Cannot set empty list of ticket numbers to username - bad method call.", null);
 		}
 
-		for (String id : ids) {
+		for (String ticketNumber : ticketNumbers) {
 			// Find the jj-dispute to be assigned to the username
-			JJDispute jjDispute = jjDisputeRepository.findById(id).orElseThrow();
+			JJDispute jjDispute = findByTicketNumberUnique(ticketNumber).orElseThrow();
+
 			if (jjDispute == null) {
-				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id + " - element not found.");
-				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id);
+				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber + " - element not found.");
+				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber);
 			}
 
 			if (!StringUtils.isBlank(username)) {
@@ -199,12 +196,12 @@ public class JJDisputeService {
 				jjDispute.setJjAssignedTo(username);
 				jjDisputeRepository.save(jjDispute);
 
-				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", id, username);
+				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", ticketNumber, username);
 			} else {
 				jjDispute.setJjAssignedTo(null);
 				jjDisputeRepository.save(jjDispute);
 
-				logger.debug("Unassigned JJDispute with ticket number {} ", id);
+				logger.debug("Unassigned JJDispute with ticket number {} ", ticketNumber);
 			}
 		}
 	}
@@ -212,13 +209,13 @@ public class JJDisputeService {
 	/**
 	 * Updates the status of a specific {@link JJDispute}
 	 *
-	 * @param id
+	 * @param ticketNumber
 	 * @param JJDisputeStatus
 	 * @param principal
 	 * @param remark note by the staff if the status is REVIEW.
 	 * @return the saved JJDispute
 	 */
-	public JJDispute setStatus(String id, JJDisputeStatus jjDisputeStatus, Principal principal, String remark) {
+	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark) {
 		if (jjDisputeStatus == null) {
 			logger.error("Attempting to set JJDispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set JJDispute status to null");
@@ -229,7 +226,7 @@ public class JJDisputeService {
 			throw new NotAllowedException("Cannot set the status from unknown user");
 		}
 
-		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 		// TCVP-1435 - business rules
 		// - current status can be unchanged
@@ -296,10 +293,10 @@ public class JJDisputeService {
 		// Set remarks with user's full name if a remark note is provided along with the status update
 		if(!StringUtils.isBlank(remark)) {
 
-			return addRemark(id, remark, principal);
+			return addRemark(ticketNumber, remark, principal);
 		}
 
-		return jjDisputeRepository.findById(id).orElseThrow();
+		return findByTicketNumberUnique(ticketNumber).orElseThrow();
 	}
 
 	/**
@@ -311,7 +308,7 @@ public class JJDisputeService {
 	 */
 	public JJDispute requireCourtHearing(String id, Principal principal, String remark) {
 
-		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(id).orElseThrow();
 
 		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark);
 		jjDisputeToUpdate.setHearingType(JJDisputeHearingType.COURT_APPEARANCE);
@@ -323,14 +320,14 @@ public class JJDisputeService {
 	/**
 	 * Creates a new remark with the user name and surname who added the remark and adds it to the given {@link JJDispute}
 	 *
-	 * @param id
+	 * @param ticketNumber
 	 * @param remark
 	 * @param principal
 	 * @return the saved JJDispute
 	 */
-	private JJDispute addRemark(String id, String remark, Principal principal) {
+	private JJDispute addRemark(String ticketNumber, String remark, Principal principal) {
 
-		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 		JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
 		jjDisputeRemark.setNote(remark);
@@ -346,6 +343,27 @@ public class JJDisputeService {
 		jjDisputeToUpdate.setRemarks(remarks);
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
+	}
+
+	/**
+	 * Finds a JJDispute by ticketNumber. Callers can optionally throw {@link NoSuchElementException} if not found.
+	 * @param ticketNumber
+	 * @return
+	 */
+	private Optional<JJDispute> findByTicketNumberUnique(String ticketNumber) {
+		// Find a JJDispute by ticketNumber. There should be one and only one record - this field "should" be unique.
+		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
+		if (jjDisputes.isEmpty()) {
+			logger.error("Cant find JJDispute by ticketNumber {}.", ticketNumber);
+			return Optional.empty();
+		}
+
+		if (jjDisputes.size() > 1) {
+			logger.error("Found more than one JJDispute for the given ticketNumber - should be unique. Using first one found.");
+		}
+
+		JJDispute jjDispute = jjDisputes.get(0);
+		return Optional.of(jjDispute);
 	}
 
 }

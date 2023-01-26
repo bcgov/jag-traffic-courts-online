@@ -277,7 +277,7 @@ export class JJDisputeService {
   }
 
   private toDisplay(jjDispute: JJDispute): JJDispute {
-    jjDispute.fullName = jjDispute.surname + ", " + jjDispute.givenNames;
+    jjDispute.fullName = jjDispute.surname + ", " + (jjDispute.contactGivenName1 + jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
     jjDispute.isEditable = this.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
