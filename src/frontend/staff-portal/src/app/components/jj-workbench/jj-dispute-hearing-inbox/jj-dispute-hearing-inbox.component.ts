@@ -63,6 +63,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.jjAssignedTo = this.jjAssignedToFilter.value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.tableHeight = this.calcTableHeight(300);
         }
       )
 
@@ -72,6 +73,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.appearanceTs = this.appearanceDateFilter.value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.tableHeight = this.calcTableHeight(300);
         }
       )
 
@@ -88,6 +90,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         })
       }
     })
+  }
+
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
   }
 
   public onAssign(element: JJDispute): void {
@@ -155,5 +161,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
     this.jjAssignedToFilter.setValue(this.jjIDIR);
     this.appearanceDateFilter.setValue(new Date());
+
+    this.tableHeight = this.calcTableHeight(300);
   }
 }

@@ -144,7 +144,7 @@ export class LookupService {
 
     /**
      * Returns a list of Violation Ticket Statutes filtered by given section text (if provided).
-     * @param section Motor vehicle act Section text to query by, ie \&quot;MVA 13(1)(a)\&quot; returns \&quot;Motor Vehicle or Trailer without Licence\&quot; contravention, or blank for no filter.
+     * @param section Motor vehicle Section text to query by, ie \&quot;13(1)(a)\&quot; returns \&quot;Motor Vehicle or Trailer without Licence\&quot; contravention, or blank for no filter.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

@@ -40,6 +40,10 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     this.disputeService.refreshDisputes.subscribe(x => {this.getAllDisputesWithPendingUpdates();})
   }
 
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60);
+  }
+
   public async ngOnInit() {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
@@ -71,6 +75,8 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.filterPredicate = function (record: DisputeWithUpdates, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
+
+      this.tableHeight = this.calcTableHeight(325);
     });
   }
 

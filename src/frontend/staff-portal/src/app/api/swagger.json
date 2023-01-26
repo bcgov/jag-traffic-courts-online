@@ -4208,7 +4208,8 @@
           },
           "disputantBirthdate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "driversLicenceNumber": {
             "type": "string",
@@ -4278,10 +4279,6 @@
           "icbcReceivedDate": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
-          },
-          "surname": {
-            "type": "string",
             "nullable": true
           },
           "enforcementOfficer": {

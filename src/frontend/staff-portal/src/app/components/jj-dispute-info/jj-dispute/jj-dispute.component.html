@@ -33,7 +33,7 @@
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
-            - {{ lastUpdatedJJDispute.occamDisputantGiven1Nm }}{{ lastUpdatedJJDispute.occamDisputantGiven2Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven2Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantGiven3Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven3Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantSurnameNm}}         </b></h1>
+            - {{ lastUpdatedJJDispute.occamDisputantGiven1Nm }}&nbsp;{{ lastUpdatedJJDispute.occamDisputantGiven2Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven2Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantGiven3Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven3Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantSurnameNm}}         </b></h1>
       </span>
       <span style="float:right">
         <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
@@ -81,7 +81,7 @@
         <ng-container *ngIf="type !== 'ticket'">
           <span class="section-grid-cell">
             <p class="section-grid-header">Court Location Code</p>
-            <p class="section-grid-text">?????</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.courtAgenId }}</p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Court Location</p>
@@ -99,7 +99,7 @@
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.surname }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactSurname }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
@@ -116,7 +116,7 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Prov / State of DL</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.addressProvince }}</p>
+          <p class="section-grid-text">{{ dLProvince }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Driver's Licence #</p>
@@ -377,8 +377,8 @@
       <textarea matInput [(ngModel)]="remarks" maxlength="1500" rows="6"
         style="background: #fffee6; width: 100%"></textarea>
     </section>
-    <div fxLayout="row" *ngIf="!isViewOnly">
-      <div *ngIf="type === 'ticket'" fxFlex="40" fxLayout="row">
+    <div fxLayout="row">
+      <div *ngIf="type === 'ticket' && isViewOnly && lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing" fxFlex="40" fxLayout="row">
         <div style="margin-right: 1rem;">
           <mat-form-field class="select-box-only">
             <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
@@ -414,7 +414,6 @@
       <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing">
         Back
       </button>
-      <div *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing"><h2>Waiting for another court hearing to be scheduled in JUSTIN</h2></div>
     </div><br /><br />
   </div>
   <br />

@@ -25,9 +25,9 @@
     </div>
   </div><br />
 
-  <!--- table of unassigned results -->
+  <!--- table of results -->
   <div class="row" style="overflow: auto" [ngStyle]="{'height.px': tableHeight}">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort *ngIf="dataSource.data">
+    <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="assignedIcon">
         <th mat-header-cell *matHeaderCellDef style="width: 50px !important;">
         </th>

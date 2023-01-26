@@ -27,7 +27,7 @@
       <app-contact-info *ngIf="decidePopup == 'A' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-contact-info>
       <app-ticket-info *ngIf="decidePopup == 'E' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-ticket-info>
       <app-update-request-info *ngIf="tabSelected.value === 2" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-update-request-info>
-      <app-dispute-decision-info *ngIf="tabSelected.value === 1" (backInbox)="backInbox()" [jjDisputeInfo]="jjDisputeInfo"></app-dispute-decision-info>
+      <app-jj-dispute *ngIf="tabSelected.value === 1" (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo" [type]="'ticket'" [isViewOnly]="true"></app-jj-dispute>
     </div>
     <div class="flex-footer d-print-none mb-40">
       <app-footer></app-footer>

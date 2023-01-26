@@ -47,13 +47,15 @@ public class JJDispute extends Auditable<String> {
 	/**
 	 * The violation ticket number as unique identifier.
 	 */
-	@Column(length = 100)
+	@Column(length = 100, nullable=false)
+	@Schema(nullable = false)
 	private String ticketNumber;
 
 	/**
 	 * The mailing address line1 of the disputant from contact information submitted via TCO as free form text.
 	 */
-	@Column(length = 100)
+	@Column(length = 100, nullable=false)
+	@Schema(nullable = false)
 	private String addressLine1;
 
 	/**
@@ -103,12 +105,14 @@ public class JJDispute extends Auditable<String> {
 	 */
 	@Column
 	@Temporal(TemporalType.DATE)
+	@Schema(nullable = true)
 	private Date disputantBirthdate;
 
 	/**
 	 * The drivers licence number from reconciled ticket data.
 	 */
 	@Column(length = 30)
+	@Schema(nullable = true)
 	private String driversLicenceNumber;
 
 	/**
@@ -133,10 +137,12 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String emailAddress;
 
-	@Column
+	@Column(nullable = false)
+	@Schema(nullable = false)
 	private JJDisputeStatus status;
 
 	@Column
+	@Schema(nullable = true)
 	private JJDisputeHearingType hearingType;
 
 	@Column(length = 36)
@@ -284,6 +290,7 @@ public class JJDispute extends Auditable<String> {
 	private String contactGivenName3;
 
 	@Column
+	@Schema(nullable = true)
 	private String contactSurname;
 
 	@Column

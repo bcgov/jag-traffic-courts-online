@@ -49,20 +49,22 @@ public class JJDisputedCount extends Auditable<String> {
 	 * Represents the disputant plea on count.
 	 */
 	@Column
+	@Schema(nullable = true)
 	private Plea plea;
 
 	/**
 	 * The count number.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Min(1)
 	@Max(3)
+	@Schema(nullable = false)
 	private Integer count;
 
 	/**
 	 * The disputant is requesting time to pay the ticketed amount.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo requestTimeToPay;
@@ -70,7 +72,7 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * The disputant is requesting a reduction of the ticketed amount.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo requestReduction;
@@ -78,7 +80,7 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * Does the want to appear in court?
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo appearInCourt;
@@ -115,7 +117,7 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * JJ's decision whether to include surcharge in the calculated fine or not. Surcharge is always 15% of the original fine amount.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo includesSurcharge;

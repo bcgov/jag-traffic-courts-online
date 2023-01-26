@@ -331,6 +331,7 @@ public class JJDisputeService {
 
 		JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
 		jjDisputeRemark.setNote(remark);
+		jjDisputeRemark.setRemarksMadeTs(new Date());
 
 		PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
 		CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();

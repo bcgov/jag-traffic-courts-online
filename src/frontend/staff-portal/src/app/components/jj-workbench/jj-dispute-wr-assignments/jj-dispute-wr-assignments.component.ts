@@ -72,6 +72,10 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     this.dataSource.sortData = this.customSortData('jjAssignedTo');
   }
 
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*80)
+  }
+
   ngAfterViewInit() {
     this.dataSource.sort = null;
     this.dataSource.sort = this.sort;
@@ -132,6 +136,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
     this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
     this.currentTeam = team;
+    this.tableHeight = this.calcTableHeight(425);
   }
 
   getCurrentTeamCounts(): teamCounts {

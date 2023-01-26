@@ -39,6 +39,10 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     }
   }
 
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
+  }
+
   ngOnInit(): void {
     this.data$.subscribe(data => {
       this.refreshData(data);
@@ -55,6 +59,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   applyFilter() {
     this.dataSource.filter = this.filterText;
+    this.tableHeight = this.calcTableHeight(300);
   }
 
   refreshData(jjDisputes: JJDispute[]): void {

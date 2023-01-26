@@ -62,6 +62,10 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     return d.status == DisputeStatus.New && (d.emailAddressVerified === true || !d.emailAddress);
   }
 
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*80)
+  }
+
   getAllDisputes(): void {
     this.logger.log('TicketInboxComponent::getAllDisputes');
 
@@ -125,6 +129,8 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.filterPredicate = function (record: Dispute, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
+
+      this.tableHeight = this.calcTableHeight(425);
     });
   }
 
@@ -205,6 +211,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.tableHeight = this.calcTableHeight(425);
   }
 
   backWorkbench(element) {

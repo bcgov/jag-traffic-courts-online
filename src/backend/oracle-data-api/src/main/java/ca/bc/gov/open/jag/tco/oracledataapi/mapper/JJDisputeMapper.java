@@ -36,7 +36,6 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "detachmentLocationTxt", target = "policeDetachment")
 	@Mapping(source = "disputantBirthDt", target = "disputantBirthdate")
 	@Mapping(source = "disputantDrvLicNumberTxt", target = "driversLicenceNumber")
-	@Mapping(source = "disputantSurnameTxt", target = "surname")
 	@Mapping(source = "disputeCounts", target = "jjDisputedCounts")
 	@Mapping(source = "disputeId", target = "id")
 	@Mapping(source = "disputeRemarks", target = "remarks")

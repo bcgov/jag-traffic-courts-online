@@ -321,7 +321,7 @@
           {
             "name": "section",
             "in": "query",
-            "description": "Motor vehicle act Section text to query by, ie \"MVA 13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "description": "Motor vehicle Section text to query by, ie \"13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
             "style": "form",
             "schema": {
               "type": "string"

@@ -3,9 +3,9 @@
   <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
     <h3><b>Hearing Inbox</b> ({{dataSource.filteredData.length}} results)</h3>
   </div>
-  <div>
+  <div style="display:flex; flex-direction: row; justify-content: right;">
     <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
-      placeholder="court date" style="background-color: #f2f2f2;"/>
+      placeholder="court date" style="background-color: #f2f2f2; width:250px;"/>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
     <mat-select [formControl]="jjAssignedToFilter" placeholder="choose a jj" style="width:250px; background-color: #f2f2f2;">
@@ -16,7 +16,7 @@
   </div>
 </div>
 <div class="row" style="overflow: auto;" [ngStyle]="{'height.px': tableHeight}">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="jjAssignedTo">
       <th mat-header-cell *matHeaderCellDef style="width:200px !important;" mat-sort-header>
         <div>

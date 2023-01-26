@@ -119,7 +119,7 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<JJDispute> {
+   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
       .pipe(
         map((response: any) => {
@@ -277,12 +277,19 @@ export class JJDisputeService {
   }
 
   private toDisplay(jjDispute: JJDispute): JJDispute {
-    jjDispute.fullName = jjDispute.surname + ", " + (jjDispute.contactGivenName1 + jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
+    jjDispute.fullName = jjDispute.contactSurname + ", " + (jjDispute.contactGivenName1 + jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
     jjDispute.isEditable = this.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
     jjDispute.jjAssignedToName = this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
     jjDispute.vtcAssignedToName = this.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo?.toUpperCase())[0]?.fullName;
+    jjDispute.address = jjDispute.addressLine1
+    + (jjDispute.addressLine2 ? ", " + jjDispute.addressLine2 : "")
+    + (jjDispute.addressLine3 ? ", " + jjDispute.addressLine3 : "")
+    + (jjDispute.addressCity ? ", " + jjDispute.addressCity: "")
+    + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
+    + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
+    + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
@@ -305,4 +312,5 @@ export interface JJDispute extends JJDisputeBase {
   isEditable?: boolean;
   isCompleted?: boolean;
   fullName?: string;
+  address?: string;
 }
