@@ -49,6 +49,9 @@ public static class Startup
         // add the Arc Dispute Client
         builder.Services.AddArcDisputeClient(builder.Configuration, section: "ArcApiConfiguration");
 
+        // Add COMS (Object Management Service) Client
+        builder.Services.AddObjectManagementService("COMS");
+
         // add the Virus Scan Client
         builder.Services.AddVirusScanClient(builder.Configuration);
 
