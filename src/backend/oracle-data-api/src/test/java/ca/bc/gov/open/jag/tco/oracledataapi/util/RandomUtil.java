@@ -204,7 +204,6 @@ public class RandomUtil {
 		dispute.setTicketNumber(UUID.randomUUID().toString());
 		dispute.setStatus(JJDisputeStatus.NEW);
 		dispute.setCourthouseLocation(randomCity());
-		dispute.setGivenNames(randomGivenName());
 		dispute.setSurname(randomSurname());
 		dispute.setEnforcementOfficer(randomName());
 		dispute.setJjAssignedTo(randomName());

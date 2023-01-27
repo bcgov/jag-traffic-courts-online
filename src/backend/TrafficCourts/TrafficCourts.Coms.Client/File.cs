@@ -7,26 +7,58 @@ public partial class File : IDisposable
     /// <summary>Does this instance own the memory stream and should dispose of it?</summary>
     private bool _ownsDataStream = true;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="File"/> class.
+    /// </summary>
+    /// <param name="data">The data stream containing the file data. The file stream will be rewound so the file position is at the beginning.</param>
     public File(Stream data)
         : this(data, null, null)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="File"/> class.
+    /// </summary>
+    /// <param name="data">The data stream containing the file data. The file stream will be rewound so the file position is at the beginning.</param>
+    /// <param name="fileName">The optional file name.</param>
     public File(Stream data, string? fileName)
         : this(data, fileName, null)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="File"/> class.
+    /// </summary>
+    /// <param name="data">The data stream containing the file data. The file stream will be rewound so the file position is at the beginning.</param>
+    /// <param name="fileName">The optional file name.</param>
+    /// <param name="contentType">The optional content type of the file</param>
     public File(Stream data, string? fileName, string? contentType)
         : this(data, fileName, contentType, null, null)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="File"/> class.
+    /// </summary>
+    /// <param name="data">The data stream containing the file data. The file stream will be rewound so the file position is at the beginning.</param>
+    /// <param name="fileName">The optional file name.</param>
+    /// <param name="contentType">The optional content type of the file</param>
+    /// <param name="metadata">The optional metadata properties</param>
+    /// <param name="tags">The optional tag properties</param>
     public File(Stream data, string? fileName, string? contentType, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
         : this(null, data, fileName, contentType, metadata, tags)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="File"/> class.
+    /// </summary>
+    /// <param name="id">The system generated file identifier.</param>
+    /// <param name="data">The data stream containing the file data. The file stream will be rewound so the file position is at the beginning.</param>
+    /// <param name="fileName">The optional file name.</param>
+    /// <param name="contentType">The optional content type of the file</param>
+    /// <param name="metadata">The optional metadata properties</param>
+    /// <param name="tags">The optional tag properties</param>
     public File(Guid? id, Stream data, string? fileName, string? contentType, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
     {
         Id = id;
@@ -36,6 +68,12 @@ public partial class File : IDisposable
 
         Metadata = Client.Metadata.Create(metadata);
         Tags = Factory.CreateTags(tags);
+
+        // data shouldn't be null, but to be on the safe side as there is no guard 
+        if (data is not null)
+        {
+            data.Position = 0; // rewind the stream so callers can consume the data
+        }
     }
 
     /// <summary>

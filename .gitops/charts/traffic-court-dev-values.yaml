@@ -56,6 +56,7 @@ oracle-data-api:
     "DISPUTE_REPOSITORY_SRC": "ords"
     "JJDISPUTE_REPOSITORY_SRC": "h2"
     "HISTORY_REPOSITORY_SRC": "h2"
+    "H2_DATASOURCE": "jdbc:h2:mem:testdb"
 
 staff-api:
   image:
