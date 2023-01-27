@@ -11,14 +11,13 @@
  */
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
-import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
 import { DisputeCount } from './disputeCount.model';
 
 
 /**
  * Represents a violation ticket notice of dispute.
  */
-export interface NoticeOfDispute { 
+export interface Dispute { 
     /**
      * The disputant\'s email address.
      */
@@ -165,18 +164,5 @@ export interface NoticeOfDispute {
      * Dispute Counts
      */
     dispute_counts?: Array<DisputeCount> | null;
-    disputant_detected_ocr_issues?: DisputeDisputantDetectedOcrIssues;
-    /**
-     * The description of the issue with OCR ticket if the citizen has detected any.
-     */
-    disputant_ocr_issues?: string | null;
-    /**
-     * The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.
-     */
-    ticket_id?: string | null;
-    /**
-     * Detachment Location
-     */
-    detachment_location?: string | null;
 }
 

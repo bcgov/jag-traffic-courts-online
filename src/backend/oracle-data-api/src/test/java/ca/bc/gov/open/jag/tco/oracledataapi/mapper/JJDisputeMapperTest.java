@@ -224,7 +224,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		Long appearanceChargeCountId = Long.valueOf("55");
 		Long courtAppearanceId = Long.valueOf("77");
 		JJDisputedCountFinding findingResultCd = JJDisputedCountFinding.GUILTY;
-		String lesserChargeDescTxt = "lesserChargeDescTxt";
+		String lesserChargeDescTxt = "Description";
 		String suspSntcProbationDurtnTxt = "suspSntcProbationDurtnTxt";
 		String suspSntcProbationCondsTxt = "suspSntcProbationCondsTxt";
 		String jailDurationTxt = "jailDurationTxt";
