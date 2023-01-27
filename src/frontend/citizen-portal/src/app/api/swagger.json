@@ -226,6 +226,52 @@
         }
       }
     },
+    "/api/disputes/user": {
+      "get": {
+        "tags": [
+          "Disputes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": { }
+              },
+              "application/json": {
+                "schema": { }
+              },
+              "text/json": {
+                "schema": { }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/api/dispute/{guidHash}/contact": {
       "put": {
         "tags": [
@@ -321,7 +367,7 @@
           {
             "name": "section",
             "in": "query",
-            "description": "Motor vehicle act Section text to query by, ie \"MVA 13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "description": "Motor vehicle Section text to query by, ie \"13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
             "style": "form",
             "schema": {
               "type": "string"
@@ -896,7 +942,7 @@
           "disputant_birthdate": {
             "type": "string",
             "description": "The disputant's birthdate.",
-            "format": "date-time"
+            "format": "date"
           },
           "drivers_licence_number": {
             "type": "string",
@@ -1428,6 +1474,19 @@
         ],
         "type": "string"
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        "name": "Authorization",
+        "in": "header"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

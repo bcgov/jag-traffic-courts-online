@@ -21,11 +21,14 @@
       "@core/*": ["./app/core/*"],
       "@shared/*": ["./app/shared/*"],
       "@components/*": ["./app/components/*"]
-    }
+    },
   },
   "angularCompilerOptions": {
     "resolveJsonModule": true,
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+  ]
 }

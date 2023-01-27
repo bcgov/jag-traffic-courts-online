@@ -18,6 +18,9 @@ if (swagger.Enabled)
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
 

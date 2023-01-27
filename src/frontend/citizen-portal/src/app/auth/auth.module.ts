@@ -47,12 +47,4 @@ export const AuthConfigLoader = (authConfig: AuthConfig) => {
   ],
   exports: [OidcModule],
 })
-export class AuthModule {
-  constructor(
-    private authConfig: AuthConfig
-  ) {
-    // Alter the injected valuables here
-    this.authConfig.config.redirectUrl = window.location.origin;
-    this.authConfig.config.postLogoutRedirectUri = window.location.origin;
-  }
-}
+export class AuthModule { }

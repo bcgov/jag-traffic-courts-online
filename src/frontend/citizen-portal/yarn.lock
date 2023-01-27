@@ -1596,10 +1596,10 @@
     tslib "2.3.1"
     uuid "8.3.2"
 
-"@ngrx/effects@14":
-  version "14.3.2"
-  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-14.3.2.tgz#a5cc62e78cec2f5ccce810b8d27a58cc91e72c4f"
-  integrity sha512-6bpGfA44jzwhBcmNaTwVgnFmYOX9iKPFpXyetDe41tVESo1CsNhUBPTmISDXKN9Mx2mwGbsMxrn6QFRypSsKAQ==
+"@ngrx/effects@^14":
+  version "14.3.3"
+  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-14.3.3.tgz#5c9e43e4dc5e1d544f4604fc6a32feec2380c413"
+  integrity sha512-bP7rIHlu1KAj5Wm0TWR7Q8VlOQOBu8uiN/fDP3Lqi8FwVW6HOq9eBGcFwJGyqwVAmulsvLFB68MhpMYg2W78+w==
   dependencies:
     tslib "^2.0.0"
 
@@ -1614,10 +1614,10 @@
     semver "^7.3.5"
     strip-json-comments "3.1.1"
 
-"@ngrx/store@14":
-  version "14.3.2"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-14.3.2.tgz#91333c9c4d7b54bf98d842cb94e6afa3a6ea8df2"
-  integrity sha512-XGHjr0arh6gClo8Ce+xqJLvW9PkeXPW2tCo9Z5qMtHFI/z5dUppLVKGmMgD/fQBDyoqWTK5xu+89tDkdeZfRjQ==
+"@ngrx/store@^14":
+  version "14.3.3"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-14.3.3.tgz#397d7fe54fb6c580282240c149f76f6f48ebf2a3"
+  integrity sha512-VhPDR2a5OQJfrVRah3vdJgL/F6UC8NU/X7lxKFqBW3NC+pmlIeFO/y8jLrZOKBXwG45tY9wrg15S70nEGoZtHA==
   dependencies:
     tslib "^2.0.0"
 
@@ -2534,10 +2534,10 @@ ajv@^6.10.0, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-angular-auth-oidc-client@14.1.5:
-  version "14.1.5"
-  resolved "https://registry.yarnpkg.com/angular-auth-oidc-client/-/angular-auth-oidc-client-14.1.5.tgz#41bd8e0ce0bf6e6388528b7bc3154df4cc32294f"
-  integrity sha512-qgWcXZb2k+VLbSai0sMDNe3f2Ae1BK9BnIrAEFH8ulvSU/oFYoWXebPrsele2/sElNQ534Rpzr48IVsq1gqiwA==
+angular-auth-oidc-client@14.1.4:
+  version "14.1.4"
+  resolved "https://registry.yarnpkg.com/angular-auth-oidc-client/-/angular-auth-oidc-client-14.1.4.tgz#373058c112baf1f60aa0a2b9ad24283250c84432"
+  integrity sha512-LiYWF1jK5uveOB0n8liXdo1TgRlE0ciw5A/1CbhZTm2X/GXzbszOOGRq0IS1vi+NOPy6neud1gTWw+4J1RfYHQ==
   dependencies:
     rfc4648 "^1.5.0"
     tslib "^2.3.0"
