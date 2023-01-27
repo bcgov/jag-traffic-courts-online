@@ -135,6 +135,180 @@
         }
       }
     },
+    "/api/coms/downloaddocument": {
+      "get": {
+        "tags": [
+          "Coms"
+        ],
+        "summary": "Downloads a document for the given unique file ID if the virus scan staus is clean.",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "description": "Unique identifier for a specific document.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document is successfully downloaded."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file to be downloaded successfully."
+          }
+        }
+      }
+    },
+    "/api/coms/removedocument": {
+      "get": {
+        "tags": [
+          "Coms"
+        ],
+        "summary": "Removes the specified document for the given unique file ID.",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "description": "Unique identifier for a specific document.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document is successfully removed."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:delete permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file to be removed successfully."
+          }
+        }
+      }
+    },
     "/api/dispute/disputes": {
       "get": {
         "tags": [
@@ -3235,70 +3409,6 @@
         },
         "additionalProperties": false
       },
-      "DisputantContactInformation": {
-        "type": "object",
-        "properties": {
-          "createdBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "modifiedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "surname": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
-            "nullable": true
-          },
-          "birthdate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "driversLicenceNumber": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "province": {
-            "maxLength": 30,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "emailAddress": {
-            "type": "string",
-            "nullable": true
-          },
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "DisputantUpdateRequest": {
         "required": [
           "status",
@@ -4035,6 +4145,14 @@
       "JJDispute": {
         "type": "object",
         "properties": {
+          "fileData": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
           "createdBy": {
             "type": "string",
             "nullable": true
@@ -4052,7 +4170,60 @@
             "format": "date-time",
             "nullable": true
           },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
           "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine1": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine3": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressPostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantBirthdate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "driversLicenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "drvLicIssuedProvSeqNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "drvLicIssuedCtryId": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
             "type": "string",
             "nullable": true
           },
@@ -4062,7 +4233,40 @@
           "hearingType": {
             "$ref": "#/components/schemas/JJDisputeHearingType"
           },
+          "noticeOfDisputeGuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "occamDisputantGiven1Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "occamDisputantGiven2Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "occamDisputantGiven3Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "occamDisputantSurnameNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "occamDisputeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "occamViolationTicketUpldId": {
+            "type": "string",
+            "nullable": true
+          },
           "submittedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "issuedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -4075,14 +4279,6 @@
           "icbcReceivedDate": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
-          },
-          "surname": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
             "nullable": true
           },
           "enforcementOfficer": {
@@ -4127,6 +4323,33 @@
             "type": "string",
             "nullable": true
           },
+          "contactLawFirmName": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactType": {
+            "$ref": "#/components/schemas/JJDisputeContactType"
+          },
+          "courtAgenId": {
+            "type": "string",
+            "nullable": true
+          },
           "lawFirmName": {
             "type": "string",
             "nullable": true
@@ -4144,6 +4367,10 @@
             "nullable": true
           },
           "lawyerGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "justinRccId": {
             "type": "string",
             "nullable": true
           },
@@ -4166,9 +4393,6 @@
             },
             "nullable": true
           },
-          "contactInformation": {
-            "$ref": "#/components/schemas/DisputantContactInformation"
-          },
           "jjDisputedCounts": {
             "type": "array",
             "items": {
@@ -4190,6 +4414,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "JJDisputeContactType": {
+        "enum": [
+          "UNKNOWN",
+          "INDIVIDUAL",
+          "LAWYER",
+          "OTHER"
+        ],
+        "type": "string"
       },
       "JJDisputeCourtAppearanceRoP": {
         "type": "object",
@@ -4249,12 +4482,14 @@
             "type": "string",
             "nullable": true
           },
+          "dattCd": {
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPDattCd"
+          },
           "crown": {
             "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPCrown"
           },
           "jjSeized": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPJjSeized"
           },
           "adjudicator": {
             "type": "string",
@@ -4287,6 +4522,23 @@
         "enum": [
           "UNKNOWN",
           "P",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputeCourtAppearanceRoPDattCd": {
+        "enum": [
+          "UNKNOWN",
+          "A",
+          "C",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputeCourtAppearanceRoPJjSeized": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
           "N"
         ],
         "type": "string"
@@ -4344,6 +4596,10 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "remarksMadeTs": {
+            "type": "string",
+            "format": "date-time"
           },
           "additionalProperties": {
             "type": "object",
@@ -4435,6 +4691,11 @@
           "totalFineAmount": {
             "type": "number",
             "format": "float",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "comments": {
@@ -4606,6 +4867,7 @@
       },
       "JJDisputedCountRoPFinding": {
         "enum": [
+          "UNKNOWN",
           "GUILTY",
           "NOT_GUILTY",
           "GUILTY_LESSER"

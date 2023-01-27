@@ -47,49 +47,57 @@ public class JJDispute extends Auditable<String> {
 	/**
 	 * The violation ticket number as unique identifier.
 	 */
-	@Column(length = 100)
+	@Column(length = 100, nullable=false)
+	@Schema(nullable = false)
 	private String ticketNumber;
 
 	/**
 	 * The mailing address line1 of the disputant from contact information submitted via TCO as free form text.
 	 */
-	@Column(length = 100)
+	@Column(length = 100, nullable=false)
+	@Schema(nullable = false)
 	private String addressLine1;
 
 	/**
 	 * The mailing address line2 of the disputant from contact information submitted via TCO as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressLine2;
 
 	/**
 	 * The mailing address line3 of the disputant from contact information submitted via TCO as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressLine3;
 
 	/**
 	 * The mailing address city of the disputant from contact information submitted via TCO as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressCity;
 
 	/**
 	 * The mailing address province of the disputant from reconciled ticket data as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressProvince;
 
 	/**
 	 * The mailing address country of the disputant from reconciled ticket data as free form text.
 	 */
 	@Column(length = 100)
+	@Schema(nullable = true)
 	private String addressCountry;
 
 	/**
 	 * The mailing address postal code of the disputant from reconciled ticket data as free form text.
 	 */
 	@Column(length = 10)
+	@Schema(nullable = true)
 	private String addressPostalCode;
 
 	/**
@@ -97,24 +105,28 @@ public class JJDispute extends Auditable<String> {
 	 */
 	@Column
 	@Temporal(TemporalType.DATE)
+	@Schema(nullable = true)
 	private Date disputantBirthdate;
 
 	/**
 	 * The drivers licence number from reconciled ticket data.
 	 */
 	@Column(length = 30)
+	@Schema(nullable = true)
 	private String driversLicenceNumber;
 
 	/**
 	 * The province lookup sequence number from the reconciled ticket data.
 	 */
 	@Column(length = 4)
+	@Schema(nullable = true)
 	private String drvLicIssuedProvSeqNo;
 
 	/**
 	 * The country lookup sequence number from the reconciled ticket data.
 	 */
 	@Column(length = 4)
+	@Schema(nullable = true)
 	private String drvLicIssuedCtryId;
 
 	/**
@@ -122,33 +134,43 @@ public class JJDispute extends Auditable<String> {
 	 */
 	@Column(length = 100)
 	@Email(regexp = ".+@.+\\..+")
+	@Schema(nullable = true)
 	private String emailAddress;
 
-	@Column
+	@Column(nullable = false)
+	@Schema(nullable = false)
 	private JJDisputeStatus status;
 
 	@Column
+	@Schema(nullable = true)
 	private JJDisputeHearingType hearingType;
 
 	@Column(length = 36)
+	@Schema(nullable = true)
 	private String noticeOfDisputeGuid;
 
 	@Column(length = 30)
+	@Schema(nullable = true)
 	private String occamDisputantGiven1Nm;
 
 	@Column(length = 30)
+	@Schema(nullable = true)
 	private String occamDisputantGiven2Nm;
 
 	@Column(length = 30)
+	@Schema(nullable = true)
 	private String occamDisputantGiven3Nm;
 
 	@Column(length = 30)
+	@Schema(nullable = true)
 	private String occamDisputantSurnameNm;
 
 	@Column(length = 15)
+	@Schema(nullable = true)
 	private String occamDisputeId;
 
 	@Column(length = 15)
+	@Schema(nullable = true)
 	private String occamViolationTicketUpldId;
 
 	/**
@@ -179,13 +201,6 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date icbcReceivedDate;
-
-	/**
-	 * The surname or corporate name of the disputant.
-	 */
-	@Column
-	@Schema(nullable = true)
-	private String surname;
 
 	/**
 	 * The enforcement officer associated to the disputed violation ticket.
@@ -264,7 +279,6 @@ public class JJDispute extends Auditable<String> {
 	private String contactLawFirmName;
 
 	@Column
-	@Schema(nullable = true)
 	private String contactGivenName1;
 
 	@Column
@@ -323,7 +337,7 @@ public class JJDispute extends Auditable<String> {
 	private String lawyerGivenName3;
 
 	@Column
-	@Schema
+	@Schema(nullable = true)
 	private String justinRccId;
 
 	/**

@@ -27,6 +27,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     appearanceTs: new Date()
   }
   appearanceDateFilter = new FormControl(new Date());
+  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   jjAssignedToFilter = new FormControl('');
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
   statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
@@ -62,6 +63,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.jjAssignedTo = this.jjAssignedToFilter.value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.tableHeight = this.calcTableHeight(300);
         }
       )
 
@@ -71,6 +73,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.appearanceTs = this.appearanceDateFilter.value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
+          this.tableHeight = this.calcTableHeight(300);
         }
       )
 
@@ -87,6 +90,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         })
       }
     })
+  }
+
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
   }
 
   public onAssign(element: JJDispute): void {
@@ -132,8 +139,8 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
 
   getAll(): void {
-    // only show status HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_MORE_INFO
-    this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1);
+    // only show status HEARING_SCHEDULED, IN_PROGRESS, REVIEW, REQUIRE_MORE_INFO
+    this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1 && x.hearingType == this.HearingType.CourtAppearance);
     this.dataSource.data = this.data;
 
     // initially sort by submitted date within status
@@ -154,5 +161,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
     this.jjAssignedToFilter.setValue(this.jjIDIR);
     this.appearanceDateFilter.setValue(new Date());
+
+    this.tableHeight = this.calcTableHeight(300);
   }
 }

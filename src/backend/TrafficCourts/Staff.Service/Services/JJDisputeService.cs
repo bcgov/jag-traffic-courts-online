@@ -50,7 +50,7 @@ public class JJDisputeService : IJJDisputeService
 
         if (dispute.Status == JJDisputeStatus.IN_PROGRESS)
         {
-            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details saved for later.");
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details updated.");
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
         else if (dispute.Status == JJDisputeStatus.CONFIRMED)
@@ -86,12 +86,21 @@ public class JJDisputeService : IJJDisputeService
 
     public async Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string? remark, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
+        try
+        {
+            JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
 
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "JJ requires a court hearing for this dispute.");
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "JJ requires a court hearing for this dispute.");
+            await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        return dispute;
+            return dispute;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "could not set status to require court hearing");
+            throw;
+        }
+
     }
 
 
@@ -109,7 +118,7 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
 
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute confirmed for resulting by staff.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute confirmed for resulting by JJ.");
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;

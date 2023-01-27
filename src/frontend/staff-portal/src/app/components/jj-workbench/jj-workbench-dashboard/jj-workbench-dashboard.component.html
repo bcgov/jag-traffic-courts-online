@@ -1,9 +1,9 @@
-<app-page [busy]="busy">
+<app-page [busy]="busy" class="container">
   <div class="flex-wrapper">
     <div class="flex-header d-print-none mb-40">
       <app-header></app-header>
     </div>
-    <div style="padding-left:5%; padding-right:5%" *ngIf="!showDispute">
+    <div class="dashBody" *ngIf="!showDispute">
       <br /><br />
       <mat-tab-group mat-align-tabs="start" [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)">
         <mat-tab *ngIf="jjAdminRole">
@@ -28,7 +28,7 @@
         </mat-tab>
       </mat-tab-group>
     </div>
-    <div style="padding-left:5%; padding-right:5%" *ngIf="showDispute">
+    <div class="dashBody" *ngIf="showDispute">
       <app-jj-dispute (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo" [isViewOnly]="!isInfoEditable"></app-jj-dispute>
     </div>
     <div class="flex-footer d-print-none mb-40">

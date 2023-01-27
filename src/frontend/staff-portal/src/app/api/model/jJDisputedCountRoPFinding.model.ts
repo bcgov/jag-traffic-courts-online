@@ -11,9 +11,10 @@
  */
 
 
-export type JJDisputedCountRoPFinding = 'GUILTY' | 'NOT_GUILTY' | 'GUILTY_LESSER';
+export type JJDisputedCountRoPFinding = 'UNKNOWN' | 'GUILTY' | 'NOT_GUILTY' | 'GUILTY_LESSER';
 
 export const JJDisputedCountRoPFinding = {
+    Unknown: 'UNKNOWN' as JJDisputedCountRoPFinding,
     Guilty: 'GUILTY' as JJDisputedCountRoPFinding,
     NotGuilty: 'NOT_GUILTY' as JJDisputedCountRoPFinding,
     GuiltyLesser: 'GUILTY_LESSER' as JJDisputedCountRoPFinding

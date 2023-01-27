@@ -49,20 +49,22 @@ public class JJDisputedCount extends Auditable<String> {
 	 * Represents the disputant plea on count.
 	 */
 	@Column
+	@Schema(nullable = true)
 	private Plea plea;
 
 	/**
 	 * The count number.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Min(1)
 	@Max(3)
+	@Schema(nullable = false)
 	private Integer count;
 
 	/**
 	 * The disputant is requesting time to pay the ticketed amount.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo requestTimeToPay;
@@ -70,7 +72,7 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * The disputant is requesting a reduction of the ticketed amount.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo requestReduction;
@@ -78,84 +80,10 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * Does the want to appear in court?
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo appearInCourt;
-
-	@Column
-	private Long appearanceChargeCountId;
-
-	@Column
-	private Long courtAppearanceId;
-
-	@Column
-	private JJDisputedCountFinding findingResultCd;
-
-	@Column(length = 500)
-	private String lesserChargeDesc;
-
-	@Column(length = 500)
-	private String suspSntcProbationDurtn;
-
-	@Column(length = 500)
-	private String suspSntcProbationConds;
-
-	@Column(length = 500)
-	private String jailDuration;
-
-	@Column
-	@Enumerated(EnumType.STRING)
-	private YesNo jailIntermittent;
-
-	@Column(length = 500)
-	private String probationDuration;
-
-	@Column(length = 1000)
-	private String probationConditions;
-
-	@Column(length = 500)
-	private String drivingProhibDuration;
-
-	@Column(length = 240)
-	private String drivingProhibMvaSection;
-
-	@Column
-	@Enumerated(EnumType.STRING)
-	private YesNo dismissed;
-
-	@Column
-	@Enumerated(EnumType.STRING)
-	private YesNo dismissedForWantProsec;
-
-	@Column
-	@Enumerated(EnumType.STRING)
-	private YesNo withdrawn;
-
-	@Column
-	@Enumerated(EnumType.STRING)
-	private YesNo abatement;
-
-	@Column(length = 500)
-	private String stayOfProceedingsBy;
-
-	@Column(length = 500)
-	private String otherTxt;
-
-	@Column(length = 500)
-	private String remarksTxt;
-
-	@Column
-	private Date accEntDtm;
-
-	@Column(length = 30)
-	private String accEntUserId;
-
-	@Column
-	private Date accUpdDtm;
-
-	@Column(length = 30)
-	private String accUpdUserId;
 
 	/**
 	 * The description of the offence including the statute and act. Example: 92.1(1) MVA - Fail to stop resulting in pursuit
@@ -189,7 +117,7 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * JJ's decision whether to include surcharge in the calculated fine or not. Surcharge is always 15% of the original fine amount.
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo includesSurcharge;

@@ -323,7 +323,7 @@ public class DisputeService : IDisputeService
 
                     disputesWithUpdates.Add(disputeWithUpdates);
                 }
-                catch (Exception ex) {  
+                catch {  
                     // dont crash carry on
                 }
             } else
@@ -337,7 +337,7 @@ public class DisputeService : IDisputeService
             if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
             {
                 DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputantUpdateRequest.UpdateJson);
-                if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment") ;
+                if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment") 
                 {
                     disputeWithUpdates.AdjournmentDocument = true;
                 }

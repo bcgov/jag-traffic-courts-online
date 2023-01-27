@@ -1,12 +1,9 @@
 <div class="header d-print-none">
-  <mat-toolbar color="primary">
+   <mat-toolbar color="primary">
     <span>
       <a href="https://www2.gov.bc.ca/gov/content/home" class="government-of-bc-logo" target="_blank" rel="noopener">
         <img src="/assets/gov_bc_logo.jpg" alt="Government of BC Logo" />
-      </a>&nbsp;&nbsp;{{ headingText }}
-      <span class="badge badge-pill badge-light header" *ngIf="environment !== 'prod'">
-        {{ environment }} v{{ version }}
-      </span>
+      </a>&nbsp;&nbsp;{{ headingText }}&nbsp;{{ environment === 'prod' ? '' : environment }} v{{ version }}
     </span>
 
     <span class="flex-fill"></span>
@@ -29,7 +26,6 @@
     </button>
   </mat-toolbar>
 </div>
-
 <div class="ngx-progress">
   <ng-progress></ng-progress>
 </div>

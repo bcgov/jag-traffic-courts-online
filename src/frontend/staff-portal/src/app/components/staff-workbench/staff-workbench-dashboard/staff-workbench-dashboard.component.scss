@@ -2,6 +2,17 @@ td, th {
     vertical-align: middle !important;
 }
 
+.container {
+  overflow: hidden;
+}
+
+.dashBody {
+  padding-left: 5%;
+  padding-right: 5%;
+  position: fixed;
+  top: 30px;
+}
+
 h2 {
   font-weight: bold;
   color: black !important;

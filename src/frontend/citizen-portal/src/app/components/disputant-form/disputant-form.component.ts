@@ -104,7 +104,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onCountryChange(country: CountryCodeValue) {
     setTimeout(() => {
       this.form.controls.address_country_id.setValue(country.ctryId);
-      
+
       this.form.controls.postal_code.setValidators([Validators.maxLength(6)]);
       this.form.controls.address_province.setValidators([Validators.maxLength(30)]);
       this.form.controls.address_province.setValue(null);
@@ -148,7 +148,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
 
   onProvinceChange(province: ProvinceCodeValue) {
     setTimeout(() => {
-      this.form.controls.address_province.setValue(province.provNm);
+      this.form.controls.address_province.setValue(province.provAbbreviationCd); // for sending two char province or state code to ARC
       this.form.controls.address_province_country_id.setValue(province.ctryId);
       this.form.controls.address_province_seq_no.setValue(province.provSeqNo);
     }, 0)

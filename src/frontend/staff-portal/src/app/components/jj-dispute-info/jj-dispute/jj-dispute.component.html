@@ -1,4 +1,22 @@
-<div [ngClass]="{'contact-info' : type === 'ticket'}" style="padding-top: 2rem;">
+<div style="display:flex; margin-top: 40px" [ngStyle]="{'width.px': infoWidth}">
+  <button mat-raised-button [matMenuTriggerFor]="printMenu" style="float: right;">Print Options</button>&nbsp;
+    <mat-menu #printMenu="matMenu" yPosition="below">
+      <button mat-menu-item (click)="printDispute=!printDispute"><mat-icon *ngIf="printDispute">check</mat-icon><mat-icon *ngIf="!printDispute">close</mat-icon>Dispute Details</button>
+      <button mat-menu-item (click)="printUploadedDocuments=!printUploadedDocuments"><mat-icon *ngIf="printUploadedDocuments">check</mat-icon><mat-icon *ngIf="!printUploadedDocuments">close</mat-icon>Uploaded Documents</button>
+      <button mat-menu-item (click)="printFileHistory=!printFileHistory"><mat-icon *ngIf="printFileHistory">check</mat-icon><mat-icon *ngIf="!printFileHistory">close</mat-icon>File History</button>
+      <button mat-menu-item (click)="printFileRemarks=!printFileRemarks"><mat-icon *ngIf="printFileRemarks">check</mat-icon><mat-icon *ngIf="!printFileRemarks">close</mat-icon>File Remarks</button>
+    </mat-menu>
+  <button mat-raised-button style="float:right;">Print</button>&nbsp;
+  <button mat-raised-button [matMenuTriggerFor]="gotoMenu" style="float:right;">Go to</button>
+    <mat-menu #gotoMenu="matMenu" yPosition="below">
+      <button mat-menu-item (click)="goTo('dispute-details')">Dispute Details</button>
+      <button mat-menu-item (click)="goTo('uploaded-documents')">Uploaded Documents</button>
+      <button mat-menu-item (click)="goTo('file-history')">File History</button>
+      <button mat-menu-item (click)="goTo('file-remarks')">File Remarks</button>
+    </mat-menu>
+</div><br />
+<div [ngClass]="{'contact-info' : type === 'ticket'}" class="info-component"  [ngStyle]="{'height.px': infoHeight}">
+
   <a (click)="onBackClicked()" style="color: #48afe5">
     <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
   </a>
@@ -7,6 +25,7 @@
       <h3>Retrieving ticket information...</h3>
     </span>
   </div>
+  <a id="dispute-details"></a>
   <div *ngIf="lastUpdatedJJDispute && retrieving === false">
     <div style="float:inline">
       <span style="float:left">
@@ -14,8 +33,7 @@
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
-            - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
-          </b></h1>
+            - {{ lastUpdatedJJDispute.occamDisputantName }}         </b></h1>
       </span>
       <span style="float:right">
         <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
@@ -30,11 +48,11 @@
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.surname }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.givenNames }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Location of Offence</p>
@@ -63,7 +81,7 @@
         <ng-container *ngIf="type !== 'ticket'">
           <span class="section-grid-cell">
             <p class="section-grid-header">Court Location Code</p>
-            <p class="section-grid-text">?????</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.courtAgenId }}</p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Court Location</p>
@@ -81,32 +99,32 @@
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.surname }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactSurname }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.givenNames }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactGivenNames }}</p>
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">Address</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.address }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Birthdate</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.birthdate | date: "MMM dd, yyyy" }}
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantBirthdate | date: "MMM dd, yyyy" }}
           </p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Prov / State of DL</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.province }}</p>
+          <p class="section-grid-text">{{ dLProvince }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Driver's Licence #</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.driversLicenceNumber }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Email</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.emailAddress }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
         </span>
       </div>
     </section><br />
@@ -160,25 +178,21 @@
         </span>
       </ng-container>
       <form [formGroup]="courtAppearanceForm" novalidate>
-        <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto">
+        <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
           <span class="section-grid-cell">
             <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">{{ courtAppearanceForm.get('appearanceTs').value | date: "MM/dd/YYYY HH:mm"
-              }}&nbsp;<button *ngIf="!isViewOnly" style="background:#fffee6" type="button"
-                (click)="updateAppearanceTs()">Now</button></p>
+            <p class="section-grid-text">{{ courtAppearanceForm.get('appearanceTs').value | date: "MM/dd/YYYY HH:mm"}}</p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Room</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="room" style="width:75px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('room').value }}</span>
+              <span>{{ courtAppearanceForm.get('room').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Reason</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="reason" style="width:75px; background:#777775" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('room').value }}</span>
+              <span>{{ courtAppearanceForm.get('room').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
@@ -213,6 +227,17 @@
             </p>
           </span>
           <span class="section-grid-cell">
+            <p class="section-grid-header">Def Att</p>
+            <p class="section-grid-text">
+              <mat-select *ngIf="!isViewOnly" formControlName="dattCd" style="background:#fffee6">
+                <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
+                <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
+                <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
+              </mat-select>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('dattCd').value }}</span>
+            </p>
+          </span>
+          <span class="section-grid-cell">
             <p class="section-grid-header">Crown</p>
             <p class="section-grid-text">
               <mat-select *ngIf="!isViewOnly" formControlName="crown" style="background:#fffee6">
@@ -225,18 +250,20 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">Seized</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="jjSeized" style="width:75px; background:#fffee6" />
+              <mat-select *ngIf="!isViewOnly" formControlName="jjSeized" style="background:#fffee6">
+                <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
+                <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
+              </mat-select>
               <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('jjSeized').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Judicial Justice</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="adjudicator" style="width:150px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('adjudicator').value }}</span>
+              <span>{{ courtAppearanceForm.get('adjudicatorName').value }}</span>
             </p>
           </span>
-          <span class="section-grid-cell" style="grid-column: span 10">
+          <span class="section-grid-cell" style="grid-column: span 11">
             <p class="section-grid-header">Comments:</p>
             <p class="section-grid-text">
               <input *ngIf="!isViewOnly" formControlName="comments" style="width:95%; background:#fffee6" />
@@ -350,8 +377,8 @@
       <textarea matInput [(ngModel)]="remarks" maxlength="1500" rows="6"
         style="background: #fffee6; width: 100%"></textarea>
     </section>
-    <div fxLayout="row" *ngIf="!isViewOnly">
-      <div *ngIf="type === 'ticket'" fxFlex="40" fxLayout="row">
+    <div fxLayout="row">
+      <div *ngIf="type === 'ticket' && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed" fxFlex="40" fxLayout="row">
         <div style="margin-right: 1rem;">
           <mat-form-field class="select-box-only">
             <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
@@ -370,16 +397,19 @@
       </div>
       <div fxFlex>
       </div>
-      <button fxFlex="30" *ngIf="type !== 'ticket' && lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons" class="large" mat-flat-button type="button" color="primary"
-        style="margin-right: 20px;" (click)="onRequireCourtHearing()">
-        Require Court Hearing
+      <button fxFlex="30" class="large" mat-flat-button type="button" color="primary"
+        style="margin-right: 20px;" (click)="onRequireCourtHearing()" *ngIf="type !== 'ticket' && lastUpdatedJJDispute.status != DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status != DisputeStatus.Accepted">
+        {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Require Court Hearing' : 'Adjourn/Continue' }}
       </button>
-      <button fxFlex="30" *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
-        style="margin-right: 20px;" (click)="onSave()">
+      <button fxFlex="30" class="large" mat-flat-button type="button" color="primary"
+        style="margin-right: 20px;" (click)="onSave()" *ngIf="type !== 'ticket' && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled].indexOf(lastUpdatedJJDispute.status) > 0">
         Save & Finish Later
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" *ngIf="lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing">
-        Submit
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()" *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) > 0">
+        Confirm
+      </button>
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed">
+        Accept
       </button>
       <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing">
         Back

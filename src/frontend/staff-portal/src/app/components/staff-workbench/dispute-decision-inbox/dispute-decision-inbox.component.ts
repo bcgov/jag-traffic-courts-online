@@ -18,6 +18,8 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
+  tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
+
   busy: Subscription;
   courtLocations: CourthouseConfig[];
   IDIR: string = "";
@@ -49,6 +51,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   filterByTeam(team: string) {
     let teamCourthouses = this.courtLocations.filter(x => (x.jjTeam === team || team === "All"));
     this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
+    this.tableHeight = this.calcTableHeight(325);
   }
 
   public ngOnInit() {
@@ -62,6 +65,10 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
   }
 
   backWorkbench(element) {
@@ -80,6 +87,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.dataSource.data.sort((a, b) => {
         if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
       });
+      this.tableHeight = this.calcTableHeight(325);
     });
   }
 }

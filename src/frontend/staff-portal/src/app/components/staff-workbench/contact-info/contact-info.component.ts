@@ -22,6 +22,7 @@ export class ContactInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
+  public infoHeight: number = window.innerHeight - 175; // less size of other fixed elements
   public provinces: ProvinceCodeValue[];
   public states: ProvinceCodeValue[];
   public bc: ProvinceCodeValue;

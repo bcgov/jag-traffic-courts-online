@@ -3,14 +3,15 @@ import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
-import { UserRepresentation } from 'app/services/auth.service';
+import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfigService } from '@config/config.service';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -23,9 +24,18 @@ export class JJDisputeComponent implements OnInit {
   @Input() isViewOnly = false;
   @Output() onBack: EventEmitter<any> = new EventEmitter();
 
+  public printDispute: boolean = true;
+  public printUploadedDocuments: boolean = true;
+  public printFileHistory: boolean = true;
+  public printFileRemarks: boolean = true;
+
   busy: Subscription;
   courtAppearanceForm: FormGroup;
+  infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
+  infoWidth: number = window.innerWidth;
   lastUpdatedJJDispute: JJDispute;
+  jjIDIR: string;
+  jjName: string;
   todayDate: Date = new Date();
   retrieving: boolean = true;
   violationDate: string = "";
@@ -35,21 +45,26 @@ export class JJDisputeComponent implements OnInit {
   remarks: string = "";
   jjList: UserRepresentation[];
   selectedJJ: string;
+  dLProvince: string;
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   RequestReduction = JJDisputedCountRequestReduction;
   HearingType = JJDisputeHearingType;
   RoPApp = JJDisputeCourtAppearanceRoPApp;
   RoPCrown = JJDisputeCourtAppearanceRoPCrown;
+  RoPDatt = JJDisputeCourtAppearanceRoPDattCd;
+  RoPSeized = JJDisputeCourtAppearanceRoPJjSeized;
   DisputeStatus = JJDisputeStatus;
   requireCourtHearingReason: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
+    private authService: AuthService,
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
-    private lookups: LookupsService
+    private lookups: LookupsService,
+    public config: ConfigService,
   ) {
     this.jjDisputeService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -58,6 +73,11 @@ export class JJDisputeComponent implements OnInit {
     this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
       this.lookups.languages$.next(response);
     });
+  }
+
+  public goTo(id: string) {
+    const element = document.getElementById(id);
+    element?.scrollIntoView(true);
   }
 
   ngOnInit() {
@@ -74,22 +94,48 @@ export class JJDisputeComponent implements OnInit {
       crown: [null],
       jjSeized: [null],
       adjudicator: [null],
-      comments: [null]
-    });;
+      comments: [null],
+      dattCd: [null],
+      adjudicatorName: [null]
+    });
+
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
+        this.jjIDIR = userProfile.idir;
+        this.jjName = userProfile.fullName;
+      }
+    })
   }
 
-  public onSubmit(): void {
-    this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;  // Send to VTC Staff for review
-    this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-    this.putJJDispute();
+  public onConfirm(): void {
+    const data: DialogOptions = {
+      titleKey: "Submit to VTC Staff?",
+      messageKey: "Are you sure this dispute is ready to be submitted to VTC Staff?",
+      actionTextKey: "Confirm",
+      actionType: "primary",
+      cancelTextKey: "Go back",
+      icon: ""
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
+            this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
+            this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;
+            this.putJJDispute();
+            this.onBackClicked();
+          });
+        }
+      });
   }
 
   onRequireCourtHearing() {
     const data: DialogOptions = {
-      titleKey: "Require court hearing?",
-      messageKey:
-        "Please enter the reason this request requires a court hearing. This information will be shared with staff only.",
-      actionTextKey: "Require court hearing",
+      titleKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ? "Require court hearing?" : "Adjourn / Continue?",
+      messageKey: this.lastUpdatedJJDispute.hearingType === this.HearingType.WrittenReasons ?
+        "Please enter the reason this request requires a court hearing. This information will be shared with staff only."
+        : "Please enter the reason this request requires an additional court hearing. This information will be shared with staff only.",
+      actionTextKey: "OK",
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
@@ -100,7 +146,7 @@ export class JJDisputeComponent implements OnInit {
         if (action?.output?.response) {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances
 
-          // udate the reason entered, reject dispute and return to TRM home
+          // update the reason entered, reject dispute and return to TRM home
           this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.requireCourtHearingReason).subscribe({
             next: response => {
               this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
@@ -131,11 +177,11 @@ export class JJDisputeComponent implements OnInit {
     }
   }
 
-  private onAccept(): void {
+  public onAccept(): void {
     const data: DialogOptions = {
       titleKey: "Submit to JUSTIN?",
       messageKey: "Are you sure this dispute is ready to be submitted to JUSTIN?",
-      actionTextKey: "Submit",
+      actionTextKey: "Accept",
       actionType: "primary",
       cancelTextKey: "Go back",
       icon: ""
@@ -144,6 +190,7 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket").subscribe(response => {
+            this.lastUpdatedJJDispute.status = this.DisputeStatus.Accepted;
             this.onBackClicked();
           });
         }
@@ -153,18 +200,21 @@ export class JJDisputeComponent implements OnInit {
   returnToJJ(): void {
     const data: DialogOptions = {
       titleKey: "Return to Judicial Justice?",
-      messageKey: "Are you sure you want to send this dispute decision to the selected judicial justice?",
+      messageKey: "Are you sure you want to send this dispute decision to the selected judicial justice? Please provide a reason why.",
       actionTextKey: "Send to jj",
       actionType: "primary",
       cancelTextKey: "Go back",
+      message: this.remarks,
       icon: ""
     };
 
-    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+    this.dialog.open(ConfirmReasonDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
-        if (action) {
+        if (action?.output?.response) {
+          this.remarks = action.output.response;
           this.jjDisputeService.apiJjTicketNumberReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
+              this.lastUpdatedJJDispute.status = this.DisputeStatus.Review;
               this.jjDisputeService.refreshDisputes.emit();
               this.onBackClicked();
             })
@@ -219,11 +269,19 @@ export class JJDisputeComponent implements OnInit {
         this.fineReductionCountsHeading = this.fineReductionCountsHeading.substring(0, this.fineReductionCountsHeading.lastIndexOf(","));
       }
 
+      let dLProvinceFound = this.config.provincesAndStates.filter(x => x.ctryId == +this.lastUpdatedJJDispute.drvLicIssuedCtryId && x.provSeqNo == +this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo);
+      this.dLProvince = dLProvinceFound.length > 0 ? dLProvinceFound[0].provNm : "Unknown";
+
       if (this.lastUpdatedJJDispute?.jjDisputeCourtAppearanceRoPs?.length > 0) {
         this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => {
           return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
         });
+        if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
+        if (!this.isViewOnly) {
+          this.courtAppearanceForm.get('adjudicator').setValue(this.jjIDIR);
+          this.courtAppearanceForm.get('adjudicatorName').setValue(this.jjName);
+        }
       }
     });
   }

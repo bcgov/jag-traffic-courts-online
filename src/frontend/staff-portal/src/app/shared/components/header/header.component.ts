@@ -58,6 +58,7 @@ export class HeaderComponent implements OnInit {
     this.authService.checkAuth().subscribe(() => {
       this.authService.isLoggedIn$.subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
+        this.fullName = this.authService.userProfile?.fullName;
       })
     })
   }

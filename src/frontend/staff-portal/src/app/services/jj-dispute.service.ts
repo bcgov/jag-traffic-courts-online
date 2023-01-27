@@ -119,7 +119,7 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<JJDispute> {
+   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
       .pipe(
         map((response: any) => {
@@ -203,6 +203,27 @@ export class JJDisputeService {
       );
   }
 
+
+  public apiJjTicketNumberConfirmPut(ticketNumber: string): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberConfirmPut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberConfirmPut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
   public get jjList$(): Observable<UserRepresentation[]> {
     return this._jjList.asObservable();
   }
@@ -229,7 +250,7 @@ export class JJDisputeService {
       .pipe(
         map((response: JJDispute) => {
           this.logger.info('jj-DisputeService::getJJDispute', response)
-          return response ? response : null
+          return response ? this.toDisplay(response) : null
         }),
         catchError((error: any) => {
           var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
@@ -256,12 +277,22 @@ export class JJDisputeService {
   }
 
   private toDisplay(jjDispute: JJDispute): JJDispute {
-    jjDispute.fullName = jjDispute.surname + ", " + jjDispute.givenNames;
+    jjDispute.contactName = jjDispute.contactSurname + ", " + (jjDispute.contactGivenName1 + jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
+    jjDispute.contactGivenNames = jjDispute.contactGivenName1 + (jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
+    jjDispute.occamDisputantName = jjDispute.occamDisputantSurnameNm + ", " + (jjDispute.occamDisputantGiven1Nm + jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
+    jjDispute.occamDisputantGivenNames = jjDispute.occamDisputantGiven1Nm + (jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
     jjDispute.isEditable = this.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
     jjDispute.jjAssignedToName = this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
     jjDispute.vtcAssignedToName = this.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo?.toUpperCase())[0]?.fullName;
+    jjDispute.address = jjDispute.addressLine1
+    + (jjDispute.addressLine2 ? ", " + jjDispute.addressLine2 : "")
+    + (jjDispute.addressLine3 ? ", " + jjDispute.addressLine3 : "")
+    + (jjDispute.addressCity ? ", " + jjDispute.addressCity: "")
+    + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
+    + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
+    + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
@@ -283,5 +314,9 @@ export interface JJDispute extends JJDisputeBase {
   room?: string;
   isEditable?: boolean;
   isCompleted?: boolean;
-  fullName?: string;
+  contactName?: string;
+  contactGivenNames?: string;
+  occamDisputantName?: string;
+  occamDisputantGivenNames?: string;
+  address?: string;
 }

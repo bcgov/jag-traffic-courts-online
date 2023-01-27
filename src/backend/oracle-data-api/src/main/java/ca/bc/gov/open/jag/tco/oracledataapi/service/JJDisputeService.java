@@ -268,7 +268,7 @@ public class JJDisputeService {
 			}
 			break;
 		case REQUIRE_COURT_HEARING:
-			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.REVIEW, JJDisputeStatus.REQUIRE_COURT_HEARING).contains(jjDisputeToUpdate.getStatus())) {
+			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.HEARING_SCHEDULED, JJDisputeStatus.REVIEW, JJDisputeStatus.CONFIRMED, JJDisputeStatus.REQUIRE_COURT_HEARING).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
@@ -331,6 +331,7 @@ public class JJDisputeService {
 
 		JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
 		jjDisputeRemark.setNote(remark);
+		jjDisputeRemark.setRemarksMadeTs(new Date());
 
 		PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
 		CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();

@@ -1,5 +1,6 @@
 export * from './boundingBox.model';
 export * from './disputantContactInformation.model';
+export * from './dispute.model';
 export * from './disputeCount.model';
 export * from './disputeCountPleaCode.model';
 export * from './disputeCountRequestCourtAppearance.model';

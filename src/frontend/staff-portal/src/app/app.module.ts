@@ -32,7 +32,6 @@ import { UpdateRequestInfoComponent } from '@components/staff-workbench/update-r
 import { PhoneUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/phone-update-request-info/phone-update-request-info.component';
 import { NameUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/name-update-request-info/name-update-request-info.component';
 import { AddressUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/address-update-request-info/address-update-request-info.component';
-import { DisputeDecisionInfoComponent } from '@components/staff-workbench/dispute-decision-info/dispute-decision-info.component';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { ContactInfoComponent } from './components/staff-workbench/contact-info/contact-info.component';
 import { TicketStatusComponent } from './components/staff-workbench/ticket-status/ticket-status.component';
@@ -81,7 +80,6 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     PhoneUpdateRequestInfoComponent,
     NameUpdateRequestInfoComponent,
     AddressUpdateRequestInfoComponent,
-    DisputeDecisionInfoComponent,
     ContactInfoComponent,
     TicketStatusComponent,
     TicketRequestComponent,

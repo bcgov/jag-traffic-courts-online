@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { Observable } from 'rxjs';
 
@@ -17,8 +16,8 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   @ViewChild(MatSort) sort = new MatSort();
 
   HearingType = JJDisputeHearingType;
-  statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
   jjAssignedToFilter: string;
+  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   filterText: string;
   data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
@@ -26,7 +25,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     "ticketNumber",
     "dateSubmitted",
     "violationDate",
-    "fullName",
+    "occamDisputantName",
     "courthouseLocation",
     "status",
   ];
@@ -35,9 +34,13 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     private jjDisputeService: JJDisputeService,
   ) {
     this.dataSource.filterPredicate = function (record, filter) {
-      return record.fullName?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1
+      return record.occamDisputantName?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1
         || record.ticketNumber?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
+  }
+
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
   }
 
   ngOnInit(): void {
@@ -56,16 +59,14 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   applyFilter() {
     this.dataSource.filter = this.filterText;
+    this.tableHeight = this.calcTableHeight(300);
   }
 
   refreshData(jjDisputes: JJDispute[]): void {
     this.data = jjDisputes;
-    // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
-    this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1 && x.hearingType === this.HearingType.CourtAppearance);
-    this.dataSource.data = this.data;
-
+    let arrayForSort = [ ... this.data ];
     // initially sort by submitted date within status
-    this.dataSource.data = this.dataSource.data.sort((a, b) => {
+    arrayForSort = arrayForSort.sort((a, b) => {
       // if they have the same status
       if (a.status === b.status) {
         if (a.submittedTs > b.submittedTs) { return 1; } else { return -1; }
@@ -76,6 +77,8 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
         if (this.jjDisputeService.jjDisputeStatusesSorted.indexOf(a.status) > this.jjDisputeService.jjDisputeStatusesSorted.indexOf(b.status)) { return 1; } else { return -1; }
       }
     });
+    this.dataSource.data = arrayForSort;
+    console.log(jjDisputes, this.dataSource.data);
 
     this.applyFilter();
   }

@@ -16,6 +16,7 @@ export class UpdateRequestInfoComponent implements OnInit {
   public initialDisputeValues: Dispute;
   public retrieving: boolean = true;
   public violationDate: string = "";
+  public infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
   public violationTime: string = "";
   public conflict: boolean = false;
   public collapseObj: any = {

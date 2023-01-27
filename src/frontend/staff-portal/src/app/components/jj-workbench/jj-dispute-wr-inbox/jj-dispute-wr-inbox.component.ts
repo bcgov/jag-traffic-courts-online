@@ -20,6 +20,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   busy: Subscription;
 
   jjIDIR: string;
+  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   HearingType = JJDisputeHearingType;
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
   statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
@@ -59,6 +60,10 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
     })
   }
 
+  calcTableHeight(heightOther) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
+  }
+
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
@@ -70,7 +75,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   getAll(): void {
     this.logger.log('JJDisputeWRInboxComponent::getJJDisputesByIDIR');
 
-    // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
+    // only show status NEW, IN_PROGRESS, REVIEW, REQUIRE_MORE_INFO
     this.data = this.data.filter(x => this.statusDisplay.indexOf(x.status) > -1 && x.hearingType === this.HearingType.WrittenReasons);
     this.dataSource.data = this.data;
 
@@ -86,5 +91,6 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
         if (this.jjDisputeService.jjDisputeStatusesSorted.indexOf(a.status) > this.jjDisputeService.jjDisputeStatusesSorted.indexOf(b.status)) { return 1; } else { return -1; }
       }
     });
+    this.tableHeight = this.calcTableHeight(300);
   }
 }

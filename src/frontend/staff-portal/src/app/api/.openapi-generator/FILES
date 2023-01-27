@@ -15,7 +15,6 @@ git_push.sh
 index.ts
 model/boundingBox.model.ts
 model/credentialRepresentation.model.ts
-model/disputantContactInformation.model.ts
 model/disputantUpdateRequest.model.ts
 model/disputantUpdateRequestStatus2.model.ts
 model/disputantUpdateRequestUpdateType.model.ts
@@ -38,9 +37,12 @@ model/federatedIdentityRepresentation.model.ts
 model/field.model.ts
 model/fileHistory.model.ts
 model/jJDispute.model.ts
+model/jJDisputeContactType.model.ts
 model/jJDisputeCourtAppearanceRoP.model.ts
 model/jJDisputeCourtAppearanceRoPApp.model.ts
 model/jJDisputeCourtAppearanceRoPCrown.model.ts
+model/jJDisputeCourtAppearanceRoPDattCd.model.ts
+model/jJDisputeCourtAppearanceRoPJjSeized.model.ts
 model/jJDisputeDisputantAttendanceType.model.ts
 model/jJDisputeHearingType.model.ts
 model/jJDisputeRemark.model.ts
