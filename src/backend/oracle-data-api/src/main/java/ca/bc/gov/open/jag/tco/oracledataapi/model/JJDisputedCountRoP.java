@@ -40,7 +40,6 @@ public class JJDisputedCountRoP extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Enumerated(EnumType.STRING)
 	private JJDisputedCountFinding finding;
 
 	/**
