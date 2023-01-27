@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Coms.Client;
+﻿using TrafficCourts.Common.Models;
+using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -48,5 +49,5 @@ public interface IComsService
     /// <param name="cancellationToken"></param>
     /// <exception cref="ObjectManagementServiceException">There was an error searching files in COMS</exception>
     /// <returns></returns>
-    Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken);
+    Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken);
 }

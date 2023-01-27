@@ -1,5 +1,7 @@
 ﻿using MassTransit;
 using Minio.DataModel.Tags;
+using System.Linq;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
@@ -82,7 +84,7 @@ public class ComsService : IComsService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
+    public async Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -90,8 +92,18 @@ public class ComsService : IComsService
 
         IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        Dictionary<Guid, string> fileData = searchResult
-            .ToDictionary(file => file.Id, file => file.FileName ?? "unknown");
+        List<FileMetadata> fileData = new();
+
+        foreach (var result in searchResult)
+        {
+            FileMetadata fileMetadata = new()
+            {
+                FileId = result.Id,
+                FileName = result.FileName
+            };
+
+            fileData.Add(fileMetadata);
+        }
 
         return fileData;
     }
@@ -103,6 +115,13 @@ public class ComsService : IComsService
         using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
+
+        // Publish a message to virus scan the newly uploaded file
+        VirusScanDocument virusScan = new()
+        {
+            DocumentId = id
+        };
+        await _bus.PublishWithLog(_logger, virusScan, cancellationToken);
 
         metadata.TryGetValue("ticket-number", out string? ticketNumber);
         if (string.IsNullOrEmpty(ticketNumber))
