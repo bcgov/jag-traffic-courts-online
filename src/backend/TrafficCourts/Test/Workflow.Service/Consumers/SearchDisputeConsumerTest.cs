@@ -25,7 +25,7 @@ public class SearchDisputeConsumerTest
     private readonly Mock<ConsumeContext<SearchDisputeRequest>> _context;
     private readonly SearchDisputeRequest _message;
     private readonly SearchDisputeResponse _expectedResponse;
-    private readonly String _mockGuid;
+    private readonly Guid _mockGuid;
 
     public SearchDisputeConsumerTest()
     {
@@ -42,7 +42,7 @@ public class SearchDisputeConsumerTest
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
         _context.Setup(_ => _.RespondAsync<SearchDisputeResponse>(_expectedResponse));
-        _mockGuid = Guid.NewGuid().ToString();
+        _mockGuid = Guid.NewGuid();
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class SearchDisputeConsumerTest
             new()
             {
                 DisputeId = 1,
-                NoticeOfDisputeGuid = _mockGuid,
+                NoticeOfDisputeGuid = _mockGuid.ToString(),
                 DisputeStatus = DisputeResultDisputeStatus.VALIDATED,
                 JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS,
                 JjDisputeHearingType = DisputeResultJjDisputeHearingType.COURT_APPEARANCE

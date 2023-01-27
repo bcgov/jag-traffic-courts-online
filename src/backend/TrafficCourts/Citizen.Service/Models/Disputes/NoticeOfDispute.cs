@@ -11,12 +11,6 @@ namespace TrafficCourts.Citizen.Service.Models.Disputes;
 public class NoticeOfDispute : Dispute
 {
     /// <summary>
-    /// The date and time the violation ticket was issue. Time must only be hours and minutes.
-    /// </summary>
-    [JsonPropertyName("issued_date")]
-    public DateTime IssuedTs { get; set; }
-
-    /// <summary>
     /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
     /// </summary>
     [JsonPropertyName("disputant_detected_ocr_issues")]

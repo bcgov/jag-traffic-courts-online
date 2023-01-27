@@ -226,6 +226,52 @@
         }
       }
     },
+    "/api/disputes/user": {
+      "get": {
+        "tags": [
+          "Disputes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": { }
+              },
+              "application/json": {
+                "schema": { }
+              },
+              "text/json": {
+                "schema": { }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/api/dispute/{guidHash}/contact": {
       "put": {
         "tags": [
@@ -896,7 +942,7 @@
           "disputant_birthdate": {
             "type": "string",
             "description": "The disputant's birthdate.",
-            "format": "date-time"
+            "format": "date"
           },
           "drivers_licence_number": {
             "type": "string",
@@ -1427,6 +1473,14 @@
           "N"
         ],
         "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }

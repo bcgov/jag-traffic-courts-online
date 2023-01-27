@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Common;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Workflow.Service.Services;
 
@@ -37,17 +38,24 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken);
                 if (searchResult is null || searchResult.Count == 0)
                 {
-                    throw new Exception("Dispute not found");
+                    throw new NullReferenceException("Dispute not found");
                 }
-                DisputeResult? result = searchResult?.OrderByDescending(d => d.DisputeId).FirstOrDefault();
-
-                await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
+                DisputeResult result = searchResult.OrderByDescending(d => d.DisputeId).First();
+                if (!String.IsNullOrEmpty(result.NoticeOfDisputeGuid))
                 {
-                    NoticeOfDisputeGuid = result?.NoticeOfDisputeGuid,
-                    DisputeStatus = result?.DisputeStatus.ToString(),
-                    JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
-                    HearingType = result?.JjDisputeHearingType?.ToString()
-                });
+                    _ = Guid.TryParse(result.NoticeOfDisputeGuid, out Guid guid);
+                    await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
+                    {
+                        NoticeOfDisputeGuid = guid,
+                        DisputeStatus = result?.DisputeStatus.ToString(),
+                        JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
+                        HearingType = result?.JjDisputeHearingType?.ToString()
+                    });
+                }
+                else
+                {
+                    throw new NullReferenceException("Dispute not found");
+                }
             }
             catch (Exception ex)
             {

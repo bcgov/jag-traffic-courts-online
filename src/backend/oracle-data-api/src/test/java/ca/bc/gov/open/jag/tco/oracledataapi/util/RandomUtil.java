@@ -204,6 +204,7 @@ public class RandomUtil {
 		dispute.setTicketNumber(UUID.randomUUID().toString());
 		dispute.setStatus(JJDisputeStatus.NEW);
 		dispute.setCourthouseLocation(randomCity());
+		dispute.setOccamDisputantSurnameNm(randomSurname());
 		dispute.setEnforcementOfficer(randomName());
 		dispute.setJjAssignedTo(randomName());
 		dispute.setViolationDate(randomDate(DateUtils.addDays(new Date(), -30), new Date())); // random date in the last 30 days

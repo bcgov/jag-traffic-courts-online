@@ -16,6 +16,13 @@ forkJoin([
     enableProdMode();
   }
 
+  authConfig.redirectUrl = window.location.origin;
+  authConfig.postLogoutRedirectUri = window.location.origin;
+
+  // Note: Authority must NOT have trailing slash
+  var authority = authConfig.authority;
+  authConfig.authority = authority.endsWith("/") ? authority.substring(0, authority.length - 1) : authority;
+
   platformBrowserDynamic([
     { provide: AppConfig, useValue: appConfig },
     { provide: AuthConfig, useValue: { config: authConfig, authWellKnownDocument } },
