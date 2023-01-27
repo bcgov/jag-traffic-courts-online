@@ -64,7 +64,6 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   refreshData(jjDisputes: JJDispute[]): void {
     this.data = jjDisputes;
-    this.dataSource.data = this.data;
     let arrayForSort = [ ... this.dataSource.data ];
     // initially sort by submitted date within status
     arrayForSort = arrayForSort.sort((a, b) => {

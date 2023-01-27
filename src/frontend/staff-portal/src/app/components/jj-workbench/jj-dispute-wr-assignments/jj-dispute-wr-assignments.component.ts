@@ -77,7 +77,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = null;
     this.dataSource.sort = this.sort;
     this.dataSource.sort.active = 'ticketNumber';
   }
@@ -160,27 +159,15 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   getAll(team: string): void {
     // filter jj disputes only show new, review, in_progress
     this.data = this.data.filter(x => (this.jjDisputeService.jjDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
-    this.data = this.data.sort((a, b) => {
-      if (((a.jjAssignedTo === this.valueOfUnassigned || !a.jjAssignedTo) && (b.jjAssignedTo === this.valueOfUnassigned || !b.jjAssignedTo))
-     || (a.jjAssignedTo !== this.valueOfUnassigned && b.jjAssignedTo !== this.valueOfUnassigned)) {
-
-      if (a.submittedTs <= b.submittedTs) return -1;
-      else return 1;
-    }
-      let firstKeyResult = 1;
-      if (a.jjAssignedTo == this.valueOfUnassigned || !a.jjAssignedTo) firstKeyResult = -1;
-      return firstKeyResult;
-    });
+    this.data.forEach(jjDispute => {
+       if (!jjDispute.jjAssignedTo) {
+         jjDispute.jjAssignedTo = this.valueOfUnassigned;
+       }
+     });
 
     this.dataSource.data = this.data;
-    this.dataSource.data.forEach(jjDispute => {
-      if (!jjDispute.jjAssignedTo) {
-        let index = this.dataSource.data.indexOf(jjDispute);
-        jjDispute.jjAssignedTo = this.valueOfUnassigned;
-        this.dataSource.data[index] = jjDispute;
-      }
-    });
-    this.dataSource.data = [... this.dataSource.data]; // trigger sort
+    this.dataSource.sort = this.sort;
+
     this.resetCounts();
 
     this.filterByTeam(team); // initialize
