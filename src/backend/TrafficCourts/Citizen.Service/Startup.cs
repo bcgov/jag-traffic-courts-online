@@ -90,7 +90,8 @@ public static class Startup
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         builder.Services.ConfigureValidatableSetting<OAuthOptions>(builder.Configuration.GetRequiredSection(OAuthOptions.Section));
-        builder.Services.AddTransient<IOAuthUserService, OAuthUserService>();
+        builder.Services.AddTransient<IOAuthUserService, OAuthUserService>()
+            .AddHttpClient<IOAuthUserService, OAuthUserService>();
 
         builder.Services.AddAuthentication(builder.Configuration);
 

@@ -194,15 +194,9 @@ public class DisputesController : ControllerBase
             var response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(message, cancellationToken);
             IActionResult result;
 
-            if (!string.IsNullOrEmpty(response.Message.NoticeOfDisputeGuid))
+            if (response.Message.NoticeOfDisputeGuid is not null)
             {
-                _logger.LogDebug("Dispute found");
-                var hex = response.Message.NoticeOfDisputeGuid;
-                if (hex == String.Empty || hex.Length != 36 || !Guid.TryParse(hex, out Guid noticeOfDisputeGuid))
-                {
-                    return BadRequest("Invalid guidHash");
-                }
-                var token = _hashids.EncodeHex(noticeOfDisputeGuid.ToString("n"));
+                var token = _hashids.EncodeHex(response.Message.NoticeOfDisputeGuid.Value.ToString("n"));
                 _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
                 _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
                 _ = Enum.TryParse(response.Message.HearingType, out JJDisputeHearingType hearingType);
@@ -253,8 +247,9 @@ public class DisputesController : ControllerBase
         try
         {
             var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            if (String.IsNullOrEmpty(token)) {
-                throw new Exception("Invalid access_token");
+            if (String.IsNullOrEmpty(token))
+            {
+                throw new UnauthorizedAccessException("Invalid access_token");
             }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
@@ -262,20 +257,24 @@ public class DisputesController : ControllerBase
                 return BadRequest("Invalid guidHash");
             }
 
-            var actionResult = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (actionResult is not OkResult)
+            var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
+            if (!String.IsNullOrEmpty(check))
             {
-                return actionResult;
+                return BadRequest(check);
             }
 
-            var user = _oAuthUserService.GetUserInfo<UserInfo>(token);
+            var user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
             var message = new GetDisputeRequest();
             message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
             var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
+            if (response is null || response.Message is null || String.IsNullOrEmpty(response.Message.TicketNumber))
+            {
+                return NotFound("Dispute not found");
+            }
 
             var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
             if (response.Message.DisputantSurname != user?.Surename
-                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd().TrimEnd() == user?.GivenNames))
+                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
             {
                 return BadRequest("Disputant not match");
             }
@@ -302,7 +301,7 @@ public class DisputesController : ControllerBase
             var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
             if (String.IsNullOrEmpty(token))
             {
-                throw new Exception("Invalid access_token");
+                throw new UnauthorizedAccessException("Invalid access_token");
             }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
@@ -310,20 +309,24 @@ public class DisputesController : ControllerBase
                 return BadRequest("Invalid guidHash");
             }
 
-            var actionResult = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (actionResult is not OkResult)
+            var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
+            if (!String.IsNullOrEmpty(check))
             {
-                return actionResult;
+                return BadRequest(check);
             }
 
-            var user = _oAuthUserService.GetUserInfo<UserInfo>(token);
+            var user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
             var message = new GetDisputeRequest();
             message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
             var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
+            if (response is null || response.Message is null || String.IsNullOrEmpty(response.Message.TicketNumber))
+            {
+                return NotFound("Dispute not found");
+            }
 
             var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
             if (response.Message.DisputantSurname != user?.Surename
-                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd().TrimEnd() == user?.GivenNames))
+                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
             {
                 return BadRequest("Disputant not match");
             }
@@ -363,9 +366,10 @@ public class DisputesController : ControllerBase
                 return BadRequest("Invalid guidHash");
             }
 
-            var actionResult = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (actionResult is not OkResult) {
-                return actionResult;
+            var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
+            if (!String.IsNullOrEmpty(check))
+            {
+                return BadRequest(check);
             }
 
             // Submit request to Workflow Service for processing.
@@ -382,7 +386,7 @@ public class DisputesController : ControllerBase
         }
     }
 
-    private async Task<IActionResult> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
+    private async Task<string> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
         // Verify Dispute exists and whose status is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
         string[] validStatuses = { DisputeStatus.NEW.ToString(), DisputeStatus.VALIDATED.ToString(), DisputeStatus.PROCESSING.ToString() };
@@ -390,19 +394,19 @@ public class DisputesController : ControllerBase
         Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
         if (response.Message?.NoticeOfDisputeGuid is null)
         {
-            return NotFound("Dispute not found");
+            return "Dispute not found";
         }
         else if (response.Message?.DisputeStatus is not null && !validStatuses.Contains(response.Message.DisputeStatus))
         {
-            return BadRequest($"Dispute has a status of {response.Message.DisputeStatus}. Expecting one of NEW, VALIDATED, or PROCESSING.");
+            return $"Dispute has a status of {response.Message.DisputeStatus}. Expecting one of NEW, VALIDATED, or PROCESSING.";
         }
         else if (response.Message?.JJDisputeStatus is not null)
         {
-            return BadRequest($"JJDispute has status of {response.Message?.JJDisputeStatus}. Must be blank.");
+            return $"JJDispute has status of {response.Message?.JJDisputeStatus}. Must be blank.";
         }
         else
         {
-            return Ok();
+            return "";
         }
     }
 }

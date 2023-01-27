@@ -1,7 +1,9 @@
 ﻿using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Common;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Workflow.Service.Services;
+using HashidsNet;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
@@ -12,11 +14,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
     {
         private readonly ILogger<SearchDisputeConsumer> _logger;
         private readonly IOracleDataApiService _oracleDataApiService;
+        private readonly IHashids _hashids;
 
-        public SearchDisputeConsumer(ILogger<SearchDisputeConsumer> logger, IOracleDataApiService oracleDataApiService)
+        public SearchDisputeConsumer(ILogger<SearchDisputeConsumer> logger, IOracleDataApiService oracleDataApiService, IHashids hashids)
         {
             _logger = logger;
             _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
+            _hashids = hashids ?? throw new ArgumentNullException(nameof(hashids));
         }
 
         /// <summary>
@@ -37,17 +41,24 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken);
                 if (searchResult is null || searchResult.Count == 0)
                 {
-                    throw new Exception("Dispute not found");
+                    throw new NoResultException("Dispute not found");
                 }
-                DisputeResult? result = searchResult?.OrderByDescending(d => d.DisputeId).FirstOrDefault();
-
-                await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
+                DisputeResult result = searchResult.OrderByDescending(d => d.DisputeId).First();
+                if (!String.IsNullOrEmpty(result.NoticeOfDisputeGuid))
                 {
-                    NoticeOfDisputeGuid = result?.NoticeOfDisputeGuid,
-                    DisputeStatus = result?.DisputeStatus.ToString(),
-                    JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
-                    HearingType = result?.JjDisputeHearingType?.ToString()
-                });
+                    _ = _hashids.TryDecodeGuid(result.NoticeOfDisputeGuid, out Guid guid);
+                    await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
+                    {
+                        NoticeOfDisputeGuid = guid,
+                        DisputeStatus = result?.DisputeStatus.ToString(),
+                        JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
+                        HearingType = result?.JjDisputeHearingType?.ToString()
+                    });
+                }
+                else
+                {
+                    throw new NoResultException("Dispute not found");
+                }
             }
             catch (Exception ex)
             {

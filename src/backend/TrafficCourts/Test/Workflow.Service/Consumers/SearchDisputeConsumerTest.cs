@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using HashidsNet;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -21,11 +22,12 @@ public class SearchDisputeConsumerTest
 
     private readonly Mock<ILogger<SearchDisputeConsumer>> _mockLogger;
     private readonly Mock<IOracleDataApiService> _oracleDataApiService;
+    private readonly Mock<IHashids> _hashids;
     private readonly SearchDisputeConsumer _consumer;
     private readonly Mock<ConsumeContext<SearchDisputeRequest>> _context;
     private readonly SearchDisputeRequest _message;
     private readonly SearchDisputeResponse _expectedResponse;
-    private readonly String _mockGuid;
+    private readonly Guid _mockGuid;
 
     public SearchDisputeConsumerTest()
     {
@@ -37,12 +39,12 @@ public class SearchDisputeConsumerTest
         _expectedResponse = new();
         _mockLogger = new();
         _oracleDataApiService = new();
-        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object);
+        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, _hashids.Object);
         _context = new();
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
         _context.Setup(_ => _.RespondAsync<SearchDisputeResponse>(_expectedResponse));
-        _mockGuid = Guid.NewGuid().ToString();
+        _mockGuid = Guid.NewGuid();
     }
 
     [Fact]
@@ -69,7 +71,7 @@ public class SearchDisputeConsumerTest
             new()
             {
                 DisputeId = 1,
-                NoticeOfDisputeGuid = _mockGuid,
+                NoticeOfDisputeGuid = _mockGuid.ToString(),
                 DisputeStatus = DisputeResultDisputeStatus.VALIDATED,
                 JjDisputeStatus = DisputeResultJjDisputeStatus.IN_PROGRESS,
                 JjDisputeHearingType = DisputeResultJjDisputeHearingType.COURT_APPEARANCE

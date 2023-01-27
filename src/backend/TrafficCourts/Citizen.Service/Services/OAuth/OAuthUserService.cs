@@ -15,28 +15,26 @@ namespace TrafficCourts.Citizen.Service.Services
     public class OAuthUserService : IOAuthUserService
     {
         private readonly Uri _userInfoEndpoint;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<OAuthUserService> _logger;
 
-        public OAuthUserService(Configuration.OAuthOptions options, ILogger<OAuthUserService> logger)
+        public OAuthUserService(Configuration.OAuthOptions options, HttpClient httpClient, ILogger<OAuthUserService> logger)
         {
             ArgumentNullException.ThrowIfNull(options);
             _userInfoEndpoint = options.UserInfoEndpoint ?? throw new ArgumentException($"{nameof(options.UserInfoEndpoint)} is required");
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public UserInfo? GetUserInfo<UserInfo>(string token)
+        public async Task<UserInfo?> GetUserInfoAsync<UserInfo>(string token, CancellationToken cancellationToken)
         {
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("Authorization", token);
-                    HttpResponseMessage response = client.GetAsync(_userInfoEndpoint).Result;
-                    response.EnsureSuccessStatusCode();
-                    var responseBody = response.Content.ReadAsStringAsync().Result;
-                    var user = Encoding.UTF8.GetString(Convert.FromBase64String(responseBody.Split(".")[1]));
-                    return JsonSerializer.Deserialize<UserInfo>(user);
-                }
+                _httpClient.DefaultRequestHeaders.Add("Authorization", token);
+                HttpResponseMessage response = await _httpClient.GetAsync(_userInfoEndpoint);
+                var responseBody = response.Content.ReadAsStringAsync().Result;
+                var user = Encoding.UTF8.GetString(Convert.FromBase64String(responseBody.Split(".")[1]));
+                return JsonSerializer.Deserialize<UserInfo>(user);
             }
             catch (Exception ex)
             {

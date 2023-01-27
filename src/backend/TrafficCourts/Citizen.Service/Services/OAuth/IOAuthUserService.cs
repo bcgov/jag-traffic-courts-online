@@ -7,10 +7,10 @@ namespace TrafficCourts.Citizen.Service.Services
         /// <summary>
         /// Get user information
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="UserInfo"></typeparam>
         /// <param name="token"></param>
-        /// <param name="context"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        UserInfo? GetUserInfo<UserInfo>(string token);
+        Task<UserInfo?> GetUserInfoAsync<UserInfo>(string token, CancellationToken cancellationToken);
     }
 }

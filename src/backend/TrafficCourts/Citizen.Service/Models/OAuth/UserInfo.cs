@@ -43,6 +43,6 @@ namespace TrafficCourts.Citizen.Service.Models.OAuth
         /// </summary>
         [JsonPropertyName("birthdate")]
         [SwaggerSchema(Format = "date")]
-        public DateTime Birthdate { get; set; }
+        public DateTime? Birthdate { get; set; }
     }
 }

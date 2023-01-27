@@ -33,14 +33,14 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 searchResult = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(context.Message.NoticeOfDisputeGuid, context.CancellationToken);
                 if (searchResult is null)
                 {
-                    throw new Exception("Dispute not found");
+                    searchResult = new Dispute();
                 }
                 await context.RespondAsync<SubmitNoticeOfDispute>(searchResult);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to process message");
-                await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse { IsError = true });
+                await context.RespondAsync<SubmitNoticeOfDispute>(new SubmitNoticeOfDispute());
             }
         }
     }
