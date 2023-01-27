@@ -3,7 +3,6 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Common;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Workflow.Service.Services;
-using HashidsNet;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
@@ -14,13 +13,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
     {
         private readonly ILogger<SearchDisputeConsumer> _logger;
         private readonly IOracleDataApiService _oracleDataApiService;
-        private readonly IHashids _hashids;
 
-        public SearchDisputeConsumer(ILogger<SearchDisputeConsumer> logger, IOracleDataApiService oracleDataApiService, IHashids hashids)
+        public SearchDisputeConsumer(ILogger<SearchDisputeConsumer> logger, IOracleDataApiService oracleDataApiService)
         {
             _logger = logger;
             _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
-            _hashids = hashids ?? throw new ArgumentNullException(nameof(hashids));
         }
 
         /// <summary>
@@ -41,12 +38,12 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken);
                 if (searchResult is null || searchResult.Count == 0)
                 {
-                    throw new NoResultException("Dispute not found");
+                    throw new NullReferenceException("Dispute not found");
                 }
                 DisputeResult result = searchResult.OrderByDescending(d => d.DisputeId).First();
                 if (!String.IsNullOrEmpty(result.NoticeOfDisputeGuid))
                 {
-                    _ = _hashids.TryDecodeGuid(result.NoticeOfDisputeGuid, out Guid guid);
+                    _ = Guid.TryParse(result.NoticeOfDisputeGuid, out Guid guid);
                     await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
                     {
                         NoticeOfDisputeGuid = guid,
@@ -57,7 +54,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 }
                 else
                 {
-                    throw new NoResultException("Dispute not found");
+                    throw new NullReferenceException("Dispute not found");
                 }
             }
             catch (Exception ex)
