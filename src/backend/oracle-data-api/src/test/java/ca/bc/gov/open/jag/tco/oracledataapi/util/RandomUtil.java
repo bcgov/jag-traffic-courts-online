@@ -208,6 +208,7 @@ public class RandomUtil {
 		dispute.setEnforcementOfficer(randomName());
 		dispute.setJjAssignedTo(randomName());
 		dispute.setViolationDate(randomDate(DateUtils.addDays(new Date(), -30), new Date())); // random date in the last 30 days
+		dispute.setAddressLine1("123 Boogie Woogie Avenue");
 		return dispute;
 	}
 
