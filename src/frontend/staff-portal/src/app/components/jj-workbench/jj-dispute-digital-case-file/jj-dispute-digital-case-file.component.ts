@@ -25,7 +25,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     "ticketNumber",
     "dateSubmitted",
     "violationDate",
-    "fullName",
+    "occamDisputantName",
     "courthouseLocation",
     "status",
   ];
@@ -34,7 +34,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     private jjDisputeService: JJDisputeService,
   ) {
     this.dataSource.filterPredicate = function (record, filter) {
-      return record.fullName?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1
+      return record.occamDisputantName?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1
         || record.ticketNumber?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
   }
@@ -65,8 +65,9 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   refreshData(jjDisputes: JJDispute[]): void {
     this.data = jjDisputes;
     this.dataSource.data = this.data;
+    let arrayForSort = [ ... this.dataSource.data ];
     // initially sort by submitted date within status
-    this.dataSource.data = this.dataSource.data.sort((a, b) => {
+    arrayForSort = arrayForSort.sort((a, b) => {
       // if they have the same status
       if (a.status === b.status) {
         if (a.submittedTs > b.submittedTs) { return 1; } else { return -1; }
@@ -77,6 +78,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
         if (this.jjDisputeService.jjDisputeStatusesSorted.indexOf(a.status) > this.jjDisputeService.jjDisputeStatusesSorted.indexOf(b.status)) { return 1; } else { return -1; }
       }
     });
+    this.dataSource.data = arrayForSort;
 
     this.applyFilter();
   }

@@ -33,7 +33,7 @@
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket Dispute</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
-            - {{ lastUpdatedJJDispute.occamDisputantGiven1Nm }}&nbsp;{{ lastUpdatedJJDispute.occamDisputantGiven2Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven2Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantGiven3Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven3Nm : ''}}{{ lastUpdatedJJDispute.occamDisputantSurnameNm}}         </b></h1>
+            - {{ lastUpdatedJJDispute.occamDisputantName }}         </b></h1>
       </span>
       <span style="float:right">
         <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
@@ -52,7 +52,7 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantGiven1Nm }}{{lastUpdatedJJDispute.occamDisputantGiven2Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven2Nm : ''}}{{lastUpdatedJJDispute.occamDisputantGiven3Nm ? ' ' + lastUpdatedJJDispute.occamDisputantGiven3Nm : ''}}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Location of Offence</p>
