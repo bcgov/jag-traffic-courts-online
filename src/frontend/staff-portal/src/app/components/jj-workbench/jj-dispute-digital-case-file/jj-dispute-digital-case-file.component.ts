@@ -64,7 +64,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   refreshData(jjDisputes: JJDispute[]): void {
     this.data = jjDisputes;
-    let arrayForSort = [ ... this.dataSource.data ];
+    let arrayForSort = [ ... this.data ];
     // initially sort by submitted date within status
     arrayForSort = arrayForSort.sort((a, b) => {
       // if they have the same status
@@ -78,6 +78,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
       }
     });
     this.dataSource.data = arrayForSort;
+    console.log(jjDisputes, this.dataSource.data);
 
     this.applyFilter();
   }

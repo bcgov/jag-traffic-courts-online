@@ -378,7 +378,7 @@
         style="background: #fffee6; width: 100%"></textarea>
     </section>
     <div fxLayout="row">
-      <div *ngIf="type === 'ticket' && isViewOnly && lastUpdatedJJDispute.status !== DisputeStatus.RequireCourtHearing" fxFlex="40" fxLayout="row">
+      <div *ngIf="type === 'ticket' && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed" fxFlex="40" fxLayout="row">
         <div style="margin-right: 1rem;">
           <mat-form-field class="select-box-only">
             <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">

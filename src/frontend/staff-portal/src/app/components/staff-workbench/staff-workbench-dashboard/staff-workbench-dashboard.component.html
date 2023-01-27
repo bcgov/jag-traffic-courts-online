@@ -21,13 +21,18 @@
           <br/>
           <app-update-request-inbox (disputeInfo)="changeDispute($event)"></app-update-request-inbox>
         </mat-tab>
+        <mat-tab #DCF>
+          <ng-template mat-tab-label><h2>DCF</h2></ng-template>
+          <br/>
+          <app-jj-dispute-digital-case-file (jjDisputeInfo)="changeJJDispute($event)" [data$]="data$"></app-jj-dispute-digital-case-file>
+        </mat-tab>
       </mat-tab-group>
     </div>
     <div *ngIf="showTicket" class="dashBody">
       <app-contact-info *ngIf="decidePopup == 'A' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-contact-info>
       <app-ticket-info *ngIf="decidePopup == 'E' && tabSelected.value === 0" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-ticket-info>
       <app-update-request-info *ngIf="tabSelected.value === 2" (backInbox)="backInbox()" [disputeInfo]="disputeInfo"></app-update-request-info>
-      <app-jj-dispute *ngIf="tabSelected.value === 1" (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo" [type]="'ticket'" [isViewOnly]="true"></app-jj-dispute>
+      <app-jj-dispute *ngIf="tabSelected.value === 1 || tabSelected.value === 3" (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo" [type]="'ticket'" [isViewOnly]="true"></app-jj-dispute>
     </div>
     <div class="flex-footer d-print-none mb-40">
       <app-footer></app-footer>
