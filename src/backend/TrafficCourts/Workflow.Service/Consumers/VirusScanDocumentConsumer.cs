@@ -1,7 +1,4 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Net;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
