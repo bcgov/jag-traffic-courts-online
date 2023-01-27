@@ -165,7 +165,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(detachmentLocation, target.getPoliceDetachment());
 		assertEquals(disputantBirthDt, target.getDisputantBirthdate());
 		assertEquals(disputantDrvLicNumber, target.getDriversLicenceNumber());
-		assertEquals(disputantSurname, target.getSurname());
 		assertEquals(disputeStatus, target.getStatus());
 		assertEquals(drvLicIssuedCtryId, target.getDrvLicIssuedCtryId());
 		assertEquals(drvLicIssuedProvSeqNo, target.getDrvLicIssuedProvSeqNo());
@@ -316,29 +315,27 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(countCreatedBy, jjDisputedCount.getCreatedBy());
 		assertEquals(countModifedTs, jjDisputedCount.getModifiedTs());
 		assertEquals(countModifiedBy, jjDisputedCount.getModifiedBy());
-		assertEquals(appearanceChargeCountId, jjDisputedCount.getAppearanceChargeCountId());
-		assertEquals(courtAppearanceId, jjDisputedCount.getCourtAppearanceId());
-		assertEquals(findingResultCd, jjDisputedCount.getFindingResultCd());
-		assertEquals(lesserChargeDescTxt, jjDisputedCount.getLesserChargeDesc());
-		assertEquals(suspSntcProbationDurtnTxt, jjDisputedCount.getSuspSntcProbationDurtn());
-		assertEquals(suspSntcProbationCondsTxt, jjDisputedCount.getSuspSntcProbationConds());
-		assertEquals(jailDurationTxt, jjDisputedCount.getJailDuration());
-		assertEquals(jailIntermittentYn, jjDisputedCount.getJailIntermittent());
-		assertEquals(probationDurationTxt, jjDisputedCount.getProbationDuration());
-		assertEquals(probationConditionsTxt, jjDisputedCount.getProbationConditions());
-		assertEquals(drivingProhibDurationTxt, jjDisputedCount.getDrivingProhibDuration());
-		assertEquals(drivingProhibMvaSectionTxt, jjDisputedCount.getDrivingProhibMvaSection());
-		assertEquals(dismissedYn, jjDisputedCount.getDismissed());
-		assertEquals(dismissedForWantProsecYn, jjDisputedCount.getDismissedForWantProsec());
-		assertEquals(withdrawnYn, jjDisputedCount.getWithdrawn());
-		assertEquals(abatementYn, jjDisputedCount.getAbatement());
-		assertEquals(stayOfProceedingsByTxt, jjDisputedCount.getStayOfProceedingsBy());
-		assertEquals(otherTxt, jjDisputedCount.getOtherTxt());
-		assertEquals(remarksTxt, jjDisputedCount.getRemarksTxt());
-		assertEquals(accEntDtm, jjDisputedCount.getAccEntDtm());
-		assertEquals(accEntUserId, jjDisputedCount.getAccEntUserId());
-		assertEquals(accUpdDtm, jjDisputedCount.getAccUpdDtm());
-		assertEquals(accUpdUserId, jjDisputedCount.getAccUpdUserId());
+		assertEquals(appearanceChargeCountId, jjDisputedCount.getJjDisputedCountRoP().getId());
+		assertEquals(findingResultCd, jjDisputedCount.getJjDisputedCountRoP().getFinding());
+		assertEquals(lesserChargeDescTxt, jjDisputedCount.getJjDisputedCountRoP().getLesserDescription());
+		assertEquals(suspSntcProbationDurtnTxt, jjDisputedCount.getJjDisputedCountRoP().getSsProbationDuration());
+		assertEquals(suspSntcProbationCondsTxt, jjDisputedCount.getJjDisputedCountRoP().getSsProbationConditions());
+		assertEquals(jailDurationTxt, jjDisputedCount.getJjDisputedCountRoP().getJailDuration());
+		assertEquals(jailIntermittentYn, jjDisputedCount.getJjDisputedCountRoP().getJailIntermittent());
+		assertEquals(probationDurationTxt, jjDisputedCount.getJjDisputedCountRoP().getProbationDuration());
+		assertEquals(probationConditionsTxt, jjDisputedCount.getJjDisputedCountRoP().getProbationConditions());
+		assertEquals(drivingProhibDurationTxt, jjDisputedCount.getJjDisputedCountRoP().getDrivingProhibition());
+		assertEquals(drivingProhibMvaSectionTxt, jjDisputedCount.getJjDisputedCountRoP().getDrivingProhibitionMVASection());
+		assertEquals(dismissedYn, jjDisputedCount.getJjDisputedCountRoP().getDismissed());
+		assertEquals(dismissedForWantProsecYn, jjDisputedCount.getJjDisputedCountRoP().getForWantOfProsecution());
+		assertEquals(withdrawnYn, jjDisputedCount.getJjDisputedCountRoP().getWithdrawn());
+		assertEquals(abatementYn, jjDisputedCount.getJjDisputedCountRoP().getAbatement());
+		assertEquals(stayOfProceedingsByTxt, jjDisputedCount.getJjDisputedCountRoP().getStayOfProceedingsBy());
+		assertEquals(otherTxt, jjDisputedCount.getJjDisputedCountRoP().getOther());
+		assertEquals(accEntDtm, jjDisputedCount.getJjDisputedCountRoP().getCreatedTs());
+		assertEquals(accEntUserId, jjDisputedCount.getJjDisputedCountRoP().getCreatedBy());
+		assertEquals(accUpdDtm, jjDisputedCount.getJjDisputedCountRoP().getModifiedTs());
+		assertEquals(accUpdUserId, jjDisputedCount.getJjDisputedCountRoP().getModifiedBy());
 
 	}
 
