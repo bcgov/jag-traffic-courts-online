@@ -107,7 +107,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		});
 	}
 	@ParameterizedTest
-	@EnumSource(value = JJDisputeStatus.class, names = { "NEW", "IN_PROGRESS", "REVIEW", "REQUIRE_COURT_HEARING" })
+	@EnumSource(value = JJDisputeStatus.class, names = { "NEW", "IN_PROGRESS", "REVIEW", "HEARING_SCHEDULED", "CONFIRMED", "REQUIRE_COURT_HEARING" })
 	void testSetStatusToREQUIRE_COURT_HEARING_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REQUIRE_COURT_HEARING);
@@ -115,7 +115,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = JJDisputeStatus.class, names = { "ACCEPTED", "CONFIRMED", "DATA_UPDATE", "REQUIRE_MORE_INFO" })
+	@EnumSource(value = JJDisputeStatus.class, names = { "ACCEPTED", "DATA_UPDATE", "REQUIRE_MORE_INFO" })
 	void testSetStatusToREQUIRE_COURT_HEARING_405(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REQUIRE_COURT_HEARING);
