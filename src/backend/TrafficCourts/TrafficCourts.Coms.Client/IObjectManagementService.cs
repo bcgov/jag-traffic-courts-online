@@ -21,10 +21,10 @@ public interface IObjectManagementService
     /// <summary>
     /// Updates a file in the object management service.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="file"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="id">The system generated file identifier to update.</param>
+    /// <param name="file">The file object to update.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous update operation.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="file"/> is null.</exception>
     /// <exception cref="MetadataInvalidKeyException">A key contains an invalid character</exception>
     /// <exception cref="MetadataTooLongException">The total length of the metadata is too long</exception>
@@ -36,30 +36,30 @@ public interface IObjectManagementService
     Task UpdateFileAsync(Guid id, File file, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a file from the object management service.
+    /// Deletes a file from the object management service. 
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="id">The system generated file identifier to delete.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous delete operation.</returns>
     /// <exception cref="ObjectManagementServiceException">Error executing the service call.</exception>
     Task DeleteFileAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// 
+    /// Gets the specified file from the object management service. 
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">The system generated file identifier to get.</param>
     /// <param name="includeTags"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>The specified file.</returns>
     /// <exception cref="ObjectManagementServiceException"></exception>
     Task<File> GetFileAsync(Guid id, bool includeTags, CancellationToken cancellationToken);
 
     /// <summary>
-    /// 
+    /// Searches for files in the the object management service. 
     /// </summary>
-    /// <param name="parameters"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <param name="parameters">The search parameters used to search for matching files.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>The collection of found files.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is null.</exception>
     /// <exception cref="MetadataInvalidKeyException">An invalid metadata key was supplied.</exception>
     /// <exception cref="MetadataTooLongException">The total length of the metadata was too long.</exception>
