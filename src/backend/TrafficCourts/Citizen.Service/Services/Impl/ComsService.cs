@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 
@@ -65,7 +66,7 @@ public class ComsService : IComsService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task<Dictionary<Guid, string>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
+    public async Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -73,8 +74,18 @@ public class ComsService : IComsService
 
         IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        Dictionary<Guid, string> fileData = searchResult
-            .ToDictionary(file => file.Id, file => file.FileName ?? "unknown");
+        List<FileMetadata> fileData = new();
+
+        foreach (var result in searchResult)
+        {
+            FileMetadata fileMetadata = new()
+            {
+                FileId = result.Id,
+                FileName = result.FileName
+            };
+
+            fileData.Add(fileMetadata);
+        }
 
         return fileData;
     }
@@ -89,14 +100,19 @@ public class ComsService : IComsService
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
+        // Publish a message to virus scan the newly uploaded file
+        VirusScanDocument virusScan = new()
+        {
+            DocumentId = id
+        };
+        await _bus.PublishWithLog(_logger, virusScan, cancellationToken);
+
         metadata.TryGetValue("ticket-number", out string? ticketNumber);
         if (string.IsNullOrEmpty(ticketNumber))
         {
             ticketNumber = "unknown";
             _logger.LogDebug("ticket-number value from metadata is empty");
         }
-
-        // TODO: Publish a message to virus scan the uploaded document when the virus scan consumer would be added
 
         // Save file upload event to file history
         SaveFileHistoryRecord fileHistoryRecord = new();

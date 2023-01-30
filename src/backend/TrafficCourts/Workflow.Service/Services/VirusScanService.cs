@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Services
             catch (ApiException ex)
             {
                 _logger.LogError(ex, "Could not scan the file for viruses");
-                throw ex;
+                throw;
             }
         }
     }
