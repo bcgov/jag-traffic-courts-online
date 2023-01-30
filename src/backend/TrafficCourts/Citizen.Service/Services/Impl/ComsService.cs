@@ -66,6 +66,30 @@ public class ComsService : IComsService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
+    public async Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Getting the file through COMS");
+
+        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
+
+        Dictionary<string, string> metadata = comsFile.Metadata;
+
+        if (!metadata.ContainsKey("virus-scan-status"))
+        {
+            _logger.LogError("Could not download the document because metadata does not contain the key: virus-scan-status");
+            throw new ObjectManagementServiceException("File could not be downloaded due to the missing metadata key: virus-scan-status");
+        }
+
+        metadata.TryGetValue("virus-scan-status", out string? scanStatus);
+        if (!string.IsNullOrEmpty(scanStatus) && scanStatus != "clean")
+        {
+            _logger.LogDebug("Trying to download unscanned or virus detected file");
+            throw new ObjectManagementServiceException($"File could not be downloaded due to virus scan status. Virus scan status of the file is {scanStatus}");
+        }
+
+        return comsFile;
+    }
+
     public async Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");

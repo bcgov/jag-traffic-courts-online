@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
 using TrafficCourts.Staff.Service.Services;
 
