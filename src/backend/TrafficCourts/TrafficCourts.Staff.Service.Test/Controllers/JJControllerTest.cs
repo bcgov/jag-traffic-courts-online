@@ -5,6 +5,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Staff.Service.Controllers;
