@@ -12,6 +12,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
@@ -41,6 +42,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.issuedDt", target = "issuedTs")
 	@Mapping(source = "dispute.submittedDt", target = "submittedTs")
 	@Mapping(source = "dispute.disputantClientId", target = "disputantClientId")
+	@Mapping(source = "dispute.contactTypeCd", target = "contactType", qualifiedByName="mapContactType")
 	@Mapping(source = "dispute.disputantSurnameNm", target = "disputantSurname")
 	@Mapping(source = "dispute.disputantGiven1Nm", target = "disputantGivenName1")
 	@Mapping(source = "dispute.disputantGiven2Nm", target = "disputantGivenName2")
@@ -163,6 +165,17 @@ public interface DisputeMapper {
 		for (DisputeStatus disputeStatus : values) {
 			if (disputeStatus.toShortName().equals(statusShortCd)) {
 				return disputeStatus;
+			}
+		}
+		return null;
+	}
+	
+	@Named("mapContactType")
+	public ContactType mapContactType(String statusShortCd) {
+		ContactType[] values = ContactType.values();
+		for (ContactType contactType : values) {
+			if (contactType.getShortName().equals(statusShortCd)) {
+				return contactType;
 			}
 		}
 		return null;

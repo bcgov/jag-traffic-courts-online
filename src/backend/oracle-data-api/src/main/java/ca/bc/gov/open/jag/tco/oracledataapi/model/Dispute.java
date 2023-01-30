@@ -92,6 +92,11 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String disputantGivenName1;
+	
+	@Column
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private ContactType contactType;
 
 	/**
 	 * Second given name of the disputant

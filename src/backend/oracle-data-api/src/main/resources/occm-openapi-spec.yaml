@@ -652,6 +652,9 @@ components:
         workPhoneNumberTxt:
           type: string
           format: nullable
+        contactTypeCd:
+          type: string
+          
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     DisputeCount:

@@ -295,6 +295,7 @@ public class JJDispute extends Auditable<String> {
 
 	@Column
 	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
 	private ContactType contactType;
 
 	@Column
