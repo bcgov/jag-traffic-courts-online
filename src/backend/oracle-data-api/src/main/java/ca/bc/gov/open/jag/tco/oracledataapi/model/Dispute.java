@@ -60,7 +60,7 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 50)
 	@Schema(nullable = false)
 	private String ticketNumber;
-	
+
 	/**
 	 * The date and time the violation ticket was issue. Time must only be hours and
 	 * minutes. This should always be in UTC date-time (ISO 8601) format
@@ -340,13 +340,56 @@ public class Dispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String officerPin;
 
+	@Column(nullable = false)
+	@Schema(nullable = false)
+	private ContactType contactTypeCd;
+
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo requestCourtAppearanceYn;
+
+	/** Can only be specified if ContantType is L */
+	@Column(length = 200, nullable = true)
+	@Schema(nullable = true)
+	private String contactLawFirmNm;
+
+	/** Can only be specified if ContantType is L or O */
+	@Column(length = 30, nullable = true)
+	@Schema(nullable = true)
+	private String contactGiven1Nm;
+
+	/** Can only be specified if ContantType is L or O */
+	@Column(length = 30, nullable = true)
+	@Schema(nullable = true)
+	private String contactGiven2Nm;
+
+	/** Can only be specified if ContantType is L or O */
+	@Column(length = 30, nullable = true)
+	@Schema(nullable = true)
+	private String contactGiven3Nm;
+
+	/** Can only be specified if ContantType is L or O */
+	@Column(length = 30, nullable = true)
+	@Schema(nullable = true)
+	private String contactSurnameNm;
+
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date appearanceDtm;
+
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo appearanceLessThan14DaysYn;
+
 	/**
 	 * Detachment location
 	 */
 	@Column(length = 150)
 	@Schema(nullable = true)
 	private String detachmentLocation;
-
 
 	/**
 	 * The disputant requires spoken language interpreter. The language name is

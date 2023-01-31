@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
@@ -30,14 +31,14 @@ class DisputeServiceH2Test extends BaseTestSuite {
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW", "REJECTED", "VALIDATED" })
-	void testSetStatusToPROCESSING_200(DisputeStatus disputeStatus) {
+	public void testSetStatusToPROCESSING_200(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.PROCESSING);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING" })
-	void testSetStatusToPROCESSING_405(DisputeStatus disputeStatus) {
+	public void testSetStatusToPROCESSING_405(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.PROCESSING);
@@ -46,14 +47,14 @@ class DisputeServiceH2Test extends BaseTestSuite {
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW" })
-	void testSetStatusToVALIDATED_200(DisputeStatus disputeStatus) {
+	public void testSetStatusToVALIDATED_200(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.VALIDATED);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "VALIDATED" })
-	void testSetStatusToVALIDATED_405(DisputeStatus disputeStatus) {
+	public void testSetStatusToVALIDATED_405(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.VALIDATED);
@@ -62,14 +63,14 @@ class DisputeServiceH2Test extends BaseTestSuite {
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW", "VALIDATED" })
-	void testSetStatusToREJECTED_200(DisputeStatus disputeStatus) {
+	public void testSetStatusToREJECTED_200(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.REJECTED);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED" })
-	void testSetStatusToREJECTED_405(DisputeStatus disputeStatus) {
+	public void testSetStatusToREJECTED_405(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.REJECTED);
@@ -78,14 +79,14 @@ class DisputeServiceH2Test extends BaseTestSuite {
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW", "PROCESSING", "REJECTED", "VALIDATED" })
-	void testSetStatusToCANCELLED_200(DisputeStatus disputeStatus) {
+	public void testSetStatusToCANCELLED_200(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.CANCELLED);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED" })
-	void testSetStatusToCANCELLED_405(DisputeStatus disputeStatus) {
+	public void testSetStatusToCANCELLED_405(DisputeStatus disputeStatus) {
 		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.CANCELLED);
@@ -93,7 +94,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	}
 
 	@Test
-	void testSetStatusToNEW_405() {
+	public void testSetStatusToNEW_405() {
 		Long id = saveDispute(DisputeStatus.NEW);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.NEW);
@@ -101,7 +102,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	}
 
 	@Test
-	void testSetStatusToNULL_405() {
+	public void testSetStatusToNULL_405() {
 		Long id = saveDispute(null);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, null);
@@ -148,6 +149,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	private Long saveDispute(DisputeStatus disputeStatus) {
 		Dispute dispute = new Dispute();
 		dispute.setStatus(disputeStatus);
+		dispute.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		return disputeRepository.save(dispute).getDisputeId();
 	}
@@ -157,6 +159,7 @@ class DisputeServiceH2Test extends BaseTestSuite {
 
 		Dispute dispute = new Dispute();
 		dispute.setStatus(DisputeStatus.NEW);
+		dispute.setContactTypeCd(ContactType.INDIVIDUAL);
 		dispute.setNoticeOfDisputeGuid(noticeOfDisputeGuid);
 		return disputeRepository.save(dispute);
 	}

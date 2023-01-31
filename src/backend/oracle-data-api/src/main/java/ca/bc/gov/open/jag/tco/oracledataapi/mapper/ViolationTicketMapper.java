@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ShortNamedEnum;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
@@ -37,6 +38,15 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputeStatusTypeCd", source = "status", qualifiedByName="mapDisputeStatus")
 	@Mapping(target = "dispute.issuedDt", source = "issuedTs")
 	@Mapping(target = "dispute.submittedDt", source = "submittedTs")
+	@Mapping(target = "dispute.contactTypeCd", constant = "I")            // TODO: source = "contactTypeCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(target = "dispute.contactLawFirmNm", source = "contactLawFirmNm")
+	@Mapping(target = "dispute.contactGiven1Nm", source = "contactGiven1Nm")
+	@Mapping(target = "dispute.contactGiven2Nm", source = "contactGiven2Nm")
+	@Mapping(target = "dispute.contactGiven3Nm", source = "contactGiven3Nm")
+	@Mapping(target = "dispute.contactSurnameNm", source = "contactSurnameNm")
+	@Mapping(target = "dispute.appearanceDtm", source = "appearanceDtm")
+	@Mapping(target = "dispute.appearanceLessThan14Days", source = "appearanceLessThan14DaysYn")
+	@Mapping(target = "dispute.requestCourtAppearanceYn", constant = "Y") // TODO: source = "requestCourtAppearanceYn")
 	@Mapping(target = "dispute.disputantClientId", source = "disputantClientId")
 	@Mapping(target = "dispute.disputantSurnameNm", source = "disputantSurname")
 	@Mapping(target = "dispute.disputantGiven1Nm", source = "disputantGivenName1")
@@ -58,7 +68,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.noticeOfDisputeGuid", source = "noticeOfDisputeGuid")
 	@Mapping(target = "dispute.emailVerifiedYn", source = "emailAddressVerified", qualifiedByName="mapBooleanToYn")
 	@Mapping(target = "dispute.filingDt", source = "filingDate")
-	@Mapping(target = "dispute.courtAgenId", constant = "19227.0734") // TODO: this field should be moved to ViolationTicket table 
+	@Mapping(target = "dispute.courtAgenId", constant = "19227.0734") // TODO: this field should be moved to ViolationTicket table
 	@Mapping(target = "dispute.representedByLawyerYn", source = "representedByLawyer")
 	@Mapping(target = "dispute.lawFirmNm", source = "lawFirmName")
 	// After mapping method to parse address source into multiple address fields
@@ -163,6 +173,11 @@ public interface ViolationTicketMapper {
 	@Named("mapDisputeStatus")
 	default String mapDisputeStatus(DisputeStatus status) {
 		return status.toShortName();
+	}
+
+	@Named("mapShortNamedEnum")
+	default String mapShortNamedEnum(ShortNamedEnum code) {
+		return code.getShortName();
 	}
 
 	/**

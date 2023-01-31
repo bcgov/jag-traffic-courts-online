@@ -5128,6 +5128,36 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("officerPin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OfficerPin { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("contactTypeCd", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public DisputeContactTypeCd ContactTypeCd { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("requestCourtAppearanceYn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public DisputeRequestCourtAppearanceYn? RequestCourtAppearanceYn { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactLawFirmNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactLawFirmNm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactGiven1Nm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactGiven1Nm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactGiven2Nm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactGiven2Nm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactGiven3Nm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactGiven3Nm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contactSurnameNm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ContactSurnameNm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("appearanceDtm", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? AppearanceDtm { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("appearanceLessThan14DaysYn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public DisputeAppearanceLessThan14DaysYn? AppearanceLessThan14DaysYn { get; set; }
+
         [Newtonsoft.Json.JsonProperty("detachmentLocation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string DetachmentLocation { get; set; }
 
@@ -6018,6 +6048,54 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum DisputeRepresentedByLawyer
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum DisputeContactTypeCd
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"INDIVIDUAL")]
+        INDIVIDUAL = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"LAWYER")]
+        LAWYER = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"OTHER")]
+        OTHER = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum DisputeRequestCourtAppearanceYn
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum DisputeAppearanceLessThan14DaysYn
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
