@@ -2,15 +2,18 @@
 
 public class VirusScanResult
 {
+    /// <summary>
+    /// The virus scan status.
+    /// </summary>
     public VirusScanStatus Status { get; set; }
 
     /// <summary>
-    /// Will be setif the <see cref="Status"/> is <see cref="VirusScanStatus.Error"/>, otherwise null.
+    ///  If the status is Error, the error message , otherwise null.
     /// </summary>
     public string? Error { get; set; }
 
     /// <summary>
-    /// Will be setif the <see cref="Status"/> is <see cref="VirusScanStatus.Infected"/>, otherwise null.
+    /// If the status is Infected, the virus name, otherwise null.
     /// </summary>
     public string? VirusName { get; set; }
 }

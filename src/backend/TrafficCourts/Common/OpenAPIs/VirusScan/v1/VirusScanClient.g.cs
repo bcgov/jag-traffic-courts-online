@@ -51,7 +51,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The virus scan operation completed successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ScanResponse> ScanFileAsync(System.IO.Stream scanRequest);
+        System.Threading.Tasks.Task<VirusScanResult> VirusScanAsync(FileParameter file);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -62,7 +62,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The virus scan operation completed successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<ScanResponse> ScanFileAsync(System.IO.Stream scanRequest, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<VirusScanResult> VirusScanAsync(FileParameter file, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Gets the ClamAV server and databas version
@@ -72,7 +72,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The version of ClamAV was retrieved successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<VersionResponse> VersionAsync();
+        System.Threading.Tasks.Task<GetVersionResult> VersionAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -83,7 +83,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The version of ClamAV was retrieved successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<VersionResponse> VersionAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<GetVersionResult> VersionAsync(System.Threading.CancellationToken cancellationToken);
 
     }
 
@@ -208,9 +208,9 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The virus scan operation completed successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<ScanResponse> ScanFileAsync(System.IO.Stream scanRequest)
+        public virtual System.Threading.Tasks.Task<VirusScanResult> VirusScanAsync(FileParameter file)
         {
-            return ScanFileAsync(scanRequest, System.Threading.CancellationToken.None);
+            return VirusScanAsync(file, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -222,11 +222,8 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The virus scan operation completed successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<ScanResponse> ScanFileAsync(System.IO.Stream scanRequest, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<VirusScanResult> VirusScanAsync(FileParameter file, System.Threading.CancellationToken cancellationToken)
         {
-            if (scanRequest == null)
-                throw new System.ArgumentNullException("scanRequest");
-
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("v1/clamav/scan");
 
@@ -236,11 +233,23 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var content_ = new System.Net.Http.StreamContent(scanRequest);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("multipart/form-data");
+                    var boundary_ = System.Guid.NewGuid().ToString();
+                    var content_ = new System.Net.Http.MultipartFormDataContent(boundary_);
+                    content_.Headers.Remove("Content-Type");
+                    content_.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; boundary=" + boundary_);
+
+                    if (file == null)
+                        throw new System.ArgumentNullException("file");
+                    else
+                    {
+                        var content_file_ = new System.Net.Http.StreamContent(file.Data);
+                        if (!string.IsNullOrEmpty(file.ContentType))
+                            content_file_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse(file.ContentType);
+                        content_.Add(content_file_, "file", file.FileName ?? "file");
+                    }
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -265,7 +274,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<ScanResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<VirusScanResult>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -276,7 +285,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                         if (status_ == 500)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("There was an internal error virus scanning the file.", status_, responseText_, headers_, null);
+                            throw new ApiException("There was an error scanning the file for virus.", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -306,7 +315,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The version of ClamAV was retrieved successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<VersionResponse> VersionAsync()
+        public virtual System.Threading.Tasks.Task<GetVersionResult> VersionAsync()
         {
             return VersionAsync(System.Threading.CancellationToken.None);
         }
@@ -320,7 +329,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </remarks>
         /// <returns>The version of ClamAV was retrieved successfully.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<VersionResponse> VersionAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<GetVersionResult> VersionAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("v1/clamav/version");
@@ -332,7 +341,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -357,7 +366,7 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<VersionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<GetVersionResult>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -367,12 +376,8 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                         else
                         if (status_ == 500)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<VersionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<VersionResponse>("There was an error getting the version from ClamAV.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("There was an error getting the version from ClamAV.", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -494,12 +499,54 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         }
     }
 
+    /// <summary>
+    /// The virus scanner version details.
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ScanResponse
+    public partial class GetVersionResult
     {
         /// <summary>
-        /// The virus scan status.
+        /// The version of the Clam AV server software.
         /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("version")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Version { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("definition")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public VirusDefinitionVersion Definition { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class VirusDefinitionVersion
+    {
+        /// <summary>
+        /// The version of the virus definition signatures.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("version")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Version { get; set; }
+
+        /// <summary>
+        /// The date of the virus definition signatures.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("date")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.DateTimeOffset Date { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class VirusScanResult
+    {
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
 
@@ -508,7 +555,16 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         public VirusScanStatus Status { get; set; }
 
         /// <summary>
-        /// The virus name if the status is Infected.
+        /// If the status is Error, the error message , otherwise null.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("error")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Error { get; set; }
+
+        /// <summary>
+        /// If the status is Infected, the virus name, otherwise null.
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("virusName")]
@@ -522,64 +578,42 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
     public enum VirusScanStatus
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Unknown")]
-        Unknown = 0,
-
         [System.Runtime.Serialization.EnumMember(Value = @"NotInfected")]
-        NotInfected = 1,
+        NotInfected = 0,
 
         [System.Runtime.Serialization.EnumMember(Value = @"Infected")]
-        Infected = 2,
+        Infected = 1,
 
         [System.Runtime.Serialization.EnumMember(Value = @"Error")]
-        Error = 3,
+        Error = 2,
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ScanRequest
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FileParameter
     {
-        /// <summary>
-        /// The file to scan for viruses
-        /// </summary>
+        public FileParameter(System.IO.Stream data)
+            : this (data, null, null)
+        {
+        }
 
-        [System.Text.Json.Serialization.JsonPropertyName("file")]
+        public FileParameter(System.IO.Stream data, string fileName)
+            : this (data, fileName, null)
+        {
+        }
 
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public byte[] File { get; set; }
+        public FileParameter(System.IO.Stream data, string fileName, string contentType)
+        {
+            Data = data;
+            FileName = fileName;
+            ContentType = contentType;
+        }
 
-    }
+        public System.IO.Stream Data { get; private set; }
 
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VersionResponse
-    {
-        /// <summary>
-        /// The version of the Clam AV server.
-        /// </summary>
+        public string FileName { get; private set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("softwareVersion")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string SoftwareVersion { get; set; }
-
-        /// <summary>
-        /// The version of the signatures.
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("databaseVersion")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string DatabaseVersion { get; set; }
-
-        /// <summary>
-        /// The date of the signatures.
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("databaseDate")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.DateTimeOffset? DatabaseDate { get; set; }
-
+        public string ContentType { get; private set; }
     }
 
 

@@ -4,6 +4,9 @@ using BCGov.VirusScan.Api.Services;
 using OpenTelemetry;
 using BCGov.VirusScan.Api.Monitoring;
 using OpenTelemetry.Metrics;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

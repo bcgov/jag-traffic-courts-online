@@ -12,13 +12,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
     /// </summary>
     public class VirusScanDocumentConsumer : IConsumer<VirusScanDocument>
     {
-        private readonly IVirusScanService _virusScanService;
+        private readonly IVirusScanClient _virusScan;
         private readonly IComsService _comsService;
         private readonly ILogger<VirusScanDocumentConsumer> _logger;
 
-        public VirusScanDocumentConsumer(IVirusScanService virusScanService, IComsService comsService, ILogger<VirusScanDocumentConsumer> logger)
+        public VirusScanDocumentConsumer(IVirusScanClient virusScan, IComsService comsService, ILogger<VirusScanDocumentConsumer> logger)
         {
-            _virusScanService = virusScanService ?? throw new ArgumentNullException(nameof(virusScanService));
+            _virusScan = virusScan ?? throw new ArgumentNullException(nameof(virusScan));
             _comsService = comsService ?? throw new ArgumentNullException(nameof(comsService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -38,14 +38,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 Coms.Client.File file = await _comsService.GetFileAsync(documentId, cancellationToken);
 
                 var stream = file.Data;
-                // Reset position to the beginning of the stream
-                stream.Position = 0;
+                var parameter = new Common.OpenAPIs.VirusScan.V1.FileParameter(stream);
 
                 // Virus scan the file and get scan result
                 _logger.LogDebug("Sending the file: {fileId} for virus scan", file.Id);
-                ScanResponse scanResult = await _virusScanService.ScanDocumentAsync(stream, cancellationToken);
+                VirusScanResult scanResult = await _virusScan.VirusScanAsync(parameter, cancellationToken);
 
-                if (VirusScanStatus.NotInfected.Equals(scanResult.Status))
+                if (scanResult.Status == VirusScanStatus.NotInfected)
                 {
                     _logger.LogDebug("No viruses detected as a result of the scan");
                     // Add a "clean" metadata tag to the document if no viruses detected
@@ -53,7 +52,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     // In case the document re-scanned and it used to be infected then remove virus-name
                     file.Metadata.Remove("virus-name");
                 }
-                else if (VirusScanStatus.Infected.Equals(scanResult.Status))
+                else if (scanResult.Status == VirusScanStatus.Infected)
                 {
                     string virusName = scanResult.VirusName;
                     _logger.LogDebug("The document with id {documentId} is infected with virus {virusName}", documentId, virusName);
@@ -61,13 +60,20 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     file.Metadata["virus-scan-status"] = "infected";
                     file.Metadata["virus-name"] = virusName;
                 }
-                else
+                else if (scanResult.Status == VirusScanStatus.Error)
                 {
                     _logger.LogDebug("Could not determine the virus status of the document");
                     string status = scanResult.Status.ToString();
-                    file.Metadata["virus-scan-status"] = status;
+                    file.Metadata["virus-scan-status"] = "error";
                     file.Metadata.Remove("virus-name");
                 }
+                else
+                {
+                    // unknown status
+                    _logger.LogWarning("Unknown virus scan status {Status}, file metadata will not be updated.", scanResult.Status);
+                    return;
+                }
+
                 // Update document's metadata
                 await _comsService.UpdateFileAsync(documentId, file, cancellationToken);
             }
@@ -86,7 +92,6 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 _logger.LogError(e, "Error getting the document from COMS and scanning for viruses");
                 throw;
             }
-
         }
     }
 }

@@ -1,29 +1,36 @@
+using BCGov.VirusScan.Api.Controllers;
+using BCGov.VirusScan.Api.Models;
 using BCGov.VirusScan.Api.Monitoring;
-using FastEndpoints;
-using FastEndpoints.Swagger;
-using NSwag;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddMediatR(typeof(VirusScanController)); // some anchor class
 builder.Services.AddVirusScan();
-
 builder.AddOpenTelemetry();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerDoc(shortSchemaNames: true, tagIndex: 2);
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
-builder.Services.AddFastEndpoints();
+//builder.Services.AddProblemDetails();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 var app = builder.Build();
 
-app.UseFastEndpoints(c =>
-{
-    c.Endpoints.ShortNames = true;
-    c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
-});
+app.MapControllers();
 
 // not sure if this is working yet
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
@@ -31,7 +38,7 @@ app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerGen();
+    app.UseSwagger();
     app.UseSwaggerUI();
 }
 
