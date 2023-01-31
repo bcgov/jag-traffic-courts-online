@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
@@ -18,13 +17,13 @@ using ApiException = TrafficCourts.Common.OpenAPIs.VirusScan.V1.ApiException;
 
 namespace TrafficCourts.Test.Workflow.Service.Consumers;
 
-public class VirusScanDocumentConsumerTest
+public class ScanUploadedDocumentForVirusesConsumerTest
 {
     [Fact]
     public async Task TestVirusScanDocumentConsumer_ConfirmScanResultClean()
     {
         Mock<IVirusScanClient> virusScanClient = new();
-        Mock<IComsService> comsService = new();
+        Mock<IWorkflowDocumentService> comsService = new();
 
         // Arrange
         var file = CreateFile();
@@ -44,9 +43,9 @@ public class VirusScanDocumentConsumerTest
         await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        var harness = await PublishAsync(provider, new VirusScanDocument { DocumentId = file.Id!.Value });
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
         // note the consumer will not execute until we this completes
-        var consumed = await harness.Consumed.Any<VirusScanDocument>();
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
         
         // Assert
         Assert.True(consumed);
@@ -64,7 +63,7 @@ public class VirusScanDocumentConsumerTest
     public async Task TestVirusScanDocumentConsumer_ConfirmScanResultInfected()
     {
         Mock<IVirusScanClient> virusScanClient = new();
-        Mock<IComsService> comsService = new();
+        Mock<IWorkflowDocumentService> comsService = new();
 
         // Arrange
         var file = CreateFile();
@@ -84,10 +83,10 @@ public class VirusScanDocumentConsumerTest
         await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        var harness = await PublishAsync(provider, new VirusScanDocument { DocumentId = file.Id!.Value });
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
 
         // note the consumer will not execute until we this completes
-        var consumed = await harness.Consumed.Any<VirusScanDocument>();
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
 
         // Assert
         Assert.True(consumed);
@@ -106,7 +105,7 @@ public class VirusScanDocumentConsumerTest
     public async Task TestVirusScanDocumentConsumer_ConfirmScanResultUnknown()
     {
         Mock<IVirusScanClient> virusScanClient = new();
-        Mock<IComsService> comsService = new();
+        Mock<IWorkflowDocumentService> comsService = new();
 
         // Arrange
         var file = CreateFile();
@@ -124,9 +123,9 @@ public class VirusScanDocumentConsumerTest
         await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        var harness = await PublishAsync(provider, new VirusScanDocument { DocumentId = file.Id!.Value });
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
         // note the consumer will not execute until we this completes
-        var consumed = await harness.Consumed.Any<VirusScanDocument>();
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
 
         // Assert
         Assert.True(consumed);
@@ -145,7 +144,7 @@ public class VirusScanDocumentConsumerTest
     public async Task TestVirusScanDocumentConsumer_ThrowsObjectManagementServiceException()
     {
         Mock<IVirusScanClient> virusScanClient = new();
-        Mock<IComsService> comsService = new();
+        Mock<IWorkflowDocumentService> comsService = new();
 
         // Arrange
         var file = CreateFile();
@@ -159,11 +158,11 @@ public class VirusScanDocumentConsumerTest
         await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        var harness = await PublishAsync(provider, new VirusScanDocument { DocumentId = file.Id!.Value });
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
 
         // note the consumer will not execute until we this completes
-        var consumed = await harness.Consumed.Any<VirusScanDocument>();
-        var published = await harness.Published.SelectAsync<Fault<VirusScanDocument>>().Count();
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
+        var published = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().Count();
 
         // Assert
         Assert.True(consumed);
@@ -172,7 +171,7 @@ public class VirusScanDocumentConsumerTest
         Assert.Equal(expectedStatus, file.Metadata["virus-scan-status"]);
         Assert.Equal(expectedName, file.Metadata["virus-name"]);
 
-        var fault = await harness.Published.SelectAsync<Fault<VirusScanDocument>>().First();
+        var fault = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().First();
 
         comsService.VerifyGetFile(file.Id!.Value);
 
@@ -184,7 +183,7 @@ public class VirusScanDocumentConsumerTest
     [Fact]
     public async Task TestVirusScanDocumentConsumer_ThrowsApiException()
     {
-        Mock<IComsService> comsService = new();
+        Mock<IWorkflowDocumentService> comsService = new();
         Mock<IVirusScanClient> virusScanClient = new();
 
         // Arrange
@@ -202,10 +201,10 @@ public class VirusScanDocumentConsumerTest
         await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        var harness = await PublishAsync(provider, new VirusScanDocument { DocumentId = file.Id!.Value });
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
         // note the consumer will not execute until we this completes
-        var consumed = await harness.Consumed.Any<VirusScanDocument>();
-        var published = await harness.Published.SelectAsync<Fault<VirusScanDocument>>().Count();
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
+        var published = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().Count();
 
         // Assert
         Assert.True(consumed);
@@ -225,12 +224,12 @@ public class VirusScanDocumentConsumerTest
     /// <param name="virusScanClient"></param>
     /// <param name="comsService"></param>
     /// <returns></returns>
-    private static ServiceProvider GetServiceProvider(IVirusScanClient virusScanClient, IComsService comsService)
+    private static ServiceProvider GetServiceProvider(IVirusScanClient virusScanClient, IWorkflowDocumentService comsService)
     {
         return new ServiceCollection()
             .AddMassTransitTestHarness(cfg =>
             {
-                cfg.AddConsumer<VirusScanDocumentConsumer>();
+                cfg.AddConsumer<ScanUploadedDocumentForVirusesConsumer>();
                 cfg.UsingInMemory((context, inMemoryConfig) =>
                 {
                     inMemoryConfig.ConfigureEndpoints(context);
@@ -238,7 +237,7 @@ public class VirusScanDocumentConsumerTest
             })
             .AddScoped(sp => comsService)
             .AddScoped(sp => virusScanClient)
-            .AddScoped(sp => Mock.Of<ILogger<VirusScanDocumentConsumer>>())
+            .AddScoped(sp => Mock.Of<ILogger<ScanUploadedDocumentForVirusesConsumer>>())
             .BuildServiceProvider(true);
     }
 

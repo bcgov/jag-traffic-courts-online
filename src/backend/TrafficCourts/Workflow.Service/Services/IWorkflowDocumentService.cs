@@ -2,7 +2,7 @@
 
 namespace TrafficCourts.Workflow.Service.Services;
 
-public interface IComsService
+public interface IWorkflowDocumentService
 {
     /// <summary>
     /// Retrieves a file with data and details through COMS service for the given unique file ID

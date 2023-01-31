@@ -15,23 +15,23 @@ public static class MockExtensions
         return mock.Setup(_ => _.VirusScanAsync(It.IsAny<Common.OpenAPIs.VirusScan.V1.FileParameter>(), It.IsAny<CancellationToken>()));
     }
 
-    public static Moq.Language.Flow.ISetup<IComsService, Task<Coms.Client.File>> SetupGetFileWithAnyParameters(this Mock<IComsService> mock)
+    public static Moq.Language.Flow.ISetup<IWorkflowDocumentService, Task<Coms.Client.File>> SetupGetFileWithAnyParameters(this Mock<IWorkflowDocumentService> mock)
     {
         return mock.Setup(_ => _.GetFileAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
     }
 
 
     /// <summary>
-    /// Verify IComsService.GetFileAsync was called once with the specified id
+    /// Verify ICitizenDocumentService.GetFileAsync was called once with the specified id
     /// </summary>
-    public static void VerifyGetFile(this Mock<IComsService> mock, Guid id)
+    public static void VerifyGetFile(this Mock<IWorkflowDocumentService> mock, Guid id)
     {
         mock.Verify(_ => _.GetFileAsync(
             It.Is<Guid>((actual) => actual == id),
             It.IsAny<CancellationToken>()), Times.Once());
     }
 
-    public static void VerifyUpdateFile(this Mock<IComsService> mock, Times times)
+    public static void VerifyUpdateFile(this Mock<IWorkflowDocumentService> mock, Times times)
     {
         mock.Verify(_ => _.UpdateFileAsync(
             It.IsAny<Guid>(),

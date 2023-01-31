@@ -5,14 +5,14 @@ namespace TrafficCourts.Workflow.Service.Services;
 /// <summary>
 /// A service for file operations utilizing common object management service client
 /// </summary>
-public class ComsService : IComsService
+public class WorkflowDocumentService : IWorkflowDocumentService
 {
     private readonly IObjectManagementService _objectManagementService;
-    private readonly ILogger<ComsService> _logger;
+    private readonly ILogger<WorkflowDocumentService> _logger;
 
-    public ComsService(
+    public WorkflowDocumentService(
         IObjectManagementService objectManagementService,
-        ILogger<ComsService> logger)
+        ILogger<WorkflowDocumentService> logger)
     {
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
