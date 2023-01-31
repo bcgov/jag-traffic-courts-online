@@ -9,6 +9,7 @@ public interface IVirusScanService
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <exception cref="PingException"></exception>
     Task<bool> PingAsync(CancellationToken cancellationToken);
 
     /// <summary>
@@ -17,7 +18,7 @@ public interface IVirusScanService
     /// <param name="sourceStream"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<VirusScanResult> ScanFileAsync(MemoryStream sourceStream, CancellationToken cancellationToken);
+    Task<VirusScanResult> ScanFileAsync(Stream sourceStream, CancellationToken cancellationToken);
 
     /// <summary>
     /// Scans a file contained in a chunked file. Used for large files. Prevents buffering 
@@ -26,12 +27,13 @@ public interface IVirusScanService
     /// <param name="sourceSection"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<VirusScanResult> ScanFileAsync(IAsyncEnumerable<MemoryStream> sourceSection, CancellationToken cancellationToken);
-    
+    Task<VirusScanResult> ScanFileAsync(IAsyncEnumerable<Stream> sourceSection, CancellationToken cancellationToken);
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="cancellationToken"></param>
+    /// <exception cref="VersionException"></exception>
     /// <returns></returns>
-    Task<VirusScannerVersion> GetVersionAsync(CancellationToken cancellationToken);
+    Task<GetVersionResult> GetVersionAsync(CancellationToken cancellationToken);
 }

@@ -1,11 +1,11 @@
 ﻿using MassTransit;
+using MassTransit.Testing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
 using TrafficCourts.Coms.Client;
@@ -17,152 +17,248 @@ using ApiException = TrafficCourts.Common.OpenAPIs.VirusScan.V1.ApiException;
 
 namespace TrafficCourts.Test.Workflow.Service.Consumers;
 
-public class VirusScanDocumentConsumerTest
+public class ScanUploadedDocumentForVirusesConsumerTest
 {
-    private readonly VirusScanDocument _message;
-    private readonly Coms.Client.File _file;
-    private readonly Mock<ILogger<VirusScanDocumentConsumer>> _mockLogger;
-    private readonly Mock<IVirusScanService> _virusScanService;
-    private readonly Mock<IComsService> _comsService;
-    private readonly Mock<ConsumeContext<VirusScanDocument>> _context;
-    private readonly VirusScanDocumentConsumer _consumer;
-    private readonly Guid _guid;
-
-    public VirusScanDocumentConsumerTest()
-    {
-        _guid= Guid.NewGuid();
-        var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
-        _message = new()
-        {
-            DocumentId = _guid
-        };
-        _file = new(_guid, fileStream, "sample_file", null, null, null);
-
-        _mockLogger = new();
-        _virusScanService = new();
-        _comsService = new();
-        _context = new();
-        _context.Setup(_ => _.Message).Returns(_message);
-        _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
-
-        _consumer = new(_virusScanService.Object, _comsService.Object, _mockLogger.Object);
-    }
-
     [Fact]
     public async Task TestVirusScanDocumentConsumer_ConfirmScanResultClean()
     {
+        Mock<IVirusScanClient> virusScanClient = new();
+        Mock<IWorkflowDocumentService> comsService = new();
+
         // Arrange
-        _comsService.Setup(_ => _.GetFileAsync(_guid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_file));
+        var file = CreateFile();
+        file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
+        file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
 
-        ScanResponse response = new()
-        {
-            Status = VirusScanStatus.NotInfected
-        };
+        comsService
+            .SetupGetFileWithAnyParameters()
+            .Returns(Task.FromResult(file));
 
-        _virusScanService.Setup(_ => _.ScanDocumentAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(response));
+        virusScanClient
+            .VirusScanWithAnyParameters()
+            .Returns(Task.FromResult(new VirusScanResult { Status = VirusScanStatus.NotInfected }));
+
+        // comsService.UpdateFileAsync ...
+
+        await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        await _consumer.Consume(_context.Object);
-
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
+        // note the consumer will not execute until we this completes
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
+        
         // Assert
-        string result = _file.Metadata.GetValueOrDefault("virus-scan-status") ?? "";
-        Assert.Equal("clean", result);
+        Assert.True(consumed);
+        Assert.Equal("clean", file.Metadata["virus-scan-status"]);
+        Assert.False(file.Metadata.ContainsKey("virus-name"));
+
+        comsService.VerifyGetFile(file.Id!.Value);
+
+        virusScanClient.VerifyVirusScan(file.Data);
+
+        // verify UpdateFile meta data
     }
 
     [Fact]
     public async Task TestVirusScanDocumentConsumer_ConfirmScanResultInfected()
     {
+        Mock<IVirusScanClient> virusScanClient = new();
+        Mock<IWorkflowDocumentService> comsService = new();
+
         // Arrange
-        _comsService.Setup(_ => _.GetFileAsync(_guid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_file));
+        var file = CreateFile();
+        file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
+        file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
 
-        ScanResponse response = new()
-        {
-            Status = VirusScanStatus.Infected,
-            VirusName = "cryptolocker"
-        };
+        comsService
+            .SetupGetFileWithAnyParameters()
+            .Returns(Task.FromResult(file));
 
-        _virusScanService.Setup(_ => _.ScanDocumentAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(response));
+        virusScanClient
+            .VirusScanWithAnyParameters()
+            .Returns(Task.FromResult(new VirusScanResult { Status = VirusScanStatus.Infected, VirusName = "cryptolocker" }));
+
+        // comsService.UpdateFileAsync ...
+
+        await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        await _consumer.Consume(_context.Object);
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
+
+        // note the consumer will not execute until we this completes
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
 
         // Assert
-        string result = _file.Metadata.GetValueOrDefault("virus-scan-status") ?? "";
-        Assert.Equal("infected", result);
-        string virusName = _file.Metadata.GetValueOrDefault("virus-name") ?? "";
-        Assert.Equal("cryptolocker", virusName);
+        Assert.True(consumed);
+        Assert.Equal("infected", file.Metadata["virus-scan-status"]);
+        Assert.Equal("cryptolocker", file.Metadata["virus-name"]);
+
+        comsService.VerifyGetFile(file.Id!.Value);
+
+        virusScanClient.VerifyVirusScan(file.Data);
+
+        // verify UpdateFile meta data
+
     }
 
     [Fact]
     public async Task TestVirusScanDocumentConsumer_ConfirmScanResultUnknown()
     {
+        Mock<IVirusScanClient> virusScanClient = new();
+        Mock<IWorkflowDocumentService> comsService = new();
+
         // Arrange
-        _comsService.Setup(_ => _.GetFileAsync(_guid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_file));
+        var file = CreateFile();
+        file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
+        file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
 
-        ScanResponse response = new()
-        {
-            Status = VirusScanStatus.Unknown
-        };
+        comsService
+            .SetupGetFileWithAnyParameters()
+            .Returns(Task.FromResult(file));
 
-        _virusScanService.Setup(_ => _.ScanDocumentAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(response));
+        virusScanClient
+            .VirusScanWithAnyParameters()
+            .Returns(Task.FromResult(new VirusScanResult { Status = VirusScanStatus.Error }));
+
+        await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        await _consumer.Consume(_context.Object);
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
+        // note the consumer will not execute until we this completes
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
 
         // Assert
-        string result = _file.Metadata.GetValueOrDefault("virus-scan-status") ?? "";
-        Assert.Equal("Unknown", result);
+        Assert.True(consumed);
+        Assert.Equal("error", file.Metadata["virus-scan-status"]);
+        Assert.False(file.Metadata.ContainsKey("virus-name"));
+
+        comsService.VerifyGetFile(file.Id!.Value);
+
+        virusScanClient.VerifyVirusScan(file.Data);
+
+        // verify UpdateFile meta data
+
     }
 
     [Fact]
     public async Task TestVirusScanDocumentConsumer_ThrowsObjectManagementServiceException()
     {
+        Mock<IVirusScanClient> virusScanClient = new();
+        Mock<IWorkflowDocumentService> comsService = new();
+
         // Arrange
-        _comsService.Setup(_ => _.GetFileAsync(_guid, It.IsAny<CancellationToken>()))
-            .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
+        var file = CreateFile();
+        var expectedStatus = file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
+        var expectedName = file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
+
+        var exception = new ObjectManagementServiceException(It.IsAny<string>());
+        comsService.SetupGetFileWithAnyParameters()
+            .Throws(exception);
+
+        await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        var result = _consumer.Consume(_context.Object);
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
 
-        try
-        {
-            await result;
-        }
-        catch (ObjectManagementServiceException e)
-        {
-            // Assert
-            Assert.IsType<ObjectManagementServiceException>(e);
-        }
+        // note the consumer will not execute until we this completes
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
+        var published = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().Count();
 
         // Assert
-        Assert.False(result.IsCompletedSuccessfully);
+        Assert.True(consumed);
+        Assert.Equal(1, published);
+        // file meta data should not be modified
+        Assert.Equal(expectedStatus, file.Metadata["virus-scan-status"]);
+        Assert.Equal(expectedName, file.Metadata["virus-name"]);
+
+        var fault = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().First();
+
+        comsService.VerifyGetFile(file.Id!.Value);
+
+        virusScanClient.VerifyVirusScan(Times.Never());
+
+        comsService.VerifyUpdateFile(Times.Never());
     }
 
     [Fact]
     public async Task TestVirusScanDocumentConsumer_ThrowsApiException()
     {
-        // Arrange
-        _comsService.Setup(_ => _.GetFileAsync(_guid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_file));
+        Mock<IWorkflowDocumentService> comsService = new();
+        Mock<IVirusScanClient> virusScanClient = new();
 
-        _virusScanService.Setup(_ => _.ScanDocumentAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-            .Throws(new ApiException("There was an internal error virus scanning the file.", StatusCodes.Status500InternalServerError, It.IsAny<string>(), null, null));
+        // Arrange
+        var file = CreateFile();
+
+        comsService
+            .SetupGetFileWithAnyParameters()
+            .Returns(Task.FromResult(file));
+
+        var exception = new ApiException("There was an internal error virus scanning the file.", StatusCodes.Status500InternalServerError, It.IsAny<string>(), null, null);
+        virusScanClient
+            .VirusScanWithAnyParameters()
+            .Throws(exception);
+
+        await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
 
         // Act
-        var result = _consumer.Consume(_context.Object);
-
-        try
-        {
-            await result;
-        }
-        catch (ApiException e)
-        {
-            // Assert
-            Assert.IsType<ApiException>(e);
-            Assert.Equal(StatusCodes.Status500InternalServerError, e.StatusCode);
-            Assert.Contains("There was an internal error virus scanning the file.", e.Message);
-        }
+        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
+        // note the consumer will not execute until we this completes
+        var consumed = await harness.Consumed.Any<DocumentUploaded>();
+        var published = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().Count();
 
         // Assert
-        Assert.False(result.IsCompletedSuccessfully);
+        Assert.True(consumed);
+        Assert.Equal(1, published);
+
+        comsService.VerifyGetFile(file.Id!.Value);
+
+        virusScanClient.VerifyVirusScan(file.Data);
+
+        comsService.VerifyUpdateFile(Times.Never());
+    }
+
+
+    /// <summary>
+    /// Gets the ServiceProvider with all the registered services 
+    /// </summary>
+    /// <param name="virusScanClient"></param>
+    /// <param name="comsService"></param>
+    /// <returns></returns>
+    private static ServiceProvider GetServiceProvider(IVirusScanClient virusScanClient, IWorkflowDocumentService comsService)
+    {
+        return new ServiceCollection()
+            .AddMassTransitTestHarness(cfg =>
+            {
+                cfg.AddConsumer<ScanUploadedDocumentForVirusesConsumer>();
+                cfg.UsingInMemory((context, inMemoryConfig) =>
+                {
+                    inMemoryConfig.ConfigureEndpoints(context);
+                });
+            })
+            .AddScoped(sp => comsService)
+            .AddScoped(sp => virusScanClient)
+            .AddScoped(sp => Mock.Of<ILogger<ScanUploadedDocumentForVirusesConsumer>>())
+            .BuildServiceProvider(true);
+    }
+
+    /// <summary>
+    /// Gets and starts the harness and published the message.
+    /// </summary>
+    private async Task<ITestHarness> PublishAsync<T>(ServiceProvider provider, T message) where T : class
+    {
+        var harness = provider.GetRequiredService<ITestHarness>();
+        await harness.Start();
+        await harness.Bus.Publish(message);
+
+        return harness;
+    }
+
+    /// <summary>
+    /// Creates a random file
+    /// </summary>
+    private Coms.Client.File CreateFile()
+    {
+        Stream stream = new MemoryStream(Guid.NewGuid().ToByteArray());
+        return new Coms.Client.File (Guid.NewGuid(), stream, "sample_file", null, null, null);
     }
 }

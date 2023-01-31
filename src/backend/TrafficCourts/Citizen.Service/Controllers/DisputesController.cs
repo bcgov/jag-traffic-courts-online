@@ -34,7 +34,7 @@ public class DisputesController : ControllerBase
     private readonly IDisputeEmailVerificationTokenEncoder _tokenEncoder;
     private readonly IOAuthUserService _oAuthUserService;
     private readonly IMapper _mapper;
-    private readonly IComsService _comsService;
+    private readonly ICitizenDocumentService _documentService;
 
     /// <summary>
     /// 
@@ -48,7 +48,7 @@ public class DisputesController : ControllerBase
     /// <param name="mapper"></param>
     /// <param name="comsService"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
-    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper, IComsService comsService)
+    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper, ICitizenDocumentService documentService)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -57,7 +57,7 @@ public class DisputesController : ControllerBase
         _tokenEncoder = tokenEncoder ?? throw new ArgumentNullException(nameof(tokenEncoder));
         _oAuthUserService = oAuthUserService ?? throw new ArgumentNullException(nameof(oAuthUserService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        _comsService = comsService ?? throw new ArgumentNullException(nameof(comsService));
+        _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
     }
 
     /// <summary>
@@ -315,7 +315,7 @@ public class DisputesController : ControllerBase
                 throw new UnauthorizedAccessException("Invalid access_token");
             }
 
-            Coms.Client.File file = await _comsService.GetFileAsync(fileId, cancellationToken);
+            Coms.Client.File file = await _documentService.GetFileAsync(fileId, cancellationToken);
 
             var stream = file.Data;
             // Reset position to the beginning of the stream

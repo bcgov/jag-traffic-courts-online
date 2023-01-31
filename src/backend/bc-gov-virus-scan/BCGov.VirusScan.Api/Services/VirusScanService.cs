@@ -6,6 +6,8 @@ using System.Text;
 using BCGov.VirusScan.Api.Network;
 using BCGov.VirusScan.Api.Models;
 using BCGov.VirusScan.Api.Monitoring;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry.Resources;
 
 namespace BCGov.VirusScan.Api.Services;
 
@@ -68,19 +70,22 @@ public sealed class VirusScanService : IVirusScanService
 
             var pong = StringComparer.OrdinalIgnoreCase.Equals(response, "PONG");
 
-            Instrumentation.EndPing();
+            Instrumentation.EndPing(operation, pong);
 
             return pong;
         }
         catch (Exception exception)
         {
             Instrumentation.EndPing(operation, exception);
-            throw;
+            _logger.LogError(exception, "Ping ClamAV using PING command failed.");
+            throw new PingException(exception);
         }
     }
 
-    public async Task<VirusScanResult> ScanFileAsync(MemoryStream source, CancellationToken cancellationToken)
+    public async Task<VirusScanResult> ScanFileAsync(Stream source, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(source);
+
         using var operation = Instrumentation.BeginVirusScan();
 
         try
@@ -96,6 +101,8 @@ public sealed class VirusScanService : IVirusScanService
 
             string response = await ReadResponseAsync(cancellationToken);
 
+            _logger.LogDebug("Scan response is '{Response}'", response);
+
             VirusScanResult result = ParseScanResponse(response);
 
             Instrumentation.EndVirusScan(result.Status);
@@ -105,37 +112,65 @@ public sealed class VirusScanService : IVirusScanService
         catch (Exception exception)
         {
             Instrumentation.EndVirusScan(operation, exception);
+            _logger.LogError(exception, "Scan file using INSTREAM command failed.");
             return new VirusScanResult { Status = VirusScanStatus.Error };
         }
     }
 
-    public async Task<VirusScanResult> ScanFileAsync(IAsyncEnumerable<MemoryStream> sourceSections, CancellationToken cancellationToken)
+    public async Task<VirusScanResult> ScanFileAsync(IAsyncEnumerable<Stream> sections, CancellationToken cancellationToken)
     {
-        await SendCommandAsync(InStreamCommand, cancellationToken);
-        NetworkStream stream = _client.GetStream();
+        ArgumentNullException.ThrowIfNull(sections);
 
-        await foreach (var section in sourceSections)
+        using var operation = Instrumentation.BeginVirusScan();
+
+        try
         {
-            await StreamChunkAsync(stream, section, cancellationToken);
+            ArgumentNullException.ThrowIfNull(sections);
+
+            await SendCommandAsync(InStreamCommand, cancellationToken);
+            NetworkStream stream = _client.GetStream();
+
+            await foreach (var section in sections)
+            {
+                await StreamChunkAsync(stream, section, cancellationToken);
+            }
+
+            // write zero length chunk 
+            await stream.WriteAsync(ZeroLengthChunk, 0, ZeroLengthChunk.Length, cancellationToken);
+
+            string response = await ReadResponseAsync(cancellationToken);
+
+            var result = ParseScanResponse(response);
+            return result;
         }
-
-        // write zero length chunk 
-        await stream.WriteAsync(ZeroLengthChunk, 0, ZeroLengthChunk.Length, cancellationToken);
-
-        string response = await ReadResponseAsync(cancellationToken);
-
-        var result = ParseScanResponse(response);
-        return result;
-
+        catch (Exception exception)
+        {
+            Instrumentation.EndVirusScan(operation, exception);
+            _logger.LogError(exception, "Scan file using INSTREAM command failed.");
+            return new VirusScanResult { Status = VirusScanStatus.Error };
+        }
     }
 
-    public async Task<VirusScannerVersion> GetVersionAsync(CancellationToken cancellationToken)
+    public async Task<GetVersionResult> GetVersionAsync(CancellationToken cancellationToken)
     {
-        await SendCommandAsync(VersionCommand, cancellationToken);
-        string response = await ReadResponseAsync(cancellationToken);
+        using var operation = Instrumentation.BeginGetVersion();
 
-        VirusScannerVersion version = ParseVersionResponse(response);
-        return version;
+        try
+        {
+            await SendCommandAsync(VersionCommand, cancellationToken);
+            string response = await ReadResponseAsync(cancellationToken);
+
+            GetVersionResult version = ParseVersionResponse(response);
+
+            Instrumentation.EndGetVersion(operation, version);
+            return version;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndGetVersion(operation, exception);
+            _logger.LogError(exception, "Get virus scan version using VERSION command failed.");
+            throw new VersionException(exception);
+        }
     }
 
     private string ParsePingResponse(string response)
@@ -153,7 +188,9 @@ public sealed class VirusScanService : IVirusScanService
             return response;
         }
 
-        _logger.LogInformation("Ping response does not end in PONG, actual response is {Response} {Length}", response, response.Length);
+        Instrumentation.PingInvalidResponse();
+
+        _logger.LogInformation("Ping response does not end in PONG, actual response is \"{Response}\"", response);
 
         return string.Empty;
     }
@@ -179,8 +216,10 @@ public sealed class VirusScanService : IVirusScanService
 
         if (response.EndsWith(" FOUND", StringComparison.OrdinalIgnoreCase))
         {
+            var virusName = GetVirusName(response);
+            _logger.LogDebug("Virus name is '{VirusName}'", virusName);
 
-            return new VirusScanResult { Status = VirusScanStatus.Infected, VirusName = GetVirusName(response) };
+            return new VirusScanResult { Status = VirusScanStatus.Infected, VirusName = virusName };
         }
 
         if (response.EndsWith(" ERROR", StringComparison.OrdinalIgnoreCase))
@@ -188,11 +227,14 @@ public sealed class VirusScanService : IVirusScanService
             return new VirusScanResult { Status = VirusScanStatus.Error, Error = GetErrorMessage(response) };
         }
 
+        Instrumentation.ScanInvalidResponse();
+        _logger.LogInformation("Scan response is invalid, actual response is \"{Response}\"", response);
+
         // unexpected case
         return new VirusScanResult { Status = VirusScanStatus.Error, Error = "Unexpeced response from ClamAV" };
     }
 
-    private VirusScannerVersion ParseVersionResponse(string response)
+    private GetVersionResult ParseVersionResponse(string response)
     {
         // If the engine version is not available, the first response will be returned.
         //
@@ -225,7 +267,12 @@ public sealed class VirusScanService : IVirusScanService
             }
         }
 
-        return new VirusScannerVersion(release, engine, engineDate);
+        if (string.IsNullOrEmpty(release))
+        {
+            Instrumentation.VersionInvalidResponse();
+        }
+
+        return new GetVersionResult(release, engine, engineDate);
     }
     private string GetErrorMessage(string response)
     {
@@ -297,6 +344,11 @@ public sealed class VirusScanService : IVirusScanService
             {
                 length--; // remove trailing null that ClamAV adds cause we are using 'z' commands
             }
+            else
+            {
+                _logger.LogWarning("Response is empty");
+                return string.Empty;
+            }
 
             string response = Encoding.UTF8.GetString(buffer, 0, length);
             return response;
@@ -313,7 +365,7 @@ public sealed class VirusScanService : IVirusScanService
     /// <param name="stream"></param>
     /// <param name="source"></param>
     /// <param name="cancellationToken"></param>
-    private async Task StreamChunkAsync(NetworkStream stream, MemoryStream source, CancellationToken cancellationToken)
+    private async Task StreamChunkAsync(NetworkStream stream, Stream source, CancellationToken cancellationToken)
     {
         int bufferSize = 4 * 1024; // stream the file in 4k chunks, if this is bigger, ClamAV appears to close the connection
         // avoid computing the buffer size repeatedly

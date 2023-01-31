@@ -10,7 +10,7 @@ namespace TrafficCourts.Staff.Service.Controllers;
 
 public class ComsController : StaffControllerBase<ComsController>
 {
-    private readonly IComsService _comsService;
+    private readonly IStaffDocumentService _documentService;
 
     /// <summary>
     /// Default Constructor
@@ -18,10 +18,10 @@ public class ComsController : StaffControllerBase<ComsController>
     /// <param name="comsService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public ComsController(IComsService comsService, ILogger<ComsController> logger) : base(logger)
+    public ComsController(IStaffDocumentService comsService, ILogger<ComsController> logger) : base(logger)
     {
         ArgumentNullException.ThrowIfNull(comsService);
-        _comsService = comsService;
+        _documentService = comsService;
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class ComsController : StaffControllerBase<ComsController>
 
         try
         {
-            Guid id = await _comsService.SaveFileAsync(fileUploadRequest.File, fileUploadRequest.Metadata, cancellationToken);
+            Guid id = await _documentService.SaveFileAsync(fileUploadRequest.File, fileUploadRequest.Metadata, cancellationToken);
             return Ok(id);
         }
         catch (Coms.Client.MetadataInvalidKeyException e)
@@ -186,7 +186,7 @@ public class ComsController : StaffControllerBase<ComsController>
 
         try
         {
-            Coms.Client.File file = await _comsService.GetFileAsync(fileId, cancellationToken);
+            Coms.Client.File file = await _documentService.GetFileAsync(fileId, cancellationToken);
 
             var stream = file.Data;
             // Reset position to the beginning of the stream
@@ -244,7 +244,7 @@ public class ComsController : StaffControllerBase<ComsController>
 
         try
         {
-            await _comsService.DeleteFileAsync(fileId, cancellationToken);
+            await _documentService.DeleteFileAsync(fileId, cancellationToken);
 
             return Ok();
         }

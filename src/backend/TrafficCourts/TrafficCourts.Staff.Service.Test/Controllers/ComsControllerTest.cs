@@ -22,7 +22,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -44,7 +44,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         var mockLogger = new Mock<ILogger<ComsController>>();
         ComsController comsController = new(comsService.Object, mockLogger.Object);
@@ -64,7 +64,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -88,7 +88,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -112,7 +112,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -136,7 +136,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -160,7 +160,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -184,7 +184,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -208,7 +208,7 @@ public class ComsControllerTest
     {
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
@@ -233,7 +233,7 @@ public class ComsControllerTest
         // Arrange
         var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
         Coms.Client.File mockFile = new(fileStream, "testFile");
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFile.Metadata.Add("ticket-number", "AO38375804");
         mockFile.Metadata.Add("virus-scan-status", "clean");
@@ -258,7 +258,7 @@ public class ComsControllerTest
         // Arrange
         var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
         Coms.Client.File mockFile = new(fileStream, "testFile");
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFile.Metadata.Add("ticket-number", "AO38375804");
         var filename = mockFile.FileName;
@@ -284,7 +284,7 @@ public class ComsControllerTest
         // Arrange
         var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
         Coms.Client.File mockFile = new(fileStream, "testFile");
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         mockFile.Metadata.Add("ticket-number", "AO38375804");
         mockFile.Metadata.Add("virus-scan-status", "unscanned");
@@ -309,7 +309,7 @@ public class ComsControllerTest
     public async void TestRemoveDocument200Result()
     {
         // Arrange
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
             .Setup(_ => _.DeleteFileAsync(guid, It.IsAny<CancellationToken>()));
@@ -327,7 +327,7 @@ public class ComsControllerTest
     public async void TestRemoveDocumentThrowsObjectManagementServiceException500result()
     {
         // Arrange
-        var comsService = new Mock<IComsService>();
+        var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
             .Setup(_ => _.DeleteFileAsync(guid, It.IsAny<CancellationToken>()))

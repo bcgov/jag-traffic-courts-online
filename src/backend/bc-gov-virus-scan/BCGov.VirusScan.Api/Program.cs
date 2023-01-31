@@ -1,29 +1,49 @@
+using BCGov.VirusScan.Api.Controllers;
 using BCGov.VirusScan.Api.Monitoring;
-using FastEndpoints;
-using FastEndpoints.Swagger;
-using NSwag;
+using MediatR;
+using System.Reflection;
 using System.Text.Json.Serialization;
+
+using Serilog;
+using Serilog.Exceptions.Core;
+using Serilog.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+{
+    var destructuringOptionsBuilder = new DestructuringOptionsBuilder();
+    var destructurers = destructuringOptionsBuilder
+        .WithDefaultDestructurers();
+
+    loggerConfiguration
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.WithExceptionDetails(destructurers);
+});
+
+builder.Services.AddMediatR(typeof(VirusScanController)); // some anchor class
 builder.Services.AddVirusScan();
+builder.AddInstrumentation();
 
-builder.AddOpenTelemetry();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//builder.Services.AddProblemDetails();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerDoc(shortSchemaNames: true, tagIndex: 2);
-
-builder.Services.AddFastEndpoints();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 var app = builder.Build();
 
-app.UseFastEndpoints(c =>
-{
-    c.Endpoints.ShortNames = true;
-    c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
-});
+app.MapControllers();
 
 // not sure if this is working yet
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
@@ -31,7 +51,7 @@ app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerGen();
+    app.UseSwagger();
     app.UseSwaggerUI();
 }
 

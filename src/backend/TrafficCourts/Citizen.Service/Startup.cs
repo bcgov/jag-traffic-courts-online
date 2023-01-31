@@ -75,7 +75,7 @@ public static class Startup
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
         builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
-        builder.Services.AddTransient<IComsService, ComsService>();
+        builder.Services.AddTransient<ICitizenDocumentService, CitizenDocumentService>();
 
         // Add COMS (Object Management Service) Client
         builder.Services.AddObjectManagementService("COMS");
