@@ -33,7 +33,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockHashids = new Mock<IHashids>();
             var mockOAuthService = new Mock<IOAuthUserService>();
             var mockMapper = new Mock<IMapper>();
-            var mockComsService = new Mock<IComsService>();
+            var mockComsService = new Mock<ICitizenDocumentService>();
             var mockControllerContext = new Mock<ControllerContext>();
 
             var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
@@ -78,7 +78,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockHashids = new Mock<IHashids>();
             var mockOAuthService = new Mock<IOAuthUserService>();
             var mockMapper = new Mock<IMapper>();
-            var mockComsService = new Mock<IComsService>();
+            var mockComsService = new Mock<ICitizenDocumentService>();
             var mockControllerContext = new Mock<ControllerContext>();
 
             var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
@@ -125,7 +125,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockHashids = new Mock<IHashids>();
             var mockOAuthService = new Mock<IOAuthUserService>();
             var mockMapper = new Mock<IMapper>();
-            var mockComsService = new Mock<IComsService>();
+            var mockComsService = new Mock<ICitizenDocumentService>();
             var mockControllerContext = new Mock<ControllerContext>();
 
             var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
@@ -171,7 +171,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockHashids = new Mock<IHashids>();
             var mockOAuthService = new Mock<IOAuthUserService>();
             var mockMapper = new Mock<IMapper>();
-            var mockComsService = new Mock<IComsService>();
+            var mockComsService = new Mock<ICitizenDocumentService>();
 
             var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
 
