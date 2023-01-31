@@ -1,16 +1,29 @@
 using BCGov.VirusScan.Api.Controllers;
-using BCGov.VirusScan.Api.Models;
 using BCGov.VirusScan.Api.Monitoring;
 using MediatR;
-using Microsoft.AspNetCore.Builder;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
+using Serilog;
+using Serilog.Exceptions.Core;
+using Serilog.Exceptions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+{
+    var destructuringOptionsBuilder = new DestructuringOptionsBuilder();
+    var destructurers = destructuringOptionsBuilder
+        .WithDefaultDestructurers();
+
+    loggerConfiguration
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.WithExceptionDetails(destructurers);
+});
 
 builder.Services.AddMediatR(typeof(VirusScanController)); // some anchor class
 builder.Services.AddVirusScan();
-builder.AddOpenTelemetry();
+builder.AddInstrumentation();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

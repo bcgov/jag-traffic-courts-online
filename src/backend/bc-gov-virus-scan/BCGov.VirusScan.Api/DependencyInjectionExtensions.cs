@@ -4,9 +4,6 @@ using BCGov.VirusScan.Api.Services;
 using OpenTelemetry;
 using BCGov.VirusScan.Api.Monitoring;
 using OpenTelemetry.Metrics;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Runtime.CompilerServices;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -24,10 +21,10 @@ public static class DependencyInjectionExtensions
     }
 
     /// <summary>
-    /// Adds OpenTelemetry configuration to the web application.
+    /// Adds OpenTelemetry instrumentation configuration to the web application.
     /// </summary>
     /// <param name="builder"></param>
-    public static void AddOpenTelemetry(this WebApplicationBuilder builder)
+    public static void AddInstrumentation(this WebApplicationBuilder builder)
     {
         builder.Services
             .AddOpenTelemetry()

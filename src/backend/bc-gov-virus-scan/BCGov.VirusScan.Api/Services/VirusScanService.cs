@@ -101,6 +101,8 @@ public sealed class VirusScanService : IVirusScanService
 
             string response = await ReadResponseAsync(cancellationToken);
 
+            _logger.LogDebug("Scan response is '{Response}'", response);
+
             VirusScanResult result = ParseScanResponse(response);
 
             Instrumentation.EndVirusScan(result.Status);
@@ -214,8 +216,10 @@ public sealed class VirusScanService : IVirusScanService
 
         if (response.EndsWith(" FOUND", StringComparison.OrdinalIgnoreCase))
         {
+            var virusName = GetVirusName(response);
+            _logger.LogDebug("Virus name is '{VirusName}'", virusName);
 
-            return new VirusScanResult { Status = VirusScanStatus.Infected, VirusName = GetVirusName(response) };
+            return new VirusScanResult { Status = VirusScanStatus.Infected, VirusName = virusName };
         }
 
         if (response.EndsWith(" ERROR", StringComparison.OrdinalIgnoreCase))

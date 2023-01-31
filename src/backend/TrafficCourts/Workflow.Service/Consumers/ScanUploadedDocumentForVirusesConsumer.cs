@@ -77,6 +77,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 _logger.LogDebug("Sending the file: {fileId} for virus scan", file.Id);
                 VirusScanResult scanResult = await _virusScan.VirusScanAsync(parameter, cancellationToken);
 
+                _logger.LogDebug("Virus scan result {VirusScanResult}", scanResult);
+
                 return scanResult;
             }
             catch (ApiException exception)

@@ -67,9 +67,11 @@ namespace BCGov.VirusScan.Api.Controllers
         /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns></returns>
         /// <response code="200">The virus scan operation completed successfully.</response>
+        /// <response code="400">No file supplied.</response>
         /// <response code="500">There was an error scanning the file for virus.</response>
         [HttpPost("scan", Name = "virusScan")]
         [ProducesResponseType(typeof(VirusScanResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ScanFileAsync([Required]IFormFile file, CancellationToken cancellationToken)
         {
@@ -77,7 +79,9 @@ namespace BCGov.VirusScan.Api.Controllers
 
             var response = await _mediator.Send(request, cancellationToken);
 
-            return Ok(response);
+            _logger.LogDebug("Virus scan result {@Result}", response.Result);
+
+            return Ok(response.Result);
         }
 
 

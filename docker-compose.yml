@@ -161,6 +161,7 @@ services:
       SERILOG__WRITETO__0__ARGS__OUTPUTTEMPLATE: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
       SERILOG__WRITETO__0__NAME: Console
+      #SERILOG__MINIMUMLEVEL__DEFAULT: Debug
     ports:
       - "5020:8080"
     restart: always
@@ -210,6 +211,7 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       ASPNETCORE_URLS: http://*:8080
       CLAMAV__SERVER: ${CLAMAV__SERVER:-clamav}
+      #LOGGING__LOGLEVEL__DEFAULT: Debug
     ports:
       - "5030:8080"
     depends_on: [clamav]
