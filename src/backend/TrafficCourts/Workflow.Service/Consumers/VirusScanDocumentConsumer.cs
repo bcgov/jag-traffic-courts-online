@@ -75,7 +75,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 }
 
                 // Update document's metadata
-                await _comsService.UpdateFileAsync(documentId, file, cancellationToken);
+                await _comsService.SetFileMetadataAsync(documentId, file.Metadata, cancellationToken);
             }
             catch (ObjectManagementServiceException e)
             {

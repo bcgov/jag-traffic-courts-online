@@ -28,4 +28,13 @@ public interface IComsService
     /// <exception cref="TooManyTagsException"></exception>
     /// <exception cref="ObjectManagementServiceException">Error executing the service call.</exception>
     Task UpdateFileAsync(Guid id, Coms.Client.File file, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Sets the metadata on the specified file.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="meta"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task SetFileMetadataAsync(Guid id, IReadOnlyDictionary<string, string> meta, CancellationToken cancellationToken);
 }

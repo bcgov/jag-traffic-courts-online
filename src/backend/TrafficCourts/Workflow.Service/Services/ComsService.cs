@@ -31,4 +31,20 @@ public class ComsService : IComsService
 
         await _objectManagementService.UpdateFileAsync(id, file, cancellationToken);
     }
+
+    public async Task SetFileMetadataAsync(Guid id, IReadOnlyDictionary<string, string> meta, CancellationToken cancellationToken)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
+        }
+
+        ArgumentNullException.ThrowIfNull(meta);
+
+        _logger.LogDebug("Updating the file metadata through COMS");
+
+        await _objectManagementService.ReplaceMetadataAsync(id, meta, cancellationToken);
+
+
+    }
 }
