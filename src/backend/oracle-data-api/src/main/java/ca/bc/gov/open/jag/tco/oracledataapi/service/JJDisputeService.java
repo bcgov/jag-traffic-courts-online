@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -20,13 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
-import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 
 @Service
 public class JJDisputeService {
@@ -34,7 +38,10 @@ public class JJDisputeService {
 	private Logger logger = LoggerFactory.getLogger(DisputeService.class);
 
 	@Autowired
-	JJDisputeRepository jjDisputeRepository;
+	private JJDisputeRepository jjDisputeRepository;
+
+	@Autowired
+	private JJDisputeRemarkRepository jjDisputeRemarkRepository;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -215,7 +222,8 @@ public class JJDisputeService {
 	 * @param remark note by the staff if the status is REVIEW.
 	 * @return the saved JJDispute
 	 */
-	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark, String partId, Long courtAppearanceId) {
+	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark,
+			String adjudicatorPartId, Long courtAppearanceId) {
 		if (jjDisputeStatus == null) {
 			logger.error("Attempting to set JJDispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set JJDispute status to null");
@@ -288,15 +296,37 @@ public class JJDisputeService {
 			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
 		}
 
-		jjDisputeRepository.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, principal.getName(), partId, courtAppearanceId);
+		// Calculate duplicate data for denormalization
+		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceById(jjDisputeToUpdate, courtAppearanceId, adjudicatorPartId);
+		YesNo seizedYn = courtAppearance != null ? courtAppearance.getJjSeized() : null;
+		JJDisputeCourtAppearanceAPP aattCd = courtAppearance != null ? courtAppearance.getAppCd() : null;
+		JJDisputeCourtAppearanceDATT dattCd = courtAppearance != null ? courtAppearance.getDattCd() : null;
+		String staffPartId = null; // TODO: Figure out mapping for staffPartId - is it the same partId??
+		jjDisputeRepository.setStatus(jjDisputeToUpdate.getId(), jjDisputeStatus, principal.getName(), courtAppearanceId, seizedYn , adjudicatorPartId, aattCd, dattCd, staffPartId);
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
 		if(!StringUtils.isBlank(remark)) {
-
-			return addRemark(ticketNumber, remark, principal);
+			addRemark(jjDisputeToUpdate.getId(), remark, principal);
 		}
 
 		return findByTicketNumberUnique(ticketNumber).orElseThrow();
+	}
+
+	/**
+	 * Helper method to find a JJDisputeCourtAppearanceRoP by id (but only if there is a partId)
+	 * @param jjDispute
+	 * @param courtAppearanceId
+	 * @param partId
+	 * @return
+	 */
+	private JJDisputeCourtAppearanceRoP findCourtAppearanceById(JJDispute jjDispute, Long courtAppearanceId, String partId) {
+		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) && courtAppearanceId != null && partId != null) {
+			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
+					.filter(courtAppearance -> courtAppearance.getId() == courtAppearanceId)
+					.findAny()
+					.orElse(null);
+		}
+		return null;
 	}
 
 	/**
@@ -325,25 +355,13 @@ public class JJDisputeService {
 	 * @param principal
 	 * @return the saved JJDispute
 	 */
-	private JJDispute addRemark(String ticketNumber, String remark, Principal principal) {
-
-		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
-
+	private void addRemark(Long jjDisputeId, String remark, Principal principal) {
 		JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
+		jjDisputeRemark.setJjDispute(new JJDispute(jjDisputeId));
 		jjDisputeRemark.setNote(remark);
 		jjDisputeRemark.setRemarksMadeTs(new Date());
-
-		PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
-		CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();
-		jjDisputeRemark.setUserFullName(user.getFullName());
-
-		jjDisputeRemark.setJjDispute(jjDisputeToUpdate);
-
-		List<JJDisputeRemark> remarks = jjDisputeToUpdate.getRemarks();
-		remarks.add(jjDisputeRemark);
-		jjDisputeToUpdate.setRemarks(remarks);
-
-		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
+		jjDisputeRemark.setUserFullName(principal.getName());
+		jjDisputeRemarkRepository.saveAndFlush(jjDisputeRemark);
 	}
 
 	/**

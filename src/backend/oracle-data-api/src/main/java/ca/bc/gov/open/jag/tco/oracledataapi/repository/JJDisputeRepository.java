@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 
 public interface JJDisputeRepository {
 
@@ -59,11 +62,17 @@ public interface JJDisputeRepository {
 	/**
 	 * Sets the status field on the given JJDispute.
 	 *
-	 * @param ticketNumber
-	 * @param jjDisputeStatus
-	 * @param userName
-	 * @param partId
+	 * @param disputeId
+	 * @param disputeStatus
+	 * @param userId
 	 * @param courtAppearanceId
+	 * @param seizedYn
+	 * @param adjudicatorPartId
+	 * @param aattCd
+	 * @param dattCd
+	 * @param staffPartId
 	 */
-	public void setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, String userName, String partId, Long courtAppearanceId);
+	public void setStatus(Long disputeId, JJDisputeStatus disputeStatus, String userId, Long courtAppearanceId, YesNo seizedYn,
+			String adjudicatorPartId, JJDisputeCourtAppearanceAPP aattCd, JJDisputeCourtAppearanceDATT dattCd, String staffPartId);
+
 }

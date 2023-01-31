@@ -369,17 +369,22 @@ public class JJDispute extends Auditable<String> {
 	@OneToMany(targetEntity = JJDisputeRemark.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "jjDispute")
 	public List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
 
-	public void addRemarks(List<JJDisputeRemark> remarks) {
-		for (JJDisputeRemark remark : remarks) {
-			remark.setJjDispute(this);
-		}
-		this.remarks.addAll(remarks);
-	}
-
 	@JsonManagedReference(value = "jj_dispute_count_reference")
 	@OneToMany(targetEntity = JJDisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
 	public List<JJDisputedCount> jjDisputedCounts = new ArrayList<JJDisputedCount>();
+
+	@JsonManagedReference(value = "jj_dispute_court_appearance_rop_reference")
+	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@JoinColumn(name = "jjdispute_id")
+	public List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
+
+	/**
+	 * Simple constructor to create a blank JJDispute with the id.
+	 */
+	public JJDispute(Long jjDisputeId) {
+		this.id = jjDisputeId;
+	}
 
 	public void addJJDisputedCounts(List<JJDisputedCount> disputedCounts) {
 		for (JJDisputedCount disputedCount : disputedCounts) {
@@ -388,10 +393,12 @@ public class JJDispute extends Auditable<String> {
 		this.jjDisputedCounts.addAll(disputedCounts);
 	}
 
-	@JsonManagedReference(value = "jj_dispute_court_appearance_rop_reference")
-	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@JoinColumn(name = "jjdispute_id")
-	public List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
+	public void addRemarks(List<JJDisputeRemark> remarks) {
+		for (JJDisputeRemark remark : remarks) {
+			remark.setJjDispute(this);
+		}
+		this.remarks.addAll(remarks);
+	}
 
 	public void addJJDisputeCourtAppearances(List<JJDisputeCourtAppearanceRoP> disputeCourtAppearanceRoPs) {
 		for (JJDisputeCourtAppearanceRoP disputeCourtAppearanceRoP : disputeCourtAppearanceRoPs) {

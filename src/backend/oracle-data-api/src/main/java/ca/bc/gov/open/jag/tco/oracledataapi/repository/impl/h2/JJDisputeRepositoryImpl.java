@@ -11,7 +11,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
 @ConditionalOnProperty(name = "repository.jjdispute", havingValue = "h2", matchIfMissing = true)
@@ -24,11 +27,21 @@ public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaReposit
 
 	@Override
 	@Modifying(clearAutomatically = true)
-	@Query("update JJDispute jj set jj.status = :jjDisputeStatus, jj.modifiedBy = :userName, jj.modifiedTs = CURRENT_TIMESTAMP() where jj.ticketNumber = :ticketNumber and :partId = null and :courtAppearanceId = null")
+	@Query("update JJDispute jj set jj.status = :jjDisputeStatus, jj.modifiedBy = :userId, jj.modifiedTs = CURRENT_TIMESTAMP() "
+			+ "where jj.id = :jjDisputeId "
+
+			// NOTE: this query does nothing with courtAppearanceId, seized, ... staffPartId as these are not fields in the JJDispute record.
+			+ "and (1=1 or :courtAppearanceId is null or :seizedYn is null or :adjudicatorPartId is null or :aattCd is null or :dattCd is null or :staffPartId is null)")
 	@Transactional
 	public void setStatus(
-			@Param(value = "ticketNumber") String ticketNumber,
-			@Param(value = "jjDisputeStatus") JJDisputeStatus jjDisputeStatus,
-			@Param(value = "userName") String userName, @Param(value = "partId") String partId, @Param(value = "courtAppearanceId") Long courtAppearanceId);
+			@Param(value = "jjDisputeId") Long disputeId,
+			@Param(value = "jjDisputeStatus") JJDisputeStatus disputeStatus,
+			@Param(value = "userId") String userId,
+			@Param(value = "courtAppearanceId") Long courtAppearanceId,
+			@Param(value = "seizedYn") YesNo seizedYn,
+			@Param(value = "adjudicatorPartId") String adjudicatorPartId,
+			@Param(value = "aattCd") JJDisputeCourtAppearanceAPP aattCd,
+			@Param(value = "dattCd") JJDisputeCourtAppearanceDATT dattCd,
+			@Param(value = "staffPartId") String staffPartId);
 
 }
