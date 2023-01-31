@@ -46,4 +46,13 @@ public interface IComsService
     /// <exception cref="ObjectManagementServiceException">There was an error searching files in COMS</exception>
     /// <returns></returns>
     Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves a file with data and details through COMS service for the given unique file ID
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>COMS File Object</returns>
+    /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
+    Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken);
 }
