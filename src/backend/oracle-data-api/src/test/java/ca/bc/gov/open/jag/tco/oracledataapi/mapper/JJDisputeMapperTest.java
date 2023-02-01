@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceCrown;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCountFinding;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCountRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
@@ -266,8 +269,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		disputeCount.setEntDtm(countCreatedTs);
 		disputeCount.setEntUserId(countCreatedBy);
 		disputeCount.setUpdDtm(countModifedTs);
-		disputeCount.setUpdUserId(countModifiedBy);		
-        disputeCount.setAppearanceChargeCountId(appearanceChargeCountId.toString());
+		disputeCount.setUpdUserId(countModifiedBy);
+		disputeCount.setAppearanceChargeCountId(appearanceChargeCountId.toString());
 		disputeCount.setFindingResultCd(findingResultCd.getShortName());
 		disputeCount.setLesserChargeDescTxt(lesserChargeDescTxt);
 		disputeCount.setSuspSntcProbationDurtnTxt(suspSntcProbationDurtnTxt);
@@ -283,7 +286,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		disputeCount.setWithdrawnYn(withdrawnYn.name());
 		disputeCount.setAbatementYn(abatementYn.name());
 		disputeCount.setStayOfProceedingsByTxt(stayOfProceedingsByTxt);
-		disputeCount.setOtherTxt(otherTxt);		
+		disputeCount.setOtherTxt(otherTxt);
 		disputeCount.setAccEntDtm(accEntDtm);
 		disputeCount.setAccEntUserId(accEntUserId);
 		disputeCount.setAccUpdDtm(accUpdDtm);
@@ -294,9 +297,9 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		JJDisputedCount jjDisputedCount = target.getJjDisputedCounts().get(0);
 
 		assertEquals(Long.valueOf(disputeCountId), jjDisputedCount.getId());
-//		assertEquals(disputeId, jjDisputedCount.getJjDispute().getDisputeId());                         // TODO: field missing in model but exists in database
+		//		assertEquals(disputeId, jjDisputedCount.getJjDispute().getDisputeId());                         // TODO: field missing in model but exists in database
 		assertEquals(Integer.valueOf(countNo), jjDisputedCount.getCount());
-//		assertEquals(statuteId, jjDisputedCount.getStatuteId());                                        // TODO: field missing in model but exists in database
+		//		assertEquals(statuteId, jjDisputedCount.getStatuteId());                                        // TODO: field missing in model but exists in database
 		assertEquals(pleaCd, jjDisputedCount.getPlea());
 		assertEquals(Float.valueOf(ticketedAmt.toString()), jjDisputedCount.getTicketedFineAmount());
 		assertEquals(fineDueDt, jjDisputedCount.getDueDate());
@@ -372,6 +375,71 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(remarkCreatedBy, jjDisputeRemark.getCreatedBy());
 		assertEquals(remarkModifedTs, jjDisputeRemark.getModifiedTs());
 		assertEquals(remarkModifiedBy, jjDisputeRemark.getModifiedBy());
+	}
+
+	@Test
+	public void testJJDisputeCourtAppearanceRoP() throws Exception {
+		String courtAppearanceId = "21";
+		String courtroomNumberTxt = "001";
+		Date appearanceDtm = RandomUtil.randomDate();
+		String appearanceReasonTxt = "HR";
+		JJDisputeCourtAppearanceAPP disputantPresenceCd = JJDisputeCourtAppearanceAPP.P;
+		Date disputantNotPresentDtm = RandomUtil.randomDate();
+		String recordingClerkNameTxt = "Clerk";
+		String defenceCounselNameTxt = "Counsel";
+		JJDisputeCourtAppearanceCrown crownPresenceCd = JJDisputeCourtAppearanceCrown.N;
+		YesNo seizedYn = YesNo.Y;
+		String judgeOrJjNameTxt = "Judge";
+		JJDisputeCourtAppearanceDATT defenceCounselPresenceCd = JJDisputeCourtAppearanceDATT.C;
+		String commentsTxt = "This is a comment";
+		Date courtAppearanceTs =  RandomUtil.randomDate();
+		String courtAppearanceCreatedBy = "5";
+		Date courtAppearanceModifedTs =  RandomUtil.randomDate();
+		String courtAppearanceModifiedBy = "6";
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance courtAppearance = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance();
+
+		courtAppearance.setAppearanceDtm(appearanceDtm);
+		courtAppearance.setAppearanceReasonTxt(appearanceReasonTxt);
+		courtAppearance.setCommentsTxt(commentsTxt);
+		courtAppearance.setCourtAppearanceId(courtAppearanceId);
+		courtAppearance.setCourtroomNumberTxt(courtroomNumberTxt);
+		courtAppearance.setCrownPresenceCd(crownPresenceCd.toString());
+		courtAppearance.setDefenceCounselNameTxt(defenceCounselNameTxt);
+		courtAppearance.setDefenceCounselPresenceCd(defenceCounselPresenceCd.toString());
+		courtAppearance.setDisputantNotPresentDtm(disputantNotPresentDtm);
+		courtAppearance.setDisputantPresenceCd(disputantPresenceCd.toString());
+		courtAppearance.setEntDtm(courtAppearanceTs);
+		courtAppearance.setEntUserId(courtAppearanceCreatedBy);
+		courtAppearance.setJudgeOrJjNameTxt(judgeOrJjNameTxt);
+		courtAppearance.setRecordingClerkNameTxt(recordingClerkNameTxt);
+		courtAppearance.setSeizedYn(seizedYn.name());
+		courtAppearance.setUpdDtm(courtAppearanceModifedTs);
+		courtAppearance.setUpdUserId(courtAppearanceModifiedBy);
+		source.setCourtAppearances(Arrays.asList(courtAppearance));
+
+		JJDispute target = jjDisputeMapper.convert(source);
+		JJDisputeCourtAppearanceRoP courtAppearanceRoP = target.getJjDisputeCourtAppearanceRoPs().get(0);
+
+		assertEquals(Long.valueOf(courtAppearanceId), courtAppearanceRoP.getId());
+		assertEquals(courtroomNumberTxt, courtAppearanceRoP.getRoom());
+		assertEquals(appearanceDtm, courtAppearanceRoP.getAppearanceTs());
+		assertEquals(appearanceReasonTxt, courtAppearanceRoP.getReason());
+		assertEquals(disputantPresenceCd, courtAppearanceRoP.getAppCd());
+		assertEquals(disputantNotPresentDtm, courtAppearanceRoP.getNoAppTs());
+		assertEquals(recordingClerkNameTxt, courtAppearanceRoP.getClerkRecord());
+		assertEquals(defenceCounselNameTxt, courtAppearanceRoP.getDefenceCounsel());
+		assertEquals(crownPresenceCd, courtAppearanceRoP.getCrown());
+		assertEquals(seizedYn, courtAppearanceRoP.getJjSeized());
+		assertEquals(judgeOrJjNameTxt, courtAppearanceRoP.getAdjudicator());
+		assertEquals(defenceCounselPresenceCd, courtAppearanceRoP.getDattCd());
+		assertEquals(commentsTxt, courtAppearanceRoP.getComments());
+		assertEquals(courtAppearanceTs, courtAppearanceRoP.getCreatedTs());
+		assertEquals(courtAppearanceCreatedBy, courtAppearanceRoP.getCreatedBy());
+		assertEquals(courtAppearanceModifedTs, courtAppearanceRoP.getModifiedTs());
+		assertEquals(courtAppearanceModifiedBy, courtAppearanceRoP.getModifiedBy());
 	}
 
 }

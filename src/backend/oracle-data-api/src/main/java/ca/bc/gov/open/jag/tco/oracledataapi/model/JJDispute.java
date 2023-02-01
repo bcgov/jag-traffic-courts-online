@@ -369,6 +369,13 @@ public class JJDispute extends Auditable<String> {
 	@OneToMany(targetEntity = JJDisputeRemark.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "jjDispute")
 	public List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
 
+	public void addRemarks(List<JJDisputeRemark> remarks) {
+		for (JJDisputeRemark remark : remarks) {
+			remark.setJjDispute(this);
+		}
+		this.remarks.addAll(remarks);
+	}
+
 	@JsonManagedReference(value = "jj_dispute_count_reference")
 	@OneToMany(targetEntity = JJDisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
@@ -379,13 +386,6 @@ public class JJDispute extends Auditable<String> {
 			disputedCount.setJjDispute(this);
 		}
 		this.jjDisputedCounts.addAll(disputedCounts);
-	}
-
-	public void addRemarks(List<JJDisputeRemark> remarks) {
-		for (JJDisputeRemark remark : remarks) {
-			remark.setJjDispute(this);
-		}
-		this.remarks.addAll(remarks);
 	}
 
 	@JsonManagedReference(value = "jj_dispute_court_appearance_rop_reference")
