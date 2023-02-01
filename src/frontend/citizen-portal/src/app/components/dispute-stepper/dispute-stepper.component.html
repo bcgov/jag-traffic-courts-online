@@ -184,21 +184,6 @@
               </section>
             </form>
 
-            <div class="col mt-4"
-              *ngIf="countForm?.value?.request_reduction === RequestReduction.Y || countForm?.value?.request_time_to_pay === RequestTimeToPay.Y">
-              <app-alert type="warning" icon="info">
-                <ng-container #alertContent class="alert-content">
-                  <span>
-                    <strong>You must provide written reasons in the Additional Information area of the form below for
-                      this option. If you do choose to appear in court to discuss you will not need to provide this
-                      information until the court hearing date. <br><br>
-
-                      If you provide written reasons, you will be notified in writing by the Court if your application
-                      was successful.</strong>
-                  </span>
-                </ng-container>
-              </app-alert>
-            </div>
           </app-page>
         </mat-card>
 

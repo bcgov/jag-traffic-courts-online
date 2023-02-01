@@ -16,23 +16,25 @@
             <small class="d-block">Given names</small>
             <div class="text">{{ noticeOfDispute.disputant_given_names }}</div>
           </div>
+        </div>
+        <h2><strong> Contact information</strong></h2>
+        <div class="row mb-2">
           <div class="col-lg-4">
             <small class="d-block">Contact type</small>
-            <div class="text">{{ noticeOfDispute.contact_type }}</div>
-          </div>
-        </div>
-        <h2><strong> Disputant contact information</strong></h2>
-        <div class="row mb-2">
-          <div class="lg-2 col-lg-4" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">
-            <small class="d-block">Law firm</small>
-            <div class="text">{{ noticeOfDispute.contact_law_firm_name }}</div>
+            <div class="text">{{ noticeOfDispute.contact_type | titlecase }}</div>
           </div>
           <div class="lg-2 col-lg-4">
-            <small class="d-block">Surname</small>
+            <small class="d-block" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">Law firm</small>
+            <div class="text" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">{{ noticeOfDispute.contact_law_firm_name }}</div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? 'S' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer s' : 'Other s') }}urname</small>
             <div class="text">{{ noticeOfDispute.contact_surname }}</div>
           </div>
           <div class="col-lg-4">
-            <small class="d-block">Given names</small>
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? 'G' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer g' : 'Other g') }}iven names</small>
             <div class="text">{{ noticeOfDispute.contact_given_names }}</div>
           </div>
         </div>
@@ -42,20 +44,20 @@
             <small class="d-block">Mailing address</small>
             <div class="text">{{ noticeOfDispute.address }}</div>
           </div>
-          <div class="col-lg-4">
-            <small class="d-block">Country</small>
-            <div class="text">{{ getCountryLongName(noticeOfDispute.address_country_id) }}</div>
-          </div>
-          <div class="col-lg-4">
-            <small class="d-block">Province/State</small>
-            <div class="text">{{ noticeOfDispute.address_province }}</div>
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">City</small>
+            <div class="text">{{ noticeOfDispute.address_city }}</div>
           </div>
         </div>
 
         <div class="row mb-2">
-          <div class="lg-2 col-lg-4">
-            <small class="d-block">City</small>
-            <div class="text">{{ noticeOfDispute.address_city }}</div>
+          <div class="col-lg-4">
+            <small class="d-block">Province/State</small>
+            <div class="text">{{ noticeOfDispute.address_province }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Country</small>
+            <div class="text">{{ getCountryLongName(noticeOfDispute.address_country_id) }}</div>
           </div>
           <div class="col-lg-4">
             <small class="d-block">Postal/ZIP code</small>

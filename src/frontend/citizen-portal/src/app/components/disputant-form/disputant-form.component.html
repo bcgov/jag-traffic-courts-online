@@ -1,5 +1,22 @@
 <form [formGroup]="form" novalidate>
   <section class="mb-2">
+    <h4><b>Name on ticket</b></h4>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field class="w-100">
+          <mat-label>Surname</mat-label>
+          <input matInput formControlName="disputant_surname" />
+          <mat-error>{{ "error.required" | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field class="w-100">
+          <mat-label>Given name(s)</mat-label>
+          <input matInput formControlName="disputant_given_names" />
+          <mat-error>{{ "error.required" | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
     <h4><b>Contact details</b></h4>
     Who are we contacting?<br/>
     <div class="row">

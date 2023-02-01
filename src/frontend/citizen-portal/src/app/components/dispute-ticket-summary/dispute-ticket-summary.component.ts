@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { DisputeContactTypeCd, DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn, Language } from "app/api";
+import { DisputeContactTypeCd, DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
 import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { ConfigService } from "@config/config.service";

@@ -166,7 +166,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     let isValid = this.formUtilsService.checkValidity(this.form);
 
     if (this.stepper.selectedIndex === this.countIndex) {
-      this.getCountsActions();
       this.countForms.controls.forEach(countForm => {
         if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
           countForm.patchValue({ plea_cd: this.Plea.G });
@@ -183,9 +182,12 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    this.getCountsActions();
+
     this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
       ...this.form.value,
       ...this.additionalForm.value,
+      ...this.countForms.value,
       ...this.legalRepresentationForm.value,
       address_country_id: this.form.get("address_country_id").value, // disabled field is not available in this.form.value
       dispute_counts: this.countForms.value
@@ -194,11 +196,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   private setAdditionalRequired() {
     this.getCountsActions();
-    if (this.countsActions.request_reduction.length > 0 && this.additionalForm.controls.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
-      this.additionalForm.controls.fine_reduction_reason[1].push(Validators.required);
+    this.additionalForm.controls.fine_reduction_reason.clearValidators();
+    this.additionalForm.controls.time_to_pay_reason.clearValidators();
+    if (this.countsActions.request_reduction.length > 0) {
+      this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required])
     }
-    if (this.countsActions.request_time_to_pay.length > 0 && this.additionalForm.controls.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
-      this.additionalForm.controls.time_to_pay_reason[1].push(Validators.required);
+    if (this.countsActions.request_time_to_pay.length > 0) {
+      this.additionalForm.controls.time_to_pay_reason.addValidators([Validators.required]);
     }
   }
 
