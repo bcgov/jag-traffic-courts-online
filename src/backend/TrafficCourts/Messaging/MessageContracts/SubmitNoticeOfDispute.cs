@@ -50,6 +50,26 @@ public class SubmitNoticeOfDispute
     public string ContactGiven3Nm { get; set; } = null!;
 
     /// <summary>
+    /// The surname or corporate name.
+    /// </summary>
+    public string DisputantSurname { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string DisputantGivenName1 { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string DisputantGivenName2 { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string DisputantGivenName3 { get; set; } = null!;
+
+    /// <summary>
     /// Contact Law Firm Name.
     /// </summary>
     public string ContactLawFirmNm { get; set; } = null!;

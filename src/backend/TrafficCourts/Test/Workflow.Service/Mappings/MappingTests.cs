@@ -37,6 +37,10 @@ public class MappingTests
         Assert.Equal(source.TicketNumber, target.TicketNumber);
         Assert.Equal(source.IssuedTs, target.IssuedTs);
         Assert.Equal(source.SubmittedTs, target.SubmittedTs);
+        Assert.Equal(source.DisputantSurname, target.DisputantSurname);
+        Assert.Equal(source.DisputantGivenName1, target.DisputantGivenName1);
+        Assert.Equal(source.DisputantGivenName2, target.DisputantGivenName2);
+        Assert.Equal(source.DisputantGivenName3, target.DisputantGivenName3);
         Assert.Equal(source.ContactSurnameNm, target.ContactSurnameNm);
         Assert.Equal(source.ContactGiven1Nm, target.ContactGiven1Nm);
         Assert.Equal(source.ContactGiven2Nm, target.ContactGiven2Nm);

@@ -178,17 +178,6 @@ public interface DisputeMapper {
 		return null;
 	}
 	
-	@Named("mapContactType")
-	default ContactType mapContactType(String statusShortCd) {
-		ContactType[] values = ContactType.values();
-		for (ContactType contactType : values) {
-			if (contactType.getShortName().equals(statusShortCd)) {
-				return contactType;
-			}
-		}
-		return null;
-	}
-
 	@Named("mapContactTypeCd")
 	default ContactType mapContactTypeCd(String statusShortCd) {
 		ContactType[] values = ContactType.values();

@@ -31,8 +31,8 @@ export class NoticeOfDisputeService {
   ticketFormFields: NoticeOfDisputeFormControls = { // need to reset before using, all default value should be set in the component itself
     disputant_surname: new FormControl<string | null>(null, [Validators.required]),
     disputant_given_names: new FormControl<string | null>(null, [Validators.required]),
-    contact_given_names: new FormControl<string | null>(null, [Validators.required]),
-    contact_surname: new FormControl<string | null>(null, [Validators.required]),
+    contact_given_names: new FormControl<string | null>(null),
+    contact_surname: new FormControl<string | null>(null),
     contact_law_firm_name: new FormControl<string | null>(null),
     contact_type: new FormControl<string>(this.ContactType.Individual,[Validators.required]),
     address: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(300)]),

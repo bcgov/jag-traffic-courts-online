@@ -37,6 +37,7 @@
     <!-- counts -->
     <mat-step [completed]="isValid()">
       <ng-template matStepLabel>Counts: Review</ng-template>
+      <h2><strong>Court Appearance?</strong></h2>
       <div class="row">
         <div class="col">
           <app-alert type="info" icon="info">
@@ -48,8 +49,7 @@
             </ng-container>
           </app-alert>
         </div>
-      </div><br />
-
+      </div>
       <mat-radio-group [formControl]="additionalForm?.get('request_court_appearance')">
         <div>
           <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
@@ -121,88 +121,91 @@
       </div>
 
       <ng-container *ngFor="let countForm of countForms?.controls; let i = index;">
-        <app-page *ngIf="additionalForm?.get('request_court_appearance').value">
-          <app-page-header>
-            <ng-container subHeader>
-              <div class="row mt-2">
-                <div class="col-md-8">
-                  <small class="d-block"> Description of offence </small>
-                  <strong>{{ countForm.value.description | titlecase }}</strong>
+        <mat-card class="mat-elevation-z8" *ngIf="additionalForm?.get('request_court_appearance').value">
+          <app-page>
+            <app-page-header>
+              <ng-container subHeader>
+                <h2><strong>Count {{ countForm.value.count_no }}</strong></h2>
+                <div class="row mt-2">
+                  <div class="col-md-8">
+                    <small class="d-block"> Description of offence </small>
+                    <strong>{{ countForm.value.description | titlecase }}</strong>
+                  </div>
+                  <div class="col-md-4">
+                    <small class="d-block">Offence amount</small>
+                    <strong>{{ countForm.value.ticketed_amount| currency:
+                      "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
+                  </div>
                 </div>
-                <div class="col-md-4">
-                  <small class="d-block">Offence amount</small>
-                  <strong>{{ countForm.value.ticketed_amount| currency:
-                    "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
-                </div>
-              </div>
-            </ng-container>
-          </app-page-header>
-
-          <form [formGroup]="countForm" novalidate>
-            <section>
-              <div class="row mt-4">
-                <div
-                  [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
-                  <label class="w-100">
-                    Please provide additional selections below:
-                  </label>
-                  <mat-checkbox [checked]="countForm?.get('request_reduction')?.value === RequestReduction.Y ? true:false"
-                    (change)="countForm?.get('request_reduction')?.setValue($event.checked? RequestReduction.Y: RequestReduction.N)"
-                    color="primary" class="w-100"> I would like
-                    to request a fine reduction on this count.</mat-checkbox>
-                  <p> and/or</p>
-                  <mat-checkbox
-                    [checked]="countForm.get('request_time_to_pay')?.value === RequestTimeToPay.Y ? true:false"
-                    (change)="countForm.get('request_time_to_pay')?.setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
-                    color="primary" class="w-100"> I would
-                    like to request time to pay on this count.</mat-checkbox>
-                </div>
-
-                <div
-                  [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
-                  <label class="w-100">
-                    Please provide additional selections below:
-                  </label>
-                  <mat-radio-group formControlName="plea_cd">
-                    <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
-                      offence and would like to request a fine reduction and/or time to pay on this count.
-                    </mat-radio-button>
-                    <p> and/or</p>
-                    <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
-                      committed this offence and would like to dispute this count</mat-radio-button>
-                  </mat-radio-group>
-                </div>
-              </div>
-              <hr />
-              <div class="row">
-                <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked()">
-                  Skip this count, no action required.
-                </mat-checkbox>
-              </div>
-            </section>
-          </form>
-
-          <div class="col mt-4"
-            *ngIf="countForm?.value?.request_reduction === RequestReduction.Y || countForm?.value?.request_time_to_pay === RequestTimeToPay.Y">
-            <app-alert type="warning" icon="info">
-              <ng-container #alertContent class="alert-content">
-                <span>
-                  <strong>You must provide written reasons in the Additional Information area of the form below for
-                    this option. If you do choose to appear in court to discuss you will not need to provide this
-                    information until the court hearing date. <br><br>
-
-                    If you provide written reasons, you will be notified in writing by the Court if your application
-                    was successful.</strong>
-                </span>
               </ng-container>
-            </app-alert>
-          </div>
+            </app-page-header>
 
-          <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()"
-            (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
-            [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
-          </app-stepper-footer>
-        </app-page>
+            <form [formGroup]="countForm" novalidate>
+              <section>
+                <div class="row mt-4">
+                  <div
+                    [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
+                    <label class="w-100">
+                      Please provide additional selections below:
+                    </label>
+                    <mat-checkbox [checked]="countForm?.get('request_reduction')?.value === RequestReduction.Y ? true:false"
+                      (change)="countForm?.get('request_reduction')?.setValue($event.checked? RequestReduction.Y: RequestReduction.N)"
+                      color="primary" class="w-100"> I would like
+                      to request a fine reduction on this count.</mat-checkbox>
+                    <p> and/or</p>
+                    <mat-checkbox
+                      [checked]="countForm.get('request_time_to_pay')?.value === RequestTimeToPay.Y ? true:false"
+                      (change)="countForm.get('request_time_to_pay')?.setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
+                      color="primary" class="w-100"> I would
+                      like to request time to pay on this count.</mat-checkbox>
+                  </div>
+
+                  <div
+                    [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
+                    <label class="w-100">
+                      Please provide additional selections below:
+                    </label>
+                    <mat-radio-group formControlName="plea_cd">
+                      <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
+                        offence and would like to request a fine reduction and/or time to pay on this count.
+                      </mat-radio-button>
+                      <p> and/or</p>
+                      <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
+                        committed this offence and would like to dispute this count</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked()">
+                    Skip this count, no action required.
+                  </mat-checkbox>
+                </div>
+              </section>
+            </form>
+
+            <div class="col mt-4"
+              *ngIf="countForm?.value?.request_reduction === RequestReduction.Y || countForm?.value?.request_time_to_pay === RequestTimeToPay.Y">
+              <app-alert type="warning" icon="info">
+                <ng-container #alertContent class="alert-content">
+                  <span>
+                    <strong>You must provide written reasons in the Additional Information area of the form below for
+                      this option. If you do choose to appear in court to discuss you will not need to provide this
+                      information until the court hearing date. <br><br>
+
+                      If you provide written reasons, you will be notified in writing by the Court if your application
+                      was successful.</strong>
+                  </span>
+                </ng-container>
+              </app-alert>
+            </div>
+          </app-page>
+        </mat-card>
+
+        <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()"
+          (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+          [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+        </app-stepper-footer>
       </ng-container>
     </mat-step>
 

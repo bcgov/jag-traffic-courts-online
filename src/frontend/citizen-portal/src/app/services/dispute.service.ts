@@ -20,6 +20,7 @@ export class DisputeService {
     "disputant_surname",
     "disputant_given_names",
     "contact_given_names",
+    "contact_surname",
     "contact_type",
     "contact_law_firm_name",
     "address",

@@ -73,26 +73,23 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   }
 
   onSelectContactType(newContactType: any) {
-    console.log(newContactType);
+    this.form.get('contact_given_names').setValue(null);
+    this.form.get('contact_surname').setValue(null);
+    this.form.get('contact_law_firm_name').clearValidators();
+    this.form.get('contact_surname').clearValidators();
+    this.form.get('contact_given_names').clearValidators();
+    this.form.get('contact_law_firm_name').setValue(null);
     if (newContactType == this.ContactType.Lawyer) {
-      // make contact law firm name required, blank out contact name
-      this.form.get('contact_law_firm_name').clearValidators();
+      // make all contact info required
       this.form.get('contact_law_firm_name').addValidators([Validators.required]);
-      this.form.get('contact_law_firm_name').setValue("");
-      this.form.get('contact_surname').setValue("");
-      this.form.get('contact_given_names').setValue("");
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
     } else if (newContactType == this.ContactType.Individual) {
-      // set contact names to disputant names, blank out law firm name
-      this.form.get('contact_law_firm_name').clearValidators();
-      this.form.get('contact_law_firm_name').setValue("");
-      this.form.get('contact_surname').setValue(this.form.get('disputant_surname').value);
-      this.form.get('contact_given_names').setValue(this.form.get('disputant_given_names').value);
+      // leave contact info null and not required
     } else {
-      // set contact names to blank, blank out law firm name
-      this.form.get('contact_law_firm_name').clearValidators();
-      this.form.get('contact_law_firm_name').setValue("");
-      this.form.get('contact_surname').setValue("");
-      this.form.get('contact_given_names').setValue("");
+      // only contact names required
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
     }
     this.form.get('contact_law_firm_name').updateValueAndValidity();
     this.form.get('contact_surname').updateValueAndValidity();
@@ -126,7 +123,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     // initialize contact type to individual on the ticket
     this.form?.get('contact_type').setValue(this.ContactType.Individual);
     this.form.get('contact_law_firm_name').clearValidators();
-    this.form.get('contact_law_firm_name').setValue("");
+    this.form.get('contact_law_firm_name').setValue(null);
     this.form.get('contact_surname').setValue(this.form.get('disputant_surname').value);
     this.form.get('contact_given_names').setValue(this.form.get('disputant_given_names').value);
 
