@@ -75,7 +75,7 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
-	private JJDisputeCourtAppearanceAPP app;
+	private JJDisputeCourtAppearanceAPP appCd;
 	
 	/**
      * No app -- timestamp when it was decided disputant did not appear
@@ -97,7 +97,7 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-    private String defenseCounsel;
+    private String defenceCounsel;
 	
 	/**
 	 * Defense Counsel Attendance
