@@ -41,6 +41,14 @@ public interface DisputeMapper {
 	@Mapping(target = "disputeStatusType", ignore = true) // ignore back reference mapping
 	@Mapping(source = "dispute.issuedDt", target = "issuedTs")
 	@Mapping(source = "dispute.submittedDt", target = "submittedTs")
+	@Mapping(source = "dispute.contactTypeCd", target = "contactTypeCd", qualifiedByName="mapContactTypeCd")
+	@Mapping(source = "dispute.contactLawFirmNm", target = "contactLawFirmNm")
+	@Mapping(source = "dispute.contactGiven1Nm", target = "contactGiven1Nm")
+	@Mapping(source = "dispute.contactGiven2Nm", target = "contactGiven2Nm")
+	@Mapping(source = "dispute.contactGiven3Nm", target = "contactGiven3Nm")
+	@Mapping(source = "dispute.contactSurnameNm", target = "contactSurnameNm")
+	@Mapping(source = "dispute.appearanceDtm", target = "appearanceDtm")
+	@Mapping(source = "dispute.appearanceLessThan14Days", target = "appearanceLessThan14DaysYn")
 	@Mapping(source = "dispute.disputantClientId", target = "disputantClientId")
 	@Mapping(source = "dispute.contactLawFirmNm", target = "contactLawFirmName")
 	@Mapping(source = "dispute.contactGiven1Nm", target = "contactGivenName1")
@@ -61,6 +69,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.drvLicIssuedCtryId", target = "driversLicenceIssuedCountryId")
 	@Mapping(source = "dispute.drvLicIssuedProvSeqNo", target = "driversLicenceIssuedProvinceSeqNo")
 	@Mapping(source = "dispute.drvLicIssuedIntlProvTxt", target = "driversLicenceProvince")
+	@Mapping(source = "dispute.requestCourtAppearanceYn", target = "requestCourtAppearanceYn")
 	@Mapping(source = "dispute.addressLine1Txt", target = "addressLine1")
 	@Mapping(source = "dispute.addressLine2Txt", target = "addressLine2")
 	@Mapping(source = "dispute.addressLine3Txt", target = "addressLine3")
@@ -180,6 +189,17 @@ public interface DisputeMapper {
 	
 	@Named("mapContactType")
 	default ContactType mapContactType(String statusShortCd) {
+		ContactType[] values = ContactType.values();
+		for (ContactType contactType : values) {
+			if (contactType.getShortName().equals(statusShortCd)) {
+				return contactType;
+			}
+		}
+		return null;
+	}
+
+	@Named("mapContactTypeCd")
+	default ContactType mapContactTypeCd(String statusShortCd) {
 		ContactType[] values = ContactType.values();
 		for (ContactType contactType : values) {
 			if (contactType.getShortName().equals(statusShortCd)) {

@@ -3,22 +3,17 @@
 public enum VirusScanStatus
 {
     /// <summary>
-    /// The result is unknown.
+    /// There was an error scanning the file.
     /// </summary>
-    Unknown = 0,
-    
-    /// <summary>
-    /// The virus scan passed. No viruses found.
-    /// </summary>
-    NotInfected,
+    Error = 1,
 
     /// <summary>
     /// The virus scan found a virus.
     /// </summary>
-    Infected,
+    Infected = 2,
 
     /// <summary>
-    /// There was an error scanning the file.
+    /// The virus scan passed. No viruses found.
     /// </summary>
-    Error
+    NotInfected = 3,
 }

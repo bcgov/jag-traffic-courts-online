@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
@@ -190,6 +191,7 @@ public class RandomUtil {
 		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
 		dispute.setTicketNumber(randomTicketNumber());
 		dispute.setStatus(DisputeStatus.NEW);
+		dispute.setContactTypeCd(ContactType.INDIVIDUAL);
 		dispute.setDisputantGivenName1(randomGivenName());
 		dispute.setDisputantSurname(randomSurname());
 
@@ -343,6 +345,18 @@ public class RandomUtil {
 		dispute.setAddressCountryId(1);
 		dispute.setAddressProvinceCountryId(1);
 		dispute.setAddressProvinceSeqNo(2);
+		dispute.setContactTypeCd(ContactType.INDIVIDUAL);
+		if (ContactType.LAWYER.equals(dispute.getContactTypeCd())) {
+			dispute.setContactLawFirmNm(randomAlphabetic(200));
+		}
+		if (ContactType.LAWYER.equals(dispute.getContactTypeCd()) || ContactType.OTHER.equals(dispute.getContactTypeCd())) {
+			dispute.setContactGiven1Nm(randomAlphabetic(30));
+			dispute.setContactGiven2Nm(randomAlphabetic(30));
+			dispute.setContactGiven3Nm(randomAlphabetic(30));
+			dispute.setContactSurnameNm(randomAlphabetic(30));
+		}
+		dispute.setAppearanceDtm(randomDate());
+		dispute.setAppearanceLessThan14DaysYn(randomYN());
 		dispute.setDetachmentLocation(randomAlphabetic(150));
 		dispute.setDisputantBirthdate(randomDate());
 		dispute.setDisputantClientId(randomNumeric(5));
@@ -382,6 +396,7 @@ public class RandomUtil {
 		dispute.setPostalCode(randomAlphanumeric(10));
 		dispute.setRejectedReason(randomAlphabetic(500));
 		dispute.setRepresentedByLawyer(randomYN());
+		dispute.setRequestCourtAppearanceYn(randomYN());
 		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setSubmittedTs(randomDateTime());
 		dispute.setSystemDetectedOcrIssues(randomYN());

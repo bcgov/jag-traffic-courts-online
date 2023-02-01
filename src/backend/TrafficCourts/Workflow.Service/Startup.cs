@@ -55,11 +55,10 @@ public static class Startup
         // add the Virus Scan Client
         builder.Services.AddVirusScanClient(builder.Configuration);
 
-        builder.Services.AddTransient<IVirusScanService, VirusScanService>();
         builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
         builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
         builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
-        builder.Services.AddTransient<IComsService, ComsService>();
+        builder.Services.AddTransient<IWorkflowDocumentService, WorkflowDocumentService>();
 
         builder.Services.AddEmailTemplates();
 

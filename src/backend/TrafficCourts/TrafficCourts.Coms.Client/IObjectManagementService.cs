@@ -68,4 +68,15 @@ public interface IObjectManagementService
     /// <exception cref="TagValueTooLongException">A tag value was too long. Maximum length of a tag value is 256.</exception>
     /// <exception cref="ObjectManagementServiceException">Other error occured</exception>
     Task<IList<FileSearchResult>> FileSearchAsync(FileSearchParameters parameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Replaces the metadata on the specified file.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="meta"></param>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="ArgumentException"><paramref name="id"/> is <see cref="Guid.Empty"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="meta"/> is null.</exception>
+    /// <returns></returns>
+    Task ReplaceMetadataAsync(Guid id, IReadOnlyDictionary<string, string> meta, CancellationToken cancellationToken);
 }

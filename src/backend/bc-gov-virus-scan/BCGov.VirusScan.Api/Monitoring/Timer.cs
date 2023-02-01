@@ -58,5 +58,10 @@ public sealed class Timer : Instrument<double>
         {
             _exception = exception;
         }
+
+        public void AddTag(string name, object value)
+        {
+            _tagList.Add(name, value);
+        }
     }
 }

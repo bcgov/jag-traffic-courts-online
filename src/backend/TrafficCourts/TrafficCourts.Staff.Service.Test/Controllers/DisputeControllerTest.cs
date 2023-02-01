@@ -16,6 +16,7 @@ using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
 using TrafficCourts.Staff.Service.Models;
 using Xunit;
+using TrafficCourts.Common.Errors;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 

@@ -2134,6 +2134,45 @@
             "type": "string",
             "nullable": true
           },
+          "contactTypeCd": {
+            "type": "string",
+            "enum": [ "UNKNOWN", "INDIVIDUAL", "LAWYER", "OTHER" ]
+          },
+          "requestCourtAppearanceYn": {
+            "type": "string",
+            "nullable": true,
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
+          "contactLawFirmNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGiven1Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGiven2Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGiven3Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactSurnameNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "appearanceDtm": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "appearanceLessThan14DaysYn": {
+            "type": "string",
+            "nullable": true,
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
           "detachmentLocation": {
             "type": "string",
             "nullable": true

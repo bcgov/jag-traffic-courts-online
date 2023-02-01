@@ -1,22 +1,18 @@
 ﻿using AutoMapper;
-using AutoMapper.Internal;
 using HashidsNet;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Services;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Text;
-using System.Threading;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common;
+using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.Features.EmailVerificationToken;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -38,6 +34,7 @@ public class DisputesController : ControllerBase
     private readonly IDisputeEmailVerificationTokenEncoder _tokenEncoder;
     private readonly IOAuthUserService _oAuthUserService;
     private readonly IMapper _mapper;
+    private readonly ICitizenDocumentService _documentService;
 
     /// <summary>
     /// 
@@ -49,8 +46,9 @@ public class DisputesController : ControllerBase
     /// <param name="tokenEncoder"></param>
     /// <param name="oAuthUserService"></param>
     /// <param name="mapper"></param>
+    /// <param name="comsService"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
-    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper)
+    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper, ICitizenDocumentService documentService)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -59,6 +57,7 @@ public class DisputesController : ControllerBase
         _tokenEncoder = tokenEncoder ?? throw new ArgumentNullException(nameof(tokenEncoder));
         _oAuthUserService = oAuthUserService ?? throw new ArgumentNullException(nameof(oAuthUserService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
     }
 
     /// <summary>
@@ -286,6 +285,78 @@ public class DisputesController : ControllerBase
         {
             _logger.LogError(ex, "Unknown Error");
             throw;
+        }
+    }
+
+    /// <summary>
+    /// Downloads a document for the given unique file ID if the virus scan staus is clean.
+    /// </summary>
+    /// <param name="fileId">Unique identifier for a specific document.</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">The document is successfully downloaded.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, requires jjdispute:read permission.</response>
+    /// <response code="500">There was a server error that prevented the file to be downloaded successfully.</response>
+    /// <returns>The document</returns>
+    [Authorize]
+    [HttpGet("/api/disputes/downloadDocument")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DownloadDocumentAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
+            if (String.IsNullOrEmpty(token))
+            {
+                throw new UnauthorizedAccessException("Invalid access_token");
+            }
+
+            Coms.Client.File file = await _documentService.GetFileAsync(fileId, cancellationToken);
+
+            var stream = file.Data;
+            // Reset position to the beginning of the stream
+            stream.Position = 0;
+
+            return File(stream, file.ContentType ?? "application/octet-stream", file.FileName ?? "download");
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            _logger.LogError(e, "User is unauthorized. Invalid Access Token");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Unauthorized;
+            problemDetails.Title = e.Source + ": Exception Authorizing User";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            problemDetails.Extensions.Add("errors", e.Message);
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Coms.Client.ObjectManagementServiceException e)
+        {
+            _logger.LogError(e, "Could not download the document because of ObjectManagementServiceException");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+            problemDetails.Title = e.Source + ": Error getting file from COMS";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving the document");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
 

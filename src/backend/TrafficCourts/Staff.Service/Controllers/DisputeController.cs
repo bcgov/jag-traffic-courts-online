@@ -5,6 +5,7 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
 using TrafficCourts.Staff.Service.Models;
+using TrafficCourts.Common.Errors;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 

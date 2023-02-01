@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace TrafficCourts.Coms.Client;
 
@@ -69,6 +68,11 @@ internal class ObjectManagementService : IObjectManagementService
 
     public async Task DeleteFileAsync(Guid id, CancellationToken cancellationToken)
     {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
+        }
+
         _logger.LogDebug("Deleting file {FileId}", id);
 
         try
@@ -93,6 +97,11 @@ internal class ObjectManagementService : IObjectManagementService
 
     public async Task<File> GetFileAsync(Guid id, bool includeTags, CancellationToken cancellationToken)
     {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
+        }
+
         _logger.LogDebug("Getting file {FileId}", id);
 
         try
@@ -212,6 +221,11 @@ internal class ObjectManagementService : IObjectManagementService
 
     public async Task UpdateFileAsync(Guid id, File file, CancellationToken cancellationToken)
     {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
+        }
+
         ArgumentNullException.ThrowIfNull(file);
         
         if (file.Data is null)
@@ -235,6 +249,26 @@ internal class ObjectManagementService : IObjectManagementService
         {
             throw ExceptionHandler("updating file", exception);
         }
+    }
+
+    public async Task ReplaceMetadataAsync(Guid id, IReadOnlyDictionary<string, string> meta, CancellationToken cancellationToken)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
+        }
+
+        ArgumentNullException.ThrowIfNull(meta);
+
+        try
+        {
+            await _client.ReplaceMetadataAsync(meta, id, versionId: null, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            throw ExceptionHandler("replacing metadata", exception);
+        }
+
     }
 
     private static string? GetHeader(IReadOnlyDictionary<string, IEnumerable<string>> headers, string name)
@@ -310,6 +344,8 @@ internal class ObjectManagementService : IObjectManagementService
 
     private Exception ExceptionHandler(string operation, Exception exception)
     {
+        // TODO: this should be enhaced to provide better error troubleshooting
+
         if (exception is ApiException)
         {
             _logger.LogError(exception, "API error {operation}", operation);

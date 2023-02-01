@@ -3,7 +3,7 @@ using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Staff.Service.Services;
 
-public interface IComsService
+public interface IStaffDocumentService
 {
     /// <summary>
     /// Saves the given file object with optional content type and metadata to object store through COMS service

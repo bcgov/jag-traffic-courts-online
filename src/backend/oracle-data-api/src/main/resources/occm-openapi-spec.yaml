@@ -489,6 +489,29 @@ components:
           type: string
         addressProvSeqNo:
           type: string
+        appearanceDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        appearanceLessThan14Days:
+          type: string
+        contactGiven1Nm:
+          type: string
+          format: nullable
+        contactGiven2Nm:
+          type: string
+          format: nullable
+        contactGiven3Nm:
+          type: string
+          format: nullable
+        contactSurnameNm:
+          type: string
+          format: nullable
+        contactLawFirmNm:
+          type: string
+          format: nullable
+        contactTypeCd:
+          type: string
         courtAgenId:
           type: string
         courtLocationTxt:
@@ -650,6 +673,8 @@ components:
         representedByLawyerYn:
           type: string
           format: nullable
+        requestCourtAppearanceYn:
+          type: string
         submittedDt:
           type: string
           format: date-time
