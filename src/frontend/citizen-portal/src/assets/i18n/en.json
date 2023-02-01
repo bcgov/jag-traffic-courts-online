@@ -73,8 +73,7 @@
       "work_phone_number": "Work Phone Number",
       "driver_license_number": "Driver's License Number",
       "driver_license_province": "Province or State of Driver's License",
-      "email_address": "Email Address",
-      "birthdate": "Birthdate"
+      "email_address": "Email Address"
     },
     "count": {
       "heading": "Count Review and Action",

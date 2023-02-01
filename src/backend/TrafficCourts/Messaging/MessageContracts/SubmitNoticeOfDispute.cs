@@ -32,22 +32,32 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
-    public string DisputantSurname { get; set; } = null!;
+    public string ContactSurname { get; set; } = null!;
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string DisputantGivenName1 { get; set; } = null!;
+    public string ContactGivenName1 { get; set; } = null!;
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string DisputantGivenName2 { get; set; } = null!;
+    public string ContactGivenName2 { get; set; } = null!;
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string DisputantGivenName3 { get; set; } = null!;
+    public string ContactGivenName3 { get; set; } = null!;
+
+    /// <summary>
+    /// Contact Law Firm Name.
+    /// </summary>
+    public string ContactLawFirmName { get; set; } = null!;
+
+    /// <summary>
+    /// Contact Type.
+    /// </summary>
+    public DisputeContactType ContactType { get; set; }
 
     /// <summary>
     /// The disputant's birthdate.
@@ -212,6 +222,11 @@ public class SubmitNoticeOfDispute
     /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
     /// </summary>
     public DisputeDisputantDetectedOcrIssues DisputantDetectedOcrIssues { get; set; }
+
+    /// <summary>
+    /// Did the disputant request a court appearance?
+    /// </summary>
+    public DisputeRequestCourtAppearance RequestCourtAppearance { get; set; }
 
     /// <summary>
     /// The description of the issue with OCR ticket if the citizen has detected any.

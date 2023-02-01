@@ -96,6 +96,8 @@ components:
           format: nullable
         contactTypeCd:
           type: string
+        requestCourtAppearanceYn:
+          type: string 
         courtAgenId:
           type: string
         courtAppearances:

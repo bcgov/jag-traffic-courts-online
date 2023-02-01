@@ -36,7 +36,7 @@ namespace TrafficCourts.Citizen.Service.Models.OAuth
         /// The surname or corporate name.
         /// </summary>
         [JsonPropertyName("family_name")]
-        public string? Surename { get; set; } = null!;
+        public string? Surname { get; set; } = null!;
 
         /// <summary>
         /// The birthdate.

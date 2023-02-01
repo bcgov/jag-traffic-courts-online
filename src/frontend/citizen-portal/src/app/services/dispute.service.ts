@@ -19,6 +19,9 @@ export class DisputeService {
   disputantFormKeys: DisputantContactInformationKeys[] = [
     "disputant_surname",
     "disputant_given_names",
+    "contact_given_names",
+    "contact_type",
+    "contact_law_firm_name",
     "address",
     "address_city",
     "address_province",
@@ -78,7 +81,8 @@ export class DisputeService {
 
   updateDisputeContact(guid: string, input: DisputantContactInformation) {
     let payload = { ...input }; // state data cannot be changed, need to create a new one
-    payload = this.noticeOfDisputesService.splitGivenNames(payload);  // break disputant names into first, second, third
+    payload = this.noticeOfDisputesService.splitDisputantGivenNames(payload);  // break disputant names into first, second, third
+    payload = this.noticeOfDisputesService.splitContactGivenNames(payload);  // break disputant names into first, second, third
     payload = this.noticeOfDisputesService.splitAddressLines(payload); // break address into line 1,2,3 by comma
     return this.disputesService.apiDisputeGuidHashContactPut(guid, payload);
   }
@@ -116,6 +120,7 @@ export enum StatusStepType {
 
 export interface DisputantContactInformation extends DisputantContactInformationBase {
   disputant_given_names?: string;
+  contact_given_names?: string;
   address?: string;
 }
 

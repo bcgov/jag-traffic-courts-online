@@ -59,10 +59,12 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.HomePhoneNumber = patch?.HomePhoneNumber;
                     break;
                 case DisputantUpdateRequestUpdateType.DISPUTANT_NAME:
-                    dispute.DisputantGivenName1 = patch?.DisputantGivenName1;
-                    dispute.DisputantGivenName2 = patch?.DisputantGivenName2;
-                    dispute.DisputantGivenName3 = patch?.DisputantGivenName3;
-                    dispute.DisputantSurname = patch?.DisputantSurname;
+                    dispute.ContactGivenName1 = patch?.ContactGivenName1;
+                    dispute.ContactGivenName2 = patch?.ContactGivenName2;
+                    dispute.ContactGivenName3 = patch?.ContactGivenName3;
+                    dispute.ContactSurname = patch?.ContactSurname;
+                    dispute.ContactLawFirmName = patch?.ContactLawFirmName;
+                    dispute.ContactType = patch?.ContactType;
                     break;
                 case DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
                     // TODO: update document metadata set StaffReviewStatus to Accepted
@@ -93,7 +95,10 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.InterpreterRequired = patch?.InterpreterRequired;   
                     dispute.WitnessNo = patch?.WitnessNo;
                     dispute.FineReductionReason = patch?.FineReductionReason;
-                    dispute.TimeToPayReason = patch?.TimeToPayReason; 
+                    dispute.TimeToPayReason = patch?.TimeToPayReason;
+#pragma warning disable CS8629 // Nullable value type may be null.
+                    dispute.RequestCourtAppearance = (DisputeRequestCourtAppearance)(patch?.RequestCourtAppearance);
+#pragma warning restore CS8629 // Nullable value type may be null.
                     break;
                 case DisputantUpdateRequestUpdateType.DISPUTANT_EMAIL:
                     // nothing to do here except record in file history (down further)

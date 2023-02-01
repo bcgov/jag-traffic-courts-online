@@ -31,6 +31,7 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "contactGiven3Nm", target = "contactGivenName3")
 	@Mapping(source = "contactSurnameNm", target = "contactSurname")
 	@Mapping(source = "contactTypeCd", target = "contactType", qualifiedByName="mapContactType")
+	@Mapping(source = "requestCourtAppearanceYn", target = "appearInCourt")
 	@Mapping(source = "courtAgenId", target = "courtAgenId")
 //	@Mapping(source = "courtAppearances", target = "courtAppearances")                 // TODO: map courtAppearances
 	@Mapping(source = "detachmentLocationTxt", target = "policeDetachment")

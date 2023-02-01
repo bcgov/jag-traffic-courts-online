@@ -19,6 +19,8 @@ model/disputantUpdateRequest.model.ts
 model/disputantUpdateRequestStatus2.model.ts
 model/disputantUpdateRequestUpdateType.model.ts
 model/dispute.model.ts
+model/disputeAppearanceLessThan14Days.model.ts
+model/disputeContactType.model.ts
 model/disputeCount.model.ts
 model/disputeCountPleaCode.model.ts
 model/disputeCountRequestCourtAppearance.model.ts
@@ -27,6 +29,7 @@ model/disputeCountRequestTimeToPay.model.ts
 model/disputeDisputantDetectedOcrIssues.model.ts
 model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
+model/disputeRequestCourtAppearance.model.ts
 model/disputeStatus.model.ts
 model/disputeSystemDetectedOcrIssues.model.ts
 model/disputeWithUpdates.model.ts
@@ -36,7 +39,9 @@ model/excludeStatus.model.ts
 model/federatedIdentityRepresentation.model.ts
 model/field.model.ts
 model/fileHistory.model.ts
+model/fileMetadata.model.ts
 model/jJDispute.model.ts
+model/jJDisputeAppearInCourt.model.ts
 model/jJDisputeContactType.model.ts
 model/jJDisputeCourtAppearanceRoP.model.ts
 model/jJDisputeCourtAppearanceRoPApp.model.ts

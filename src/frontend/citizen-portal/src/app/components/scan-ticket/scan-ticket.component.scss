@@ -1,55 +1,45 @@
-.vertical-align {
-  vertical-align: middle;
+@import "palette";
+
+small {
+  color: theme-palette(grey, dark);
+  line-height: 1.3em;
 }
 
-.w-33 {
-  width: 33% !important;
+.h2 {
+  line-height: 1rem;
 }
+
+.text {
+  font-weight: 700;
+  line-height: 1.5em;
+}
+
+.card-section {
+  background-color: #ededed !important;
+  border-left: 3px solid theme-palette(blue);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+.count-text-container {
+  display: flex;
+  height: 100%;
+  padding-bottom: 0.3rem;
+}
+
+.count-text {
+  height: 100%;
+  display: flex;
+}
+
 
 .mat-flat-button,
 .mat-stroked-button {
   width: 100%;
 
   &.large {
-    height: 46px;
+    height: 70px;
     font-size: 1rem;
   }
-}
-
-.upload-link {
-  display: inline-flex;
-}
-
-.new-image-icon {
-  padding-top: 2px;
-}
-
-@media (max-width: 991px) {
-  .mat-flat-button,
-  .mat-stroked-button {
-    margin-bottom: 1em;
-  }
-}
-
-// ::ng-deep .mat-step-header {
-//   font-size: 20px;
-// }
-
-::ng-deep .mat-step-text-label{
-  font-size: 20px !important;
-}
-
-// .mat-form-field-disabled{
-//   border: 1px solid black;
-// }
-// .mat-form-field-appearance-fill .mat-form-field-flex {
-//   border-radius: 4px 4px 0 0;
-//   padding: 0.75em 0.75em 0 0.75em;
-//   border: 1px solid;
-// }
-::ng-deep .feild-border .mat-form-field-flex{
-  border: 1px solid !important;
-}
-.mat-form-field-appearance-outline .mat-form-field-outline {
-     border: 1px solid black;
 }

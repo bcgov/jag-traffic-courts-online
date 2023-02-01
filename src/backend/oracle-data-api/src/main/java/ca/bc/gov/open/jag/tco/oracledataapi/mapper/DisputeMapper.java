@@ -42,7 +42,15 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.issuedDt", target = "issuedTs")
 	@Mapping(source = "dispute.submittedDt", target = "submittedTs")
 	@Mapping(source = "dispute.disputantClientId", target = "disputantClientId")
+	@Mapping(source = "dispute.contactLawFirmNm", target = "contactLawFirmName")
+	@Mapping(source = "dispute.contactGiven1Nm", target = "contactGivenName1")
+	@Mapping(source = "dispute.contactGiven2Nm", target = "contactGivenName2")
+	@Mapping(source = "dispute.contactGiven3Nm", target = "contactGivenName3")
+	@Mapping(source = "dispute.contactSurnameNm", target = "contactSurname")
 	@Mapping(source = "dispute.contactTypeCd", target = "contactType", qualifiedByName="mapContactType")
+	@Mapping(source = "dispute.requestCourtAppearanceYn", target = "requestCourtAppearance")
+	@Mapping(source = "dispute.appearanceDtm", target = "appearanceDtm")
+	@Mapping(source = "dispute.appearanceLessThan14Days", target = "appearanceLessThan14Days")
 	@Mapping(source = "dispute.disputantSurnameNm", target = "disputantSurname")
 	@Mapping(source = "dispute.disputantGiven1Nm", target = "disputantGivenName1")
 	@Mapping(source = "dispute.disputantGiven2Nm", target = "disputantGivenName2")
@@ -171,7 +179,7 @@ public interface DisputeMapper {
 	}
 	
 	@Named("mapContactType")
-	public ContactType mapContactType(String statusShortCd) {
+	default ContactType mapContactType(String statusShortCd) {
 		ContactType[] values = ContactType.values();
 		for (ContactType contactType : values) {
 			if (contactType.getShortName().equals(statusShortCd)) {

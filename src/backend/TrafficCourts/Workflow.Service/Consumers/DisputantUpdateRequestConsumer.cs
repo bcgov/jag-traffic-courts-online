@@ -76,11 +76,12 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
             }
         }
 
-        // If some or all name fields have data, send a DISPUTANT_NAME update request
-        if (!string.IsNullOrEmpty(message.DisputantGivenName1)
-            || !string.IsNullOrEmpty(message.DisputantGivenName2)
-            || !string.IsNullOrEmpty(message.DisputantGivenName3)
-            || !string.IsNullOrEmpty(message.DisputantSurname)
+        // If some or all name fields have data, send a CONTACT_NAME update request
+        if (!string.IsNullOrEmpty(message.ContactGivenName1)
+            || !string.IsNullOrEmpty(message.ContactGivenName2)
+            || !string.IsNullOrEmpty(message.ContactGivenName3)
+            || !string.IsNullOrEmpty(message.ContactSurname)
+            || !string.IsNullOrEmpty(message.ContactLawFirmName)
             )
         {
             disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_NAME;

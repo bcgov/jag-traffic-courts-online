@@ -49,15 +49,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ticketType: string;
   matcher = new FormErrorStateMatcher();
 
-  // Count
-  countIndexes: number[];
-
   // Additional
   countsActions: any;
   customWitnessOption = false;
   minWitnesses = 1;
   maxWitnesses = 99;
-  additionalIndex: number;
+  countIndex: number = 1;
+  additionalIndex: number = 2;
 
   // Summary
   declared = false;
@@ -106,24 +104,28 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       countArray.push(this.formBuilder.group({ ...count, ...this.countFormFields }));
     })
     this.countForms = this.formBuilder.array(countArray);
+    this.countForms.controls.forEach(countform => {countform.patchValue({ ...this.countFormDefaultValue, __skip: false })});
+
+    // additional form fields
+    this.additionalForm = this.formBuilder.group({
+      ...this.additionFormFields,
+    }, {
+      validators: [...this.additionFormValidators]
+    });
 
     // build form
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
     });
     this.form.reset();
-    
+
     // take info from ticket, convert dl number to string
     Object.keys(this.ticket).forEach(key => {
       this.ticket[key] && this.form.get(key)?.patchValue(this.ticket[key]);
     });
     this.ticket.drivers_licence_number && this.form.controls.drivers_licence_number.setValue(this.ticket.drivers_licence_number.toString());
-    
-    this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
 
-    this.countIndexes = this.ticket.counts.map(i => i.count_no);
-    let lastCountInx = this.countIndexes[this.countIndexes.length - 1]
-    this.additionalIndex = lastCountInx + 1;
+    this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
   }
 
   ngAfterViewInit(): void {
@@ -157,76 +159,61 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
   }
 
-  onAttendHearingChange(countForm: FormGroup, event): void {
-    countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event.value, __skip: false });
-  }
-
   onStepCancel(): void {
     this.violationTicketService.goToInitiateResolution();
   }
 
   onStepSave(): void {
-    let isAdditional = this.stepper.selectedIndex === this.additionalIndex;
     let isValid = this.formUtilsService.checkValidity(this.form);
 
-    if (this.countIndexes?.indexOf(this.stepper.selectedIndex) > -1) {
-      let countInx = this.stepper.selectedIndex - 1;
-      let countForm = this.countForms.controls[countInx];
-      if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
-        countForm.patchValue({ plea_cd: this.Plea.G });
-      }
-      if (countForm.value.__skip) {
-        countForm.patchValue({ ...this.getCountFormInitValue(this.ticket.counts[countInx]), __skip: true });
-      }
-      if (countForm.value.__apply_to_remaining_counts && countInx + 1 < this.countForms.length) {
-        let value = this.countForms.controls[countInx].value;
-        for (let i = countInx; i < this.countForms.length; i++) {
-          this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __apply_to_remaining_counts: false })
+    if (this.stepper.selectedIndex === this.countIndex) {
+      this.getCountsActions();
+      this.countForms.controls.forEach(countForm => {
+        if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
+          countForm.patchValue({ plea_cd: this.Plea.G });
         }
-      }
-      this.setAdditional();
+        if (countForm.value.__skip) {
+          countForm.patchValue({ ...this.getCountFormInitValue(this.ticket.counts[countForm.value.count_no]), __skip: true });
+        }
+      });
+      this.setAdditionalRequired();
+
     } else if (!isValid) {
       this.utilsService.scrollToErrorSection();
       this.toastService.openErrorToast(this.config.dispute_validation_error);
       return;
     }
 
-    if (isAdditional) {
-      this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
-        ...this.form.value,
-        ...this.additionalForm.value,
-        ...this.legalRepresentationForm.value,
-        address_country_id: this.form.get("address_country_id").value, // disabled field is not available in this.form.value
-        dispute_counts: this.countForms.value
-      });
-    } else {
-      this.noticeOfDispute = null;
+    this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
+      ...this.form.value,
+      ...this.additionalForm.value,
+      ...this.legalRepresentationForm.value,
+      address_country_id: this.form.get("address_country_id").value, // disabled field is not available in this.form.value
+      dispute_counts: this.countForms.value
+    });
+  }
+
+  private setAdditionalRequired() {
+    this.getCountsActions();
+    if (this.countsActions.request_reduction.length > 0 && this.additionalForm.controls.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
+      this.additionalForm.controls.fine_reduction_reason[1].push(Validators.required);
+    }
+    if (this.countsActions.request_time_to_pay.length > 0 && this.additionalForm.controls.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
+      this.additionalForm.controls.time_to_pay_reason[1].push(Validators.required);
     }
   }
 
-  private setAdditional() {
-    this.getCountsActions();
-    let fields = cloneDeep(this.additionFormFields);
-    if (this.countsActions.request_reduction.length > 0 && fields.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
-      fields.fine_reduction_reason[1].push(Validators.required);
-    }
-    if (this.countsActions.request_time_to_pay.length > 0 && fields.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
-      fields.time_to_pay_reason[1].push(Validators.required);
-    }
-    this.additionalForm = this.formBuilder.group({
-      ...fields,
-    }, {
-      validators: [...this.additionFormValidators]
-    });
+  onConsoleLog() {
+    console.log(this.form);
   }
 
   isValid(countInx?): boolean {
     let countForm = this.countForms?.controls[countInx]
     if (countForm) {
       let valid = countForm.valid || countForm.value.__skip;
-      if (countForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
+      if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
         valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
-      } else if (countForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
+      } else if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
         valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
       }
       return valid && !this.isAllCountsSkipped;

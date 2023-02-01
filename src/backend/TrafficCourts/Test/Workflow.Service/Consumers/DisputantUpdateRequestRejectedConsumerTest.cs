@@ -67,7 +67,7 @@ public class DisputantUpdateRequestRejectedConsumerTest
     {
         // Arrange
         _updateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_NAME;
-        _updateRequest.UpdateJson = "{ \"disputantGivenName1\": \"fname1\", \"disputantGivenName2\": \"fname2\", \"disputantGivenName3\": \"fname3\", \"disputantSurname\": \"lname\" }";
+        _updateRequest.UpdateJson = "{ \"contactGivenName1\": \"fname1\", \"contactGivenName2\": \"fname2\", \"contactGivenName3\": \"fname3\", \"contactSurname\": \"lname\", \"contactType\":\"I\", \"contactLawFirmName\":\"contactLawFirmName\" }";
 
         // Act
         await _consumer.Consume(_context.Object);

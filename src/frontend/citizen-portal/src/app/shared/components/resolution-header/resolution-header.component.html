@@ -14,4 +14,15 @@
       <b class="text-nowrap">{{ date }}</b>
     </div>
   </div>
+  <div fxLayout="row">
+    <div fxFlex="25">
+      <small class="me-2 text-nowrap">Surname:</small>
+      <b class="text-nowrap">{{ ticket.disputant_surname }}</b>
+    </div>
+    <div fxFlex style="text-align: end;">
+      <small class="me-2 text-nowrap">Given name(s):</small>
+      <b class="text-nowrap">{{ ticket.disputant_given_names }}</b>
+      <b *ngIf="date" fxHide.gt-md="true" fxShow.lt-lg="true"> {{ date }}</b>
+    </div>
+  </div>
 </h2>

@@ -12,6 +12,8 @@
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
+import { DisputeRequestCourtAppearance } from './disputeRequestCourtAppearance.model';
+import { DisputeContactType } from './disputeContactType.model';
 import { DisputeCount } from './disputeCount.model';
 
 
@@ -39,6 +41,27 @@ export interface NoticeOfDispute {
      * The surname or corporate name.
      */
     disputant_surname?: string | null;
+    /**
+     * Contact Law Firm Name
+     */
+    contact_law_firm_name?: string | null;
+    /**
+     * Contact Given Name 1
+     */
+    contact_given_name1?: string | null;
+    /**
+     * Contact Given Name 2
+     */
+    contact_given_name2?: string | null;
+    /**
+     * Contact Given Name 3
+     */
+    contact_given_name3?: string | null;
+    /**
+     * Contact Surname
+     */
+    contact_surname?: string | null;
+    contact_type?: DisputeContactType;
     /**
      * The mailing address of the disputant.
      */
@@ -144,6 +167,7 @@ export interface NoticeOfDispute {
      * Address of the lawyer who will represent the disputant at the hearing.
      */
     lawyer_phone_number?: string | null;
+    request_court_appearance?: DisputeRequestCourtAppearance;
     /**
      * The disputant requires spoken language interpreter. The language name is indicated in this field.
      */

@@ -297,6 +297,14 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private ContactType contactType;
+	
+	/**
+	 * Does the want to appear in court?
+	 */
+	@Column(nullable = false)
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private YesNo appearInCourt;
 
 	@Column
 	@Schema(nullable = true)

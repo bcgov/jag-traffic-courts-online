@@ -72,8 +72,7 @@
       "work_phone_number": "Numéro de Téléphone Professionnel",
       "driver_license_number": "Numéro de Permis de Conduire",
       "driver_license_province": "Province ou État du Permis de Conduire",
-      "email_address": "Adresse E-Mail",
-      "birthdate": "Date de Naissance"
+      "email_address": "Adresse E-Mail"
     },
     "count": {
       "heading": "Examen des Infractions et Mesures à Prendre",

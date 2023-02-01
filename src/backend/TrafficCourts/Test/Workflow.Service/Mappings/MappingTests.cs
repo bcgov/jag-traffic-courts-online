@@ -37,10 +37,12 @@ public class MappingTests
         Assert.Equal(source.TicketNumber, target.TicketNumber);
         Assert.Equal(source.IssuedTs, target.IssuedTs);
         Assert.Equal(source.SubmittedTs, target.SubmittedTs);
-        Assert.Equal(source.DisputantSurname, target.DisputantSurname);
-        Assert.Equal(source.DisputantGivenName1, target.DisputantGivenName1);
-        Assert.Equal(source.DisputantGivenName2, target.DisputantGivenName2);
-        Assert.Equal(source.DisputantGivenName3, target.DisputantGivenName3);
+        Assert.Equal(source.ContactSurname, target.ContactSurname);
+        Assert.Equal(source.ContactGivenName1, target.ContactGivenName1);
+        Assert.Equal(source.ContactGivenName2, target.ContactGivenName2);
+        Assert.Equal(source.ContactGivenName3, target.ContactGivenName3);
+        Assert.Equal(source.ContactLawFirmName, target.ContactLawFirmName);
+        Assert.Equal(source.ContactType, target.ContactType);
         Assert.Equal(source.DisputantBirthdate, target.DisputantBirthdate);
         Assert.Equal(source.DriversLicenceNumber, target.DriversLicenceNumber);
         Assert.Equal(source.DriversLicenceProvince, target.DriversLicenceProvince);
@@ -63,6 +65,7 @@ public class MappingTests
         Assert.Equal(source.InterpreterLanguageCd, target.InterpreterLanguageCd);
         Assert.Equal(source.WitnessNo, target.WitnessNo);
         Assert.Equal(source.FineReductionReason, target.FineReductionReason);
+        Assert.Equal(source.RequestCourtAppearance, target.RequestCourtAppearance);
         Assert.Equal(source.TimeToPayReason, target.TimeToPayReason);
         Assert.Equal(source.DisputantDetectedOcrIssues, target.DisputantDetectedOcrIssues);
         Assert.Equal(source.DisputantOcrIssues, target.DisputantOcrIssues);
@@ -119,13 +122,15 @@ public class MappingTests
     [Fact]
     public void TestJsonDeserializer()
     {
-        string json = "{ \"disputantGivenName1\": \"fname1\", \"disputantGivenName2\": \"fname2\", \"disputantGivenName3\": \"fname3\", \"disputantSurname\": \"lname\" }";
+        string json = "{ \"contactGivenName1\": \"fname1\", \"contactGivenName2\": \"fname2\", \"contactGivenName3\": \"fname3\", \"contactSurname\": \"lname\", \"contactLawFirmName\":\"contactLawFirmName\", \"contactType\": \"I\" }";
         Dispute? patch = Newtonsoft.Json.JsonConvert.DeserializeObject<Dispute>(json);
         Assert.NotNull(patch);
-        Assert.Equal("fname1", patch.DisputantGivenName1);
-        Assert.Equal("fname2", patch.DisputantGivenName2);
-        Assert.Equal("fname3", patch.DisputantGivenName3);
-        Assert.Equal("lname", patch.DisputantSurname);
+        Assert.Equal("fname1", patch.ContactGivenName1);
+        Assert.Equal("fname2", patch.ContactGivenName2);
+        Assert.Equal("fname3", patch.ContactGivenName3);
+        Assert.Equal("lname", patch.ContactSurname);
+        Assert.Equal("contactLawFirmName", patch.ContactLawFirmName);
+        Assert.Equal("contactType", patch.ContactType.ToString());
     }
 
 }

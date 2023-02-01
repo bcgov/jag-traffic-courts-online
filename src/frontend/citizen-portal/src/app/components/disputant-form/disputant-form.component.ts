@@ -5,7 +5,7 @@ import { UtilsService } from "@core/services/utils.service";
 import { ConfigService } from "@config/config.service";
 import { Address } from "@shared/models/address.model";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
-import { Language } from "app/api";
+import { DisputeContactType, Language } from "app/api";
 import { NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
 import { DisputantContactInformationFormGroup } from "app/services/dispute.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
@@ -35,6 +35,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   todayDate: Date = new Date();
   showManualButton: boolean = true;
   showAddressFields: boolean = true; // temporary preset for testing
+  ContactType = DisputeContactType;
 
   // Consume from the service
   languages: Language[] = [];
@@ -71,6 +72,34 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     })
   }
 
+  onSelectContactType(newContactType: any) {
+    console.log(newContactType);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make contact law firm name required, blank out contact name
+      this.form.get('contact_law_firm_name').clearValidators();
+      this.form.get('contact_law_firm_name').addValidators([Validators.required]);
+      this.form.get('contact_law_firm_name').setValue("");
+      this.form.get('contact_surname').setValue("");
+      this.form.get('contact_given_names').setValue("");
+    } else if (newContactType == this.ContactType.Individual) {
+      // set contact names to disputant names, blank out law firm name
+      this.form.get('contact_law_firm_name').clearValidators();
+      this.form.get('contact_law_firm_name').setValue("");
+      this.form.get('contact_surname').setValue(this.form.get('disputant_surname').value);
+      this.form.get('contact_given_names').setValue(this.form.get('disputant_given_names').value);
+    } else {
+      // set contact names to blank, blank out law firm name
+      this.form.get('contact_law_firm_name').clearValidators();
+      this.form.get('contact_law_firm_name').setValue("");
+      this.form.get('contact_surname').setValue("");
+      this.form.get('contact_given_names').setValue("");
+    }
+    this.form.get('contact_law_firm_name').updateValueAndValidity();
+    this.form.get('contact_surname').updateValueAndValidity();
+    this.form.get('contact_given_names').updateValueAndValidity();
+    this.form.updateValueAndValidity();
+  }
+
   ngOnInit(): void {
     if (!this.form.value.address_country_id) {
       this.countryFormControl.setValue(this.canada);
@@ -93,6 +122,14 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     } else if (form.controls.drivers_licence_province) { // have control but no value
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
+
+    // initialize contact type to individual on the ticket
+    this.form?.get('contact_type').setValue(this.ContactType.Individual);
+    this.form.get('contact_law_firm_name').clearValidators();
+    this.form.get('contact_law_firm_name').setValue("");
+    this.form.get('contact_surname').setValue(this.form.get('disputant_surname').value);
+    this.form.get('contact_given_names').setValue(this.form.get('disputant_given_names').value);
+
   }
 
   ngAfterViewInit(): void {

@@ -16,7 +16,9 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.TicketNumber).NotEmpty().MaximumLength(12);
             RuleFor(_ => _.IssuedTs).NotEmpty();
             RuleFor(_ => _.DisputantSurname).NotEmpty();
+            RuleFor(_ => _.ContactSurname).NotEmpty();
             RuleFor(_ => _.DisputantGivenName1).NotEmpty();
+            RuleFor(_ => _.ContactGivenName1).NotEmpty();
             RuleFor(_ => _.DisputantBirthdate).NotEmpty();
             RuleFor(_ => _.DriversLicenceNumber).MaximumLength(20);
             RuleFor(_ => _.DriversLicenceProvince).MaximumLength(30);
@@ -34,6 +36,11 @@ namespace TrafficCourts.Citizen.Service.Validators
 #pragma warning restore CS0618 // Type or member is obsolete
             RuleFor(_ => _.TicketId).NotEmpty();
             RuleFor(_ => _.WitnessNo).InclusiveBetween(0,99);
+            RuleFor(_ => _.RequestCourtAppearance).NotEmpty();
+            RuleFor(_ => _.ContactType).NotEmpty();
+            RuleFor(_ => _.ContactLawFirmName).NotEmpty()
+                .When(_ => _.ContactType == Common.OpenAPIs.OracleDataApi.v1_0.DisputeContactType.LAWYER)
+                .WithMessage("'Contact Law Firm Name' is required since contact type is Lawyer.");
             RuleFor(_ => _.DisputantOcrIssues).NotEmpty()
                 .When(_ => _.DisputantDetectedOcrIssues == Common.OpenAPIs.OracleDataApi.v1_0.DisputeDisputantDetectedOcrIssues.Y)
                 .WithMessage("'Disputant Ocr Issues Description' is required since the disputant detected ocr issues");

@@ -3533,6 +3533,32 @@
             "type": "string",
             "nullable": true
           },
+          "contactLawFirmName": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactType": {
+            "$ref": "#/components/schemas/DisputeContactType"
+          },
+          "requestCourtAppearance": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearance"
+          },
           "disputantGivenName2": {
             "type": "string",
             "nullable": true
@@ -3746,6 +3772,14 @@
             "type": "string",
             "nullable": true
           },
+          "appearanceDtm": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "appearanceLessThan14Days": {
+            "$ref": "#/components/schemas/DisputeAppearanceLessThan14Days"
+          },
           "violationTicket": {
             "$ref": "#/components/schemas/ViolationTicket"
           },
@@ -3763,6 +3797,23 @@
           }
         },
         "additionalProperties": false
+      },
+      "DisputeAppearanceLessThan14Days": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeContactType": {
+        "enum": [
+          "UNKNOWN",
+          "INDIVIDUAL",
+          "LAWYER",
+          "OTHER"
+        ],
+        "type": "string"
       },
       "DisputeCount": {
         "type": "object",
@@ -3859,6 +3910,14 @@
         "type": "string"
       },
       "DisputeRepresentedByLawyer": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeRequestCourtAppearance": {
         "enum": [
           "UNKNOWN",
           "Y",
@@ -4142,14 +4201,27 @@
         },
         "additionalProperties": false
       },
+      "FileMetadata": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JJDispute": {
         "type": "object",
         "properties": {
           "fileData": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "nullable": true
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMetadata"
             },
             "nullable": true
           },
@@ -4346,6 +4418,9 @@
           "contactType": {
             "$ref": "#/components/schemas/JJDisputeContactType"
           },
+          "appearInCourt": {
+            "$ref": "#/components/schemas/JJDisputeAppearInCourt"
+          },
           "courtAgenId": {
             "type": "string",
             "nullable": true
@@ -4414,6 +4489,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "JJDisputeAppearInCourt": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
       },
       "JJDisputeContactType": {
         "enum": [

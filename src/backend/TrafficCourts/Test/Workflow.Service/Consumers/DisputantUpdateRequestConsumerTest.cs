@@ -75,21 +75,24 @@ public class DisputantUpdateRequestConsumerTest
     }
 
     [Theory]
-    [InlineData("fname1", "", "", "")]
-    [InlineData("", "fname2", "", "")]
-    [InlineData("", "", "fname3", "")]
-    [InlineData("", "", "", "lname")]
-    [InlineData("fname1", null, null, null)]
-    [InlineData(null, "fname2", null, null)]
-    [InlineData(null, null, "fname3", null)]
-    [InlineData(null, null, null, "lname")]
-    public async Task TestDisputantUpdateRequestConsumer_Name(string fname1, string fname2, string fname3, string lname)
+    [InlineData("fname1", "", "", "", DisputeContactType.INDIVIDUAL, "")]
+    [InlineData("", "fname2", "", "", DisputeContactType.INDIVIDUAL, "")]
+    [InlineData("", "", "fname3", "", DisputeContactType.INDIVIDUAL, "")]
+    [InlineData("", "", "", "lname", DisputeContactType.INDIVIDUAL, "")]
+    [InlineData("", "", "", "", DisputeContactType.INDIVIDUAL, "contactLawFirmName")]
+    [InlineData("fname1", null, null, null, DisputeContactType.INDIVIDUAL, null)]
+    [InlineData(null, "fname2", null, null, DisputeContactType.INDIVIDUAL, null)]
+    [InlineData(null, null, "fname3", null, DisputeContactType.INDIVIDUAL, null)]
+    [InlineData(null, null, null, "lname", DisputeContactType.INDIVIDUAL, "contactLawFirmName")]
+    public async Task TestDisputantUpdateRequestConsumer_Name(string fname1, string fname2, string fname3, string lname, DisputeContactType contactType, string contactLawFirmName)
     {
         // Arrange
-        _message.DisputantGivenName1 = fname1;
-        _message.DisputantGivenName2 = fname2;
-        _message.DisputantGivenName3 = fname3;
-        _message.DisputantSurname = lname;
+        _message.ContactGivenName1 = fname1;
+        _message.ContactGivenName2 = fname2;
+        _message.ContactGivenName3 = fname3;
+        _message.ContactSurname = lname;
+        _message.ContactType = contactType;
+        _message.ContactLawFirmName = contactLawFirmName;
 
         // Act
         await _consumer.Consume(_context.Object);

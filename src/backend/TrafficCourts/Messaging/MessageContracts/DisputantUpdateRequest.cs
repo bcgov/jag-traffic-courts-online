@@ -1,4 +1,6 @@
-﻿namespace TrafficCourts.Messaging.MessageContracts;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+
+namespace TrafficCourts.Messaging.MessageContracts;
 
 /// <summary>
 /// A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{guidhash}/contact endpoint.
@@ -76,6 +78,12 @@ public class DisputantUpdateRequest : DisputantUpdateContactRequest
     /// </summary>
     public string? TimeToPayReason { get; set; } = null!;
 
+
+    /// <summary>
+    /// Request Court Appearance
+    /// </summary>
+    public DisputeRequestCourtAppearance RequestCourtAppearance { get; set; }    
+    
     /// <summary>
     /// Dispute Counts
     /// </summary>

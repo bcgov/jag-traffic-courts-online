@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DisputeContactType } from './disputeContactType.model';
 
 
 /**
@@ -35,6 +36,27 @@ export interface DisputantContactInformation {
      * The surname or corporate name.
      */
     disputant_surname?: string | null;
+    /**
+     * Contact Law Firm Name
+     */
+    contact_law_firm_name?: string | null;
+    /**
+     * Contact Given Name 1
+     */
+    contact_given_name1?: string | null;
+    /**
+     * Contact Given Name 2
+     */
+    contact_given_name2?: string | null;
+    /**
+     * Contact Given Name 3
+     */
+    contact_given_name3?: string | null;
+    /**
+     * Contact Surname
+     */
+    contact_surname?: string | null;
+    contact_type?: DisputeContactType;
     /**
      * The mailing address of the disputant.
      */
