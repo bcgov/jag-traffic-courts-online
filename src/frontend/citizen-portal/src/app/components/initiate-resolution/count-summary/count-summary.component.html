@@ -11,6 +11,21 @@
     </div>
   </div>
 
+  <div class="mb-2"  *ngIf="violationTicketService.ticketType == 'Handwritten ticket'">
+    <section class="px-4 py-2 mb-3 card-section">
+      <div class="row mt-2">
+        <div class="col-lg-10">
+          <small class="d-block">Province / State of DL</small>
+          <div class="text">{{ ticket.drivers_licence_province }}</div>
+        </div>
+        <div class="col-lg-2">
+          <small class="d-block">Driver's licence number</small>
+          <div class="text">{{ ticket.drivers_licence_number }}</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <div class="mb-2">
     <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of ticket.counts; let i = index">
       <app-count-item-summary #countitem [count]="row" [selectView]="selectView"></app-count-item-summary>
