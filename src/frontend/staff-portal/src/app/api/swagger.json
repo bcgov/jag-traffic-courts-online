@@ -3533,32 +3533,6 @@
             "type": "string",
             "nullable": true
           },
-          "contactLawFirmName": {
-            "type": "string",
-            "nullable": true
-          },
-          "contactGivenName1": {
-            "type": "string",
-            "nullable": true
-          },
-          "contactGivenName2": {
-            "type": "string",
-            "nullable": true
-          },
-          "contactGivenName3": {
-            "type": "string",
-            "nullable": true
-          },
-          "contactSurname": {
-            "type": "string",
-            "nullable": true
-          },
-          "contactType": {
-            "$ref": "#/components/schemas/DisputeContactType"
-          },
-          "requestCourtAppearance": {
-            "$ref": "#/components/schemas/DisputeRequestCourtAppearance"
-          },
           "disputantGivenName2": {
             "type": "string",
             "nullable": true
@@ -3713,6 +3687,40 @@
             "type": "string",
             "nullable": true
           },
+          "contactTypeCd": {
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
+          },
+          "requestCourtAppearanceYn": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
+          },
+          "contactLawFirmNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGiven1Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGiven2Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactGiven3Nm": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactSurnameNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "appearanceDtm": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "appearanceLessThan14DaysYn": {
+            "$ref": "#/components/schemas/DisputeAppearanceLessThan14DaysYn"
+          },
           "detachmentLocation": {
             "type": "string",
             "nullable": true
@@ -3772,11 +3780,6 @@
             "type": "string",
             "nullable": true
           },
-          "appearanceDtm": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
           "appearanceLessThan14Days": {
             "$ref": "#/components/schemas/DisputeAppearanceLessThan14Days"
           },
@@ -3806,7 +3809,15 @@
         ],
         "type": "string"
       },
-      "DisputeContactType": {
+      "DisputeAppearanceLessThan14DaysYn": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeContactTypeCd": {
         "enum": [
           "UNKNOWN",
           "INDIVIDUAL",
@@ -3917,7 +3928,7 @@
         ],
         "type": "string"
       },
-      "DisputeRequestCourtAppearance": {
+      "DisputeRequestCourtAppearanceYn": {
         "enum": [
           "UNKNOWN",
           "Y",

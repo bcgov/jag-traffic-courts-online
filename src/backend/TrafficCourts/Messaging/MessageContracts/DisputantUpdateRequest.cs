@@ -82,7 +82,7 @@ public class DisputantUpdateRequest : DisputantUpdateContactRequest
     /// <summary>
     /// Request Court Appearance
     /// </summary>
-    public DisputeRequestCourtAppearance RequestCourtAppearance { get; set; }    
+    public DisputeRequestCourtAppearanceYn RequestCourtAppearance { get; set; }    
     
     /// <summary>
     /// Dispute Counts

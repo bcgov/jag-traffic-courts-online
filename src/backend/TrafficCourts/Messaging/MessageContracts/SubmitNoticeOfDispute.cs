@@ -32,32 +32,32 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
-    public string ContactSurname { get; set; } = null!;
+    public string ContactSurnameNm { get; set; } = null!;
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string ContactGivenName1 { get; set; } = null!;
+    public string ContactGiven1Nm { get; set; } = null!;
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string ContactGivenName2 { get; set; } = null!;
+    public string ContactGiven2Nm { get; set; } = null!;
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string ContactGivenName3 { get; set; } = null!;
+    public string ContactGiven3Nm { get; set; } = null!;
 
     /// <summary>
     /// Contact Law Firm Name.
     /// </summary>
-    public string ContactLawFirmName { get; set; } = null!;
+    public string ContactLawFirmNm { get; set; } = null!;
 
     /// <summary>
     /// Contact Type.
     /// </summary>
-    public DisputeContactType ContactType { get; set; }
+    public DisputeContactTypeCd ContactTypeCd { get; set; }
 
     /// <summary>
     /// The disputant's birthdate.
@@ -226,7 +226,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// Did the disputant request a court appearance?
     /// </summary>
-    public DisputeRequestCourtAppearance RequestCourtAppearance { get; set; }
+    public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
 
     /// <summary>
     /// The description of the issue with OCR ticket if the citizen has detected any.

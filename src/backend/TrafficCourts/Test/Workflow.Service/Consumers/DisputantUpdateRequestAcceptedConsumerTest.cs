@@ -80,12 +80,12 @@ public class DisputantUpdateRequestAcceptedConsumerTest
         await _consumer.Consume(_context.Object);
 
         // Assert
-        Assert.Equal("fname1", _dispute.ContactGivenName1);
-        Assert.Equal("fname2", _dispute.ContactGivenName2);
-        Assert.Equal("fname3", _dispute.ContactGivenName3);
-        Assert.Equal("lname", _dispute.ContactSurname);
-        Assert.Equal("contactLawFirmName", _dispute.ContactLawFirmName);
-        Assert.Equal("contactType", _dispute.ContactType.ToString());
+        Assert.Equal("fname1", _dispute.ContactGiven1Nm);
+        Assert.Equal("fname2", _dispute.ContactGiven2Nm);
+        Assert.Equal("fname3", _dispute.ContactGiven3Nm);
+        Assert.Equal("lname", _dispute.ContactSurnameNm);
+        Assert.Equal("contactLawFirmName", _dispute.ContactLawFirmNm);
+        Assert.Equal("contactType", _dispute.ContactTypeCd.ToString());
     }
 
     [Fact]

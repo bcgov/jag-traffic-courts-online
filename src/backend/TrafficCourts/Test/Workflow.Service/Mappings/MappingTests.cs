@@ -37,12 +37,12 @@ public class MappingTests
         Assert.Equal(source.TicketNumber, target.TicketNumber);
         Assert.Equal(source.IssuedTs, target.IssuedTs);
         Assert.Equal(source.SubmittedTs, target.SubmittedTs);
-        Assert.Equal(source.ContactSurname, target.ContactSurname);
-        Assert.Equal(source.ContactGivenName1, target.ContactGivenName1);
-        Assert.Equal(source.ContactGivenName2, target.ContactGivenName2);
-        Assert.Equal(source.ContactGivenName3, target.ContactGivenName3);
-        Assert.Equal(source.ContactLawFirmName, target.ContactLawFirmName);
-        Assert.Equal(source.ContactType, target.ContactType);
+        Assert.Equal(source.ContactSurnameNm, target.ContactSurnameNm);
+        Assert.Equal(source.ContactGiven1Nm, target.ContactGiven1Nm);
+        Assert.Equal(source.ContactGiven2Nm, target.ContactGiven2Nm);
+        Assert.Equal(source.ContactGiven3Nm, target.ContactGiven3Nm);
+        Assert.Equal(source.ContactLawFirmNm, target.ContactLawFirmNm);
+        Assert.Equal(source.ContactTypeCd, target.ContactTypeCd);
         Assert.Equal(source.DisputantBirthdate, target.DisputantBirthdate);
         Assert.Equal(source.DriversLicenceNumber, target.DriversLicenceNumber);
         Assert.Equal(source.DriversLicenceProvince, target.DriversLicenceProvince);
@@ -65,7 +65,7 @@ public class MappingTests
         Assert.Equal(source.InterpreterLanguageCd, target.InterpreterLanguageCd);
         Assert.Equal(source.WitnessNo, target.WitnessNo);
         Assert.Equal(source.FineReductionReason, target.FineReductionReason);
-        Assert.Equal(source.RequestCourtAppearance, target.RequestCourtAppearance);
+        Assert.Equal(source.RequestCourtAppearanceYn, target.RequestCourtAppearanceYn);
         Assert.Equal(source.TimeToPayReason, target.TimeToPayReason);
         Assert.Equal(source.DisputantDetectedOcrIssues, target.DisputantDetectedOcrIssues);
         Assert.Equal(source.DisputantOcrIssues, target.DisputantOcrIssues);
@@ -125,12 +125,12 @@ public class MappingTests
         string json = "{ \"contactGivenName1\": \"fname1\", \"contactGivenName2\": \"fname2\", \"contactGivenName3\": \"fname3\", \"contactSurname\": \"lname\", \"contactLawFirmName\":\"contactLawFirmName\", \"contactType\": \"I\" }";
         Dispute? patch = Newtonsoft.Json.JsonConvert.DeserializeObject<Dispute>(json);
         Assert.NotNull(patch);
-        Assert.Equal("fname1", patch.ContactGivenName1);
-        Assert.Equal("fname2", patch.ContactGivenName2);
-        Assert.Equal("fname3", patch.ContactGivenName3);
-        Assert.Equal("lname", patch.ContactSurname);
-        Assert.Equal("contactLawFirmName", patch.ContactLawFirmName);
-        Assert.Equal("contactType", patch.ContactType.ToString());
+        Assert.Equal("fname1", patch.ContactGiven1Nm);
+        Assert.Equal("fname2", patch.ContactGiven2Nm);
+        Assert.Equal("fname3", patch.ContactGiven3Nm);
+        Assert.Equal("lname", patch.ContactSurnameNm);
+        Assert.Equal("contactLawFirmName", patch.ContactLawFirmNm);
+        Assert.Equal("contactType", patch.ContactTypeCd.ToString());
     }
 
 }

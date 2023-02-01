@@ -4,7 +4,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { AppRoutes } from "app/app.routes";
 import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearance } from "app/api";
+import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from "app/api";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 
 @Component({
@@ -25,7 +25,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
   ticketType;
   countsActions: any;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
-  RequestCourtAppearance = DisputeRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
 
   constructor(
     private route: ActivatedRoute,

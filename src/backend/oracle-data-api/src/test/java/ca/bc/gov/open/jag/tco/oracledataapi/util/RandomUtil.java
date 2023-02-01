@@ -371,7 +371,6 @@ public class RandomUtil {
 		dispute.setDisputeCounts(createDisputeCounts(dispute));
 		dispute.setDisputeStatusType(createDisputeStatusType());
 		dispute.setDriversLicenceNumber(randomAlphanumeric(30));
-		dispute.setRequestCourtAppearance(randomYN());
 //		dispute.setDriversLicenceProvince(randomAlphabetic(30));
 		// Field below is commented out in order to test the driversLicenceProvince string field
 		dispute.setDriversLicenceIssuedCountryId(1);

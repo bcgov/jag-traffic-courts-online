@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
-import { DisputeRequestCourtAppearance } from './disputeRequestCourtAppearance.model';
-import { DisputeContactType } from './disputeContactType.model';
 import { DisputeCount } from './disputeCount.model';
+import { DisputeRequestCourtAppearanceYn } from './disputeRequestCourtAppearanceYn.model';
 
 
 /**
@@ -60,7 +60,7 @@ export interface Dispute {
      * Contact Surname
      */
     contact_surname?: string | null;
-    contact_type?: DisputeContactType;
+    contact_type?: DisputeContactTypeCd;
     /**
      * The mailing address of the disputant.
      */
@@ -166,7 +166,7 @@ export interface Dispute {
      * Address of the lawyer who will represent the disputant at the hearing.
      */
     lawyer_phone_number?: string | null;
-    request_court_appearance?: DisputeRequestCourtAppearance;
+    request_court_appearance?: DisputeRequestCourtAppearanceYn;
     /**
      * The disputant requires spoken language interpreter. The language name is indicated in this field.
      */

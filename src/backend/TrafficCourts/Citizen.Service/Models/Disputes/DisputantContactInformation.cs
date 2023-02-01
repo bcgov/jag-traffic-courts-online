@@ -48,41 +48,41 @@ public class DisputantContactInformation
     /// Contact Law Firm Name
     /// </summary>
     [JsonPropertyName("contact_law_firm_name")]
-    public string? ContactLawFirmName { get; set; }
+    public string? ContactLawFirmNm { get; set; }
 
     /// <summary>
     /// Contact Given Name 1
     /// </summary>
     [JsonPropertyName("contact_given_name1")]
     [MaxLength(30)]
-    public string? ContactGivenName1 { get; set; }
+    public string? ContactGiven1Nm { get; set; }
 
     /// <summary>
     /// Contact Given Name 2
     /// </summary>
     [JsonPropertyName("contact_given_name2")]
     [MaxLength(30)]
-    public string? ContactGivenName2 { get; set; }
+    public string? ContactGiven2Nm { get; set; }
 
     /// <summary>
     /// Contact Given Name 3
     /// </summary>
     [JsonPropertyName("contact_given_name3")]
     [MaxLength(30)]
-    public string? ContactGivenName3 { get; set; }
+    public string? ContactGiven3Nm { get; set; }
 
     /// <summary>
     /// Contact Surname
     /// </summary>
     [JsonPropertyName("contact_surname")]
     [MaxLength(30)]
-    public string? ContactSurname { get; set; }
+    public string? ContactSurnameNm { get; set; }
 
     /// <summary>
     /// Contact Type
     /// </summary>
     [JsonPropertyName("contact_type")]
-    public DisputeContactType? ContactType { get; set; }
+    public DisputeContactTypeCd? ContactTypeCd { get; set; }
 
     /// <summary>
     /// The mailing address of the disputant.

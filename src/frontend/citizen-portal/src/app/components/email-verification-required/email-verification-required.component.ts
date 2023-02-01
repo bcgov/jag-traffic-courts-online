@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
 import { TicketTypes } from '@shared/enums/ticket-type.enum';
-import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearance } from 'app/api';
+import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from 'app/api';
 import { NoticeOfDisputeService, NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
@@ -20,7 +20,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
   ticketTypes = TicketTypes;
   countsActions: any;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
-  RequestCourtAppearance = DisputeRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
 
   dispute: NoticeOfDispute;
 

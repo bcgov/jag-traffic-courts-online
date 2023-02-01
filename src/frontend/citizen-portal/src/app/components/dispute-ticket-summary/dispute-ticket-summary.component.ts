@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { DisputeContactType, DisputeRepresentedByLawyer, DisputeRequestCourtAppearance, Language } from "app/api";
+import { DisputeContactTypeCd, DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn, Language } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
 import { NoticeOfDisputeService, NoticeOfDispute } from "app/services/notice-of-dispute.service";
 import { ConfigService } from "@config/config.service";
@@ -13,8 +13,8 @@ export class DisputeTicketSummaryComponent implements OnInit {
   @Input() noticeOfDispute: NoticeOfDispute;
   countsActions: any;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
-  ContactType = DisputeContactType;
-  RequestCourtAppearance = DisputeRequestCourtAppearance;
+  ContactType = DisputeContactTypeCd;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
 
   constructor(
     private configService: ConfigService,

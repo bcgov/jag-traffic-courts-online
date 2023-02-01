@@ -20,7 +20,7 @@ public class DisputantUpdateContactRequest
     /// <summary>
     /// Contact Type
     /// </summary>
-    public DisputeContactType ContactType { get; set; }
+    public DisputeContactTypeCd ContactType { get; set; }
 
     /// <summary>
     /// Contact Lawyer Name.

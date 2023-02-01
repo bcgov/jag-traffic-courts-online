@@ -271,9 +271,9 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            var givenNames = response.Message.ContactGivenName1 + " " + response.Message.ContactGivenName2 + " " + response.Message.ContactGivenName3;
-            if (response.Message.ContactSurname != user?.Surname
-                || !(response.Message.ContactGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
+            var givenNames = response.Message.ContactGiven1Nm + " " + response.Message.ContactGiven2Nm + " " + response.Message.ContactGiven3Nm;
+            if (response.Message.ContactSurnameNm != user?.Surname
+                || !(response.Message.ContactGiven1Nm == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
             {
                 return BadRequest("Disputant not match");
             }
@@ -395,9 +395,9 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            var givenNames = response.Message.ContactGivenName1 + " " + response.Message.ContactGivenName2 + " " + response.Message.ContactGivenName3;
-            if (response.Message.ContactSurname != user?.Surname
-                || !(response.Message.ContactGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
+            var givenNames = response.Message.ContactGiven1Nm + " " + response.Message.ContactGiven2Nm + " " + response.Message.ContactGiven3Nm;
+            if (response.Message.ContactSurnameNm != user?.Surname
+                || !(response.Message.ContactGiven1Nm == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
             {
                 return BadRequest("Contact name does not match");
             }

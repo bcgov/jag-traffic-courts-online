@@ -5,7 +5,7 @@ import { UtilsService } from "@core/services/utils.service";
 import { ConfigService } from "@config/config.service";
 import { Address } from "@shared/models/address.model";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
-import { DisputeContactType, Language } from "app/api";
+import { DisputeContactTypeCd, Language } from "app/api";
 import { NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
 import { DisputantContactInformationFormGroup } from "app/services/dispute.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
@@ -35,7 +35,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   todayDate: Date = new Date();
   showManualButton: boolean = true;
   showAddressFields: boolean = true; // temporary preset for testing
-  ContactType = DisputeContactType;
+  ContactType = DisputeContactTypeCd;
 
   // Consume from the service
   languages: Language[] = [];
@@ -167,7 +167,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.form.controls.address_province_seq_no.updateValueAndValidity();
       this.form.controls.home_phone_number.updateValueAndValidity();
 
-      if (this.mode !== DisputeFormMode.UPDATEDISPUTANT) { // Disputant form do not have drivers license information
+      if (this.mode !== DisputeFormMode.UPDATEDISPUTANT) { // Disputant form do not have drivers licence information
         let form = this.form as NoticeOfDisputeFormGroup;
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
         form.controls.drivers_licence_province.setValidators([Validators.maxLength(30)]);

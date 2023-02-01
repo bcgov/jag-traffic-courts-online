@@ -59,12 +59,12 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.HomePhoneNumber = patch?.HomePhoneNumber;
                     break;
                 case DisputantUpdateRequestUpdateType.DISPUTANT_NAME:
-                    dispute.ContactGivenName1 = patch?.ContactGivenName1;
-                    dispute.ContactGivenName2 = patch?.ContactGivenName2;
-                    dispute.ContactGivenName3 = patch?.ContactGivenName3;
-                    dispute.ContactSurname = patch?.ContactSurname;
-                    dispute.ContactLawFirmName = patch?.ContactLawFirmName;
-                    dispute.ContactType = patch?.ContactType;
+                    dispute.ContactGiven1Nm = patch?.ContactGiven1Nm;
+                    dispute.ContactGiven2Nm = patch?.ContactGiven2Nm;
+                    dispute.ContactGiven3Nm = patch?.ContactGiven3Nm;
+                    dispute.ContactSurnameNm = patch?.ContactSurnameNm;
+                    dispute.ContactLawFirmNm = patch?.ContactLawFirmNm;
+                    dispute.ContactTypeCd = (DisputeContactTypeCd)(patch?.ContactTypeCd);
                     break;
                 case DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
                     // TODO: update document metadata set StaffReviewStatus to Accepted
@@ -97,7 +97,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.FineReductionReason = patch?.FineReductionReason;
                     dispute.TimeToPayReason = patch?.TimeToPayReason;
 #pragma warning disable CS8629 // Nullable value type may be null.
-                    dispute.RequestCourtAppearance = (DisputeRequestCourtAppearance)(patch?.RequestCourtAppearance);
+                    dispute.RequestCourtAppearanceYn = (DisputeRequestCourtAppearanceYn)(patch?.RequestCourtAppearanceYn);
 #pragma warning restore CS8629 // Nullable value type may be null.
                     break;
                 case DisputantUpdateRequestUpdateType.DISPUTANT_EMAIL:

@@ -9,16 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
 import { DisputeAppearanceLessThan14Days } from './disputeAppearanceLessThan14Days.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { DisputeStatus } from './disputeStatus.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
-import { DisputeRequestCourtAppearance } from './disputeRequestCourtAppearance.model';
-import { DisputeContactType } from './disputeContactType.model';
+import { DisputeAppearanceLessThan14DaysYn } from './disputeAppearanceLessThan14DaysYn.model';
 import { ViolationTicket } from './violationTicket.model';
 import { DisputeCount } from './disputeCount.model';
+import { DisputeRequestCourtAppearanceYn } from './disputeRequestCourtAppearanceYn.model';
 
 
 export interface Dispute { 
@@ -33,13 +34,6 @@ export interface Dispute {
     submittedTs?: string | null;
     disputantSurname?: string | null;
     disputantGivenName1?: string | null;
-    contactLawFirmName?: string | null;
-    contactGivenName1?: string | null;
-    contactGivenName2?: string | null;
-    contactGivenName3?: string | null;
-    contactSurname?: string | null;
-    contactType?: DisputeContactType;
-    requestCourtAppearance?: DisputeRequestCourtAppearance;
     disputantGivenName2?: string | null;
     disputantGivenName3?: string | null;
     disputantBirthdate?: string | null;
@@ -74,6 +68,15 @@ export interface Dispute {
     lawyerPhoneNumber?: string | null;
     lawyerEmail?: string | null;
     officerPin?: string | null;
+    contactTypeCd?: DisputeContactTypeCd;
+    requestCourtAppearanceYn?: DisputeRequestCourtAppearanceYn;
+    contactLawFirmNm?: string | null;
+    contactGiven1Nm?: string | null;
+    contactGiven2Nm?: string | null;
+    contactGiven3Nm?: string | null;
+    contactSurnameNm?: string | null;
+    appearanceDtm?: string | null;
+    appearanceLessThan14DaysYn?: DisputeAppearanceLessThan14DaysYn;
     detachmentLocation?: string | null;
     interpreterLanguageCd?: string | null;
     interpreterRequired?: DisputeInterpreterRequired;
@@ -88,7 +91,6 @@ export interface Dispute {
     disputantOcrIssues?: string | null;
     systemDetectedOcrIssues?: DisputeSystemDetectedOcrIssues;
     ocrTicketFilename?: string | null;
-    appearanceDtm?: string | null;
     appearanceLessThan14Days?: DisputeAppearanceLessThan14Days;
     violationTicket?: ViolationTicket;
     disputeCounts?: Array<DisputeCount> | null;

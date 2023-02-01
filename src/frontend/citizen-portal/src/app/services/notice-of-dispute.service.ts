@@ -8,7 +8,7 @@ import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
-import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, DisputeStatus, DisputeContactType } from "app/api";
+import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, DisputeStatus, DisputeContactTypeCd } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
@@ -24,9 +24,9 @@ export class NoticeOfDisputeService {
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
   RequestReduction = DisputeCountRequestReduction;
-  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   PleaCode = DisputeCountPleaCode;
-  ContactType = DisputeContactType;
+  ContactType = DisputeContactTypeCd;
 
   ticketFormFields: NoticeOfDisputeFormControls = { // need to reset before using, all default value should be set in the component itself
     disputant_surname: new FormControl<string | null>(null, [Validators.required]),

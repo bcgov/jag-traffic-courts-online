@@ -20,7 +20,8 @@ model/disputantUpdateRequestStatus2.model.ts
 model/disputantUpdateRequestUpdateType.model.ts
 model/dispute.model.ts
 model/disputeAppearanceLessThan14Days.model.ts
-model/disputeContactType.model.ts
+model/disputeAppearanceLessThan14DaysYn.model.ts
+model/disputeContactTypeCd.model.ts
 model/disputeCount.model.ts
 model/disputeCountPleaCode.model.ts
 model/disputeCountRequestCourtAppearance.model.ts
@@ -29,7 +30,7 @@ model/disputeCountRequestTimeToPay.model.ts
 model/disputeDisputantDetectedOcrIssues.model.ts
 model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
-model/disputeRequestCourtAppearance.model.ts
+model/disputeRequestCourtAppearanceYn.model.ts
 model/disputeStatus.model.ts
 model/disputeSystemDetectedOcrIssues.model.ts
 model/disputeWithUpdates.model.ts

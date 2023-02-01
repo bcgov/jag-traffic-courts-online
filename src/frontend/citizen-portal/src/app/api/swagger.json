@@ -352,6 +352,77 @@
         }
       }
     },
+    "/api/disputes/downloaddocument": {
+      "get": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "Downloads a document for the given unique file ID if the virus scan staus is clean.",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "description": "Unique identifier for a specific document.",
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document is successfully downloaded."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file to be downloaded successfully."
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:read permission."
+          }
+        }
+      }
+    },
     "/api/dispute/{guidHash}/contact": {
       "put": {
         "tags": [
@@ -726,7 +797,7 @@
             "nullable": true
           },
           "contact_type": {
-            "$ref": "#/components/schemas/DisputeContactType"
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
           },
           "address_line1": {
             "maxLength": 100,
@@ -855,7 +926,7 @@
             "nullable": true
           },
           "contact_type": {
-            "$ref": "#/components/schemas/DisputeContactType"
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
           },
           "address_line1": {
             "maxLength": 100,
@@ -1004,7 +1075,7 @@
             "nullable": true
           },
           "request_court_appearance": {
-            "$ref": "#/components/schemas/DisputeRequestCourtAppearance"
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
           },
           "interpreter_language_cd": {
             "type": "string",
@@ -1041,7 +1112,7 @@
         "additionalProperties": false,
         "description": "Represents a violation ticket notice of dispute."
       },
-      "DisputeContactType": {
+      "DisputeContactTypeCd": {
         "enum": [
           "UNKNOWN",
           "INDIVIDUAL",
@@ -1129,7 +1200,7 @@
         ],
         "type": "string"
       },
-      "DisputeRequestCourtAppearance": {
+      "DisputeRequestCourtAppearanceYn": {
         "enum": [
           "UNKNOWN",
           "Y",
@@ -1281,7 +1352,7 @@
             "nullable": true
           },
           "contact_type": {
-            "$ref": "#/components/schemas/DisputeContactType"
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
           },
           "address_line1": {
             "maxLength": 100,
@@ -1430,7 +1501,7 @@
             "nullable": true
           },
           "request_court_appearance": {
-            "$ref": "#/components/schemas/DisputeRequestCourtAppearance"
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
           },
           "interpreter_language_cd": {
             "type": "string",

@@ -93,38 +93,6 @@ public class Dispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String disputantGivenName1;
 	
-	@Column
-	@Schema(nullable = true)
-	private String contactLawFirmName;
-
-	@Column
-	private String contactGivenName1;
-
-	@Column
-	@Schema(nullable = true)
-	private String contactGivenName2;
-
-	@Column
-	@Schema(nullable = true)
-	private String contactGivenName3;
-
-	@Column
-	@Schema(nullable = true)
-	private String contactSurname;
-
-	@Column
-	@Schema(nullable = true)
-	@Enumerated(EnumType.STRING)
-	private ContactType contactType;
-	
-	/**
-	 * Does the want to appear in court?
-	 */
-	@Column(nullable = false)
-	@Schema(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private YesNo requestCourtAppearance;
-
 	/**
 	 * Second given name of the disputant
 	 */
@@ -525,14 +493,6 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 100)
 	@Schema(maxLength = 100, nullable = true)
 	private String ocrTicketFilename;
-	
-	/**
-	 * Next upcoming court appearance (read only)
-	 */
-	@Column
-	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date appearanceDtm;
 	
 	/**
 	 * Is there an upcoming court appearance in next 14 days (read only)

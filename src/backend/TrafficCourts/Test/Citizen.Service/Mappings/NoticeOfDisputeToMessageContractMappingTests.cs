@@ -27,12 +27,12 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.TicketNumber, actual.TicketNumber);
             Assert.Equal(DisputeStatus.NEW, actual.Status);
             Assert.Equal(noticeOfDispute.IssuedTs, actual.IssuedTs);
-            Assert.Equal(noticeOfDispute.ContactSurname, actual.ContactSurname);
-            Assert.Equal(noticeOfDispute.ContactGivenName1, actual.ContactGivenName1);
-            Assert.Equal(noticeOfDispute.ContactGivenName2, actual.ContactGivenName2);
-            Assert.Equal(noticeOfDispute.ContactGivenName3, actual.ContactGivenName3);
-            Assert.Equal(noticeOfDispute.ContactLawFirmName, actual.ContactLawFirmName);
-            Assert.Equal(noticeOfDispute.ContactType, actual.ContactType);
+            Assert.Equal(noticeOfDispute.ContactSurnameNm, actual.ContactSurnameNm);
+            Assert.Equal(noticeOfDispute.ContactGiven1Nm, actual.ContactGiven1Nm);
+            Assert.Equal(noticeOfDispute.ContactGiven2Nm, actual.ContactGiven2Nm);
+            Assert.Equal(noticeOfDispute.ContactGiven3Nm, actual.ContactGiven3Nm);
+            Assert.Equal(noticeOfDispute.ContactLawFirmNm, actual.ContactLawFirmNm);
+            Assert.Equal(noticeOfDispute.ContactTypeCd, actual.ContactTypeCd);
             Assert.Equal(noticeOfDispute.DisputantBirthdate, actual.DisputantBirthdate);
             Assert.Equal(noticeOfDispute.DriversLicenceNumber, actual.DriversLicenceNumber);
             Assert.Equal(noticeOfDispute.DriversLicenceProvince, actual.DriversLicenceProvince);

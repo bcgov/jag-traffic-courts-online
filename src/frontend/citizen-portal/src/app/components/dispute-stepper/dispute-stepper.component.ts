@@ -12,8 +12,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { cloneDeep } from "lodash";
-import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
@@ -35,7 +34,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ticketTypes = TicketTypes;
   Plea = DisputeCountPleaCode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
-  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
   RequestReduction = DisputeCountRequestReduction;
 

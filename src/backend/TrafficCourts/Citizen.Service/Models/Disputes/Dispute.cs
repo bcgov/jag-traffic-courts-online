@@ -118,7 +118,7 @@ public class Dispute : DisputantContactInformation
     /// Request Court Appearance
     /// </summary>
     [JsonPropertyName("request_court_appearance")]
-    public DisputeRequestCourtAppearance RequestCourtAppearance { get; set; }
+    public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
 
     /// <summary>
     /// The disputant requires spoken language interpreter. The language name is indicated in this field.
