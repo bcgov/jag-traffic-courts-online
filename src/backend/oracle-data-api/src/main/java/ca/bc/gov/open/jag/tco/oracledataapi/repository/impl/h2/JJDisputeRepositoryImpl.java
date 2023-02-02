@@ -24,11 +24,11 @@ public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaReposit
 
 	@Override
 	@Modifying(clearAutomatically = true)
-	@Query("update JJDispute jj set jj.status = :jjDisputeStatus, jj.modifiedBy = :userName, jj.modifiedTs = CURRENT_TIMESTAMP() where jj.ticketNumber = :ticketNumber")
+	@Query("update JJDispute jj set jj.status = :jjDisputeStatus, jj.modifiedBy = :userName, jj.modifiedTs = CURRENT_TIMESTAMP() where jj.ticketNumber = :ticketNumber and :partId = null and :courtAppearanceId = null")
 	@Transactional
 	public void setStatus(
 			@Param(value = "ticketNumber") String ticketNumber,
 			@Param(value = "jjDisputeStatus") JJDisputeStatus jjDisputeStatus,
-			@Param(value = "userName") String userName);
+			@Param(value = "userName") String userName, @Param(value = "partId") String partId, @Param(value = "courtAppearanceId") Long courtAppearanceId);
 
 }
