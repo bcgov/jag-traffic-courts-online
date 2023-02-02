@@ -1,9 +1,0 @@
-export enum DisputeActionTypes {
-  SEARCH = "[Dispute] SEARCH",
-  SEARCH_SUCCESS = "[Dispute] SEARCH SUCCESS",
-  SEARCH_FAILED = "[Dispute] SEARCH FAILED",
-  
-  UPDATE_CONTACT = "[Dispute] UPDATE CONTACT",
-  UPDATE_CONTACT_SUCCESS = "[Dispute] UPDATE CONTACT SUCCESS",
-  UPDATE_CONTACT_FAILED = "[Dispute] UPDATE CONTACT FAILED",
-};

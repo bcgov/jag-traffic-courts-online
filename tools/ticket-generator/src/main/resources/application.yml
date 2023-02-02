@@ -1,7 +1,0 @@
-server:
-  port: 8080
-
-logging:
-  level:
-    root: INFO
-    ca.bc.gov.court.traffic.ticket: DEBUG
