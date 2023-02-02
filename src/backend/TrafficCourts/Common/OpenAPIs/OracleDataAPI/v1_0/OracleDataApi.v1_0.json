@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5010",
+      "url": "http://localhost:8080",
       "description": "Generated server url"
     }
   ],
@@ -1670,7 +1670,7 @@
             "type": "string",
             "nullable": true
           },
-          "app": {
+          "appCd": {
             "type": "string",
             "nullable": true,
             "enum": [ "UNKNOWN", "A", "P", "N" ]
@@ -1684,7 +1684,7 @@
             "type": "string",
             "nullable": true
           },
-          "defenseCounsel": {
+          "defenceCounsel": {
             "type": "string",
             "nullable": true
           },
