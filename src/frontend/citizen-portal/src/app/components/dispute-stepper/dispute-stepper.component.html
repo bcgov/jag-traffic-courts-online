@@ -125,10 +125,13 @@
           <app-page>
             <app-page-header>
               <ng-container subHeader>
-                <h2><strong>Count {{ countForm.value.count_no }}</strong></h2>
                 <div class="row mt-2">
-                  <div class="col-md-8">
-                    <small class="d-block"> Description of offence </small>
+                  <div class="col-md-2">
+                    <small class="d-block">Count</small>
+                    <strong>Count {{ countForm.value.count_no }}</strong>
+                  </div>
+                  <div class="col-md-6">
+                    <small class="d-block">Description of offence </small>
                     <strong>{{ countForm.value.description | titlecase }}</strong>
                   </div>
                   <div class="col-md-4">
@@ -185,13 +188,12 @@
             </form>
 
           </app-page>
-        </mat-card>
-
-        <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()"
-          (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
-          [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
-        </app-stepper-footer>
+        </mat-card><br/><br/>
       </ng-container>
+      <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()"
+        (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+        [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+      </app-stepper-footer>
     </mat-step>
 
     <!-- additional -->
@@ -427,7 +429,7 @@
       <app-page *ngIf="noticeOfDispute">
         <app-page-header>
           <ng-container subHeader>
-            Review the information for each count to ensure details are correct. <strong>Once request has been
+            Review the information for each count to ensure details are correct. <strong>Once the request has been
               submitted you may not make changes.</strong>
           </ng-container>
         </app-page-header>

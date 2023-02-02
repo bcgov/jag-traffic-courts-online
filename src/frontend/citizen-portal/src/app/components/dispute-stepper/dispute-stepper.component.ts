@@ -206,10 +206,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onConsoleLog() {
-    console.log(this.form);
-  }
-
   isValid(countInx?): boolean {
     let countForm = this.countForms?.controls[countInx]
     if (countForm) {

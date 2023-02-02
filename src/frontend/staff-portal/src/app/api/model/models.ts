@@ -30,7 +30,7 @@ export * from './jJDispute.model';
 export * from './jJDisputeAppearInCourt.model';
 export * from './jJDisputeContactType.model';
 export * from './jJDisputeCourtAppearanceRoP.model';
-export * from './jJDisputeCourtAppearanceRoPApp.model';
+export * from './jJDisputeCourtAppearanceRoPAppCd.model';
 export * from './jJDisputeCourtAppearanceRoPCrown.model';
 export * from './jJDisputeCourtAppearanceRoPDattCd.model';
 export * from './jJDisputeCourtAppearanceRoPJjSeized.model';

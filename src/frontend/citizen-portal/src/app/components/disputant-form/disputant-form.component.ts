@@ -124,8 +124,8 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     this.form?.get('contact_type').setValue(this.ContactType.Individual);
     this.form.get('contact_law_firm_name').clearValidators();
     this.form.get('contact_law_firm_name').setValue(null);
-    this.form.get('contact_surname').setValue(this.form.get('disputant_surname').value);
-    this.form.get('contact_given_names').setValue(this.form.get('disputant_given_names').value);
+    this.form.get('contact_surname').setValue(null);
+    this.form.get('contact_given_names').setValue(null);
 
   }
 

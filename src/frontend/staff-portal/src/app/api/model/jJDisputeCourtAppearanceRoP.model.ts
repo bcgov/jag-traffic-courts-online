@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { JJDisputeCourtAppearanceRoPApp } from './jJDisputeCourtAppearanceRoPApp.model';
 import { JJDisputeCourtAppearanceRoPCrown } from './jJDisputeCourtAppearanceRoPCrown.model';
+import { JJDisputeCourtAppearanceRoPAppCd } from './jJDisputeCourtAppearanceRoPAppCd.model';
 import { JJDisputeCourtAppearanceRoPDattCd } from './jJDisputeCourtAppearanceRoPDattCd.model';
 import { JJDisputeCourtAppearanceRoPJjSeized } from './jJDisputeCourtAppearanceRoPJjSeized.model';
 
@@ -25,10 +25,10 @@ export interface JJDisputeCourtAppearanceRoP {
     room?: string | null;
     duration?: number | null;
     reason?: string | null;
-    app?: JJDisputeCourtAppearanceRoPApp;
+    appCd?: JJDisputeCourtAppearanceRoPAppCd;
     noAppTs?: string | null;
     clerkRecord?: string | null;
-    defenseCounsel?: string | null;
+    defenceCounsel?: string | null;
     dattCd?: JJDisputeCourtAppearanceRoPDattCd;
     crown?: JJDisputeCourtAppearanceRoPCrown;
     jjSeized?: JJDisputeCourtAppearanceRoPJjSeized;

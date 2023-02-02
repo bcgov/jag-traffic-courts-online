@@ -118,6 +118,11 @@ export class NoticeOfDisputeService {
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
 
+    input.disputant_birthdate = "2001-01-01" // TODO: remove this once disputant birthdate removed from schema, API
+    input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
+        count.request_court_appearance = input.request_court_appearance;
+    });
+
     const data: DialogOptions = {
       titleKey: "Submit request",
       messageKey:

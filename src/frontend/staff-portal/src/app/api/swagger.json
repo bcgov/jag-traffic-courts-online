@@ -4560,8 +4560,8 @@
             "type": "string",
             "nullable": true
           },
-          "app": {
-            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPApp"
+          "appCd": {
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPAppCd"
           },
           "noAppTs": {
             "type": "string",
@@ -4572,7 +4572,7 @@
             "type": "string",
             "nullable": true
           },
-          "defenseCounsel": {
+          "defenceCounsel": {
             "type": "string",
             "nullable": true
           },
@@ -4603,7 +4603,7 @@
         },
         "additionalProperties": false
       },
-      "JJDisputeCourtAppearanceRoPApp": {
+      "JJDisputeCourtAppearanceRoPAppCd": {
         "enum": [
           "UNKNOWN",
           "A",
