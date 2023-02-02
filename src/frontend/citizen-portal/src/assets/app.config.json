@@ -1,0 +1,10 @@
+{
+  "production": false,
+  "environment": "dev",
+  "version": "1.53.1",
+  "useMockServices": false,
+  "apiBaseUrl": "/api",
+  "features": {
+    "dispute": true
+  }
+}

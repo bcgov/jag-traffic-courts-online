@@ -1,0 +1,90 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>Violation ticket details</ng-container>
+    <ng-container subHeader>
+      <strong class="text-success">Ticket found.</strong> Review ticket details below, then <strong>start a ticket
+        resolution request (includes requesting fine reductions, time to pay or disputes). </strong>
+    </ng-container>
+  </app-page-header>
+  <cdk-accordion>
+    <cdk-accordion-item #accordionItem="cdkAccordionItem" role="button" tabindex="0" [attr.id]="'accordion-header'"
+      [attr.aria-expanded]="accordionItem.expanded" [attr.aria-controls]="'accordion-body'">
+      <div class="subheader-desc" (click)="accordionItem.toggle()">
+        <span>Ticket type: <strong>{{ticketType}}</strong></span>
+        <a class="ms-3">
+          {{ accordionItem.expanded ? ' + See more information' : ' - See less information' }}
+        </a>
+      </div>
+      <div role="region" [style.display]="!accordionItem.expanded ? '' : 'none'" [attr.id]="'accordion-body'"
+        [attr.aria-labelledby]="'accordion-header'">
+        <div class="col my-3">
+          <app-alert type="info" icon="info">
+            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypes.ELECTRONIC_TICKET">
+              <strong>Things you should know: </strong>
+              <ul class="mt-3">
+                <li>Online payment available through <a target="_blank" href="https://pay.gov.bc.ca/"><u>PayBC</u></a>,
+                  to view other payment methods <a target="_blank" href="https://pay.gov.bc.ca/"><u>click here</u></a>.
+                  If you pay your ticket within 30 days of the issue you can save $25 per count.</li>
+                <li>You have 30 days from the violation date to submit your dispute request. If you are outside the 30
+                  days <a target="_blank" href="https://pay.gov.bc.ca/"><u>click here</u></a> for more information</li>
+                <li>You can request a fine reduction or time to pay in writing without having to go to a court hearing.
+                </li>
+                <li>If you don’t pay your fine you may not be able to get or renew licences and permits, including your
+                  driver’s licence.</li>
+              </ul>
+            </ng-container>
+            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypes.CAMERA_TICKET">
+              <strong>Things you should know: </strong>
+              <ul class="mt-3">
+                <li>Visit <a target="_blank" href="https://pay.gov.bc.ca/">PayBC</a> to pay your ticket online now, or
+                  <a target="_blank" href="https://pay.gov.bc.ca/"><u>click here</u></a> to view other payment methods.
+                </li>
+                <li>If you dispute the ticket, an Intersection Safety Camera Officer will always appear in court to
+                  explain the offence and provide evidence. </li>
+                <li>To speak to an officer at the Integrated Traffic Camera Unit please call <a
+                    href="tel:1800-772-8120"><u>1-800-772-8120</u></a> toll-free. </li>
+                <li>You have 45 days from the violation date to submit your dispute request. If you are past the 45 days
+                  <a target="_blank" href="https://pay.gov.bc.ca/"><u>click here</u></a> for more information
+                </li>
+                <li> If you don’t pay your fine you may not be able to get or renew licences and permits, including your
+                  driver’s licence. </li>
+                <li>Intersection Safety Camera tickets are issued to the registered owner of a vehicle and registered
+                  owners do not receive penalty points on their drivers's licence.</li>
+              </ul>
+            </ng-container>
+            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypes.HANDWRITTEN_TICKET">
+              <strong>Things you should know: </strong>
+              <ul class="mt-3">
+                <li>You can pay these ticket types in person, by mail, or telephone with a credit card. See <a
+                    target="_blank"
+                    href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket"><u>Payment
+                      Options</u></a> for more information.
+                </li>
+                <li>You can request a fine reduction or time to pay without having to dispute your ticket and go to a
+                  court hearing.</li>
+                <li>If you don’t pay your fine you may not be able to get or renew licences and permits, including your
+                  driver’s licence.</li>
+              </ul>
+            </ng-container>
+          </app-alert>
+          <hr>
+        </div>
+      </div>
+    </cdk-accordion-item>
+  </cdk-accordion>
+  <div *ngIf="ticket">
+    <app-count-summary [ticket]="ticket"></app-count-summary>
+
+    <div fxLayout="row wrap" class="mt-4 d-print-none">
+      <button fxFlex="33" fxFlex.lt-md="100" mat-stroked-button type="button" color="primary" class="large" routerLink="/ticket/find">
+        Cancel and search again
+      </button>
+      <div fxFlex></div>
+      <button fxFlex="50" fxFlex.lt-md="100" mat-flat-button color="primary" class="large" (click)="onDisputeTicket()">
+        <strong>Start traffic ticket dispute request</strong>
+      </button>
+    </div>
+
+    <app-resolution-footer></app-resolution-footer>
+  </div>
+</app-page>

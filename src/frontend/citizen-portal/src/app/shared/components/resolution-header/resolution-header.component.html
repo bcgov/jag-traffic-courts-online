@@ -1,0 +1,17 @@
+<h2 class="my-2">
+  <div fxLayout="row">
+    <div fxFlex="25">
+      <small class="me-2 text-nowrap">Ticket #:</small>
+      <b class="text-nowrap">{{ ticketNumber }}</b>
+    </div>
+    <div fxFlex style="text-align: end;">
+      <small class="me-2 text-nowrap">Violation time:</small>
+      <b class="text-nowrap">{{ time }}</b>
+      <b *ngIf="date" fxHide.gt-md="true" fxShow.lt-lg="true"> {{ date }}</b>
+    </div>
+    <div *ngIf="date" fxFlex="50" fxHide.lt-lg="true" fxShow.gt-md="true" class="violation-time">
+      <small class="me-2 text-nowrap">Violation date:</small>
+      <b class="text-nowrap">{{ date }}</b>
+    </div>
+  </div>
+</h2>

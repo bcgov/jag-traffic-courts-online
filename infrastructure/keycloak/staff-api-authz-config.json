@@ -1,0 +1,310 @@
+{
+  "allowRemoteResourceManagement": true,
+  "policyEnforcementMode": "ENFORCING",
+  "resources": [
+    {
+      "name": "jj-dispute",
+      "type": "urn:staff-api:resources:jj-dispute",
+      "ownerManagedAccess": false,
+      "displayName": "jj-dispute",
+      "attributes": {},
+      "_id": "8c3dadf5-aaca-4bef-b802-b15d6f1eed82",
+      "uris": [],
+      "scopes": [
+        {
+          "name": "accept"
+        },
+        {
+          "name": "read"
+        },
+        {
+          "name": "require_court_hearing"
+        },
+        {
+          "name": "update"
+        },
+        {
+          "name": "review"
+        },
+        {
+          "name": "assign"
+        }
+      ]
+    },
+    {
+      "name": "dispute",
+      "type": "urn:staff-api:resources:dispute",
+      "ownerManagedAccess": false,
+      "displayName": "dispute",
+      "attributes": {},
+      "_id": "fb7f064f-c819-41ba-98c8-2c46f2ca2c2d",
+      "uris": [],
+      "scopes": [
+        {
+          "name": "read"
+        },
+        {
+          "name": "cancel"
+        },
+        {
+          "name": "reject"
+        },
+        {
+          "name": "update"
+        },
+        {
+          "name": "submit"
+        },
+        {
+          "name": "delete"
+        },
+        {
+          "name": "validate"
+        },
+        {
+          "name": "create"
+        }
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "id": "b8d4f115-046b-42aa-9450-436af87039b2",
+      "name": "has role vtc-staff",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"staff-api/vtc-staff\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "f0b1fe1e-2e2f-4361-946c-2118613f33fd",
+      "name": "has role admin-judicial-justice",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"staff-api/admin-judicial-justice\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "4c417ab6-5f82-4187-96cc-7fe7304ce15a",
+      "name": "has role admin-vtc-staff",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"staff-api/admin-vtc-staff\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "9b577517-9c17-42f3-aa8e-136a9a9efa46",
+      "name": "has role judicial-justice",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"staff-api/judicial-justice\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "f92168bf-af54-4543-9097-1dad0bc13195",
+      "name": "can accept jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"accept\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+      }
+    },
+    {
+      "id": "4eb19a17-2eb3-4815-a8fd-253bee63cd5d",
+      "name": "can require_court_hearing jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"require_court_hearing\"]",
+        "applyPolicies": "[\"has role admin-judicial-justice\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "8e810eac-cf5c-45d3-889c-13c519d94e90",
+      "name": "can read dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"dispute\"]",
+        "scopes": "[\"read\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "c447d05b-fe22-477d-8dd8-1af13b1f037d",
+      "name": "can cancel dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"dispute\"]",
+        "scopes": "[\"cancel\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "35d19f9a-fa1d-456b-9208-a452c68b1c55",
+      "name": "can update dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"dispute\"]",
+        "scopes": "[\"update\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "9a527c87-1995-4cb0-8be9-89f21bab5cb9",
+      "name": "can validate dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"dispute\"]",
+        "scopes": "[\"validate\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "fb8f7558-f80c-47e1-a68c-b069e4007318",
+      "name": "can read jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"read\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "cf3947b0-d8d4-4576-86ff-6b1d1b903f11",
+      "name": "can submit dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"dispute\"]",
+        "scopes": "[\"submit\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "ddcdd65d-bcfb-4e20-9c52-452e9a45de14",
+      "name": "can reject dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"dispute\"]",
+        "scopes": "[\"reject\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "48bb5ae1-c944-4409-b813-42bebbb8b6d6",
+      "name": "can update jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"update\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
+      }
+    },
+    {
+      "id": "7ce63336-84b3-4f2d-ae3b-fb0f1bf66a2a",
+      "name": "can assign jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"assign\"]",
+        "applyPolicies": "[\"has role admin-judicial-justice\"]"
+      }
+    },
+    {
+      "id": "7436e778-1bf7-423c-ad02-69584c53024a",
+      "name": "can review jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"review\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+      }
+    }
+  ],
+  "scopes": [
+    {
+      "id": "09d396b9-8eff-413e-a976-c949d246f992",
+      "name": "create"
+    },
+    {
+      "id": "9643248b-8b2e-4d99-864f-04ba536f3323",
+      "name": "update"
+    },
+    {
+      "id": "fb72f426-9d5e-48fb-ae72-06877050136d",
+      "name": "read"
+    },
+    {
+      "id": "4f42d361-4c53-4e66-8c7c-5aa366d3dc3b",
+      "name": "delete"
+    },
+    {
+      "id": "ccc0bc56-fa1a-4184-8950-182b7bdb07d0",
+      "name": "submit"
+    },
+    {
+      "id": "592c1116-1d05-463d-8ceb-56ebf91ef301",
+      "name": "reject"
+    },
+    {
+      "id": "79f10ad7-3bdc-41f1-a86a-9b2b8735a2ac",
+      "name": "validate",
+      "displayName": "validate"
+    },
+    {
+      "id": "9b2024a3-bf81-4fe6-874d-efef71b5a530",
+      "name": "cancel",
+      "displayName": "cancel"
+    },
+    {
+      "id": "1d7a2e88-1641-4b72-93d1-8888a818ae30",
+      "name": "assign"
+    },
+    {
+      "id": "eb4ef3f1-704d-4e1a-8222-69b6f05528e3",
+      "name": "review"
+    },
+    {
+      "id": "f85d84cd-223e-4e1e-9747-afbbcd4da2c2",
+      "name": "accept"
+    },
+    {
+      "id": "899689eb-f7d3-4494-9c06-37d9a841a336",
+      "name": "require_court_hearing",
+      "displayName": "require_court_hearing"
+    }
+  ],
+  "decisionStrategy": "UNANIMOUS"
+}

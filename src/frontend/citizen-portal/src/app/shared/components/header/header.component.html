@@ -1,0 +1,44 @@
+<div class="header d-print-none">
+  <div class="container">
+    <mat-toolbar color="primary">
+      <span>
+        <a href="https://www2.gov.bc.ca/gov/content/home"
+           class="government-of-bc-logo"
+           target="_blank"
+           rel="noopener">
+          <img src="/assets/gov_bc_logo.jpg"
+               alt="Government of BC Logo" />
+        </a>
+      </span>
+
+      <span class="flex-fill"></span>
+
+      <span class="badge badge-pill badge-light"
+            *ngIf="environment !== 'prod'">
+        {{ environment }} v{{ version }}
+      </span>
+
+      <!--
+    <a (click)="onLanguage()" class="language">
+      <mat-icon inline="true" class="me-2">language</mat-icon>
+      <span style="vertical-align: 5px">{{ languageDesc }}</span>
+    </a>
+  -->
+
+      <!--
+  <ng-container *ngIf="fullName">
+    <span class="fullName d-none d-md-block">
+      {{ fullName }}
+    </span>
+    <span class="logout">
+      <mat-icon (click)="onLogout()">logout</mat-icon>
+    </span>
+  </ng-container>
+  -->
+    </mat-toolbar>
+  </div>
+</div>
+
+<div class="ngx-progress">
+  <ng-progress></ng-progress>
+</div>

@@ -1,0 +1,181 @@
+{
+  "app_heading": "Tribunal de la Circulation en Ligne CB",
+  "landing": {
+    "description1": "L'outil en ligne pour soumettre et résoudre vos BC litiges de contravention.",
+    "description2": "Si vous souhaitez simplement payer votre billet, veuillez cliquer sur le bouton 'Payez Maintenant'",
+    "step_1": {
+      "heading": "Lancer un Litige",
+      "detail": "Connectez-vous à l'aide de votre carte CB Services et lancez le processus de résolution en ligne."
+    },
+    "step_2": {
+      "heading": "Recherche de Tickets de Violation",
+      "detail": "Trouvez votre ticket de violation et assurez-vous que les spécificités du ticket sont correctes. Grâce à notre processus étape par étape, vous pouvez indiquer vos préférences et comment vous souhaitez que le ticket soit contesté."
+    },
+    "step_3": {
+      "heading": "Résolution des Tickets de Violation",
+      "detail": "Soumettez votre résolution ou enregistrez les détails jusqu'à ce que vous soyez prêt à poursuivre le processus de résolution. Vous disposez de 365 jours pour contester votre billet à compter de la date d'émission du billet."
+    },
+    "self_resolution": {
+      "heading": "Assistant d'Auto-Résolution",
+      "detail": "Interagissez avec un assistant en ligne et explorez les raisons de votre ticket. L'assistant en ligne vous guidera à travers plusieurs options illustrées à travers du texte, des vidéos et des images.",
+      "explore": "Explorez Mes Options"
+    }
+  },
+  "find": {
+    "heading": "Trouvez Votre Ticket de Trafic CB",
+    "sub_heading": "Entrez le numéro de ticket de violation et l'heure de violation pour trouver votre ticket.",
+    "note_heading": "COORDONNÉES DU CENTRE DE BILLETS DE VIOLATION",
+    "note_phone": "Téléphone sans Frais",
+    "note_forms": "Les formulaires sont disponibles sur le site Web à l'adresse",
+    "note_form_name": "Formulaires en Ligne"
+  },
+  "summary": {
+    "heading": "Récapitulatif de Votre Ticket de Circulation CB",
+    "sub_heading": "Récapitulatif de votre billet et des éventuels litiges.",
+    "ticket_number": "Billet #",
+    "ticket_outstanding": "Votre Billet n'est pas Payé",
+    "ticket_outstanding_detail": "Voir ci-dessous pour en savoir plus sur votre billet.",
+    "dispute_status_1": "Le litige a été déposé. Un e-mail avec les informations du tribunal sera envoyé prochainement.",
+    "dispute_status_2": "A court date has been set for this dispute. Check your email for more information.",
+    "paid_early_1": "Si payé par",
+    "paid_early_2": "le montant dû comprend un",
+    "paid_early_3": "remise",
+    "dispute_count": "Contestation",
+    "dispute_ticket": "Billet de Contestation",
+    "questions": "Des Questions",
+    "questions_detail_1": "Toute autre question concernant votre litige doit être adressée à:",
+    "questions_detail_2": "Téléphone sans frais",
+    "status_0": "Créé",
+    "status_1": "Soumis",
+    "status_2": "En Cours",
+    "status_3": "Résolu",
+    "status_4": "Rejeté",
+    "status_unpaid": "Non Payé",
+    "status_paid": "Payé"
+  },
+  "stepper": {
+    "next": "Suivant",
+    "cancel": "Annuler",
+    "back": "Reculer",
+    "submit": "Soumettre",
+    "disputant": {
+      "heading": "Informations sur le Litige",
+      "sub_heading": "Veuillez remplir les informations suivantes.",
+      "note": "Un avis d'audience sera posté à l'adresse ci-dessus. Vous DEVEZ notifier par écrit au Violation Ticket Center toute nouvelle adresse de changement d'adresse.",
+      "lastName": "Nom de Famille",
+      "given_names": "Prénoms",
+      "mailing_address": "Adresse Postale",
+      "city": "Ville",
+      "province": "Province",
+      "postal_code": "Code Postal",
+      "home_phone_number": "Numéro de Téléphone Résidentiel",
+      "work_phone_number": "Numéro de Téléphone Professionnel",
+      "driver_licence_number": "Numéro de Permis de Conduire",
+      "driver_licence_province": "Province ou État du Permis de Conduire",
+      "email_address": "Adresse E-Mail",
+      "birthdate": "Date de Naissance"
+    },
+    "count": {
+      "heading": "Examen des Infractions et Mesures à Prendre",
+      "sub_heading_1": "Infraction",
+      "sub_heading_2": "Examen et Mesures à Prendre",
+      "desc_of_offence": "Description de l'Infraction",
+      "offence_amount": "Montant de l'Infraction",
+      "amount_due": "Montant Dû",
+      "discount_if_paid_by": "Remise sur les Billets (si payée par",
+      "dispute_yes_no": "Je voudrais contester cette infraction",
+      "for_this_offence": "Pour cette infraction",
+      "what_to_do": "qu'est-ce que tu aimerais faire?",
+      "offence_agreement_1": "Rien, je paierai l'amende pour cette infraction",
+      "offence_agreement_2": "Demander une réduction ou un délai de paiement pour l'infraction",
+      "offence_agreement_3": "Contester l'accusation",
+      "requests": "Quelles demandes aimeriez-vous faire?",
+      "requestReduction": "Je demande une réduction du montant du ticket: et/ou",
+      "requestReductionReasonLabel": "Quelles sont vos raisons pour une réduction du (des) montant(s) du billet?",
+      "requestMoreTime": "Je demande du temps pour payer le montant du ticket",
+      "requestMoreTimeReasonLabel": "Quelles sont vos raisons pour lesquelles vous avez besoin de plus de temps pour payer le (s) montant (s) du billet?"
+    },
+    "additional": {
+      "heading": "Informations Complémentaires",
+      "sub_heading": "Les questions suivantes s'appliquent à TOUTES les infractions pour ce ticket qui sont actuellement en litige. Si l'un de ces éléments est requis pour un décompte dans le litige, veuillez les sélectionner.",
+      "requests": "Veuillez indiquer si les conditions suivantes s'appliquent",
+      "lawyer": "J'ai l'intention d'être représenté à l'audience par un avocat",
+      "interpreter": "J'ai besoin d'un interprète parlant à l'audience",
+      "interpreter_language": "Langue de l'Interprète",
+      "witness": "J'ai l'intention d'appeler un témoin",
+      "no_lawyer": "Je n'ai PAS l'intention d'être représenté à l'audience par un avocat",
+      "no_interpreter": "Je n'ai PAS besoin d'un interprète parlant à l'audience",
+      "no_witness": "Je n'ai PAS l'intention d'appeler un témoin",
+      "note": "Si le défendeur ou l'agent du défendeur n'assiste pas à l'audience du tribunal, le tribunal traitera le ticket de violation comme non contesté, la ou les condamnations pour les allégations seront enregistrées contre le dossier du contestant, et le ticket prescrit sera inscrit. montant(s) deviendra immédiatement exigible et payable."
+    },
+    "overview": {
+      "heading": "Aperçu du Différend",
+      "sub_heading": "Veuillez consulter les informations suivantes. Vous pouvez revenir à n'importe quelle étape pour mettre à jour les informations.",
+      "disputant_information": "Informations sur le Litige",
+      "address_information": "Adresse",
+      "count": "Infraction",
+      "count_information": "Information sur l'Infraction",
+      "additional_information": "Informations Complémentaires",
+      "offence_not_included": "Cette infraction n'est PAS incluse dans le litige",
+      "offence_dispute": "Je veux contester cette infraction",
+      "certify": "Je certifie que toutes les informations fournies sont véridiques et complètes. Je comprends que le fait de fournir sciemment des informations fausses ou trompeuses constitue une infraction à la loi.",
+      "note_heading": "SOUMISSION DE BILLETS POUR VIOLATION",
+      "note_detail": "Une fois soumis, il ne peut pas être mis à jour."
+    }
+  },
+  "submit": {
+    "heading": "Contestation de Contravention Soumise CB",
+    "sub_heading": "Le différend a été soumis avec succès.",
+    "note_heading": "Contestation Reçue",
+    "note_detail": "Votre contestation a été soumise avec succès. Veuillez vérifier votre courrier électronique (y compris votre dossier indésirable) pour les mises à jour.",
+    "next_steps": "Prochaines Étapes",
+    "next_steps_detail_1": "Votre litige est maintenant soumis aux tribunaux de la circulation. Vous serez informé une fois que votre litige aura été examiné.",
+    "next_steps_detail_2": "Les questions concernant votre litige doivent être adressées à",
+    "next_steps_detail_3": "Téléphone sans Rrais",
+    "view_your_ticket": "Consultez votre Billet",
+    "exit": "Sortir"
+  },
+  "ticket_dispute": {
+    "heading": "Différend avec le Tribunal de la Circulation CB"
+  },
+  "offence_dispute": {
+    "heading": "Différend d'Infraction au Tribunal CB"
+  },
+  "label": {
+    "search": "Rechercher",
+    "back": "Reculer",
+    "pay_now": "Payez Maintenant",
+    "pay_count": "Payer l'Infraction",
+    "pay_balance": "Payer le solde du billet de",
+    "initiate_dispute": "Lancer un Litige",
+    "find_another_ticket": "Trouver un Autre Billet",
+    "violation_ticket_number": "Numéro de Ticket de Violation",
+    "violation_ticket_number_hint": "Un numéro de ticket de violation est composé de 2 lettres et 8 chiffres",
+    "violation_time": "Temps de Biolation",
+    "count_number": "Infraction #",
+    "desc_of_offence": "Description de l'Infraction",
+    "for_vehicle": "pour Véhicule",
+    "offence_amount": "Montant de l'Infraction",
+    "amount_due": "Montant Dû",
+    "status": "Statut"
+  },
+  "submit_confirmation": {
+    "heading": "Soumettre un Litige",
+    "message": "Lorsque votre contestation est soumise pour décision, elle ne peut plus être mise à jour. Êtes-vous prêt à soumettre votre différend?",
+    "confirm": "Soumettre un Litige",
+    "cancel": "Annuler"
+  },
+  "toaster": {
+    "dispute_submitted": "Le litige a été soumis avec succès",
+    "dispute_validation_error": "Votre litige comporte une erreur qui doit être corrigée avant que vous ne puissiez soumettre",
+    "ticket_error": "Le ticket n'a pas pu être récupéré",
+    "dispute_create_error": "Le litige n'a pas pu être créé",
+    "statute_error": "Les statuts n’ont pas pu être chargés",
+    "language_error": "Les langs n’ont pas pu être chargés",
+    "dispute_error": "Les litiges n’ont pas pu être rejugés / sauvegardés."
+  },
+  "error": {
+    "required": "Obligatoire",
+    "email_address": "Doit être une adresse e-mail valide"
+  }
+}

@@ -1,0 +1,130 @@
+version: "3.8"
+
+services:
+  #############################################################################################
+  ###                           Azure Form Recognizer (3 containers)                        ###
+  #############################################################################################
+  
+  citizen-api:
+    environment:
+      FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-2.1}
+      FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-http://azure-cognitive-service-proxy:5200}
+      FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-75f5614c-eded-4413-a3d9-c67281e8402e}
+      
+  form-rec-nginx:
+    build:
+      context: ./tools/form-recognizer
+      dockerfile: Dockerfile.proxy
+    container_name: azure-cognitive-service-proxy
+    depends_on:
+      - form-rec-layout
+      - form-rec-custom-api
+      - form-rec-custom-supervised
+      - form-rec-cron
+    ports:
+      - "5200:5200"
+
+  form-rec-cron:
+    container_name: azure-cognitive-service-custom-cron
+    image: alpine:3.14
+    entrypoint: >
+      /bin/sh -c "
+      LC_ALL=C find /shared/formrecognizer/.__custom__.virtualdir/.__requests__.virtualdir/.__default__.virtualdir -mmin +60 -delete;
+      LC_ALL=C find /logs -mtime +30 -delete;
+      exit 0;
+      "
+    volumes:
+      - type: bind
+        source: ./tools/form-recognizer/shared
+        target: /shared
+      - type: bind
+        source: ./tools/form-recognizer/logs
+        target: /logs
+
+  form-rec-layout:
+    container_name: azure-cognitive-service-custom-layout
+    build:
+      context: ./tools/form-recognizer
+      dockerfile: Dockerfile.layout
+    depends_on:
+      - rabbitmq
+    environment:
+      eula: accept
+      apikey: ${FORMRECOGNIZER__APIKEY}
+      billing: ${FORMRECOGNIZER__BILLING_URL}
+      Logging:Console:LogLevel:Default: Information
+      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
+      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
+      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
+      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
+      SharedRootFolder: /shared
+      Mounts:Shared: /shared
+      Mounts:Output: /logs
+    volumes:
+      - type: bind
+        source: ./tools/form-recognizer/shared
+        target: /shared
+      - type: bind
+        source: ./tools/form-recognizer/logs
+        target: /logs
+    expose:
+      - "5000"
+
+  form-rec-custom-api:
+    container_name: azure-cognitive-service-custom-api
+    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-api
+    restart: always
+    depends_on:
+      - rabbitmq
+      - form-rec-layout
+      - form-rec-custom-supervised
+    environment:
+      eula: accept
+      apikey: ${FORMRECOGNIZER__APIKEY}
+      billing: ${FORMRECOGNIZER__BILLING_URL}
+      Logging:Console:LogLevel:Default: Information
+      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
+      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
+      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
+      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
+      SharedRootFolder: /shared
+      Mounts:Shared: /shared
+      Mounts:Output: /logs
+    volumes:
+      - type: bind
+        source: ./tools/form-recognizer/shared
+        target: /shared
+      - type: bind
+        source: ./tools/form-recognizer/logs
+        target: /logs
+    expose:
+      - "5000"
+
+  form-rec-custom-supervised:
+    container_name: azure-cognitive-service-custom-supervised
+    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-supervised
+    restart: always
+    depends_on:
+      - rabbitmq
+      - form-rec-layout
+    environment:
+      eula: accept
+      apikey: ${FORMRECOGNIZER__APIKEY}
+      billing: ${FORMRECOGNIZER__BILLING_URL}
+      CustomFormRecognizer:ContainerPhase: All
+      CustomFormRecognizer:LayoutAnalyzeUri: http://azure-cognitive-service-custom-layout:5000/formrecognizer/v2.1/layout/analyze
+      Logging:Console:LogLevel:Default: Information
+      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
+      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
+      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
+      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
+      SharedRootFolder: /shared
+      Mounts:Shared: /shared
+      Mounts:Output: /logs
+    volumes:
+      - type: bind
+        source: ./tools/form-recognizer/shared
+        target: /shared
+      - type: bind
+        source: ./tools/form-recognizer/logs
+        target: /logs

@@ -1,0 +1,181 @@
+<ng-container *ngIf="noticeOfDispute">
+  <section class="mb-2">
+    <app-resolution-header [ticket]="noticeOfDispute"></app-resolution-header>
+  </section>
+
+  <div class="mb-2">
+    <section class="px-4 py-2 mb-4 card-section">
+      <div class="page-subheader pagebreak">
+        <h2><strong> Disputant contact information</strong></h2>
+        <div class="row mb-2">
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">Surname</small>
+            <div class="text">{{ noticeOfDispute.disputant_surname }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Given names</small>
+            <div class="text">{{ noticeOfDispute.disputant_given_names }}</div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">Mailing address</small>
+            <div class="text">{{ noticeOfDispute.address }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Country</small>
+            <div class="text">{{ getCountryLongName(noticeOfDispute.address_country_id) }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Province/State</small>
+            <div class="text">{{ noticeOfDispute.address_province }}</div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">City</small>
+            <div class="text">{{ noticeOfDispute.address_city }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Postal/ZIP code</small>
+            <div class="text">{{ noticeOfDispute.postal_code }}</div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">Birth date</small>
+            <div class="text">{{ noticeOfDispute.disputant_birthdate | date:"yyyy-MM-dd" }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Driver's licence number</small>
+            <div class="text">{{ noticeOfDispute.drivers_licence_number }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Province/State of driver's licence</small>
+            <div class="text">{{ noticeOfDispute.drivers_licence_province }}</div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">Phone number</small>
+            <div class="text">{{ noticeOfDispute.home_phone_number | phone }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Email address</small>
+            <div class="text">{{ noticeOfDispute.email_address }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of noticeOfDispute.dispute_counts; let i = index">
+      <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
+    </section>
+
+    <section class="px-4 py-2 mb-4 card-section">
+      <div class="page-subheader pagebreak">
+        <strong> Additional information </strong>
+
+        <div *ngIf="countsActions?.not_request_court_appearance?.length > 0">
+          <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
+            <hr />
+            <strong class="fs-5">
+              <div>{{ countsActions?.request_reduction }}</div>
+            </strong>
+            <h3 class="mb-0 additional-info-desc">
+              I do not want to attend a court hearing and want to supply written reasons.
+            </h3>
+            <small>Written reasons for <strong>fine reduction</strong> request</small>
+            <div>{{ noticeOfDispute.fine_reduction_reason }}</div>
+          </ng-container>
+          <ng-container *ngIf="countsActions.request_reduction !== countsActions.request_time_to_pay">
+            <hr />
+            <strong class="fs-5">
+              <div>{{ countsActions.request_time_to_pay }}</div>
+            </strong>
+          </ng-container>
+          <ng-container *ngIf="countsActions.request_time_to_pay?.length > 0">
+            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written
+              reasons.</h3>
+            <small>Written reasons for <strong>time to pay</strong> request</small>
+            <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
+          </ng-container>
+        </div>
+        <div *ngIf="countsActions?.request_court_appearance?.length > 0">
+          <hr />
+          <div *ngIf="countsActions?.guilty?.length > 0">
+            <strong class="fs-5 mb-3">
+              <div>{{ countsActions?.guilty }}</div>
+            </strong>
+            <h3 class="mb-2 additional-info-desc">
+              I want to attend a court hearing to request a fine reduction and/or time to pay.
+            </h3>
+            <br />
+          </div>
+          <div *ngIf="countsActions?.not_guilty?.length > 0">
+            <strong class="fs-5 mb-3">
+              <div>{{ countsActions?.not_guilty }}</div>
+            </strong>
+            <h3 class="mb-2 additional-info-desc">
+              I want to attend a court hearing and dispute the charge.
+            </h3>
+            <br />
+          </div>
+          <div class="row mb-2" *ngIf="noticeOfDispute.represented_by_lawyer === RepresentedByLawyer.Y">
+            <div class="row mb-3">
+              <small>Action</small>
+              <div><strong>I intend to be represented by a lawyer in court</strong></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <small>Name of law firm</small>
+                <div><strong>{{ noticeOfDispute.law_firm_name }}</strong></div>
+              </div>
+              <div class="col">
+                <small>Full name of lawyer</small>
+                <div><strong>{{ noticeOfDispute.lawyer_full_name }}</strong></div>
+              </div>
+              <div class="col">
+                <small>Contact Email</small>
+                <div><strong>{{ noticeOfDispute.lawyer_email }}</strong></div>
+              </div>
+            </div>
+            <div class="row">
+              <small>Address of the law firm</small>
+              <div><strong>{{ noticeOfDispute.lawyer_address }}</strong></div>
+            </div>
+          </div>
+          <div class="row mb-2" *ngIf="noticeOfDispute.interpreter_language_cd">
+            <div class="row">
+              <div class="col-lg-8">
+                <small>Action</small>
+                <div><strong>I require a language interpreter at the hearing</strong></div>
+              </div>
+              <div class="col">
+                <small>Language</small>
+                <div><strong>{{getLanguageDescription(noticeOfDispute.interpreter_language_cd)}}</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2" *ngIf="noticeOfDispute.witness_no > 0">
+            <div class="row">
+              <div class="col-lg-8">
+                <small>Action</small>
+                <div><strong>I intend to call witness(es)</strong></div>
+              </div>
+              <div class="col">
+                <small># of witness(es)</small>
+                <div><strong>{{noticeOfDispute.witness_no}}</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</ng-container>

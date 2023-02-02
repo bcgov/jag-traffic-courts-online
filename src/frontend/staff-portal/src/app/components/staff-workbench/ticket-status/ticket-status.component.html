@@ -1,0 +1,6 @@
+<div class="ticket-status BC-Gov-15px-black-text" *ngIf="dispute">
+    <div>Request submitted date: <span>{{ dispute.submittedTs | date:"EEEE, MMMM ddd y"}}</span></div>
+    <div>Status: <span>{{dispute.status}}</span></div>
+    <div>Assigned to: <span>{{dispute.userAssignedTo ? dispute.userAssignedTo : "Unassigned"}}</span></div>
+    <div *ngIf="!dispute.emailAddress"><span>Citizen has opted out of email communication for this dispute</span></div>
+</div>

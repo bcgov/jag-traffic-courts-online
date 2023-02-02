@@ -1,0 +1,19 @@
+<div *ngIf="ticket">
+  <section class="mb-2">
+    <app-resolution-header [ticket]="ticket"></app-resolution-header>
+  </section>
+
+  <div class="row mt-2 mb-2" *ngIf="selectView">
+    <div class="col">
+      <mat-checkbox (change)="onSelectAllChange($event)" class="me-4 mb-2" color="primary">
+        I agree I committed this offence and I would like to pay all counts for this ticket.
+      </mat-checkbox>
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of ticket.counts; let i = index">
+      <app-count-item-summary #countitem [count]="row" [selectView]="selectView"></app-count-item-summary>
+    </section>
+  </div>
+</div>

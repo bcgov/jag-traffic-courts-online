@@ -1,0 +1,4 @@
+location /api/ {
+    proxy_pass ${API_BASE_PATH};
+    client_max_body_size 10M;
+}

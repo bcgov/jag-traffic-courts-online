@@ -1,0 +1,68 @@
+
+src/frontend/citizen-portal/debug.log
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.DS_Store
+.metadata
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+app/*[Bb]in/
+bin/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+.vscode/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+
+# Docker Environment Files
+.env
+
+# code coverage files
+**/coverage.info
+
+#RESHARPER
+.DotSettings
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# dependencies
+/node_modules
+package-lock.json
+
+# paybc mock
+/src/mock_paybc/
+
+# Azure Form Recognizer
+/tools/form-recognizer/logs/*
+!/tools/form-recognizer/logs/.keep
+/tools/form-recognizer/shared/*
+!/tools/form-recognizer/shared/.keep
+
+# SFTP file location that contains generated ARC files 
+/sftp-in

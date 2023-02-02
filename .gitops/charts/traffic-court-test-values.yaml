@@ -1,0 +1,107 @@
+# global values
+global:
+  namespace: 0198bb-test
+  vault:
+    role: 0198bb-nonprod
+    path: test/
+
+arc-dispute-api:
+  image:
+    tag: "1.53.1"
+    pullPolicy: Always
+  env: 
+    "Swagger__Enabled": "true"
+
+citizen-api:
+  image:
+    tag: "1.53.1"
+    pullPolicy: Always
+  env:
+    "FormRecognizer__ApiVersion": "2022-06-30-preview"
+    "FormRecognizer__ModelId": "ViolationTicket"
+    "Swagger__Enabled": "true"
+    "TicketSearch__SearchType": "Mock"
+    "MassTransit__Transport": "RabbitMq"
+
+citizen-web:
+  image:
+    tag: "1.53.1"
+    pullPolicy: Always
+
+  appConfig: |  
+    {
+        "production": false,
+        "environment": "Test",
+        "version": "1.53.1",
+        "useMockServices": false,
+        "apiBaseUrl": "/api",
+        "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
+        "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
+        "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket",
+        "features": {
+          "dispute":true
+        }
+      }
+
+oracle-data-api:
+  image:
+    tag: "1.53.1"
+    pullPolicy: Always
+  env:
+    "ORDS_API_OCCAM_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam"
+    "ORDS_API_TCO_URL": "https://dev.jag.gov.bc.ca/ords/devj/tcoords/tco"
+    "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG"
+    "TZ": "America/Vancouver"
+    "LOOKUP_REPOSITORY_SRC": "ords"
+    "DISPUTE_REPOSITORY_SRC": "ords"
+    "JJDISPUTE_REPOSITORY_SRC": "h2"
+    "HISTORY_REPOSITORY_SRC": "h2"
+
+staff-api:
+  image:
+    tag: "1.53.1"
+    pullPolicy: Always
+  env:    
+    "Jwt__Audience": "staff-api"
+    "Jwt__Authority": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court"
+    "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/admin/realms/"
+    "KeycloakAdminApi__Realm": "traffic-court"
+    "OAuth__TokenUri": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
+    "Swagger__Enabled": "true"
+    "MassTransit__Transport": "RabbitMq"
+
+staff-web:
+  image:
+    tag: "1.53.1"
+    pullPolicy: Always
+  keycloakConfig: |
+    {
+      "config": {
+        "url": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/",
+        "realm": "traffic-court",
+        "clientId": "staff-portal"
+      },
+      "initOptions": {
+      }
+    }
+  appConfig: |
+    {
+        "production": false,
+        "environment": "Test",
+        "version": "1.53.1",
+        "useMockServices": false,
+        "apiBaseUrl": "/api",
+        "features": {
+          "dispute":true
+        }
+      }
+
+workflow-service:
+  image:
+    tag: "1.53.1"
+    pullPolicy: Always
+  env:
+    "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
+    "EmailConfiguration__AllowList": ""
+    "EmailConfiguration__EmailVerificationURL": "https://test.tickets.gov.bc.ca/email/verify"
+    "MassTransit__Transport": "RabbitMq"

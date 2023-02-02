@@ -1,0 +1,36 @@
+@import "palette.scss";
+
+.text-dark {
+  color: theme-palette(grey, dark);
+
+  & strong {
+    color: var(--bs-body-color)
+  }
+}
+
+h3 {
+  font-weight: bold;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mat-flat-button,
+.mat-stroked-button {
+  width: 100%;
+
+  &.large {
+    height: 46px;
+    font-size: 1rem;
+  }
+}
+
+.icon-xlarge {
+  font-size: 50px !important;
+  height: 50px !important;
+  width: 50px !important;
+}
+
+@media (max-width: 767px) {
+  .conf-email {
+    margin-bottom: 1em;
+  }
+}

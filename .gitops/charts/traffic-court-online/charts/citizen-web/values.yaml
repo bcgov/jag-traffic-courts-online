@@ -1,0 +1,70 @@
+# Default values for citizen-web.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## @param replicaCount Number of replicas
+##
+replicaCount: 1
+
+image:
+  registry: image-registry.openshift-image-registry.svc:5000
+  repository: 0198bb-tools/citizen-web
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+## @param nameOverride String to partially override citizen-web.fullname template (will maintain the release name)
+##
+nameOverride: ""
+
+## @param fullnameOverride String to fully override citizen-web.fullname template
+##
+fullnameOverride: ""
+
+resources:
+  limits:
+    cpu: 150m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+## Autoscaling configuration
+## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+## @param autoscaling.enabled Enable Horizontal POD autoscaling
+## @param autoscaling.minReplicas Minimum number of replicas
+## @param autoscaling.maxReplicas Maximum number of replicas
+## @param autoscaling.targetCPUUtilizationPercentage Target CPU utilization percentage
+## @param autoscaling.targetMemoryUtilizationPercentage Target Memory utilization percentage
+##
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+## @param appConfig configuration file
+## appConfig: |-
+##   {
+##       "production": false,
+##       "environment": "Dev",
+##       "version": "1.33.0",
+##       "useMockServices": false,
+##       "apiBaseUrl": "/api",
+##       "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
+##       "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
+##       "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket",
+##       "features": {
+##         "dispute":true
+##       }
+##     }
+##
+appConfig: ""
+
+## @param existingAppConfigConfigmap ConfigMap with app configuration
+## NOTE: This will override appConfig
+##
+existingAppConfigConfigmap: ""

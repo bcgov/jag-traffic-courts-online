@@ -1,0 +1,56 @@
+@import "palette";
+
+h2,
+.text-bold.text-bold {
+  font-weight: bold;
+  color: theme-palette(blue);
+}
+
+h2.close {
+  transform: scale(1.5);
+}
+
+p {
+  font: 400 16px / 22px BCSans, Noto Sans, Verdana, Arial, sans-serif;
+}
+
+.mat-dialog-title.mat-dialog-title  {
+  margin: 0;
+}
+
+.text-error {
+  font-weight: bold;
+  color: theme-palette(red);
+}
+
+mat-expansion-panel {
+  box-shadow: none !important;
+  padding-bottom: 1em;
+  border-bottom: 1px solid theme-palette(grey, light);
+}
+
+mat-expansion-panel-header {
+  padding-left: 0;
+  padding-right: 0.5em;
+}
+
+.mat-expansion-panel {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.mat-expansion-panel-header.mat-expanded {
+  height: 64px;
+}
+
+@media (max-width: 767px) {
+  img {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  img {
+    max-width: 560px;
+  }
+}

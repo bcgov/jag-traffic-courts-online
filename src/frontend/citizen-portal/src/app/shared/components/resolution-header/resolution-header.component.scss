@@ -1,0 +1,11 @@
+@import "palette.scss";
+
+@media (min-width: 768px) {
+  .violation-time {
+    text-align: right;
+  }
+}
+
+small {
+  color: theme-palette(grey, dark);
+}

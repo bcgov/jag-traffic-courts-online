@@ -1,0 +1,34 @@
+//
+// MATERIAL THEME
+//
+
+@use '@angular/material' as mat;
+@import "./material-palette";
+@import "@angular/material/theming";
+
+// Define the palettes for your theme using the Material Design palettes available in the material
+// palette.scss (imported above). For each palette, you can optionally specify a default (500),
+// lighter (100), and darker (700) hue.
+$tco-app-primary: mat.define-palette($tco-blue, 500);
+$tco-app-accent: mat.define-palette($tco-yellow, 500);
+
+// The warn palette is optional (defaults to red).
+$tco-app-warn: mat.define-palette(mat.$red-palette);
+
+// Create the default theme object (a Sass map containing all of the palettes).
+$tco-app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $tco-app-primary,
+      accent: $tco-app-accent,
+      warn: $tco-app-warn,
+    ),
+    typography: $tco-typography,
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+
+@include mat.all-component-themes($tco-app-theme);

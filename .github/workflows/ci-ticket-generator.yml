@@ -1,0 +1,33 @@
+name: Ticket Generator CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'tools/ticket-generator/**'
+      - '.github/workflows/ci-ticket-generator.yml'
+
+jobs:
+  build-ticket-generator:
+    runs-on: ubuntu-20.04
+    environment: Development
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./tools/ticket-generator
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-gen:latest
+        run: |
+          docker build --tag ${IMAGE} -f ${CONTEXT}/Dockerfile ${CONTEXT}
+          docker push ${IMAGE}

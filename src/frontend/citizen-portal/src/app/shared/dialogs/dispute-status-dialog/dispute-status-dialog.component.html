@@ -1,0 +1,29 @@
+<div mat-dialog-title class="d-flex justify-content-between">
+  <span class="text-center">
+    Ticket #: <b>{{ params?.ticketNumber }}</b>
+  </span>
+  <button mat-icon-button mat-dialog-close color="primary">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <mat-stepper class="status-stepper" labelPosition="bottom" [linear]="true" [disableRipple]="true"
+    [selectedIndex]="selectedStep">
+    <mat-step *ngFor="let step of steps;" [completed]="step.isCompleted" [editable]="false">
+      <ng-template matStepLabel>{{ step.type }}</ng-template>
+    </mat-step>
+  </mat-stepper>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="p-2 text-center">
+    <div class="text-center">
+      <img class="icon" src="/assets/support-icon.svg" />
+      <strong>Looking for more support?</strong>
+    </div>
+    <div class="mt-2 text-body text-center">
+      Contact the Violation Ticket Centre toll free
+      <a href="tel:+18776618026" style="text-decoration: underline;">1-877-661-8026</a>.
+      <strong>Open weekdays 9 AM to 4 PM.</strong>
+    </div>
+  </div>
+</mat-dialog-actions>

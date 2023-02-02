@@ -1,0 +1,10 @@
+{
+    "authority": "https://idtest.gov.bc.ca/login",
+    "clientId": "ca.bc.gov.ag.tco.dev",
+    "scope": "openid profile address email",
+    "responseType": "code",
+    "silentRenew": true,
+    "useRefreshToken": true,
+    "renewTimeBeforeTokenExpiresInSeconds": 30,
+    "unauthorizedRoute": "/"
+  }

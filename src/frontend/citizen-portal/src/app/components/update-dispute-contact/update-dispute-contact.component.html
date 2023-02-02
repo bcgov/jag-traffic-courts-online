@@ -1,0 +1,26 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>
+      Update Contact Information
+    </ng-container>
+    <ng-container subHeader>
+      Enter your contact information, then <b>choose the type of request you'd like to make</b>
+    </ng-container>
+  </app-page-header>
+  <section style="padding-bottom: 1rem;">
+    <app-resolution-header></app-resolution-header>
+  </section>
+
+  <app-disputant-form [form]="form" [mode]="mode"></app-disputant-form>
+
+  <div fxLayout="row" class="my-4 d-print-none">
+    <button fxFlex="25" mat-stroked-button color="primary" class="large" (click)="back()">
+      Cancel request
+    </button>
+    <div fxFlex></div>
+    <button fxFlex="35" mat-flat-button color="primary" class="large" (click)="updateContact()"
+      [disabled]="!this.form?.valid">
+      <strong>Update contact Information</strong>
+    </button>
+  </div>
+</app-page>

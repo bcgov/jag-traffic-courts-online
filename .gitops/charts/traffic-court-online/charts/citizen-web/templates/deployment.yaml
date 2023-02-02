@@ -1,0 +1,68 @@
+{{- define "tco.connectsTo" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "citizen-api.fullname" . }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "citizen-web.fullname" . }}
+  labels:
+    app.openshift.io/runtime: nginx
+    {{- include "citizen-web.labels" . | nindent 4 }}
+  annotations:
+    app.openshift.io/connects-to: '[{{ include "tco.connectsTo" . | fromYaml | toJson }}]'
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "citizen-web.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "citizen-web.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ .Values.global.licenseplate }}-vault
+      containers:
+        - env:
+          - name: TZ
+            value: America/Vancouver
+          name: {{ .Chart.Name }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- if or .Values.appConfig .Values.existingAppConfigConfigmap }}
+            - name: configuration
+              mountPath: /usr/share/nginx/html/assets/app.config.json
+              readOnly: true
+              subPath: app.config.json
+            {{- end }}
+            - name: configuration
+              mountPath: /opt/app-root/etc/nginx.default.d/nginx-api-proxy-pass.conf
+              readOnly: true
+              subPath: nginx-api-proxy-pass.conf
+      volumes:
+        - name: configuration
+          configMap:
+            name: {{ include "citizen-web.configmapName" . }}
+            items:
+            {{- if or .Values.appConfig }}
+              - key: app.config.json
+                path: app.config.json
+            {{- end }}
+              - key: nginx-api-proxy-pass.conf
+                path: nginx-api-proxy-pass.conf

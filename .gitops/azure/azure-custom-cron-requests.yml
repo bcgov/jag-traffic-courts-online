@@ -1,0 +1,27 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: azure-cognitive-service-cleanup-requests
+  namespace: 0198bb-dev
+spec:
+  schedule: '@hourly'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: forms-recognizer-shared
+              persistentVolumeClaim:
+                claimName: forms-recognizer-shared
+          containers:
+            - name: azure-cognitive-service-cleanup-requests
+              image: alpine:3.14
+              args:
+                - /bin/sh
+                - '-c'
+                - "LC_ALL=C find /shared/formrecognizer/.__custom__.virtualdir/.__requests__.virtualdir/.__default__.virtualdir -mmin +60 -delete;"
+              volumeMounts:
+                - name: forms-recognizer-shared
+                  mountPath: /shared
+          restartPolicy: OnFailure

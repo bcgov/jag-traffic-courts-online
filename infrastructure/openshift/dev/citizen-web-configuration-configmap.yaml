@@ -1,0 +1,6 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: citizen-web-configuration
+data:
+  app.config.json: "{\r\n  \"production\": false,\r\n  \"environment\": \"dev\",\r\n  \"version\": \"1.0.0\",\r\n  \"useMockServices\": true,\r\n  \"apiBaseUrl\": \"/api\",\r\n  \"understandYourTicketLink\": \"https://understandmyticket.gov.bc.ca/\",\r\n  \"paymentOptionsLink\": \"https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket\",\r\n  \"resolutionOptionsLink\": \"https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket\"\r\n}\r\n"

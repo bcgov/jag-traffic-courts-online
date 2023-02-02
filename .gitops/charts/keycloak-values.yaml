@@ -1,0 +1,45 @@
+## Keycloak chart configuration
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/keycloak/values.yaml
+
+## Service configuration
+##
+service:
+  type: ClusterIP
+
+## Keycloak pods' SecurityContext
+podSecurityContext:
+  enabled: false
+
+## Keycloak containers' Security Context
+containerSecurityContext:
+  enabled: false
+## Metrics configuration
+##
+metrics:
+  enabled: true
+
+keycloakConfigCli:
+  enabled: false
+
+## PostgreSQL chart configuration
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+postgresql:
+  primary:
+    
+    containerSecurityContext:
+      enabled: false
+    podSecurityContext:
+      enabled: false
+    
+    persistence:
+      size: 500Mi
+
+  ## volumePermissions: Change the owner and group of the persistent volume(s) mountpoint(s) to 'runAsUser:fsGroup' on each node
+  volumePermissions:
+    enabled: false
+
+  ## @section Metrics Parameters
+  metrics:
+    enabled: true
+    containerSecurityContext:
+      enabled: false

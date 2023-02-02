@@ -1,0 +1,38 @@
+<app-page [busy]="busy" class="container">
+  <div class="flex-wrapper">
+    <div class="flex-header d-print-none mb-40">
+      <app-header></app-header>
+    </div>
+    <div class="dashBody" *ngIf="!showDispute">
+      <br /><br />
+      <mat-tab-group mat-align-tabs="start" [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)">
+        <mat-tab *ngIf="jjAdminRole">
+          <ng-template mat-tab-label><h2>WR Assignments</h2></ng-template>
+          <br/>
+          <app-jj-dispute-wr-assignments (jjDisputeInfo)="changeJJDispute($event)"></app-jj-dispute-wr-assignments>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label><h2>WR Inbox</h2></ng-template>
+          <br/>
+          <app-jj-dispute-wr-inbox (jjDisputeInfo)="changeJJDispute($event)"></app-jj-dispute-wr-inbox>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label><h2>Hearing Inbox</h2></ng-template>
+          <br/>
+          <app-jj-dispute-hearing-inbox (jjDisputeInfo)="changeJJDispute($event)"></app-jj-dispute-hearing-inbox>
+        </mat-tab>
+        <mat-tab #DCF>
+          <ng-template mat-tab-label><h2>DCF</h2></ng-template>
+          <br/>
+          <app-jj-dispute-digital-case-file (jjDisputeInfo)="changeJJDispute($event)" [data$]="data$"></app-jj-dispute-digital-case-file>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div class="dashBody" *ngIf="showDispute">
+      <app-jj-dispute (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo" [isViewOnly]="!isInfoEditable"></app-jj-dispute>
+    </div>
+    <div class="flex-footer d-print-none mb-40">
+      <app-footer></app-footer>
+    </div>
+  </div>
+</app-page>

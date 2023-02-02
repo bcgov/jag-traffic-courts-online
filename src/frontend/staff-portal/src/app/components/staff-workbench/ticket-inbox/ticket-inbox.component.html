@@ -1,0 +1,135 @@
+<div>
+  <div class="flex-container" style="width: 40%">
+    <table>
+      <tr>
+        <td><span class="BC-Gov-15px-black-text" style="color:green;" ><b>{{ countNewTickets() }} NEW ticket records</b></span> </td>
+        <td style="width:5px">|</td>
+        <td>
+            <select style="border: none;">
+              <option><span class="BC-Gov-15px-black-bold-text"><b>Fraser Valley Region</b>&nbsp;&nbsp;</span></option>
+            </select>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="BC-Gov-15px-blue-text" ><b>Ticket number search:</b></span></td>
+        <td colspan="2">
+          <div class="inputContainer">
+            <input name="searchInput" matInput type="search" (keyup)="applyFilter($event)" autocomplete="off" class="input"/>
+            <mat-icon class="inputIcon">search</mat-icon>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<br />
+
+<div class="row" style="overflow: auto" [ngStyle]="{'height.px': tableHeight}">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort #tickTbSort="matSort">
+
+    <ng-container matColumnDef="__RedGreenAlert">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell  *matCellDef="let element">
+        <mat-icon [ngStyle]="{ 'color':'red' }" *ngIf="element.__RedGreenAlert =='Red'">cancel</mat-icon>
+        <mat-icon [ngStyle]="{ 'color':'grey' }" *ngIf="element.__RedGreenAlert =='Green' && (element.emailAddressVerified === false && element.emailAdddress)">check_circle</mat-icon>
+        <mat-icon [ngStyle]="{ 'color':'green' }" *ngIf="element.__RedGreenAlert =='Green' && (element.emailAddressVerified === true || !(element.emailAdddress))">check_circle</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="__DateSubmitted">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Date Submitted
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.__DateSubmitted ? (element.__DateSubmitted | date: "yyyy/MM/dd") : "" }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="ticketNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Ticket
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" *ngIf="!element.userAssignedTo || element.userAssignedTo === userProfile.idir"><a (click)="backWorkbench(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" *ngIf="element.userAssignedTo && element.userAssignedTo !== userProfile.idir">{{ element.ticketNumber }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="disputantSurname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Surname
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.disputantSurname }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="disputantGivenNames">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Given Name(s)
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.disputantGivenNames}} </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Status
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" *ngIf="element.emailAddressVerified === true || !(element.emailAddress)">{{ element.status }}</span>
+          <span *ngIf="element.emailAddressVerified === false && element.emailAddress">Email Address Not Verified</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="__FilingDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Filing Date
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.__FilingDate ? (element.__FilingDate | date: "yyyy/MM/dd") : "" }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="__CourtHearing">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
+          Court Hearing
+        </th>
+        <td mat-cell *matCellDef="let element" class="centerColumn">
+          <mat-checkbox [checked]="element.__CourtHearing == true" [disabled]="true"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="disputantDetectedOcrIssues">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
+          Citizen Flag
+        </th>
+        <td mat-cell *matCellDef="let element" class="centerColumn">
+          <mat-checkbox [checked]="element.disputantDetectedOcrIssues === DisputantDetectedOcrIssues.Y" [disabled]="true"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="__SystemDetectedOcrIssues">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
+          System Flag
+        </th>
+        <td mat-cell *matCellDef="let element" class="centerColumn">
+          <mat-checkbox [checked]="element.__SystemDetectedOcrIssues" [indeterminate]="element.__SystemDetectedOcrIssues === null && element.ticketNumber[0] === 'A'" [disabled]="true"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="userAssignedTo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Assigned
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" title="{{element.__UserAssignedTs}}">{{ element.userAssignedTo ? element.userAssignedTo : "Unassigned" }}</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>

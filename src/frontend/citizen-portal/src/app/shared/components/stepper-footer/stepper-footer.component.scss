@@ -1,0 +1,22 @@
+button.mat-flat-button .mat-icon,
+button.mat-stroked-button .mat-icon {
+  vertical-align: top;
+  font-size: 1.25em;
+}
+
+.mat-flat-button,
+.mat-stroked-button {
+  width: 100%;
+
+  &.large {
+    height: 46px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .mat-flat-button,
+  .mat-stroked-button {
+    margin-bottom: 1em;
+  }
+}

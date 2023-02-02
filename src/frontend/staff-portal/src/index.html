@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ticket information in British Columbia</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="snowplow.js"></script>
+    <script>
+      /**
+       * @description
+       * Checks if the browser is Internet Explorer, or pre-Chromium
+       * Edge.
+       */
+      function isIEOrPreChromiumEdge() {
+        return !("reversed" in document.createElement("ol"));
+      }
+
+      if (isIEOrPreChromiumEdge()) {
+        window.location.replace("/assets/unsupported.html");
+      }
+    </script>
+  </head>
+  <body class="mat-typography">
+    <app-root></app-root>
+  </body>
+</html>
