@@ -33,6 +33,7 @@ export class UpdateDisputeContactComponent implements OnInit {
           ...this.disputantFormFields,
         });
         this.form.reset();
+        console.log(found, this.form);
 
         this.store.select(DisputeStore.Selectors.State).subscribe(state => {
           this.state = state;

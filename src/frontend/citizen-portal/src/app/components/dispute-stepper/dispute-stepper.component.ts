@@ -206,18 +206,23 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isValid(countInx?): boolean {
-    let countForm = this.countForms?.controls[countInx]
-    if (countForm) {
-      let valid = countForm.valid || countForm.value.__skip;
-      if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
-        valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
-      } else if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
-        valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
-      }
-      return valid && !this.isAllCountsSkipped;
-    }
-    return this.form.valid;
+  isValid(): boolean {
+    if (this.stepper?.selectedIndex >= this.countIndex) {
+      let allCountsValid: boolean = true;
+      this.countForms?.controls.forEach(countForm => {
+        if (countForm) {
+          let valid = countForm.valid || countForm.value.__skip;
+          if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
+            valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
+          } else if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
+            valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
+          }
+          allCountsValid = allCountsValid && valid && !this.isAllCountsSkipped;
+        }
+      });
+      if (!allCountsValid) return false;
+      else return this.form.valid;
+    } else return this.form.valid;
   }
 
   onChangeRepresentedByLawyer(event: MatCheckboxChange) {
