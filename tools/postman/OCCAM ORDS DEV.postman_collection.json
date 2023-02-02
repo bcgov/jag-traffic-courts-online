@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "1b7e4ca1-3570-4cfd-8020-e3266f435cdb",
+		"_postman_id": "715deee1-1af9-47e2-8a6d-856de23eca99",
 		"name": "OCCAM ORDS DEV V2",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "535849"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -280,7 +279,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-OCCAM}}/v1/violationTicketList?fromDate=&excludeStatus=&ticketNumber=EA90300000&noticeOfDisputeGuid&issueTime=12:15",
+					"raw": "{{JUSTIN-OCCAM}}/v1/violationTicketList?fromDate=&excludeStatus=&ticketNumber=EA90300000&noticeOfDisputeGuid=&issueTime=12:15",
 					"host": [
 						"{{JUSTIN-OCCAM}}"
 					],
@@ -320,7 +319,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-OCCAM}}/v1/violationTicket?violationTicketId=192&disputeId=&noticeOfDisputeGuid=",
+					"raw": "{{JUSTIN-OCCAM}}/v1/violationTicket?violationTicketId=358&disputeId=&noticeOfDisputeGuid=",
 					"host": [
 						"{{JUSTIN-OCCAM}}"
 					],
@@ -331,7 +330,7 @@
 					"query": [
 						{
 							"key": "violationTicketId",
-							"value": "192"
+							"value": "358"
 						},
 						{
 							"key": "disputeId",
@@ -396,7 +395,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-OCCAM}}/v1/deleteViolationTicket?disputeId=4&noticeOfDisputeGuid",
+					"raw": "{{JUSTIN-OCCAM}}/v1/deleteViolationTicket?disputeId=284&noticeOfDisputeGuid=&violationTicketId=",
 					"host": [
 						"{{JUSTIN-OCCAM}}"
 					],
@@ -406,16 +405,15 @@
 					],
 					"query": [
 						{
-							"key": "violationTicketId",
-							"value": "",
-							"disabled": true
-						},
-						{
 							"key": "disputeId",
-							"value": "4"
+							"value": "284"
 						},
 						{
 							"key": "noticeOfDisputeGuid",
+							"value": ""
+						},
+						{
+							"key": "violationTicketId",
 							"value": ""
 						}
 					]
@@ -453,7 +451,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-OCCAM}}/v1/assignViolationTicket?violationTicketId=2&userId=staffUser1&disputeId&noticeOfDisputeGuid",
+					"raw": "{{JUSTIN-OCCAM}}/v1/assignViolationTicket?violationTicketId=2&userId=staffUser1&disputeId=&noticeOfDisputeGuid=",
 					"host": [
 						"{{JUSTIN-OCCAM}}"
 					],
@@ -489,7 +487,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-OCCAM}}/v1/violationTicketStatus?violationTicketId=141&userId=staffUser1&statusCd=PROC&rejectReason&disputeId&noticeOfDisputeGuid",
+					"raw": "{{JUSTIN-OCCAM}}/v1/violationTicketStatus?violationTicketId=141&userId=staffUser1&statusCd=PROC&rejectReason=&disputeId=&noticeOfDisputeGuid=",
 					"host": [
 						"{{JUSTIN-OCCAM}}"
 					],
@@ -520,6 +518,170 @@
 						},
 						{
 							"key": "noticeOfDisputeGuid",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DisputeUpdateRequestSearch",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/disputeUpdateRequestList?disputeUpdateStatTypeCd=PEND&disputeUpdateReqTypeCd=&noticeOfDisputeGuid=&disputeId=",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"disputeUpdateRequestList"
+					],
+					"query": [
+						{
+							"key": "disputeUpdateStatTypeCd",
+							"value": "PEND"
+						},
+						{
+							"key": "disputeUpdateReqTypeCd",
+							"value": ""
+						},
+						{
+							"key": "noticeOfDisputeGuid",
+							"value": ""
+						},
+						{
+							"key": "disputeId",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DisputeUpdateRequestGet",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/disputeUpdateRequest?disputeUpdateRequestId=1",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"disputeUpdateRequest"
+					],
+					"query": [
+						{
+							"key": "disputeUpdateRequestId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DisputeUpdateRequestInsert",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n    \"disputeUpdateRequestId\": null,\r\n    \"disputeId\": \"284\",\r\n    \"disputeUpdateStatTypeCd\": \"PEND\",\r\n    \"disputeUpdateReqTypeCd\": \"CONT\",\r\n    \"requestJsonTxt\": null,\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"EWong\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}\r\n"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/processDisputeUpdateRequest",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"processDisputeUpdateRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DisputeUpdateRequestUpdate",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"disputeUpdateRequestId\": \"3\",\r\n    \"disputeId\": \"284\",\r\n    \"disputeUpdateStatTypeCd\": \"PEND\",\r\n    \"disputeUpdateReqTypeCd\": \"CONT\",\r\n    \"requestJsonTxt\": \"some update json txt\",\r\n    \"entDtm\": \"2023-02-02T06:50:50Z\",\r\n    \"entUserId\": \"EWong\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/updateDisputeUpdateRequest",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"updateDisputeUpdateRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DisputeUpdateRequestDelete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/deleteDisputeUpdateRequest?disputeUpdateRequestId=&disputeId=284",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"deleteDisputeUpdateRequest"
+					],
+					"query": [
+						{
+							"key": "disputeUpdateRequestId",
+							"value": ""
+						},
+						{
+							"key": "disputeId",
+							"value": "284"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DisputeUpdateRequestStatusUpdate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/disputeUpdateRequestStatus?userId=staffUser1&disputeUpdateStatTypeCd=PROC&disputeUpdateRequestId=",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"disputeUpdateRequestStatus"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "staffUser1"
+						},
+						{
+							"key": "disputeUpdateStatTypeCd",
+							"value": "PROC"
+						},
+						{
+							"key": "disputeUpdateRequestId",
 							"value": ""
 						}
 					]
