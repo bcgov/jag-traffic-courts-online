@@ -36,6 +36,7 @@ model/excludeStatus.model.ts
 model/federatedIdentityRepresentation.model.ts
 model/field.model.ts
 model/fileHistory.model.ts
+model/fileMetadata.model.ts
 model/jJDispute.model.ts
 model/jJDisputeContactType.model.ts
 model/jJDisputeCourtAppearanceRoP.model.ts

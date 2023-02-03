@@ -4,7 +4,7 @@ export class AppRoutes {
   public static FIND = 'find';
   public static SCAN = 'scan';
   public static SUMMARY = 'summary';
-  public static STEPPER = 'stepper';
+  public static STEPPER = 'dispute';
 
   public static TICKET_MODULE_PATH = AppRoutes.TICKET;
 
@@ -15,8 +15,9 @@ export class AppRoutes {
   // Dispute
   public static DISPUTE = 'dispute';
   public static FIND_DISPUTE = 'find';
-  public static UPDATE_DISPUTE = 'manage';
-  public static UPDATE_DISPUTE_CONTACT = 'update/address';
+  public static UPDATE_DISPUTE_LANDING = 'manage';
+  public static UPDATE_DISPUTE_CONTACT = 'update/contact';
+  public static UPDATE_DISPUTE = 'update';
 
   public static DISPUTE_MODULE_PATH = AppRoutes.DISPUTE;
 

@@ -16,8 +16,8 @@ export class AuthEffects {
 
   Authorize$ = createEffect(() => this.actions$.pipe(
     ofType(Actions.Authorize),
-    switchMap(() => {
-      localStorage.setItem("url", this.router.url);
+    switchMap(action => {
+      localStorage.setItem("url", action.redirectUrl);
       this.oidcSecurityService.authorize();
       return of(Actions.Authorizing());
     }))

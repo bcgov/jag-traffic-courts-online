@@ -106,20 +106,6 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div *ngIf="mode !== DisputeFormMode.UPDATEDISPUTANT" class="col-md-6">
-        <mat-form-field class="w-100">
-          <mat-label>Birthdate</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="disputant_birthdate" readonly
-            (click)="picker.open()" [max]="todayDate" />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
-          <mat-error *ngIf="form.get('disputant_birthdate')?.hasError('required')">{{"error.required" |
-            translate}}</mat-error>
-          <mat-error *ngIf="form.get('disputant_birthdate').hasError('matDatepickerMax')">No future
-            birthdate
-          </mat-error>
-        </mat-form-field>
-      </div>
     </div>
 
     <div class="row">

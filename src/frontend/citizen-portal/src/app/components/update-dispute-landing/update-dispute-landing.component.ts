@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { JJDisputeStatus } from 'app/api';
 import { AuthStore } from 'app/auth/store';
 import { DisputeService } from 'app/services/dispute.service';
@@ -21,7 +20,6 @@ export class UpdateDisputeLandingComponent implements OnInit {
   constructor(
     private disputeService: DisputeService,
     private store: Store,
-    private oidcSecurityService: OidcSecurityService
   ) {
   }
 
@@ -48,8 +46,8 @@ export class UpdateDisputeLandingComponent implements OnInit {
     this.disputeService.showDisputeStatus(this.state);
   }
 
-  goToUpdateDisputeAuth(): void {
-    this.store.dispatch(AuthStore.Actions.Authorize());
+  goToUpdateDispute(): void {
+    this.disputeService.goToUpdateDispute(this.state.params);
   }
 
   goToUpdateDisputeContact(): void {

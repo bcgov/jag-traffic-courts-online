@@ -14,12 +14,13 @@ import { JJDisputeRemark } from './jJDisputeRemark.model';
 import { JJDisputedCount } from './jJDisputedCount.model';
 import { JJDisputeContactType } from './jJDisputeContactType.model';
 import { JJDisputeDisputantAttendanceType } from './jJDisputeDisputantAttendanceType.model';
+import { FileMetadata } from './fileMetadata.model';
 import { JJDisputeHearingType } from './jJDisputeHearingType.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 
 export interface JJDispute { 
-    fileData?: { [key: string]: string; } | null;
+    fileData?: Array<FileMetadata> | null;
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
