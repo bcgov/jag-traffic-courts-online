@@ -1,7 +1,9 @@
 package ca.bc.gov.open.cto;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
@@ -63,18 +65,23 @@ public class WebDriverManager {
 			System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
 
 			DesiredCapabilities capabilities = new DesiredCapabilities();
+			
+			Map<String,String> prefs = new HashMap<>();
+			prefs.put("safebrowsing.enabled", "false"); // Bypass warning message, keep file anyway (for .exe, .jar, etc.)
 
 			ChromeOptions options = new ChromeOptions();
-
+			
 			options.addArguments("--start-maximized");
 			options.addArguments("test-type");
-			options.setHeadless(false);
+			options.setExperimentalOption("prefs", prefs);
+			options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1080","--ignore-certificate-errors","--no-sandbox", "--disable-dev-shm-usage");
+
 
 			capabilities.setCapability("chrome.binary", file.getAbsolutePath());
 
 			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-			driver = new ChromeDriver();
+			driver = new ChromeDriver(options);
 
 		} else if (Config.SELECTED_DRIVER.equals(Constants.FIREFOX_DRIVER)) {
 			
