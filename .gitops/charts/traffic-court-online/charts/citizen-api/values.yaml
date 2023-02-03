@@ -45,3 +45,13 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+## The coms.service.secretName must have keys with the following values
+##   - username
+##   - password
+##
+coms:
+ secretName: patroni-coms
+ host: patroni-coms
+ service:
+  secretName: common-object-management-service-coms-basicauth
