@@ -85,17 +85,21 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <summary>
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
+        /// <param name="partId">Adjudicator's participant ID</param>
+        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned);
+        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
+        /// <param name="partId">Adjudicator's participant ID</param>
+        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Updates each JJ Dispute based on the passed in ticket numbers to assign them to a specific JJ or unassign them if JJ not specified.
@@ -1045,20 +1049,24 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <summary>
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
+        /// <param name="partId">Adjudicator's participant ID</param>
+        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned)
+        public virtual System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId)
         {
-            return AcceptJJDisputeAsync(ticketNumber, checkVTCAssigned, System.Threading.CancellationToken.None);
+            return AcceptJJDisputeAsync(ticketNumber, checkVTCAssigned, partId, courtAppearanceId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
+        /// <param name="partId">Adjudicator's participant ID</param>
+        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId, System.Threading.CancellationToken cancellationToken)
         {
             if (ticketNumber == null)
                 throw new System.ArgumentNullException("ticketNumber");
@@ -1070,6 +1078,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
             urlBuilder_.Append("api/v1.0/jj/dispute/{ticketNumber}/accept?");
             urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            if (partId != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("partId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(partId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (courtAppearanceId != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("courtAppearanceId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(courtAppearanceId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
             urlBuilder_.Length--;
 
             var client_ = _httpClient;

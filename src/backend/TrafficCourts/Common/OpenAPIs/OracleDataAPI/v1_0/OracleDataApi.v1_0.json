@@ -215,6 +215,23 @@
             "in": "query",
             "required": true,
             "schema": { "type": "boolean" }
+          },
+          {
+            "name": "partId",
+            "in": "query",
+            "description": "Adjudicator's participant ID",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "courtAppearanceId",
+            "in": "query",
+            "description": "Court Appearance ID",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "responses": {

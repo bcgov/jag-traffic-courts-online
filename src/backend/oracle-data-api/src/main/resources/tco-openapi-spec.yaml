@@ -36,8 +36,85 @@ paths:
                 $ref: '#/components/schemas/JJDispute'
       tags:
         - JJDispute
+  /v1/disputeStatus:
+    post:
+      parameters:
+        - name: disputeId
+          in: query
+          required: true
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: courtAppearanceId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: statusCd
+          in: query
+          required: true
+          description: ''
+          schema:
+            type: string
+            maxLength: 4
+        - name: seizedYn
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 1
+        - name: adjudicatorPartId
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 20
+        - name: aattCd
+          in: query
+          description: 'Disputant presence code'
+          schema:
+            type: string
+            maxLength: 3
+        - name: dattCd
+          in: query
+          description: 'Defence counsel presence code'
+          schema:
+            type: string
+            maxLength: 1
+        - name: staffPartId
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 20
+        - name: userId
+          in: query
+          required: true
+          description: 'This is actually userName, not a user ID.'
+          schema:
+            type: string
+            maxLength: 30
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - JJDispute
 components:
   schemas:
+    ResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        exception:
+          type: string
+          format: nullable
     AuditBase:
       type: object
       properties:
