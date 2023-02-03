@@ -214,6 +214,11 @@ public class SubmitNoticeOfDispute
     public string? DetachmentLocation { get; set; }
 
     /// <summary>
+    /// Court Agency Id
+    /// </summary>
+    public string? CourtAgenId { get; set; }
+
+    /// <summary>
     /// The disputant requires spoken language interpreter. The language name is indicated in this field.
     /// </summary>
     public string? InterpreterLanguageCd { get; set; }

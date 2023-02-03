@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } fro
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
@@ -26,14 +26,14 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     'disputantGivenNames',
     'status',
     '__FilingDate',
-    '__CourtHearing',
+    'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
     '__SystemDetectedOcrIssues',
     'userAssignedTo',
   ];
   disputes: Dispute[] = [];
   public userProfile: KeycloakProfile = {};
-  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  public RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   public DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
@@ -99,23 +99,15 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             emailAddressVerified: d.emailAddressVerified,
             emailAddress: d.emailAddress,
             __SystemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.violationTicket.ocrViolationTicket),
-            __CourtHearing: false,
             __DateSubmitted: new Date(d.submittedTs),
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
             __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
             additionalProperties: d.additionalProperties,
             status: d.status,
             __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
-            userAssignedTs: d.userAssignedTs
+            userAssignedTs: d.userAssignedTs,
+            requestCourtAppearanceYn: d.requestCourtAppearanceYn
           }
-
-          // set court hearing to true if its true for any one of the three possible counts
-          // otherwise false
-          if (d.disputeCounts) d.disputeCounts.forEach(c => {
-            if (c.requestCourtAppearance === this.RequestCourtAppearance.Y) {
-              newDispute.__CourtHearing = true;
-            }
-          });
 
           this.disputes = this.disputes.concat(newDispute);
         }

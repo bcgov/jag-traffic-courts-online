@@ -99,7 +99,8 @@ export class DisputeService implements IDisputeService {
           this.logger.info('DisputeService::getDisputes', response);
           this._disputes.next(response);
           response.forEach(dispute => {
-            dispute = this.joinGivenNames(dispute);
+            dispute = this.joinDisputantGivenNames(dispute);
+            dispute = this.joinContactGivenNames(dispute);
             dispute = this.joinLawyerNames(dispute);
             dispute = this.joinAddressLines(dispute);
           });
@@ -145,7 +146,8 @@ export class DisputeService implements IDisputeService {
         map((response: Dispute) => {
           this.logger.info('DisputeService::getDispute', response)
           if (response) {
-            response = this.joinGivenNames(response);
+            response = this.joinDisputantGivenNames(response);
+            response = this.joinContactGivenNames(response);
             response = this.joinLawyerNames(response);
             response = this.joinAddressLines(response);
           }
@@ -178,9 +180,10 @@ export class DisputeService implements IDisputeService {
      */
   public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
 
-    dispute.disputantBirthdate = this.datePipe.transform(dispute?.disputantBirthdate, "yyyy-MM-dd");
+    dispute.disputantBirthdate = "2001-01-01"; // TODO: remove this after disputant birthdate gone from schema
     dispute.issuedTs = this.datePipe.transform(dispute?.issuedTs, "yyyy-MM-ddTHH:mm:ss");
-    dispute = this.splitGivenNames(dispute);
+    dispute = this.splitDisputantGivenNames(dispute);
+    dispute = this.splitContactGivenNames(dispute);
     dispute = this.splitLawyerNames(dispute);
     dispute = this.splitAddressLines(dispute);
     //  dispute.violationTicket =
@@ -384,7 +387,7 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public splitGivenNames(Dispute: Dispute):Dispute {
+  public splitDisputantGivenNames(Dispute: Dispute):Dispute {
     let dispute = Dispute;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -398,12 +401,37 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public joinGivenNames(Dispute: Dispute): Dispute {
+  public splitContactGivenNames(Dispute: Dispute):Dispute {
+    let dispute = Dispute;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (Dispute.contactGivenNames) {
+      let givenNames = Dispute.contactGivenNames.split(" ");
+      if (givenNames.length > 0) dispute.contactGiven1Nm = givenNames[0];
+      if (givenNames.length > 1) dispute.contactGiven2Nm = givenNames[1];
+      if (givenNames.length > 2) dispute.contactGiven3Nm = givenNames[2];
+    }
+
+    return dispute;
+  }
+
+
+  public joinDisputantGivenNames(Dispute: Dispute): Dispute {
     let dispute = Dispute;
 
     dispute.disputantGivenNames = Dispute.disputantGivenName1;
     if (Dispute.disputantGivenName2) dispute.disputantGivenNames = Dispute.disputantGivenNames + " " + Dispute.disputantGivenName2;
     if (Dispute.disputantGivenName3) dispute.disputantGivenNames = Dispute.disputantGivenNames + " " + Dispute.disputantGivenName3;
+
+    return dispute;
+  }
+
+  public joinContactGivenNames(Dispute: Dispute): Dispute {
+    let dispute = Dispute;
+
+    dispute.contactGivenNames = Dispute.contactGiven1Nm;
+    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven1Nm;
+    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
 
     return dispute;
   }
@@ -461,12 +489,12 @@ export class DisputeService implements IDisputeService {
 
 export interface Dispute extends DisputeBase {
   disputantGivenNames?: string;
+  contactGivenNames?: string;
   lawyerFullName?: string;
   address?: string;
   __DateSubmitted?: Date,
   __RedGreenAlert?: string,
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
-  __CourtHearing: boolean, // if at least one count requests court hearing
   __UserAssignedTs?: Date,
   __SystemDetectedOcrIssues?: boolean // if at least one OCR's field has a confidence level below 80% threshold
 }

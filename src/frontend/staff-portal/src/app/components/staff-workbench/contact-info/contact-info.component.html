@@ -93,10 +93,11 @@
           <section class="mb-2" style="width: 66%;">
             <div class="row">
 
+              <h4>Name on Ticket</h4>
               <!-- Notice of Dispute surname -->
               <div class="col-md-6">
                 <mat-form-field class="w-100">
-                  <mat-label>Surname</mat-label>
+                  <mat-label>Disputant surname</mat-label>
                   <input matInput formControlName="disputantSurname" />
                   <mat-error>{{ "error.required" | translate }}</mat-error>
                 </mat-form-field>
@@ -105,7 +106,7 @@
               <!-- Notice of dispute given names -->
               <div class="col-md-6">
                 <mat-form-field class="w-100">
-                  <mat-label>Given name(s)</mat-label>
+                  <mat-label>Disputant given name(s)</mat-label>
                   <input matInput formControlName="disputantGivenNames" />
                   <mat-error>{{ "error.required" | translate }}</mat-error>
                 </mat-form-field>
@@ -113,6 +114,49 @@
             </div>
 
             <section>
+              <div class="row">
+                <h4>Who are we contacting?</h4>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Contact Type</mat-label>
+                    <mat-select formControlName="contactTypeCd" (selectionChange)="onSelectContactType($event.value)">
+                      <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
+                      <mat-option [value]="ContactType.Lawyer">Lawyer</mat-option>
+                      <mat-option [value]="ContactType.Other">Other</mat-option>
+                    </mat-select>
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6" *ngIf="form.get('contactTypeCd').value === ContactType.Lawyer">
+                  <mat-form-field class="w-100">
+                    <mat-label>Name of law firm</mat-label>
+                    <input matInput formControlName="contactLawFirmNm" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row"  *ngIf="form.get('contactTypeCd').value !== ContactType.Individual">
+
+                <!--Contact surname -->
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Contact Surname</mat-label>
+                    <input matInput formControlName="contactSurnameNm" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- Contact given names -->
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Contact Given name(s)</mat-label>
+                    <input matInput formControlName="contactGivenNames" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
               <div class="row">
 
                 <!-- Notice of dispute mailing address -->
@@ -201,19 +245,6 @@
                     }}</mat-error>
                   <mat-error *ngIf="form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')">Must be a valid postal/zip code
                   </mat-error>
-                </mat-form-field>
-              </div>
-
-              <!-- Notice of dispute birthdate -->
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Birthdate</mat-label>
-                  <input matInput [matDatepicker]="picker" formControlName="disputantBirthdate" (click)="picker.open()"
-                    [max]="todayDate" />
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
-                  <mat-error *ngIf="form.get('disputantBirthdate').hasError('required')">Valid birthdate required</mat-error>
-                  <mat-error *ngIf="form.get('disputantBirthdate').hasError('matDatepickerMax')">No future birthdate</mat-error>
                 </mat-form-field>
               </div>
             </div>

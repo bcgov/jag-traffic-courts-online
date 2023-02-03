@@ -49,8 +49,8 @@
             </div>
             <div class="col-md-4">
               <mat-form-field class="w-100">
-                <mat-label>Court hearing?</mat-label>
-                <input matInput [value]="disputeCount.get('requestCourtAppearance').value === RequestCourtAppearance.Y ? 'Yes' : 'No'" readonly="true" />
+                <mat-label>Plea Code</mat-label>
+                <input matInput [value]="disputeCount.get('pleaCode').value === PleaCode.G ? 'Guilty' : 'Not Guilty'" readonly="true" />
               </mat-form-field>
             </div>
           </div>
@@ -64,7 +64,7 @@
       <div class="page-subheader pagebreak additional-info">
         <strong><span class="contact-body">Additional information</span></strong>
 
-        <div *ngIf="countsActions?.notRequestCourtAppearance?.length > 0">
+        <div *ngIf="disputeInfo.requestCourtAppearanceYn === RequestCourtAppearance.N">
           <ng-container *ngIf="countsActions?.requestReduction?.length > 0">
             <hr />
             <strong class="fs-5">
@@ -88,20 +88,20 @@
             <div>{{ disputeInfo.timeToPayReason }}</div>
           </ng-container>
         </div>
-        <div *ngIf="countsActions?.requestCourtAppearance?.length > 0">
+        <div *ngIf="disputeInfo.requestCourtAppearanceYn === RequestCourtAppearance.Y">
           <hr />
-          <div *ngIf="countsActions?.courtGuilty.length > 0">
+          <div *ngIf="countsActions?.Guilty.length > 0">
             <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.courtGuilty }}</div>
+              <div>{{ countsActions?.Guilty }}</div>
             </strong>
             <h3 class="mb-2 additional-info-desc">
               I want to attend a court hearing to request a fine reduction and/or time to pay.
             </h3>
             <br />
           </div>
-          <div *ngIf="countsActions?.courtNotGuilty.length > 0">
+          <div *ngIf="countsActions?.NotGuilty.length > 0">
             <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.courtNotGuilty }}</div>
+              <div>{{ countsActions?.NotGuilty }}</div>
             </strong>
             <br />
             <h3 class="mb-2 additional-info-desc">I want to attend a court hearing and dispute the charge.</h3>

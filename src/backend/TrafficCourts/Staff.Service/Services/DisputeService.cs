@@ -44,13 +44,20 @@ public class DisputeService : IDisputeService
 
         foreach(Dispute dispute in disputes)
         {
-            // When reviewing the list of tickets, the JSON is needed to compute SystemDetectedOCRIssues
-            OcrViolationTicket? ocrViolationTicket = null;
-            if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
+            try
             {
-                // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
-                ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
-                dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
+                // When reviewing the list of tickets, the JSON is needed to compute SystemDetectedOCRIssues
+                OcrViolationTicket? ocrViolationTicket = null;
+                if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
+                {
+                    // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
+                    ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
+                    dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
+                }
+            }
+            catch 
+            {
+                // dont crash since in dev environment, ocr image could be on individuals localhost
             }
         }
 

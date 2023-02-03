@@ -392,6 +392,13 @@ public class Dispute extends Auditable<String> {
 	private String detachmentLocation;
 
 	/**
+	 * Court Agency Id
+	 */
+	@Column(length = 50)
+	@Schema(nullable = true)
+	private String courtAgenId;
+
+	/**
 	 * The disputant requires spoken language interpreter. The language name is
 	 * indicated in this field.
 	 */

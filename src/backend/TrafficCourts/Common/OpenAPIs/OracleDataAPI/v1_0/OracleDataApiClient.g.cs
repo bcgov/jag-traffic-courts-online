@@ -5165,6 +5165,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("detachmentLocation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string DetachmentLocation { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("courtAgenId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CourtAgenId { get; set; }
+
         [Newtonsoft.Json.JsonProperty("interpreterLanguageCd", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(3)]
         public string InterpreterLanguageCd { get; set; }

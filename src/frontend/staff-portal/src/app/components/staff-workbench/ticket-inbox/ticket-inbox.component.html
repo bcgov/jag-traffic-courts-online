@@ -92,12 +92,12 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="__CourtHearing">
+      <ng-container matColumnDef="requestCourtAppearanceYn">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
           Court Hearing
         </th>
         <td mat-cell *matCellDef="let element" class="centerColumn">
-          <mat-checkbox [checked]="element.__CourtHearing == true" [disabled]="true"></mat-checkbox>
+          <mat-checkbox [checked]="element.requestCourtAppearanceYn == RequestCourtAppearance.Y" [disabled]="true"></mat-checkbox>
         </td>
       </ng-container>
 

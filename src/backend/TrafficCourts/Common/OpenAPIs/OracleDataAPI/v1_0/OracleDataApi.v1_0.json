@@ -2151,6 +2151,10 @@
             "type": "string",
             "nullable": true
           },
+          "courtAgenId": {
+            "type": "string",
+            "nullable": true
+          },
           "interpreterLanguageCd": {
             "maxLength": 3,
             "minLength": 0,

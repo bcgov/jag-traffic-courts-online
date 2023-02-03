@@ -62,7 +62,7 @@ public class MappingTests
         Assert.Equal(source.AddressCountryId, target.AddressCountryId);
         Assert.Equal(source.PostalCode, target.PostalCode);
         Assert.Equal(source.HomePhoneNumber, target.HomePhoneNumber);
-        Assert.Equal(source.WorkPhoneNumber, target.WorkPhoneNumber);
+        Assert.Equal(source.CourtAgenId, target.CourtAgenId);
         Assert.Equal(source.EmailAddress, target.EmailAddress);
         Assert.Equal(source.RepresentedByLawyer, target.RepresentedByLawyer);
         Assert.Equal(source.InterpreterRequired, target.InterpreterRequired);
