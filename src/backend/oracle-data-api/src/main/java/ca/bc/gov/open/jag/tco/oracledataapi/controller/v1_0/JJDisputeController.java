@@ -162,7 +162,7 @@ public class JJDisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark, null, null), HttpStatus.OK);
 	}
 
 	/**
@@ -208,14 +208,19 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@PutMapping("/dispute/{ticketNumber}/accept")
-	public ResponseEntity<JJDispute> acceptJJDispute(@PathVariable String ticketNumber, boolean checkVTCAssigned, Principal principal) {
+	public ResponseEntity<JJDispute> acceptJJDispute(@PathVariable String ticketNumber,
+			boolean checkVTCAssigned,
+			Principal principal,
+			@RequestParam(required = false) @Parameter(description = "Adjudicator's participant ID") String partId,
+			@RequestParam(required = false) @Parameter(description = "Court Appearance ID") Long courtAppearanceId) {
+		
 		logger.debug("PUT /dispute/{}/accept called", ticketNumber);
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId, courtAppearanceId), HttpStatus.OK);
 	}
 
 	/**
@@ -238,6 +243,6 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
 		logger.debug("PUT /dispute/{}/confirm called", ticketNumber);
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null, null), HttpStatus.OK);
 	}
 }

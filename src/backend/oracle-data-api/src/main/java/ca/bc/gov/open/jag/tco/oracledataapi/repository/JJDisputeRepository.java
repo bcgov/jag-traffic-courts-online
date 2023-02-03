@@ -62,7 +62,8 @@ public interface JJDisputeRepository {
 	 * @param ticketNumber
 	 * @param jjDisputeStatus
 	 * @param userName
+	 * @param partId
+	 * @param courtAppearanceId
 	 */
-	public void setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, String userName);
-
+	public void setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, String userName, String partId, Long courtAppearanceId);
 }

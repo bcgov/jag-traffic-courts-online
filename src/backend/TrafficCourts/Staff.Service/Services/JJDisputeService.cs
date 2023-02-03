@@ -106,7 +106,7 @@ public class JJDisputeService : IJJDisputeService
 
     public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, null, null, cancellationToken);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute approved for resulting by staff.");
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
