@@ -125,7 +125,7 @@ public class JJDisputeService {
 
 		// Update the status of the JJ Dispute if the status is not the same as current one
 		if (jjDispute.getStatus() != null &&  jjDisputeToUpdate.getStatus() != jjDispute.getStatus()) {
-			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null);
+			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null, null, null);
 		}
 
 		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "id", "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
@@ -215,7 +215,7 @@ public class JJDisputeService {
 	 * @param remark note by the staff if the status is REVIEW.
 	 * @return the saved JJDispute
 	 */
-	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark) {
+	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark, String partId, Long courtAppearanceId) {
 		if (jjDisputeStatus == null) {
 			logger.error("Attempting to set JJDispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set JJDispute status to null");
@@ -288,7 +288,7 @@ public class JJDisputeService {
 			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
 		}
 
-		jjDisputeRepository.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, principal.getName());
+		jjDisputeRepository.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, principal.getName(), partId, courtAppearanceId);
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
 		if(!StringUtils.isBlank(remark)) {
@@ -310,7 +310,7 @@ public class JJDisputeService {
 
 		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(id).orElseThrow();
 
-		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark);
+		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark, null, null);
 		jjDisputeToUpdate.setHearingType(JJDisputeHearingType.COURT_APPEARANCE);
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
