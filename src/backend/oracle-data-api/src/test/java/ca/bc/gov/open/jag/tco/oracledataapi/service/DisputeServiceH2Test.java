@@ -17,11 +17,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestType;
 
 @ConditionalOnProperty(name = "repository.dispute", havingValue = "h2", matchIfMissing = true)
 class DisputeServiceH2Test extends BaseTestSuite {
@@ -110,39 +110,39 @@ class DisputeServiceH2Test extends BaseTestSuite {
 	}
 
 	@Test
-	public void testDisputantUpdateRequest() throws Exception {
+	public void testDisputeUpdateRequest() throws Exception {
 		Dispute dispute = createAndSaveDispute();
 		String noticeOfDisputeGuid = dispute.getNoticeOfDisputeGuid();
 
 		String json = "{ \"address_line1\": \"123 Main Street\", \"address_line2\": \"\", \"address_line3\": \"\" }";
-		DisputantUpdateRequest updateRequest = new DisputantUpdateRequest();
+		DisputeUpdateRequest updateRequest = new DisputeUpdateRequest();
 		updateRequest.setDisputeId(Long.valueOf(1L));
-		updateRequest.setStatus(DisputantUpdateRequestStatus.PENDING);
-		updateRequest.setUpdateType(DisputantUpdateRequestType.DISPUTANT_ADDRESS);
+		updateRequest.setStatus(DisputeUpdateRequestStatus.PENDING);
+		updateRequest.setUpdateType(DisputeUpdateRequestType.DISPUTANT_ADDRESS);
 		updateRequest.setUpdateJson(json);
-		DisputantUpdateRequest savedUpdateReq = disputeService.saveDisputantUpdateRequest(noticeOfDisputeGuid, updateRequest);
-		Long disputantUpdateRequestId = savedUpdateReq.getDisputantUpdateRequestId();
+		DisputeUpdateRequest savedUpdateReq = disputeService.saveDisputeUpdateRequest(noticeOfDisputeGuid, updateRequest);
+		Long disputeUpdateRequestId = savedUpdateReq.getDisputeUpdateRequestId();
 
-		assertNotNull(disputantUpdateRequestId);
+		assertNotNull(disputeUpdateRequestId);
 
-		List<DisputantUpdateRequest> updateRequests = disputeService.findDisputantUpdateRequestByDisputeIdAndStatus(dispute.getDisputeId(), null);
+		List<DisputeUpdateRequest> updateRequests = disputeService.findDisputeUpdateRequestByDisputeIdAndStatus(dispute.getDisputeId(), null);
 
 		assertEquals(1, updateRequests.size());
 		savedUpdateReq = updateRequests.get(0);
 
 		assertEquals(dispute.getDisputeId(), savedUpdateReq.getDisputeId().longValue());
-		assertEquals(DisputantUpdateRequestStatus.PENDING, savedUpdateReq.getStatus());
-		assertEquals(DisputantUpdateRequestType.DISPUTANT_ADDRESS, savedUpdateReq.getUpdateType());
+		assertEquals(DisputeUpdateRequestStatus.PENDING, savedUpdateReq.getStatus());
+		assertEquals(DisputeUpdateRequestType.DISPUTANT_ADDRESS, savedUpdateReq.getUpdateType());
 		assertEquals(json, savedUpdateReq.getUpdateJson());
 
-		savedUpdateReq = disputeService.updateDisputantUpdateRequest(disputantUpdateRequestId, DisputantUpdateRequestStatus.ACCEPTED);
-		assertEquals(DisputantUpdateRequestStatus.ACCEPTED, savedUpdateReq.getStatus());
+		savedUpdateReq = disputeService.updateDisputeUpdateRequest(disputeUpdateRequestId, DisputeUpdateRequestStatus.ACCEPTED);
+		assertEquals(DisputeUpdateRequestStatus.ACCEPTED, savedUpdateReq.getStatus());
 	}
 
 	@Test
-	public void testDisputantUpdateRequest_404() throws Exception {
+	public void testDisputeUpdateRequest_404() throws Exception {
 		assertThrows(NoSuchElementException.class, () -> {
-			disputeService.saveDisputantUpdateRequest("some-guid", new DisputantUpdateRequest());
+			disputeService.saveDisputeUpdateRequest("some-guid", new DisputeUpdateRequest());
 		});
 	}
 
