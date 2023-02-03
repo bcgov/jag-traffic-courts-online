@@ -12,7 +12,7 @@
   </section>
 
   <app-dispute-stepper *ngIf="ticket" [ticket]="ticket" [ticketCounts]="ticket.counts" [ticketType]="ticketType"
-    [mode]="mode" (submit)="submitDispute($event)"></app-dispute-stepper>
+    [mode]="mode" (saveDispute)="submitDispute($event)"></app-dispute-stepper>
 
   <app-resolution-footer></app-resolution-footer>
 </app-page>

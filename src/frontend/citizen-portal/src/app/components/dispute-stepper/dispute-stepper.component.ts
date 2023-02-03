@@ -30,7 +30,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   @Input() disputeCounts: DisputeCount[] = [];
   @Input() ticketType: string;
   @Input() mode: DisputeFormMode;
-  @Output() submit: EventEmitter<NoticeOfDispute> = new EventEmitter();
+  @Output() saveDispute: EventEmitter<NoticeOfDispute> = new EventEmitter();
 
   @ViewChild(MatStepper) private stepper: MatStepper;
 
@@ -261,6 +261,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   submitDispute() {
-    this.submit.emit(this.noticeOfDispute);
+    this.saveDispute.emit(this.noticeOfDispute);
   }
 }
