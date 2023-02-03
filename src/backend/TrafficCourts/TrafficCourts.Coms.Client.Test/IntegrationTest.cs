@@ -1,6 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Npgsql;
+using TrafficCourts.Coms.Client.Data;
 using Xunit.Abstractions;
 
 namespace TrafficCourts.Coms.Client.Test
@@ -13,7 +16,11 @@ namespace TrafficCourts.Coms.Client.Test
         // {
         //   "BaseUrl": "https://coms-host/api/v1",
         //   "Username": "coms-username",
-        //   "Password": "coms-password"
+        //   "Password": "coms-password",
+        //   "DatabaseHost": "localhost",
+        //   "DatabaseName": "coms",
+        //   "DatabaseUsername": "postgres",
+        //   "DatabasePassword": "password"
         // }
         //
         private readonly ITestOutputHelper _output;
@@ -40,9 +47,22 @@ namespace TrafficCourts.Coms.Client.Test
             _client.ReadResponseAsString = true; // make it easier to debug
             _output = output;
 
+            // create repository (metadata and tag work around)
+            NpgsqlConnectionStringBuilder connectionString = new NpgsqlConnectionStringBuilder();
+            connectionString.Host = configuration.GetValue<string>("DatabaseHost") ?? string.Empty;
+            connectionString.Database = configuration.GetValue<string>("DatabaseName") ?? string.Empty;
+            connectionString.Username = configuration.GetValue<string>("DatabaseUsername") ?? string.Empty;
+            connectionString.Password = configuration.GetValue<string>("DatabasePassword") ?? string.Empty;
+
+            DbContextOptionsBuilder<ObjectManagementContext> builder = new DbContextOptionsBuilder<ObjectManagementContext>();
+            builder.UseNpgsql(connectionString.ConnectionString);
+
+            ObjectManagementContext context = new ObjectManagementContext(builder.Options);
+            IObjectManagementRepository repository = new ObjectManagementRepository(context);
+
             // create service 
             var factory = new MemoryStreamFactory(() => new MemoryStream());
-            _service = new ObjectManagementService(_client, factory, Mock.Of<ILogger<ObjectManagementService>>());
+            _service = new ObjectManagementService(_client, repository, factory, Mock.Of<ILogger<ObjectManagementService>>());
         }
 
         #region ObjectManagementClient
