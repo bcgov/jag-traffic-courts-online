@@ -46,7 +46,7 @@ public class DisputesController : ControllerBase
     /// <param name="tokenEncoder"></param>
     /// <param name="oAuthUserService"></param>
     /// <param name="mapper"></param>
-    /// <param name="comsService"></param>
+    /// <param name="documentService"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
     public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper, ICitizenDocumentService documentService)
     {

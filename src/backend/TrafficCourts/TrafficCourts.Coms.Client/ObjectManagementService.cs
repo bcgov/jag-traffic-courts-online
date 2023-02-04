@@ -310,7 +310,11 @@ internal class ObjectManagementService : IObjectManagementService
         return string.Empty;
     }
 
+#if false // USE_COMS_REPOSITORY
     private async Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
+#else
+    private Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
+#endif
     {
 #if false // USE_COMS_REPOSITORY
         try
@@ -328,7 +332,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
 #else
         var lookup = GetMetadataFromRepository(ids);
-        return lookup;
+        return Task.FromResult(lookup);
 #endif
     }
 
