@@ -158,7 +158,7 @@ namespace TrafficCourts.Coms.Client.Test
             // expect the file id to set after creation
             Assert.Equal(id, expectedFile.Id);
 
-            using var actualFile = await _service.GetFileAsync(id, false, _cancellationToken);
+            using var actualFile = await _service.GetFileAsync(id, _cancellationToken);
 
             // search for the file by the first metadata property
             FileSearchParameters parameters = new FileSearchParameters();

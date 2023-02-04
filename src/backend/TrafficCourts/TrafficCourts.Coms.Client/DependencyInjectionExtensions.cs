@@ -9,6 +9,7 @@ public static class DependencyInjectionExtensions
 {
     public static void AddObjectManagementRepository(this IServiceCollection services)
     {
+        // not the best way to configure this, but it is designed as a work around
         NpgsqlConnectionStringBuilder connectionString = new NpgsqlConnectionStringBuilder();
         connectionString.Host = Environment.GetEnvironmentVariable("COMS_DB_HOST");
         connectionString.Database = Environment.GetEnvironmentVariable("COMS_DB_DATABASE");

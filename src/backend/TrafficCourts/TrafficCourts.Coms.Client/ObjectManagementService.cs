@@ -105,7 +105,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
     }
 
-    public async Task<File> GetFileAsync(Guid id, bool includeTags, CancellationToken cancellationToken)
+    public async Task<File> GetFileAsync(Guid id, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
         {
@@ -125,12 +125,7 @@ internal class ObjectManagementService : IObjectManagementService
             var metadataValues = await GetMetadataAsync(id, cancellationToken);
             IDictionary<string, string>? metadata = Client.Metadata.Create(metadataValues[id]);
 
-            IDictionary<string, string>? tags = null;
-
-            if (includeTags)
-            {
-                tags = await GetTagsAsync(id, cancellationToken);
-            }
+            IDictionary<string, string>? tags = await GetTagsAsync(id, cancellationToken);
 
             // make a copy of the stream because the FileResponse will dispose of the stream
             var stream = _memoryStreamFactory.GetStream();

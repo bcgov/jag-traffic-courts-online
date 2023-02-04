@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Moq;
+using Newtonsoft.Json.Linq;
 
 namespace TrafficCourts.Coms.Client.Test.ServiceTests;
 
@@ -21,16 +23,26 @@ public class GetFileAsync : ObjectManagementServiceTest
             new MetadataItem { Key = "type", Value = "picture" }
         };
 
+        var metadata = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("type", "picture")
+        };
+
+        _mockRepository.Setup(_ => _.GetObjectMetadata(It.IsAny<Guid>(), It.IsAny<string>()))
+            .Returns(metadata);
+
+        _mockRepository.Setup(_ => _.GetObjectTags(It.IsAny<Guid>(), It.IsAny<string>()))
+            .Returns(Array.Empty<KeyValuePair<string, string>>());
+
         var stream = GetRandomStream();
         SetupReadObjectReturn(new FileResponse(200, headers, stream, null, null));
-        SetupGetObjectMetadataAsync(new[] { new ObjectMetadata { Id = id, Metadata = metadataItems } });
 
         CancellationTokenSource cts = new CancellationTokenSource();
 
         ObjectManagementService sut = GetService();
 
         // act
-        File actualFile = await sut.GetFileAsync(id, false, cts.Token);
+        File actualFile = await sut.GetFileAsync(id, cts.Token);
 
         // assert
         // should have read the object to get the expected found object
@@ -41,6 +53,10 @@ public class GetFileAsync : ObjectManagementServiceTest
              It.Is<string?>((actual) => actual == null),
             It.Is<CancellationToken>((actual) => actual == cts.Token)
         ));
+
+        // should have called GetObjectMetadata and GetObjectTags
+        _mockRepository.Verify(_ => _.GetObjectMetadata(It.Is<Guid>(actual => actual == id), It.Is<string>(actual => actual == null)));
+        _mockRepository.Verify(_ => _.GetObjectTags(It.Is<Guid>(actual => actual == id), It.Is<string>(actual => actual == null)));
 
         Assert.NotNull(actualFile);
         Assert.NotNull(actualFile.Data);

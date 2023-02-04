@@ -22,7 +22,7 @@ public class WorkflowDocumentService : IWorkflowDocumentService
     {
         _logger.LogDebug("Getting the file through COMS");
 
-        return await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
+        return await _objectManagementService.GetFileAsync(fileId, cancellationToken);
     }
 
     public async Task UpdateFileAsync(Guid id, Coms.Client.File file, CancellationToken cancellationToken)

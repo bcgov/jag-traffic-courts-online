@@ -21,7 +21,7 @@ public class SearchObjectsAsync : ObjectManagementBase
         mockHttp
             .Expect(HttpMethod.Get, OperationUrl)
             .WithHeaders(acceptJson: true, meta)
-            .Respond(HttpStatusCode.Created, "application/json", JsonSerializer.Serialize(expected));
+            .Respond(HttpStatusCode.OK, "application/json", JsonSerializer.Serialize(expected));
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
