@@ -16,10 +16,6 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "File",
-                  "Metadata"
-                ],
                 "type": "object",
                 "properties": {
                   "File": {
