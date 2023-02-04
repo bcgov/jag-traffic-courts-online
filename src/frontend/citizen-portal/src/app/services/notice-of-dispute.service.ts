@@ -9,10 +9,9 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
-import { DisputesService, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket } from "app/api";
+import { DisputesService, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
-import { ViolationTicketService } from "./violation-ticket.service";
 
 @Injectable({
   providedIn: "root",
@@ -46,6 +45,7 @@ export class NoticeOfDisputeService {
   }
 
   countFormConfigs: DisputeCountFormConfigs = {
+    count_no: null,
     plea_cd: null,
     request_time_to_pay: this.RequestTimeToPay.N,
     request_reduction: this.RequestReduction.N,
@@ -82,7 +82,6 @@ export class NoticeOfDisputeService {
     private router: Router,
     private dialog: MatDialog,
     private disputesService: DisputesService,
-    private violationTicketService: ViolationTicketService,
     private datePipe: DatePipe,
     private fb: FormBuilder,
   ) {
@@ -108,16 +107,17 @@ export class NoticeOfDisputeService {
     return form;
   }
 
-  getCountForm(count?: DisputeCount): DisputeCountFormGroup {
+  getCountForm(ticket_count?: ViolationTicketCount, dispute_count?: DisputeCount): DisputeCountFormGroup {
     let controls: DisputeCountFormControls = {};
-    let configs = { ...count, ...this.countFormConfigs }; // create all fields
+    let configs = this.countFormConfigs; // create all fields
     Object.keys(configs).forEach(key => {
       let config = configs[key];
       let value = config?.value === undefined ? config : config?.value;
       controls[key] = new FormControl(value, config?.options);
     })
     let form = this.fb.group(controls);
-    form.patchValue(count); // patch value as it was overwritten in configs
+    form.patchValue(ticket_count); // set count_no
+    form.patchValue(dispute_count); // set others
     return form;
   }
 

@@ -91,7 +91,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
 
     this.counts = this.ticketCounts.map((ticketCount, inx) => {
-      return { ticket_count: ticketCount, form: this.noticeOfDisputeService.getCountForm(this.disputeCounts[inx]) };
+      return { ticket_count: ticketCount, form: this.noticeOfDisputeService.getCountForm(ticketCount, this.disputeCounts[inx]) };
     })
     this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
 
