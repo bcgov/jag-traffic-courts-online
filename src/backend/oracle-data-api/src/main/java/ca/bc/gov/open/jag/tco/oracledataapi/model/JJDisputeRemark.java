@@ -58,7 +58,7 @@ public class JJDisputeRemark extends Auditable<String> {
 
 	@JsonBackReference
 	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "ticket_number")
+	@JoinColumn(name = "jj_dispute_id")
 	@Schema(hidden = true)
 	private JJDispute jjDispute;
 

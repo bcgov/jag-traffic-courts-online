@@ -206,10 +206,9 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
 
 		// Set the status to REVIEW
-		jjDisputeController.reviewJJDispute(ticketNumber, "Test Remark", false, principal);
+		jjDispute = jjDisputeController.reviewJJDispute(ticketNumber, "Test Remark", false, principal).getBody();
 
 		// Assert status and remark are set.
-		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
 		assertEquals(JJDisputeStatus.REVIEW, jjDispute.getStatus());
 		assertEquals("Test Remark", jjDispute.getRemarks().get(0).getNote());
 		assertEquals("testUser", jjDispute.getRemarks().get(0).getUserFullName());
