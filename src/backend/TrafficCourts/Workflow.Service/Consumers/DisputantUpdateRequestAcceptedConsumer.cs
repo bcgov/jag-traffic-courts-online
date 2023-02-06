@@ -59,6 +59,10 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.HomePhoneNumber = patch?.HomePhoneNumber;
                     break;
                 case DisputantUpdateRequestUpdateType.DISPUTANT_NAME:
+                    dispute.DisputantGivenName1 = patch?.DisputantGivenName1;
+                    dispute.DisputantGivenName2 = patch?.DisputantGivenName2;
+                    dispute.DisputantGivenName3 = patch?.DisputantGivenName3;
+                    dispute.DisputantSurname = patch?.DisputantSurname;
                     dispute.ContactGiven1Nm = patch?.ContactGiven1Nm;
                     dispute.ContactGiven2Nm = patch?.ContactGiven2Nm;
                     dispute.ContactGiven3Nm = patch?.ContactGiven3Nm;

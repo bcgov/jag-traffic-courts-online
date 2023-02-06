@@ -27,12 +27,6 @@ export class UpdateDisputeContactComponent implements OnInit {
   ngOnInit(): void {
     this.disputeService.checkStoredDispute().subscribe(found => {
       if (found) {
-        // this.form = this.formBuilder.group({
-        //   ...this.disputantFormFields,
-        // });
-        // this.form.reset();
-        // console.log(found, this.form);
-
         this.form = this.disputeService.getDisputantForm();
         this.store.select(DisputeStore.Selectors.State).subscribe(state => {
           this.state = state;

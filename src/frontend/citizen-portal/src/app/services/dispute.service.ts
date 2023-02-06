@@ -163,18 +163,3 @@ export enum StatusStepType {
   SCHEDULED = "Hearing Scheduled",
   CONFIRMED = "Decision Made",
 }
-
-// export interface DisputantContactInformation extends DisputantContactInformationBase {
-//   disputant_given_names?: string;
-//   contact_given_names?: string;
-//   address?: string;
-// }
-
-// export type DisputantContactInformationKeys = keyof DisputantContactInformation;
-// export type DisputantContactInformationFormControls = {
-//   [key in DisputantContactInformationKeys]?: AbstractControl;
-// }
-// export interface DisputantContactInformationFormGroup extends FormGroup {
-//   value: DisputantContactInformation;
-//   controls: DisputantContactInformationFormControls;
-// }

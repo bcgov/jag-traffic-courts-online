@@ -8,9 +8,8 @@ import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
-// import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, DisputeStatus, DisputeContactTypeCd } from "app/api";
 import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
-import { DisputesService, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount } from "app/api";
+import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -27,29 +26,13 @@ export class NoticeOfDisputeService {
   PleaCode = DisputeCountPleaCode;
   ContactType = DisputeContactTypeCd;
 
-  // ticketFormFields: NoticeOfDisputeFormControls = { // need to reset before using, all default value should be set in the component itself
-  //   disputant_surname: new FormControl<string | null>(null, [Validators.required]),
-  //   disputant_given_names: new FormControl<string | null>(null, [Validators.required]),
-  //   contact_given_names: new FormControl<string | null>(null),
-  //   contact_surname: new FormControl<string | null>(null),
-  //   contact_law_firm_name: new FormControl<string | null>(null),
-  //   contact_type: new FormControl<string>(this.ContactType.Individual,[Validators.required]),
-  //   address: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(300)]),
-  //   address_city: new FormControl<string | null>(null, [Validators.required]),
-  //   address_province: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(30)]),
-  //   address_province_country_id: new FormControl<number | null>(null),
-  //   address_province_seq_no: new FormControl<number | null>(null),
-  //   address_country_id: new FormControl<number | null>(null, [Validators.required]),
-  //   postal_code: new FormControl<string | null>(null, [Validators.required]),
-  //   home_phone_number: new FormControl<string | null>(null, [FormControlValidators.phone]),
-  //   email_address: new FormControl<string | null>(null, [Validators.required, Validators.email]),
-  //   drivers_licence_number: new FormControl<string | null>(null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]),
-  //   drivers_licence_province: new FormControl<string | null>(null, [Validators.required]),
-  //   drivers_licence_country_id: new FormControl<number | null>(null),
-  //   drivers_licence_province_seq_no: new FormControl<number | null>(null),
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
     disputant_surname: { value: null, options: { validators: [Validators.required] } },
     disputant_given_names: { value: null, options: { validators: [Validators.required] } },
+    contact_given_names: { value: null },
+    contact_surname:{ value: null },
+    contact_law_firm_name: { value: null },
+    contact_type: { value: this.ContactType.Individual, options: { validators: [Validators.required] } },
     address: { value: null, options: { validators: [Validators.required, Validators.maxLength(300)] } },
     address_city: { value: null, options: { validators: [Validators.required] } },
     address_province: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
@@ -71,24 +54,13 @@ export class NoticeOfDisputeService {
     plea_cd: null,
     request_time_to_pay: this.RequestTimeToPay.N,
     request_reduction: this.RequestReduction.N,
-  //   __skip: [false],
-  //   __apply_to_remaining_counts: [false],
-  // }
-
-  // additionFormFields = {
-  //   represented_by_lawyer: [this.RepresentedByLawyer.N],
-  //   request_court_appearance: [null, [Validators.required]],
-  //   interpreter_language_cd: [null],
-  //   witness_no: [0],
-  //   fine_reduction_reason: [null, []],
-  //   time_to_pay_reason: [null, []],
-    request_court_appearance: { value: null, options: { validators: [Validators.required] } },
     __skip: false,
     __apply_to_remaining_counts: false,
   }
 
   additionFormConfigs: NoticeOfDisputeFormConfigs = {
     represented_by_lawyer: this.RepresentedByLawyer.N,
+    request_court_appearance: { value: null, options: { validators: [Validators.required] } },
     interpreter_language_cd: null,
     witness_no: 0,
     fine_reduction_reason: null,
@@ -183,7 +155,7 @@ export class NoticeOfDisputeService {
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
 
-    input.disputant_birthdate = "2001-01-01" // TODO: remove this once disputant birthdate removed from schema, API
+    // input.disputant_birthdate = "2001-01-01" // TODO: remove this once disputant birthdate removed from schema, API
     input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
         count.request_court_appearance = input.request_court_appearance;
     });
@@ -300,21 +272,6 @@ export class NoticeOfDisputeService {
   }
 }
 
-// export interface NoticeOfDispute extends NoticeOfDisputeBase {
-//   disputant_given_names?: string;
-//   contact_given_names?: string;
-//   lawyer_full_name?: string;
-//   address?: string;
-// }
-
-// export type NoticeOfDisputeKeys = keyof NoticeOfDispute;
-// export type NoticeOfDisputeFormControls = {
-//   [key in NoticeOfDisputeKeys]?: AbstractControl;
-// }
-// export interface NoticeOfDisputeFormGroup extends FormGroup {
-//   value: NoticeOfDispute;
-//   controls: NoticeOfDisputeFormControls;
-// }
 // Export in service, much clear when accessing
 // Overriding models in app/api
 export * from "../shared/models/dispute-form.model";

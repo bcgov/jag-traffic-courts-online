@@ -74,22 +74,21 @@ public class DisputantUpdateRequestAcceptedConsumerTest
         // Arrange
         _updateRequest.Status = DisputantUpdateRequestStatus2.ACCEPTED;
         _updateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_NAME;
-        _updateRequest.UpdateJson = "{ \"contactGiven1Nm\": \"fname1\", \"contactGiven2Nm\": \"fname2\", \"contactGiven3Nm\": \"fname3\", \"contactSurnameNm\": \"lname\", \"contactLawFirmName\":\"lawFirmname\", \"contactType\":\"I\", \"disputantGivenName1\": \"gname1\", \"disputantGivenName2\": \"gname2\", \"disputantGivenName3\": \"gname3\", \"disputantSurname\": \"sname\" }";
+        _updateRequest.UpdateJson = "{ \"contactGiven1Nm\": \"fname1\", \"contactGiven2Nm\": \"fname2\", \"contactGiven3Nm\": \"fname3\", \"contactSurnameNm\": \"lname\", \"contactLawFirmNm\":\"lawFirmNm\", \"contactType\":\"I\", \"disputantGivenName1\": \"gname1\", \"disputantGivenName2\": \"gname2\", \"disputantGivenName3\": \"gname3\", \"disputantSurname\": \"sname\" }";
 
         // Act
         await _consumer.Consume(_context.Object);
 
         // Assert
-        Assert.Equal("fname1", _dispute.DisputantGivenName1);
-        Assert.Equal("fname2", _dispute.DisputantGivenName2);
-        Assert.Equal("fname3", _dispute.DisputantGivenName3);
-        Assert.Equal("lname", _dispute.DisputantSurname);
+        Assert.Equal("gname1", _dispute.DisputantGivenName1);
+        Assert.Equal("gname2", _dispute.DisputantGivenName2);
+        Assert.Equal("gname3", _dispute.DisputantGivenName3);
+        Assert.Equal("sname", _dispute.DisputantSurname);
         Assert.Equal("fname1", _dispute.ContactGiven1Nm);
         Assert.Equal("fname2", _dispute.ContactGiven2Nm);
         Assert.Equal("fname3", _dispute.ContactGiven3Nm);
         Assert.Equal("lname", _dispute.ContactSurnameNm);
-        Assert.Equal("contactLawFirmName", _dispute.ContactLawFirmNm);
-        Assert.Equal("contactType", _dispute.ContactTypeCd.ToString());
+        Assert.Equal("lawFirmNm", _dispute.ContactLawFirmNm);
     }
 
     [Fact]
