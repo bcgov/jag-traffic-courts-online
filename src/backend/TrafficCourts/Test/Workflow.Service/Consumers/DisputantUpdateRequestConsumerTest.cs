@@ -87,10 +87,14 @@ public class DisputantUpdateRequestConsumerTest
     public async Task TestDisputantUpdateRequestConsumer_Name(string fname1, string fname2, string fname3, string lname, DisputeContactTypeCd contactType, string contactLawFirmName)
     {
         // Arrange
-        _message.ContactGivenName1 = fname1;
-        _message.ContactGivenName2 = fname2;
-        _message.ContactGivenName3 = fname3;
-        _message.ContactSurname = lname;
+        _message.DisputantGivenName1 = fname1;
+        _message.DisputantGivenName2 = fname2;
+        _message.DisputantGivenName3 = fname3;
+        _message.DisputantSurname = lname;
+        _message.ContactGiven1Nm = fname1;
+        _message.ContactGiven2Nm = fname2;
+        _message.ContactGiven3Nm = fname3;
+        _message.ContactSurnameNm = lname;
         _message.ContactType = contactType;
         _message.ContactLawFirmName = contactLawFirmName;
 

@@ -126,9 +126,13 @@ public class MappingTests
     [Fact]
     public void TestJsonDeserializer()
     {
-        string json = "{ \"contactGivenName1\": \"fname1\", \"contactGivenName2\": \"fname2\", \"contactGivenName3\": \"fname3\", \"contactSurname\": \"lname\", \"contactLawFirmName\":\"contactLawFirmName\", \"contactType\": \"I\" }";
+        string json = "{ \"contactGiven1Nm\": \"fname1\", \"contactGiven2Nm\": \"fname2\", \"contactGiven3Nm\": \"fname3\", \"contactSurnameNm\": \"lname\", \"disputantGivenName1\": \"fname1\", \"disputantGivenName2\": \"fname2\", \"contactGivenName3\": \"fname3\", \"disputantSurname\": \"lname\", \"contactLawFirmName\":\"contactLawFirmName\", \"contactType\": \"I\" }";
         Dispute? patch = Newtonsoft.Json.JsonConvert.DeserializeObject<Dispute>(json);
         Assert.NotNull(patch);
+        Assert.Equal("fname1", patch.DisputantGivenName1);
+        Assert.Equal("fname2", patch.DisputantGivenName2);
+        Assert.Equal("fname3", patch.DisputantGivenName3);
+        Assert.Equal("lname", patch.DisputantSurname);
         Assert.Equal("fname1", patch.ContactGiven1Nm);
         Assert.Equal("fname2", patch.ContactGiven2Nm);
         Assert.Equal("fname3", patch.ContactGiven3Nm);

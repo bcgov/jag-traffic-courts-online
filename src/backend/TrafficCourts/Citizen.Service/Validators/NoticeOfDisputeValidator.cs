@@ -16,9 +16,7 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.TicketNumber).NotEmpty().MaximumLength(12);
             RuleFor(_ => _.IssuedTs).NotEmpty();
             RuleFor(_ => _.DisputantSurname).NotEmpty();
-            RuleFor(_ => _.ContactSurnameNm).NotEmpty();
             RuleFor(_ => _.DisputantGivenName1).NotEmpty();
-            RuleFor(_ => _.ContactGiven1Nm).NotEmpty();
             RuleFor(_ => _.DisputantBirthdate).NotEmpty();
             RuleFor(_ => _.DriversLicenceNumber).MaximumLength(20);
             RuleFor(_ => _.DriversLicenceProvince).MaximumLength(30);
@@ -37,13 +35,19 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.TicketId).NotEmpty();
             RuleFor(_ => _.WitnessNo).InclusiveBetween(0,99);
             RuleFor(_ => _.RequestCourtAppearanceYn).NotEmpty();
+            RuleFor(_ => _.DisputantOcrIssues).NotEmpty()
+                .When(_ => _.DisputantDetectedOcrIssues == Common.OpenAPIs.OracleDataApi.v1_0.DisputeDisputantDetectedOcrIssues.Y)
+                .WithMessage("'Disputant Ocr Issues Description' is required since the disputant detected ocr issues");
             RuleFor(_ => _.ContactTypeCd).NotEmpty();
             RuleFor(_ => _.ContactLawFirmNm).NotEmpty()
                 .When(_ => _.ContactTypeCd == Common.OpenAPIs.OracleDataApi.v1_0.DisputeContactTypeCd.LAWYER)
                 .WithMessage("'Contact Law Firm Name' is required since contact type is Lawyer.");
-            RuleFor(_ => _.DisputantOcrIssues).NotEmpty()
-                .When(_ => _.DisputantDetectedOcrIssues == Common.OpenAPIs.OracleDataApi.v1_0.DisputeDisputantDetectedOcrIssues.Y)
-                .WithMessage("'Disputant Ocr Issues Description' is required since the disputant detected ocr issues");
+            RuleFor(_ => _.ContactGiven1Nm).NotEmpty()
+                .When(_ => (_.ContactTypeCd == Common.OpenAPIs.OracleDataApi.v1_0.DisputeContactTypeCd.LAWYER) || (_.ContactTypeCd == Common.OpenAPIs.OracleDataApi.v1_0.DisputeContactTypeCd.OTHER))
+                .WithMessage("'Contact Given Name' is required since contact type is not 'Individual on Ticket'");
+            RuleFor(_ => _.ContactSurnameNm).NotEmpty()
+                .When(_ => (_.ContactTypeCd == Common.OpenAPIs.OracleDataApi.v1_0.DisputeContactTypeCd.LAWYER) || (_.ContactTypeCd == Common.OpenAPIs.OracleDataApi.v1_0.DisputeContactTypeCd.OTHER))
+                .WithMessage("'Contact Surame' is required since contact type is not 'Individual on Ticket'");
 
             // Validation rules for Legal Representation
             RuleFor(_ => _.LawFirmName).NotNull()

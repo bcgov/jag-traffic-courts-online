@@ -23,6 +23,26 @@ public class DisputantUpdateContactRequest
     public DisputeContactTypeCd ContactType { get; set; }
 
     /// <summary>
+    /// The first given name or corporate name continued.
+    /// </summary>
+    public string? DisputantGivenName1 { get; set; } = null!;
+
+    /// <summary>
+    /// The second given name
+    /// </summary>
+    public string? DisputantGivenName2 { get; set; } = null!;
+
+    /// <summary>
+    /// The third given name 
+    /// </summary>
+    public string? DisputantGivenName3 { get; set; } = null!;
+
+    /// <summary>
+    /// The surname or corporate name.
+    /// </summary>
+    public string? DisputantSurname { get; set; } = null!;
+
+    /// <summary>
     /// Contact Lawyer Name.
     /// </summary>
     public string? ContactLawFirmName { get; set; } = null!;
@@ -30,22 +50,22 @@ public class DisputantUpdateContactRequest
     /// <summary>
     /// The first given name or corporate name continued.
     /// </summary>
-    public string? ContactGivenName1 { get; set; } = null!;
+    public string? ContactGiven1Nm { get; set; } = null!;
 
     /// <summary>
     /// The second given name
     /// </summary>
-    public string? ContactGivenName2 { get; set; } = null!;
+    public string? ContactGiven2Nm { get; set; } = null!;
 
     /// <summary>
     /// The third given name 
     /// </summary>
-    public string? ContactGivenName3 { get; set; } = null!;
+    public string? ContactGiven3Nm { get; set; } = null!;
 
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
-    public string? ContactSurname { get; set; } = null!;
+    public string? ContactSurnameNm { get; set; } = null!;
 
     /// <summary>
     /// The mailing address of the disputant.
