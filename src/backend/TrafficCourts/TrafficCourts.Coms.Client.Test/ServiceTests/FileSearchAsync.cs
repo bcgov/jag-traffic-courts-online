@@ -28,6 +28,8 @@ public class FileSearchAsync : ObjectManagementServiceTest
                 It.Is<IList<Guid>?>((actual) => actual == parameters.Ids),
                 It.Is<string?>((actual) => actual == parameters.Path),
                 It.Is<bool?>((actual) => actual == parameters.Active),
+                It.Is<bool?>((actual) => actual == false /*deleteMarker*/),
+                It.Is<bool?>((actual) => actual == true /* latest */),
                 It.Is<bool?>((actual) => actual == parameters.Public),
                 It.Is<string?>((actual) => actual == parameters.MimeType),
                 It.Is<string?>((actual) => actual == parameters.Name),
@@ -45,6 +47,7 @@ public class FileSearchAsync : ObjectManagementServiceTest
         CancellationTokenSource cts = new CancellationTokenSource();
 
         // setup return value
+        SetupRepository();
         SetupSearchObjectsReturn(new List<DBObject> { new DBObject { Id = expected } });
         SetupGetObjectMetadataAsync(new ObjectMetadata[] { new ObjectMetadata { Id = expected } });
 
@@ -59,6 +62,8 @@ public class FileSearchAsync : ObjectManagementServiceTest
                 It.Is<IList<Guid>?>((actual) => actual == parameters.Ids),
                 It.Is<string?>((actual) => actual == parameters.Path),
                 It.Is<bool?>((actual) => actual == parameters.Active),
+                It.Is<bool?>((actual) => actual == false /*deleteMarker*/),
+                It.Is<bool?>((actual) => actual == true /* latest */),
                 It.Is<bool?>((actual) => actual == parameters.Public),
                 It.Is<string?>((actual) => actual == parameters.MimeType),
                 It.Is<string?>((actual) => actual == parameters.Name),
@@ -66,11 +71,15 @@ public class FileSearchAsync : ObjectManagementServiceTest
                 It.Is<CancellationToken>((actual) => actual == cts.Token)
             ));
 
+#if false // USE_COMS_REPOSITORY
         // should have read the object to get the expected found object
         _mockClient.Verify(_ => _.GetObjectMetadataAsync(
             It.Is<IList<Guid>>((actual) => actual.Count == 1 && actual[0] == expected),
             It.Is<CancellationToken>((actual) => actual == cts.Token)
         ));
+#else
+        _mockRepository.Verify(_ => _.GetObjectMetadata(It.Is<Guid>(actual => actual == expected), It.IsAny<string?>()));
+#endif
     }
 
     private void SetupSearchObjectsReturn(List<DBObject> values)
@@ -81,6 +90,8 @@ public class FileSearchAsync : ObjectManagementServiceTest
             It.IsAny<string?>(),
             It.IsAny<bool?>(),
             It.IsAny<bool?>(),
+            It.IsAny<bool?>(),
+            It.IsAny<bool?>(),
             It.IsAny<string?>(),
             It.IsAny<string?>(),
             It.IsAny<IReadOnlyDictionary<string, string>?>(),
@@ -88,5 +99,9 @@ public class FileSearchAsync : ObjectManagementServiceTest
         .ReturnsAsync(() => values);
     }
 
-
+    private void SetupRepository()
+    {
+        _mockRepository.Setup(_ => _.GetObjectMetadata(It.IsAny<Guid>(), It.IsAny<string?>())).Returns(Array.Empty<KeyValuePair<string, string>>());
+        _mockRepository.Setup(_ => _.GetObjectTags(It.IsAny<Guid>(), It.IsAny<string?>())).Returns(Array.Empty<KeyValuePair<string, string>>());
+    }
 }

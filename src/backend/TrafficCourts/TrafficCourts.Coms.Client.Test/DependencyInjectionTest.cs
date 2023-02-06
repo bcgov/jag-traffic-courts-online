@@ -15,6 +15,15 @@ public class DependencyInjectionTest
 {
     private readonly Fixture _fixture = new Fixture();
 
+    public DependencyInjectionTest()
+    {
+        // dont do this normally in unit tests
+        Environment.SetEnvironmentVariable("COMS_DB_HOST", Guid.NewGuid().ToString());
+        Environment.SetEnvironmentVariable("COMS_DB_DATABASE", Guid.NewGuid().ToString());
+        Environment.SetEnvironmentVariable("COMS_DB_USER", Guid.NewGuid().ToString());
+        Environment.SetEnvironmentVariable("COMS_DB_PASSWORD", Guid.NewGuid().ToString());
+    }
+
     [Fact]
     public void should_register_service_without_MemoryStream_factory()
     {

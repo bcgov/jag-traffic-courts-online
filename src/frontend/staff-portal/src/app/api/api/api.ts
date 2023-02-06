@@ -1,7 +1,7 @@
-export * from './coms.service';
-import { ComsService } from './coms.service';
 export * from './dispute.service';
 import { DisputeService } from './dispute.service';
+export * from './document.service';
+import { DocumentService } from './document.service';
 export * from './emailHistory.service';
 import { EmailHistoryService } from './emailHistory.service';
 export * from './fileHistory.service';
@@ -12,4 +12,4 @@ export * from './keycloak.service';
 import { KeycloakService } from './keycloak.service';
 export * from './lookup.service';
 import { LookupService } from './lookup.service';
-export const APIS = [ComsService, DisputeService, EmailHistoryService, FileHistoryService, JJService, KeycloakService, LookupService];
+export const APIS = [DisputeService, DocumentService, EmailHistoryService, FileHistoryService, JJService, KeycloakService, LookupService];
