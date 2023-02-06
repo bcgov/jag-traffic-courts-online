@@ -35,7 +35,7 @@ class DisputeServiceOrdsOccamTest extends BaseTestSuite {
 	private HealthApi ordsOccamHealthApi;
 
 	@Test
-	void testPingOrdsOccam() throws Exception {
+	public void testPingOrdsOccam() throws Exception {
 		PingResult pingResult = ordsOccamHealthApi.ping();
 		assertNotNull(pingResult);
 		assertEquals("success", pingResult.getStatus());
