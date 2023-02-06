@@ -1551,6 +1551,9 @@
             "type": "string",
             "description": "Detachment Location",
             "nullable": true
+          },
+          "violation_ticket": {
+            "$ref": "#/components/schemas/ViolationTicket"
           }
         },
         "additionalProperties": false,
@@ -1747,12 +1750,6 @@
             "type": "integer",
             "description": "The year the drivers licence expires.",
             "format": "int32",
-            "nullable": true
-          },
-          "disputant_birthdate": {
-            "type": "string",
-            "description": "The birthdate of the individual the violation ticket was issued to.",
-            "format": "date",
             "nullable": true
           },
           "address": {

@@ -23,6 +23,8 @@ public class MessageContractToDisputeMappingProfile : Profile
             .ForMember(dest => dest.DriversLicenceCountryId, opt => opt.MapFrom(src => src.DriversLicenceIssuedCountryId))
             .ForMember(dest => dest.DriversLicenceProvinceSeqNo, opt => opt.MapFrom(src => src.DriversLicenceIssuedProvinceSeqNo));
         CreateMap<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount, Messaging.MessageContracts.DisputeCount>();
+        CreateMap<Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicket, Messaging.MessageContracts.ViolationTicket>()
+            .ForMember(dest => dest.ViolationTicketCounts, opt => opt.MapFrom(src => src.ViolationTicketCounts));
 
         CreateMap<DateOnly, DateTime>();
     }

@@ -12,9 +12,14 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
             .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts));
         CreateMap<Models.Disputes.DisputeCount, Messaging.MessageContracts.DisputeCount>();
 
-        CreateMap<SubmitNoticeOfDispute, NoticeOfDispute> ()
-            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts));
+        CreateMap<SubmitNoticeOfDispute, NoticeOfDispute>()
+            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts))
+            .ForMember(dest => dest.ViolationTicket, opt => opt.MapFrom(src => src.ViolationTicket));
         CreateMap<Messaging.MessageContracts.DisputeCount, Models.Disputes.DisputeCount>();
+        CreateMap<Messaging.MessageContracts.ViolationTicket, Models.Tickets.ViolationTicket>()
+            .ForMember(dest => dest.Counts, opt => opt.MapFrom(src => src.ViolationTicketCounts));
+        CreateMap<Messaging.MessageContracts.TicketCount, Models.Tickets.ViolationTicketCount>()
+            .ForMember(dest => dest.Section, opt => opt.MapFrom(src => src.Section));
 
         CreateMap<Models.Tickets.ViolationTicket, Messaging.MessageContracts.ViolationTicket>()
             .ForMember(dest => dest.ViolationTicketCounts, opt => opt.MapFrom(src => src.Counts));

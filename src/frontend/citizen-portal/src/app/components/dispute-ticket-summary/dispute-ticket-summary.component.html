@@ -90,8 +90,8 @@
     </section>
 
 
-    <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of noticeOfDispute.dispute_counts; let i = index">
-      <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
+    <section class="px-4 py-2 mb-3 card-section" *ngFor="let count of noticeOfDispute.dispute_counts;">
+      <app-count-item-dispute-summary [count]="count"></app-count-item-dispute-summary>
     </section>
 
     <section class="px-4 py-2 mb-4 card-section">
