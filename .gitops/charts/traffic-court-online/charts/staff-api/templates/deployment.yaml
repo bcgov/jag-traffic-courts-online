@@ -50,6 +50,16 @@ spec:
             value: http://{{ .Release.Name }}-oracle-data-api.{{ .Values.global.namespace }}.svc.cluster.local:8080
           - name: ASPNETCORE_URLS
             value: http://*:8080;http://*:9090
+          - name: COMS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.coms.secretName }}
+                key: username
+          - name: COMS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.coms.secretName }}
+                key: password
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
