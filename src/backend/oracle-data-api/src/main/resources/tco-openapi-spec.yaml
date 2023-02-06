@@ -36,6 +36,30 @@ paths:
                 $ref: '#/components/schemas/JJDispute'
       tags:
         - JJDispute
+  /v1/jjDisputeList:
+    get:
+      parameters:
+        - name: justinRccId
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+        - name: violationTicketId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JJDisputeListResponse'
+      tags:
+        - JJDispute
   /v1/disputeStatus:
     post:
       parameters:
@@ -311,6 +335,13 @@ components:
           format: nullable
       allOf:
         - $ref: '#/components/schemas/AuditBase'
+    JJDisputeListResponse:
+      type: object
+      properties:
+        jjDisputes:
+          type: array
+          items:
+            $ref: '#/components/schemas/JJDispute'
     JJDisputeCount:
       type: object
       properties:
