@@ -58,10 +58,6 @@ export interface ViolationTicket {
      */
     drivers_licence_expiry_year?: number | null;
     /**
-     * The birthdate of the individual the violation ticket was issued to.
-     */
-    disputant_birthdate?: string | null;
-    /**
      * The address of the individual the violation ticket was issued to.
      */
     address?: string | null;

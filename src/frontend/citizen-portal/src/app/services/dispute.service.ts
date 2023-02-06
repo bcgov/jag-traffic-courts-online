@@ -1,16 +1,17 @@
 import { Injectable } from "@angular/core";
-import { FormGroup, AbstractControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { DisputeNotFoundDialogComponent } from "@shared/dialogs/dispute-not-found-dialog/dispute-not-found-dialog.component";
 import { DisputeStatusDialogComponent } from "@shared/dialogs/dispute-status-dialog/dispute-status-dialog.component";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputantContactInformation as DisputantContactInformationBase, DisputesService, SearchDisputeResult } from "app/api";
+import { DisputesService, SearchDisputeResult } from "app/api";
 import { AppRoutes } from "app/app.routes";
+import { AuthStore } from "app/auth/store";
 import { DisputeStore } from "app/store";
-import { map, Observable, of } from "rxjs";
-import { NoticeOfDisputeService } from "./notice-of-dispute.service";
+import { cloneDeep } from "lodash";
+import { map, Observable } from "rxjs";
+import { DisputantContactInformation, DisputantContactInformationFormConfigs, DisputantContactInformationKeys, NoticeOfDispute, NoticeOfDisputeFormGroup, NoticeOfDisputeService } from "./notice-of-dispute.service";
 
 @Injectable({
   providedIn: "root",
@@ -30,8 +31,8 @@ export class DisputeService {
     "email_address",
   ]
 
-  // copy setting from NoticeOfDisputeService instead of create a similar one
-  disputantFormFields: DisputantContactInformationFormControls = {};
+  // copy from NoticeOfDisputeService instead of create a similar one
+  disputantFormConfigs: DisputantContactInformationFormConfigs = {};
 
   constructor(
     private dialog: MatDialog,
@@ -41,9 +42,16 @@ export class DisputeService {
     private router: Router,
     private store: Store,
   ) {
-    this.disputantFormKeys.forEach(key => { // copy from NoticeOfDisputeService
-      this.disputantFormFields[key] = this.noticeOfDisputesService.ticketFormFields[key];
+    this.disputantFormConfigs = cloneDeep(this.noticeOfDisputesService.noticeOfDisputeFormConfigs);
+    Object.keys(this.disputantFormConfigs).forEach(key => {
+      if ((this.disputantFormKeys as String[]).indexOf(key) < 0) {
+        delete this.disputantFormConfigs[key];
+      }
     })
+  }
+
+  getDisputantForm(): NoticeOfDisputeFormGroup {
+    return this.noticeOfDisputesService.getNoticeOfDisputeForm({}, this.disputantFormConfigs);
   }
 
   checkStoredDispute(suppressRedirect?: boolean): Observable<boolean> {
@@ -76,11 +84,37 @@ export class DisputeService {
     return this.disputesService.apiDisputesSearchGet(params.ticketNumber, params.time);
   }
 
+  getDispute(token: string): Observable<NoticeOfDispute> {
+    return this.disputesService.apiDisputesGuidHashGet(token).pipe(
+      map((noticeOfDispute: NoticeOfDispute) => {
+        noticeOfDispute.disputant_given_names = [noticeOfDispute.disputant_given_name1, noticeOfDispute.disputant_given_name2, noticeOfDispute.disputant_given_name3].filter(i => i).join(" ");
+        noticeOfDispute.lawyer_full_name = [noticeOfDispute.lawyer_given_name1, noticeOfDispute.lawyer_given_name2, noticeOfDispute.lawyer_given_name3, noticeOfDispute.lawyer_surname].filter(i => i).join(" ");
+        noticeOfDispute.address = [noticeOfDispute.address_line1, noticeOfDispute.address_line2, noticeOfDispute.address_line3].filter(i => i).join(",");
+        return noticeOfDispute;
+      }))
+  }
+
   updateDisputeContact(guid: string, input: DisputantContactInformation) {
+    let payload = this.disputantContactToServer(input);
+    return this.disputesService.apiDisputeGuidHashContactPut(guid, payload);
+  }
+
+  updateDispute(guid: string, input: NoticeOfDispute) {
+    let payload = this.disputeToServer(input);
+    return this.disputesService.apiDisputesGuidHashPut(guid, payload);
+  }
+
+  private disputantContactToServer(input: DisputantContactInformation): DisputantContactInformation {
     let payload = { ...input }; // state data cannot be changed, need to create a new one
     payload = this.noticeOfDisputesService.splitGivenNames(payload);  // break disputant names into first, second, third
     payload = this.noticeOfDisputesService.splitAddressLines(payload); // break address into line 1,2,3 by comma
-    return this.disputesService.apiDisputeGuidHashContactPut(guid, payload);
+    return payload;
+  }
+
+  private disputeToServer(input: NoticeOfDispute): NoticeOfDispute {
+    let payload: NoticeOfDispute = this.disputantContactToServer(input);
+    payload = this.noticeOfDisputesService.splitLawyerNames(payload);
+    return payload;
   }
 
   openDisputeNotFoundDialog() {
@@ -95,7 +129,7 @@ export class DisputeService {
   }
 
   goToUpdateDisputeLanding(params: QueryParamsForSearch): void {
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE)], {
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE_LANDING)], {
       queryParams: params,
     });
   }
@@ -105,6 +139,17 @@ export class DisputeService {
       queryParams: params,
     })
   }
+
+  goToUpdateDispute(params: QueryParamsForSearch): void {
+    this.store.dispatch(AuthStore.Actions.Authorize({ redirectUrl: this.getUpdateDisputeUrl(params) }));
+  }
+
+  private getUpdateDisputeUrl(params: QueryParamsForSearch): string {
+    let queryString = Object.keys(params).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
+    }).join('&');
+    return AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE) + "?" + queryString;
+  }
 }
 
 export enum StatusStepType {
@@ -112,18 +157,4 @@ export enum StatusStepType {
   PROCESSING = "Processing",
   SCHEDULED = "Hearing Scheduled",
   CONFIRMED = "Decision Made",
-}
-
-export interface DisputantContactInformation extends DisputantContactInformationBase {
-  disputant_given_names?: string;
-  address?: string;
-}
-
-export type DisputantContactInformationKeys = keyof DisputantContactInformation;
-export type DisputantContactInformationFormControls = {
-  [key in DisputantContactInformationKeys]?: AbstractControl;
-}
-export interface DisputantContactInformationFormGroup extends FormGroup {
-  value: DisputantContactInformation;
-  controls: DisputantContactInformationFormControls;
 }

@@ -4142,14 +4142,27 @@
         },
         "additionalProperties": false
       },
+      "FileMetadata": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JJDispute": {
         "type": "object",
         "properties": {
           "fileData": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "nullable": true
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMetadata"
             },
             "nullable": true
           },

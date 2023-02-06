@@ -12,6 +12,7 @@
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
+import { ViolationTicket } from './violationTicket.model';
 import { DisputeCount } from './disputeCount.model';
 
 
@@ -178,5 +179,6 @@ export interface NoticeOfDispute {
      * Detachment Location
      */
     detachment_location?: string | null;
+    violation_ticket?: ViolationTicket;
 }
 

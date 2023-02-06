@@ -6,8 +6,7 @@ import { ConfigService } from "@config/config.service";
 import { Address } from "@shared/models/address.model";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
 import { Language } from "app/api";
-import { NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
-import { DisputantContactInformationFormGroup } from "app/services/dispute.service";
+import { DisputantContactInformationFormGroup, NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { FormControlValidators } from "@core/validators/form-control.validators";
 
@@ -32,7 +31,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   optOut: boolean = false;
 
   // Form related
-  todayDate: Date = new Date();
   showManualButton: boolean = true;
   showAddressFields: boolean = true; // temporary preset for testing
 
@@ -72,15 +70,18 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (!this.form.value.address_country_id) {
+    let country = this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift();
+    if (!this.form.value.address_country_id && !country) {
       this.countryFormControl.setValue(this.canada);
     } else {
-      this.countryFormControl.setValue(this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift());
+      this.countryFormControl.setValue(country);
     }
+
+    let province = this.provincesAndStates.filter(i => i.provAbbreviationCd === this.form.value.address_province).shift();
     if (!this.form.value.address_province) {
       this.provinceFormControl.setValue(this.bc);
     } else {
-      this.provinceFormControl.setValue(this.provincesAndStates.filter(i => i.provAbbreviationCd === this.form.value.address_province).shift());
+      this.provinceFormControl.setValue(province);
     }
 
     let form = this.form as NoticeOfDisputeFormGroup;
@@ -157,7 +158,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onDLProvinceChange(province: ProvinceCodeValue) {
     setTimeout(() => {
       let form = this.form as NoticeOfDisputeFormGroup;
-      form.controls.drivers_licence_province.setValue(province.provNm);
+      form.controls.drivers_licence_province.setValue(province.provAbbreviationCd);
       form.controls.drivers_licence_country_id.setValue(province.ctryId);
       form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
 

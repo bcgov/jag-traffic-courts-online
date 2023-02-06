@@ -3,7 +3,8 @@ import { ActionTypes } from ".";
 import { AuthStore } from "..";
 
 export const Authorize = createAction(
-  ActionTypes.AUTHORIZE
+  ActionTypes.AUTHORIZE,
+  props<{ redirectUrl?: string }>()
 );
 
 export const Authorizing = createAction(

@@ -21,6 +21,7 @@ export * from './excludeStatus.model';
 export * from './federatedIdentityRepresentation.model';
 export * from './field.model';
 export * from './fileHistory.model';
+export * from './fileMetadata.model';
 export * from './jJDispute.model';
 export * from './jJDisputeContactType.model';
 export * from './jJDisputeCourtAppearanceRoP.model';

@@ -6,4 +6,12 @@ export enum DisputeActionTypes {
   UPDATE_CONTACT = "[Dispute] UPDATE CONTACT",
   UPDATE_CONTACT_SUCCESS = "[Dispute] UPDATE CONTACT SUCCESS",
   UPDATE_CONTACT_FAILED = "[Dispute] UPDATE CONTACT FAILED",
+
+  GET = "[Dispute] GET",
+  GET_SUCCESS = "[Dispute] GET SUCCESS",
+  GET_FAILED = "[Dispute] GET FAILED",
+    
+  UPDATE = "[Dispute] UPDATE",
+  UPDATE_SUCCESS = "[Dispute] UPDATE SUCCESS",
+  UPDATE_FAILED = "[Dispute] UPDATE FAILED",
 };

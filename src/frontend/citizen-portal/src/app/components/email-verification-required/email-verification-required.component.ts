@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
 import { TicketTypes } from '@shared/enums/ticket-type.enum';
 import { DisputeRepresentedByLawyer } from 'app/api';
-import { NoticeOfDisputeService, NoticeOfDispute } from 'app/services/notice-of-dispute.service';
+import { NoticeOfDisputeService, NoticeOfDispute, CountsActions } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -18,7 +18,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
   email: string;
   ticketType: string;
   ticketTypes = TicketTypes;
-  countsActions: any;
+  countsActions: CountsActions;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
 
   dispute: NoticeOfDispute;

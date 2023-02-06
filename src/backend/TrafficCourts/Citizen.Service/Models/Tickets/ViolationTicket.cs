@@ -84,13 +84,13 @@ public class ViolationTicket
     public short? DriversLicenceExpiryYear { get; set; }
     #endregion
 
-    /// <summary>
-    /// The birthdate of the individual the violation ticket was issued to.
-    /// </summary>
-    [JsonPropertyName("disputant_birthdate")]
-    [SwaggerSchema(Format = "date")]
-    [JsonConverter(typeof(DateOnlyJsonConverter))]
-    public DateOnly? DisputantBirthdate { get; set; }
+    ///// <summary>
+    ///// The birthdate of the individual the violation ticket was issued to.
+    ///// </summary>
+    //[JsonPropertyName("disputant_birthdate")]
+    //[SwaggerSchema(Format = "date")]
+    //[JsonConverter(typeof(DateOnlyJsonConverter))]
+    //public DateOnly? DisputantBirthdate { get; set; }
 
     /// <summary>
     /// The address of the individual the violation ticket was issued to.

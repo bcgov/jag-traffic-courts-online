@@ -271,12 +271,12 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
-            if (response.Message.DisputantSurname != user?.Surename
-                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
-            {
-                return BadRequest("Disputant not match");
-            }
+            //var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
+            //if (response.Message.DisputantSurname != user?.Surename
+            //    || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
+            //{
+            //    return BadRequest("Disputant not match");
+            //}
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
             return Ok(result);

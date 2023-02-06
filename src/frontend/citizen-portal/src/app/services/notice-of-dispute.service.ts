@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, ValidatorFn, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { FormControlValidators } from "@core/validators/form-control.validators";
@@ -8,18 +8,16 @@ import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
-import { DisputeCount, DisputesService, NoticeOfDispute as NoticeOfDisputeBase, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, DisputeStatus } from "app/api";
+import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
+import { DisputesService, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
-import { ViolationTicketService } from "./violation-ticket.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class NoticeOfDisputeService {
   private _noticeOfDispute: BehaviorSubject<NoticeOfDispute> = new BehaviorSubject<NoticeOfDispute>(null);
-  private _countFormDefaultValue: any;
-  private _additionFormDefaultValue: any;
 
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
@@ -27,69 +25,110 @@ export class NoticeOfDisputeService {
   RequestCourtAppearance = DisputeCountRequestCourtAppearance;
   PleaCode = DisputeCountPleaCode;
 
-  ticketFormFields: NoticeOfDisputeFormControls = { // need to reset before using, all default value should be set in the component itself
-    disputant_surname: new FormControl<string | null>(null, [Validators.required]),
-    disputant_given_names: new FormControl<string | null>(null, [Validators.required]),
-    address: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(300)]),
-    address_city: new FormControl<string | null>(null, [Validators.required]),
-    address_province: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(30)]),
-    address_province_country_id: new FormControl<number | null>(null),
-    address_province_seq_no: new FormControl<number | null>(null),
-    address_country_id: new FormControl<number | null>(null, [Validators.required]),
-    postal_code: new FormControl<string | null>(null, [Validators.required]),
-    home_phone_number: new FormControl<string | null>(null, [FormControlValidators.phone]),
-    work_phone_number: new FormControl<string | null>(null, [FormControlValidators.phone]), // not using now
-    email_address: new FormControl<string | null>(null, [Validators.required, Validators.email]),
-    disputant_birthdate: new FormControl<string | null>(null, [Validators.required]),
-    drivers_licence_number: new FormControl<string | null>(null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]),
-    drivers_licence_province: new FormControl<string | null>(null, [Validators.required]),
-    drivers_licence_country_id: new FormControl<number | null>(null),
-    drivers_licence_province_seq_no: new FormControl<number | null>(null),
+  noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
+    disputant_surname: { value: null, options: { validators: [Validators.required] } },
+    disputant_given_names: { value: null, options: { validators: [Validators.required] } },
+    address: { value: null, options: { validators: [Validators.required, Validators.maxLength(300)] } },
+    address_city: { value: null, options: { validators: [Validators.required] } },
+    address_province: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
+    address_province_country_id: { value: null },
+    address_country_id: { value: null, options: { validators: [Validators.required] } },
+    address_province_seq_no: { value: null, options: { validators: [Validators.required] } },
+    postal_code: { value: null, options: { validators: [Validators.required] } },
+    home_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
+    work_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
+    email_address: { value: null, options: { validators: [Validators.required, Validators.email] } },
+    drivers_licence_number: { value: null, options: { validators: [Validators.required, Validators.minLength(7), Validators.maxLength(9)] } },
+    drivers_licence_province: { value: null, options: { validators: [Validators.required] } },
+    drivers_licence_country_id: { value: null },
+    drivers_licence_province_seq_no: { value: null }
   }
 
-  countFormFields = {
-    plea_cd: [null],
+  countFormConfigs: DisputeCountFormConfigs = {
+    count_no: null,
+    plea_cd: null,
     request_time_to_pay: this.RequestTimeToPay.N,
     request_reduction: this.RequestReduction.N,
-    request_court_appearance: [null, [Validators.required]],
-    __skip: [false],
-    __apply_to_remaining_counts: [false],
+    request_court_appearance: { value: null, options: { validators: [Validators.required] } },
+    __skip: false,
+    __apply_to_remaining_counts: false,
   }
 
-  additionFormFields = {
-    represented_by_lawyer: [this.RepresentedByLawyer.N],
-    interpreter_language_cd: [null],
-    witness_no: [0],
-    fine_reduction_reason: [null, []],
-    time_to_pay_reason: [null, []],
+  additionFormConfigs: NoticeOfDisputeFormConfigs = {
+    represented_by_lawyer: this.RepresentedByLawyer.N,
+    interpreter_language_cd: null,
+    witness_no: 0,
+    fine_reduction_reason: null,
+    time_to_pay_reason: null,
 
-    __witness_present: [false],
-    __interpreter_required: [false],
+    __witness_present: false,
+    __interpreter_required: false,
   }
 
-  additionFormValidators = [
+  additionFormValidators: ValidatorFn[] = [
     FormGroupValidators.requiredIfTrue("__interpreter_required", "interpreter_language_cd"),
     FormGroupValidators.requiredIfTrue("__witness_present", "witness_no"),
   ]
 
-  legalRepresentationFields = {
-    law_firm_name: [null, [Validators.required]],
-    lawyer_full_name: [null, [Validators.required]],
-    lawyer_email: [null, [Validators.required, Validators.email]],
-    lawyer_phone_number: [null, [Validators.required]],
-    lawyer_address: [null, [Validators.required]],
+  legalRepresentationConfigs: NoticeOfDisputeFormConfigs = {
+    law_firm_name: { value: null, options: { validators: [Validators.required] } },
+    lawyer_full_name: { value: null, options: { validators: [Validators.required] } },
+    lawyer_email: { value: null, options: { validators: [Validators.required] } },
+    lawyer_phone_number: { value: null, options: { validators: [Validators.required] } },
+    lawyer_address: { value: null, options: { validators: [Validators.required] } }
   }
 
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private disputesService: DisputesService,
-    private violationTicketService: ViolationTicketService,
     private datePipe: DatePipe,
     private fb: FormBuilder,
   ) {
-    this._countFormDefaultValue = this.fb.group(this.countFormFields).value;
-    this._additionFormDefaultValue = this.fb.group(this.additionFormFields).value;
+  }
+
+  getNoticeOfDisputeForm(
+    noticeOfDispute: ViolationTicket | NoticeOfDispute = {},
+    configs: NoticeOfDisputeFormConfigs = this.noticeOfDisputeFormConfigs
+  ): NoticeOfDisputeFormGroup {
+    var controls: NoticeOfDisputeFormControls = {};
+    Object.keys(configs).forEach(key => {
+      let config = configs[key];
+      let value = config?.value === undefined ? config : config?.value;
+      controls[key] = new FormControl(value, config?.options);
+    })
+    let form = this.fb.group(controls);
+
+    noticeOfDispute = noticeOfDispute ? noticeOfDispute : {};
+    Object.keys(noticeOfDispute).forEach(key => {
+      noticeOfDispute[key] && form.controls[key]?.patchValue(noticeOfDispute[key]);
+    });
+    noticeOfDispute.drivers_licence_number && form.controls.drivers_licence_number?.setValue(noticeOfDispute.drivers_licence_number.toString());
+    return form;
+  }
+
+  getCountForm(ticket_count?: ViolationTicketCount, dispute_count?: DisputeCount): DisputeCountFormGroup {
+    let controls: DisputeCountFormControls = {};
+    let configs = this.countFormConfigs; // create all fields
+    Object.keys(configs).forEach(key => {
+      let config = configs[key];
+      let value = config?.value === undefined ? config : config?.value;
+      controls[key] = new FormControl(value, config?.options);
+    })
+    let form = this.fb.group(controls);
+    form.patchValue(ticket_count); // set count_no
+    form.patchValue(dispute_count); // set others
+    return form;
+  }
+
+  getAdditionalForm(additionalInfo: ViolationTicket | NoticeOfDispute = {}): NoticeOfDisputeFormGroup {
+    let form = this.getNoticeOfDisputeForm(additionalInfo, this.additionFormConfigs);
+    form.addValidators(this.additionFormValidators);
+    return form;
+  }
+
+  getLegalRepresentationForm(legalRepresentation: ViolationTicket | NoticeOfDispute = {}): NoticeOfDisputeFormGroup {
+    return this.getNoticeOfDisputeForm(legalRepresentation, this.legalRepresentationConfigs);
   }
 
   get noticeOfDispute$(): Observable<NoticeOfDispute> {
@@ -101,11 +140,7 @@ export class NoticeOfDisputeService {
   }
 
   get countFormDefaultValue(): any {
-    return this._countFormDefaultValue;
-  }
-
-  get additionFormDefaultValue(): any {
-    return this._additionFormDefaultValue;
+    return this.countFormConfigs;
   }
 
   createNoticeOfDispute(input: NoticeOfDispute): void {
@@ -198,8 +233,8 @@ export class NoticeOfDisputeService {
     return noticeOfDispute;
   }
 
-  getCountsActions(counts: DisputeCount[]): any {
-    let countsActions: any = {};
+  getCountsActions(counts: DisputeCount[]): CountsActions {
+    let countsActions: CountsActions = {};
     let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.count_no).join(", ");
     countsActions.not_request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.N));
     countsActions.guilty = toCountStr(counts.filter(i => i.plea_cd === this.PleaCode.G));
@@ -210,24 +245,13 @@ export class NoticeOfDisputeService {
     return countsActions;
   }
 
-  getNoticeOfDispute(formValue): NoticeOfDispute {
+  getNoticeOfDispute(ticket: ViolationTicket | NoticeOfDispute, formValue: NoticeOfDispute): NoticeOfDispute {
     // form contains all sub forms
     // get the ticket from storage to make sure the user can't change the ticket info
-    return <NoticeOfDispute>{ ...this.violationTicketService.ticket, ...formValue };
+    return <NoticeOfDispute>{ ...ticket, ...formValue };
   }
 }
 
-export interface NoticeOfDispute extends NoticeOfDisputeBase {
-  disputant_given_names?: string;
-  lawyer_full_name?: string;
-  address?: string;
-}
-
-export type NoticeOfDisputeKeys = keyof NoticeOfDispute;
-export type NoticeOfDisputeFormControls = {
-  [key in NoticeOfDisputeKeys]?: AbstractControl;
-}
-export interface NoticeOfDisputeFormGroup extends FormGroup {
-  value: NoticeOfDispute;
-  controls: NoticeOfDisputeFormControls;
-}
+// Export in service, much clear when accessing
+// Overriding models in app/api
+export * from "../shared/models/dispute-form.model";

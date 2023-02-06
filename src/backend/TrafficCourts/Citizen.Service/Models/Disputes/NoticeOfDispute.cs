@@ -33,4 +33,10 @@ public class NoticeOfDispute : Dispute
     /// </summary>
     [JsonPropertyName("detachment_location")]
     public string? DetachmentLocation { get; set; } = null!;
+
+    /// <summary>
+    /// Violation Ticket
+    /// </summary>
+    [JsonPropertyName("violation_ticket")]
+    public Models.Tickets.ViolationTicket? ViolationTicket { get; set; } = null!;
 }
