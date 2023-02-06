@@ -115,15 +115,15 @@
               <div class="row mt-2">
                 <div class="col-md-2">
                   <small class="d-block">Count</small>
-                  <strong>Count {{ count.form.value.count_no }}</strong>
+                  <strong>Count {{ count.ticket_count.count_no }}</strong>
                 </div>
                 <div class="col-md-6">
                   <small class="d-block">Description of offence </small>
-                  <strong>{{ count.form.value.description | titlecase }}</strong>
+                  <strong>{{ count.ticket_count.description | titlecase }}</strong>
                 </div>
                 <div class="col-md-4">
                   <small class="d-block">Offence amount</small>
-                  <strong>{{ count.form.value.ticketed_amount| currency:
+                  <strong>{{ count.ticket_count.ticketed_amount| currency:
                     "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
                 </div>
               </div>
@@ -230,26 +230,25 @@
           </app-alert>
         </div>
 
-        <app-stepper-footer [disableSave]="!isValid(count?.form)" (save)="disputeStepper.next()"
-          (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
-          [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
-        </app-stepper-footer>
-      </app-page>
+        </app-page>
+      </mat-card><br />
     </ng-container>
+    <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()"
+      (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+      [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+    </app-stepper-footer>
   </mat-step>
 
-  <mat-step [completed]="isAdditionalFormValid()">
-
     <!-- aditional -->
-    <mat-step [completed]="additionalForm?.valid">
-      <ng-template matStepLabel>Additional information</ng-template>
-      <app-page>
-        <app-page-header>
-          <ng-container subHeader class="subheader-desc">
-            The following additional information is required and will apply to all counts on this ticket made with
-            that selection.
-          </ng-container>
-        </app-page-header>
+  <mat-step [completed]="additionalForm?.valid">
+    <ng-template matStepLabel>Additional information</ng-template>
+    <app-page>
+      <app-page-header>
+        <ng-container subHeader class="subheader-desc">
+          The following additional information is required and will apply to all counts on this ticket made with
+          that selection.
+        </ng-container>
+      </app-page-header>
 
       <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
         <ng-container *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.N">
@@ -272,7 +271,7 @@
               </div>
             </div>>
           </ng-container>
-          <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
+          <ng-container *ngIf="countsActions?.request_reduction !== countsActions?.request_time_to_pay">
             <div>{{ countsActions?.request_time_to_pay }}</div>
           </ng-container>
           <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">

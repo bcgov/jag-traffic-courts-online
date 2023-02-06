@@ -6,7 +6,6 @@ import { ConfigService } from "@config/config.service";
 import { Address } from "@shared/models/address.model";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
 import { DisputeContactTypeCd, Language } from "app/api";
-import { DisputantContactInformationFormGroup } from "app/services/dispute.service";
 import { DisputantContactInformationFormGroup, NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { FormControlValidators } from "@core/validators/form-control.validators";

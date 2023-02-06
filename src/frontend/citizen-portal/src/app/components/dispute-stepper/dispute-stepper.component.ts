@@ -92,16 +92,17 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
     this.ticketType = this.violationTicketService.ticketType;
 
-    // take info from ticket, convert dl number to string
-    this.ticket.drivers_licence_number && this.form.controls.drivers_licence_number.setValue(this.ticket.drivers_licence_number.toString());
-
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
     this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
 
+    // take info from ticket, convert dl number to string
+    this.ticket.drivers_licence_number && this.form.controls.drivers_licence_number.setValue(this.ticket.drivers_licence_number.toString());
+
     this.counts = this.ticketCounts.map((ticketCount, inx) => {
       return { ticket_count: ticketCount, form: this.noticeOfDisputeService.getCountForm(ticketCount, this.disputeCounts[inx]) };
-    })
+    });
+    console.log(this.counts);
     this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
   }
 
@@ -186,13 +187,14 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       let allCountsValid: boolean = true;
       this.counts.forEach(count => {
         let countForm = count.form;
+        let valid = true;
         if (countForm) {
-          let valid = countForm.valid || countForm.value.__skip;
           if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
             valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
           } else if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
             valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
           }
+          valid = countForm.valid || countForm.value.__skip;
           allCountsValid = allCountsValid && valid && !this.isAllCountsSkipped;
         }
       });
