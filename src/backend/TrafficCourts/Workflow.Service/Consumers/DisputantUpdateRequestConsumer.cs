@@ -36,10 +36,10 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
             return;
         }
 
-        Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest disputantUpdateRequest = new()
+        DisputeUpdateRequest disputantUpdateRequest = new()
         {
-            UpdateType = DisputantUpdateRequestUpdateType.UNKNOWN,
-            Status = DisputantUpdateRequestStatus2.PENDING,
+            UpdateType = DisputeUpdateRequestUpdateType.UNKNOWN,
+            Status = DisputeUpdateRequestStatus2.PENDING,
             UpdateJson = JsonSerializer.Serialize(message)
         };
 
@@ -83,8 +83,8 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
             || !string.IsNullOrEmpty(message.DisputantSurname)
             )
         {
-            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_NAME;
-            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+            disputantUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
+            await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
         }
 
         // If some or all address fields have data, send a DISPUTANT_ADDRESS update request
@@ -99,15 +99,15 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
             || message.AddressCountryId is not null
             )
         {
-            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_ADDRESS;
-            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+            disputantUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS;
+            await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
         }
 
         // If some or all phone fields have data, send a DISPUTANT_PHONE update request
         if (message.HomePhoneNumber is not null)
         {
-            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_PHONE;
-            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+            disputantUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_PHONE;
+            await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
         }
 
         // If some or all court options fields have data, send a COURT_OPTIONS update request
@@ -126,28 +126,28 @@ public class DisputantUpdateRequestConsumer : IConsumer<DisputantUpdateRequest>
             || !string.IsNullOrEmpty(message.FineReductionReason)
             || !string.IsNullOrEmpty(message.TimeToPayReason))
         {
-            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.COURT_OPTIONS;
-            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+            disputantUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.COURT_OPTIONS;
+            await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
         }
 
         // If some or all count fields have data, send a DISPUTE_COUNT request
         if (message.DisputeCounts != null && message.DisputeCounts.Count > 0)
         {
-            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.COUNT;
-            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+            disputantUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.COUNT;
+            await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
         }
 
         // If the message contains a documentId, send a DISPUTANT_DOCUMENT request
         if (message.DocumentId is not null && message.DocumentId != Guid.Empty)
         {
-            disputantUpdateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT;
-            await _oracleDataApiService.SaveDisputantUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
+            disputantUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT;
+            await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputantUpdateRequest, context.CancellationToken);
         }
 
         // TODO: ensure security so only requests authenticated with BCSC can do COURT_OPTIONS, COUNT, DOCUMENTS
 
         // If at least one disputantUpdateRequest was saved ...
-        if (disputantUpdateRequest.UpdateType != DisputantUpdateRequestUpdateType.UNKNOWN)
+        if (disputantUpdateRequest.UpdateType != DisputeUpdateRequestUpdateType.UNKNOWN)
         {
             if (dispute?.EmailAddressVerified == true && dispute?.EmailAddress is not null)
             {

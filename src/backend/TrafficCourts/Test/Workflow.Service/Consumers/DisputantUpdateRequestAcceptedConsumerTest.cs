@@ -9,7 +9,7 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
 using Xunit;
-using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest;
+using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
 
 namespace TrafficCourts.Test.Workflow.Service.Consumers;
 
@@ -32,13 +32,13 @@ public class DisputantUpdateRequestAcceptedConsumerTest
         };
         _updateRequest = new()
         {
-            DisputantUpdateRequestId = 1,
+            DisputeUpdateRequestId = 1,
             DisputeId = 1
         };
 
         _mockLogger = new();
         _oracleDataApiService = new();
-        _oracleDataApiService.Setup(_ => _.UpdateDisputantUpdateRequestStatusAsync(1, DisputantUpdateRequestStatus.ACCEPTED, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_updateRequest));
+        _oracleDataApiService.Setup(_ => _.UpdateDisputeUpdateRequestStatusAsync(1, DisputeUpdateRequestStatus.ACCEPTED, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_updateRequest));
         _oracleDataApiService.Setup(_ => _.GetDisputeByIdAsync(1, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _oracleDataApiService.Setup(_ => _.UpdateDisputeAsync(1, _dispute, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _context = new();
@@ -52,8 +52,8 @@ public class DisputantUpdateRequestAcceptedConsumerTest
     public async Task TestDisputantUpdateRequestAcceptedConsumer_AddressUpdates()
     {
         // Arrange
-        _updateRequest.Status = DisputantUpdateRequestStatus2.ACCEPTED;
-        _updateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_ADDRESS;
+        _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
+        _updateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS;
         _updateRequest.UpdateJson = "{ \"addressLine1\": \"addr1\", \"addressLine2\": \"addr2\", \"addressLine3\": \"addr3\", \"addressCity\": \"city\", \"addressProvince\": \"BC\", \"postalCode\": \"A1B2C3\"}";
 
         // Act
@@ -72,8 +72,8 @@ public class DisputantUpdateRequestAcceptedConsumerTest
     public async Task TestDisputantUpdateRequestAcceptedConsumer_NameUpdates()
     {
         // Arrange
-        _updateRequest.Status = DisputantUpdateRequestStatus2.ACCEPTED;
-        _updateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_NAME;
+        _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
+        _updateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
         _updateRequest.UpdateJson = "{ \"disputantGivenName1\": \"fname1\", \"disputantGivenName2\": \"fname2\", \"disputantGivenName3\": \"fname3\", \"disputantSurname\": \"lname\" }";
 
         // Act
@@ -90,8 +90,8 @@ public class DisputantUpdateRequestAcceptedConsumerTest
     public async Task TestDisputantUpdateRequestAcceptedConsumer_PhoneUpdates()
     {
         // Arrange
-        _updateRequest.Status = DisputantUpdateRequestStatus2.ACCEPTED;
-        _updateRequest.UpdateType = DisputantUpdateRequestUpdateType.DISPUTANT_PHONE;
+        _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
+        _updateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_PHONE;
         _updateRequest.UpdateJson = "{ \"homePhoneNumber\": \"2505556666\" }";
 
         // Act

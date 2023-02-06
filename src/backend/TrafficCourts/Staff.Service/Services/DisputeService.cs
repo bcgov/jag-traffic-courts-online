@@ -274,9 +274,9 @@ public class DisputeService : IDisputeService
     public async Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
     {
         ICollection<DisputeWithUpdates> disputesWithUpdates = new Collection<DisputeWithUpdates>();
-        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputantUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
+        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputeUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
 
-        foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest disputantUpdateRequest in pendingDisputeUpdateRequests)
+        foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest disputantUpdateRequest in pendingDisputeUpdateRequests)
         {
             DisputeWithUpdates? disputeWithUpdates = new DisputeWithUpdates();
             if (disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId) is null)
@@ -334,7 +334,7 @@ public class DisputeService : IDisputeService
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             disputeWithUpdates.AdjournmentDocument = false;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-            if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
+            if (disputantUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
             {
                 DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputantUpdateRequest.UpdateJson);
                 if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment") 
@@ -345,7 +345,7 @@ public class DisputeService : IDisputeService
 
             // check whether this update request is for a change of plea
             disputeWithUpdates.ChangeOfPlea = false;
-            if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.COUNT)
+            if (disputantUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.COUNT)
             {
                 CountUpdateJSON? countUpdateJSON = JsonSerializer.Deserialize<CountUpdateJSON>(disputantUpdateRequest.UpdateJson);
                 if (countUpdateJSON is not null && countUpdateJSON.pleaCode is not null)
@@ -365,8 +365,8 @@ public class DisputeService : IDisputeService
     /// <param name="disputeId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetDisputantUpdateRequestsAsync(disputeId, null, cancellationToken);
+        return await _oracleDataApi.GetDisputeUpdateRequestsAsync(disputeId, null, cancellationToken);
     }
 }

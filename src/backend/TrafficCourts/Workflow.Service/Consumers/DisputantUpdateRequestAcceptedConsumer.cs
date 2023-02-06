@@ -4,7 +4,7 @@ using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
-using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest;
+using DisputeUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 
@@ -36,7 +36,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
         DisputantUpdateRequestAccepted message = context.Message;
 
         // Set the status of the DisputantUpdateRequest object to ACCEPTED.
-        DisputantUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputantUpdateRequestStatusAsync(message.UpdateRequestId, DisputantUpdateRequestStatus.ACCEPTED, context.CancellationToken);
+        DisputeUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.ACCEPTED, context.CancellationToken);
 
         if (updateRequest.UpdateJson is not null)
         {
@@ -47,7 +47,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
             Dispute? patch = JsonConvert.DeserializeObject<Dispute>(updateRequest.UpdateJson);
             switch (updateRequest.UpdateType)
             {
-                case DisputantUpdateRequestUpdateType.DISPUTANT_ADDRESS:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS:
                     dispute.AddressLine1 = patch?.AddressLine1;
                     dispute.AddressLine2 = patch?.AddressLine2;
                     dispute.AddressLine3 = patch?.AddressLine3;
@@ -55,19 +55,19 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.AddressProvince = patch?.AddressProvince;
                     dispute.PostalCode = patch?.PostalCode;
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_PHONE:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_PHONE:
                     dispute.HomePhoneNumber = patch?.HomePhoneNumber;
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_NAME:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_NAME:
                     dispute.DisputantGivenName1 = patch?.DisputantGivenName1;
                     dispute.DisputantGivenName2 = patch?.DisputantGivenName2;
                     dispute.DisputantGivenName3 = patch?.DisputantGivenName3;
                     dispute.DisputantSurname = patch?.DisputantSurname;
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
                     // TODO: update document metadata set StaffReviewStatus to Accepted
                     break;
-                case DisputantUpdateRequestUpdateType.COUNT:
+                case DisputeUpdateRequestUpdateType.COUNT:
                     foreach(Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount disputeCount in dispute.DisputeCounts)
                     {
                         Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount? patchCount = patch?.DisputeCounts.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
@@ -79,7 +79,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                         }
                     }
                     break;
-                case DisputantUpdateRequestUpdateType.COURT_OPTIONS:
+                case DisputeUpdateRequestUpdateType.COURT_OPTIONS:
                     dispute.RepresentedByLawyer = patch?.RepresentedByLawyer;
                     dispute.LawFirmName = patch?.LawFirmName;
                     dispute.LawyerSurname = patch?.LawyerSurname;
@@ -95,7 +95,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.FineReductionReason = patch?.FineReductionReason;
                     dispute.TimeToPayReason = patch?.TimeToPayReason; 
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_EMAIL:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_EMAIL:
                     // nothing to do here except record in file history (down further)
                     break;
                 default:

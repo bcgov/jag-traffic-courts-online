@@ -283,11 +283,11 @@ public class DisputeControllerTest
         // Mock the IDisputeService to return a DisputantUpdateRequests, confirm controller returns them.
 
         // Arrange
-        DisputantUpdateRequest updateRequest1 = new();
-        updateRequest1.DisputantUpdateRequestId = 1;
-        DisputantUpdateRequest updateRequest2 = new();
-        updateRequest2.DisputantUpdateRequestId = 2;
-        List<DisputantUpdateRequest> updateRequests = new() { updateRequest1, updateRequest2 };
+        DisputeUpdateRequest updateRequest1 = new();
+        updateRequest1.DisputeUpdateRequestId = 1;
+        DisputeUpdateRequest updateRequest2 = new();
+        updateRequest2.DisputeUpdateRequestId = 2;
+        List<DisputeUpdateRequest> updateRequests = new() { updateRequest1, updateRequest2 };
 
         var disputeService = new Mock<IDisputeService>();
         disputeService
@@ -302,7 +302,7 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        var actual = okResult.Value as List<DisputantUpdateRequest>;
+        var actual = okResult.Value as List<DisputeUpdateRequest>;
         Assert.NotNull(actual);
         Assert.Equal(2, actual!.Count);
         Assert.Equal(updateRequest1, actual[0]);

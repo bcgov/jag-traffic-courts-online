@@ -534,7 +534,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute update request records</returns>
     [HttpGet("{disputeId}/disputeUpdateRequests")]
-    [ProducesResponseType(typeof(IList<DisputantUpdateRequest>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<DisputeUpdateRequest>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -545,7 +545,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            ICollection<DisputantUpdateRequest> disputeUpdateRequests = await _disputeService.GetDisputeUpdateRequestsAsync(disputeId, cancellationToken);
+            ICollection<DisputeUpdateRequest> disputeUpdateRequests = await _disputeService.GetDisputeUpdateRequestsAsync(disputeId, cancellationToken);
             return Ok(disputeUpdateRequests);
         }
         catch (Exception e)
