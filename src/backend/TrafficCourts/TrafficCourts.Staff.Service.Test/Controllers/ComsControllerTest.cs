@@ -28,8 +28,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(guid);
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -46,8 +46,8 @@ public class ComsControllerTest
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -70,8 +70,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataInvalidKeyException(It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -94,8 +94,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataTooLongException());
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -118,8 +118,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyEmptyException(It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -142,8 +142,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyTooLongException(It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -166,8 +166,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagValueTooLongException(It.IsAny<string>(), It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -190,8 +190,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TooManyTagsException(It.IsAny<int>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -214,8 +214,8 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
@@ -241,11 +241,11 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(mockFile);
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.DownloadDocumentAsync(guid, CancellationToken.None);
+        IActionResult? result = await comsController.GetAsync(guid, CancellationToken.None);
 
         // Assert
         var fileResult = Assert.IsType<FileStreamResult>(result);
@@ -265,11 +265,11 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.DownloadDocumentAsync(guid, CancellationToken.None);
+        IActionResult? result = await comsController.GetAsync(guid, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -292,11 +292,11 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.DownloadDocumentAsync(guid, CancellationToken.None);
+        IActionResult? result = await comsController.GetAsync(guid, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -313,11 +313,11 @@ public class ComsControllerTest
         Guid guid = Guid.NewGuid();
         comsService
             .Setup(_ => _.DeleteFileAsync(guid, It.IsAny<CancellationToken>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.RemoveDocumentAsync(guid, CancellationToken.None);
+        IActionResult? result = await comsController.DeleteAsync(guid, CancellationToken.None);
 
         // Assert
         Assert.IsType<OkResult>(result);
@@ -332,11 +332,11 @@ public class ComsControllerTest
         comsService
             .Setup(_ => _.DeleteFileAsync(guid, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
-        var mockLogger = new Mock<ILogger<ComsController>>();
-        ComsController comsController = new(comsService.Object, mockLogger.Object);
+        var mockLogger = new Mock<ILogger<DocumentController>>();
+        DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.RemoveDocumentAsync(guid, CancellationToken.None);
+        IActionResult? result = await comsController.DeleteAsync(guid, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);

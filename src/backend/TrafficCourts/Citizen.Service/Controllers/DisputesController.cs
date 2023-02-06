@@ -304,6 +304,7 @@ public class DisputesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DownloadDocumentAsync(Guid fileId, CancellationToken cancellationToken)
     {
@@ -322,6 +323,10 @@ public class DisputesController : ControllerBase
             stream.Position = 0;
 
             return File(stream, file.ContentType ?? "application/octet-stream", file.FileName ?? "download");
+        }
+        catch (FileNotFoundException)
+        {
+            return NotFound();
         }
         catch (UnauthorizedAccessException e)
         {

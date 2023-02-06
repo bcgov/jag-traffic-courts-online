@@ -56,4 +56,10 @@
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
     <ProjectReference Include="..\TrafficCourts.Coms.Client\TrafficCourts.Coms.Client.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>TrafficCourts.Staff.Service.Test</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 </Project>

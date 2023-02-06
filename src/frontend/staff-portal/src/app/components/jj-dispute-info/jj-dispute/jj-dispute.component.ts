@@ -3,7 +3,7 @@ import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -49,7 +49,7 @@ export class JJDisputeComponent implements OnInit {
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   RequestReduction = JJDisputedCountRequestReduction;
   HearingType = JJDisputeHearingType;
-  RoPApp = JJDisputeCourtAppearanceRoPApp;
+  RoPApp = JJDisputeCourtAppearanceRoPAppCd;
   RoPCrown = JJDisputeCourtAppearanceRoPCrown;
   RoPDatt = JJDisputeCourtAppearanceRoPDattCd;
   RoPSeized = JJDisputeCourtAppearanceRoPJjSeized;

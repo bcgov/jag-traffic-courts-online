@@ -30,7 +30,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class ComsService {
+export class DocumentService {
 
     protected basePath = '';
     public defaultHeaders = new HttpHeaders();
@@ -100,15 +100,15 @@ export class ComsService {
     }
 
     /**
-     * Downloads a document for the given unique file ID if the virus scan staus is clean.
+     * Removes the specified document for the given unique file ID.
      * @param fileId Unique identifier for a specific document.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiComsDownloaddocumentGet(fileId?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiComsDownloaddocumentGet(fileId?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiComsDownloaddocumentGet(fileId?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiComsDownloaddocumentGet(fileId?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDocumentDelete(fileId?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDocumentDelete(fileId?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDocumentDelete(fileId?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDocumentDelete(fileId?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fileId !== undefined && fileId !== null) {
@@ -156,7 +156,7 @@ export class ComsService {
             }
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/api/coms/downloaddocument`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/api/document`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -170,15 +170,15 @@ export class ComsService {
     }
 
     /**
-     * Removes the specified document for the given unique file ID.
+     * Downloads a document for the given unique file ID if the virus scan staus is clean.
      * @param fileId Unique identifier for a specific document.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiComsRemovedocumentGet(fileId?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiComsRemovedocumentGet(fileId?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiComsRemovedocumentGet(fileId?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiComsRemovedocumentGet(fileId?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDocumentGet(fileId?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDocumentGet(fileId?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDocumentGet(fileId?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDocumentGet(fileId?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fileId !== undefined && fileId !== null) {
@@ -226,7 +226,7 @@ export class ComsService {
             }
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/api/coms/removedocument`,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/api/document`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -241,19 +241,26 @@ export class ComsService {
 
     /**
      * Uploads and saves the provided document file in the common object management service along with metadata.
+     * @param ticketNumber The ticket number to associate with this file.
      * @param file 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiComsUploaddocumentPost(file: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<string>;
-    public apiComsUploaddocumentPost(file: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<string>>;
-    public apiComsUploaddocumentPost(file: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<string>>;
-    public apiComsUploaddocumentPost(file: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDocumentPost(ticketNumber: string, file: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<string>;
+    public apiDocumentPost(ticketNumber: string, file: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public apiDocumentPost(ticketNumber: string, file: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public apiDocumentPost(ticketNumber: string, file: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (ticketNumber === null || ticketNumber === undefined) {
+            throw new Error('Required parameter ticketNumber was null or undefined when calling apiDocumentPost.');
+        }
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling apiComsUploaddocumentPost.');
+            throw new Error('Required parameter file was null or undefined when calling apiDocumentPost.');
         }
 
         let localVarHeaders = this.defaultHeaders;
+        if (ticketNumber !== undefined && ticketNumber !== null) {
+            localVarHeaders = localVarHeaders.set('ticketNumber', String(ticketNumber));
+        }
 
         let localVarCredential: string | undefined;
         // authentication (Bearer) required
@@ -301,7 +308,7 @@ export class ComsService {
         }
 
         if (file !== undefined) {
-            localVarFormParams = localVarFormParams.append('File', <any>file) as any || localVarFormParams;
+            localVarFormParams = localVarFormParams.append('file', <any>file) as any || localVarFormParams;
         }
 
         let responseType_: 'text' | 'json' | 'blob' = 'json';
@@ -315,7 +322,7 @@ export class ComsService {
             }
         }
 
-        return this.httpClient.post<string>(`${this.configuration.basePath}/api/coms/uploaddocument`,
+        return this.httpClient.post<string>(`${this.configuration.basePath}/api/document`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,

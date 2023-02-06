@@ -51,6 +51,7 @@ public interface IObjectManagementService
     /// <param name="includeTags"></param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>The specified file.</returns>
+    /// <exception cref="FileNotFoundException">The file with the specified file is not found.</exception>
     /// <exception cref="ObjectManagementServiceException"></exception>
     Task<File> GetFileAsync(Guid id, bool includeTags, CancellationToken cancellationToken);
 

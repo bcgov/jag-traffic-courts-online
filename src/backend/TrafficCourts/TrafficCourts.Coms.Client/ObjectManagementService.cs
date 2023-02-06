@@ -1,5 +1,6 @@
 ﻿#define USE_COMS_REPOSITORY
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using TrafficCourts.Coms.Client.Data;
 
@@ -137,6 +138,11 @@ internal class ObjectManagementService : IObjectManagementService
 
             var file = new File(id, stream, fileName, contentType, metadata, tags);
             return file;
+        }
+        catch (ApiException exception) when (exception.StatusCode == StatusCodes.Status404NotFound)
+        {
+            _logger.LogInformation(exception, "File not found with id {FileId}", id);
+            throw new FileNotFoundException($"File with {id} not found");
         }
         catch (ApiException exception)
         {

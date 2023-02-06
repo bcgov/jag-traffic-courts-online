@@ -22,7 +22,7 @@ services:
       # COMS database connection string for metadata/tags workaround
       COMS_DB_DATABASE: coms
       COMS_DB_HOST: coms-db
-      COMS_DB_PASSWORD: password      
+      COMS_DB_PASSWORD: password
       COMS_DB_USER: postgres
       FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-}
       FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-}
@@ -76,7 +76,7 @@ services:
       # COMS database connection string for metadata/tags workaround
       COMS_DB_DATABASE: coms
       COMS_DB_HOST: coms-db
-      COMS_DB_PASSWORD: password      
+      COMS_DB_PASSWORD: password
       COMS_DB_USER: postgres
       MASSTRANSIT__TRANSPORT: ${MASSTRANSIT__TRANSPORT:-RabbitMq}
       RABBITMQ__HOST: rabbitmq
@@ -164,7 +164,7 @@ services:
       # COMS database connection string for metadata/tags workaround
       COMS_DB_DATABASE: coms
       COMS_DB_HOST: coms-db
-      COMS_DB_PASSWORD: password      
+      COMS_DB_PASSWORD: password
       COMS_DB_USER: postgres
       SMTPCONFIGURATION__HOST: ${SMTPCONFIGURATION__HOST:-smtp-server}
       SMTPCONFIGURATION__PORT: ${SMTPCONFIGURATION__PORT:-5025}
