@@ -38,7 +38,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/appearanceChargeCountList?ticketNumber=EA90100004",
+					"raw": "{{JUSTIN-TCO}}/v1/appearanceChargeCountList?disputeId=101",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -48,36 +48,9 @@
 					],
 					"query": [
 						{
-							"key": "ticketNumber",
-							"value": "EA90100004"
+							"key": "disputeId",
+							"value": "101"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "AppearanceChargeCount",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"appearanceChargeCountId\": 25,\r\n    \"courtAppearanceId\": 5,\r\n    \"disputeCountId\": 1,\r\n    \"findingResultCd\": \"findingResultCd\",\r\n    \"lesserChargeDescTxt\": \"lesserChargeDescTxt\",\r\n    \"suspSntcProbationDurtnTxt\": \"suspSntcProbationDurtnTxt\",\r\n    \"suspSntcProbationCondsTxt\": \"suspSntcProbationCondsTxt\",\r\n    \"jailDurationTxt\": \"jailDurationTxt\",\r\n    \"jailIntermittentYn\": \"Y\",\r\n    \"probationDurationTxt\": \"probationDurationTxt\",\r\n    \"probationConditionsTxt\": \"probationConditionsTxt\",\r\n    \"drivingProhibDurationTxt\": \"drivingProhibDurationTxt\",\r\n    \"drivingProhibMvaSectionTxt\": \"drivingProhibMvaSectionTxt\",\r\n    \"dismissedYn\": \"Y\",\r\n    \"dismissedForWantProsecYn\": \"Y\",\r\n    \"withdrawnYn\": \"N\",\r\n    \"abatementYn\": \"N\",\r\n    \"stayOfProceedingsByTxt\": \"stayOfProceedingsByTxt\",\r\n    \"otherTxt\": \"otherTxt\",\r\n    \"remarksTxt\": \"remarksTxt\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/updateAppearanceChargeCount",
-					"host": [
-						"{{JUSTIN-TCO}}"
-					],
-					"path": [
-						"v1",
-						"updateAppearanceChargeCount"
 					]
 				}
 			},
@@ -89,7 +62,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/courtAppearanceList?disputeId=13",
+					"raw": "{{JUSTIN-TCO}}/v1/courtAppearanceList?disputeId=101",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -100,35 +73,8 @@
 					"query": [
 						{
 							"key": "disputeId",
-							"value": "13"
+							"value": "101"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CourtAppearanceUpdate",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"courtAppearanceId\": 5,\r\n    \"appearanceDtm\": \"2022-12-14T07:12:27Z\",\r\n    \"courtroomNumberTxt\": \"courtroomNumberTxt\",\r\n    \"appearanceReasonTxt\": \"appearanceReasonTxt\",\r\n    \"disputantPresenceCd\": \"disputantPresenceCd\",\r\n    \"disputantNotPresentDtm\": \"2022-12-14T07:12:27Z\",\r\n    \"recordingClerkNameTxt\": \"recordingClerkNameTxt\",\r\n    \"defenceCounselNameTxt\": \"defenceCounselNameTxt\",\r\n    \"crownPresenceCd\": \"C\",\r\n    \"seizedYn\": \"Y\",\r\n    \"judgeOrJjNameTxt\": \"judgeOrJjNameTxt\",\r\n    \"commentsTxt\": \"commentsTxt\",\r\n    \"defenceCounselPresenceCd\": \"C\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/updateCourtAppearance",
-					"host": [
-						"{{JUSTIN-TCO}}"
-					],
-					"path": [
-						"v1",
-						"updateCourtAppearance"
 					]
 				}
 			},
@@ -197,7 +143,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"disputeId\": 25,\r\n    \"disputeRemarkTxt\": \"This is a test remark\",\r\n    \"fullUserNameTxt\": \"John Smith\",\r\n    \"remarksMadeDtm\": \"2022-12-14T07:12:27Z\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}",
+					"raw": "{\r\n    \"disputeId\": 101,\r\n    \"disputeRemarkTxt\": \"This is a test remark\",\r\n    \"fullUserNameTxt\": \"John Smith\",\r\n    \"remarksMadeDtm\": \"2022-12-14T07:12:27Z\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": \"TCO\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -224,7 +170,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"disputeId\": \"25\",\r\n    \"disputeStatusTypeCd\": \"NEW\",\r\n    \"violationDt\": \"Smith\",\r\n    \"submittedDt\": \"Tcotest\",\r\n    \"icbcReceivedDt\": null,\r\n    \"vtcAssignedTo\": null,\r\n    \"vtcAssignedDtm\": null,\r\n    \"jjAssignedTo\": \"DELTA MUN\",\r\n    \"jjAssignedDtm\": null,\r\n    \"remarksTxt\": \"Will not get updated\",\r\n    \"entDtm\": \"2022-11-25T11:14:55Z\",\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": \"2022-12-05T03:31:18Z\",\r\n    \"updUserId\": \"TCO\",\r\n    \"disputeCounts\": [\r\n        {\r\n            \"disputeCountId\": \"1\",\r\n            \"adjustedAmt\": \"75\",\r\n            \"includesSurchargeYn\": \"Y\",\r\n            \"revisedDueDt\": \"2023-05-11\",\r\n            \"totalFineAmt\": \"215.50\",\r\n            \"commentsTxt\": \"Move the due date to May 11th next year\",\r\n            \"requestTimeToPayYn\": \"Y\",\r\n            \"requestReductionYn\": \"Y\",\r\n            \"requestCourtAppearanceYn\": \"N\",\r\n            \"entDtm\": null,\r\n            \"entUserId\": \"TCO\",\r\n            \"updDtm\": null,\r\n            \"updUserId\": \"EWONG\"\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"disputeId\": \"81\",\r\n    \"occamViolationTicketUpldId\": \"358\",\r\n    \"occamDisputeId\": \"284\",\r\n    \"noticeOfDisputeGuid\": \"EE3B0F4E79C65EA1E05400144FFBC109\",\r\n    \"justinRccId\": \"50487.0734\",\r\n    \"disputeStatusTypeCd\": \"PROG\",\r\n    \"ticketNumberTxt\": \"EA90100004\",\r\n    \"contactTypeCd\": \"I\",\r\n    \"contactLawFirmNm\": null,\r\n    \"occamDisputantSurnameNm\": \"Smith\",\r\n    \"occamDisputantGiven1Nm\": \"TCOTest\",\r\n    \"occamDisputantGiven2Nm\": null,\r\n    \"occamDisputantGiven3Nm\": null,\r\n    \"contactSurnameNm\": null,\r\n    \"contactGiven1Nm\": null,\r\n    \"contactGiven2Nm\": null,\r\n    \"contactGiven3Nm\": null,\r\n    \"disputantSurnameTxt\": \"Smith\",\r\n    \"disputantGiven1Nm\": \"Tcotest\",\r\n    \"disputantGiven2Nm\": null,\r\n    \"disputantGiven3Nm\": null,\r\n    \"offenceLocationTxt\": null,\r\n    \"detachmentLocationTxt\": \"DELTA MUN  \",\r\n    \"courtAgenId\": \"8841.0001\",\r\n    \"issuedTs\": \"2022-09-11T13:15Z\",\r\n    \"submittedDt\": \"2022-12-02T22:48:34Z\",\r\n    \"icbcReceivedDt\": \"2022-11-24\",\r\n    \"violationDt\": \"2022-09-11\",\r\n    \"disputantBirthDt\": \"2000-02-19\",\r\n    \"disputantDrvLicNumberTxt\": \"6669999\",\r\n    \"drvLicIssuedProvSeqNo\": \"1\",\r\n    \"drvLicIssuedCtryId\": \"1\",\r\n    \"emailAddressTxt\": \"elaine.2.wong@gov.bc.ca\",\r\n    \"addressLine1Txt\": \"123 Fakester St.\",\r\n    \"addressLine2Txt\": null,\r\n    \"addressLine3Txt\": null,\r\n    \"addressCityTxt\": \"Surrey\",\r\n    \"addressProvinceTxt\": \"British Columbia\",\r\n    \"addressCountryTxt\": \"Canada\",\r\n    \"addressPostalCodeTxt\": \"V9V 8D9\",\r\n    \"lawyerSurnameNm\": null,\r\n    \"lawyerGiven1Nm\": null,\r\n    \"lawyerGiven2Nm\": null,\r\n    \"lawyerGiven3Nm\": null,\r\n    \"lawFirmNm\": null,\r\n    \"interpreterLanguageCd\": null,\r\n    \"fineReductionReasonTxt\": \"Limited Income for now\",\r\n    \"timeToPayReasonTxt\": \"Currently unemployed, temporarily\",\r\n    \"witnessNo\": null,\r\n    \"jjAssignedTo\": null,\r\n    \"jjDecisionDt\": null,\r\n    \"vtcAssignedTo\": null,\r\n    \"vtcAssignedDtm\": null,\r\n    \"courtHearingTypeCd\": \"W\",\r\n    \"entDtm\": \"2023-01-17T10:14:18Z\",\r\n    \"entUserId\": \"TCO\",\r\n    \"updDtm\": \"2023-01-20T11:52:48Z\",\r\n    \"updUserId\": \"TCO\",\r\n    \"disputeCounts\": [\r\n        {\r\n            \"disputeCountId\": \"61\",\r\n            \"disputeId\": \"81\",\r\n            \"countNo\": \"1\",\r\n            \"statuteId\": \"19189\",\r\n            \"pleaCd\": \"G\",\r\n            \"ticketedAmt\": \"234.12\",\r\n            \"fineDueDt\": \"2022-10-11Z\",\r\n            \"violationDt\": \"2022-09-11Z\",\r\n            \"adjustedAmt\": null,\r\n            \"includesSurchargeYn\": null,\r\n            \"revisedDueDt\": null,\r\n            \"totalFineAmt\": \"234.12\",\r\n            \"commentsTxt\": null,\r\n            \"requestTimeToPayYn\": \"Y\",\r\n            \"requestReductionYn\": \"Y\",\r\n            \"requestCourtAppearanceYn\": \"N\",\r\n            \"entDtm\": \"2023-01-17T10:14:18Z\",\r\n            \"entUserId\": \"TCO\",\r\n            \"updDtm\": \"2023-01-22T22:05:23Z\",\r\n            \"updUserId\": \"TCO\",\r\n            \"appearanceChargeCountId\": null,\r\n            \"courtAppearanceId\": null,\r\n            \"findingResultCd\": null,\r\n            \"lesserChargeDescTxt\": null,\r\n            \"suspSntcProbationDurtnTxt\": null,\r\n            \"suspSntcProbationCondsTxt\": null,\r\n            \"jailDurationTxt\": null,\r\n            \"jailIntermittentYn\": null,\r\n            \"probationDurationTxt\": null,\r\n            \"probationConditionsTxt\": null,\r\n            \"drivingProhibDurationTxt\": null,\r\n            \"drivingProhibMvaSectionTxt\": null,\r\n            \"dismissedYn\": null,\r\n            \"dismissedForWantProsecYn\": null,\r\n            \"withdrawnYn\": null,\r\n            \"abatementYn\": null,\r\n            \"stayOfProceedingsByTxt\": null,\r\n            \"otherTxt\": null,\r\n            \"remarksTxt\": null,\r\n            \"accEntDtm\": null,\r\n            \"accEntUserId\": null,\r\n            \"accUpdDtm\": null,\r\n            \"accUpdUserId\": null\r\n        }\r\n    ],\r\n    \"courtAppearances\": [],\r\n    \"disputeRemarks\": [\r\n        {\r\n            \"disputeRemarkId\": \"21\",\r\n            \"disputeId\": \"81\",\r\n            \"disputeRemarkTxt\": \"This is a test remark\",\r\n            \"fullUserNameTxt\": \"John Smith\",\r\n            \"remarksMadeDtm\": \"2022-12-14T07:12:27Z\",\r\n            \"entDtm\": \"2023-01-19T05:30:16Z\",\r\n            \"entUserId\": \"TCO\",\r\n            \"updDtm\": null,\r\n            \"updUserId\": null\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -369,6 +315,30 @@
 					"path": [
 						"v1",
 						"unassignDisputeVtc"
+					],
+					"query": [
+						{
+							"key": "assignedBeforeTs",
+							"value": "2022-09-19T08:12:13Z"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unassignDisputeJj",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/unassignDisputeJj?assignedBeforeTs=2022-09-19T08:12:13Z",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"unassignDisputeJj"
 					],
 					"query": [
 						{
