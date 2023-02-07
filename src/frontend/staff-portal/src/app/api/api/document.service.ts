@@ -240,7 +240,7 @@ export class DocumentService {
     }
 
     /**
-     * Uploads and saves the provided document file in the common object management service along with metadata.
+     * Creates a new file the document management service along with metadata.
      * @param ticketNumber The ticket number to associate with this file.
      * @param file 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

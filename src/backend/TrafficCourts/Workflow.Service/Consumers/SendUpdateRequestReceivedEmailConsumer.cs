@@ -16,9 +16,9 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
 {
     private readonly ILogger<SendUpdateRequestReceivedEmailConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IDisputantUpdateRequestReceivedTemplate _updateRequestReceivedTemplate;
+    private readonly IDisputeUpdateRequestReceivedTemplate _updateRequestReceivedTemplate;
 
-    public SendUpdateRequestReceivedEmailConsumer(ILogger<SendUpdateRequestReceivedEmailConsumer> logger, IOracleDataApiService oracleDataApiService, IDisputantUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
+    public SendUpdateRequestReceivedEmailConsumer(ILogger<SendUpdateRequestReceivedEmailConsumer> logger, IOracleDataApiService oracleDataApiService, IDisputeUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
@@ -63,7 +63,7 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "Failed to update the status of DisputantUpdateRequest(s) to PENDING.");
+            _logger.LogError(ex, "Failed to update the status of DisputeUpdateRequest(s) to PENDING.");
             throw;
         }
     }

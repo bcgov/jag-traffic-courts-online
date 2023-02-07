@@ -28,11 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
@@ -379,77 +379,77 @@ public class DisputeController {
 	}
 
 	/**
-	 * POST endpoint that inserts a DisputantUpdateRequest into persistent storage linked to the Dispute identified by the noticeOfDisputeGuid.
+	 * POST endpoint that inserts a DisputeUpdateRequest into persistent storage linked to the Dispute identified by the noticeOfDisputeGuid.
 	 *
 	 * @param dispute to be saved
-	 * @return id of the saved {@link DisputantUpdateRequest}
+	 * @return id of the saved {@link DisputeUpdateRequest}
 	 */
 	@PostMapping("/dispute/{guid}/updateRequest")
-	@Operation(summary = "An endpoint that inserts a DisputantUpdateRequest into persistent storage.")
+	@Operation(summary = "An endpoint that inserts a DisputeUpdateRequest into persistent storage.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest record saved."),
+		@ApiResponse(responseCode = "200", description = "Ok. DisputeUpdateRequest record saved."),
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
 	})
-	public ResponseEntity<Long> saveDisputantUpdateRequest(
+	public ResponseEntity<Long> saveDisputeUpdateRequest(
 			@PathVariable(name = "guid")
 			@Parameter(description = "The noticeOfDisputeGuid of the Dispute to associate with.")
 			String noticeOfDisputeGuid,
 			@RequestBody
-			DisputantUpdateRequest disputantUpdateRequest) {
+			DisputeUpdateRequest disputeUpdateRequest) {
 		logger.debug("POST /dispute/{}/updateRequest called", noticeOfDisputeGuid);
 
-		Long disputantUpdateRequestId = disputeService.saveDisputantUpdateRequest(noticeOfDisputeGuid, disputantUpdateRequest).getDisputantUpdateRequestId();
-		return new ResponseEntity<Long>(disputantUpdateRequestId, HttpStatus.OK);
+		Long disputeUpdateRequestId = disputeService.saveDisputeUpdateRequest(noticeOfDisputeGuid, disputeUpdateRequest).getDisputeUpdateRequestId();
+		return new ResponseEntity<Long>(disputeUpdateRequestId, HttpStatus.OK);
 	}
 
 	/**
-	 * Get endpoint that retrieves all <code>DisputantUpdateRequest</code>s from persistent storage that is associated with the optionally given Dispute via optional disputeId.
+	 * Get endpoint that retrieves all <code>DisputeUpdateRequest</code>s from persistent storage that is associated with the optionally given Dispute via optional disputeId.
 	 *
-	 * @param disputantUpdateRequest id to be retrieved
-	 * @return id of the saved {@link DisputantUpdateRequest}
+	 * @param disputeUpdateRequest id to be retrieved
+	 * @return id of the saved {@link DisputeUpdateRequest}
 	 */
 	@GetMapping("/dispute/updateRequests")
-	@Operation(summary = "An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.")
+	@Operation(summary = "An endpoint that retrieves all DisputeUpdateRequest optionally for a given Dispute, optionally filtered by DisputeUpdateRequestStatus.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest record saved."),
+		@ApiResponse(responseCode = "200", description = "Ok. DisputeUpdateRequest record saved."),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
 	})
-	public ResponseEntity<List<DisputantUpdateRequest>> getDisputantUpdateRequests(
+	public ResponseEntity<List<DisputeUpdateRequest>> getDisputeUpdateRequests(
 			@RequestParam(required=false)
 			@Parameter(description = "If specified, filter request by the disputeId of the Dispute.")
 			Long id,
 			@RequestParam(required = false)
-			@Parameter(description = "If specified, filter request by DisputantUpdateRequestStatus", example = "PENDING")
-			DisputantUpdateRequestStatus status) {
+			@Parameter(description = "If specified, filter request by DisputeUpdateRequestStatus", example = "PENDING")
+			DisputeUpdateRequestStatus status) {
 		logger.debug("GET /dispute/updateRequests called", id, status);
-		return new ResponseEntity<List<DisputantUpdateRequest>>(disputeService.findDisputantUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
+		return new ResponseEntity<List<DisputeUpdateRequest>>(disputeService.findDisputeUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
 	}
 
 	/**
-	 * PUT endpoint that updates the status of a DisputantUpdateRequest record.
+	 * PUT endpoint that updates the status of a DisputeUpdateRequest record.
 	 *
-	 * @param disputantUpdateRequestStatus to be saved
-	 * @return id of the saved {@link DisputantUpdateRequest}
+	 * @param disputeUpdateRequestStatus to be saved
+	 * @return id of the saved {@link DisputeUpdateRequest}
 	 */
 	@PutMapping("/dispute/updateRequest/{id}")
-	@Operation(summary = "An endpoint that updates the status of a DisputantUpdateRequest record.")
+	@Operation(summary = "An endpoint that updates the status of a DisputeUpdateRequest record.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok. DisputantUpdateRequest updated."),
-		@ApiResponse(responseCode = "404", description = "DisputantUpdateRequest could not be found."),
+		@ApiResponse(responseCode = "200", description = "Ok. DisputeUpdateRequest updated."),
+		@ApiResponse(responseCode = "404", description = "DisputeUpdateRequest could not be found."),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
 	})
-	public ResponseEntity<DisputantUpdateRequest> updateDisputantUpdateRequestStatus(
+	public ResponseEntity<DisputeUpdateRequest> updateDisputeUpdateRequestStatus(
 			@PathVariable(name = "id")
-			@Parameter(description = "The id of the DisputantUpdateRequest record to update.")
+			@Parameter(description = "The id of the DisputeUpdateRequest record to update.")
 			Long updateRequestId,
 			@RequestParam
 			@Parameter(description = "The status the request record should be updated to.", example = "ACCEPTED")
-			DisputantUpdateRequestStatus disputantUpdateRequestStatus) {
+			DisputeUpdateRequestStatus disputeUpdateRequestStatus) {
 		logger.debug("PUT /dispute/updateRequest/{} called", updateRequestId);
 
-		DisputantUpdateRequest disputantUpdateRequest = disputeService.updateDisputantUpdateRequest(updateRequestId, disputantUpdateRequestStatus);
-		return new ResponseEntity<DisputantUpdateRequest>(disputantUpdateRequest, HttpStatus.OK);
+		DisputeUpdateRequest disputeUpdateRequest = disputeService.updateDisputeUpdateRequest(updateRequestId, disputeUpdateRequestStatus);
+		return new ResponseEntity<DisputeUpdateRequest>(disputeUpdateRequest, HttpStatus.OK);
 	}
 
 }

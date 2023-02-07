@@ -18,12 +18,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DisputantUpdateRequest extends Auditable<String> {
+public class DisputeUpdateRequest extends Auditable<String> {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue
-	private Long disputantUpdateRequestId;
+	private Long disputeUpdateRequestId;
 
 	@Column
 	private Long disputeId;
@@ -31,12 +31,12 @@ public class DisputantUpdateRequest extends Auditable<String> {
 	@Column(length = 3)
 	@Schema(nullable = false)
 	@NotNull
-	private DisputantUpdateRequestStatus status;
+	private DisputeUpdateRequestStatus status;
 
 	@Column(length = 3)
 	@Schema(nullable = false)
 	@NotNull
-	private DisputantUpdateRequestType updateType;
+	private DisputeUpdateRequestType updateType;
 
 	@Column(length = 1000)
 	@Schema(nullable = false)

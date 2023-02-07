@@ -46,7 +46,7 @@
             },
         new MailTemplate()
             {
-                TemplateName = "DisputantUpdateRequestAcceptedTemplate",
+                TemplateName = "DisputeUpdateRequestAcceptedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Disputant contact information changes approved)",
                 HtmlContentTemplate = "",
@@ -54,7 +54,7 @@
             },
         new MailTemplate()
             {
-                TemplateName = "DisputantUpdateRequestRejectedTemplate",
+                TemplateName = "DisputeUpdateRequestRejectedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Disputant contact information changes rejected)",
                 HtmlContentTemplate = "",
@@ -62,7 +62,7 @@
             },
         new MailTemplate()
             {
-                TemplateName = "DisputantUpdateRequestReceivedTemplate",
+                TemplateName = "DisputeUpdateRequestReceivedTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "TBD (ie. Dispute update request(s) received)",
                 HtmlContentTemplate = "",

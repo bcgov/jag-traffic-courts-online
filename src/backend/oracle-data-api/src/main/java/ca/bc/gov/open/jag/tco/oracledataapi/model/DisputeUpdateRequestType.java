@@ -1,7 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 
-public enum DisputantUpdateRequestType implements ShortNamedEnum {
+public enum DisputeUpdateRequestType implements ShortNamedEnum {
 
 	/** Unknown type (undefined). Must be index 0. */
 	UNKNOWN("UKN"),
@@ -15,7 +15,7 @@ public enum DisputantUpdateRequestType implements ShortNamedEnum {
 
 	private String shortName;
 
-	private DisputantUpdateRequestType(String shortName) {
+	private DisputeUpdateRequestType(String shortName) {
 		this.shortName = shortName;
 	}
 

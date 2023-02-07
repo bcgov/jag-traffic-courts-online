@@ -309,6 +309,24 @@ paths:
                 $ref: '#/components/schemas/ResponseResult'
       tags:
         - Violation Ticket
+  /v1/processDisputeUpdateRequest:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - Dispute Update Request
 components:
   schemas:
     AgenciesListResult:
@@ -846,6 +864,21 @@ components:
         ticketedAmt:
           type: string
         violationTicketCountId:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    DisputeUpdateRequest:
+      type: object
+      properties:
+        disputeUpdateRequestId:
+          type: string
+        disputeId:
+          type: string
+        disputeUpdateStatTypeCd:
+          type: string
+        disputeUpdateReqTypeCd:
+          type: string
+        requestJsonTxt:
           type: string
       allOf:
         - $ref: '#/components/schemas/AuditBase'
