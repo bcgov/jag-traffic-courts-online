@@ -33,15 +33,6 @@ public interface JJDisputeRepository {
 	public List<JJDispute> findByTicketNumber(String ticketNumber);
 
 	/**
-	 * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the entity instance completely.
-	 *
-	 * @param entity must not be {@literal null}.
-	 * @return the saved entity; will never be {@literal null}.
-	 * @throws IllegalArgumentException in case the given {@literal entity} is {@literal null}.
-	 */
-	public JJDispute save(JJDispute entity);
-
-	/**
 	 * Saves an entity and flushes changes instantly.
 	 *
 	 * @param entity entity to be saved. Must not be {@literal null}.

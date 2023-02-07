@@ -271,6 +271,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		disputeCount.setUpdDtm(countModifedTs);
 		disputeCount.setUpdUserId(countModifiedBy);
 		disputeCount.setAppearanceChargeCountId(appearanceChargeCountId.toString());
+		disputeCount.setCourtAppearanceId(courtAppearanceId.toString());
 		disputeCount.setFindingResultCd(findingResultCd.getShortName());
 		disputeCount.setLesserChargeDescTxt(lesserChargeDescTxt);
 		disputeCount.setSuspSntcProbationDurtnTxt(suspSntcProbationDurtnTxt);
@@ -337,7 +338,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(accEntUserId, jjDisputedCount.getJjDisputedCountRoP().getCreatedBy());
 		assertEquals(accUpdDtm, jjDisputedCount.getJjDisputedCountRoP().getModifiedTs());
 		assertEquals(accUpdUserId, jjDisputedCount.getJjDisputedCountRoP().getModifiedBy());
-
 	}
 
 	@Test

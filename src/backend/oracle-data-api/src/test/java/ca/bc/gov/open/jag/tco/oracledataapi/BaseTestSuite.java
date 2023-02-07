@@ -5,9 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.builder.Diff;
+import org.apache.commons.lang3.builder.ReflectionDiffBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -147,6 +156,55 @@ public class BaseTestSuite {
 	    } catch (Exception e) {
 	        throw new RuntimeException(e);
 	    }
+	}
+
+	protected <T> List<Diff<?>> getDifferences(T lhs, T rhs, String... ignoredFields) {
+		List<Diff<?>> diffs = new ArrayList<Diff<?>>(new ReflectionDiffBuilder<T>(lhs, rhs, ToStringStyle.JSON_STYLE).build().getDiffs());
+		List<Object> skippedFields = Arrays.asList(ignoredFields);
+
+		for (Iterator<Diff<?>> iterator = diffs.iterator(); iterator.hasNext();) {
+			Diff<?> diff = iterator.next();
+
+			// skip known field differences and child objects
+			if (skippedFields.contains(diff.getFieldName())) {
+				iterator.remove();
+			}
+		}
+
+		return diffs;
+	}
+
+	protected void logDiffs(List<Diff<?>> diffs, String objectClass) {
+		if (!diffs.isEmpty()) {
+			System.out.println("\n" + objectClass + " Diffs:");
+			for (Diff<?> diff : diffs) {
+				logDiff(diff);
+			}
+		}
+	}
+
+	protected void logDiff(Diff<?> diff) {
+		if (diff.getKey() != null && diff.getKey() instanceof Date) {
+			StringBuffer sb = new StringBuffer();
+			sb.append("[");
+			sb.append(diff.getFieldName());
+			sb.append(": ");
+			if (diff.getFieldName().endsWith("Ts")) {
+				sb.append(diff.getLeft() == null ? "null" : DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.format(diff.getLeft()));
+				sb.append(", ");
+				sb.append(diff.getRight() == null ? "null" : DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.format(diff.getRight()));
+			}
+			else {
+				sb.append(diff.getLeft() == null ? "null" : DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(diff.getLeft()));
+				sb.append(", ");
+				sb.append(diff.getRight() == null ? "null" : DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(diff.getRight()));
+			}
+			sb.append("]");
+			System.out.println(sb);
+		}
+		else {
+			System.out.println(diff.toString());
+		}
 	}
 
 }

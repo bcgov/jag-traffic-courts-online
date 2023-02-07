@@ -87,9 +87,10 @@ public class JJDisputeService {
 
 		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
 
+			// FIXME: setting vtcAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/assignDisputeVtc endpoint
 			jjDispute.setVtcAssignedTo(principal.getName());
 			jjDispute.setVtcAssignedTs(new Date());
-			jjDisputeRepository.save(jjDispute);
+			jjDisputeRepository.saveAndFlush(jjDispute);
 
 			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
 
@@ -112,7 +113,7 @@ public class JJDisputeService {
 		for (JJDispute jjdispute : jjDisputeRepository.findByVtcAssignedTsBefore(hourAgo)) {
 			jjdispute.setVtcAssignedTo(null);
 			jjdispute.setVtcAssignedTs(null);
-			jjDisputeRepository.save(jjdispute);
+			jjDisputeRepository.saveAndFlush(jjdispute);
 			count++;
 		}
 
@@ -170,11 +171,7 @@ public class JJDisputeService {
 			jjDisputeToUpdate.addRemarks(jjDispute.getRemarks());
 		}
 
-		JJDispute updatedJJDispute = jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
-		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistence
-		entityManager.refresh(updatedJJDispute);
-
-		return updatedJJDispute;
+		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
 
 	/**
@@ -200,13 +197,15 @@ public class JJDisputeService {
 
 			if (!StringUtils.isBlank(username)) {
 
+				// FIXME: setting JjAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/assignDisputeJj endpoint
 				jjDispute.setJjAssignedTo(username);
-				jjDisputeRepository.save(jjDispute);
+				jjDisputeRepository.saveAndFlush(jjDispute);
 
 				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", ticketNumber, username);
 			} else {
+				// FIXME: setting JjAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/unassignDisputeJj endpoint
 				jjDispute.setJjAssignedTo(null);
-				jjDisputeRepository.save(jjDispute);
+				jjDisputeRepository.saveAndFlush(jjDispute);
 
 				logger.debug("Unassigned JJDispute with ticket number {} ", ticketNumber);
 			}
