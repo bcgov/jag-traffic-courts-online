@@ -26,8 +26,8 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
         CreateMap<Models.Tickets.ViolationTicketCount, Messaging.MessageContracts.TicketCount>()
             .ForMember(dest => dest.Section, opt => opt.MapFrom(src => src.Section));
 
-        CreateMap<DisputantContactInformation, Messaging.MessageContracts.DisputantUpdateContactRequest>();
-        CreateMap<Messaging.MessageContracts.DisputantUpdateContactRequest, Messaging.MessageContracts.DisputeUpdateRequest>();
+        CreateMap<DisputantContactInformation, Messaging.MessageContracts.DisputeUpdateContactRequest>();
+        CreateMap<Messaging.MessageContracts.DisputeUpdateContactRequest, Messaging.MessageContracts.DisputeUpdateRequest>();
 
         CreateMap<Dispute, Messaging.MessageContracts.DisputeUpdateRequest>()
             .ForMember(dest => dest.RepresentedByLawyer, opt => opt.MapFrom(src => src.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y ? true : false))
