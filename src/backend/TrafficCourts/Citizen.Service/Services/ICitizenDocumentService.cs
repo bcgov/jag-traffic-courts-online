@@ -53,6 +53,7 @@ public interface ICitizenDocumentService
     /// <param name="fileId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>COMS File Object</returns>
+    /// <exception cref="FileNotFoundException">File not found</exception>
     /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
     Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken);
 }

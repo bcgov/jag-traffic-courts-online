@@ -12,7 +12,7 @@ import { LookupsService } from 'app/services/lookups.service';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
-import { ComsService } from 'app/api';
+// import { ComsService } from 'app/api';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -68,7 +68,7 @@ export class JJDisputeComponent implements OnInit {
     private logger: LoggerService,
     private lookups: LookupsService,
     public config: ConfigService,
-    private coms: ComsService
+    // private coms: ComsService
   ) {
     this.jjDisputeService.jjList$.subscribe(result => {
       this.jjList = result;

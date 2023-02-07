@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿#nullable disable
+using Moq;
 using System;
 
 namespace TrafficCourts.Coms.Client.Test.ServiceTests;

@@ -46,12 +46,21 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+## common-object-management-service configuration
+##
+## The coms.db.secret must have keys with the following values
+##   - app-db-name
+##   - app-db-username
+##   - app-db-password
+##
 ## The coms.service.secretName must have keys with the following values
 ##   - username
 ##   - password
 ##
 coms:
-  secretName: patroni-coms
-  host: patroni-coms
+  db: 
+    secretName: patroni-coms
+    host: patroni-coms
   service:
     secretName: common-object-management-service-coms-basicauth
+

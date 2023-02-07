@@ -24,9 +24,19 @@ git clone https://github.com/bcgov/jag-traffic-courts-online
 NOTE: ensure to use v14.x. More recent versions (i.e. v17.x) do not work.
 It's useful to install different versions of node (https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows)
 For this project, before building any code perform a:
+
 ```bash
 nvm install 14.19.0
 nvm use 14.19.0
+```
+
+#### Yarn
+
+[Install yarn](https://yarnpkg.com/getting-started/install)
+
+```
+npm i -g corepack
+corepack prepare yarn@3.4.1 --activate
 ```
 
 #### Angular cli

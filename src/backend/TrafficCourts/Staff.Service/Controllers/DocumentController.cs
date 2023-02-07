@@ -1,14 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
+using TrafficCourts.Coms.Client.Data.Models;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class ComsController : StaffControllerBase<ComsController>
+/// <summary>
+/// Temporary workaround because the unit tests are difficult to refactor at this point
+/// </summary>
+public static class DocumentControllerExtensions
+{
+    [Obsolete("Use UploadDocumentAsync([Required]IFormFile file, [Required][FromHeader] string ticketNumber, CancellationToken cancellationToken)")]
+    public static Task<IActionResult> UploadDocumentAsync(this DocumentController controller, [FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
+    {
+        fileUploadRequest.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
+        return controller.CreateAsync(fileUploadRequest.File, ticketNumber!, cancellationToken);
+    }
+}
+   
+
+public class DocumentController : StaffControllerBase<DocumentController>
 {
     private readonly IStaffDocumentService _documentService;
 
@@ -18,40 +34,47 @@ public class ComsController : StaffControllerBase<ComsController>
     /// <param name="comsService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public ComsController(IStaffDocumentService comsService, ILogger<ComsController> logger) : base(logger)
+    public DocumentController(IStaffDocumentService comsService, ILogger<DocumentController> logger) : base(logger)
     {
         ArgumentNullException.ThrowIfNull(comsService);
         _documentService = comsService;
     }
 
     /// <summary>
-    /// Uploads and saves the provided document file in the common object management service along with metadata.
+    /// Creates a new file the document management service along with metadata.
     /// </summary>
-    /// <param name="fileUploadRequest">The file to save in the common object management service and the metadata of the uploaded file to be saved including the document type</param>
+    /// <param name="file">The file to save in the common object management service and the metadata of the uploaded file to be saved including the document type</param>
+    /// <param name="ticketNumber">The ticket number to associate with this file.</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The document is successfully uploaded and saved.</response>
-    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="400">The request was not well formed. The file and ticket number are required</response>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, requires jjdispute:update permission.</response>
     /// <response code="500">There was a server error that prevented the file upload from completing successfully.</response>
     /// <returns>The ID of the uploaded file</returns>
-    [HttpPost("UploadDocument")]
+    [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> UploadDocumentAsync([FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
-
+    public async Task<IActionResult> CreateAsync(
+        [Required]
+        IFormFile file,
+        [FromHeader]
+        [Required]
+        [MaxLength(20)]
+        string ticketNumber,
+        CancellationToken cancellationToken)
     {
         _logger.LogDebug("Uploading the document to the object storage");
 
-        if (!fileUploadRequest.Metadata.ContainsKey("ticket-number"))
+        if (string.IsNullOrEmpty(ticketNumber))
         {
             _logger.LogError("Could not upload a document because metadata does not contain the key: ticket-number");
             ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.BadRequest;
+            problemDetails.Status = StatusCodes.Status400BadRequest;
             problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticket-number";
             problemDetails.Instance = HttpContext?.Request?.Path;
 
@@ -60,7 +83,8 @@ public class ComsController : StaffControllerBase<ComsController>
 
         try
         {
-            Guid id = await _documentService.SaveFileAsync(fileUploadRequest.File, fileUploadRequest.Metadata, cancellationToken);
+            var metadata = new Dictionary<string, string> { { "ticket-number", ticketNumber } };
+            Guid id = await _documentService.SaveFileAsync(file, metadata, cancellationToken);
             return Ok(id);
         }
         catch (Coms.Client.MetadataInvalidKeyException e)
@@ -172,16 +196,18 @@ public class ComsController : StaffControllerBase<ComsController>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, requires jjdispute:read permission.</response>
+    /// <response code="404">The file was not found.</response>
     /// <response code="500">There was a server error that prevented the file to be downloaded successfully.</response>
     /// <returns>The document</returns>
-    [HttpGet("DownloadDocument")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> DownloadDocumentAsync(Guid fileId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAsync(Guid fileId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Downloading the document from the object storage");
 
@@ -194,6 +220,10 @@ public class ComsController : StaffControllerBase<ComsController>
             stream.Position = 0;
 
             return File(stream, file.ContentType ?? "application/octet-stream", file.FileName ?? "download");
+        }
+        catch (FileNotFoundException)
+        {
+            return NotFound();
         }
         catch (Coms.Client.ObjectManagementServiceException e)
         {
@@ -232,16 +262,16 @@ public class ComsController : StaffControllerBase<ComsController>
     /// <response code="403">Forbidden, requires jjdispute:delete permission.</response>
     /// <response code="500">There was a server error that prevented the file to be removed successfully.</response>
     /// <returns></returns>
-    [HttpGet("RemoveDocument")]
+    [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Delete)]
-    public async Task<IActionResult> RemoveDocumentAsync(Guid fileId, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteAsync(Guid fileId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Removing the document from the object storage");
+        _logger.LogDebug("Deleting the document from the object storage");
 
         try
         {

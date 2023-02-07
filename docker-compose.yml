@@ -16,6 +16,14 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       ASPNETCORE_URLS: http://*:8080
+      COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
+      COMS__USERNAME: ${COMS__USERNAME:-username}
+      COMS__PASSWORD: ${COMS__PASSWORD:-password}
+      # COMS database connection string for metadata/tags workaround
+      COMS_DB_DATABASE: coms
+      COMS_DB_HOST: coms-db
+      COMS_DB_PASSWORD: password
+      COMS_DB_USER: postgres
       FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-}
       FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-}
       FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-}
@@ -38,9 +46,6 @@ services:
       OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__ENDPOINT:-traffic-ticket-dev}
       OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
       HASHIDS__SALT: ${HASHIDS__SALT:-00000000000000000000000000000000}
-      COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
-      COMS__USERNAME: ${COMS__USERNAME:-username}
-      COMS__PASSWORD: ${COMS__PASSWORD:-password}
       SERILOG__USING__0: Serilog.Sinks.Console
       SERILOG__WRITETO__0__ARGS__OUTPUTTEMPLATE: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
@@ -68,6 +73,11 @@ services:
       COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
       COMS__USERNAME: ${COMS__USERNAME:-username}
       COMS__PASSWORD: ${COMS__PASSWORD:-password}
+      # COMS database connection string for metadata/tags workaround
+      COMS_DB_DATABASE: coms
+      COMS_DB_HOST: coms-db
+      COMS_DB_PASSWORD: password
+      COMS_DB_USER: postgres
       MASSTRANSIT__TRANSPORT: ${MASSTRANSIT__TRANSPORT:-RabbitMq}
       RABBITMQ__HOST: rabbitmq
       RABBITMQ__PORT: 5672
@@ -151,6 +161,11 @@ services:
       COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
       COMS__USERNAME: ${COMS__USERNAME:-username}
       COMS__PASSWORD: ${COMS__PASSWORD:-password}
+      # COMS database connection string for metadata/tags workaround
+      COMS_DB_DATABASE: coms
+      COMS_DB_HOST: coms-db
+      COMS_DB_PASSWORD: password
+      COMS_DB_USER: postgres
       SMTPCONFIGURATION__HOST: ${SMTPCONFIGURATION__HOST:-smtp-server}
       SMTPCONFIGURATION__PORT: ${SMTPCONFIGURATION__PORT:-5025}
       EMAILCONFIGURATION__SENDER: ${EMAILCONFIGURATION__SENDER:-DoNotReply@gov.bc.ca}
@@ -310,6 +325,8 @@ services:
     environment:
       POSTGRES_PASSWORD: "password"
       POSTGRES_DB: "coms"
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
 
   #############################################################################################
   ###                           Minio                                                       ###
@@ -323,9 +340,7 @@ services:
       - 9000:9000
       - 9001:9001
     volumes:
-      - type: bind
-        source: ./tools/minio
-        target: /data
+      - data-minio:/data
     environment:
       MINIO_ROOT_USER: "username"
       MINIO_ROOT_PASSWORD: "password"
@@ -367,6 +382,8 @@ services:
       - REDIS_PASSWORD=password
     ports:
       - 6379:6379
+    volumes:
+      - data-redis:/data
 
   redis-ui:
     container_name: redis-ui
@@ -396,7 +413,9 @@ services:
       - "5025:5025"
 
 volumes:
+  data-clamav:
+  data-minio:
+  data-oracle:
+  data-postgres:
   data-rabbit:
   data-redis:
-  data-oracle:
-  data-clamav:

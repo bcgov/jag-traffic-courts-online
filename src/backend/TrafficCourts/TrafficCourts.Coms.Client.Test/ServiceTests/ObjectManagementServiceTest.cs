@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using Microsoft.Extensions.Logging;
 using Moq;
+using TrafficCourts.Coms.Client.Data;
 
 namespace TrafficCourts.Coms.Client.Test.ServiceTests;
 
@@ -16,6 +17,8 @@ public abstract class ObjectManagementServiceTest
     /// </summary>
     protected Mock<IObjectManagementClient> _mockClient = new();
 
+    protected Mock<IObjectManagementRepository> _mockRepository = new();
+
     /// <summary>
     /// Factory to create memory streams
     /// </summary>
@@ -30,7 +33,7 @@ public abstract class ObjectManagementServiceTest
     /// Creates the service under test using <see cref="_mockClient"/> and <see cref="_mockLogger"/>.
     /// </summary>
     /// <returns></returns>
-    internal ObjectManagementService GetService() => new(_mockClient.Object, _memoryStreamFactory, _mockLogger.Object);
+    internal ObjectManagementService GetService() => new(_mockClient.Object, _mockRepository.Object, _memoryStreamFactory, _mockLogger.Object);
 
     /// <summary>
     /// Creates a <see cref="MemoryStream"/> with some random data containing the bytes of new <see cref="Guid"/>.

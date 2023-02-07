@@ -12,7 +12,7 @@ public class SearchObjectsAsync : ObjectManagementBase
 
     [Theory]
     [MemberData(nameof(TestCases))]
-    public async Task calls_client_with_correct_parameters(Dictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, Dictionary<string, string>? tags)
+    public async Task calls_client_with_correct_parameters(Dictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? deleteMarker, bool? latest, bool? @public, string? mimeType, string? name, Dictionary<string, string>? tags)
     {
         List<DBObject> expected = _fixture.CreateMany<DBObject>().ToList();
 
@@ -21,11 +21,11 @@ public class SearchObjectsAsync : ObjectManagementBase
         mockHttp
             .Expect(HttpMethod.Get, OperationUrl)
             .WithHeaders(acceptJson: true, meta)
-            .Respond(HttpStatusCode.Created, "application/json", JsonSerializer.Serialize(expected));
+            .Respond(HttpStatusCode.OK, "application/json", JsonSerializer.Serialize(expected));
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        await sut.SearchObjectsAsync(meta, objIds, path, active, @public, mimeType, name, tags, CancellationToken.None);
+        await sut.SearchObjectsAsync(meta, objIds, path, active, deleteMarker, latest, @public, mimeType, name, tags, CancellationToken.None);
         mockHttp.VerifyNoOutstandingExpectation();
     }
 
@@ -33,10 +33,10 @@ public class SearchObjectsAsync : ObjectManagementBase
     {
         get
         {
-            // IDictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? @public, string? mimeType, string? name, IDictionary<string, string>? tags
-            yield return new object?[] { null, null, null, null, null, null, null, null };
+            // IDictionary<string, string>? meta, IList<Guid>? objIds, string? path, bool? active, bool? deleteMarker, bool? latest, bool? @public, string? mimeType, string? name, IDictionary<string, string>? tags
+            yield return new object?[] { null, null, null, null, null, null, null, null, null, null };
 
-            yield return new object?[] { null, null, "", false, false, "", "", null };
+            yield return new object?[] { null, null, "", false, false, false, false, "", "", null };
         }
     }
 }

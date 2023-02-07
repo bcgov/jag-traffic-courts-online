@@ -70,7 +70,7 @@ public class CitizenDocumentService : ICitizenDocumentService
     {
         _logger.LogDebug("Getting the file through COMS");
 
-        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
+        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
         Dictionary<string, string> metadata = comsFile.Metadata;
 
