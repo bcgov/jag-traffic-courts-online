@@ -44,8 +44,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(0, allDisputes.size());
 
 		// Create a couple of JJDisputes
-		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());
-		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute());
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(RandomUtil.createJJDispute());
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(RandomUtil.createJJDispute());
 
 		// Assert request returns one record
 		JJDispute jjDispute = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
@@ -67,8 +67,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute2.setJjAssignedTo("Tony Stark");
 
 		// Create a JJDisputes with different assignedTo
-		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
-		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(jjDispute2);
 
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
@@ -104,8 +104,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute2.setTicketNumber("AX00000000");
 
 		// Create a JJDisputes with different assignedTo
-		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
-		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(jjDispute2);
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
@@ -133,7 +133,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		String ticketNumber = jjDispute.getTicketNumber();
 		setPrincipal("testUser");
 		jjDispute.setCourthouseLocation("Vancouver");
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint to do assignment
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, true, getPrincipal()).getBody();
@@ -161,8 +161,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute2.setJjAssignedTo("Tony Stark");
 
 		// Create a couple of JJDisputes (one unassigned and one assigned to a JJ)
-		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
-		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(jjDispute2);
 
 		// Get the ids of the jj disputes and call the AssignJJ endpoint to assign all jj disputes to a new JJ
 		List<String> ticketNumbers = new ArrayList<>();
@@ -198,7 +198,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
 		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
@@ -226,7 +226,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
 		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
@@ -251,7 +251,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		authority.add(new SimpleGrantedAuthority("User"));
 		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
 		Principal principal = new PreAuthenticatedToken(user);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();

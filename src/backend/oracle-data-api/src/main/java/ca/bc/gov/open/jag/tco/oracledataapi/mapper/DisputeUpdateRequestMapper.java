@@ -68,6 +68,7 @@ public interface DisputeUpdateRequestMapper {
 
 	@Named("mapEnumToShortName")
 	default String mapShortNamedEnum(ShortNamedEnum code) {
-		return code.getShortName();
+		// TODO: move to abstract BaseMapper class to avoid code redundancy
+		return code != null ? code.getShortName() : null;
 	}
 }

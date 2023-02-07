@@ -313,7 +313,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		jjDispute.setTicketNumber("AX12345678");
 		jjDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
 		jjDispute.setHearingType(JJDisputeHearingType.WRITTEN_REASONS);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		assertEquals(1, IterableUtils.toList(jjDisputeRepository.findAll()).size());
 
@@ -346,7 +346,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		jjDispute.setTicketNumber("AX12345678");
 		jjDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
 		jjDispute.setHearingType(JJDisputeHearingType.WRITTEN_REASONS);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Assert records exist in repo
 		assertEquals(1, IterableUtils.toList(disputeRepository.findAll()).size());

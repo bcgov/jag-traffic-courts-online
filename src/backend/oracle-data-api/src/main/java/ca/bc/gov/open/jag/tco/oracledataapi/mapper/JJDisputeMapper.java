@@ -3,20 +3,14 @@ package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCountFinding;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR) // This is required for tests to work
-public abstract class JJDisputeMapper {
+public abstract class JJDisputeMapper extends BaseMapper {
 
 	@Mapping(source = "addressLine1Txt", target = "addressLine1")
 	@Mapping(source = "addressLine2Txt", target = "addressLine2")
@@ -44,6 +38,8 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "drvLicIssuedProvSeqNo", target = "drvLicIssuedProvSeqNo")
 	@Mapping(source = "drvLicIssuedCtryId", target = "drvLicIssuedCtryId")
 	@Mapping(source = "emailAddressTxt", target = "emailAddress")
+	@Mapping(source = "entDtm", target = "createdTs")
+	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "fineReductionReasonTxt", target = "fineReductionReason")
 	@Mapping(source = "jjAssignedTo", target = "jjAssignedTo")
 	@Mapping(source = "jjDecisionDt", target = "jjDecisionDate")
@@ -67,80 +63,180 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "submittedDt", target = "submittedTs")
 	@Mapping(source = "ticketNumberTxt", target = "ticketNumber")
 	@Mapping(source = "timeToPayReasonTxt", target = "timeToPayReason")
+	@Mapping(source = "updDtm", target = "modifiedTs")
+	@Mapping(source = "updUserId", target = "modifiedBy")
 	@Mapping(source = "violationDt", target = "violationDate")
 	@Mapping(source = "vtcAssignedTo", target = "vtcAssignedTo")
 	@Mapping(source = "vtcAssignedDtm", target = "vtcAssignedTs")
 	@Mapping(source = "witnessNo", target = "witnessNo")
-	@Mapping(source = "entDtm", target = "createdTs")
-	@Mapping(source = "entUserId", target = "createdBy")
-	@Mapping(source = "updDtm", target = "modifiedTs")
-	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDispute convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute jjDispute);
 
-	@Mapping(source = "disputeCountId", target = "id")
-	@Mapping(source = "countNo", target = "count")
-	@Mapping(source = "statuteId", target = "description")                              // TODO: adjust mapping to statuteId
-	@Mapping(source = "pleaCd", target = "plea", qualifiedByName="mapPlea")
-	@Mapping(source = "ticketedAmt", target = "ticketedFineAmount")
-	@Mapping(source = "fineDueDt", target = "dueDate")
-	@Mapping(source = "violationDt", target = "violationDate")
-	@Mapping(source = "adjustedAmt", target = "lesserOrGreaterAmount")
-	@Mapping(source = "includesSurchargeYn", target = "includesSurcharge")
-	@Mapping(source = "revisedDueDt", target = "revisedDueDate")
-	@Mapping(source = "totalFineAmt", target = "totalFineAmount")
-	@Mapping(source = "commentsTxt", target = "comments")
-	@Mapping(source = "requestTimeToPayYn", target = "requestTimeToPay")
-	@Mapping(source = "requestReductionYn", target = "requestReduction")
-	@Mapping(source = "requestCourtAppearanceYn", target = "appearInCourt")
-	@Mapping(source = "entDtm", target = "createdTs")
-	@Mapping(source = "entUserId", target = "createdBy")
-	@Mapping(source = "updDtm", target = "modifiedTs")
-	@Mapping(source = "updUserId", target = "modifiedBy")
-	@Mapping(source = "appearanceChargeCountId", target = "jjDisputedCountRoP.id")
-	@Mapping(source = "findingResultCd", target = "jjDisputedCountRoP.finding", qualifiedByName="mapFindingResult")
-	@Mapping(source = "lesserChargeDescTxt", target = "jjDisputedCountRoP.lesserDescription")
-	@Mapping(source = "suspSntcProbationDurtnTxt", target = "jjDisputedCountRoP.ssProbationDuration")
-	@Mapping(source = "suspSntcProbationCondsTxt", target = "jjDisputedCountRoP.ssProbationConditions")
-	@Mapping(source = "jailDurationTxt", target = "jjDisputedCountRoP.jailDuration")
-	@Mapping(source = "jailIntermittentYn", target = "jjDisputedCountRoP.jailIntermittent")
-	@Mapping(source = "probationDurationTxt", target = "jjDisputedCountRoP.probationDuration")
-	@Mapping(source = "probationConditionsTxt", target = "jjDisputedCountRoP.probationConditions")
-	@Mapping(source = "drivingProhibDurationTxt", target = "jjDisputedCountRoP.drivingProhibition")
-	@Mapping(source = "drivingProhibMvaSectionTxt", target = "jjDisputedCountRoP.drivingProhibitionMVASection")
-	@Mapping(source = "dismissedYn", target = "jjDisputedCountRoP.dismissed")
-	@Mapping(source = "dismissedForWantProsecYn", target = "jjDisputedCountRoP.forWantOfProsecution")
-	@Mapping(source = "withdrawnYn", target = "jjDisputedCountRoP.withdrawn")
+	@Mapping(source = "addressLine1", target = "addressLine1Txt")
+	@Mapping(source = "addressLine2", target = "addressLine2Txt")
+	@Mapping(source = "addressLine3", target = "addressLine3Txt")
+	@Mapping(source = "addressCity", target = "addressCityTxt")
+	@Mapping(source = "addressCountry", target = "addressCountryTxt")
+	@Mapping(source = "addressPostalCode", target = "addressPostalCodeTxt")
+	@Mapping(source = "addressProvince", target = "addressProvinceTxt")
+	@Mapping(source = "contactLawFirmName", target = "contactLawFirmNm")
+	@Mapping(source = "contactGivenName1", target = "contactGiven1Nm")
+	@Mapping(source = "contactGivenName2", target = "contactGiven2Nm")
+	@Mapping(source = "contactGivenName3", target = "contactGiven3Nm")
+	@Mapping(source = "contactSurname", target = "contactSurnameNm")
+	@Mapping(source = "contactType", target = "contactTypeCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(source = "courtAgenId", target = "courtAgenId")
+	@Mapping(source = "createdBy", target = "entUserId")
+	@Mapping(source = "createdTs", target = "entDtm")
+	@Mapping(source = "disputantBirthdate", target = "disputantBirthDt")
+	@Mapping(source = "driversLicenceNumber", target = "disputantDrvLicNumberTxt")
+	@Mapping(source = "drvLicIssuedCtryId", target = "drvLicIssuedCtryId")
+	@Mapping(source = "drvLicIssuedProvSeqNo", target = "drvLicIssuedProvSeqNo")
+	@Mapping(source = "emailAddress", target = "emailAddressTxt")
+	@Mapping(source = "fineReductionReason", target = "fineReductionReasonTxt")
+	@Mapping(source = "hearingType", target = "courtHearingTypeCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(source = "icbcReceivedDate", target = "icbcReceivedDt")
+	@Mapping(source = "id", target = "disputeId")
+	@Mapping(source = "interpreterLanguageCd", target = "interpreterLanguageCd")
+	@Mapping(source = "issuedTs", target = "issuedTs")
+	@Mapping(source = "jjAssignedTo", target = "jjAssignedTo")
+	@Mapping(source = "jjDecisionDate", target = "jjDecisionDt")
+	@Mapping(source = "jjDisputeCourtAppearanceRoPs", target = "courtAppearances")
+	@Mapping(source = "jjDisputedCounts", target = "disputeCounts")
+	@Mapping(source = "justinRccId", target = "justinRccId")
+	@Mapping(source = "lawFirmName", target = "lawFirmNm")
+	@Mapping(source = "lawyerGivenName1", target = "lawyerGiven1Nm")
+	@Mapping(source = "lawyerGivenName2", target = "lawyerGiven2Nm")
+	@Mapping(source = "lawyerGivenName3", target = "lawyerGiven3Nm")
+	@Mapping(source = "lawyerSurname", target = "lawyerSurnameNm")
+	@Mapping(source = "modifiedBy", target = "updUserId")
+	@Mapping(source = "modifiedTs", target = "updDtm")
+	@Mapping(source = "noticeOfDisputeGuid", target = "noticeOfDisputeGuid")
+	@Mapping(source = "occamDisputantGiven1Nm", target = "occamDisputantGiven1Nm")
+	@Mapping(source = "occamDisputantGiven2Nm", target = "occamDisputantGiven2Nm")
+	@Mapping(source = "occamDisputantGiven3Nm", target = "occamDisputantGiven3Nm")
+	@Mapping(source = "occamDisputantSurnameNm", target = "occamDisputantSurnameNm")
+	@Mapping(source = "occamDisputeId", target = "occamDisputeId")
+	@Mapping(source = "occamViolationTicketUpldId", target = "occamViolationTicketUpldId")
+	@Mapping(source = "offenceLocation", target = "offenceLocationTxt")
+	@Mapping(source = "policeDetachment", target = "detachmentLocationTxt")
+	@Mapping(source = "remarks", target = "disputeRemarks")
+	@Mapping(source = "status", target = "disputeStatusTypeCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(source = "submittedTs", target = "submittedDt")
+	@Mapping(source = "ticketNumber", target = "ticketNumberTxt")
+	@Mapping(source = "timeToPayReason", target = "timeToPayReasonTxt")
+	@Mapping(source = "violationDate", target = "violationDt")
+	@Mapping(source = "vtcAssignedTo", target = "vtcAssignedTo")
+	@Mapping(source = "vtcAssignedTs", target = "vtcAssignedDtm")
+	@Mapping(source = "witnessNo", target = "witnessNo")
+	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute convert(JJDispute jjDispute);
+
 	@Mapping(source = "abatementYn", target = "jjDisputedCountRoP.abatement")
-	@Mapping(source = "stayOfProceedingsByTxt", target = "jjDisputedCountRoP.stayOfProceedingsBy")
-	@Mapping(source = "otherTxt", target = "jjDisputedCountRoP.other")
 	@Mapping(source = "accEntDtm", target = "jjDisputedCountRoP.createdTs")
 	@Mapping(source = "accEntUserId", target = "jjDisputedCountRoP.createdBy")
 	@Mapping(source = "accUpdDtm", target = "jjDisputedCountRoP.modifiedTs")
 	@Mapping(source = "accUpdUserId", target = "jjDisputedCountRoP.modifiedBy")
+	@Mapping(source = "adjustedAmt", target = "lesserOrGreaterAmount")
+	@Mapping(source = "appearanceChargeCountId", target = "jjDisputedCountRoP.id")
+	@Mapping(source = "commentsTxt", target = "comments")
+	@Mapping(source = "countNo", target = "count")
+	@Mapping(source = "dismissedForWantProsecYn", target = "jjDisputedCountRoP.forWantOfProsecution")
+	@Mapping(source = "dismissedYn", target = "jjDisputedCountRoP.dismissed")
+	@Mapping(source = "disputeCountId", target = "id")
+	@Mapping(source = "disputeId", target = "jjDispute.id")
+	@Mapping(source = "drivingProhibDurationTxt", target = "jjDisputedCountRoP.drivingProhibition")
+	@Mapping(source = "drivingProhibMvaSectionTxt", target = "jjDisputedCountRoP.drivingProhibitionMVASection")
+	@Mapping(source = "entDtm", target = "createdTs")
+	@Mapping(source = "entUserId", target = "createdBy")
+	@Mapping(source = "findingResultCd", target = "jjDisputedCountRoP.finding", qualifiedByName="mapFindingResult")
+	@Mapping(source = "fineDueDt", target = "dueDate")
+	@Mapping(source = "includesSurchargeYn", target = "includesSurcharge")
+	@Mapping(source = "jailDurationTxt", target = "jjDisputedCountRoP.jailDuration")
+	@Mapping(source = "jailIntermittentYn", target = "jjDisputedCountRoP.jailIntermittent")
+	@Mapping(source = "lesserChargeDescTxt", target = "jjDisputedCountRoP.lesserDescription")
+	@Mapping(source = "otherTxt", target = "jjDisputedCountRoP.other")
+	@Mapping(source = "pleaCd", target = "plea", qualifiedByName="mapPlea")
+	@Mapping(source = "probationConditionsTxt", target = "jjDisputedCountRoP.probationConditions")
+	@Mapping(source = "probationDurationTxt", target = "jjDisputedCountRoP.probationDuration")
+	@Mapping(source = "requestCourtAppearanceYn", target = "appearInCourt")
+	@Mapping(source = "requestReductionYn", target = "requestReduction")
+	@Mapping(source = "requestTimeToPayYn", target = "requestTimeToPay")
+	@Mapping(source = "revisedDueDt", target = "revisedDueDate")
+	@Mapping(source = "stayOfProceedingsByTxt", target = "jjDisputedCountRoP.stayOfProceedingsBy")
+	@Mapping(source = "suspSntcProbationCondsTxt", target = "jjDisputedCountRoP.ssProbationConditions")
+	@Mapping(source = "suspSntcProbationDurtnTxt", target = "jjDisputedCountRoP.ssProbationDuration")
+	@Mapping(source = "statuteId", target = "description")                              // TODO: adjust mapping to statuteId
+	@Mapping(source = "ticketedAmt", target = "ticketedFineAmount")
+	@Mapping(source = "totalFineAmt", target = "totalFineAmount")
+	@Mapping(source = "updDtm", target = "modifiedTs")
+	@Mapping(source = "updUserId", target = "modifiedBy")
+	@Mapping(source = "violationDt", target = "violationDate")
+	@Mapping(source = "withdrawnYn", target = "jjDisputedCountRoP.withdrawn")
 	public abstract JJDisputedCount convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount jjDisputeCount);
+
+	@Mapping(source = "appearInCourt", target = "requestCourtAppearanceYn")
+	@Mapping(source = "comments", target = "commentsTxt")
+	@Mapping(source = "count", target = "countNo")
+	@Mapping(source = "createdBy", target = "entUserId")
+	@Mapping(source = "createdTs", target = "entDtm")
+	@Mapping(source = "description", target = "statuteId")                              // TODO: adjust mapping to statuteId
+	@Mapping(source = "dueDate", target = "fineDueDt")
+	@Mapping(source = "id", target = "disputeCountId")
+	@Mapping(source = "includesSurcharge", target = "includesSurchargeYn")
+	@Mapping(source = "jjDisputedCountRoP.abatement", target = "abatementYn")
+	@Mapping(source = "jjDisputedCountRoP.createdBy", target = "accEntUserId")
+	@Mapping(source = "jjDisputedCountRoP.createdTs", target = "accEntDtm")
+	@Mapping(source = "jjDisputedCountRoP.dismissed", target = "dismissedYn")
+	@Mapping(source = "jjDisputedCountRoP.drivingProhibition", target = "drivingProhibDurationTxt")
+	@Mapping(source = "jjDisputedCountRoP.drivingProhibitionMVASection", target = "drivingProhibMvaSectionTxt")
+	@Mapping(source = "jjDisputedCountRoP.finding", target = "findingResultCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(source = "jjDisputedCountRoP.forWantOfProsecution", target = "dismissedForWantProsecYn")
+	@Mapping(source = "jjDisputedCountRoP.id", target = "appearanceChargeCountId")
+	@Mapping(source = "jjDisputedCountRoP.jailDuration", target = "jailDurationTxt")
+	@Mapping(source = "jjDisputedCountRoP.jailIntermittent", target = "jailIntermittentYn")
+	@Mapping(source = "jjDisputedCountRoP.lesserDescription", target = "lesserChargeDescTxt")
+	@Mapping(source = "jjDisputedCountRoP.modifiedBy", target = "accUpdUserId")
+	@Mapping(source = "jjDisputedCountRoP.modifiedTs", target = "accUpdDtm")
+	@Mapping(source = "jjDisputedCountRoP.other", target = "otherTxt")
+	@Mapping(source = "jjDisputedCountRoP.probationConditions", target = "probationConditionsTxt")
+	@Mapping(source = "jjDisputedCountRoP.probationDuration", target = "probationDurationTxt")
+	@Mapping(source = "jjDisputedCountRoP.ssProbationConditions", target = "suspSntcProbationCondsTxt")
+	@Mapping(source = "jjDisputedCountRoP.ssProbationDuration", target = "suspSntcProbationDurtnTxt")
+	@Mapping(source = "jjDisputedCountRoP.stayOfProceedingsBy", target = "stayOfProceedingsByTxt")
+	@Mapping(source = "jjDisputedCountRoP.withdrawn", target = "withdrawnYn")
+	@Mapping(source = "lesserOrGreaterAmount", target = "adjustedAmt")
+	@Mapping(source = "modifiedBy", target = "updUserId")
+	@Mapping(source = "modifiedTs", target = "updDtm")
+	@Mapping(source = "plea", target = "pleaCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(source = "requestReduction", target = "requestReductionYn")
+	@Mapping(source = "requestTimeToPay", target = "requestTimeToPayYn")
+	@Mapping(source = "revisedDueDate", target = "revisedDueDt")
+	@Mapping(source = "ticketedFineAmount", target = "ticketedAmt")
+	@Mapping(source = "totalFineAmount", target = "totalFineAmt")
+	@Mapping(source = "violationDate", target = "violationDt")
+	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount convert(JJDisputedCount jjDisputeCount);
 
 	/** Convert TCO ORDS -> Oracle Data API */
 	@Mapping(source = "disputeRemarkId", target = "id")
 	@Mapping(source = "disputeId", target = "jjDispute.id")
 	@Mapping(source = "disputeRemarkTxt", target = "note")
-	@Mapping(source = "fullUserNameTxt", target = "userFullName")
-	@Mapping(source = "remarksMadeDtm", target = "remarksMadeTs")
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "entUserId", target = "createdBy")
+	@Mapping(source = "fullUserNameTxt", target = "userFullName")
+	@Mapping(source = "remarksMadeDtm", target = "remarksMadeTs")
 	@Mapping(source = "updDtm", target = "modifiedTs")
 	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDisputeRemark convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeRemark jjDisputeRemark);
 
 	/** Convert Oracle Data API -> TCO*/
+	@Mapping(source = "createdBy", target = "entUserId")
+	@Mapping(source = "createdTs", target = "entDtm")
 	@Mapping(source = "id", target = "disputeRemarkId")
 	@Mapping(source = "jjDispute.id", target = "disputeId")
-	@Mapping(source = "note", target = "disputeRemarkTxt")
-	@Mapping(source = "userFullName", target = "fullUserNameTxt")
-	@Mapping(source = "remarksMadeTs", target = "remarksMadeDtm")
-	@Mapping(source = "createdBy", target = "entDtm")
-	@Mapping(source = "createdTs", target = "entUserId")
 	@Mapping(source = "modifiedBy", target = "updUserId")
 	@Mapping(source = "modifiedTs", target = "updDtm")
+	@Mapping(source = "note", target = "disputeRemarkTxt")
+	@Mapping(source = "remarksMadeTs", target = "remarksMadeDtm")
+	@Mapping(source = "userFullName", target = "fullUserNameTxt")
 	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeRemark convert(JJDisputeRemark jjDisputeRemark);
 
 	@Mapping(source = "appearanceDtm", target = "appearanceTs")
@@ -154,68 +250,13 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "disputeId", target = "jjDispute.id")
 	@Mapping(source = "disputantPresenceCd", target = "appCd")
 	@Mapping(source = "disputantNotPresentDtm", target = "noAppTs")
+	@Mapping(source = "entDtm", target = "createdTs")
+	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "judgeOrJjNameTxt", target = "adjudicator")
 	@Mapping(source = "recordingClerkNameTxt", target = "clerkRecord")
 	@Mapping(source = "seizedYn", target = "jjSeized")
-	@Mapping(source = "entDtm", target = "createdTs")
-	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "updDtm", target = "modifiedTs")
 	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDisputeCourtAppearanceRoP convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance);
-
-	@Named("mapContactType")
-	public ContactType mapContactType(String statusShortCd) {
-		ContactType[] values = ContactType.values();
-		for (ContactType contactType : values) {
-			if (contactType.getShortName().equals(statusShortCd)) {
-				return contactType;
-			}
-		}
-		return null;
-	}
-
-	@Named("mapDisputeStatus")
-	public JJDisputeStatus mapDisputeStatus(String statusShortCd) {
-		JJDisputeStatus[] values = JJDisputeStatus.values();
-		for (JJDisputeStatus statusType : values) {
-			if (statusType.getShortName().equals(statusShortCd)) {
-				return statusType;
-			}
-		}
-		return null;
-	}
-
-	@Named("mapFindingResult")
-	public JJDisputedCountFinding mapFindingResult(String statusShortCd) {
-		JJDisputedCountFinding[] values = JJDisputedCountFinding.values();
-		for (JJDisputedCountFinding findingCd : values) {
-			if (findingCd.getShortName().equals(statusShortCd)) {
-				return findingCd;
-			}
-		}
-		return null;
-	}
-
-	@Named("mapHearingType")
-	public JJDisputeHearingType mapHearingType(String statusShortCd) {
-		JJDisputeHearingType[] values = JJDisputeHearingType.values();
-		for (JJDisputeHearingType hearingType : values) {
-			if (hearingType.getShortName().equals(statusShortCd)) {
-				return hearingType;
-			}
-		}
-		return null;
-	}
-
-	@Named("mapPlea")
-	public Plea mapPlea(String statusShortCd) {
-		Plea[] values = Plea.values();
-		for (Plea hearingType : values) {
-			if (hearingType.getShortName().equals(statusShortCd)) {
-				return hearingType;
-			}
-		}
-		return null;
-	}
 
 }

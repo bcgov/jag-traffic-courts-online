@@ -25,6 +25,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.ResponseResult;
@@ -85,13 +86,33 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
-	public JJDispute save(JJDispute entity) {
-		throw new NotYetImplementedException();
-	}
+	public JJDispute saveAndFlush(JJDispute jjDispute) {
+		try {
+			ResponseResult responseResult = assertNoExceptions(() -> {
+				ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute convert = jjDisputeMapper.convert(jjDispute);
+				return jjDisputeApi.v1UpdateDisputePut(convert);
+			});
+			if (responseResult.getDisputeId() != null) {
+				logger.debug("Successfully updated the jjDispute through ORDS with dispute id {}", responseResult.getDisputeId());
 
-	@Override
-	public JJDispute saveAndFlush(JJDispute entity) {
-		throw new NotYetImplementedException();
+				// There is no endpoint to retrieve a JJDispute by id, so we'll use the ticketNumber that was in the update request (hopefully it wasn't changed)
+				//return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
+
+				List<JJDispute> jjDisputes = findByTicketNumber(jjDispute.getTicketNumber());
+				if (jjDisputes.isEmpty()) {
+					throw new InternalServerErrorException("Update was successful, but retrieving the same record failed");
+				}
+				else if (jjDisputes.size() > 1) {
+					logger.error("More than on JJDispute found with the [supposedly-unique] ticketNumber: {}", jjDispute.getTicketNumber());
+				}
+				return jjDisputes.get(0);
+			}
+		} catch (ApiException e) {
+			logger.error("ERROR updating JJDispute to ORDS with data: {}", jjDispute.toString(), e);
+			throw new InternalServerErrorException(e);
+		}
+
+		return null;
 	}
 
 	@Override
