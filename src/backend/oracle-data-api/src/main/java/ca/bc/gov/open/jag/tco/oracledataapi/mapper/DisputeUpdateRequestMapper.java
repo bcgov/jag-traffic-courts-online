@@ -35,8 +35,8 @@ public interface DisputeUpdateRequestMapper {
 	// Map Oracle Data API disputeUpdateRequest model to ORDS isputeUpdateRequest data
 	@Mapping(target = "disputeUpdateRequestId", source = "disputeUpdateRequestId")
 	@Mapping(target = "disputeId", source = "disputeId")
-	@Mapping(target = "disputeUpdateStatTypeCd", source = "status", qualifiedByName="mapShortNamedEnum")
-	@Mapping(target = "disputeUpdateReqTypeCd", source = "updateType", qualifiedByName="mapShortNamedEnum")
+	@Mapping(target = "disputeUpdateStatTypeCd", source = "status", qualifiedByName="mapEnumToShortName")
+	@Mapping(target = "disputeUpdateReqTypeCd", source = "updateType", qualifiedByName="mapEnumToShortName")
 	@Mapping(target = "requestJsonTxt", source = "updateJson")
 	@Mapping(target = "entUserId", source = "createdBy")
 	@Mapping(target = "entDtm", source = "createdTs")
@@ -66,7 +66,7 @@ public interface DisputeUpdateRequestMapper {
 		return null;
 	}
 
-	@Named("mapShortNamedEnum")
+	@Named("mapEnumToShortName")
 	default String mapShortNamedEnum(ShortNamedEnum code) {
 		return code.getShortName();
 	}

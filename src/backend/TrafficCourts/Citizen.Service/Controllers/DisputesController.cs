@@ -449,7 +449,7 @@ public class DisputesController : ControllerBase
             }
 
             // Submit request to Workflow Service for processing.
-            DisputeUpdateRequest message = _mapper.Map<DisputeUpdateRequest>(_mapper.Map<DisputantUpdateContactRequest>(disputantContactInformation));
+            DisputeUpdateRequest message = _mapper.Map<DisputeUpdateRequest>(_mapper.Map<DisputeUpdateContactRequest>(disputantContactInformation));
             message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
             await _bus.PublishWithLog(_logger, message, cancellationToken);
 
