@@ -1132,12 +1132,12 @@
         "tags": [
           "Dispute"
         ],
-        "summary": "Approves a DisputantUpdateRequest record, setting it's status to ACCEPTED.",
+        "summary": "Approves a DisputeUpdateRequest record, setting it's status to ACCEPTED.",
         "parameters": [
           {
             "name": "updateStatusId",
             "in": "path",
-            "description": "Unique identifier for a specific DisputantUpdateRequest record to accept.",
+            "description": "Unique identifier for a specific DisputeUpdateRequest record to accept.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1160,12 +1160,12 @@
         "tags": [
           "Dispute"
         ],
-        "summary": "Rejects a DisputantUpdateRequest record, setting it's status to REJECTED.",
+        "summary": "Rejects a DisputeUpdateRequest record, setting it's status to REJECTED.",
         "parameters": [
           {
             "name": "updateStatusId",
             "in": "path",
-            "description": "Unique identifier for a specific DisputantUpdateRequest record to reject.",
+            "description": "Unique identifier for a specific DisputeUpdateRequest record to reject.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1291,7 +1291,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/DisputantUpdateRequest"
+                    "$ref": "#/components/schemas/DisputeUpdateRequest"
                   }
                 }
               },
@@ -1299,7 +1299,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/DisputantUpdateRequest"
+                    "$ref": "#/components/schemas/DisputeUpdateRequest"
                   }
                 }
               },
@@ -1307,7 +1307,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/DisputantUpdateRequest"
+                    "$ref": "#/components/schemas/DisputeUpdateRequest"
                   }
                 }
               }
@@ -3427,80 +3427,6 @@
         },
         "additionalProperties": false
       },
-      "DisputantUpdateRequest": {
-        "required": [
-          "status",
-          "updateJson",
-          "updateType"
-        ],
-        "type": "object",
-        "properties": {
-          "createdBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "modifiedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "disputantUpdateRequestId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "disputeId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "status": {
-            "$ref": "#/components/schemas/DisputantUpdateRequestStatus2"
-          },
-          "updateType": {
-            "$ref": "#/components/schemas/DisputantUpdateRequestUpdateType"
-          },
-          "updateJson": {
-            "maxLength": 1000,
-            "minLength": 3,
-            "type": "string"
-          },
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "DisputantUpdateRequestStatus2": {
-        "enum": [
-          "UNKNOWN",
-          "ACCEPTED",
-          "PENDING",
-          "REJECTED"
-        ],
-        "type": "string"
-      },
-      "DisputantUpdateRequestUpdateType": {
-        "enum": [
-          "UNKNOWN",
-          "DISPUTANT_ADDRESS",
-          "DISPUTANT_PHONE",
-          "DISPUTANT_NAME",
-          "COUNT",
-          "DISPUTANT_EMAIL",
-          "DISPUTANT_DOCUMENT",
-          "COURT_OPTIONS"
-        ],
-        "type": "string"
-      },
       "Dispute": {
         "type": "object",
         "properties": {
@@ -3974,6 +3900,80 @@
           "UNKNOWN",
           "Y",
           "N"
+        ],
+        "type": "string"
+      },
+      "DisputeUpdateRequest": {
+        "required": [
+          "status",
+          "updateJson",
+          "updateType"
+        ],
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputeUpdateRequestId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "disputeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DisputeUpdateRequestStatus2"
+          },
+          "updateType": {
+            "$ref": "#/components/schemas/DisputeUpdateRequestUpdateType"
+          },
+          "updateJson": {
+            "maxLength": 1000,
+            "minLength": 3,
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DisputeUpdateRequestStatus2": {
+        "enum": [
+          "UNKNOWN",
+          "ACCEPTED",
+          "PENDING",
+          "REJECTED"
+        ],
+        "type": "string"
+      },
+      "DisputeUpdateRequestUpdateType": {
+        "enum": [
+          "UNKNOWN",
+          "DISPUTANT_ADDRESS",
+          "DISPUTANT_PHONE",
+          "DISPUTANT_NAME",
+          "COUNT",
+          "DISPUTANT_EMAIL",
+          "DISPUTANT_DOCUMENT",
+          "COURT_OPTIONS"
         ],
         "type": "string"
       },

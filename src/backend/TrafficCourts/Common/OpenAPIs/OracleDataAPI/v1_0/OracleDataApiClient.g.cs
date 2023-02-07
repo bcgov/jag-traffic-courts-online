@@ -252,23 +252,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task<Dispute> CancelDisputeAsync(long id, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
-        /// An endpoint that updates the status of a DisputantUpdateRequest record.
+        /// An endpoint that updates the status of a DisputeUpdateRequest record.
         /// </summary>
-        /// <param name="id">The id of the DisputantUpdateRequest record to update.</param>
-        /// <param name="disputantUpdateRequestStatus">The status the request record should be updated to.</param>
-        /// <returns>Ok. DisputantUpdateRequest updated.</returns>
+        /// <param name="id">The id of the DisputeUpdateRequest record to update.</param>
+        /// <param name="disputeUpdateRequestStatus">The status the request record should be updated to.</param>
+        /// <returns>Ok. DisputeUpdateRequest updated.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long id, DisputantUpdateRequestStatus disputantUpdateRequestStatus);
+        System.Threading.Tasks.Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long id, DisputeUpdateRequestStatus disputeUpdateRequestStatus);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that updates the status of a DisputantUpdateRequest record.
+        /// An endpoint that updates the status of a DisputeUpdateRequest record.
         /// </summary>
-        /// <param name="id">The id of the DisputantUpdateRequest record to update.</param>
-        /// <param name="disputantUpdateRequestStatus">The status the request record should be updated to.</param>
-        /// <returns>Ok. DisputantUpdateRequest updated.</returns>
+        /// <param name="id">The id of the DisputeUpdateRequest record to update.</param>
+        /// <param name="disputeUpdateRequestStatus">The status the request record should be updated to.</param>
+        /// <returns>Ok. DisputeUpdateRequest updated.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long id, DisputantUpdateRequestStatus disputantUpdateRequestStatus, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long id, DisputeUpdateRequestStatus disputeUpdateRequestStatus, System.Threading.CancellationToken cancellationToken);
 
         /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
         /// <returns>OK</returns>
@@ -332,21 +332,21 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task<long> SaveDisputeAsync(Dispute body, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
-        /// An endpoint that inserts a DisputantUpdateRequest into persistent storage.
+        /// An endpoint that inserts a DisputeUpdateRequest into persistent storage.
         /// </summary>
         /// <param name="guid">The noticeOfDisputeGuid of the Dispute to associate with.</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<long> SaveDisputantUpdateRequestAsync(string guid, DisputantUpdateRequest body);
+        System.Threading.Tasks.Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that inserts a DisputantUpdateRequest into persistent storage.
+        /// An endpoint that inserts a DisputeUpdateRequest into persistent storage.
         /// </summary>
         /// <param name="guid">The noticeOfDisputeGuid of the Dispute to associate with.</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<long> SaveDisputantUpdateRequestAsync(string guid, DisputantUpdateRequest body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest body, System.Threading.CancellationToken cancellationToken);
 
         /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
         /// <param name="ticketNumber">If specified will filter by TicketNumber. (Format is XX00000000)</param>
@@ -413,23 +413,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task UnassignDisputesAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.
+        /// An endpoint that retrieves all DisputeUpdateRequest optionally for a given Dispute, optionally filtered by DisputeUpdateRequestStatus.
         /// </summary>
         /// <param name="id">If specified, filter request by the disputeId of the Dispute.</param>
-        /// <param name="status">If specified, filter request by DisputantUpdateRequestStatus</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <param name="status">If specified, filter request by DisputeUpdateRequestStatus</param>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long? id, Status? status);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long? id, Status? status);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.
+        /// An endpoint that retrieves all DisputeUpdateRequest optionally for a given Dispute, optionally filtered by DisputeUpdateRequestStatus.
         /// </summary>
         /// <param name="id">If specified, filter request by the disputeId of the Dispute.</param>
-        /// <param name="status">If specified, filter request by DisputantUpdateRequestStatus</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <param name="status">If specified, filter request by DisputeUpdateRequestStatus</param>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long? id, Status? status, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long? id, Status? status, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.
@@ -2491,37 +2491,37 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         }
 
         /// <summary>
-        /// An endpoint that updates the status of a DisputantUpdateRequest record.
+        /// An endpoint that updates the status of a DisputeUpdateRequest record.
         /// </summary>
-        /// <param name="id">The id of the DisputantUpdateRequest record to update.</param>
-        /// <param name="disputantUpdateRequestStatus">The status the request record should be updated to.</param>
-        /// <returns>Ok. DisputantUpdateRequest updated.</returns>
+        /// <param name="id">The id of the DisputeUpdateRequest record to update.</param>
+        /// <param name="disputeUpdateRequestStatus">The status the request record should be updated to.</param>
+        /// <returns>Ok. DisputeUpdateRequest updated.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long id, DisputantUpdateRequestStatus disputantUpdateRequestStatus)
+        public virtual System.Threading.Tasks.Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long id, DisputeUpdateRequestStatus disputeUpdateRequestStatus)
         {
-            return UpdateDisputantUpdateRequestStatusAsync(id, disputantUpdateRequestStatus, System.Threading.CancellationToken.None);
+            return UpdateDisputeUpdateRequestStatusAsync(id, disputeUpdateRequestStatus, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that updates the status of a DisputantUpdateRequest record.
+        /// An endpoint that updates the status of a DisputeUpdateRequest record.
         /// </summary>
-        /// <param name="id">The id of the DisputantUpdateRequest record to update.</param>
-        /// <param name="disputantUpdateRequestStatus">The status the request record should be updated to.</param>
-        /// <returns>Ok. DisputantUpdateRequest updated.</returns>
+        /// <param name="id">The id of the DisputeUpdateRequest record to update.</param>
+        /// <param name="disputeUpdateRequestStatus">The status the request record should be updated to.</param>
+        /// <returns>Ok. DisputeUpdateRequest updated.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long id, DisputantUpdateRequestStatus disputantUpdateRequestStatus, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long id, DisputeUpdateRequestStatus disputeUpdateRequestStatus, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
 
-            if (disputantUpdateRequestStatus == null)
-                throw new System.ArgumentNullException("disputantUpdateRequestStatus");
+            if (disputeUpdateRequestStatus == null)
+                throw new System.ArgumentNullException("disputeUpdateRequestStatus");
 
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1.0/dispute/updateRequest/{id}?");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-            urlBuilder_.Append(System.Uri.EscapeDataString("disputantUpdateRequestStatus") + "=").Append(System.Uri.EscapeDataString(ConvertToString(disputantUpdateRequestStatus, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("disputeUpdateRequestStatus") + "=").Append(System.Uri.EscapeDataString(ConvertToString(disputeUpdateRequestStatus, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
 
             var client_ = _httpClient;
@@ -2597,7 +2597,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<DisputantUpdateRequest>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<DisputeUpdateRequest>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -3248,24 +3248,24 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         }
 
         /// <summary>
-        /// An endpoint that inserts a DisputantUpdateRequest into persistent storage.
+        /// An endpoint that inserts a DisputeUpdateRequest into persistent storage.
         /// </summary>
         /// <param name="guid">The noticeOfDisputeGuid of the Dispute to associate with.</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<long> SaveDisputantUpdateRequestAsync(string guid, DisputantUpdateRequest body)
+        public virtual System.Threading.Tasks.Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest body)
         {
-            return SaveDisputantUpdateRequestAsync(guid, body, System.Threading.CancellationToken.None);
+            return SaveDisputeUpdateRequestAsync(guid, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that inserts a DisputantUpdateRequest into persistent storage.
+        /// An endpoint that inserts a DisputeUpdateRequest into persistent storage.
         /// </summary>
         /// <param name="guid">The noticeOfDisputeGuid of the Dispute to associate with.</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<long> SaveDisputantUpdateRequestAsync(string guid, DisputantUpdateRequest body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest body, System.Threading.CancellationToken cancellationToken)
         {
             if (guid == null)
                 throw new System.ArgumentNullException("guid");
@@ -3885,26 +3885,26 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         }
 
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.
+        /// An endpoint that retrieves all DisputeUpdateRequest optionally for a given Dispute, optionally filtered by DisputeUpdateRequestStatus.
         /// </summary>
         /// <param name="id">If specified, filter request by the disputeId of the Dispute.</param>
-        /// <param name="status">If specified, filter request by DisputantUpdateRequestStatus</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <param name="status">If specified, filter request by DisputeUpdateRequestStatus</param>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long? id, Status? status)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long? id, Status? status)
         {
-            return GetDisputantUpdateRequestsAsync(id, status, System.Threading.CancellationToken.None);
+            return GetDisputeUpdateRequestsAsync(id, status, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.
+        /// An endpoint that retrieves all DisputeUpdateRequest optionally for a given Dispute, optionally filtered by DisputeUpdateRequestStatus.
         /// </summary>
         /// <param name="id">If specified, filter request by the disputeId of the Dispute.</param>
-        /// <param name="status">If specified, filter request by DisputantUpdateRequestStatus</param>
-        /// <returns>Ok. DisputantUpdateRequest record saved.</returns>
+        /// <param name="status">If specified, filter request by DisputeUpdateRequestStatus</param>
+        /// <returns>Ok. DisputeUpdateRequest record saved.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long? id, Status? status, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long? id, Status? status, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1.0/dispute/updateRequests?");
@@ -3990,7 +3990,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         else
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<DisputantUpdateRequest>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<DisputeUpdateRequest>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -5486,7 +5486,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class DisputantUpdateRequest
+    public partial class DisputeUpdateRequest
     {
         [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string CreatedBy { get; set; }
@@ -5503,8 +5503,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <summary>
         /// ID
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("disputantUpdateRequestId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long DisputantUpdateRequestId { get; set; }
+        [Newtonsoft.Json.JsonProperty("disputeUpdateRequestId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long DisputeUpdateRequestId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("disputeId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long DisputeId { get; set; }
@@ -5512,12 +5512,12 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public DisputantUpdateRequestStatus2 Status { get; set; }
+        public DisputeUpdateRequestStatus2 Status { get; set; }
 
         [Newtonsoft.Json.JsonProperty("updateType", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public DisputantUpdateRequestUpdateType UpdateType { get; set; }
+        public DisputeUpdateRequestUpdateType UpdateType { get; set; }
 
         [Newtonsoft.Json.JsonProperty("updateJson", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
@@ -5660,7 +5660,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum DisputantUpdateRequestStatus
+    public enum DisputeUpdateRequestStatus
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
@@ -6362,7 +6362,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum DisputantUpdateRequestStatus2
+    public enum DisputeUpdateRequestStatus2
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
@@ -6380,7 +6380,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum DisputantUpdateRequestUpdateType
+    public enum DisputeUpdateRequestUpdateType
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]

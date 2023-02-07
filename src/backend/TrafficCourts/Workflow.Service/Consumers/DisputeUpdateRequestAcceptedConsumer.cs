@@ -4,39 +4,39 @@ using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
-using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest;
+using DisputeUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 
-public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateRequestAccepted>
+public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateRequestAccepted>
 {
-    private readonly ILogger<DisputantUpdateRequestAcceptedConsumer> _logger;
+    private readonly ILogger<DisputeUpdateRequestAcceptedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IDisputantUpdateRequestAcceptedTemplate _updateRequestAcceptedTemplate;
+    private readonly IDisputeUpdateRequestAcceptedTemplate _updateRequestAcceptedTemplate;
 
-    public DisputantUpdateRequestAcceptedConsumer(
-        ILogger<DisputantUpdateRequestAcceptedConsumer> logger,
+    public DisputeUpdateRequestAcceptedConsumer(
+        ILogger<DisputeUpdateRequestAcceptedConsumer> logger,
         IOracleDataApiService oracleDataApiService,
-        IDisputantUpdateRequestAcceptedTemplate updateRequestAcceptedTemplate)
+        IDisputeUpdateRequestAcceptedTemplate updateRequestAcceptedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestAcceptedTemplate = updateRequestAcceptedTemplate ?? throw new ArgumentNullException(nameof(updateRequestAcceptedTemplate));
     }
 
-    public async Task Consume(ConsumeContext<DisputantUpdateRequestAccepted> context)
+    public async Task Consume(ConsumeContext<DisputeUpdateRequestAccepted> context)
     {
         // TCVP-1975
-        // - call oracle-data-api to patch the Dispute with the DisputantUpdateRequest changes.
-        // - call oracle-data-api to update DisputantUpdateRequest status.
+        // - call oracle-data-api to patch the Dispute with the DisputeUpdateRequest changes.
+        // - call oracle-data-api to update DisputeUpdateRequest status.
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
 
         _logger.LogDebug("Consuming message");
-        DisputantUpdateRequestAccepted message = context.Message;
+        DisputeUpdateRequestAccepted message = context.Message;
 
-        // Set the status of the DisputantUpdateRequest object to ACCEPTED.
-        DisputantUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputantUpdateRequestStatusAsync(message.UpdateRequestId, DisputantUpdateRequestStatus.ACCEPTED, context.CancellationToken);
+        // Set the status of the DisputeUpdateRequest object to ACCEPTED.
+        DisputeUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.ACCEPTED, context.CancellationToken);
 
         if (updateRequest.UpdateJson is not null)
         {
@@ -47,7 +47,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
             Dispute? patch = JsonConvert.DeserializeObject<Dispute>(updateRequest.UpdateJson);
             switch (updateRequest.UpdateType)
             {
-                case DisputantUpdateRequestUpdateType.DISPUTANT_ADDRESS:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS:
                     dispute.AddressLine1 = patch?.AddressLine1;
                     dispute.AddressLine2 = patch?.AddressLine2;
                     dispute.AddressLine3 = patch?.AddressLine3;
@@ -55,10 +55,10 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.AddressProvince = patch?.AddressProvince;
                     dispute.PostalCode = patch?.PostalCode;
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_PHONE:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_PHONE:
                     dispute.HomePhoneNumber = patch?.HomePhoneNumber;
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_NAME:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_NAME:
                     dispute.DisputantGivenName1 = patch?.DisputantGivenName1;
                     dispute.DisputantGivenName2 = patch?.DisputantGivenName2;
                     dispute.DisputantGivenName3 = patch?.DisputantGivenName3;
@@ -70,7 +70,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.ContactLawFirmNm = patch?.ContactLawFirmNm;
                     dispute.ContactTypeCd = (DisputeContactTypeCd)(patch?.ContactTypeCd);
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
                     // TODO: update document metadata set StaffReviewStatus to Accepted
                     break;
                 case DisputantUpdateRequestUpdateType.COUNT:
@@ -85,7 +85,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                         }
                     }
                     break;
-                case DisputantUpdateRequestUpdateType.COURT_OPTIONS:
+                case DisputeUpdateRequestUpdateType.COURT_OPTIONS:
                     dispute.RepresentedByLawyer = patch?.RepresentedByLawyer;
                     dispute.LawFirmName = patch?.LawFirmName;
                     dispute.LawyerSurname = patch?.LawyerSurname;
@@ -104,7 +104,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
                     dispute.RequestCourtAppearanceYn = (DisputeRequestCourtAppearanceYn)(patch?.RequestCourtAppearanceYn);
 #pragma warning restore CS8629 // Nullable value type may be null.
                     break;
-                case DisputantUpdateRequestUpdateType.DISPUTANT_EMAIL:
+                case DisputeUpdateRequestUpdateType.DISPUTANT_EMAIL:
                     // nothing to do here except record in file history (down further)
                     break;
                 default:
@@ -125,7 +125,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
         }
     }
 
-    private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
+    private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputeUpdateRequestAccepted> context)
     {
         SendDispuantEmail message = new()
         {
@@ -136,12 +136,12 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
         await context.PublishWithLog(_logger, message, context.CancellationToken);
     }
 
-    private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
+    private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputeUpdateRequestAccepted> context)
     {
         SaveFileHistoryRecord fileHistoryRecord = new()
         {
             TicketNumber = dispute.TicketNumber,
-            Description = "Disputant update request accepted."
+            Description = "Dispute update request accepted."
         };
         await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
     }

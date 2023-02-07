@@ -702,13 +702,13 @@
     "/api/v1.0/dispute/updateRequest/{id}": {
       "put": {
         "tags": [ "dispute-controller" ],
-        "summary": "An endpoint that updates the status of a DisputantUpdateRequest record.",
-        "operationId": "updateDisputantUpdateRequestStatus",
+        "summary": "An endpoint that updates the status of a DisputeUpdateRequest record.",
+        "operationId": "updateDisputeUpdateRequestStatus",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The id of the DisputantUpdateRequest record to update.",
+            "description": "The id of the DisputeUpdateRequest record to update.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -716,7 +716,7 @@
             }
           },
           {
-            "name": "disputantUpdateRequestStatus",
+            "name": "disputeUpdateRequestStatus",
             "in": "query",
             "description": "The status the request record should be updated to.",
             "required": true,
@@ -745,8 +745,8 @@
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
-            "description": "Ok. DisputantUpdateRequest updated.",
-            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DisputantUpdateRequest" } } }
+            "description": "Ok. DisputeUpdateRequest updated.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/DisputeUpdateRequest" } } }
           }
         }
       }
@@ -973,8 +973,8 @@
     "/api/v1.0/dispute/{guid}/updateRequest": {
       "post": {
         "tags": [ "dispute-controller" ],
-        "summary": "An endpoint that inserts a DisputantUpdateRequest into persistent storage.",
-        "operationId": "saveDisputantUpdateRequest",
+        "summary": "An endpoint that inserts a DisputeUpdateRequest into persistent storage.",
+        "operationId": "saveDisputeUpdateRequest",
         "parameters": [
           {
             "name": "guid",
@@ -985,7 +985,7 @@
           }
         ],
         "requestBody": {
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DisputantUpdateRequest" } } },
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DisputeUpdateRequest" } } },
           "required": true
         },
         "responses": {
@@ -1006,7 +1006,7 @@
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
-            "description": "Ok. DisputantUpdateRequest record saved.",
+            "description": "Ok. DisputeUpdateRequest record saved.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1207,8 +1207,8 @@
     "/api/v1.0/dispute/updateRequests": {
       "get": {
         "tags": [ "dispute-controller" ],
-        "summary": "An endpoint that retrieves all DisputantUpdateRequest optionally for a given Dispute, optionally filtered by DisputantUpdateRequestStatus.",
-        "operationId": "getDisputantUpdateRequests",
+        "summary": "An endpoint that retrieves all DisputeUpdateRequest optionally for a given Dispute, optionally filtered by DisputeUpdateRequestStatus.",
+        "operationId": "getDisputeUpdateRequests",
         "parameters": [
           {
             "name": "id",
@@ -1223,7 +1223,7 @@
           {
             "name": "status",
             "in": "query",
-            "description": "If specified, filter request by DisputantUpdateRequestStatus",
+            "description": "If specified, filter request by DisputeUpdateRequestStatus",
             "required": false,
             "schema": {
               "type": "string",
@@ -1250,12 +1250,12 @@
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
-            "description": "Ok. DisputantUpdateRequest record saved.",
+            "description": "Ok. DisputeUpdateRequest record saved.",
             "content": {
               "*/*": {
                 "schema": {
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/DisputantUpdateRequest" }
+                  "items": { "$ref": "#/components/schemas/DisputeUpdateRequest" }
                 }
               }
             }
@@ -2516,7 +2516,7 @@
           }
         }
       },
-      "DisputantUpdateRequest": {
+      "DisputeUpdateRequest": {
         "required": [ "status", "updateJson", "updateType" ],
         "type": "object",
         "properties": {
@@ -2534,7 +2534,7 @@
             "format": "date-time",
             "nullable": true
           },
-          "disputantUpdateRequestId": {
+          "disputeUpdateRequestId": {
             "type": "integer",
             "description": "ID",
             "format": "int64",

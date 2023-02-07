@@ -18,7 +18,7 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
 using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Disputes.DisputantContactInformation;
-using DisputantUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputantUpdateRequest;
+using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 using Dispute = TrafficCourts.Citizen.Service.Models.Disputes.Dispute;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
@@ -452,7 +452,7 @@ public class DisputesController : ControllerBase
             //}
 
             // Submit request to Workflow Service for processing.
-            DisputantUpdateRequest request = _mapper.Map<DisputantUpdateRequest>(dispute);
+            DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
             request.NoticeOfDisputeGuid = noticeOfDisputeGuid;
             await _bus.PublishWithLog(_logger, request, cancellationToken);
 
@@ -493,7 +493,7 @@ public class DisputesController : ControllerBase
             }
 
             // Submit request to Workflow Service for processing.
-            DisputantUpdateRequest message = _mapper.Map<DisputantUpdateRequest>(_mapper.Map<DisputantUpdateContactRequest>(disputantContactInformation));
+            DisputeUpdateRequest message = _mapper.Map<DisputeUpdateRequest>(_mapper.Map<DisputeUpdateContactRequest>(disputantContactInformation));
             message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
             await _bus.PublishWithLog(_logger, message, cancellationToken);
 

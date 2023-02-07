@@ -5,7 +5,7 @@ namespace TrafficCourts.Messaging.MessageContracts;
 /// <summary>
 /// A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{guidhash}/contact endpoint.
 /// </summary>
-public class DisputantUpdateRequest : DisputantUpdateContactRequest
+public class DisputeUpdateRequest : DisputeUpdateContactRequest
 {
     /// <summary>
     /// represented by lawyer.
@@ -99,4 +99,3 @@ public class DisputantUpdateRequest : DisputantUpdateContactRequest
     /// </summary>
     public string? DocumentType { get; set; }
 }
-

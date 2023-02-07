@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { ConfigService } from '@config/config.service';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
-import { DisputantUpdateRequestUpdateType, DisputantUpdateRequestStatus2 } from 'app/api';
+import { DisputeUpdateRequestUpdateType, DisputeUpdateRequestStatus2 } from 'app/api';
 import { DisputantUpdateRequest } from '../../../services/dispute.service';
 
 @Component({
@@ -23,8 +23,8 @@ export class UpdateRequestInfoComponent implements OnInit {
     contactInformation: true
   }
   public disputeUpdateRequests: DisputantUpdateRequest[] = [];
-  public RequestUpdateType = DisputantUpdateRequestUpdateType;
-  public RequestUpdateStatus = DisputantUpdateRequestStatus2;
+  public RequestUpdateType = DisputeUpdateRequestUpdateType;
+  public RequestUpdateStatus = DisputeUpdateRequestStatus2;
 
   constructor(
     public config: ConfigService,
@@ -42,7 +42,7 @@ export class UpdateRequestInfoComponent implements OnInit {
     // process accepts and rejects
     this.disputeUpdateRequests.forEach(disputeUpdateRequest => {
       if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Accepted) {
-        this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
+        this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).subscribe({
           next: response => {
             disputeUpdateRequest.status = this.RequestUpdateStatus.Accepted;
           },
@@ -50,7 +50,7 @@ export class UpdateRequestInfoComponent implements OnInit {
           complete: () => { }
         });
       } else if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Rejected) {
-        this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
+        this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).subscribe({
           next: response => {
             disputeUpdateRequest.status = this.RequestUpdateStatus.Rejected;
           },
@@ -105,7 +105,7 @@ export class UpdateRequestInfoComponent implements OnInit {
   // respond to status changes from child component
   onDisputantUpdateRequestStatusChange(disputantUpdateRequest: DisputantUpdateRequest) {
     this.disputeUpdateRequests.forEach(disputeUpdateRequest => {
-      if (disputeUpdateRequest.disputantUpdateRequestId === disputantUpdateRequest.disputantUpdateRequestId) disputeUpdateRequest.status = disputantUpdateRequest.status;
+      if (disputeUpdateRequest.disputeUpdateRequestId === disputantUpdateRequest.disputeUpdateRequestId) disputeUpdateRequest.status = disputantUpdateRequest.status;
     });
   }
 

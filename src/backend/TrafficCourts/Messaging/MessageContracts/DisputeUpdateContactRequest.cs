@@ -5,7 +5,7 @@ namespace TrafficCourts.Messaging.MessageContracts;
 /// <summary>
 /// A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{guidhash}/contact endpoint.
 /// </summary>
-public class DisputantUpdateContactRequest
+public class DisputeUpdateContactRequest
 {
     /// <summary>
     /// The notice of dispute identifer.
@@ -117,4 +117,3 @@ public class DisputantUpdateContactRequest
     /// </summary>
     public string? HomePhoneNumber { get; set; } = null!;
 }
-

@@ -460,9 +460,9 @@ public class DisputeController : StaffControllerBase<DisputeController>
     }
 
     /// <summary>
-    /// Approves a DisputantUpdateRequest record, setting it's status to ACCEPTED.
+    /// Approves a DisputeUpdateRequest record, setting it's status to ACCEPTED.
     /// </summary>
-    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to accept.</param>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputeUpdateRequest record to accept.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut("updateRequest/{updateStatusId}/accept")]
@@ -476,9 +476,9 @@ public class DisputeController : StaffControllerBase<DisputeController>
     }
 
     /// <summary>
-    /// Rejects a DisputantUpdateRequest record, setting it's status to REJECTED.
+    /// Rejects a DisputeUpdateRequest record, setting it's status to REJECTED.
     /// </summary>
-    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to reject.</param>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputeUpdateRequest record to reject.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut("updateRequest/{updateStatusId}/reject")]
@@ -534,7 +534,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute update request records</returns>
     [HttpGet("{disputeId}/disputeUpdateRequests")]
-    [ProducesResponseType(typeof(IList<DisputantUpdateRequest>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<DisputeUpdateRequest>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -545,7 +545,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            ICollection<DisputantUpdateRequest> disputeUpdateRequests = await _disputeService.GetDisputeUpdateRequestsAsync(disputeId, cancellationToken);
+            ICollection<DisputeUpdateRequest> disputeUpdateRequests = await _disputeService.GetDisputeUpdateRequestsAsync(disputeId, cancellationToken);
             return Ok(disputeUpdateRequests);
         }
         catch (Exception e)

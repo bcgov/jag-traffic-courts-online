@@ -1,7 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputantUpdateRequest as DisputantUpdateRequestBase, DisputantUpdateRequestStatus2 } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2 } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
@@ -504,5 +504,5 @@ export interface DisputeWithUpdates extends DisputeWithUpdatesBase {
 }
 
 export interface DisputantUpdateRequest extends DisputantUpdateRequestBase {
-  newStatus: DisputantUpdateRequestStatus2;
+  newStatus: DisputeUpdateRequestStatus2;
 }
