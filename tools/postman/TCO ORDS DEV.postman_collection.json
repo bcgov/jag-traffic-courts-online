@@ -86,7 +86,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/jjDisputeList?justinRccId=&violationTicketId=&ticketNumber=",
+					"raw": "{{JUSTIN-TCO}}/v1/jjDisputeList?justinRccId=&violationTicketId=&ticketNumber=&jjAssignedTo=EWOngJJ&vtcAssignedTo=ewongvtc",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -106,6 +106,14 @@
 						{
 							"key": "ticketNumber",
 							"value": ""
+						},
+						{
+							"key": "jjAssignedTo",
+							"value": "EWOngJJ"
+						},
+						{
+							"key": "vtcAssignedTo",
+							"value": "ewongvtc"
 						}
 					]
 				}
@@ -252,7 +260,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeJj?disputeId=&userId=",
+					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeJj?disputeId=&userId=EWongJJ&ticketNumber=EA90100004",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -267,7 +275,11 @@
 						},
 						{
 							"key": "userId",
-							"value": ""
+							"value": "EWongJJ"
+						},
+						{
+							"key": "ticketNumber",
+							"value": "EA90100004"
 						}
 					]
 				}
@@ -280,7 +292,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeVtc?disputeId=&userId=",
+					"raw": "{{JUSTIN-TCO}}/v1/assignDisputeVtc?disputeId=&userId=EWONGVTC&ticketNumber=EA90100004",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -295,7 +307,11 @@
 						},
 						{
 							"key": "userId",
-							"value": ""
+							"value": "EWONGVTC"
+						},
+						{
+							"key": "ticketNumber",
+							"value": "EA90100004"
 						}
 					]
 				}
@@ -308,7 +324,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/unassignDisputeVtc?assignedBeforeTs=2022-09-19T08:12:13Z",
+					"raw": "{{JUSTIN-TCO}}/v1/unassignDisputeVtc?assignedBeforeTs=2022-09-19T08:12:13Z&ticketNumber=EA90100004",
 					"host": [
 						"{{JUSTIN-TCO}}"
 					],
@@ -320,30 +336,10 @@
 						{
 							"key": "assignedBeforeTs",
 							"value": "2022-09-19T08:12:13Z"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "unassignDisputeJj",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{JUSTIN-TCO}}/v1/unassignDisputeJj?assignedBeforeTs=2022-09-19T08:12:13Z",
-					"host": [
-						"{{JUSTIN-TCO}}"
-					],
-					"path": [
-						"v1",
-						"unassignDisputeJj"
-					],
-					"query": [
+						},
 						{
-							"key": "assignedBeforeTs",
-							"value": "2022-09-19T08:12:13Z"
+							"key": "ticketNumber",
+							"value": "EA90100004"
 						}
 					]
 				}
