@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ShortNamedEnum;
 
 /**
  * This mapper maps from ORDS disputeUpdateRequest model to Oracle Data API disputeUpdateRequest model and vice versa
@@ -34,8 +35,8 @@ public interface DisputeUpdateRequestMapper {
 	// Map Oracle Data API disputeUpdateRequest model to ORDS isputeUpdateRequest data
 	@Mapping(target = "disputeUpdateRequestId", source = "disputeUpdateRequestId")
 	@Mapping(target = "disputeId", source = "disputeId")
-	@Mapping(target = "disputeUpdateStatTypeCd", source = "status", qualifiedByName="mapDisputeUpdateStatTypeCd")
-	@Mapping(target = "disputeUpdateReqTypeCd", source = "updateType", qualifiedByName="mapDisputeUpdateReqTypeCd")
+	@Mapping(target = "disputeUpdateStatTypeCd", source = "status", qualifiedByName="mapShortNamedEnum")
+	@Mapping(target = "disputeUpdateReqTypeCd", source = "updateType", qualifiedByName="mapShortNamedEnum")
 	@Mapping(target = "requestJsonTxt", source = "updateJson")
 	@Mapping(target = "entUserId", source = "createdBy")
 	@Mapping(target = "entDtm", source = "createdTs")
@@ -65,13 +66,8 @@ public interface DisputeUpdateRequestMapper {
 		return null;
 	}
 
-	@Named("mapDisputeUpdateStatTypeCd")
-	default String mapDisputeUpdateStatTypeCd(DisputeUpdateRequestStatus status) {
-		return status.getShortName();
-	}
-
-	@Named("mapDisputeUpdateReqTypeCd")
-	default String mapDisputeUpdateReqTypeCd(DisputeUpdateRequestType status) {
-		return status.getShortName();
+	@Named("mapShortNamedEnum")
+	default String mapShortNamedEnum(ShortNamedEnum code) {
+		return code.getShortName();
 	}
 }
