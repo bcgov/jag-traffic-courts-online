@@ -409,7 +409,7 @@ public class DisputeService {
 	}
 
 	/**
-	 * Updates the status of the given DisputantUpdateStatus record
+	 * Updates the status of the given DisputeUpdateStatus record
 	 * @param updateRequestId
 	 * @param status
 	 * @return the newly saved DisputeUpdateRequest record, never null.

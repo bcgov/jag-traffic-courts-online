@@ -109,11 +109,11 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest disputantUpdateRequest, CancellationToken cancellationToken)
+    public async Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest disputeUpdateRequest, CancellationToken cancellationToken)
     {
         try
         {
-            return await _client.SaveDisputeUpdateRequestAsync(guid, disputantUpdateRequest, cancellationToken);
+            return await _client.SaveDisputeUpdateRequestAsync(guid, disputeUpdateRequest, cancellationToken);
         }
         catch (Exception)
         {
@@ -145,11 +145,11 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long disputantUpdateRequestId, DisputeUpdateRequestStatus disputantUpdateRequestStatus, CancellationToken cancellationToken)
+    public async Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long disputeUpdateRequestId, DisputeUpdateRequestStatus disputeUpdateRequestStatus, CancellationToken cancellationToken)
     {
         try
         {
-            return await _client.UpdateDisputeUpdateRequestStatusAsync(disputantUpdateRequestId, disputantUpdateRequestStatus, cancellationToken);
+            return await _client.UpdateDisputeUpdateRequestStatusAsync(disputeUpdateRequestId, disputeUpdateRequestStatus, cancellationToken);
         }
         catch (Exception)
         {
@@ -157,11 +157,11 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, Status? disputantUpdateRequestStatus, CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, Status? disputeUpdateRequestStatus, CancellationToken cancellationToken)
     {
         try
         {
-            return await _client.GetDisputeUpdateRequestsAsync(disputeId, disputantUpdateRequestStatus);
+            return await _client.GetDisputeUpdateRequestsAsync(disputeId, disputeUpdateRequestStatus);
         }
         catch (Exception)
         {

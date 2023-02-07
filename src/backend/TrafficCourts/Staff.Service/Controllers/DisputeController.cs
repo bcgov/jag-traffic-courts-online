@@ -460,9 +460,9 @@ public class DisputeController : StaffControllerBase<DisputeController>
     }
 
     /// <summary>
-    /// Approves a DisputantUpdateRequest record, setting it's status to ACCEPTED.
+    /// Approves a DisputeUpdateRequest record, setting it's status to ACCEPTED.
     /// </summary>
-    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to accept.</param>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputeUpdateRequest record to accept.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut("updateRequest/{updateStatusId}/accept")]
@@ -476,9 +476,9 @@ public class DisputeController : StaffControllerBase<DisputeController>
     }
 
     /// <summary>
-    /// Rejects a DisputantUpdateRequest record, setting it's status to REJECTED.
+    /// Rejects a DisputeUpdateRequest record, setting it's status to REJECTED.
     /// </summary>
-    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to reject.</param>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputeUpdateRequest record to reject.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut("updateRequest/{updateStatusId}/reject")]

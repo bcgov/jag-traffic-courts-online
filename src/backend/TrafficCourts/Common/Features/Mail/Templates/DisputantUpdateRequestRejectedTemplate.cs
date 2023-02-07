@@ -1,8 +1,8 @@
 ﻿namespace TrafficCourts.Common.Features.Mail.Templates;
 
-public class DisputantUpdateRequestRejectedTemplate : MailTemplateCollectionEmailTemplate, IDisputantUpdateRequestRejectedTemplate
+public class DisputeUpdateRequestRejectedTemplate : MailTemplateCollectionEmailTemplate, IDisputeUpdateRequestRejectedTemplate
 {
-    public DisputantUpdateRequestRejectedTemplate() : base("DisputantUpdateRequestRejectedTemplate")
+    public DisputeUpdateRequestRejectedTemplate() : base("DisputeUpdateRequestRejectedTemplate")
     {
     }
 }

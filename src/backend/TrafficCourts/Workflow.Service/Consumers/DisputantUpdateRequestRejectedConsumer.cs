@@ -3,38 +3,38 @@ using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
-using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
+using DisputeUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 
-public class DisputantUpdateRequestRejectedConsumer : IConsumer<DisputantUpdateRequestRejected>
+public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateRequestRejected>
 {
-    private readonly ILogger<DisputantUpdateRequestRejectedConsumer> _logger;
+    private readonly ILogger<DisputeUpdateRequestRejectedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IDisputantUpdateRequestRejectedTemplate _updateRequestRejectedTemplate;
+    private readonly IDisputeUpdateRequestRejectedTemplate _updateRequestRejectedTemplate;
 
-    public DisputantUpdateRequestRejectedConsumer(
-        ILogger<DisputantUpdateRequestRejectedConsumer> logger,
+    public DisputeUpdateRequestRejectedConsumer(
+        ILogger<DisputeUpdateRequestRejectedConsumer> logger,
         IOracleDataApiService oracleDataApiService,
-        IDisputantUpdateRequestRejectedTemplate updateRequestRejectedTemplate)
+        IDisputeUpdateRequestRejectedTemplate updateRequestRejectedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestRejectedTemplate = updateRequestRejectedTemplate ?? throw new ArgumentNullException(nameof(updateRequestRejectedTemplate));
     }
 
-    public async Task Consume(ConsumeContext<DisputantUpdateRequestRejected> context)
+    public async Task Consume(ConsumeContext<DisputeUpdateRequestRejected> context)
     {
         // TCVP-1974
-        // - call oracle-data-api to update DisputantUpdateRequest status.
+        // - call oracle-data-api to update DisputeUpdateRequest status.
         // - send confirmation email indicating request was rejected
         // - populate file/email history records
 
         _logger.LogDebug("Consuming message");
-        DisputantUpdateRequestRejected message = context.Message;
+        DisputeUpdateRequestRejected message = context.Message;
 
-        // Set the status of the DisputantUpdateRequest object to REJECTED.
-        DisputantUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.REJECTED, context.CancellationToken);
+        // Set the status of the DisputeUpdateRequest object to REJECTED.
+        DisputeUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.REJECTED, context.CancellationToken);
 
         // Get the current Dispute by id
         Dispute dispute = await _oracleDataApiService.GetDisputeByIdAsync(updateRequest.DisputeId, context.CancellationToken);
@@ -49,7 +49,7 @@ public class DisputantUpdateRequestRejectedConsumer : IConsumer<DisputantUpdateR
         PublishFileHistoryLog(dispute, context);
     }
 
-    private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputantUpdateRequestRejected> context)
+    private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputeUpdateRequestRejected> context)
     {
         SendDispuantEmail message = new()
         {
@@ -60,7 +60,7 @@ public class DisputantUpdateRequestRejectedConsumer : IConsumer<DisputantUpdateR
         await context.PublishWithLog(_logger, message, context.CancellationToken);
     }
 
-    private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputantUpdateRequestRejected> context)
+    private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputeUpdateRequestRejected> context)
     {
         SaveFileHistoryRecord fileHistoryRecord = new()
         {

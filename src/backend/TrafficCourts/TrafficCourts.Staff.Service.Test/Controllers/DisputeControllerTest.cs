@@ -280,7 +280,7 @@ public class DisputeControllerTest
     [Fact]
     public async void TestGetDisputeUpdateRequestsAsync200Result()
     {
-        // Mock the IDisputeService to return a DisputantUpdateRequests, confirm controller returns them.
+        // Mock the IDisputeService to return a DisputeUpdateRequests, confirm controller returns them.
 
         // Arrange
         DisputeUpdateRequest updateRequest1 = new();

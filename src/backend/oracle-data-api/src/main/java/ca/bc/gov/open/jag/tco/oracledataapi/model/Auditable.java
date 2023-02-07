@@ -26,8 +26,8 @@ import lombok.Setter;
  */
 @TypeDefs({
 	@TypeDef(name = "contactType", defaultForType = ContactType.class, typeClass = ShortNamedEnumType.class),
-	@TypeDef(name = "disputantUpdateStatus", defaultForType = DisputeUpdateRequestStatus.class, typeClass = ShortNamedEnumType.class),
-	@TypeDef(name = "disputantUpdateType", defaultForType = DisputeUpdateRequestType.class, typeClass = ShortNamedEnumType.class),
+	@TypeDef(name = "disputeUpdateStatus", defaultForType = DisputeUpdateRequestStatus.class, typeClass = ShortNamedEnumType.class),
+	@TypeDef(name = "disputeUpdateType", defaultForType = DisputeUpdateRequestType.class, typeClass = ShortNamedEnumType.class),
 	@TypeDef(name = "jjDisputedCountFinding", defaultForType = JJDisputedCountFinding.class, typeClass = ShortNamedEnumType.class),
 	@TypeDef(name = "jjDisputeHearingType", defaultForType = JJDisputeHearingType.class, typeClass = ShortNamedEnumType.class),
 	@TypeDef(name = "jjDisputeStatus", defaultForType = JJDisputeStatus.class, typeClass = ShortNamedEnumType.class),

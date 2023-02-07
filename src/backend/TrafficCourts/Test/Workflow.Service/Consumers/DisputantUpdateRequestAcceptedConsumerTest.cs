@@ -9,21 +9,21 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
 using Xunit;
-using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
+using DisputeUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
 
 namespace TrafficCourts.Test.Workflow.Service.Consumers;
 
-public class DisputantUpdateRequestAcceptedConsumerTest
+public class DisputeUpdateRequestAcceptedConsumerTest
 {
-    private readonly DisputantUpdateRequestAccepted _message;
+    private readonly DisputeUpdateRequestAccepted _message;
     private readonly Dispute _dispute;
-    private readonly DisputantUpdateRequest _updateRequest;
-    private readonly Mock<ILogger<DisputantUpdateRequestAcceptedConsumer>> _mockLogger;
+    private readonly DisputeUpdateRequest _updateRequest;
+    private readonly Mock<ILogger<DisputeUpdateRequestAcceptedConsumer>> _mockLogger;
     private readonly Mock<IOracleDataApiService> _oracleDataApiService;
-    private readonly Mock<ConsumeContext<DisputantUpdateRequestAccepted>> _context;
-    private readonly DisputantUpdateRequestAcceptedConsumer _consumer;
+    private readonly Mock<ConsumeContext<DisputeUpdateRequestAccepted>> _context;
+    private readonly DisputeUpdateRequestAcceptedConsumer _consumer;
 
-    public DisputantUpdateRequestAcceptedConsumerTest()
+    public DisputeUpdateRequestAcceptedConsumerTest()
     {
         _message = new(1);
         _dispute = new()
@@ -45,11 +45,11 @@ public class DisputantUpdateRequestAcceptedConsumerTest
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
 
-        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputantUpdateRequestAcceptedTemplate());
+        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputeUpdateRequestAcceptedTemplate());
     }
 
     [Fact]
-    public async Task TestDisputantUpdateRequestAcceptedConsumer_AddressUpdates()
+    public async Task TestDisputeUpdateRequestAcceptedConsumer_AddressUpdates()
     {
         // Arrange
         _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
@@ -69,7 +69,7 @@ public class DisputantUpdateRequestAcceptedConsumerTest
     }
 
     [Fact]
-    public async Task TestDisputantUpdateRequestAcceptedConsumer_NameUpdates()
+    public async Task TestDisputeUpdateRequestAcceptedConsumer_NameUpdates()
     {
         // Arrange
         _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
@@ -87,7 +87,7 @@ public class DisputantUpdateRequestAcceptedConsumerTest
     }
 
     [Fact]
-    public async Task TestDisputantUpdateRequestAcceptedConsumer_PhoneUpdates()
+    public async Task TestDisputeUpdateRequestAcceptedConsumer_PhoneUpdates()
     {
         // Arrange
         _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;

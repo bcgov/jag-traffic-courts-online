@@ -8,34 +8,34 @@ using DisputeUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Di
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 
-public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateRequestAccepted>
+public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateRequestAccepted>
 {
-    private readonly ILogger<DisputantUpdateRequestAcceptedConsumer> _logger;
+    private readonly ILogger<DisputeUpdateRequestAcceptedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IDisputantUpdateRequestAcceptedTemplate _updateRequestAcceptedTemplate;
+    private readonly IDisputeUpdateRequestAcceptedTemplate _updateRequestAcceptedTemplate;
 
-    public DisputantUpdateRequestAcceptedConsumer(
-        ILogger<DisputantUpdateRequestAcceptedConsumer> logger,
+    public DisputeUpdateRequestAcceptedConsumer(
+        ILogger<DisputeUpdateRequestAcceptedConsumer> logger,
         IOracleDataApiService oracleDataApiService,
-        IDisputantUpdateRequestAcceptedTemplate updateRequestAcceptedTemplate)
+        IDisputeUpdateRequestAcceptedTemplate updateRequestAcceptedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestAcceptedTemplate = updateRequestAcceptedTemplate ?? throw new ArgumentNullException(nameof(updateRequestAcceptedTemplate));
     }
 
-    public async Task Consume(ConsumeContext<DisputantUpdateRequestAccepted> context)
+    public async Task Consume(ConsumeContext<DisputeUpdateRequestAccepted> context)
     {
         // TCVP-1975
-        // - call oracle-data-api to patch the Dispute with the DisputantUpdateRequest changes.
-        // - call oracle-data-api to update DisputantUpdateRequest status.
+        // - call oracle-data-api to patch the Dispute with the DisputeUpdateRequest changes.
+        // - call oracle-data-api to update DisputeUpdateRequest status.
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
 
         _logger.LogDebug("Consuming message");
-        DisputantUpdateRequestAccepted message = context.Message;
+        DisputeUpdateRequestAccepted message = context.Message;
 
-        // Set the status of the DisputantUpdateRequest object to ACCEPTED.
+        // Set the status of the DisputeUpdateRequest object to ACCEPTED.
         DisputeUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.ACCEPTED, context.CancellationToken);
 
         if (updateRequest.UpdateJson is not null)
@@ -116,7 +116,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
         }
     }
 
-    private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
+    private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputeUpdateRequestAccepted> context)
     {
         SendDispuantEmail message = new()
         {
@@ -127,7 +127,7 @@ public class DisputantUpdateRequestAcceptedConsumer : IConsumer<DisputantUpdateR
         await context.PublishWithLog(_logger, message, context.CancellationToken);
     }
 
-    private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputantUpdateRequestAccepted> context)
+    private async void PublishFileHistoryLog(Dispute dispute, ConsumeContext<DisputeUpdateRequestAccepted> context)
     {
         SaveFileHistoryRecord fileHistoryRecord = new()
         {

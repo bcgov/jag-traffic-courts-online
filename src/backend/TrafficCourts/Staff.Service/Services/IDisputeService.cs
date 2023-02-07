@@ -106,7 +106,7 @@ public interface IDisputeService
     /// </summary>
     /// <param name="disputeId">Dispute Id</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A collection of DisputantUpdateRequest objects</returns>
+    /// <returns>A collection of DisputeUpdateRequest objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken);
 }

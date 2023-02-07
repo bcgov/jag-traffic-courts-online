@@ -2,6 +2,6 @@
 
 namespace TrafficCourts.Common.Features.Mail.Templates;
 
-public interface IDisputantUpdateRequestRejectedTemplate : IEmailTemplate<Dispute>
+public interface IDisputeUpdateRequestRejectedTemplate : IEmailTemplate<Dispute>
 {
 }
