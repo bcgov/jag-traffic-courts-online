@@ -2,6 +2,9 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -50,6 +53,13 @@ class DisputeServiceOrdsTcoTest extends BaseTestSuite {
 		assertNotNull(jjDisputeDb);
 		assertEquals(ticketNumber, jjDisputeDb.getTicketNumber());
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDisputeDb.getStatus());
+	}
+
+	@Test
+	public void testJjDisputeList_GET() throws Exception {
+		List<JJDispute> jjDisputes = jjDisputeService.getJJDisputes(null, null);
+		assertNotNull(jjDisputes);
+		assertTrue(jjDisputes.size() > 0);
 	}
 
 }

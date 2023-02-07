@@ -132,6 +132,7 @@ public abstract class JJDisputeMapper {
 	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDisputeRemark convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeRemark jjDisputeRemark);
 
+	/** Convert Oracle Data API -> TCO*/
 	@Mapping(source = "id", target = "disputeRemarkId")
 	@Mapping(source = "jjDispute.id", target = "disputeId")
 	@Mapping(source = "note", target = "disputeRemarkTxt")

@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.InternalServerErrorException;
 
@@ -26,6 +26,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
@@ -62,8 +63,15 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
-	public Iterable<JJDispute> findAll() {
-		throw new NotYetImplementedException();
+	public List<JJDispute> findAll() {
+		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null);
+		if (response == null)
+			return new ArrayList<JJDispute>();
+
+		// convert a list of TCO ORDS JJDisputes to Oracle Data JJDisputes
+		return response.getJjDisputes().stream()
+				.map(jjDispute -> map(jjDispute))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -74,11 +82,6 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 			return Arrays.asList(jjDispute);
 		}
 		return new ArrayList<JJDispute>();
-	}
-
-	@Override
-	public Optional<JJDispute> findById(Long id) {
-		throw new NotYetImplementedException();
 	}
 
 	@Override
