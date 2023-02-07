@@ -9,19 +9,19 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { DisputantUpdateRequestStatus2 } from './disputantUpdateRequestStatus2.model';
-import { DisputantUpdateRequestUpdateType } from './disputantUpdateRequestUpdateType.model';
+import { DisputeUpdateRequestUpdateType } from './disputeUpdateRequestUpdateType.model';
+import { DisputeUpdateRequestStatus2 } from './disputeUpdateRequestStatus2.model';
 
 
-export interface DisputantUpdateRequest { 
+export interface DisputeUpdateRequest { 
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string | null;
-    disputantUpdateRequestId?: number;
+    disputeUpdateRequestId?: number;
     disputeId?: number;
-    status: DisputantUpdateRequestStatus2;
-    updateType: DisputantUpdateRequestUpdateType;
+    status: DisputeUpdateRequestStatus2;
+    updateType: DisputeUpdateRequestUpdateType;
     updateJson: string;
     additionalProperties?: { [key: string]: any; } | null;
 }

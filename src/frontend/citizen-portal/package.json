@@ -64,7 +64,7 @@
     "@angular-eslint/eslint-plugin-template": "14.4.0",
     "@angular-eslint/schematics": "14.4.0",
     "@angular-eslint/template-parser": "14.4.0",
-    "@angular/cli": "^14.2.10",
+    "@angular/cli": "^15.1.4",
     "@angular/compiler-cli": "^14.2.12",
     "@ngrx/eslint-plugin": "^14.3.2",
     "@openapitools/openapi-generator-cli": "^2.5.2",
