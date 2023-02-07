@@ -175,61 +175,6 @@
           </section>
         </form>
 
-        <div class="col mt-4"
-          *ngIf="count?.form.value.request_reduction === RequestReduction.Y || count?.form.value.request_time_to_pay === RequestTimeToPay.Y">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <span>
-                <strong>You must provide written reasons in the Additional Information area of the form below for
-                  this option. If you do choose to appear in court to discuss you will not need to provide this
-                  information until the court hearing date. <br><br>
-
-                  If you provide written reasons, you will be notified in writing by the Court if your application
-                  was successful.</strong>
-              </span>
-            </ng-container>
-          </app-alert>
-        </div>
-
-        <div class="col mt-4 alert-info-text-color"
-          *ngIf="count?.form.value.request_court_appearance === RequestCourtAppearance.N">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <span class="text-dark">
-                <strong>You have selected that you do not want to attend a court hearing.</strong>
-                You must provide written reasons in the Additional Information area of the form below for this
-                option. You will be notified in writing to the address supplied above by the Court if your request
-                was successful.
-              </span>
-
-            </ng-container>
-          </app-alert>
-        </div>
-        <div class="col mt-4 alert-info-text-color"
-          *ngIf="count?.form.value.request_court_appearance === RequestCourtAppearance.Y">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <span class="text-dark">
-                <strong>You have selected that you wish to attend a court hearing in person.
-                </strong>
-                A Notice of Hearing will be mailed to you – it will have the date, time and location of your
-                hearing. If you fail to appear before the provincial court on your hearing date you will be found
-                guilty and the full ticketed amount must be paid immediately.
-              </span>
-            </ng-container>
-          </app-alert>
-        </div>
-
-        <div class="col mt-4"
-          *ngIf="count?.form.value.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
-                to explain the offence and provide evidence.</strong>
-            </ng-container>
-          </app-alert>
-        </div>
-
         </app-page>
       </mat-card><br />
     </ng-container>
@@ -269,7 +214,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-            </div>>
+            </div>
           </ng-container>
           <ng-container *ngIf="countsActions?.request_reduction !== countsActions?.request_time_to_pay">
             <div>{{ countsActions?.request_time_to_pay }}</div>
@@ -457,7 +402,6 @@
           </div>
         </section>
       </form>
-
       <app-stepper-footer [disableSave]="!isAdditionalFormValid()" (save)="disputeStepper.next()"
         (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
         [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">

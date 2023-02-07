@@ -102,7 +102,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.counts = this.ticketCounts.map((ticketCount, inx) => {
       return { ticket_count: ticketCount, form: this.noticeOfDisputeService.getCountForm(ticketCount, this.disputeCounts[inx]) };
     });
-    console.log(this.counts);
+    console.log(this.additionalForm);
     this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
   }
 
@@ -168,9 +168,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private setAdditionalRequired() {
+ private setAdditionalRequired() {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
-    this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
 
     this.additionalForm.controls.fine_reduction_reason.clearValidators();
     this.additionalForm.controls.time_to_pay_reason.clearValidators();

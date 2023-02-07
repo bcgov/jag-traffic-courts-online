@@ -271,11 +271,33 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            // var givenNames = response.Message.ContactGiven1Nm + " " + response.Message.ContactGiven2Nm + " " + response.Message.ContactGiven3Nm;
-            // if (response.Message.ContactSurnameNm != user?.Surname
-            //    || !(response.Message.ContactGiven1Nm == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
+            // TODO:  Uncomment before UAT and go-live
+            //// if contact type is individual then match with disputant name otherwise match with contact names
+            //if (response.Message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
             //{
-            //    return BadRequest("Disputant not match");
+            //    var givenNames = response.Message.DisputantGivenName1
+            //        + (response.Message.DisputantGivenName2 != null ? (" " + response.Message.DisputantGivenName2) : "")
+            //        + (response.Message.DisputantGivenName3 != null ? (" " + response.Message.DisputantGivenName3) : "");
+            //    if (response.Message.DisputantSurname.ToUpper() == user?.Surname.ToUpper()
+            //        || !(response.Message.DisputantGivenName1.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
+            //    {
+            //        return BadRequest("Disputant name does not match");
+            //    }
+            //}
+            //else if (response.Message.ContactTypeCd == DisputeContactTypeCd.LAWYER || response.Message.ContactTypeCd == DisputeContactTypeCd.OTHER)
+            //{
+            //    var givenNames = response.Message.ContactGiven1Nm
+            //        + (response.Message.ContactGiven2Nm != null ? (" " + response.Message.ContactGiven2Nm) : "")
+            //        + (response.Message.ContactGiven3Nm != null ? (" " + response.Message.ContactGiven3Nm) : "");
+            //    if (response.Message.ContactSurnameNm.ToUpper() != user?.Surname.ToUpper()
+            //        || !(response.Message.ContactGiven1Nm.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
+            //    {
+            //        return BadRequest("Contact name does not match");
+            //    }
+            //}
+            //else
+            //{
+            //    return BadRequest("Unknown contact type in request to update.");
             //}
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
@@ -400,12 +422,34 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            var givenNames = response.Message.ContactGiven1Nm + " " + response.Message.ContactGiven2Nm + " " + response.Message.ContactGiven3Nm;
-            if (response.Message.ContactSurnameNm != user?.Surname
-                || !(response.Message.ContactGiven1Nm == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
-            {
-                return BadRequest("Contact name does not match");
-            }
+            // TODO: Uncomment this before User Acceptance Testing
+            //// if contact type is individual then match with disputant name otherwise match with contact names
+            //if (response.Message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
+            //{
+            //    var givenNames = response.Message.DisputantGivenName1 
+            //        + (response.Message.DisputantGivenName2 != null ? (" " + response.Message.DisputantGivenName2) : "") 
+            //        + (response.Message.DisputantGivenName3 != null ? (" " + response.Message.DisputantGivenName3) : "");
+            //    if (response.Message.DisputantSurname.ToUpper() == user?.Surname.ToUpper()
+            //        || !(response.Message.DisputantGivenName1.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
+            //    {
+            //        return BadRequest("Disputant name does not match");
+            //    }
+            //}
+            //else if (response.Message.ContactTypeCd == DisputeContactTypeCd.LAWYER || response.Message.ContactTypeCd == DisputeContactTypeCd.OTHER)
+            //{
+            //    var givenNames = response.Message.ContactGiven1Nm
+            //        + (response.Message.ContactGiven2Nm != null ? (" " + response.Message.ContactGiven2Nm) : "")
+            //        + (response.Message.ContactGiven3Nm != null ? (" " + response.Message.ContactGiven3Nm) : "");
+            //    if (response.Message.ContactSurnameNm.ToUpper() != user?.Surname.ToUpper()
+            //        || !(response.Message.ContactGiven1Nm.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
+            //    {
+            //        return BadRequest("Contact name does not match");
+            //    }
+            //}
+            //else
+            //{
+            //    return BadRequest("Unknown contact type in request to update.");
+            //}
 
             // Submit request to Workflow Service for processing.
             DisputantUpdateRequest request = _mapper.Map<DisputantUpdateRequest>(dispute);

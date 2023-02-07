@@ -105,6 +105,7 @@ export class DisputeService {
 
   updateDispute(guid: string, input: NoticeOfDispute) {
     let payload = this.disputeToServer(input);
+    console.log(payload);
     return this.disputesService.apiDisputesGuidHashPut(guid, payload);
   }
 
