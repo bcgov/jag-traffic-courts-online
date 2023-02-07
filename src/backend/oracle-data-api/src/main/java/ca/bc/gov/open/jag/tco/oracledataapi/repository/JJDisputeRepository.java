@@ -2,7 +2,6 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
@@ -29,15 +28,6 @@ public interface JJDisputeRepository {
 	 * @return all entities
 	 */
 	public Iterable<JJDispute> findAll();
-
-	/**
-	 * Retrieves an entity by its id.
-	 *
-	 * @param id must not be {@literal null}.
-	 * @return the entity with the given id or {@literal Optional#empty()} if none found.
-	 * @throws IllegalArgumentException if {@literal id} is {@literal null}.
-	 */
-	public Optional<JJDispute> findById(Long id);
 
 	/** Fetch all records that match by JJDispute.ticketNumber (should only ever be one). */
 	public List<JJDispute> findByTicketNumber(String ticketNumber);

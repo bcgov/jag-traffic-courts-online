@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -83,11 +82,6 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 			return Arrays.asList(jjDispute);
 		}
 		return new ArrayList<JJDispute>();
-	}
-
-	@Override
-	public Optional<JJDispute> findById(Long id) {
-		throw new NotYetImplementedException();
 	}
 
 	@Override
