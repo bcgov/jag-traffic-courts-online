@@ -271,34 +271,8 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            // TODO:  Uncomment before UAT and go-live
-            //// if contact type is individual then match with disputant name otherwise match with contact names
-            //if (response.Message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
-            //{
-            //    var givenNames = response.Message.DisputantGivenName1
-            //        + (response.Message.DisputantGivenName2 != null ? (" " + response.Message.DisputantGivenName2) : "")
-            //        + (response.Message.DisputantGivenName3 != null ? (" " + response.Message.DisputantGivenName3) : "");
-            //    if (response.Message.DisputantSurname.ToUpper() == user?.Surname.ToUpper()
-            //        || !(response.Message.DisputantGivenName1.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
-            //    {
-            //        return BadRequest("Disputant name does not match");
-            //    }
-            //}
-            //else if (response.Message.ContactTypeCd == DisputeContactTypeCd.LAWYER || response.Message.ContactTypeCd == DisputeContactTypeCd.OTHER)
-            //{
-            //    var givenNames = response.Message.ContactGiven1Nm
-            //        + (response.Message.ContactGiven2Nm != null ? (" " + response.Message.ContactGiven2Nm) : "")
-            //        + (response.Message.ContactGiven3Nm != null ? (" " + response.Message.ContactGiven3Nm) : "");
-            //    if (response.Message.ContactSurnameNm.ToUpper() != user?.Surname.ToUpper()
-            //        || !(response.Message.ContactGiven1Nm.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
-            //    {
-            //        return BadRequest("Contact name does not match");
-            //    }
-            //}
-            //else
-            //{
-            //    return BadRequest("Unknown contact type in request to update.");
-            //}
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
             return Ok(result);
@@ -422,34 +396,8 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            // TODO: Uncomment this before User Acceptance Testing
-            //// if contact type is individual then match with disputant name otherwise match with contact names
-            //if (response.Message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
-            //{
-            //    var givenNames = response.Message.DisputantGivenName1 
-            //        + (response.Message.DisputantGivenName2 != null ? (" " + response.Message.DisputantGivenName2) : "") 
-            //        + (response.Message.DisputantGivenName3 != null ? (" " + response.Message.DisputantGivenName3) : "");
-            //    if (response.Message.DisputantSurname.ToUpper() == user?.Surname.ToUpper()
-            //        || !(response.Message.DisputantGivenName1.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
-            //    {
-            //        return BadRequest("Disputant name does not match");
-            //    }
-            //}
-            //else if (response.Message.ContactTypeCd == DisputeContactTypeCd.LAWYER || response.Message.ContactTypeCd == DisputeContactTypeCd.OTHER)
-            //{
-            //    var givenNames = response.Message.ContactGiven1Nm
-            //        + (response.Message.ContactGiven2Nm != null ? (" " + response.Message.ContactGiven2Nm) : "")
-            //        + (response.Message.ContactGiven3Nm != null ? (" " + response.Message.ContactGiven3Nm) : "");
-            //    if (response.Message.ContactSurnameNm.ToUpper() != user?.Surname.ToUpper()
-            //        || !(response.Message.ContactGiven1Nm.ToUpper() == user?.GivenName.ToUpper() || givenNames.TrimEnd().ToUpper() == user?.GivenNames.ToUpper()))
-            //    {
-            //        return BadRequest("Contact name does not match");
-            //    }
-            //}
-            //else
-            //{
-            //    return BadRequest("Unknown contact type in request to update.");
-            //}
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             // Submit request to Workflow Service for processing.
             DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
@@ -528,5 +476,42 @@ public class DisputesController : ControllerBase
         {
             return "";
         }
+    }
+
+    private bool CompareNames(SubmitNoticeOfDispute message, UserInfo? user)
+    {
+        bool result = true;
+
+        // if contact type is individual then match with disputant name otherwise match with contact names
+        if (message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
+        {
+            var givenNames = message.DisputantGivenName1
+                + (message.DisputantGivenName2 != null ? (" " + message.DisputantGivenName2) : "")
+                + (message.DisputantGivenName3 != null ? (" " + message.DisputantGivenName3) : "");
+            if (message.DisputantSurname.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+                || !(message.DisputantGivenName1.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = false;
+            }
+        }
+        else if (message.ContactTypeCd == DisputeContactTypeCd.LAWYER || message.ContactTypeCd == DisputeContactTypeCd.OTHER)
+        {
+            var givenNames = message.ContactGiven1Nm
+                + (message.ContactGiven2Nm != null ? (" " + message.ContactGiven2Nm) : "")
+                + (message.ContactGiven3Nm != null ? (" " + message.ContactGiven3Nm) : "");
+            if (message.ContactSurnameNm.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+                || !(message.ContactGiven1Nm.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = false;
+            }
+        }
+        else
+        {
+            result = false;
+        }
+
+        #warning Contact Name Comparisons with BC Services Cards have been disabled 
+        // return result;
+        return true;
     }
 }

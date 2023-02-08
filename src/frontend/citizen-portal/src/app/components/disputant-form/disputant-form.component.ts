@@ -121,13 +121,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
 
-    // initialize contact type to individual on the ticket
-    this.form?.get('contact_type').setValue(this.ContactType.Individual);
-    this.form.get('contact_law_firm_name').clearValidators();
-    this.form.get('contact_law_firm_name').setValue(null);
-    this.form.get('contact_surname').setValue(null);
-    this.form.get('contact_given_names').setValue(null);
-
   }
 
   ngAfterViewInit(): void {

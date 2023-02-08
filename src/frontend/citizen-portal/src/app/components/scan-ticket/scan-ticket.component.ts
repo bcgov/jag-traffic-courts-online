@@ -10,7 +10,7 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   styleUrls: ['./scan-ticket.component.scss'],
 })
 export class ScanTicketComponent implements OnInit {
-  public ticket: ViolationTicket;
+  private ticket: ViolationTicket;
   ticketImageSrc: string;
   ticketImageFile: string;
   ticketFilename: string;
@@ -36,8 +36,9 @@ export class ScanTicketComponent implements OnInit {
 
     // get count summary info
     this.ticket.counts.forEach(count => {
-      this.violationTicketCounts[count.count_no - 1] = count;
+      this.violationTicketCounts.push(count);
     });
+    this.violationTicketCounts = this.violationTicketCounts.sort((a,b)=> a.count_no - b.count_no);
 
     this.ticketImageSrc = inputTicketData.ticketImage;
     this.ticketFilename = inputTicketData.filename;

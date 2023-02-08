@@ -32,6 +32,8 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
 
+        using var loggingScope = _logger.BeginConsumeScope(context);
+
         _logger.LogDebug("Consuming message");
         DisputeUpdateRequestAccepted message = context.Message;
 
@@ -45,6 +47,11 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
 
             // Extract patched Dispute values per updateType
             Dispute? patch = JsonConvert.DeserializeObject<Dispute>(updateRequest.UpdateJson);
+            if (patch != null)
+            {
+                throw new InvalidOperationException("Unable to process update request JSON.");
+            }
+
             switch (updateRequest.UpdateType)
             {
                 case DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS:
@@ -68,7 +75,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                     dispute.ContactGiven3Nm = patch?.ContactGiven3Nm;
                     dispute.ContactSurnameNm = patch?.ContactSurnameNm;
                     dispute.ContactLawFirmNm = patch?.ContactLawFirmNm;
-                    dispute.ContactTypeCd = (DisputeContactTypeCd)(patch?.ContactTypeCd);
+                    dispute.ContactTypeCd = patch?.ContactTypeCd != null ? patch.ContactTypeCd : DisputeContactTypeCd.UNKNOWN;
                     break;
                 case DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
                     // TODO: update document metadata set StaffReviewStatus to Accepted
@@ -100,9 +107,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                     dispute.WitnessNo = patch?.WitnessNo;
                     dispute.FineReductionReason = patch?.FineReductionReason;
                     dispute.TimeToPayReason = patch?.TimeToPayReason;
-#pragma warning disable CS8629 // Nullable value type may be null.
-                    dispute.RequestCourtAppearanceYn = (DisputeRequestCourtAppearanceYn)(patch?.RequestCourtAppearanceYn);
-#pragma warning restore CS8629 // Nullable value type may be null.
+                    dispute.RequestCourtAppearanceYn = patch?.RequestCourtAppearanceYn;
                     break;
                 case DisputeUpdateRequestUpdateType.DISPUTANT_EMAIL:
                     // nothing to do here except record in file history (down further)

@@ -13,7 +13,7 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
         CreateMap<Models.Disputes.DisputeCount, Messaging.MessageContracts.DisputeCount>();
 
         CreateMap<SubmitNoticeOfDispute, NoticeOfDispute>()
-            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts))
+            //.ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts))
             .ForMember(dest => dest.ViolationTicket, opt => opt.MapFrom(src => src.ViolationTicket));
         CreateMap<Messaging.MessageContracts.DisputeCount, Models.Disputes.DisputeCount>();
         CreateMap<Messaging.MessageContracts.ViolationTicket, Models.Tickets.ViolationTicket>()

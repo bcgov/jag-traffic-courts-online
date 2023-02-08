@@ -41,7 +41,6 @@ export class NoticeOfDisputeService {
     address_province_seq_no: { value: null, options: { validators: [Validators.required] } },
     postal_code: { value: null, options: { validators: [Validators.required] } },
     home_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
-    work_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
     email_address: { value: null, options: { validators: [Validators.required, Validators.email] } },
     drivers_licence_number: { value: null, options: { validators: [Validators.required, Validators.minLength(7), Validators.maxLength(9)] } },
     drivers_licence_province: { value: null, options: { validators: [Validators.required] } },
@@ -155,7 +154,6 @@ export class NoticeOfDisputeService {
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
 
-    // input.disputant_birthdate = "2001-01-01" // TODO: remove this once disputant birthdate removed from schema, API
     input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
         count.request_court_appearance = input.request_court_appearance;
     });

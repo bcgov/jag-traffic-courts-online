@@ -55,9 +55,11 @@ public class DisputeService : IDisputeService
                     dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
                 }
             }
-            catch 
+            catch (Exception ex)
             {
-                // dont crash since in dev environment, ocr image could be on individuals localhost
+                // Should never reach here in test or prod, but if so then it means the ocr json data is invalid or not parseable by .NET
+                // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
+                _logger.LogError(ex, "Could not extract object store file reference from json data while retrieving disputes.");
             }
         }
 
@@ -111,7 +113,7 @@ public class DisputeService : IDisputeService
             }
             catch (Exception ex)
             {
-                // Should never reach here, but if so then it means the ocr json data is invalid or not parseable by .NET
+                // Should never reach here in test or prod, but if so then it means the ocr json data is invalid or not parseable by .NET
                 // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
                 _logger.LogError(ex, "Could not extract object store file reference from json data");
             }
