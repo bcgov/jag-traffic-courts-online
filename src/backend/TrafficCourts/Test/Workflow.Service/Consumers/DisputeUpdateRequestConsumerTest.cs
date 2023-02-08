@@ -144,7 +144,7 @@ public class DisputeUpdateRequestConsumerTest
         // Act
         await _consumer.Consume(_context.Object);
 
-        // Assert the oracle service was called once, INSERTing an update request of type Dispute_ADDRESS and status PENDING.
+        // Assert the oracle service was called once, INSERTing an update request of type DISPUTANT_ADDRESS and status PENDING.
         _oracleDataApiService.Verify(m => m.SaveDisputeUpdateRequestAsync(_message.NoticeOfDisputeGuid.ToString(),
             It.Is<Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>(a =>
                 a.Status == DisputeUpdateRequestStatus2.PENDING &&

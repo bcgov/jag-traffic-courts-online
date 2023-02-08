@@ -1,7 +1,6 @@
 export * from './boundingBox.model';
 export * from './credentialRepresentation.model';
 export * from './dispute.model';
-export * from './disputeAppearanceLessThan14Days.model';
 export * from './disputeAppearanceLessThan14DaysYn.model';
 export * from './disputeContactTypeCd.model';
 export * from './disputeCount.model';

@@ -2232,11 +2232,6 @@
             "type": "string",
             "nullable": true
           },
-          "appearanceLessThan14Days": {
-            "type": "string",
-            "nullable": true,
-            "enum": [ "UNKNOWN", "Y", "N" ]
-          },
           "violationTicket": { "$ref": "#/components/schemas/ViolationTicket" },
           "disputeCounts": {
             "type": "array",

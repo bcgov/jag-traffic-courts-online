@@ -16,7 +16,6 @@ index.ts
 model/boundingBox.model.ts
 model/credentialRepresentation.model.ts
 model/dispute.model.ts
-model/disputeAppearanceLessThan14Days.model.ts
 model/disputeAppearanceLessThan14DaysYn.model.ts
 model/disputeContactTypeCd.model.ts
 model/disputeCount.model.ts

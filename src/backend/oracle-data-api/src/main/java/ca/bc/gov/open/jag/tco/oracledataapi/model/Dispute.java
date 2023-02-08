@@ -501,14 +501,6 @@ public class Dispute extends Auditable<String> {
 	@Schema(maxLength = 100, nullable = true)
 	private String ocrTicketFilename;
 	
-	/**
-	 * Is there an upcoming court appearance in next 14 days (read only)
-	 */
-	@Column(nullable = true)
-	@Schema(nullable = true)
-	@Enumerated(EnumType.STRING)
-	private YesNo appearanceLessThan14Days;
-
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
 	@Schema(nullable = true)

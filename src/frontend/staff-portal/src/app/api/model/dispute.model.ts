@@ -12,7 +12,6 @@
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
-import { DisputeAppearanceLessThan14Days } from './disputeAppearanceLessThan14Days.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { DisputeStatus } from './disputeStatus.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
@@ -92,7 +91,6 @@ export interface Dispute {
     disputantOcrIssues?: string | null;
     systemDetectedOcrIssues?: DisputeSystemDetectedOcrIssues;
     ocrTicketFilename?: string | null;
-    appearanceLessThan14Days?: DisputeAppearanceLessThan14Days;
     violationTicket?: ViolationTicket;
     disputeCounts?: Array<DisputeCount> | null;
     additionalProperties?: { [key: string]: any; } | null;

@@ -5228,10 +5228,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string OcrTicketFilename { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("appearanceLessThan14Days", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public DisputeAppearanceLessThan14Days? AppearanceLessThan14Days { get; set; }
-
         [Newtonsoft.Json.JsonProperty("violationTicket", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public ViolationTicket ViolationTicket { get; set; }
 
@@ -6183,21 +6179,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum DisputeSystemDetectedOcrIssues
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
-        UNKNOWN = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
-        Y = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"N")]
-        N = 2,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum DisputeAppearanceLessThan14Days
     {
 
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
