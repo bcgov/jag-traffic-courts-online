@@ -120,6 +120,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "occamViolationTicketUpldId", target = "occamViolationTicketUpldId")
 	@Mapping(source = "offenceLocation", target = "offenceLocationTxt")
 	@Mapping(source = "policeDetachment", target = "detachmentLocationTxt")
+	@Mapping(source = "appearInCourt", target = "requestCourtAppearanceYn")
 	@Mapping(source = "remarks", target = "disputeRemarks")
 	@Mapping(source = "status", target = "disputeStatusTypeCd", qualifiedByName="mapShortNamedEnum")
 	@Mapping(source = "submittedTs", target = "submittedDt")
