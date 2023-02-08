@@ -9,7 +9,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -40,9 +39,60 @@ public class DisputeTicketOptionsPicker {
 		WebDriverWait driverWait = WebDriverManager.getDriverWait();
 		WebElement element = WebDriverManager.getElement();
 		WebDriverManager.getElements();
-		
 
 		CommonUtils.login();
+
+		DisputeTicketOptionsPicker disputeTicketExisting = new DisputeTicketOptionsPicker();
+		disputeTicketExisting.startDisputeTicket(element, driverWait, driver);
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
+		element.sendKeys("Test");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
+		element.sendKeys("User");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
+		element.sendKeys("3220 Qadra");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
+		element.sendKeys("Victoria");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
+		element.sendKeys("V8X1G3");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
+		element.sendKeys("9999999999");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
+		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
+		element.sendKeys("999 999 1234");
+
+		// Add DOB
+		/*
+		 * new WebDriverWait(driver, Duration.ofSeconds(10))
+		 * .until(ExpectedConditions.presenceOfElementLocated(By.
+		 * xpath("//*[@aria-label='Open calendar']"))) .click(); new
+		 * WebDriverWait(driver, Duration.ofSeconds(10))
+		 * .until(ExpectedConditions.presenceOfElementLocated(By.
+		 * xpath("//*[contains(text(), ' 2004 ')]"))) .click(); Thread.sleep(1000); new
+		 * WebDriverWait(driver, Duration.ofSeconds(10))
+		 * .until(ExpectedConditions.presenceOfElementLocated(By.
+		 * xpath("//*[contains(text(), ' JAN ')]"))).click(); Thread.sleep(1000); new
+		 * WebDriverWait(driver, Duration.ofSeconds(10))
+		 * .until(ExpectedConditions.presenceOfElementLocated(By.
+		 * xpath("//*[contains(text(), ' 31 ')]"))).click();
+		 */
+
+		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
+		review.reviewProcess(element, driverWait, driver);
+		
+		//Additional info
+		
+		DisputeTicketOptionsPicker info = new DisputeTicketOptionsPicker();
+		info.additionalInfo(element, driverWait, driver);
+
+		DisputeTicketOptionsPicker overview = new DisputeTicketOptionsPicker();
+		overview.ticketRequestOverview(element, driverWait, driver);
+
+	}
+
+	public void startDisputeTicket(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
 		Thread.sleep(1000);
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("scroll(0, 450);");
@@ -78,38 +128,10 @@ public class DisputeTicketOptionsPicker {
 				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-button-wrapper > strong")));
 		element.click();
 		System.out.println("Start dispute ticket");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
-		element.sendKeys("Test");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
-		element.sendKeys("User");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-		element.sendKeys("3220 Qadra");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-		element.sendKeys("Victoria");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
-		element.sendKeys("V8X1G3");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys("9999999999");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
-		element.sendKeys("999 999 1234");
+	}
 
-		// Add DOB
-		/*
-		 * new WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[@aria-label='Open calendar']"))) .click(); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' 2004 ')]"))) .click(); Thread.sleep(1000); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' JAN ')]"))).click(); Thread.sleep(1000); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' 31 ')]"))).click();
-		 */
+	public void reviewProcess(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
 		Thread.sleep(1000);
 		// Scroll down till the bottom of the page
 		JavascriptExecutor jse3 = (JavascriptExecutor) driver;
@@ -124,22 +146,22 @@ public class DisputeTicketOptionsPicker {
 		// Select rdo button
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-2")));
 		element.click();
-		
+
 		JavascriptExecutor jse68 = (JavascriptExecutor) driver;
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[2]/div[1]/mat-checkbox[1]/label/span[1]")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[2]/div[1]/mat-checkbox[1]/label/span[1]")));
 		jse68.executeScript("arguments[0].scrollIntoView();", element);
 		Thread.sleep(1000);
 		element.click();
 		JavascriptExecutor jse6 = (JavascriptExecutor) driver;
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[2]/div[1]/mat-checkbox[2]/label/span[1]")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[2]/div[1]/mat-checkbox[2]/label/span[1]")));
 		jse6.executeScript("arguments[0].scrollIntoView();", element);
 		Thread.sleep(1000);
 		element.click();
 		JavascriptExecutor jse7 = (JavascriptExecutor) driver;
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[3]/mat-checkbox[1]/label/span[1]")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[3]/mat-checkbox[1]/label/span[1]")));
 		jse7.executeScript("arguments[0].scrollIntoView();", element);
 		Thread.sleep(1000);
 		element.click();
@@ -164,12 +186,12 @@ public class DisputeTicketOptionsPicker {
 
 		// Click Next
 		Thread.sleep(1000);
-		
+
 		JavascriptExecutor js11 = (JavascriptExecutor) driver;
 		js11.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[3]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));		
+				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[3]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
 		element.click();
 
 		String b = "Count 3: Review";
@@ -198,6 +220,11 @@ public class DisputeTicketOptionsPicker {
 		} else {
 			System.out.println("Text: " + c + " is not present. ");
 		}
+
+	}
+
+	public void additionalInfo(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys(
@@ -210,6 +237,11 @@ public class DisputeTicketOptionsPicker {
 				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[5]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
 		element.click();
 
+	}
+	
+	public void ticketRequestOverview(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+		
+		
 		String d = "Ticket request overview";
 		// identify elements with text()
 		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Ticket request overview')]"));
@@ -223,7 +255,7 @@ public class DisputeTicketOptionsPicker {
 		JavascriptExecutor js15 = (JavascriptExecutor) driver;
 		// Scroll down till the bottom of the page
 		js15.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		
+
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-13")));
 		element.click();
@@ -250,7 +282,8 @@ public class DisputeTicketOptionsPicker {
 		System.out.println("Submit in pop-up clicked");
 
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
-
+		
+		
 	}
 
 }
