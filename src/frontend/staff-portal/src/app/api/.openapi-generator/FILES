@@ -15,9 +15,6 @@ git_push.sh
 index.ts
 model/boundingBox.model.ts
 model/credentialRepresentation.model.ts
-model/disputantUpdateRequest.model.ts
-model/disputantUpdateRequestStatus2.model.ts
-model/disputantUpdateRequestUpdateType.model.ts
 model/dispute.model.ts
 model/disputeAppearanceLessThan14Days.model.ts
 model/disputeAppearanceLessThan14DaysYn.model.ts
@@ -33,6 +30,9 @@ model/disputeRepresentedByLawyer.model.ts
 model/disputeRequestCourtAppearanceYn.model.ts
 model/disputeStatus.model.ts
 model/disputeSystemDetectedOcrIssues.model.ts
+model/disputeUpdateRequest.model.ts
+model/disputeUpdateRequestStatus2.model.ts
+model/disputeUpdateRequestUpdateType.model.ts
 model/disputeWithUpdates.model.ts
 model/emailHistory.model.ts
 model/emailHistorySuccessfullySent.model.ts

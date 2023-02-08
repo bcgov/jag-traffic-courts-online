@@ -73,7 +73,7 @@ public class DisputeUpdateRequestRejectedConsumerTest
         await _consumer.Consume(_context.Object);
 
         // Assert
-        Assert.Equal(DisputantUpdateRequestStatus2.REJECTED, _updateRequest.Status);
+        Assert.Equal(DisputeUpdateRequestStatus2.REJECTED, _updateRequest.Status);
     }
 
     [Fact]

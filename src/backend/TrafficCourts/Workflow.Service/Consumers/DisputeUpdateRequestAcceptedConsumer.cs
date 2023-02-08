@@ -73,7 +73,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                 case DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
                     // TODO: update document metadata set StaffReviewStatus to Accepted
                     break;
-                case DisputantUpdateRequestUpdateType.COUNT:
+                case DisputeUpdateRequestUpdateType.COUNT:
                     foreach(Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount disputeCount in dispute.DisputeCounts)
                     {
                         Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount? patchCount = patch?.DisputeCounts.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
