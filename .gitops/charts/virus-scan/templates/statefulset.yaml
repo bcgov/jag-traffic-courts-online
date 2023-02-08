@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "clamav.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "clamav.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.clamav.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "clamav.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "clamav.fullname" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "clamav.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: clamav
+        image: "{{ .Values.clamav.image }}:{{ .Values.clamav.tag }}"
+        imagePullPolicy: "{{ .Values.clamav.imagePullPolicy }}"
+        {{- if .Values.containerSecurityContext.enabled }}
+        securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+        {{- end }}
+        ports:
+        - containerPort: 3310
+          name: clamav
+          protocol: TCP
+        # Give clamav up to 300s to get CVDs in place etc.
+        startupProbe:
+          exec:
+            command:
+            - /opt/app-root/clamdcheck.sh
+          failureThreshold: 30
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - /opt/app-root/clamdcheck.sh
+          failureThreshold: 2
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources:
+          {{- toYaml .Values.clamav.resources | nindent 10 }}
+        volumeMounts:
+          - mountPath: /opt/app-root/src
+            name: signatures
+          # clamd.conf file
+          - mountPath: /etc/clamd.conf
+            name: config-volume
+            readOnly: true
+            subPath: clamd.conf
+          # freshclam.conf file
+          - mountPath: /etc/freshclam.conf
+            name: config-volume
+            readOnly: true
+            subPath: freshclam.conf
+      - name: virus-scan-service
+        image: "{{ .Values.virusScanService.image }}:{{ .Values.virusScanService.tag }}"
+        imagePullPolicy: {{ .Values.virusScanService.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        env:
+          {{- $env := merge (.Values.env | default dict) -}}
+          {{ range $k, $v := $env }}
+          - name: {{ $k | quote }}
+            value: {{ $v | quote }}
+          {{- end }}
+          - name: TZ
+            value: America/Vancouver
+          - name: ASPNETCORE_URLS
+            value: http://*:8080
+      #securityContext:
+      #  runAsNonRoot: true
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ include "clamav.fullname" . }}
+      {{- with .Values.clamav.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.clamav.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.clamav.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: signatures
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- with .Values.clamav.storageClassName }}
+      storageClassName: {{ . }}
+      {{- end }}
+      resources:
+        requests:
+          storage: 2Gi
