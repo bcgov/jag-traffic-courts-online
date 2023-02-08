@@ -107,8 +107,9 @@ workflow-service:
     tag: "1.53.2"
     pullPolicy: Always
   env:
+    "COMS__BASEURL": "http://common-object-management-service-coms:3000"
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
     "EmailConfiguration__AllowList": ""
     "EmailConfiguration__EmailVerificationURL": "https://dev.tickets.gov.bc.ca/email/verify"
     "MassTransit__Transport": "RabbitMq"
-    "COMS__BASEURL": "http://common-object-management-service-coms:3000"
+    "VIRUSSCAN__BASEURL": "http://virus-scan-api:8080"
