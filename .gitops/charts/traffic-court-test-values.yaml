@@ -111,3 +111,4 @@ workflow-service:
     "EmailConfiguration__EmailVerificationURL": "https://test.tickets.gov.bc.ca/email/verify"
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service-coms:3000"
+    "VIRUSSCAN__BASEURL": "http://virus-scan-api:8080"
