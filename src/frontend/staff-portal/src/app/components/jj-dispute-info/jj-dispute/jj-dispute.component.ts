@@ -12,7 +12,7 @@ import { LookupsService } from 'app/services/lookups.service';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
-// import { ComsService } from 'app/api';
+import { DocumentService } from 'app/api/api/document.service';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -68,7 +68,7 @@ export class JJDisputeComponent implements OnInit {
     private logger: LoggerService,
     private lookups: LookupsService,
     public config: ConfigService,
-    // private coms: ComsService
+    private documentService: DocumentService
   ) {
     this.jjDisputeService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -84,29 +84,29 @@ export class JJDisputeComponent implements OnInit {
     element?.scrollIntoView(true);
   }
 
-  // onRemove(fileId: string) {
+  onRemove(fileId: string) {
 
-  // }
+  }
 
-  // onGetFile(fileId: string) {
+  onGetFile(fileId: string) {
 
-  // }
+  }
 
-  // onUpload(files: FileList) {
-  //   if (files.length <=0) return;
+  onUpload(files: FileList) {
+    if (files.length <=0) return;
 
-  //   // upload to coms
-  //   this.coms.apiComsUploaddocumentPost(files[0],)
-  //     .subscribe(fileId => {
+    // upload to coms
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
+      .subscribe(fileId => {
 
-  //     // add to display of files in DCF
-  //     let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
-  //     this.lastUpdatedJJDispute.fileData.push(item);
+      // add to display of files in DCF
+      let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
+      this.lastUpdatedJJDispute.fileData.push(item);
 
-  //     this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
-  //   });
+      this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
+    });
 
-  // }
+  }
 
   ngOnInit() {
     this.getJJDispute();
