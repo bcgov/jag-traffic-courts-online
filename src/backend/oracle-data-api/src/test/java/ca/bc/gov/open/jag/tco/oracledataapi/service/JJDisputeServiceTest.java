@@ -163,7 +163,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDispute = RandomUtil.createJJDispute();
 		jjDispute.setStatus(jjDisputeStatus);
 
-		return jjDisputeRepository.save(jjDispute);
+		return jjDisputeRepository.saveAndFlush(jjDispute);
 	}
 
 }
