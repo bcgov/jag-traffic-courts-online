@@ -480,6 +480,10 @@ public class DisputesController : ControllerBase
 
     private bool CompareNames(SubmitNoticeOfDispute message, UserInfo? user)
     {
+#if DEBUG 
+#warning Contact Name Comparisons with BC Services Cards have been disabled 
+        return true;
+#endif
         bool result = true;
 
         // if contact type is individual then match with disputant name otherwise match with contact names
@@ -510,8 +514,6 @@ public class DisputesController : ControllerBase
             result = false;
         }
 
-        #warning Contact Name Comparisons with BC Services Cards have been disabled 
-        // return result;
-        return true;
+        return result;
     }
 }
