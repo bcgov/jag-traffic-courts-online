@@ -444,7 +444,7 @@ public class DisputeController {
 			@Parameter(description = "The id of the DisputeUpdateRequest record to update.")
 			Long updateRequestId,
 			@RequestParam
-			@Parameter(description = "The status the request record should be updated to.", example = "ACCEPTED")
+			@Parameter(description = "The status of the request record should be updated to.", example = "ACCEPTED")
 			DisputeUpdateRequestStatus disputeUpdateRequestStatus) {
 		logger.debug("PUT /dispute/updateRequest/{} called", updateRequestId);
 

@@ -4,8 +4,8 @@ public enum DisputeUpdateRequestStatus implements ShortNamedEnum {
 
 	/** Unknown type (undefined). Must be index 0. */
 	UNKNOWN("UKN"),
-	ACCEPTED("ACC"),
-	PENDING("PEN"),
+	ACCEPTED("ACT"),
+	PENDING("PEND"),
 	REJECTED("REJ");
 
 	private String shortName;

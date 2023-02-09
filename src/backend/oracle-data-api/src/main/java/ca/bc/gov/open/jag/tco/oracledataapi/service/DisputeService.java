@@ -417,7 +417,7 @@ public class DisputeService {
 	public DisputeUpdateRequest updateDisputeUpdateRequest(Long updateRequestId, DisputeUpdateRequestStatus status) {
 		DisputeUpdateRequest disputeUpdateRequest = disputeUpdateRequestRepository.findById(updateRequestId).orElseThrow();
 		disputeUpdateRequest.setStatus(status);
-		return disputeUpdateRequestRepository.save(disputeUpdateRequest);
+		return disputeUpdateRequestRepository.update(disputeUpdateRequest);
 	}
 
 }
