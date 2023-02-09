@@ -420,4 +420,13 @@ public class DisputeService {
 		return disputeUpdateRequestRepository.update(disputeUpdateRequest);
 	}
 
+	/**
+	 * Deletes a specific {@link DisputeUpdateRequest}
+	 *
+	 * @param id of the DisputeUpdateRequest to be deleted
+	 */
+	public void deleteDisputeUpdateRequest(Long id) {
+		disputeUpdateRequestRepository.deleteById(id);
+	}
+
 }

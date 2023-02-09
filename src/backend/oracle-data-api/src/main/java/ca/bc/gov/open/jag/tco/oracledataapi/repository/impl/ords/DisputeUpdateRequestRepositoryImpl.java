@@ -117,6 +117,22 @@ public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestR
 		return null;
 	}
 
+	@Override
+	public void deleteById(Long id) {
+		if (id == null) {
+			throw new IllegalArgumentException("DisputeUpdateRequest ID is null.");
+		}
+
+		try {
+			UpdateRequestResponseResult result = assertNoExceptions(() -> disputeUpdateRequestApi.v1DeleteDisputeUpdateRequestDelete(id, null));
+			logger.debug("Successfully deleted the dispute update request through ORDS with id {}", result.getDisputeUpdateRequestId());
+
+		} catch (ApiException e) {
+			logger.error("ERROR deleting DisputeUpdateRequest through ORDS with id: {}", id, e);
+			throw new InternalServerErrorException(e);
+		}
+	}
+
 	/**
 	 * A helper method that will throw an appropriate InternalServerErrorException based on the UpdateRequestResponseResult. Any RuntimeExceptions throw will propagate up to caller.
 	 * @return
