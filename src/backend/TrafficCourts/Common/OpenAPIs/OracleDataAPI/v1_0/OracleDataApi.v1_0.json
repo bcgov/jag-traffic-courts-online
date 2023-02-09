@@ -718,7 +718,7 @@
           {
             "name": "disputeUpdateRequestStatus",
             "in": "query",
-            "description": "The status the request record should be updated to.",
+            "description": "The status of the request record should be updated to.",
             "required": true,
             "schema": {
               "type": "string",

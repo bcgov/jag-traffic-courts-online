@@ -11,6 +11,7 @@ import javax.ws.rs.InternalServerErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeUpdateRequestMapper;
@@ -22,6 +23,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.UpdateRequestLi
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.UpdateRequestResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeUpdateRequestRepository;
 
+@ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = true)
 @Qualifier("disputantUpdateRequestRepository")
 @Repository
 public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestRepository{
