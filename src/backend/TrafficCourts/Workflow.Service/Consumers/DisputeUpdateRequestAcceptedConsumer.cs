@@ -32,6 +32,8 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
 
+        using var loggingScope = _logger.BeginConsumeScope(context);
+
         _logger.LogDebug("Consuming message");
         DisputeUpdateRequestAccepted message = context.Message;
 
@@ -45,6 +47,11 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
 
             // Extract patched Dispute values per updateType
             Dispute? patch = JsonConvert.DeserializeObject<Dispute>(updateRequest.UpdateJson);
+            if (patch == null)
+            {
+                throw new InvalidOperationException("Unable to process update request JSON.");
+            }
+
             switch (updateRequest.UpdateType)
             {
                 case DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS:
@@ -63,6 +70,12 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                     dispute.DisputantGivenName2 = patch?.DisputantGivenName2;
                     dispute.DisputantGivenName3 = patch?.DisputantGivenName3;
                     dispute.DisputantSurname = patch?.DisputantSurname;
+                    dispute.ContactGiven1Nm = patch?.ContactGiven1Nm;
+                    dispute.ContactGiven2Nm = patch?.ContactGiven2Nm;
+                    dispute.ContactGiven3Nm = patch?.ContactGiven3Nm;
+                    dispute.ContactSurnameNm = patch?.ContactSurnameNm;
+                    dispute.ContactLawFirmNm = patch?.ContactLawFirmNm;
+                    dispute.ContactTypeCd = patch?.ContactTypeCd != null ? patch.ContactTypeCd : DisputeContactTypeCd.UNKNOWN;
                     break;
                 case DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
                     // TODO: update document metadata set StaffReviewStatus to Accepted
@@ -93,7 +106,8 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                     dispute.InterpreterRequired = patch?.InterpreterRequired;   
                     dispute.WitnessNo = patch?.WitnessNo;
                     dispute.FineReductionReason = patch?.FineReductionReason;
-                    dispute.TimeToPayReason = patch?.TimeToPayReason; 
+                    dispute.TimeToPayReason = patch?.TimeToPayReason;
+                    dispute.RequestCourtAppearanceYn = patch?.RequestCourtAppearanceYn;
                     break;
                 case DisputeUpdateRequestUpdateType.DISPUTANT_EMAIL:
                     // nothing to do here except record in file history (down further)
@@ -132,7 +146,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
         SaveFileHistoryRecord fileHistoryRecord = new()
         {
             TicketNumber = dispute.TicketNumber,
-            Description = "Disputant update request accepted."
+            Description = "Dispute update request accepted."
         };
         await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
     }

@@ -787,6 +787,38 @@
             "description": "The surname or corporate name.",
             "nullable": true
           },
+          "contact_law_firm_name": {
+            "type": "string",
+            "description": "Contact Law Firm Name",
+            "nullable": true
+          },
+          "contact_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 1",
+            "nullable": true
+          },
+          "contact_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 2",
+            "nullable": true
+          },
+          "contact_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 3",
+            "nullable": true
+          },
+          "contact_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Surname",
+            "nullable": true
+          },
+          "contact_type": {
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
+          },
           "address_line1": {
             "maxLength": 100,
             "type": "string",
@@ -883,6 +915,38 @@
             "type": "string",
             "description": "The surname or corporate name.",
             "nullable": true
+          },
+          "contact_law_firm_name": {
+            "type": "string",
+            "description": "Contact Law Firm Name",
+            "nullable": true
+          },
+          "contact_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 1",
+            "nullable": true
+          },
+          "contact_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 2",
+            "nullable": true
+          },
+          "contact_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 3",
+            "nullable": true
+          },
+          "contact_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Surname",
+            "nullable": true
+          },
+          "contact_type": {
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
           },
           "address_line1": {
             "maxLength": 100,
@@ -1030,6 +1094,9 @@
             "description": "Address of the lawyer who will represent the disputant at the hearing.",
             "nullable": true
           },
+          "request_court_appearance": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
+          },
           "interpreter_language_cd": {
             "type": "string",
             "description": "The disputant requires spoken language interpreter. The language name is indicated in this field.",
@@ -1064,6 +1131,15 @@
         },
         "additionalProperties": false,
         "description": "Represents a violation ticket notice of dispute."
+      },
+      "DisputeContactTypeCd": {
+        "enum": [
+          "UNKNOWN",
+          "INDIVIDUAL",
+          "LAWYER",
+          "OTHER"
+        ],
+        "type": "string"
       },
       "DisputeCount": {
         "type": "object",
@@ -1137,6 +1213,14 @@
         "type": "string"
       },
       "DisputeRepresentedByLawyer": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeRequestCourtAppearanceYn": {
         "enum": [
           "UNKNOWN",
           "Y",
@@ -1258,6 +1342,38 @@
             "description": "The surname or corporate name.",
             "nullable": true
           },
+          "contact_law_firm_name": {
+            "type": "string",
+            "description": "Contact Law Firm Name",
+            "nullable": true
+          },
+          "contact_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 1",
+            "nullable": true
+          },
+          "contact_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 2",
+            "nullable": true
+          },
+          "contact_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 3",
+            "nullable": true
+          },
+          "contact_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Surname",
+            "nullable": true
+          },
+          "contact_type": {
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
+          },
           "address_line1": {
             "maxLength": 100,
             "type": "string",
@@ -1403,6 +1519,9 @@
             "type": "string",
             "description": "Address of the lawyer who will represent the disputant at the hearing.",
             "nullable": true
+          },
+          "request_court_appearance": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
           },
           "interpreter_language_cd": {
             "type": "string",

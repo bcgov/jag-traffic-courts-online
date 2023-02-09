@@ -76,8 +76,13 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             }
         }
 
-        // If some or all name fields have data, send a DISPUTANT_NAME update request
-        if (!string.IsNullOrEmpty(message.DisputantGivenName1)
+        // If some or all name fields have data, send a CONTACT_NAME update request
+        if (!string.IsNullOrEmpty(message.ContactGiven1Nm)
+            || !string.IsNullOrEmpty(message.ContactGiven2Nm)
+            || !string.IsNullOrEmpty(message.ContactGiven3Nm)
+            || !string.IsNullOrEmpty(message.ContactSurnameNm)
+            || !string.IsNullOrEmpty(message.ContactLawFirmName)
+            || !string.IsNullOrEmpty(message.DisputantGivenName1)
             || !string.IsNullOrEmpty(message.DisputantGivenName2)
             || !string.IsNullOrEmpty(message.DisputantGivenName3)
             || !string.IsNullOrEmpty(message.DisputantSurname)
@@ -146,7 +151,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
 
         // TODO: ensure security so only requests authenticated with BCSC can do COURT_OPTIONS, COUNT, DOCUMENTS
 
-        // If at least one disputeUpdateRequest was saved ...
+        // If at least one DisputeUpdateRequest was saved ...
         if (disputeUpdateRequest.UpdateType != DisputeUpdateRequestUpdateType.UNKNOWN)
         {
             if (dispute?.EmailAddressVerified == true && dispute?.EmailAddress is not null)

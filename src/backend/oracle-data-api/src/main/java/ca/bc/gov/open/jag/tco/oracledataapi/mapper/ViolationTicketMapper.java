@@ -38,7 +38,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputeStatusTypeCd", source = "status", qualifiedByName="mapDisputeStatus")
 	@Mapping(target = "dispute.issuedDt", source = "issuedTs")
 	@Mapping(target = "dispute.submittedDt", source = "submittedTs")
-	@Mapping(target = "dispute.contactTypeCd", constant = "I")            // TODO: source = "contactTypeCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(target = "dispute.contactTypeCd", source = "contactTypeCd", qualifiedByName="mapShortNamedEnum")
 	@Mapping(target = "dispute.contactLawFirmNm", source = "contactLawFirmNm")
 	@Mapping(target = "dispute.contactGiven1Nm", source = "contactGiven1Nm")
 	@Mapping(target = "dispute.contactGiven2Nm", source = "contactGiven2Nm")
@@ -68,7 +68,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.noticeOfDisputeGuid", source = "noticeOfDisputeGuid")
 	@Mapping(target = "dispute.emailVerifiedYn", source = "emailAddressVerified", qualifiedByName="mapBooleanToYn")
 	@Mapping(target = "dispute.filingDt", source = "filingDate")
-	@Mapping(target = "dispute.courtAgenId", constant = "19227.0734") // TODO: this field should be moved to ViolationTicket table
+	@Mapping(target = "dispute.courtAgenId", source = "courtAgenId")
 	@Mapping(target = "dispute.representedByLawyerYn", source = "representedByLawyer")
 	@Mapping(target = "dispute.lawFirmNm", source = "lawFirmName")
 	// After mapping method to parse address source into multiple address fields

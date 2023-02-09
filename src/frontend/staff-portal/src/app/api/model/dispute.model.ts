@@ -77,6 +77,7 @@ export interface Dispute {
     appearanceDtm?: string | null;
     appearanceLessThan14DaysYn?: DisputeAppearanceLessThan14DaysYn;
     detachmentLocation?: string | null;
+    courtAgenId?: string | null;
     interpreterLanguageCd?: string | null;
     interpreterRequired?: DisputeInterpreterRequired;
     witnessNo?: number | null;

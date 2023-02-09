@@ -12,6 +12,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
+import { DisputeRequestCourtAppearanceYn} from "app/api";
 import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCountFormGroup, DisputeCount, Count } from "app/services/notice-of-dispute.service";
@@ -39,7 +40,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ticketTypes = TicketTypes;
   Plea = DisputeCountPleaCode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
-  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
   RequestReduction = DisputeCountRequestReduction;
 
@@ -50,15 +51,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   noticeOfDispute: NoticeOfDispute;
   matcher = new FormErrorStateMatcher();
 
-  // Count
-  countIndexes: number[];
-
   // Additional
   countsActions: CountsActions;
   customWitnessOption = false;
   minWitnesses = 1;
   maxWitnesses = 99;
-  additionalIndex: number;
+  countIndex: number = 1;
+  additionalIndex: number = 2;
 
   // Summary
   declared = false;
@@ -87,17 +86,23 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    if (!this.ticket) {
+      this.violationTicketService.goToFind();
+      return;
+    }
+    this.ticketType = this.violationTicketService.ticketType;
+
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
+    this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
+
+    // take info from ticket, convert dl number to string
+    this.ticket.drivers_licence_number && this.form.controls.drivers_licence_number.setValue(this.ticket.drivers_licence_number.toString());
 
     this.counts = this.ticketCounts.map((ticketCount, inx) => {
       return { ticket_count: ticketCount, form: this.noticeOfDisputeService.getCountForm(ticketCount, this.disputeCounts[inx]) };
-    })
+    });
     this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
-
-    this.countIndexes = this.ticketCounts.map(i => i.count_no);
-    let lastCountInx = this.countIndexes[this.countIndexes.length - 1]
-    this.additionalIndex = lastCountInx + 1;
   }
 
   ngAfterViewInit(): void {
@@ -127,84 +132,77 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     return { ...this.countFormDefaultValue, ...count };
   }
 
-  onAttendHearingChange(countForm: DisputeCountFormGroup, event): void {
-    countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event.value, __skip: false });
-  }
-
   onStepCancel(): void {
     this.violationTicketService.goToInitiateResolution();
   }
 
   onStepSave(): void {
-    let isAdditional = this.stepper.selectedIndex === this.additionalIndex;
     let isValid = this.formUtilsService.checkValidity(this.form);
 
-    if (this.countIndexes?.indexOf(this.stepper.selectedIndex) > -1) {
-      let countInx = this.stepper.selectedIndex - 1;
-      let countForm = this.counts[countInx].form;
-      if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
-        countForm.patchValue({ plea_cd: this.Plea.G });
-      }
-      if (countForm.value.__skip) {
-        countForm.patchValue({ ...this.getCountFormInitValue(this.ticketCounts[countInx]), __skip: true });
-      }
-      if (countForm.value.__apply_to_remaining_counts && countInx + 1 < this.counts.length) {
-        let value = this.counts[countInx].form.value;
-        for (let i = countInx; i < this.counts.length; i++) {
-          this.counts[i].form.patchValue({ ...value, ...this.ticketCounts[i], __apply_to_remaining_counts: false })
+    if (this.stepper.selectedIndex === this.countIndex) {
+      this.counts.forEach(count => {
+        let countForm = count.form;
+        if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
+          countForm.patchValue({ plea_cd: this.Plea.G });
         }
-      }
-      this.setAdditional();
+        if (countForm.value.__skip) {
+          countForm.patchValue({ ...this.getCountFormInitValue(count.ticket_count), __skip: true });
+        }
+      });
+      this.setAdditionalRequired();
+      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
+
     } else if (!isValid) {
       this.utilsService.scrollToErrorSection();
       this.toastService.openErrorToast(this.config.dispute_validation_error);
       return;
     }
 
-    if (isAdditional) {
-      this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
-        ...this.form.value,
-        ...this.additionalForm.value,
-        ...this.legalRepresentationForm.value,
-        dispute_counts: this.counts.map(i => i.form.value)
-      });
-    } else {
-      this.noticeOfDispute = null;
-    }
+    this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
+      ...this.form.value,
+      ...this.additionalForm.value,
+      ...this.legalRepresentationForm.value,
+      address_country_id: this.form.get("address_country_id").value, // disabled field is not available in this.form.value
+      dispute_counts: this.counts.map(i => i.form.value)
+    });
   }
 
-  private setAdditional() {
+ private setAdditionalRequired() {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
-    this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
 
-    if (this.countsActions.request_reduction.length > 0 && !this.additionalForm.controls.fine_reduction_reason.hasValidator(Validators.required)) {
-      this.additionalForm.controls.fine_reduction_reason.addValidators(Validators.required);
+    this.additionalForm.controls.fine_reduction_reason.clearValidators();
+    this.additionalForm.controls.time_to_pay_reason.clearValidators();
+    if (this.countsActions.request_reduction.length > 0) {
+      this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required]);
     }
-    if (this.countsActions.request_time_to_pay.length > 0 && !this.additionalForm.controls.time_to_pay_reason.hasValidator(Validators.required)) {
+    if (this.countsActions.request_time_to_pay.length > 0 ) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
     }
   }
 
-  isValid(countForm?: DisputeCountFormGroup): boolean {
-    if (countForm) {
-      let valid = countForm.valid;
-      if (countForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
-        valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
-      } else if (countForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
-        valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
-      }
-      return (valid || countForm.value.__skip) && !this.isAllCountsSkipped;
-    }
-    return this.form.valid;
+  isValid(): boolean {
+    if (this.stepper?.selectedIndex >= this.countIndex) {
+      let allCountsValid: boolean = true;
+      this.counts.forEach(count => {
+        let countForm = count.form;
+        let valid = true;
+        if (countForm) {
+          if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
+            valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
+          } else if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
+            valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
+          }
+          valid = countForm.valid || countForm.value.__skip;
+          allCountsValid = allCountsValid && valid && !this.isAllCountsSkipped;
+        }
+      });
+      if (!allCountsValid) return false;
+      else return this.form.valid;
+    } else return this.form.valid;
   }
 
   isAdditionalFormValid(): boolean {
     var result = true;
-    this.counts?.forEach((count: Count) => {
-      if (!this.isValid(count?.form)) {
-        result = false;
-      }
-    });
     if (this.additionalForm?.value.represented_by_lawyer === this.RepresentedByLawyer.Y && !this.legalRepresentationForm?.valid) {
       result = false;
     }

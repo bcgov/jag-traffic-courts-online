@@ -115,6 +115,12 @@ public class Dispute : DisputantContactInformation
     public string? LawyerPhoneNumber { get; set; } = String.Empty;
 
     /// <summary>
+    /// Request Court Appearance
+    /// </summary>
+    [JsonPropertyName("request_court_appearance")]
+    public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
+
+    /// <summary>
     /// The disputant requires spoken language interpreter. The language name is indicated in this field.
     /// </summary>
     [JsonPropertyName("interpreter_language_cd")]

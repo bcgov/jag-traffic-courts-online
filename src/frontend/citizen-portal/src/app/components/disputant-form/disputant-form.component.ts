@@ -5,7 +5,7 @@ import { UtilsService } from "@core/services/utils.service";
 import { ConfigService } from "@config/config.service";
 import { Address } from "@shared/models/address.model";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
-import { Language } from "app/api";
+import { DisputeContactTypeCd, Language } from "app/api";
 import { DisputantContactInformationFormGroup, NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { FormControlValidators } from "@core/validators/form-control.validators";
@@ -33,6 +33,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   // Form related
   showManualButton: boolean = true;
   showAddressFields: boolean = true; // temporary preset for testing
+  ContactType = DisputeContactTypeCd;
 
   // Consume from the service
   languages: Language[] = [];
@@ -69,6 +70,31 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     })
   }
 
+  onSelectContactType(newContactType: any) {
+    this.form.get('contact_given_names').setValue(null);
+    this.form.get('contact_surname').setValue(null);
+    this.form.get('contact_law_firm_name').clearValidators();
+    this.form.get('contact_surname').clearValidators();
+    this.form.get('contact_given_names').clearValidators();
+    this.form.get('contact_law_firm_name').setValue(null);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make all contact info required
+      this.form.get('contact_law_firm_name').addValidators([Validators.required]);
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
+    } else if (newContactType == this.ContactType.Individual) {
+      // leave contact info null and not required
+    } else {
+      // only contact names required
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
+    }
+    this.form.get('contact_law_firm_name').updateValueAndValidity();
+    this.form.get('contact_surname').updateValueAndValidity();
+    this.form.get('contact_given_names').updateValueAndValidity();
+    this.form.updateValueAndValidity();
+  }
+
   ngOnInit(): void {
     let country = this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift();
     if (!this.form.value.address_country_id && !country) {
@@ -94,6 +120,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     } else if (form.controls.drivers_licence_province) { // have control but no value
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
+
   }
 
   ngAfterViewInit(): void {
@@ -131,7 +158,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.form.controls.address_province_seq_no.updateValueAndValidity();
       this.form.controls.home_phone_number.updateValueAndValidity();
 
-      if (this.mode !== DisputeFormMode.UPDATEDISPUTANT) { // Disputant form do not have drivers license information
+      if (this.mode !== DisputeFormMode.UPDATEDISPUTANT) { // Disputant form do not have drivers licence information
         let form = this.form as NoticeOfDisputeFormGroup;
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
         form.controls.drivers_licence_province.setValidators([Validators.maxLength(30)]);

@@ -1,4 +1,6 @@
-﻿namespace TrafficCourts.Messaging.MessageContracts;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+
+namespace TrafficCourts.Messaging.MessageContracts;
 
 /// <summary>
 /// A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{guidhash}/contact endpoint.
@@ -14,6 +16,11 @@ public class DisputeUpdateContactRequest
     /// The disputant's email address.
     /// </summary>
     public string? EmailAddress { get; set; } = null!;
+
+    /// <summary>
+    /// Contact Type
+    /// </summary>
+    public DisputeContactTypeCd ContactType { get; set; }
 
     /// <summary>
     /// The first given name or corporate name continued.
@@ -34,6 +41,31 @@ public class DisputeUpdateContactRequest
     /// The surname or corporate name.
     /// </summary>
     public string? DisputantSurname { get; set; } = null!;
+
+    /// <summary>
+    /// Contact Lawyer Name.
+    /// </summary>
+    public string? ContactLawFirmName { get; set; } = null!;
+
+    /// <summary>
+    /// The first given name or corporate name continued.
+    /// </summary>
+    public string? ContactGiven1Nm { get; set; } = null!;
+
+    /// <summary>
+    /// The second given name
+    /// </summary>
+    public string? ContactGiven2Nm { get; set; } = null!;
+
+    /// <summary>
+    /// The third given name 
+    /// </summary>
+    public string? ContactGiven3Nm { get; set; } = null!;
+
+    /// <summary>
+    /// The surname or corporate name.
+    /// </summary>
+    public string? ContactSurnameNm { get; set; } = null!;
 
     /// <summary>
     /// The mailing address of the disputant.
@@ -85,4 +117,3 @@ public class DisputeUpdateContactRequest
     /// </summary>
     public string? HomePhoneNumber { get; set; } = null!;
 }
-

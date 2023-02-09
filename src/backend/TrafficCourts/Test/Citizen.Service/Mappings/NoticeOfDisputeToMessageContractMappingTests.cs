@@ -27,10 +27,16 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.TicketNumber, actual.TicketNumber);
             Assert.Equal(DisputeStatus.NEW, actual.Status);
             Assert.Equal(noticeOfDispute.IssuedTs, actual.IssuedTs);
+            Assert.Equal(noticeOfDispute.ContactSurnameNm, actual.ContactSurnameNm);
+            Assert.Equal(noticeOfDispute.ContactGiven1Nm, actual.ContactGiven1Nm);
+            Assert.Equal(noticeOfDispute.ContactGiven2Nm, actual.ContactGiven2Nm);
+            Assert.Equal(noticeOfDispute.ContactGiven3Nm, actual.ContactGiven3Nm);
             Assert.Equal(noticeOfDispute.DisputantSurname, actual.DisputantSurname);
             Assert.Equal(noticeOfDispute.DisputantGivenName1, actual.DisputantGivenName1);
             Assert.Equal(noticeOfDispute.DisputantGivenName2, actual.DisputantGivenName2);
             Assert.Equal(noticeOfDispute.DisputantGivenName3, actual.DisputantGivenName3);
+            Assert.Equal(noticeOfDispute.ContactLawFirmNm, actual.ContactLawFirmNm);
+            Assert.Equal(noticeOfDispute.ContactTypeCd, actual.ContactTypeCd);
             Assert.Equal(noticeOfDispute.DisputantBirthdate, actual.DisputantBirthdate);
             Assert.Equal(noticeOfDispute.DriversLicenceNumber, actual.DriversLicenceNumber);
             Assert.Equal(noticeOfDispute.DriversLicenceProvince, actual.DriversLicenceProvince);

@@ -41,6 +41,7 @@ model/field.model.ts
 model/fileHistory.model.ts
 model/fileMetadata.model.ts
 model/jJDispute.model.ts
+model/jJDisputeAppearInCourt.model.ts
 model/jJDisputeContactType.model.ts
 model/jJDisputeCourtAppearanceRoP.model.ts
 model/jJDisputeCourtAppearanceRoPAppCd.model.ts

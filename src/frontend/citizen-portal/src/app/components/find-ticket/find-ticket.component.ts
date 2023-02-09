@@ -20,7 +20,7 @@ export class FindTicketComponent implements OnInit {
   form: FormGroup;
 
   notFound = false;
-  toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s license number and loation 3. Count Act / Section / Description 4. Fine amount';
+  toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s licence number and loation 3. Count Act / Section / Description 4. Fine amount';
   configuration = new Configuration();
 
   constructor(

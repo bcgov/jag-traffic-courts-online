@@ -32,6 +32,26 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
+    public string ContactSurnameNm { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string ContactGiven1Nm { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string ContactGiven2Nm { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string ContactGiven3Nm { get; set; } = null!;
+
+    /// <summary>
+    /// The surname or corporate name.
+    /// </summary>
     public string DisputantSurname { get; set; } = null!;
 
     /// <summary>
@@ -48,6 +68,16 @@ public class SubmitNoticeOfDispute
     /// The given names or corporate name continued.
     /// </summary>
     public string DisputantGivenName3 { get; set; } = null!;
+
+    /// <summary>
+    /// Contact Law Firm Name.
+    /// </summary>
+    public string ContactLawFirmNm { get; set; } = null!;
+
+    /// <summary>
+    /// Contact Type.
+    /// </summary>
+    public DisputeContactTypeCd ContactTypeCd { get; set; }
 
     /// <summary>
     /// The disputant's birthdate.
@@ -184,6 +214,11 @@ public class SubmitNoticeOfDispute
     public string? DetachmentLocation { get; set; }
 
     /// <summary>
+    /// Court Agency Id
+    /// </summary>
+    public string? CourtAgenId { get; set; }
+
+    /// <summary>
     /// The disputant requires spoken language interpreter. The language name is indicated in this field.
     /// </summary>
     public string? InterpreterLanguageCd { get; set; }
@@ -212,6 +247,11 @@ public class SubmitNoticeOfDispute
     /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
     /// </summary>
     public DisputeDisputantDetectedOcrIssues DisputantDetectedOcrIssues { get; set; }
+
+    /// <summary>
+    /// Did the disputant request a court appearance?
+    /// </summary>
+    public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
 
     /// <summary>
     /// The description of the issue with OCR ticket if the citizen has detected any.

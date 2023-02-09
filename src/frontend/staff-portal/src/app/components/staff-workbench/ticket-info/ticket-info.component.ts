@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { CountryCodeValue, CourthouseConfig, ProvinceCodeValue } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
+import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -52,6 +52,7 @@ export class TicketInfoComponent implements OnInit {
   public courtLocationFlag: OCRMessageToDisplay;
   public IsAct = ViolationTicketCountIsAct;
   public IsRegulation = ViolationTicketCountIsRegulation;
+  public ContactType = DisputeContactTypeCd;
 
   /**
    * @description
@@ -108,15 +109,18 @@ export class TicketInfoComponent implements OnInit {
       emailAddress: [null, [Validators.email]],
       disputantSurname: [null, [Validators.required]],
       disputantGivenNames: [null, [Validators.required]],
+      contactTypeCd: [null, [Validators.required]],
+      contactSurnameNm: [null],
+      contactGivenNames: [null],
+      contactLawFirmNm: [null],
       addressCountryId: [null, [Validators.required]],
-      disputantBirthdate: [null, [Validators.required]], // Optional
       address: [null, [Validators.required, Validators.maxLength(300)]],
       addressCity: [null, [Validators.required]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
-      postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]], // space needs to be added back to the middle for display
+      postalCode: [null, [Validators.required]], // space needs to be added back to the middle for display
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       driversLicenceProvinceProvId: [null],
@@ -168,6 +172,31 @@ export class TicketInfoComponent implements OnInit {
     });
     // retreive fresh copy from db
     this.getDispute();
+  }
+
+  onSelectContactType(newContactType: any) {
+    this.form.get('contactGivenNames').setValue(null);
+    this.form.get('contactSurnameNm').setValue(null);
+    this.form.get('contactLawFirmNm').clearValidators();
+    this.form.get('contactSurnameNm').clearValidators();
+    this.form.get('contactGivenNames').clearValidators();
+    this.form.get('contactLawFirmNm').setValue(null);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make all contact info required
+      this.form.get('contactLawFirmNm').addValidators([Validators.required]);
+      this.form.get('contactSurnameNm').addValidators([Validators.required]);
+      this.form.get('contactGivenNames').addValidators([Validators.required]);
+    } else if (newContactType == this.ContactType.Individual) {
+      // leave contact info null and not required
+    } else {
+      // only contact names required
+      this.form.get('contactSurnameNm').addValidators([Validators.required]);
+      this.form.get('contactGivenNames').addValidators([Validators.required]);
+    }
+    this.form.get('contactLawFirmNm').updateValueAndValidity();
+    this.form.get('contactSurnameNm').updateValueAndValidity();
+    this.form.get('contactGivenNames').updateValueAndValidity();
+    this.form.updateValueAndValidity();
   }
 
   public onCountryChange(ctryId: number) {
@@ -396,7 +425,6 @@ export class TicketInfoComponent implements OnInit {
     putDispute.driversLicenceIssuedProvinceSeqNo = this.form.get('driversLicenceProvinceSeqNo').value;
     putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
     putDispute.emailAddress = this.form.get('emailAddress').value;
-    putDispute.disputantBirthdate = this.form.get('disputantBirthdate').value;
     putDispute.address = this.form.get('address').value;
     putDispute.addressCity = this.form.get('addressCity').value;
     putDispute.addressProvince = this.form.get('addressProvince').value;
@@ -405,6 +433,10 @@ export class TicketInfoComponent implements OnInit {
     putDispute.addressCountryId = this.form.get('addressCountryId').value;
     putDispute.postalCode = this.form.get('postalCode').value;
     putDispute.rejectedReason = this.form.get('rejectedReason').value;
+
+    // set dispute courtagenid from violation ticket courthouse location
+    let courtFound = this.courtLocations.filter(x => x.name === putDispute.violationTicket.courtLocation);
+    if (courtFound.length > 0) putDispute.courtAgenId = courtFound[0].code;
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
@@ -428,7 +460,6 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('driversLicenceProvinceProvId').markAsUntouched();
       this.form.get('homePhoneNumber').markAsUntouched();
       this.form.get('emailAddress').markAsUntouched();
-      this.form.get('disputantBirthdate').markAsUntouched();
       this.form.get('address').markAsUntouched();
       this.form.get('addressCity').markAsUntouched();
       this.form.get('addressProvince').markAsUntouched();
@@ -467,7 +498,6 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('disputantSurname').invalid) return false;
     if (this.form.get('disputantGivenNames').invalid) return false;
     if (this.form.get('addressCountryId').invalid) return false;
-    if (this.form.get('disputantBirthdate').invalid) return false;
     if (this.form.get('address').invalid) return false;
     if (this.form.get('addressCity').invalid) return false;
     if (this.form.get('addressProvince').invalid) return false;
@@ -488,7 +518,6 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('disputantSurname').touched) return true;
     if (this.form.get('disputantGivenNames').touched) return true;
     if (this.form.get('addressCountryId').touched) return true;
-    if (this.form.get('disputantBirthdate').touched) return true;
     if (this.form.get('address').touched) return true;
     if (this.form.get('addressCity').touched) return true;
     if (this.form.get('addressProvince').touched) return true;
@@ -714,6 +743,11 @@ export class TicketInfoComponent implements OnInit {
         if (response.violationTicket.disputantSurname) {
           this.initialDisputeValues = response;
         } else this.initialDisputeValues = this.setFieldsFromJSON(response);
+
+        // set court agency id if possible
+        let courtFound = this.courtLocations.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
+        if (courtFound.length > 0) this.initialDisputeValues.courtAgenId = courtFound[0].code;
+
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);
         this.form.get('driversLicenceProvinceSeqNo').setValue(this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);

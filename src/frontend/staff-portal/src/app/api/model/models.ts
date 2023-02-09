@@ -26,6 +26,7 @@ export * from './field.model';
 export * from './fileHistory.model';
 export * from './fileMetadata.model';
 export * from './jJDispute.model';
+export * from './jJDisputeAppearInCourt.model';
 export * from './jJDisputeContactType.model';
 export * from './jJDisputeCourtAppearanceRoP.model';
 export * from './jJDisputeCourtAppearanceRoPAppCd.model';

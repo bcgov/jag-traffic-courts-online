@@ -12,6 +12,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
+import { DisputeContactTypeCd } from 'app/api';
 
 @Component({
   selector: 'app-contact-info',
@@ -37,6 +38,7 @@ export class ContactInfoComponent implements OnInit {
   public violationTime: string = "";
   public conflict: boolean = false;
   public form: FormGroup;
+  public ContactType = DisputeContactTypeCd;
   public collapseObj: any = {
     contactInformation: true
   }
@@ -65,9 +67,12 @@ export class ContactInfoComponent implements OnInit {
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
       emailAddress: [null, [Validators.email]],
+      contactTypeCd: [null, [Validators.required]],
+      contactSurnameNm: [null],
+      contactGivenNames: [null],
+      contactLawFirmNm: [null],
       disputantSurname: [null, [Validators.required]],
       disputantGivenNames: [null, [Validators.required]],
-      disputantBirthdate: [null, [Validators.required]],
       address: [null, [Validators.required, Validators.maxLength(300)]],
       addressCity: [null, [Validators.required]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
@@ -76,7 +81,7 @@ export class ContactInfoComponent implements OnInit {
       addressProvinceSeqNo: [null],
       addressCountryId: [null, [Validators.required]],
       rejectedReason: [null, Validators.maxLength(256)], // Optional
-      postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]],
+      postalCode: [null, [Validators.required]],
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       driversLicenceProvinceProvId: [null],
@@ -151,6 +156,31 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceCountryId").setValue(provFound.ctryId);
       this.form.get("addressProvinceSeqNo").setValue(provFound.provSeqNo);
     }, 0)
+  }
+
+  onSelectContactType(newContactType: any) {
+    this.form.get('contactGivenNames').setValue(null);
+    this.form.get('contactSurnameNm').setValue(null);
+    this.form.get('contactLawFirmNm').clearValidators();
+    this.form.get('contactSurnameNm').clearValidators();
+    this.form.get('contactGivenNames').clearValidators();
+    this.form.get('contactLawFirmNm').setValue(null);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make all contact info required
+      this.form.get('contactLawFirmNm').addValidators([Validators.required]);
+      this.form.get('contactSurnameNm').addValidators([Validators.required]);
+      this.form.get('contactGivenNames').addValidators([Validators.required]);
+    } else if (newContactType == this.ContactType.Individual) {
+      // leave contact info null and not required
+    } else {
+      // only contact names required
+      this.form.get('contactSurnameNm').addValidators([Validators.required]);
+      this.form.get('contactGivenNames').addValidators([Validators.required]);
+    }
+    this.form.get('contactLawFirmNm').updateValueAndValidity();
+    this.form.get('contactSurnameNm').updateValueAndValidity();
+    this.form.get('contactGivenNames').updateValueAndValidity();
+    this.form.updateValueAndValidity();
   }
 
   public onSubmit(): void {

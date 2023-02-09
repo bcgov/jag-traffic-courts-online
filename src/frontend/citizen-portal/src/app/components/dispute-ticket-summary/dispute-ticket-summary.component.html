@@ -6,7 +6,7 @@
   <div class="mb-2">
     <section class="px-4 py-2 mb-4 card-section">
       <div class="page-subheader pagebreak">
-        <h2><strong> Disputant contact information</strong></h2>
+        <h2><strong> Name on ticket</strong></h2>
         <div class="row mb-2">
           <div class="lg-2 col-lg-4">
             <small class="d-block">Surname</small>
@@ -17,26 +17,47 @@
             <div class="text">{{ noticeOfDispute.disputant_given_names }}</div>
           </div>
         </div>
+        <h2><strong> Contact information</strong></h2>
+        <div class="row mb-2">
+          <div class="col-lg-4">
+            <small class="d-block">Contact type</small>
+            <div class="text">{{ noticeOfDispute.contact_type | titlecase }}</div>
+          </div>
+          <div class="lg-2 col-lg-4">
+            <small class="d-block" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">Law firm</small>
+            <div class="text" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">{{ noticeOfDispute.contact_law_firm_name }}</div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? 'S' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer s' : 'Other s') }}urname</small>
+            <div class="text">{{ noticeOfDispute.contact_surname }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? 'G' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer g' : 'Other g') }}iven names</small>
+            <div class="text">{{ noticeOfDispute.contact_given_names }}</div>
+          </div>
+        </div>
 
         <div class="row mb-2">
           <div class="lg-2 col-lg-4">
             <small class="d-block">Mailing address</small>
             <div class="text">{{ noticeOfDispute.address }}</div>
           </div>
-          <div class="col-lg-4">
-            <small class="d-block">Country</small>
-            <div class="text">{{ getCountryLongName(noticeOfDispute.address_country_id) }}</div>
-          </div>
-          <div class="col-lg-4">
-            <small class="d-block">Province/State</small>
-            <div class="text">{{ noticeOfDispute.address_province }}</div>
+          <div class="lg-2 col-lg-4">
+            <small class="d-block">City</small>
+            <div class="text">{{ noticeOfDispute.address_city }}</div>
           </div>
         </div>
 
         <div class="row mb-2">
-          <div class="lg-2 col-lg-4">
-            <small class="d-block">City</small>
-            <div class="text">{{ noticeOfDispute.address_city }}</div>
+          <div class="col-lg-4">
+            <small class="d-block">Province/State</small>
+            <div class="text">{{ noticeOfDispute.address_province }}</div>
+          </div>
+          <div class="col-lg-4">
+            <small class="d-block">Country</small>
+            <div class="text">{{ getCountryLongName(noticeOfDispute.address_country_id) }}</div>
           </div>
           <div class="col-lg-4">
             <small class="d-block">Postal/ZIP code</small>
@@ -45,10 +66,6 @@
         </div>
 
         <div class="row mb-2">
-          <div class="lg-2 col-lg-4">
-            <small class="d-block">Birth date</small>
-            <div class="text">{{ noticeOfDispute.disputant_birthdate | date:"yyyy-MM-dd" }}</div>
-          </div>
           <div class="col-lg-4">
             <small class="d-block">Driver's licence number</small>
             <div class="text">{{ noticeOfDispute.drivers_licence_number }}</div>
@@ -81,7 +98,7 @@
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
 
-        <div *ngIf="countsActions?.not_request_court_appearance?.length > 0">
+        <div *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.N">
           <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
             <hr />
             <strong class="fs-5">
@@ -106,7 +123,7 @@
             <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
           </ng-container>
         </div>
-        <div *ngIf="countsActions?.request_court_appearance?.length > 0">
+        <div *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.Y">
           <hr />
           <div *ngIf="countsActions?.guilty?.length > 0">
             <strong class="fs-5 mb-3">

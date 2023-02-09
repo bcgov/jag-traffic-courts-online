@@ -1,6 +1,7 @@
 export * from './boundingBox.model';
 export * from './disputantContactInformation.model';
 export * from './dispute.model';
+export * from './disputeContactTypeCd.model';
 export * from './disputeCount.model';
 export * from './disputeCountPleaCode.model';
 export * from './disputeCountRequestCourtAppearance.model';
@@ -9,6 +10,7 @@ export * from './disputeCountRequestTimeToPay.model';
 export * from './disputeDisputantDetectedOcrIssues.model';
 export * from './disputeInterpreterRequired.model';
 export * from './disputeRepresentedByLawyer.model';
+export * from './disputeRequestCourtAppearanceYn.model';
 export * from './disputeStatus.model';
 export * from './field.model';
 export * from './jJDisputeHearingType.model';

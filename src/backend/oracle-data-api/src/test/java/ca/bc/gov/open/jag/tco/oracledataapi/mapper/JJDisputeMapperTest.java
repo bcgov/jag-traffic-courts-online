@@ -89,6 +89,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String createdBy = "1";
 		Date modifiedTs =  RandomUtil.randomDate();
 		String modifiedBy = "2";
+		YesNo requestCourtAppearanceYn = YesNo.Y;
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
 		source.setAddressLine1Txt(addressLine1);
@@ -138,6 +139,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setOccamDisputeId(occamDisputeId);
 		source.setOccamViolationTicketUpldId(occamViolationTicketUpldId);
 		source.setOffenceLocationTxt(offenceLocationTxt);
+		source.setRequestCourtAppearanceYn(requestCourtAppearanceYn.toString());
 		source.setSubmittedDt(submittedDt);
 		source.setTicketNumberTxt(ticketNumber);
 		source.setTimeToPayReasonTxt(timeToPayReason);
@@ -193,6 +195,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(occamDisputeId, target.getOccamDisputeId());
 		assertEquals(occamViolationTicketUpldId, target.getOccamViolationTicketUpldId());
 		assertEquals(offenceLocationTxt, target.getOffenceLocation());
+		assertEquals(requestCourtAppearanceYn, target.getAppearInCourt());
 		assertEquals(submittedDt, target.getSubmittedTs());
 		assertEquals(ticketNumber, target.getTicketNumber());
 		assertEquals(timeToPayReason, target.getTimeToPayReason());

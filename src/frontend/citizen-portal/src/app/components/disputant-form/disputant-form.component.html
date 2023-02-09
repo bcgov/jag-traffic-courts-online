@@ -1,23 +1,65 @@
 <form [formGroup]="form" novalidate>
   <section class="mb-2">
+    <h4><b>Name on ticket</b></h4>
     <div class="row">
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label>Legal Surname</mat-label>
+          <mat-label>Surname</mat-label>
           <input matInput formControlName="disputant_surname" />
           <mat-error>{{ "error.required" | translate }}</mat-error>
         </mat-form-field>
       </div>
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label>Legal Given name(s)</mat-label>
+          <mat-label>Given name(s)</mat-label>
           <input matInput formControlName="disputant_given_names" />
           <mat-error>{{ "error.required" | translate }}</mat-error>
         </mat-form-field>
       </div>
     </div>
+    <h4><b>Contact details</b></h4>
+    Who are we contacting?<br/>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field class="w-100">
+          <mat-label>Contact Type</mat-label>
+          <mat-select formControlName="contact_type" (selectionChange)="onSelectContactType($event.value)">
+            <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
+            <mat-option [value]="ContactType.Lawyer">Lawyer</mat-option>
+            <mat-option [value]="ContactType.Other">Other</mat-option>
+          </mat-select>
+          <mat-error>{{ "error.required" | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6" *ngIf="form.get('contact_type').value === ContactType.Lawyer">
+        <mat-form-field class="w-100">
+          <mat-label>Name of law firm</mat-label>
+          <input matInput formControlName="contact_law_firm_name" />
+          <mat-error>{{ "error.required" | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
 
-    <section>
+    <div class="row" *ngIf="form.get('contact_type').value !== ContactType.Individual">
+      <div class="col-md-6">
+        <mat-form-field class="w-100">
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Lawyer">Lawyer surname</mat-label>
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Other">Other surname</mat-label>
+          <input matInput formControlName="contact_surname" />
+          <mat-error>{{ "error.required" | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field class="w-100">
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Lawyer">Lawyer given name(s)</mat-label>
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Other">Other given name(s)</mat-label>
+          <input matInput formControlName="contact_given_names" />
+          <mat-error>{{ "error.required" | translate }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- <section> TODO: make this operational
       <app-address-form-autocomplete (autocompleteAddress)="onAddressAutocomplete($event)">
         <button *ngIf="showManualButton" mat-button type="button" color="primary" [disabled]="showAddressFields"
           (click)="showAddressFields = true">
@@ -25,7 +67,7 @@
           Add address manually
         </button>
       </app-address-form-autocomplete>
-    </section>
+    </section> -->
 
     <section [ngClass]="{'hide-address': !showAddressFields}">
       <div class="row">
@@ -38,27 +80,15 @@
         </div>
         <div class="col-md-6">
           <mat-form-field class="w-100">
-            <mat-label>Country</mat-label>
-            <mat-select [formControl]="countryFormControl">
-              <mat-option [value]="canada">{{ canada.ctryLongNm }}</mat-option>
-              <mat-option [value]="usa">{{ usa.ctryLongNm }}</mat-option>
-              <mat-option *ngFor="let country of countries" [value]="country">{{ country.ctryLongNm
-                }}</mat-option>
-            </mat-select>
+            <mat-label>City</mat-label>
+            <input matInput formControlName="address_city" />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-md-6">
-          <mat-form-field class="w-100">
-            <mat-label>City</mat-label>
-            <input matInput formControlName="address_city" />
-            <mat-error>{{ "error.required" | translate }}</mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label *ngIf="isCA">Province</mat-label>
             <mat-label *ngIf="isUSA">State</mat-label>
@@ -70,7 +100,7 @@
                 <mat-option *ngFor="let province of provinces" [value]="province">{{ province.provNm }}
                 </mat-option>
               </div>
-              
+
               <div *ngIf="isUSA">
                 <mat-option *ngFor="let state of states" [value]="state">{{ state.provNm }}
                 </mat-option>
@@ -82,33 +112,53 @@
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
+        <div class="col-md-4">
+          <mat-form-field class="w-100">
+            <mat-label>Country</mat-label>
+            <mat-select [formControl]="countryFormControl">
+              <mat-option [value]="canada">{{ canada.ctryLongNm }}</mat-option>
+              <mat-option [value]="usa">{{ usa.ctryLongNm }}</mat-option>
+              <mat-option *ngFor="let country of countries" [value]="country">{{ country.ctryLongNm
+                }}</mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field class="w-100">
+            <mat-label *ngIf="isCA">Postal Code</mat-label>
+            <input *ngIf="isCA" matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
+              formControlName="postal_code" [showMaskTyped]="true" />
+
+            <mat-label *ngIf="isUSA">Zip Code</mat-label>
+            <input *ngIf="isUSA" matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
+              formControlName="postal_code" [showMaskTyped]="true" />
+
+            <mat-label *ngIf="!isUSA && !isCA">Postal/Zip Code</mat-label>
+            <input *ngIf="!isUSA && !isCA" matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
+              formControlName="postal_code" />
+
+            <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate
+              }}</mat-error>
+            <mat-error *ngIf="form.get('postal_code').hasError('pattern')">Must be a valid postal/zip code
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
+
     </section>
 
     <div class="row">
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label *ngIf="isCA">Postal Code</mat-label>
-          <input *ngIf="isCA" matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
-            formControlName="postal_code" [showMaskTyped]="true" />
-
-          <mat-label *ngIf="isUSA">Zip Code</mat-label>
-          <input *ngIf="isUSA" matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
-            formControlName="postal_code" [showMaskTyped]="true" />
-
-          <mat-label *ngIf="!isUSA && !isCA">Postal/Zip Code</mat-label>
-          <input *ngIf="!isUSA && !isCA" matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
-            formControlName="postal_code" />
-
-          <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate
-            }}</mat-error>
-          <mat-error *ngIf="form.get('postal_code').hasError('pattern')">Must be a valid postal/zip code
-          </mat-error>
+          <mat-label>Email address</mat-label>
+          <input matInput formControlName="email_address" autocomplete="off" />
+          <mat-error *ngIf="form.get('email_address')?.hasError('required')">{{"error.required" |
+            translate}}</mat-error>
+          <mat-error *ngIf="form.get('email_address')?.hasError('email')">{{"error.email_address" |
+            translate }}</mat-error>
         </mat-form-field>
       </div>
-    </div>
-
-    <div class="row">
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label>Phone number</mat-label>
@@ -120,16 +170,6 @@
           </mat-error>
           <mat-error *ngIf="form.get('home_phone_number')?.hasError('phone')">Must be a valid phone number
           </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-6">
-        <mat-form-field class="w-100">
-          <mat-label>Email address</mat-label>
-          <input matInput formControlName="email_address" autocomplete="off" />
-          <mat-error *ngIf="form.get('email_address')?.hasError('required')">{{"error.required" |
-            translate}}</mat-error>
-          <mat-error *ngIf="form.get('email_address')?.hasError('email')">{{"error.email_address" |
-            translate }}</mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -159,11 +199,11 @@
             translate }}</mat-error>
           <mat-error *ngIf="form.get('drivers_licence_number')?.errors?.minlength ||
                               form.get('drivers_licence_number').hasError('maxlength')">
-            Must be a valid driver's license number of seven to nine digits
+            Must be a valid driver's licence number of seven to nine digits
           </mat-error>
         </mat-form-field>
       </div>
-    </div>
+    </div><br/>
 
     <div class="row">
       <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}" (change)="onOptOut()">

@@ -44,13 +44,22 @@ public class DisputeService : IDisputeService
 
         foreach(Dispute dispute in disputes)
         {
-            // When reviewing the list of tickets, the JSON is needed to compute SystemDetectedOCRIssues
-            OcrViolationTicket? ocrViolationTicket = null;
-            if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
+            try
             {
-                // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
-                ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
-                dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
+                // When reviewing the list of tickets, the JSON is needed to compute SystemDetectedOCRIssues
+                OcrViolationTicket? ocrViolationTicket = null;
+                if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
+                {
+                    // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
+                    ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
+                    dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Should never reach here in test or prod, but if so then it means the ocr json data is invalid or not parseable by .NET
+                // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
+                _logger.LogError(ex, "Could not extract object store file reference from json data while retrieving disputes.");
             }
         }
 
@@ -104,7 +113,7 @@ public class DisputeService : IDisputeService
             }
             catch (Exception ex)
             {
-                // Should never reach here, but if so then it means the ocr json data is invalid or not parseable by .NET
+                // Should never reach here in test or prod, but if so then it means the ocr json data is invalid or not parseable by .NET
                 // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
                 _logger.LogError(ex, "Could not extract object store file reference from json data");
             }

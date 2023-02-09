@@ -35,114 +35,105 @@
         style="width: 100%; height: 600px;" [src]="ticketImageSrc"></pdf-viewer>
       </span>
     </div>
-    <div class="col-lg-6 col-md-12 feild-border">
-      <h1 class="mb-4" style="margin-left: 30px;"><strong>Ticket details</strong></h1>
-      <mat-stepper orientation="vertical" #stepper>
-        <mat-step *ngIf="form" [stepControl]="form">
-          <form [formGroup]="form">
-            <ng-template matStepLabel>Please review the details below and ensure they match the information on the
-              ticket</ng-template>
-            <section>
-              <div class="row">
-                <div class="col-lg-12 pb-4">
-                  <mat-form-field class="w-100 mb-2">
-                    <mat-label>Violation ticket number</mat-label>
-                    <input formControlName="ticket_number" matInput type="text"
-                      oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off" />
-                    <mat-hint>
-                      <strong>A ticket number is 2 letters and 8 numbers</strong>
-                    </mat-hint>
-                  </mat-form-field>
-                </div>
-                <div class="col-lg-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Violation date</mat-label>
-                    <input matInput formControlName="violation_date" readonly />
-                  </mat-form-field>
-                </div>
+    <div class="col-lg-6 col-md-12">
+      <h1 class="mb-4"><strong>Ticket details</strong></h1>
+      <span>Please review the details below and ensure they match the information on the
+          ticket</span>
+      <div class="mb-2">
+      <section class="px-4 py-2 mb-3 card-section">
 
-                <div class="col-lg-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Violation time</mat-label>
-                    <input matInput formControlName="violation_time" />
-                  </mat-form-field>
-                </div>
-
-                <div class="col-lg-12">
-                  <mat-form-field class="w-100">
-                    <mat-label>Surname</mat-label>
-                    <input matInput formControlName="disputant_surname" />
-                  </mat-form-field>
-                </div>
-
-                <div class="col-lg-12">
-                  <mat-form-field class="w-100">
-                    <mat-label>Given names</mat-label>
-                    <input matInput formControlName="disputant_given_names" />
-                  </mat-form-field>
-                </div>
-                <div class="col-lg-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Province / State of DL</mat-label>
-                    <input matInput formControlName="drivers_licence_province" />
-                  </mat-form-field>
-                </div>
-
-                <div class="col-lg-6">
-                  <mat-form-field class="w-100">
-                    <mat-label>Driver's licence number</mat-label>
-                    <input matInput formControlName="drivers_licence_number" autocomplete="off" />
-                  </mat-form-field>
-                </div>
-                <p class="text-dark"><strong>If your surname, given names, or drivers licence number <span
-                      style="color: red;">do not match </span></strong>
-                  the scanned ticket details, please check the box below and describe the difference</p>
-                <p class="text-dark"><strong>Example: </strong>My Surname is spelled MacGibbens not MacGibbons.</p>
-                <mat-checkbox color="primary" class="w-100" [checked]="form.get('disputant_detected_ocr_issues').value === DetectedOcrIssues.Y ? true:false"
-                  (change)="form.get('disputant_detected_ocr_issues').setValue($event.checked? DetectedOcrIssues.Y: DetectedOcrIssues.N)" >
-                  Yes, there are differences between the information on the ticket and the information scanned above.
-                </mat-checkbox>
-                <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value === DetectedOcrIssues.Y">
-                  <mat-form-field>
-                    <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
-                    <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues" maxlength="500"
-                      rows="4">
-                  </textarea>
-                  </mat-form-field>
-                </div>
-              </div>
-            </section>
-            <div class="row mb-4 mt-4">
-              <div class="col-lg-6">
-                <button mat-stroked-button type="button" color="primary" class="large"
-                  routerLink="/ticket/find">
-                  Cancel and search again
-                </button>
-              </div>
-              <div class="offset-lg-2 col-lg-4">
-                <button type="button" mat-flat-button color="primary" class="large" matStepperNext>
-                  Next >
-                </button>
-              </div>
-            </div>
-          </form>
-        </mat-step>
-        <mat-step>
-          <ng-template matStepLabel>Save information and create online ticket</ng-template>
-          <p class="text-dark">Ensure all information entered above is correct to the best of my knowledge before
-            submission.<strong>
-              You may not make changes once the online ticket is created.
-            </strong></p>
-          <div>
-            <button type="button" mat-flat-button color="primary" class="large" (click)="onSubmit()">Save and create
-              online ticket ></button>
-            <button type="button" mat-flat-button class="large" matStepperPrevious> Go back and review ticket
-              details</button>
+        <div class="row mt-2">
+          <div class="col-lg-12">
+            <small class="d-block"> Violation ticket number </small>
+            <div class="text">{{ form.get('ticket_number').value?.toUpperCase() }}</div>
           </div>
-        </mat-step>
-      </mat-stepper>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-6">
+            <small class="d-block"> Violation date </small>
+            <div class="text">{{ form.get('violation_date').value }}</div>
+          </div>
+          <div class="col-lg-6">
+            <small class="d-block">Violation time</small>
+            <div class="text">{{ form.get('violation_time').value }}</div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-6">
+            <small class="d-block"> Surname </small>
+            <div class="text">{{ form.get('disputant_surname').value }}</div>
+          </div>
+          <div class="col-lg-6">
+            <small class="d-block"> Given name(s) </small>
+            <div class="text">{{ form.get('disputant_given_names').value }}</div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-lg-6">
+            <small class="d-block">Province / State of DL</small>
+            <div class="text">{{ form.get('drivers_licence_province').value }}</div>
+          </div>
+          <div class="col-lg-6">
+            <small class="d-block">Driver's licence number</small>
+            <div class="text">{{ form.get('drivers_licence_number').value }}</div>
+          </div>
+        </div>
+
+      </section>
+      <section class="px-4 py-2 mb-3 card-section" *ngFor="let count of violationTicketCounts">
+
+        <div class="row mt-2">
+          <div class="col-lg-4">
+            <small class="d-block"> &nbsp; </small>
+            <div class="h2 count-text"><strong>Count {{ count.count_no }}</strong></div>
+          </div>
+          <div class="col-lg-6">
+            <small class="d-block"> Description of offence </small>
+            <div class="text">{{ count.description | titlecase }}</div>
+          </div>
+          <div class="col-lg-2">
+            <small class="d-block">Amount</small>
+            <div class="text">{{ count.ticketed_amount | currency }}</div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <form [formGroup]="form">
+      <div class="row">
+        <p class="text-dark"><strong>If the information above <span
+              style="color: red;">does not match </span></strong>
+          what you see on your ticket, please check the box below and describe the difference.</p>
+        <mat-checkbox color="primary" class="w-100" [checked]="form.get('disputant_detected_ocr_issues').value === DetectedOcrIssues.Y ? true:false"
+          (change)="form.get('disputant_detected_ocr_issues').setValue($event.checked? DetectedOcrIssues.Y: DetectedOcrIssues.N)" >
+          There are differences between the information on the ticket and the information scanned above.
+        </mat-checkbox>
+        <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value === DetectedOcrIssues.Y">
+          <mat-form-field>
+            <mat-label>Describe any differences</mat-label>
+            <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues" maxlength="500"
+              rows="4">
+            </textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </form><br />
+    <div>
+      <button type="button" mat-flat-button color="primary" color="primary" class="large" (click)="onSubmit()">
+        <mat-icon class="me-2">description</mat-icon>
+        Save information and create online ticket
+      </button><br /><br />
+      <button type="button" mat-stroked-button class="large" color="primary" routerLink="/ticket/find">
+        <mat-icon class="me-2">search</mat-icon>
+        Cancel and search again
+      </button>
     </div>
   </div>
+</div>
 
-  <app-resolution-footer></app-resolution-footer>
+<app-resolution-footer></app-resolution-footer>
 </app-page>

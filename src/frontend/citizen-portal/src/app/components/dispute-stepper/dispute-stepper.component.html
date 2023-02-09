@@ -20,80 +20,122 @@
     </app-page>
   </mat-step>
 
-  <!-- count -->
-  <ng-container *ngFor="let count of counts;">
-    <mat-step [completed]="isValid(count?.form)">
-      <ng-template matStepLabel>Count {{ count.ticket_count.count_no }}: Review</ng-template>
-      <app-page>
-        <app-page-header>
-          <ng-container subHeader>
-            <div class="row mt-2">
-              <div class="col-md-8">
-                <small class="d-block"> Description of offence </small>
-                <strong>{{ count.ticket_count.description | titlecase }}</strong>
-              </div>
-              <div class="col-md-4">
-                <small class="d-block">Offence amount</small>
-                <strong>{{ count.ticket_count.ticketed_amount| currency:
-                  "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
-              </div>
-            </div>
+  <!-- count & court appearance -->
+  <mat-step [completed]="isValid()">
+    <ng-template matStepLabel>Counts: Review</ng-template>
+    <h2><strong>Court Appearance?</strong></h2>
+    <div class="row">
+      <div class="col">
+        <app-alert type="info" icon="info">
+          <ng-container class="alert-content" #alertContent>
+            <strong>Did you know? </strong><br>
+            You can make a dispute request by attending a court hearing in person, or you may supply
+            written reasons requesting a fine reduction and/or time to pay without having to attend a
+            court hearing.
           </ng-container>
-        </app-page-header>
+        </app-alert>
+      </div>
+    </div>
+    <mat-radio-group [formControl]="additionalForm?.get('request_court_appearance')">
+      <div>
+        <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
+          to attend a court hearing</span> <span
+          matTooltip="Ask for a fine reduction or more time to pay for each count." #tooltip3="matTooltip">
+          <mat-icon>info</mat-icon>
+        </span>
+      </div>
+      <mat-radio-button [value]="RequestCourtAppearance.N">
+        <span class="wrap-mat-radio-label">
+          I agree I committed these offences and would like to request a fine reduction and/or time to
+          pay and supply written reasons to a judicial justice to review.
+        </span>
+      </mat-radio-button>
+      <div>
+        <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> to
+          attend a court hearing</span> <span
+          matTooltip="Dispute any count or ask for a fine reduction or more time to pay for any count." #tooltip3="matTooltip">
+          <mat-icon>info</mat-icon>
+        </span>
+      </div>
+      <mat-radio-button [value]="RequestCourtAppearance.Y">
+        <span class="wrap-mat-radio-label">
+          I want to attend a court hearing in person and discuss my ticket with the police officer and
+          judicial justice.
+        </span>
+      </mat-radio-button>
+      <mat-error *ngIf="additionalForm?.controls.request_court_appearance.touched
+            && additionalForm?.controls.request_court_appearance.invalid
+            && additionalForm?.controls.request_court_appearance.errors.required">
+        {{ "error.required" | translate }}
+      </mat-error>
+    </mat-radio-group>
+    <div class="col mt-4 alert-info-text-color"
+      *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.N">
+      <app-alert type="warning" icon="info">
+        <ng-container #alertContent class="alert-content">
+          <span class="text-dark">
+            <strong>You have selected that you do not want to attend a court hearing.</strong>
+            You must provide written reasons in the Additional Information area of the form below for this
+            option. You will be notified in writing to the address supplied above by the Court if your request
+            was successful.
+          </span>
+        </ng-container>
+      </app-alert>
+    </div>
+    <div class="col mt-4 alert-info-text-color"
+      *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.Y">
+      <app-alert type="warning" icon="info">
+        <ng-container #alertContent class="alert-content">
+          <span class="text-dark">
+            <strong>You have selected that you wish to attend a court hearing in person.
+            </strong>
+            A Notice of Hearing will be mailed to you – it will have the date, time and location of your
+            hearing. If you fail to appear before the provincial court on your hearing date you will be found
+            guilty and the full ticketed amount must be paid immediately.
+          </span>
+        </ng-container>
+      </app-alert>
+    </div>
+    <div class="col mt-4"
+      *ngIf="(additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
+      <app-alert type="warning" icon="info">
+        <ng-container #alertContent class="alert-content">
+          <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
+            to explain the offence and provide evidence.</strong>
+        </ng-container>
+      </app-alert>
+    </div>
+
+    <ng-container *ngFor="let count of counts;">
+      <mat-card class="mat-elevation-z8" *ngIf="additionalForm?.get('request_court_appearance').value">
+        <ng-template matStepLabel>Count {{ count.ticket_count.count_no }}: Review</ng-template>
+        <app-page>
+          <app-page-header>
+            <ng-container subHeader>
+              <div class="row mt-2">
+                <div class="col-md-2">
+                  <small class="d-block">Count</small>
+                  <strong>Count {{ count.ticket_count.count_no }}</strong>
+                </div>
+                <div class="col-md-6">
+                  <small class="d-block">Description of offence </small>
+                  <strong>{{ count.ticket_count.description | titlecase }}</strong>
+                </div>
+                <div class="col-md-4">
+                  <small class="d-block">Offence amount</small>
+                  <strong>{{ count.ticket_count.ticketed_amount| currency:
+                    "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
+                </div>
+              </div>
+            </ng-container>
+          </app-page-header>
 
         <form [formGroup]="count?.form" novalidate>
           <section>
-            <div class="row">
-              <div class="col">
-                <app-alert type="info" icon="info">
-                  <ng-container class="alert-content" #alertContent>
-                    <strong>Did you know? </strong><br>
-                    You can make a dispute request by attending a court hearing in person, or you may supply
-                    written reasons requesting a fine reduction and/or time to pay without having to attend a
-                    court hearing.
-                  </ng-container>
-                </app-alert>
-                <mat-radio-group formControlName="request_court_appearance"
-                  (change)="onAttendHearingChange(count?.form, $event)">
-                  <div>
-                    <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
-                      to attend a court hearing</span> <span
-                      matTooltip="Ask for a fine reduction or more time to pay for the count." #tooltip3="matTooltip">
-                      <mat-icon>info</mat-icon>
-                    </span>
-                  </div>
-                  <mat-radio-button [value]="RequestCourtAppearance.N">
-                    <span class="wrap-mat-radio-label">
-                      I agree I committed this offence and would like to request a fine reduction and/or time to
-                      pay and supply written reasons to a judicial justice to review.
-                    </span>
-                  </mat-radio-button>
 
-                  <div>
-                    <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> to
-                      attend a court hearing</span> <span
-                      matTooltip="Ask for a fine reduction or more time to pay for the count." #tooltip3="matTooltip">
-                      <mat-icon>info</mat-icon>
-                    </span>
-                  </div>
-                  <mat-radio-button [value]="RequestCourtAppearance.Y">
-                    <span class="wrap-mat-radio-label">
-                      I want to attend a court hearing in person and discuss my ticket with the police officer and
-                      judicial justice.
-                    </span>
-                  </mat-radio-button>
-                  <mat-error *ngIf="count?.form.controls.request_court_appearance.touched
-                          && count?.form.controls.request_court_appearance.invalid
-                          && count?.form.controls.request_court_appearance.errors.required
-                          && !count?.form.value.__skip">
-                    {{ "error.required" | translate }}
-                  </mat-error>
-                </mat-radio-group>
-              </div>
-            </div>
             <div class="row mt-4">
               <div
-                [ngStyle]="{ 'display': count?.form.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
+                [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
                 <label class="w-100">
                   Please provide additional selections below:
                 </label>
@@ -109,7 +151,7 @@
               </div>
 
               <div
-                [ngStyle]="{ 'display': count?.form.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
+                [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
                 <label class="w-100">
                   Please provide additional selections below:
                 </label>
@@ -123,15 +165,9 @@
                 </mat-radio-group>
               </div>
             </div>
+
             <hr />
             <div class="row">
-              <mat-checkbox *ngIf="count?.ticket_count.count_no === 1 && counts.length > 1"
-                formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
-                selection to all counts on this violation ticket.</mat-checkbox>
-              <mat-checkbox *ngIf="count?.ticket_count.count_no === 2 && counts.length > 2"
-                formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
-                selection to remaining counts on ticket.
-              </mat-checkbox>
               <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked()">
                 Skip this count, no action required.
               </mat-checkbox>
@@ -139,71 +175,17 @@
           </section>
         </form>
 
-        <div class="col mt-4"
-          *ngIf="count?.form.value.request_reduction === RequestReduction.Y || count?.form.value.request_time_to_pay === RequestTimeToPay.Y">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <span>
-                <strong>You must provide written reasons in the Additional Information area of the form below for
-                  this option. If you do choose to appear in court to discuss you will not need to provide this
-                  information until the court hearing date. <br><br>
+        </app-page>
+      </mat-card><br />
+    </ng-container>
+    <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()"
+      (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+      [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+    </app-stepper-footer>
+  </mat-step>
 
-                  If you provide written reasons, you will be notified in writing by the Court if your application
-                  was successful.</strong>
-              </span>
-            </ng-container>
-          </app-alert>
-        </div>
-
-        <div class="col mt-4 alert-info-text-color"
-          *ngIf="count?.form.value.request_court_appearance === RequestCourtAppearance.N">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <span class="text-dark">
-                <strong>You have selected that you do not want to attend a court hearing.</strong>
-                You must provide written reasons in the Additional Information area of the form below for this
-                option. You will be notified in writing to the address supplied above by the Court if your request
-                was successful.
-              </span>
-
-            </ng-container>
-          </app-alert>
-        </div>
-        <div class="col mt-4 alert-info-text-color"
-          *ngIf="count?.form.value.request_court_appearance === RequestCourtAppearance.Y">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <span class="text-dark">
-                <strong>You have selected that you wish to attend a court hearing in person.
-                </strong>
-                A Notice of Hearing will be mailed to you – it will have the date, time and location of your
-                hearing. If you fail to appear before the provincial court on your hearing date you will be found
-                guilty and the full ticketed amount must be paid immediately.
-              </span>
-            </ng-container>
-          </app-alert>
-        </div>
-
-        <div class="col mt-4"
-          *ngIf="count?.form.value.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
-          <app-alert type="warning" icon="info">
-            <ng-container #alertContent class="alert-content">
-              <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
-                to explain the offence and provide evidence.</strong>
-            </ng-container>
-          </app-alert>
-        </div>
-
-        <app-stepper-footer [disableSave]="!isValid(count?.form)" (save)="disputeStepper.next()"
-          (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
-          [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
-        </app-stepper-footer>
-      </app-page>
-    </mat-step>
-  </ng-container>
-
-  <!-- additional -->
-  <mat-step [completed]="isAdditionalFormValid()">
+    <!-- aditional -->
+  <mat-step [completed]="additionalForm?.valid">
     <ng-template matStepLabel>Additional information</ng-template>
     <app-page>
       <app-page-header>
@@ -214,7 +196,7 @@
       </app-page-header>
 
       <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
-        <ng-container *ngIf="countsActions?.not_request_court_appearance?.length > 0">
+        <ng-container *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.N">
           <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
             <div>{{ countsActions?.request_reduction }}</div>
             <div class="row">
@@ -234,7 +216,7 @@
               </div>
             </div>
           </ng-container>
-          <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
+          <ng-container *ngIf="countsActions?.request_reduction !== countsActions?.request_time_to_pay">
             <div>{{ countsActions?.request_time_to_pay }}</div>
           </ng-container>
           <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
@@ -257,10 +239,7 @@
           </ng-container>
         </ng-container>
 
-        <section *ngIf="countsActions?.request_court_appearance?.length > 0">
-          <div>
-            <div>{{ countsActions?.request_court_appearance }}</div>
-          </div>
+        <section *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.Y">
           <h3 class="mt-4 mb-2 reduction-text">
           </h3>
           <div class="row">
@@ -355,7 +334,6 @@
               </mat-form-field>
             </div>
           </div>
-
           <div class="row">
             <div class="col">
               <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witness_present"
@@ -424,7 +402,6 @@
           </div>
         </section>
       </form>
-
       <app-stepper-footer [disableSave]="!isAdditionalFormValid()" (save)="disputeStepper.next()"
         (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
         [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">

@@ -9,7 +9,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
-import { DisputesService, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount } from "app/api";
+import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -22,12 +22,17 @@ export class NoticeOfDisputeService {
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
   RequestReduction = DisputeCountRequestReduction;
-  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   PleaCode = DisputeCountPleaCode;
+  ContactType = DisputeContactTypeCd;
 
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
     disputant_surname: { value: null, options: { validators: [Validators.required] } },
     disputant_given_names: { value: null, options: { validators: [Validators.required] } },
+    contact_given_names: { value: null },
+    contact_surname:{ value: null },
+    contact_law_firm_name: { value: null },
+    contact_type: { value: this.ContactType.Individual, options: { validators: [Validators.required] } },
     address: { value: null, options: { validators: [Validators.required, Validators.maxLength(300)] } },
     address_city: { value: null, options: { validators: [Validators.required] } },
     address_province: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
@@ -36,7 +41,6 @@ export class NoticeOfDisputeService {
     address_province_seq_no: { value: null, options: { validators: [Validators.required] } },
     postal_code: { value: null, options: { validators: [Validators.required] } },
     home_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
-    work_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
     email_address: { value: null, options: { validators: [Validators.required, Validators.email] } },
     drivers_licence_number: { value: null, options: { validators: [Validators.required, Validators.minLength(7), Validators.maxLength(9)] } },
     drivers_licence_province: { value: null, options: { validators: [Validators.required] } },
@@ -49,13 +53,13 @@ export class NoticeOfDisputeService {
     plea_cd: null,
     request_time_to_pay: this.RequestTimeToPay.N,
     request_reduction: this.RequestReduction.N,
-    request_court_appearance: { value: null, options: { validators: [Validators.required] } },
     __skip: false,
     __apply_to_remaining_counts: false,
   }
 
   additionFormConfigs: NoticeOfDisputeFormConfigs = {
     represented_by_lawyer: this.RepresentedByLawyer.N,
+    request_court_appearance: { value: null, options: { validators: [Validators.required] } },
     interpreter_language_cd: null,
     witness_no: 0,
     fine_reduction_reason: null,
@@ -144,11 +148,15 @@ export class NoticeOfDisputeService {
   }
 
   createNoticeOfDispute(input: NoticeOfDispute): void {
-    input.disputant_birthdate = this.datePipe.transform(input.disputant_birthdate, "yyyy-MM-dd");
     input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss");
-    input = this.splitGivenNames(input);  // break disputant names into first, second, third
+    input = this.splitDisputantGivenNames(input);  // break disputant names into first, second, third
+    input = this.splitContactGivenNames(input);  // break disputant names into first, second, third
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
+
+    input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
+        count.request_court_appearance = input.request_court_appearance;
+    });
 
     const data: DialogOptions = {
       titleKey: "Submit request",
@@ -208,13 +216,25 @@ export class NoticeOfDisputeService {
     return noticeOfDispute;
   }
 
-  splitGivenNames(noticeOfDispute: NoticeOfDispute): NoticeOfDispute {
+  splitDisputantGivenNames(noticeOfDispute: NoticeOfDispute): NoticeOfDispute {
     // split up where spaces occur and stuff in given names 1,2,3
     if (noticeOfDispute.disputant_given_names) {
       let givenNames = noticeOfDispute.disputant_given_names.split(" ");
       if (givenNames.length > 0) noticeOfDispute.disputant_given_name1 = givenNames[0];
       if (givenNames.length > 1) noticeOfDispute.disputant_given_name2 = givenNames[1];
       if (givenNames.length > 2) noticeOfDispute.disputant_given_name3 = givenNames[2];
+    }
+
+    return noticeOfDispute;
+  }
+
+  splitContactGivenNames(noticeOfDispute: NoticeOfDispute): NoticeOfDispute {
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (noticeOfDispute.contact_given_names) {
+      let contactGivenNames = noticeOfDispute.contact_given_names.split(" ");
+      if (contactGivenNames.length > 0) noticeOfDispute.contact_given_name1 = contactGivenNames[0];
+      if (contactGivenNames.length > 1) noticeOfDispute.contact_given_name2 = contactGivenNames[1];
+      if (contactGivenNames.length > 2) noticeOfDispute.contact_given_name3 = contactGivenNames[2];
     }
 
     return noticeOfDispute;
@@ -236,12 +256,10 @@ export class NoticeOfDisputeService {
   getCountsActions(counts: DisputeCount[]): CountsActions {
     let countsActions: CountsActions = {};
     let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.count_no).join(", ");
-    countsActions.not_request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.N));
     countsActions.guilty = toCountStr(counts.filter(i => i.plea_cd === this.PleaCode.G));
     countsActions.not_guilty = toCountStr(counts.filter(i => i.plea_cd === this.PleaCode.N));
     countsActions.request_reduction = toCountStr(counts.filter(i => i.request_reduction === this.RequestReduction.Y));
     countsActions.request_time_to_pay = toCountStr(counts.filter(i => i.request_time_to_pay === this.RequestTimeToPay.Y));
-    countsActions.request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.Y));
     return countsActions;
   }
 

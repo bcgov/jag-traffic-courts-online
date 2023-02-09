@@ -92,7 +92,7 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String disputantGivenName1;
-
+	
 	/**
 	 * Second given name of the disputant
 	 */
@@ -392,6 +392,13 @@ public class Dispute extends Auditable<String> {
 	private String detachmentLocation;
 
 	/**
+	 * Court Agency Id
+	 */
+	@Column(length = 50)
+	@Schema(nullable = true)
+	private String courtAgenId;
+
+	/**
 	 * The disputant requires spoken language interpreter. The language name is
 	 * indicated in this field.
 	 */
@@ -493,7 +500,7 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 100)
 	@Schema(maxLength = 100, nullable = true)
 	private String ocrTicketFilename;
-
+	
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
 	@Schema(nullable = true)

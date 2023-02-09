@@ -271,12 +271,8 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            //var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
-            //if (response.Message.DisputantSurname != user?.Surename
-            //    || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
-            //{
-            //    return BadRequest("Disputant not match");
-            //}
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
             return Ok(result);
@@ -400,12 +396,8 @@ public class DisputesController : ControllerBase
                 return NotFound("Dispute not found");
             }
 
-            var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
-            if (response.Message.DisputantSurname != user?.Surename
-                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
-            {
-                return BadRequest("Disputant not match");
-            }
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             // Submit request to Workflow Service for processing.
             DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
@@ -484,5 +476,44 @@ public class DisputesController : ControllerBase
         {
             return "";
         }
+    }
+
+    private bool CompareNames(SubmitNoticeOfDispute message, UserInfo? user)
+    {
+#if DEBUG 
+#warning Contact Name Comparisons with BC Services Cards have been disabled 
+        return true;
+#endif
+        bool result = true;
+
+        // if contact type is individual then match with disputant name otherwise match with contact names
+        if (message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
+        {
+            var givenNames = message.DisputantGivenName1
+                + (message.DisputantGivenName2 != null ? (" " + message.DisputantGivenName2) : "")
+                + (message.DisputantGivenName3 != null ? (" " + message.DisputantGivenName3) : "");
+            if (message.DisputantSurname.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+                || !(message.DisputantGivenName1.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = false;
+            }
+        }
+        else if (message.ContactTypeCd == DisputeContactTypeCd.LAWYER || message.ContactTypeCd == DisputeContactTypeCd.OTHER)
+        {
+            var givenNames = message.ContactGiven1Nm
+                + (message.ContactGiven2Nm != null ? (" " + message.ContactGiven2Nm) : "")
+                + (message.ContactGiven3Nm != null ? (" " + message.ContactGiven3Nm) : "");
+            if (message.ContactSurnameNm.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+                || !(message.ContactGiven1Nm.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = false;
+            }
+        }
+        else
+        {
+            result = false;
+        }
+
+        return result;
     }
 }

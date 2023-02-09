@@ -12,6 +12,7 @@ index.ts
 model/boundingBox.model.ts
 model/disputantContactInformation.model.ts
 model/dispute.model.ts
+model/disputeContactTypeCd.model.ts
 model/disputeCount.model.ts
 model/disputeCountPleaCode.model.ts
 model/disputeCountRequestCourtAppearance.model.ts
@@ -20,6 +21,7 @@ model/disputeCountRequestTimeToPay.model.ts
 model/disputeDisputantDetectedOcrIssues.model.ts
 model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
+model/disputeRequestCourtAppearanceYn.model.ts
 model/disputeStatus.model.ts
 model/field.model.ts
 model/jJDisputeHearingType.model.ts

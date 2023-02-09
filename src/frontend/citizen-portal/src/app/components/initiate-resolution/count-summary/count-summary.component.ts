@@ -8,6 +8,7 @@ import {
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CountItemSummaryComponent } from '@components/initiate-resolution/count-item-summary/count-item-summary.component';
 import { ViolationTicket } from 'app/api';
+import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
   selector: 'app-count-summary',
@@ -22,7 +23,7 @@ export class CountSummaryComponent implements OnInit {
 
   defaultLanguage: string;
 
-  constructor() { }
+  constructor(public violationTicketService: ViolationTicketService) { }
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {

@@ -9,6 +9,7 @@ export interface FormConfig<T> {
 
 export interface DisputantContactInformation extends DisputantContactInformationBase {
   disputant_given_names?: string;
+  contact_given_names?: string;
   address?: string;
 }
 export type DisputantContactInformationKeys = keyof DisputantContactInformation;
@@ -29,6 +30,7 @@ export interface DisputantContactInformationFormGroup extends FormGroup {
 // Notice of dispute, including additional and legal representative
 export interface NoticeOfDispute extends NoticeOfDisputeBase {
   disputant_given_names?: string;
+  contact_given_names?: string;
   address?: string;
   lawyer_full_name?: string;
   __witness_present?: boolean;
@@ -75,7 +77,6 @@ export interface Count {
 
 // Dispute counts Actions
 export interface DisputeCountActions extends DisputeCountBase { // just used as key template
-  not_request_court_appearance?: any;
   guilty?: any;
   not_guilty?: any;
 }

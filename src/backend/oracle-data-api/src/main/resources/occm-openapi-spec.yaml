@@ -564,6 +564,8 @@ components:
           format: nullable
         disputantSurnameNm:
           type: string
+        requestCourtAppearanceYn:
+          type: string
         disputeId:
           type: string
         disputeStatusTypeCd:
@@ -672,8 +674,6 @@ components:
         representedByLawyerYn:
           type: string
           format: nullable
-        requestCourtAppearanceYn:
-          type: string
         submittedDt:
           type: string
           format: date-time
@@ -695,6 +695,7 @@ components:
         workPhoneNumberTxt:
           type: string
           format: nullable
+          
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     DisputeCount:

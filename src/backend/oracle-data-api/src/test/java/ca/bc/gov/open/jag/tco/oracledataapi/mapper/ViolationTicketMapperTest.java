@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatusType;
@@ -15,7 +16,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 public class ViolationTicketMapperTest extends BaseTestSuite{
 
 	private ViolationTicketMapper violationTicketMapper;
-	
+
 	@Autowired
 	private ViolationTicketMapperImpl violationTicketMapperImpl;
 
@@ -32,6 +33,7 @@ public class ViolationTicketMapperTest extends BaseTestSuite{
 		testDispute.setDisputeStatusType(statusType);
 		testDispute.setStatus(DisputeStatus.NEW);
 		testDispute.setViolationTicket(testViolationTicket);
+		testDispute.setContactTypeCd(ContactType.INDIVIDUAL);
 		// Lawyer Address string having 300 characters (max allowed length for lawyerAddress field)
 		testDispute.setLawyerAddress("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce accumsan nulla quam, non aliquam erat porttitor eu. "
 				+ "Vivamus ornare ante nec eros luctus, non tincidunt ipsum interdum. Aliquam felis felis, ullamcorper non rutrum sit amet, sollicitudin sit amet lectus. "

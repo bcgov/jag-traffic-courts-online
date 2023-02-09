@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
@@ -425,6 +426,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
 
@@ -440,6 +442,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenThrow(ApiException.class);
 
@@ -457,6 +460,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
 
@@ -471,6 +475,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(null);
 
@@ -489,6 +494,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
 
