@@ -45,22 +45,8 @@ public class DisputeTicketOptionsPicker {
 		DisputeTicketOptionsPicker disputeTicketExisting = new DisputeTicketOptionsPicker();
 		disputeTicketExisting.startDisputeTicket(element, driverWait, driver);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
-		element.sendKeys("Test");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
-		element.sendKeys("User");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-		element.sendKeys("3220 Qadra");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-		element.sendKeys("Victoria");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
-		element.sendKeys("V8X1G3");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys("9999999999");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
-		element.sendKeys("999 999 1234");
+		DisputeTicketOptionsPicker persInfo = new DisputeTicketOptionsPicker();
+		persInfo.addressInput(element, driverWait, driver);
 
 		// Add DOB
 		/*
@@ -80,14 +66,17 @@ public class DisputeTicketOptionsPicker {
 
 		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
 		review.reviewProcess(element, driverWait, driver);
-		
-		//Additional info
-		
+
+		// Additional info
+
 		DisputeTicketOptionsPicker info = new DisputeTicketOptionsPicker();
 		info.additionalInfo(element, driverWait, driver);
 
 		DisputeTicketOptionsPicker overview = new DisputeTicketOptionsPicker();
 		overview.ticketRequestOverview(element, driverWait, driver);
+
+		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
+		popup.popupSubmitWindow(element, driverWait, driver);
 
 	}
 
@@ -238,10 +227,9 @@ public class DisputeTicketOptionsPicker {
 		element.click();
 
 	}
-	
+
 	public void ticketRequestOverview(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
-		
-		
+
 		String d = "Ticket request overview";
 		// identify elements with text()
 		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Ticket request overview')]"));
@@ -265,6 +253,10 @@ public class DisputeTicketOptionsPicker {
 				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[6]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
 		element.click();
 
+	}
+
+	public void popupSubmitWindow(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
 		// Switch to pop-up window
 		String parentWindowHandler = driver.getWindowHandle(); // Store your parent window
 		String subWindowHandler = null;
@@ -282,8 +274,27 @@ public class DisputeTicketOptionsPicker {
 		System.out.println("Submit in pop-up clicked");
 
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
-		
-		
+
+	}
+
+	public void addressInput(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
+		element.sendKeys("Test");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
+		element.sendKeys("User");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
+		element.sendKeys("3220 Qadra");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
+		element.sendKeys("Victoria");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
+		element.sendKeys("V8X1G3");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
+		element.sendKeys("9999999999");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
+		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
+		element.sendKeys("999 999 1234");
 	}
 
 }
