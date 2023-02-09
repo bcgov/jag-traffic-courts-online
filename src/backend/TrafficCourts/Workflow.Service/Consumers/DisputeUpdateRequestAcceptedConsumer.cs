@@ -47,7 +47,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
 
             // Extract patched Dispute values per updateType
             Dispute? patch = JsonConvert.DeserializeObject<Dispute>(updateRequest.UpdateJson);
-            if (patch != null)
+            if (patch == null)
             {
                 throw new InvalidOperationException("Unable to process update request JSON.");
             }
