@@ -1,5 +1,5 @@
 image:
-  tag: 0.3.0
+  tag: latest
 
 route:
   enabled: false
