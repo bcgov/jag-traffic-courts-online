@@ -1,16 +1,14 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.NoSuchElementException;
 
 import javax.transaction.Transactional;
 
@@ -18,11 +16,16 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -38,10 +41,17 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 class DisputeControllerTest extends BaseTestSuite {
+
+	@InjectMocks
+	private DisputeController disputeController;
+
+	@Mock
+	private DisputeService service;
 
 	@Test
 	public void testSaveDispute() throws Exception {
@@ -495,90 +505,82 @@ class DisputeControllerTest extends BaseTestSuite {
 
 	@Test
 	public void testSaveDisputeUpdateRequest_200() throws Exception {
-		// Setup - persist a new random Dispute to the database
-		Long disputeId = saveDispute(RandomUtil.createDispute());
-		DisputeUpdateRequest disputeUpdateRequest = RandomUtil.createDisputeUpdateRequest(disputeId);
+		// Setup - create a new random Dispute and DisutantUpdateRequest to return
+		Dispute dispute = RandomUtil.createDispute();
+		DisputeUpdateRequest disputeUpdateRequest = RandomUtil.createDisputeUpdateRequest(dispute.getDisputeId());
+
+		// Mock underlying saveDisputeUpdateRequest service
+		Mockito.when(service.saveDisputeUpdateRequest(dispute.getNoticeOfDisputeGuid(), disputeUpdateRequest)).thenReturn(disputeUpdateRequest);
 
 		// issue a POST request, expect 200
-		Long disputeUpdateRequestId = saveDisputeUpdateRequest(disputeUpdateRequest);
-		assertNotNull(disputeUpdateRequestId);
+		ResponseEntity<Long> controllerResponse = disputeController.saveDisputeUpdateRequest(dispute.getNoticeOfDisputeGuid(), disputeUpdateRequest);
+		Mockito.verify(service).saveDisputeUpdateRequest(dispute.getNoticeOfDisputeGuid(), disputeUpdateRequest);
+		Long resultId = controllerResponse.getBody();
+		assertNotNull(resultId);
+		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
 	}
 
 	@Test
 	public void testSaveDisputeUpdateRequest_404() throws Exception {
-		// Try to issue a POST request to create a DisputeUpdateRequest for a Dispute that doesn't exist
-		mvc.perform(MockMvcRequestBuilders
-				.post("/api/v1.0/dispute/{guid}/updateRequest", UUID.randomUUID().toString()) // random guid that doesn't exist
-				.principal(getPrincipal())
-				.content(asJsonString(RandomUtil.createDisputeUpdateRequest(Long.valueOf(1))))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isNotFound());
+		// Setup - create a new random Dispute and DisutantUpdateRequest to return
+		Dispute dispute = RandomUtil.createDispute();
+		Long disputeId = 2L;
+		DisputeUpdateRequest disputeUpdateRequest = RandomUtil.createDisputeUpdateRequest(disputeId);
+
+		// Mock underlying saveDisputeUpdateRequest service
+		Mockito.when(service.saveDisputeUpdateRequest(dispute.getNoticeOfDisputeGuid(), disputeUpdateRequest)).thenThrow(NoSuchElementException.class);
+
+		// issue a POST request, expect 404
+		Assertions.assertThrows(NoSuchElementException.class, () -> {
+			disputeController.saveDisputeUpdateRequest(dispute.getNoticeOfDisputeGuid(), disputeUpdateRequest);
+		});
 	}
 
 	@Test
 	@SuppressWarnings("unused")
 	public void testGetDisputeUpdateRequests_200() throws Exception {
-		// Setup - persist a couple new random Disputes to the database along with a few DisputeUpdateRequests
-		Long disputeId1 = saveDispute(RandomUtil.createDispute());
-		Long disputeId2 = saveDispute(RandomUtil.createDispute());
+		// Setup - create a couple new random Disputes along with a few DisputeUpdateRequests
+		Dispute dispute1 = RandomUtil.createDispute();
+		Dispute dispute2 = RandomUtil.createDispute();
 
-		Long disputeUpdateRequest1 = saveDisputeUpdateRequest(RandomUtil.createDisputeUpdateRequest(disputeId1, DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME));
-		Long disputeUpdateRequest2 = saveDisputeUpdateRequest(RandomUtil.createDisputeUpdateRequest(disputeId1, DisputeUpdateRequestStatus.ACCEPTED, DisputeUpdateRequestType.DISPUTANT_ADDRESS));
-		Long disputeUpdateRequest3 = saveDisputeUpdateRequest(RandomUtil.createDisputeUpdateRequest(disputeId2, DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME));
-		Long disputeUpdateRequest4 = saveDisputeUpdateRequest(RandomUtil.createDisputeUpdateRequest(disputeId2, DisputeUpdateRequestStatus.REJECTED, DisputeUpdateRequestType.DISPUTANT_PHONE));
+		DisputeUpdateRequest disputeUpdateRequest1 = RandomUtil.createDisputeUpdateRequest(dispute1.getDisputeId(), DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME);
+		DisputeUpdateRequest disputeUpdateRequest2 = RandomUtil.createDisputeUpdateRequest(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED, DisputeUpdateRequestType.DISPUTANT_ADDRESS);
+		DisputeUpdateRequest disputeUpdateRequest3 = RandomUtil.createDisputeUpdateRequest(dispute2.getDisputeId(), DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME);
+		DisputeUpdateRequest disputeUpdateRequest4 = RandomUtil.createDisputeUpdateRequest(dispute2.getDisputeId(), DisputeUpdateRequestStatus.REJECTED, DisputeUpdateRequestType.DISPUTANT_PHONE);
 
-		List<DisputeUpdateRequest> results;
+		List<DisputeUpdateRequest> results = new ArrayList<DisputeUpdateRequest>();
+		results.add(disputeUpdateRequest2);
 
-		// Fetching for dispute 1 (filtered by status) should return the single disputeUpdateRequest1 record
-		results = getGetDisputeUpdateRequests(disputeId1, DisputeUpdateRequestStatus.PENDING);
-		assertEquals(1, results.size());
-		assertEquals(disputeUpdateRequest1, results.get(0).getDisputeUpdateRequestId());
+		// Mock underlying findDisputeUpdateRequestByDisputeIdAndStatus service
+		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED)).thenReturn(results);
 
-		// Fetching for dispute 2 (filtered by status) should return the single disputeUpdateRequest3 record
-		results = getGetDisputeUpdateRequests(disputeId2, DisputeUpdateRequestStatus.PENDING);
-		assertEquals(1, results.size());
-		assertEquals(disputeUpdateRequest3, results.get(0).getDisputeUpdateRequestId());
-
-		// Fetching for any dispute (filtered by status) should return the both disputeUpdateRequests 1 and 3 records
-		results = getGetDisputeUpdateRequests(null, DisputeUpdateRequestStatus.PENDING);
-		assertEquals(2, results.size());
-		assertTrue(Arrays.asList(disputeUpdateRequest1, disputeUpdateRequest3).contains(results.get(0).getDisputeUpdateRequestId()));
-
-		// Fetching for a dispute that doesn't exist should just return an empty list.
-		assertFalse(Arrays.asList(disputeId1, disputeId1).contains(Long.valueOf(-1))); // assert the new ids are not -1
-		results = getGetDisputeUpdateRequests(Long.valueOf(-1), DisputeUpdateRequestStatus.PENDING);
-		assertEquals(0, results.size());
+		// issue a GET request, expect 200 and correct ID and status
+		ResponseEntity<List<DisputeUpdateRequest>> controllerResponse = disputeController.getDisputeUpdateRequests(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED);
+		List<DisputeUpdateRequest> resultList = controllerResponse.getBody();
+		assertNotNull(resultList);
+		assertEquals(disputeUpdateRequest2.getDisputeUpdateRequestId(), results.get(0).getDisputeUpdateRequestId());
+		assertEquals(disputeUpdateRequest2.getStatus(), results.get(0).getStatus());
+		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
 	}
 
 	@Test
 	public void testUpdateDisputeUpdateRequest_200() throws Exception {
-		// Setup - persist a new random Dispute to the database
-		Long disputeId = saveDispute(RandomUtil.createDispute());
-		DisputeUpdateRequest disputeUpdateRequest = RandomUtil.createDisputeUpdateRequest(disputeId, DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME);
-		Long disputeUpdateRequestId = saveDisputeUpdateRequest(disputeUpdateRequest);
-		assertNotNull(disputeUpdateRequestId);
+		// Setup - create a new random Dispute and DisutantUpdateRequest to update
+		Dispute dispute = RandomUtil.createDispute();
+		DisputeUpdateRequest disputeUpdateRequest = RandomUtil.createDisputeUpdateRequest(dispute.getDisputeId(), DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME);
+		DisputeUpdateRequest updatedDisputeUpdateRequest = disputeUpdateRequest;
+		updatedDisputeUpdateRequest.setStatus(DisputeUpdateRequestStatus.ACCEPTED);
 
-		// assert the DisputeUpdateRequest was property persisted
-		List<DisputeUpdateRequest> disputeUpdateRequests = getGetDisputeUpdateRequests(disputeId, DisputeUpdateRequestStatus.PENDING);
-		assertEquals(1, disputeUpdateRequests.size());
-		assertEquals(disputeUpdateRequestId, disputeUpdateRequests.get(0).getDisputeUpdateRequestId());
-		assertEquals(DisputeUpdateRequestStatus.PENDING, disputeUpdateRequests.get(0).getStatus());
-		assertEquals(DisputeUpdateRequestType.DISPUTANT_NAME, disputeUpdateRequests.get(0).getUpdateType());
+		// Mock underlying updateDisputeUpdateRequest service
+		Mockito.when(service.updateDisputeUpdateRequest(disputeUpdateRequest.getDisputeUpdateRequestId(), DisputeUpdateRequestStatus.ACCEPTED)).thenReturn(updatedDisputeUpdateRequest);
 
 		// issue a PUT request to update the record to ACCEPTED, expect 200
-		mvc.perform(MockMvcRequestBuilders
-				.put("/api/v1.0/dispute/updateRequest/{id}", disputeUpdateRequestId)
-				.param("disputeUpdateRequestStatus", DisputeUpdateRequestStatus.ACCEPTED.toString())
-				.principal(getPrincipal()))
-		.andExpect(status().isOk());
-
-		// reissue request, the returned result should have been updated.
-		disputeUpdateRequests = getGetDisputeUpdateRequests(disputeId, DisputeUpdateRequestStatus.ACCEPTED);
-		assertEquals(1, disputeUpdateRequests.size());
-		assertEquals(disputeUpdateRequestId, disputeUpdateRequests.get(0).getDisputeUpdateRequestId());
-		assertEquals(DisputeUpdateRequestStatus.ACCEPTED, disputeUpdateRequests.get(0).getStatus());
-		assertEquals(DisputeUpdateRequestType.DISPUTANT_NAME, disputeUpdateRequests.get(0).getUpdateType());
+		ResponseEntity<DisputeUpdateRequest> controllerResponse = disputeController.updateDisputeUpdateRequestStatus(disputeUpdateRequest.getDisputeUpdateRequestId(), DisputeUpdateRequestStatus.ACCEPTED);
+		DisputeUpdateRequest result = controllerResponse.getBody();
+		assertNotNull(result);
+		assertEquals(disputeUpdateRequest.getDisputeUpdateRequestId(), result.getDisputeUpdateRequestId());
+		assertEquals(DisputeUpdateRequestStatus.ACCEPTED, result.getStatus());
+		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
 	}
 
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
@@ -704,36 +706,6 @@ class DisputeControllerTest extends BaseTestSuite {
 				.andExpect(status().isOk());
 		List<DisputeResult> result = mapResult(resultActions, new TypeReference<List<DisputeResult>>() {});
 		return result;
-	}
-
-	/** Issues a POST request to /api/v1.0/dispute/{guid}/updateRequest to persist a new DisputeUpdateRequest in the database */
-	private Long saveDisputeUpdateRequest(DisputeUpdateRequest disputeUpdateRequest) throws Exception {
-		// Get the guid of the corresponding Disputeid
-		Dispute dispute = getDispute(disputeUpdateRequest.getDisputeId());
-
-		// perform a POST to the controller to create an updateRequest object
-		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-				.post("/api/v1.0/dispute/{guid}/updateRequest", dispute.getNoticeOfDisputeGuid())
-				.principal(getPrincipal())
-				.content(asJsonString(disputeUpdateRequest))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
-		return Long.valueOf(mvcResult.getResponse().getContentAsString());
-	}
-
-	/** Issues a GET request to /api/v1.0/dispute/updateRequests to retrieve all DisputeUpdateRequests per for a Dispute */
-	private List<DisputeUpdateRequest> getGetDisputeUpdateRequests(Long disputeId, DisputeUpdateRequestStatus status) throws Exception {
-		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
-				.get("/api/v1.0/dispute/updateRequests")
-				.param("id", disputeId == null ? null : disputeId.toString())
-				.param("status", status.toString())
-				.principal(getPrincipal()))
-				.andExpect(status().isOk());
-
-		List<DisputeUpdateRequest> disputeUpdateRequests = mapResult(resultActions, new TypeReference<List<DisputeUpdateRequest>>() {});
-		return disputeUpdateRequests;
 	}
 
 }

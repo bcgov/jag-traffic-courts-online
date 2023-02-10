@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.HealthApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.PingResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
@@ -78,6 +79,30 @@ class DisputeServiceOrdsOccamTest extends BaseTestSuite {
 		assertTrue(disputeCntDiffs.isEmpty());
 		assertTrue(vioTicketDiffs.isEmpty());
 		assertTrue(vioTicketCntDiffs.isEmpty());
+	}
+
+	@Test
+	public void testDisputeUpdateRequestOrdsPersistance() throws ParseException {
+		// This test creates a Dispute and a DisputeUpdateRequest where all fields are populated, saves it to ORDs, loads it from ORDs,
+		// and then compares the values of all fields to the original copy - they should be identical (except for the noted ignoredFields).
+
+		Dispute dispute = RandomUtil.createFullyPopulatedDispute();
+		Dispute savedDispute = disputeService.save(dispute);
+
+		DisputeUpdateRequest updateRequest = RandomUtil.createDisputeUpdateRequest(savedDispute.getDisputeId());
+		DisputeUpdateRequest savedUpdateRequest = disputeService.saveDisputeUpdateRequest(savedDispute.getNoticeOfDisputeGuid(), updateRequest);
+
+		List<Diff<?>> disputeUpdateRequestDiffs = getDifferences(updateRequest, savedUpdateRequest,
+				"disputeUpdateRequestId",
+				"createdBy",
+				"createdTs");
+		logDiffs(disputeUpdateRequestDiffs, "DisputeUpdateRequest");
+
+		// cleanup ORDs
+		disputeService.deleteDisputeUpdateRequest(savedUpdateRequest.getDisputeUpdateRequestId());
+		disputeService.delete(savedDispute.getDisputeId());
+
+		assertTrue(disputeUpdateRequestDiffs.isEmpty());
 	}
 
 }

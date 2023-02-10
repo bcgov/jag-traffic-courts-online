@@ -14,13 +14,13 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatusType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
@@ -341,7 +341,7 @@ public class RandomUtil {
 		dispute.setAddressLine1(randomAlphanumeric(100));
 		dispute.setAddressLine2(randomAlphanumeric(100));
 		dispute.setAddressLine3(randomAlphanumeric(100));
-//		dispute.setAddressProvince(randomAlphabetic(30));
+		//		dispute.setAddressProvince(randomAlphabetic(30));
 		// Fields below are commented out in order to test the addressProvince string field
 		dispute.setAddressCountryId(1);
 		dispute.setAddressProvinceCountryId(1);
@@ -372,7 +372,7 @@ public class RandomUtil {
 		dispute.setDisputeCounts(createDisputeCounts(dispute));
 		dispute.setDisputeStatusType(createDisputeStatusType());
 		dispute.setDriversLicenceNumber(randomAlphanumeric(30));
-//		dispute.setDriversLicenceProvince(randomAlphabetic(30));
+		//		dispute.setDriversLicenceProvince(randomAlphabetic(30));
 		// Field below is commented out in order to test the driversLicenceProvince string field
 		dispute.setDriversLicenceIssuedCountryId(1);
 		dispute.setDriversLicenceIssuedProvinceSeqNo(2);
@@ -493,6 +493,7 @@ public class RandomUtil {
 
 	public static DisputeUpdateRequest createDisputeUpdateRequest(Long disputeId, DisputeUpdateRequestStatus status, DisputeUpdateRequestType type) {
 		DisputeUpdateRequest disputeUpdateRequest = new DisputeUpdateRequest();
+		disputeUpdateRequest.setDisputeUpdateRequestId(5L);
 		disputeUpdateRequest.setDisputeId(disputeId);
 		disputeUpdateRequest.setStatus(status);
 		disputeUpdateRequest.setUpdateType(type);
