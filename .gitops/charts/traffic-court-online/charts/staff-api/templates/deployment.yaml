@@ -50,17 +50,17 @@ spec:
             value: http://{{ .Release.Name }}-oracle-data-api.{{ .Values.global.namespace }}.svc.cluster.local:8080
           - name: ASPNETCORE_URLS
             value: http://*:8080;http://*:9090
-          - name: COMS_USERNAME
+          - name: COMS__USERNAME
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.coms.service.secretName }}
                 key: username
-          - name: COMS_USERNAME
+          - name: COMS__USERNAME
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.coms.service.secretName }}
                 key: username
-          - name: COMS_PASSWORD
+          - name: COMS__PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.coms.service.secretName }}
