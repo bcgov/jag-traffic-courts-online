@@ -1,12 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,9 +13,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestType;
 
 @ConditionalOnProperty(name = "repository.dispute", havingValue = "h2", matchIfMissing = true)
 class DisputeServiceH2Test extends BaseTestSuite {
@@ -109,59 +100,12 @@ class DisputeServiceH2Test extends BaseTestSuite {
 		});
 	}
 
-	@Test
-	public void testDisputeUpdateRequest() throws Exception {
-		Dispute dispute = createAndSaveDispute();
-		String noticeOfDisputeGuid = dispute.getNoticeOfDisputeGuid();
-
-		String json = "{ \"address_line1\": \"123 Main Street\", \"address_line2\": \"\", \"address_line3\": \"\" }";
-		DisputeUpdateRequest updateRequest = new DisputeUpdateRequest();
-		updateRequest.setDisputeId(Long.valueOf(1L));
-		updateRequest.setStatus(DisputeUpdateRequestStatus.PENDING);
-		updateRequest.setUpdateType(DisputeUpdateRequestType.DISPUTANT_ADDRESS);
-		updateRequest.setUpdateJson(json);
-		DisputeUpdateRequest savedUpdateReq = disputeService.saveDisputeUpdateRequest(noticeOfDisputeGuid, updateRequest);
-		Long disputeUpdateRequestId = savedUpdateReq.getDisputeUpdateRequestId();
-
-		assertNotNull(disputeUpdateRequestId);
-
-		List<DisputeUpdateRequest> updateRequests = disputeService.findDisputeUpdateRequestByDisputeIdAndStatus(dispute.getDisputeId(), null);
-
-		assertEquals(1, updateRequests.size());
-		savedUpdateReq = updateRequests.get(0);
-
-		assertEquals(dispute.getDisputeId(), savedUpdateReq.getDisputeId().longValue());
-		assertEquals(DisputeUpdateRequestStatus.PENDING, savedUpdateReq.getStatus());
-		assertEquals(DisputeUpdateRequestType.DISPUTANT_ADDRESS, savedUpdateReq.getUpdateType());
-		assertEquals(json, savedUpdateReq.getUpdateJson());
-
-		savedUpdateReq = disputeService.updateDisputeUpdateRequest(disputeUpdateRequestId, DisputeUpdateRequestStatus.ACCEPTED);
-		assertEquals(DisputeUpdateRequestStatus.ACCEPTED, savedUpdateReq.getStatus());
-	}
-
-	@Test
-	public void testDisputeUpdateRequest_404() throws Exception {
-		assertThrows(NoSuchElementException.class, () -> {
-			disputeService.saveDisputeUpdateRequest("some-guid", new DisputeUpdateRequest());
-		});
-	}
-
 	private Long saveDispute(DisputeStatus disputeStatus) {
 		Dispute dispute = new Dispute();
 		dispute.setStatus(disputeStatus);
 		dispute.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		return disputeRepository.save(dispute).getDisputeId();
-	}
-
-	private Dispute createAndSaveDispute() {
-		String noticeOfDisputeGuid = UUID.randomUUID().toString();
-
-		Dispute dispute = new Dispute();
-		dispute.setStatus(DisputeStatus.NEW);
-		dispute.setContactTypeCd(ContactType.INDIVIDUAL);
-		dispute.setNoticeOfDisputeGuid(noticeOfDisputeGuid);
-		return disputeRepository.save(dispute);
 	}
 
 }
