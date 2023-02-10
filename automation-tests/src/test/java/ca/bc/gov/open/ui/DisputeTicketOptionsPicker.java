@@ -130,40 +130,7 @@ public class DisputeTicketOptionsPicker {
 		Thread.sleep(1000);
 		element.click();
 		System.out.println("Click Next");
-		System.out.println("Count review 1");
-		Thread.sleep(1000);
-		// Select rdo button
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-2")));
-		element.click();
-
-		JavascriptExecutor jse68 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[2]/div[1]/mat-checkbox[1]/label/span[1]")));
-		jse68.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
-		JavascriptExecutor jse6 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[2]/div[1]/mat-checkbox[2]/label/span[1]")));
-		jse6.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
-		JavascriptExecutor jse7 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[3]/mat-checkbox[1]/label/span[1]")));
-		jse7.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
-		Thread.sleep(1000);
-		// Click Next
-		JavascriptExecutor jse8 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
-		Thread.sleep(1000);
-		jse8.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
-		String a = "Count 2: Review";
+		String a = "Count: Review";
 		// identify elements with text()
 		List<WebElement> l = driver.findElements(By.xpath("//*[contains(text(),'Count 2: Review')]"));
 		// verify list size
@@ -172,32 +139,44 @@ public class DisputeTicketOptionsPicker {
 		} else {
 			System.out.println("Text: " + a + " is not present. ");
 		}
-
-		// Click Next
 		Thread.sleep(1000);
-
-		JavascriptExecutor js11 = (JavascriptExecutor) driver;
-		js11.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[3]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
+		// Select rdo button
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-2")));
 		element.click();
 
-		String b = "Count 3: Review";
-		// identify elements with text()
-		List<WebElement> k = driver.findElements(By.xpath("//*[contains(text(),'Count 3: Review')]"));
-		// verify list size
-		if (k.size() > 0) {
-			System.out.println("Text: " + b + " is present. ");
-		} else {
-			System.out.println("Text: " + b + " is not present. ");
-		}
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-3 .mat-checkbox-inner-container")));
+		Thread.sleep(1000);
+		js.executeScript("arguments[0].click();", element);
+
+		JavascriptExecutor js1 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-4 .mat-checkbox-inner-container")));
+		js1.executeScript("arguments[0].click();", element);
+		JavascriptExecutor js2 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-6 .mat-checkbox-inner-container")));
+		js2.executeScript("arguments[0].click();", element);
+		Thread.sleep(1000);
+		JavascriptExecutor js3 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions
+				.visibilityOfElementLocated(By.cssSelector("#mat-checkbox-7 .mat-checkbox-inner-container")));
+		js3.executeScript("arguments[0].click();", element);
+		Thread.sleep(1000);
+		JavascriptExecutor js4 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions
+				.visibilityOfElementLocated(By.cssSelector("#mat-checkbox-9 .mat-checkbox-inner-container")));
+		js4.executeScript("arguments[0].click();", element);
+		Thread.sleep(1000);
+		element = driverWait.until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-10 .mat-checkbox-inner-container")));
+		element.click();
 		Thread.sleep(1000);
 		JavascriptExecutor js12 = (JavascriptExecutor) driver;
 		js12.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[4]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ng-star-inserted > .row #primaryButton")));
 		element.click();
 
 		String c = "Additional information";
@@ -215,16 +194,16 @@ public class DisputeTicketOptionsPicker {
 	public void additionalInfo(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, ven");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys(
 				"semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel,");
 		// Click Next
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[5]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
-		element.click();
+		JavascriptExecutor js5 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		js5.executeScript("arguments[0].click();", element);
 
 	}
 
@@ -245,13 +224,15 @@ public class DisputeTicketOptionsPicker {
 		js15.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-13")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-2")));
 		element.click();
 		System.out.println("Tick declare box checked");
+		System.out.println("Click Submit button");
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[6]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
-		element.click();
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[4]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
+		js.executeScript("arguments[0].click();", element);
+		
 
 	}
 
@@ -267,13 +248,23 @@ public class DisputeTicketOptionsPicker {
 			subWindowHandler = iterator.next();
 		}
 		driver.switchTo().window(subWindowHandler); // switch to popup window
-
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/div[3]/div[2]/div/mat-dialog-container/app-confirm-dialog/mat-dialog-actions/button[2]/span[1]")));
-		element.click();
+		
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
+		js.executeScript("arguments[0].click();", element);
 		System.out.println("Submit in pop-up clicked");
 
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
+		
+		String d = "Email verification required";
+		// identify elements with text()
+		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Email verification required')]"));
+		// verify list size
+		if (n.size() > 0) {
+			System.out.println("Text: " + d + " is present. ");
+		} else {
+			System.out.println("Text: " + d + " is not present. ");
+		}
 
 	}
 
@@ -287,12 +278,12 @@ public class DisputeTicketOptionsPicker {
 		element.sendKeys("3220 Qadra");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
 		element.sendKeys("Victoria");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
 		element.sendKeys("V8X1G3");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
 		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
+		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
 		element.sendKeys("999 999 1234");
 	}

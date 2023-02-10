@@ -49,13 +49,10 @@ public class DisputeTicketAttendCourtHearing {
 		persInfo.addressInput(element, driverWait, driver);
 
 		Thread.sleep(1000);
-		// Scroll down till the bottom of the page
-		JavascriptExecutor jse3 = (JavascriptExecutor) driver;
 		// Click Next
+		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
-		jse3.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
+		js.executeScript("arguments[0].click();", element);
 		System.out.println("Click Next");
 		System.out.println("Count review 1");
 		Thread.sleep(1000);
@@ -66,106 +63,74 @@ public class DisputeTicketAttendCourtHearing {
 		JavascriptExecutor jse1 = (JavascriptExecutor) driver;
 		element = driverWait
 				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-5 .mat-radio-outer-circle")));
-		Thread.sleep(1000);
 		jse1.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[3]/mat-checkbox[1]/label/span[1]")));
-		element.click();
-		JavascriptExecutor jse8 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[2]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button/span[1]/strong")));
+		JavascriptExecutor jse2 = (JavascriptExecutor) driver;
+		element = driverWait
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-6 .mat-radio-outer-circle")));
+		jse2.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-		jse8.executeScript("arguments[0].scrollIntoView();", element);
+		JavascriptExecutor jse3 = (JavascriptExecutor) driver;
+		element = driverWait
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-9 .mat-radio-outer-circle")));
+		jse3.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-		element.click();
-		String a = "Count 1: Review";
+		JavascriptExecutor jse4 = (JavascriptExecutor) driver;
+		element = driverWait
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-12 .mat-radio-outer-circle")));
+		jse4.executeScript("arguments[0].click();", element);
+
+		JavascriptExecutor jse22 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		jse22.executeScript("arguments[0].click();", element);
+		Thread.sleep(1000);
+		String a = "Additional information";
 		// identify elements with text()
-		List<WebElement> l = driver.findElements(By.xpath("//*[contains(text(),'Count 1: Review')]"));
+		List<WebElement> l = driver.findElements(By.xpath("//*[contains(text(),'Additional information')]"));
 		// verify list size
 		if (l.size() > 0) {
 			System.out.println("Text: " + a + " is present. ");
 		} else {
 			System.out.println("Text: " + a + " is not present. ");
 		}
-		JavascriptExecutor jse22 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[3]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/form/section/div[3]/mat-checkbox[1]/label/span[1]")));
+		JavascriptExecutor jse21 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("mat-checkbox-12-input")));
+		jse21.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-		jse22.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
-		JavascriptExecutor jse2 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[3]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
-		Thread.sleep(1000);
-		jse2.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
-		String b = "Count 2: Review";
-		// identify elements with text()
-		List<WebElement> m = driver.findElements(By.xpath("//*[contains(text(),'Count 2: Review')]"));
-		// verify list size
-		if (m.size() > 0) {
-			System.out.println("Text: " + b + " is present. ");
-		} else {
-			System.out.println("Text: " + b + " is not present. ");
-		}
-		JavascriptExecutor jse4 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[4]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
-		Thread.sleep(1000);
-		jse4.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
-		String c = "Count 3: Review";
-		// identify elements with text()
-		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Count 3: Review')]"));
-		// verify list size
-		if (n.size() > 0) {
-			System.out.println("Text: " + c + " is present. ");
-		} else {
-			System.out.println("Text: " + c + " is not present. ");
-		}
 
 		// Additional Info with lawyer, interpreter and witness
 		element = driverWait.until(ExpectedConditions
 				.elementToBeClickable(By.cssSelector("#mat-checkbox-13 .mat-checkbox-inner-container")));
 		element.click();
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
 		element.sendKeys("Test LTD");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys("Lawyer Lawyer");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
 		element.sendKeys("3220 Douglas");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
 		element.sendKeys("9999999999");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
 		element.sendKeys("test@test.com");
+		JavascriptExecutor jse6 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("mat-select-value-9")));
+		jse6.executeScript("arguments[0].click();", element);
+		element = driverWait
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-option-267 > .mat-option-text")));
+		element.click();
+		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions
 				.elementToBeClickable(By.cssSelector("#mat-checkbox-14 .mat-checkbox-inner-container")));
 		element.click();
-		element = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("mat-select-value-7")));
-		element.click();
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-option-264 > .mat-option-text")));
-		element.click();
-		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions
-				.elementToBeClickable(By.cssSelector("#mat-checkbox-15 .mat-checkbox-inner-container")));
-		element.click();
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
 		element.clear();
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
 		element.sendKeys("3");
 		Thread.sleep(1000);
-		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		// Scroll down till the bottom of the page
-		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		Thread.sleep(1000);
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[5]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")))
-				.click();
+
+		JavascriptExecutor jse7 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		jse7.executeScript("arguments[0].click();", element);
 		String d = "Ticket request overview";
 		// identify elements with text()
 		List<WebElement> o = driver.findElements(By.xpath("//*[contains(text(),'Ticket request overview')]"));
@@ -176,18 +141,14 @@ public class DisputeTicketAttendCourtHearing {
 			System.out.println("Text: " + d + " is not present. ");
 		}
 		Thread.sleep(1000);
-		JavascriptExecutor js15 = (JavascriptExecutor) driver;
-		// Scroll down till the bottom of the page
-		js15.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-
-		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-16")));
-		element.click();
+		JavascriptExecutor jse8 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-2-input")));
+		jse8.executeScript("arguments[0].click();", element);
 		System.out.println("Tick declare box checked");
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[6]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
-		element.click();
+		JavascriptExecutor jse9 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Submit request')]")));
+		jse9.executeScript("arguments[0].click();", element);
 
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
 		popup.popupSubmitWindow(element, driverWait, driver);
