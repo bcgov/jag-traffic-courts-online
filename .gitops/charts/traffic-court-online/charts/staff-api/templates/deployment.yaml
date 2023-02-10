@@ -55,11 +55,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.coms.service.secretName }}
                 key: username
-          - name: COMS__USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.coms.service.secretName }}
-                key: username
           - name: COMS__PASSWORD
             valueFrom:
               secretKeyRef:
