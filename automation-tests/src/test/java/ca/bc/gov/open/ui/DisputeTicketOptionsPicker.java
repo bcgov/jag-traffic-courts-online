@@ -130,9 +130,9 @@ public class DisputeTicketOptionsPicker {
 		Thread.sleep(1000);
 		element.click();
 		System.out.println("Click Next");
-		String a = "Count: Review";
+		String a = "Counts: Review";
 		// identify elements with text()
-		List<WebElement> l = driver.findElements(By.xpath("//*[contains(text(),'Count 2: Review')]"));
+		List<WebElement> l = driver.findElements(By.xpath("//*[contains(text(),'Counts: Review')]"));
 		// verify list size
 		if (l.size() > 0) {
 			System.out.println("Text: " + a + " is present. ");
