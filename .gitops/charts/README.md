@@ -10,7 +10,7 @@ See [Installing Helm](https://helm.sh/docs/intro/install/)
 
 ## Common Object Management Service
 
-To package the COMS helm chart to a tgz, clone the repository to a **temporary** directory
+To package the COMS helm chart to a tgz, clone the repository into a **temporary** directory
 and run the `helm package` command.
 
 ```
