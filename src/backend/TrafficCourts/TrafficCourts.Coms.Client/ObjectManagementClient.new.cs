@@ -192,17 +192,15 @@ public partial class ObjectManagementClient
     /// <param name="objId">Uuid or array of uuids representing the object</param>
     /// <param name="path">The canonical S3 path string of the object</param>
     /// <param name="active">Boolean on active status</param>
-    /// <param name="deleteMarker">Boolean on object version DeleteMarker status</param>
-    /// <param name="latest">Boolean on object version is latest</param>
     /// <param name="public">Boolean on public status</param>
     /// <param name="mimeType">The object MIME Type</param>
     /// <param name="name">the `name` metadata for the object Typically a descriptive title or original filename</param>
     /// <param name="tagset*">Tags for the object, defined as a Key/Value tag. The query must be formatted in deepObject style notation, where a tag-set made out of multiple tags would be encoded something similar to `tagset[x]=a&amp;tagset[y]=b`. Only one value can exist for a given tag key.</param>
     /// <returns>Returns and array of objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DBObject>> SearchObjectsAsync(string? x_amz_meta_*, System.Guid? objId, string? path, bool? active, bool? deleteMarker, bool? latest, bool? @public, string? mimeType, string? name, S3TagSet? tagset*)
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DBObject>> SearchObjectsAsync(string? x_amz_meta_*, System.Guid? objId, string? path, bool? active, bool? @public, string? mimeType, string? name, S3TagSet? tagset*)
     {
-        return SearchObjectsAsync(x_amz_meta_ *, objId, path, active, deleteMarker, latest, @public, mimeType, name, tagset *, System.Threading.CancellationToken.None);
+        return SearchObjectsAsync(x_amz_meta_ *, objId, path, active, @public, mimeType, name, tagset *, System.Threading.CancellationToken.None);
     }
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -216,15 +214,13 @@ public partial class ObjectManagementClient
     /// <param name="objId">Uuid or array of uuids representing the object</param>
     /// <param name="path">The canonical S3 path string of the object</param>
     /// <param name="active">Boolean on active status</param>
-    /// <param name="deleteMarker">Boolean on object version DeleteMarker status</param>
-    /// <param name="latest">Boolean on object version is latest</param>
     /// <param name="public">Boolean on public status</param>
     /// <param name="mimeType">The object MIME Type</param>
     /// <param name="name">the `name` metadata for the object Typically a descriptive title or original filename</param>
     /// <param name="tagset*">Tags for the object, defined as a Key/Value tag. The query must be formatted in deepObject style notation, where a tag-set made out of multiple tags would be encoded something similar to `tagset[x]=a&amp;tagset[y]=b`. Only one value can exist for a given tag key.</param>
     /// <returns>Returns and array of objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DBObject>> SearchObjectsAsync(string? x_amz_meta_*, System.Guid? objId, string? path, bool? active, bool? deleteMarker, bool? latest, bool? @public, string? mimeType, string? name, S3TagSet? tagset*, System.Threading.CancellationToken cancellationToken)
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DBObject>> SearchObjectsAsync(string? x_amz_meta_*, System.Guid? objId, string? path, bool? active, bool? @public, string? mimeType, string? name, S3TagSet? tagset*, System.Threading.CancellationToken cancellationToken)
     {
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/object?");
@@ -239,14 +235,6 @@ public partial class ObjectManagementClient
         if (active != null)
         {
             urlBuilder_.Append(System.Uri.EscapeDataString("active") + "=").Append(System.Uri.EscapeDataString(ConvertToString(active, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-        }
-        if (deleteMarker != null)
-        {
-            urlBuilder_.Append(System.Uri.EscapeDataString("deleteMarker") + "=").Append(System.Uri.EscapeDataString(ConvertToString(deleteMarker, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-        }
-        if (latest != null)
-        {
-            urlBuilder_.Append(System.Uri.EscapeDataString("latest") + "=").Append(System.Uri.EscapeDataString(ConvertToString(latest, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
         }
         if (@public != null)
         {
