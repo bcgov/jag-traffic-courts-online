@@ -54,6 +54,9 @@ Set the JDBC URL parameter to "jdbc:h2:file:./data/h2" to connect, username is "
 | ORDS_API_TIMEOUT            | Connection timeout limit in MS.
 | ORDS_API_RETRY_COUNT        | The maximum number of retry attempts to allow.
 | ORDS_API_RETRY_DELAY        | The Duration of the fixed delays.
+| ORDS_API_BASICAUTH_ENABLED  | If enabled, this will add basic authentication using the credentials below for all ORDS API calls.
+| ORDS_API_BASICAUTH_USERNAME | Basic auth username for calling ORDS.
+| ORDS_API_BASICAUTH_PASSWORD | Basic auth password for calling ORDS.
 | JAVA_OPTS	                  | JVM parameters to be passed to the container. ie, "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
 
 Note: Redis Standalone and Sentinel modes are mutually exclusive.  Either use host/port variables or master/nodes.
