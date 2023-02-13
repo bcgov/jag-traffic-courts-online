@@ -44,6 +44,7 @@ ENV GIT_SHA=$GIT_SHA
 
 WORKDIR /app
 EXPOSE 8080
+EXPOSE 8000
 
 ADD https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${PROMETHEUS_AGENT_VERSION}/jmx_prometheus_javaagent-${PROMETHEUS_AGENT_VERSION}.jar /app/jmx_prometheus_javaagent.jar
 RUN printf "Generate jmx_prometheus_javaagent_config.yaml\n" & \
