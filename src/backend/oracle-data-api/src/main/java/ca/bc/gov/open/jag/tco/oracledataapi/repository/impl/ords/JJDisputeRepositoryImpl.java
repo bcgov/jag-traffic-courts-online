@@ -31,6 +31,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.DisputeResponseRe
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 @ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = false)
 @Qualifier("jjDisputeRepository")
@@ -55,12 +56,12 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
-	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned) {
-		throw new NotYetImplementedException();
+	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs) {
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1UnassignDisputeVtcPost(DateUtil.formatAsDateTimeUTC(assignedBeforeTs), ticketNumber));
 	}
 
 	@Override
-	public Iterable<JJDispute> findByVtcAssignedTsBefore(Date olderThan) {
+	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned) {
 		throw new NotYetImplementedException();
 	}
 

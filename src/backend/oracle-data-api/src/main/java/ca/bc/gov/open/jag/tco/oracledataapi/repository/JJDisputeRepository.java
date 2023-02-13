@@ -18,11 +18,15 @@ public interface JJDisputeRepository {
 	 */
 	public void assignJJDisputeVtc(String ticketNumber, String username);
 
+	/**
+	 * Unassigned JJDisputes older than the supplied datestamp (or just the one JJDispute if ticketNumber is supplied).
+	 * @param ticketNumber
+	 * @param assignedBeforeTs
+	 */
+	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs);
+
 	/** Fetch all records which have the specified jjAssigned. */
 	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned);
-
-	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
-	public Iterable<JJDispute> findByVtcAssignedTsBefore(Date olderThan);
 
 	/**
 	 * Deletes all entities managed by the repository.
