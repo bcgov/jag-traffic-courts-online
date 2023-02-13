@@ -25,6 +25,15 @@ public class OrdsConfigProperties {
 	@Value("${ords.rest-api.tco.url}")
 	private String ordsRestApiTcoUrl;
 
+	@Value("${ords.rest-api.basicauth.enabled}")
+	private boolean ordsBasicAuthEnabled;
+
+	@Value("${ords.rest-api.basicauth.username}")
+	private String ordsRestApiUsername;
+
+	@Value("${ords.rest-api.basicauth.password}")
+	private String ordsRestApiPassword;
+
 	@Value("${ords.rest-api.timeout}")
 	private int ordsRestApiTimeout;
 
