@@ -149,6 +149,11 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String noticeOfDisputeGuid;
 
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo noticeOfHearingYn;
+
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String occamDisputantGiven1Nm;
@@ -208,6 +213,11 @@ public class JJDispute extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	private String enforcementOfficer;
+
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo electronicTicketYn;
 
 	/**
 	 * The police detachment location.
@@ -296,7 +306,7 @@ public class JJDispute extends Auditable<String> {
 	@Column(nullable = true)
 	@Schema(nullable = true)
 	private ContactType contactType;
-	
+
 	/**
 	 * Does the want to appear in court?
 	 */

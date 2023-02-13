@@ -291,6 +291,9 @@ components:
         drvLicIssuedProvSeqNo:
           type: string
           format: nullable
+        electronicTicketYn:
+          type: string
+          format: nullable
         emailAddressTxt:
           type: string
           format: nullable
@@ -333,6 +336,9 @@ components:
           format: nullable
         noticeOfDisputeGuid:
           type: string
+        noticeOfHearingYn:
+          type: string
+          format: nullable
         occamDisputantGiven1Nm:
           type: string
           format: nullable
