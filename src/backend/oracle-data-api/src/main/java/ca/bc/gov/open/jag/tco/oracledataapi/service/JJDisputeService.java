@@ -182,18 +182,10 @@ public class JJDisputeService {
 				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber);
 			}
 
+			jjDisputeRepository.assignJJDisputeJj(ticketNumber, username);
 			if (!StringUtils.isBlank(username)) {
-
-				// FIXME: setting JjAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/assignDisputeJj endpoint
-				jjDispute.setJjAssignedTo(username);
-				jjDisputeRepository.saveAndFlush(jjDispute);
-
 				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", ticketNumber, username);
 			} else {
-				// FIXME: setting JjAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/unassignDisputeJj endpoint
-				jjDispute.setJjAssignedTo(null);
-				jjDisputeRepository.saveAndFlush(jjDispute);
-
 				logger.debug("Unassigned JJDispute with ticket number {} ", ticketNumber);
 			}
 		}

@@ -51,6 +51,11 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
+	public void assignJJDisputeJj(String ticketNumber, String username) {
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeJjPost(username, ticketNumber));
+	}
+
+	@Override
 	public void assignJJDisputeVtc(String ticketNumber, String username) {
 		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeVtcPost(username, ticketNumber));
 	}
@@ -61,8 +66,15 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
-	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned) {
-		throw new NotYetImplementedException();
+	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssignedTo) {
+		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null, jjAssignedTo);
+		if (response == null)
+			return new ArrayList<JJDispute>();
+
+		// convert a list of TCO ORDS JJDisputes to Oracle Data JJDisputes
+		return response.getJjDisputes().stream()
+				.map(jjDispute -> map(jjDispute))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -72,7 +84,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public List<JJDispute> findAll() {
-		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null);
+		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null, null);
 		if (response == null)
 			return new ArrayList<JJDispute>();
 

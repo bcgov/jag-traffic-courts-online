@@ -117,6 +117,35 @@ class DisputeServiceOrdsTcoTest extends BaseTestSuite {
 	}
 
 	@Test
+	public void testJjDisputeAssignJj_POST() throws Exception {
+		String ticketNumber = "EA90100004";
+		JJDispute jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		String jjAssignedTo = jjDispute.getJjAssignedTo();
+
+		String username = RandomUtil.randomGivenName().charAt(0) + RandomUtil.randomSurname();
+		assertNotEquals(jjAssignedTo, username); // confirm jjAssignedTo is not already set to the random name.
+		jjDisputeRepository.assignJJDisputeJj(ticketNumber, username);
+
+		jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		assertEquals(username, jjDispute.getJjAssignedTo());
+	}
+
+	@Test
+	public void testJjDisputeUnassignJj_POST() throws Exception {
+		String ticketNumber = "EA90100004";
+		String username = RandomUtil.randomGivenName().charAt(0) + RandomUtil.randomSurname();
+
+		jjDisputeRepository.assignJJDisputeJj(ticketNumber, username);
+		JJDispute jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		assertNotNull(jjDispute.getJjAssignedTo());
+
+		// Setting the username to null should "unassign" JJDispute
+		jjDisputeRepository.assignJJDisputeJj(ticketNumber, null);
+		jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		assertNull(jjDispute.getJjAssignedTo());
+	}
+
+	@Test
 	public void testJjDisputeAssignVtc_POST() throws Exception {
 		String ticketNumber = "EA90100004";
 		JJDispute jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
