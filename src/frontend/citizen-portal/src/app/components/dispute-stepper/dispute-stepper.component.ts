@@ -50,6 +50,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   legalRepresentationForm: NoticeOfDisputeFormGroup;
   noticeOfDispute: NoticeOfDispute;
   matcher = new FormErrorStateMatcher();
+
+  // TODO: use ViewChild to detect instead of hardcode
   countIndex: number = 1;
 
   // Additional
@@ -136,9 +138,10 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.counts.forEach(count => {
         let countForm = count.form;
         if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
-          countForm.patchValue({ plea_cd: this.Plea.G });
+          countForm.controls.plea_cd.patchValue(this.Plea.G);
         }
         if (countForm.value.__skip) {
+          // TODO: move to onSkipChange
           countForm.patchValue({ ...this.getCountFormInitValue(count.ticket_count), __skip: true });
         }
       });
