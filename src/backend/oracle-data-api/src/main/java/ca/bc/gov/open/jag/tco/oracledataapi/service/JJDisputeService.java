@@ -86,11 +86,7 @@ public class JJDisputeService {
 		JJDispute jjDispute = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
-
-			// FIXME: setting vtcAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/assignDisputeVtc endpoint
-			jjDispute.setVtcAssignedTo(principal.getName());
-			jjDispute.setVtcAssignedTs(new Date());
-			jjDisputeRepository.saveAndFlush(jjDispute);
+			jjDisputeRepository.assignJJDisputeVtc(ticketNumber, principal.getName());
 
 			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
 

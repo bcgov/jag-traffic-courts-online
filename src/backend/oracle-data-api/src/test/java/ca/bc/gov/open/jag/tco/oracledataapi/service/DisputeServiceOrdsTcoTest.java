@@ -1,13 +1,15 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.Diff;
-import org.junit.jupiter.api.Disabled;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,17 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.HealthApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.PingResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 @EnabledIfEnvironmentVariable(named = "JJDISPUTE_REPOSITORY_SRC", matches = "ords")
 class DisputeServiceOrdsTcoTest extends BaseTestSuite {
 
 	@Autowired
 	private JJDisputeService jjDisputeService;
+
+	@Autowired
+	private JJDisputeRepository jjDisputeRepository;
 
 	@Autowired
 	private HealthApi ordsTcoHealthApi;
@@ -46,7 +53,6 @@ class DisputeServiceOrdsTcoTest extends BaseTestSuite {
 	}
 
 	@Test
-	@Disabled
 	public void testSetStatus() throws Exception {
 		String ticketNumber = "EA90100004";
 
@@ -107,6 +113,22 @@ class DisputeServiceOrdsTcoTest extends BaseTestSuite {
 		List<Diff<?>> courtAppearancesDiffs = getDifferences(jjDispute.getJjDisputeCourtAppearanceRoPs().get(0), savedJJDispute.getJjDisputeCourtAppearanceRoPs().get(0),
 				"jjDispute");
 		logDiffs(courtAppearancesDiffs, "courtAppearances");
+	}
+
+	@Test
+	public void testJjDisputeAssignVtc_POST() throws Exception {
+		String ticketNumber = "EA90100004";
+		JJDispute jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		String vtcAssignedTo = jjDispute.getVtcAssignedTo();
+
+		String username = RandomUtil.randomGivenName().charAt(0) + RandomUtil.randomSurname();
+		assertNotEquals(vtcAssignedTo, username); // confirm vtcAssignedTo is not already set to the random name.
+		jjDisputeRepository.assignJJDisputeVtc(ticketNumber, username);
+
+		jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		assertEquals(username, jjDispute.getVtcAssignedTo());
+		// vtcAssignedTs should have been set by the stored procedure so we don't know the exact time, but it should have happened in the last 5 minutes.
+		assertTrue(jjDispute.getVtcAssignedTs().after(DateUtils.addMinutes(new Date(), -5)));
 	}
 
 }

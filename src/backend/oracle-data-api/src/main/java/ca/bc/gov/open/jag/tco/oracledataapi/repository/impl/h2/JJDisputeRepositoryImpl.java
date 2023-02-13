@@ -22,6 +22,11 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaRepository<JJDispute, Long> {
 
 	@Override
+	@Modifying(clearAutomatically = true)
+	@Query("update JJDispute jj set jj.vtcAssignedTo = :username, jj.vtcAssignedTs = CURRENT_TIMESTAMP() where jj.ticketNumber = :ticketNumber")
+	public void assignJJDisputeVtc(String ticketNumber, String username);
+
+	@Override
 	@Query("select jj from JJDispute jj where jj.ticketNumber = :ticketNumber")
 	public List<JJDispute> findByTicketNumber(@Param(value = "ticketNumber") String ticketNumber);
 
