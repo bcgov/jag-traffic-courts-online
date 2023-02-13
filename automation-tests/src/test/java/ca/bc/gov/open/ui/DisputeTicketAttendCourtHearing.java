@@ -1,10 +1,6 @@
 package ca.bc.gov.open.ui;
 
-import java.time.Duration;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
