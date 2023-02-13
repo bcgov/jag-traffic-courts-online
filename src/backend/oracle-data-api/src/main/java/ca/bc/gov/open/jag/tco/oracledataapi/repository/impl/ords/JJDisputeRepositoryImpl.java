@@ -27,6 +27,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.DisputeResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
@@ -46,6 +47,11 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	public JJDisputeRepositoryImpl(JjDisputeApi jjDisputeApi) {
 		this.jjDisputeApi = jjDisputeApi;
+	}
+
+	@Override
+	public void assignJJDisputeVtc(String ticketNumber, String username) {
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeVtcPost(username, ticketNumber));
 	}
 
 	@Override
@@ -88,7 +94,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	@Override
 	public JJDispute saveAndFlush(JJDispute jjDispute) {
 		try {
-			ResponseResult responseResult = assertNoExceptions(() -> {
+			DisputeResponseResult responseResult = assertNoExceptions(() -> {
 				ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute convert = jjDisputeMapper.convert(jjDispute);
 				return jjDisputeApi.v1UpdateDisputePut(convert);
 			});
@@ -137,8 +143,29 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
 	 * @return
 	 */
-	private ResponseResult assertNoExceptions(Supplier<ResponseResult> m) {
+	private ResponseResult assertNoExceptionsGeneric(Supplier<ResponseResult> m) {
 		ResponseResult result = m.get();
+
+		if (result == null) {
+			// Missing response object.
+			throw new InternalServerErrorException("Invalid ResponseResult object");
+		} else if (result.getException() != null) {
+			// Exception in response exists
+			throw new InternalServerErrorException(result.getException());
+		} else if (!"1".equals(result.getStatus())) {
+			// Status is not 1 (success)
+			throw new InternalServerErrorException("Status is not 1 (success)");
+		} else {
+			return result;
+		}
+	}
+
+	/**
+	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
+	 * @return
+	 */
+	private DisputeResponseResult assertNoExceptions(Supplier<DisputeResponseResult> m) {
+		DisputeResponseResult result = m.get();
 
 		if (result == null) {
 			// Missing response object.

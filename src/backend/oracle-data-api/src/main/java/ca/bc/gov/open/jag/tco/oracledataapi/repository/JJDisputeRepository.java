@@ -11,6 +11,13 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 
 public interface JJDisputeRepository {
 
+	/**
+	 * Assigns a particular JJDispute (by ticketNumber) to the supplied username.
+	 * @param ticketNumber
+	 * @param username
+	 */
+	public void assignJJDisputeVtc(String ticketNumber, String username);
+
 	/** Fetch all records which have the specified jjAssigned. */
 	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned);
 
