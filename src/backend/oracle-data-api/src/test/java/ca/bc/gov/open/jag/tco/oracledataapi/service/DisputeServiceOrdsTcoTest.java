@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
@@ -129,6 +130,26 @@ class DisputeServiceOrdsTcoTest extends BaseTestSuite {
 		assertEquals(username, jjDispute.getVtcAssignedTo());
 		// vtcAssignedTs should have been set by the stored procedure so we don't know the exact time, but it should have happened in the last 5 minutes.
 		assertTrue(jjDispute.getVtcAssignedTs().after(DateUtils.addMinutes(new Date(), -5)));
+	}
+
+	@Test
+	public void testJjDisputeUnAssignVtc_POST() throws Exception {
+		String ticketNumber = "EA90100004";
+		String username = RandomUtil.randomGivenName().charAt(0) + RandomUtil.randomSurname();
+
+		// Ensure JJDispute is assigned.
+		jjDisputeRepository.assignJJDisputeVtc(ticketNumber, username);
+		JJDispute jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		assertNotNull(jjDispute.getVtcAssignedTo());
+		assertNotNull(jjDispute.getVtcAssignedTs());
+
+		Thread.sleep(1000);
+
+		// Attempt to unassign JJDispute, assert
+		jjDisputeRepository.unassignJJDisputeVtc(ticketNumber, new Date());
+		jjDispute = jjDisputeService.getJJDisputeByTicketNumber(ticketNumber);
+		assertNull(jjDispute.getVtcAssignedTo());
+		assertNull(jjDispute.getVtcAssignedTs());
 	}
 
 }

@@ -101,19 +101,10 @@ public class JJDisputeService {
 	 * @return number of records modified.
 	 */
 	public void unassignJJDisputes() {
-		int count = 0;
-
 		// Find all Disputes with an assignedTs older than 1 hour ago.
 		Date hourAgo = DateUtils.addHours(new Date(), -1);
 		logger.debug("Unassigning all jj-disputes older than {}", hourAgo.toInstant());
-		for (JJDispute jjdispute : jjDisputeRepository.findByVtcAssignedTsBefore(hourAgo)) {
-			jjdispute.setVtcAssignedTo(null);
-			jjdispute.setVtcAssignedTs(null);
-			jjDisputeRepository.saveAndFlush(jjdispute);
-			count++;
-		}
-
-		logger.debug("Unassigned {} record(s)", count);
+		jjDisputeRepository.unassignJJDisputeVtc(null, hourAgo);
 	}
 
 	/**
