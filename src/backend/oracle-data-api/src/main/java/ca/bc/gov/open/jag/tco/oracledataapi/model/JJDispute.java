@@ -214,6 +214,11 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String enforcementOfficer;
 
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo electronicTicketYn;
+
 	/**
 	 * The police detachment location.
 	 */
