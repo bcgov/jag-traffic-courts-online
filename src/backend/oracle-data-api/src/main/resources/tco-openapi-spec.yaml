@@ -6,6 +6,8 @@ info:
 servers:
   - description: local
     url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca/tcoords/tco/'
+security:
+  - basicAuth: []
 paths:
   /v1/ping:
     get:
@@ -18,6 +20,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PingResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Health
   /v1/jjDispute:
@@ -34,6 +38,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JJDispute'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
   /v1/updateDispute:
@@ -52,6 +58,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
   /v1/jjDisputeList:
@@ -76,6 +84,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JJDisputeListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
   /v1/disputeStatus:
@@ -145,6 +155,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
   /v1/processDisputeRemark:
@@ -163,9 +175,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RemarkResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
     AuditBase:
       type: object
@@ -539,3 +557,21 @@ components:
         exception:
           type: string
           format: nullable
+    # Schema for error response body
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
