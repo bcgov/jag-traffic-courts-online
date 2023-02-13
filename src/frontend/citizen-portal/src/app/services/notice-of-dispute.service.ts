@@ -29,14 +29,14 @@ export class NoticeOfDisputeService {
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
     disputant_surname: { value: null, options: { validators: [Validators.required] } },
     disputant_given_names: { value: null, options: { validators: [Validators.required] } },
-    contact_given_names: { value: null },
-    contact_surname:{ value: null },
-    contact_law_firm_name: { value: null },
+    contact_given_names: null,
+    contact_surname: null,
+    contact_law_firm_name: null,
     contact_type: { value: this.ContactType.Individual, options: { validators: [Validators.required] } },
     address: { value: null, options: { validators: [Validators.required, Validators.maxLength(300)] } },
     address_city: { value: null, options: { validators: [Validators.required] } },
     address_province: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
-    address_province_country_id: { value: null },
+    address_province_country_id: null,
     address_country_id: { value: null, options: { validators: [Validators.required] } },
     address_province_seq_no: { value: null, options: { validators: [Validators.required] } },
     postal_code: { value: null, options: { validators: [Validators.required] } },
@@ -44,10 +44,10 @@ export class NoticeOfDisputeService {
     email_address: { value: null, options: { validators: [Validators.required, Validators.email] } },
     drivers_licence_number: { value: null, options: { validators: [Validators.required, Validators.minLength(7), Validators.maxLength(9)] } },
     drivers_licence_province: { value: null, options: { validators: [Validators.required] } },
-    drivers_licence_country_id: { value: null },
-    drivers_licence_province_seq_no: { value: null }
+    drivers_licence_country_id: null,
+    drivers_licence_province_seq_no: null
   }
-
+  
   countFormConfigs: DisputeCountFormConfigs = {
     count_no: null,
     plea_cd: null,
@@ -56,10 +56,9 @@ export class NoticeOfDisputeService {
     __skip: false,
     __apply_to_remaining_counts: false,
   }
-
+  
   additionFormConfigs: NoticeOfDisputeFormConfigs = {
     represented_by_lawyer: this.RepresentedByLawyer.N,
-    request_court_appearance: { value: null, options: { validators: [Validators.required] } },
     interpreter_language_cd: null,
     witness_no: 0,
     fine_reduction_reason: null,
@@ -111,7 +110,7 @@ export class NoticeOfDisputeService {
     return form;
   }
 
-  getCountForm(ticket_count?: ViolationTicketCount, dispute_count?: DisputeCount): DisputeCountFormGroup {
+  getCountForm(ticket_count?: ViolationTicketCount, dispute_count?: DisputeCount, isUpdate?: boolean): DisputeCountFormGroup {
     let controls: DisputeCountFormControls = {};
     let configs = this.countFormConfigs; // create all fields
     Object.keys(configs).forEach(key => {
@@ -121,7 +120,11 @@ export class NoticeOfDisputeService {
     })
     let form = this.fb.group(controls);
     form.patchValue(ticket_count); // set count_no
-    form.patchValue(dispute_count); // set others
+    if (isUpdate && !dispute_count) {
+      form.controls.__skip.setValue(true);
+    } else if (dispute_count) {
+      form.patchValue(dispute_count); // set others
+    }
     return form;
   }
 
@@ -155,7 +158,7 @@ export class NoticeOfDisputeService {
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
 
     input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
-        count.request_court_appearance = input.request_court_appearance;
+      count.request_court_appearance = input.request_court_appearance;
     });
 
     const data: DialogOptions = {

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy, Input, Output, EventEmitter } from "@angular/core";
-import { FormArray, FormBuilder, Validators } from "@angular/forms";
+import { FormControl, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialog } from "@angular/material/dialog";
@@ -12,10 +12,9 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { DisputeRequestCourtAppearanceYn} from "app/api";
-import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount } from "app/api";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCountFormGroup, DisputeCount, Count } from "app/services/notice-of-dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 
@@ -45,19 +44,19 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   RequestReduction = DisputeCountRequestReduction;
 
   form: NoticeOfDisputeFormGroup;
+  requestCourtAppearanceFormControl: FormControl<DisputeRequestCourtAppearanceYn> = new FormControl(null, [Validators.required]);
   counts: Count[];
   additionalForm: NoticeOfDisputeFormGroup;
   legalRepresentationForm: NoticeOfDisputeFormGroup;
   noticeOfDispute: NoticeOfDispute;
   matcher = new FormErrorStateMatcher();
+  countIndex: number = 1;
 
   // Additional
   countsActions: CountsActions;
   customWitnessOption = false;
   minWitnesses = 1;
   maxWitnesses = 99;
-  countIndex: number = 1;
-  additionalIndex: number = 2;
 
   // Summary
   declared = false;
@@ -86,21 +85,15 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (!this.ticket) {
-      this.violationTicketService.goToFind();
-      return;
-    }
-    this.ticketType = this.violationTicketService.ticketType;
-
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
-    this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
 
-    // take info from ticket, convert dl number to string
-    this.ticket.drivers_licence_number && this.form.controls.drivers_licence_number.setValue(this.ticket.drivers_licence_number.toString());
-
-    this.counts = this.ticketCounts.map((ticketCount, inx) => {
-      return { ticket_count: ticketCount, form: this.noticeOfDisputeService.getCountForm(ticketCount, this.disputeCounts[inx]) };
+    this.counts = this.ticketCounts.map(ticketCount => {
+      var dispute_count = this.disputeCounts.filter(i => i.count_no === ticketCount.count_no).shift();
+      return {
+        ticket_count: ticketCount,
+        form: this.noticeOfDisputeService.getCountForm(ticketCount, dispute_count, this.mode !== DisputeFormMode.CREATE)
+      };
     });
     this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
   }
@@ -149,9 +142,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
           countForm.patchValue({ ...this.getCountFormInitValue(count.ticket_count), __skip: true });
         }
       });
-      this.setAdditionalRequired();
-      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
-
+      this.setAdditional();
     } else if (!isValid) {
       this.utilsService.scrollToErrorSection();
       this.toastService.openErrorToast(this.config.dispute_validation_error);
@@ -160,45 +151,44 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
     this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
       ...this.form.value,
-      ...this.additionalForm.value,
-      ...this.legalRepresentationForm.value,
-      address_country_id: this.form.get("address_country_id").value, // disabled field is not available in this.form.value
+      ...this.additionalForm?.value,
+      ...this.legalRepresentationForm?.value,
+      request_court_appearance: this.requestCourtAppearanceFormControl.value,
       dispute_counts: this.counts.map(i => i.form.value)
     });
   }
 
- private setAdditionalRequired() {
+  private setAdditional() {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
+    this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
 
-    this.additionalForm.controls.fine_reduction_reason.clearValidators();
-    this.additionalForm.controls.time_to_pay_reason.clearValidators();
     if (this.countsActions.request_reduction.length > 0) {
       this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required]);
     }
-    if (this.countsActions.request_time_to_pay.length > 0 ) {
+    if (this.countsActions.request_time_to_pay.length > 0) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
     }
   }
 
-  isValid(): boolean {
-    if (this.stepper?.selectedIndex >= this.countIndex) {
-      let allCountsValid: boolean = true;
-      this.counts.forEach(count => {
-        let countForm = count.form;
-        let valid = true;
-        if (countForm) {
-          if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
-            valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
-          } else if (this.additionalForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
-            valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
-          }
-          valid = countForm.valid || countForm.value.__skip;
-          allCountsValid = allCountsValid && valid && !this.isAllCountsSkipped;
+  isCountFormsValid(): boolean {
+    if (this.stepper?.selectedIndex < this.countIndex) {
+      return false;
+    }
+
+    let allCountsValid: boolean = true;
+    this.counts.forEach(count => {
+      let countForm = count.form;
+      if (countForm) {
+        let valid = countForm.valid;
+        if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.Y) {
+          valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
+        } else if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N) {
+          valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
         }
-      });
-      if (!allCountsValid) return false;
-      else return this.form.valid;
-    } else return this.form.valid;
+        allCountsValid = allCountsValid && (valid || countForm.value.__skip);
+      }
+    });
+    return allCountsValid && !this.isAllCountsSkipped;
   }
 
   isAdditionalFormValid(): boolean {
@@ -237,12 +227,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   private get isAllCountsSkipped() {
-    if (this.counts?.filter(i => i.form?.value.__skip).length === this.counts.length) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return this.counts?.filter(i => i.form?.value.__skip).length === this.counts.length;
   }
 
   onSkipChecked() {
