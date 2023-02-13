@@ -1478,6 +1478,11 @@
             "type": "string",
             "nullable": true
           },
+          "noticeOfHearingYn": {
+            "type": "string",
+            "nullable": true,
+            "enum": [ "UNKNOWN", "Y", "N" ]
+          },
           "occamDisputantGiven1Nm": {
             "type": "string",
             "nullable": true
@@ -1525,6 +1530,11 @@
           "enforcementOfficer": {
             "type": "string",
             "nullable": true
+          },
+          "electronicTicketYn": {
+            "type": "string",
+            "nullable": true,
+            "enum": [ "UNKNOWN", "Y", "N" ]
           },
           "policeDetachment": {
             "type": "string",
