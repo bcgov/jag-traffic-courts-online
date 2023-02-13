@@ -10,6 +10,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.HealthApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiClient;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.auth.HttpBasicAuth;
 
 @Configuration
 @EnableConfigurationProperties(OrdsConfigProperties.class)
@@ -22,6 +23,13 @@ public class OrdsOccamApiClientConfiguration {
 		// Setting this to null will make it use the baseUrl instead
 		apiClient.setServerIndex(null);
 		apiClient.setBasePath(ordsConfigProperties.getOrdsRestApiOccamUrl());
+
+		if(ordsConfigProperties.isOrdsBasicAuthEnabled()) {
+			// Set basic auth header with credentials
+			HttpBasicAuth authentication = (HttpBasicAuth) apiClient.getAuthentication("basicAuth");
+			authentication.setUsername(ordsConfigProperties.getOrdsRestApiUsername());
+			authentication.setPassword(ordsConfigProperties.getOrdsRestApiPassword());
+		}
 
 		// Set to true to see actual request/response messages sent/received from ORDs.
 		apiClient.setDebugging(ordsConfigProperties.isOrdsRestApiDebug());

@@ -26,6 +26,13 @@ repository:
 # ORDS CLIENT properties
 ords:
   rest-api:
+    basicauth:
+      # If true, will enable basic authentication using the credentials below for all API calls
+      enabled: ${ORDS_API_BASICAUTH_ENABLED:false}
+      # Basic auth username for calling ORDS
+      username: ${ORDS_API_BASICAUTH_USERNAME:username}
+      # Basic auth password for calling ORDS
+      password: ${ORDS_API_BASICAUTH_PASSWORD:password}
     # If true, will enable debugging for all API calls to see request/response objects 
     debug: ${ORDS_API_DEBUG:false}
     timeout: 2000

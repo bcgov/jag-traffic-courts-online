@@ -60,6 +60,7 @@ oracle-data-api:
     "DISPUTE_REPOSITORY_SRC": "ords"
     "JJDISPUTE_REPOSITORY_SRC": "h2"
     "HISTORY_REPOSITORY_SRC": "h2"
+    "ORDS_API_BASICAUTH_ENABLED": "false"
 
 staff-api:
   image:
