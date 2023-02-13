@@ -71,6 +71,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String lawyerGiven3Nm = "LawyerGiven3";
 		String lawyerSurnameNm = "LawyerSurname";
 		String noticeOfDisputeGuid = "noticeOfDisputeGuid";
+		YesNo noticeOfHearingYn = YesNo.Y;
 		String occamDisputantGiven1Nm = "name1";
 		String occamDisputantGiven2Nm = "name2";
 		String occamDisputantGiven3Nm = "name3";
@@ -132,6 +133,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setLawyerGiven3Nm(lawyerGiven3Nm);
 		source.setLawyerSurnameNm(lawyerSurnameNm);
 		source.setNoticeOfDisputeGuid(noticeOfDisputeGuid);
+		source.setNoticeOfHearingYn(noticeOfHearingYn.toString());
 		source.setOccamDisputantGiven1Nm(occamDisputantGiven1Nm);
 		source.setOccamDisputantGiven2Nm(occamDisputantGiven2Nm);
 		source.setOccamDisputantGiven3Nm(occamDisputantGiven3Nm);
@@ -188,6 +190,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(lawyerGiven3Nm, target.getLawyerGivenName3());
 		assertEquals(lawyerSurnameNm, target.getLawyerSurname());
 		assertEquals(noticeOfDisputeGuid, target.getNoticeOfDisputeGuid());
+		assertEquals(noticeOfHearingYn, target.getNoticeOfHearingYn());
 		assertEquals(occamDisputantGiven1Nm, target.getOccamDisputantGiven1Nm());
 		assertEquals(occamDisputantGiven2Nm, target.getOccamDisputantGiven2Nm());
 		assertEquals(occamDisputantGiven3Nm, target.getOccamDisputantGiven3Nm());

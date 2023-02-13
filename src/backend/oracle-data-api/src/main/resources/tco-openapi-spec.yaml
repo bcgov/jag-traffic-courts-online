@@ -333,6 +333,9 @@ components:
           format: nullable
         noticeOfDisputeGuid:
           type: string
+        noticeOfHearingYn:
+          type: string
+          format: nullable
         occamDisputantGiven1Nm:
           type: string
           format: nullable
