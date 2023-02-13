@@ -57,6 +57,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		JJDisputeStatus disputeStatus = JJDisputeStatus.NEW;
 		String drvLicIssuedCtryId = "2";
 		String drvLicIssuedProvSeqNo = "1";
+		YesNo electronicTicketYn = YesNo.Y;
 		String emailAddress = "someone@somewhere.com";
 		String fineReductionReasonTxt = "just because";
 		String jjAssignedTo = "jjAssignedTo";
@@ -119,6 +120,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setDisputeStatusTypeCd(disputeStatus.getShortName());
 		source.setDrvLicIssuedCtryId(drvLicIssuedCtryId);
 		source.setDrvLicIssuedProvSeqNo(drvLicIssuedProvSeqNo);
+		source.setElectronicTicketYn(electronicTicketYn.toString());
 		source.setEmailAddressTxt(emailAddress);
 		source.setFineReductionReasonTxt(fineReductionReasonTxt);
 		source.setJjAssignedTo(jjAssignedTo);
@@ -176,6 +178,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(disputeStatus, target.getStatus());
 		assertEquals(drvLicIssuedCtryId, target.getDrvLicIssuedCtryId());
 		assertEquals(drvLicIssuedProvSeqNo, target.getDrvLicIssuedProvSeqNo());
+		assertEquals(electronicTicketYn, target.getElectronicTicketYn());
 		assertEquals(emailAddress, target.getEmailAddress());
 		assertEquals(fineReductionReasonTxt, target.getFineReductionReason());
 		assertEquals(jjAssignedTo, target.getJjAssignedTo());
