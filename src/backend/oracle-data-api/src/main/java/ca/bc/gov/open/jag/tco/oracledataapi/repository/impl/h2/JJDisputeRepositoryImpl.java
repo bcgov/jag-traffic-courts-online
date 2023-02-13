@@ -24,6 +24,11 @@ public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaReposit
 
 	@Override
 	@Modifying(clearAutomatically = true)
+	@Query("update JJDispute jj set jj.jjAssignedTo = :username where jj.ticketNumber = :ticketNumber")
+	public void assignJJDisputeJj(String ticketNumber, String username);
+
+	@Override
+	@Modifying(clearAutomatically = true)
 	@Query("update JJDispute jj set jj.vtcAssignedTo = :username, jj.vtcAssignedTs = CURRENT_TIMESTAMP() where jj.ticketNumber = :ticketNumber")
 	public void assignJJDisputeVtc(String ticketNumber, String username);
 
