@@ -4331,6 +4331,9 @@
             "type": "string",
             "nullable": true
           },
+          "noticeOfHearingYn": {
+            "$ref": "#/components/schemas/JJDisputeNoticeOfHearingYn"
+          },
           "occamDisputantGiven1Nm": {
             "type": "string",
             "nullable": true
@@ -4378,6 +4381,9 @@
           "enforcementOfficer": {
             "type": "string",
             "nullable": true
+          },
+          "electronicTicketYn": {
+            "$ref": "#/components/schemas/JJDisputeElectronicTicketYn"
           },
           "policeDetachment": {
             "type": "string",
@@ -4660,11 +4666,27 @@
         ],
         "type": "string"
       },
+      "JJDisputeElectronicTicketYn": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
       "JJDisputeHearingType": {
         "enum": [
           "UNKNOWN",
           "COURT_APPEARANCE",
           "WRITTEN_REASONS"
+        ],
+        "type": "string"
+      },
+      "JJDisputeNoticeOfHearingYn": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
         ],
         "type": "string"
       },

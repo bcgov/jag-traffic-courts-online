@@ -375,9 +375,10 @@
         <ng-container [formGroup]="form?.get('jjDisputedCountRoP')">
           <!-- Suspended Sentence -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <span class="count-text" style="font-size: small">
-              <b>Suspended Sentence</b>
-            </span><br />
+            <mat-checkbox *ngIf="isViewOnly === false" formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
+              <span class="count-text" style="font-size: small"><b>Suspended Sentence</b></span>
+            </mat-checkbox>
+            <br />
             <div style="padding-left: 0.75rem;">
               <mat-label class="section-grid-header">Probation</mat-label><br />
               <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
@@ -388,9 +389,10 @@
           </span>
           <!-- Jail -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <span class="count-text" style="font-size: small">
-              <b>Jail</b>
-            </span><br />
+            <mat-checkbox *ngIf="isViewOnly === false" formControlName="jailCheckbox" (change)="onJailCheck($event.checked)">
+              <span class="count-text" style="font-size: small"><b>Jail</b></span>
+            </mat-checkbox>
+            <br />
             <div style="padding-left: 0.75rem;">
               <mat-label class="section-grid-header">Duration</mat-label><br />
               <input matInput formControlName="jailDuration" /><br />
@@ -402,9 +404,10 @@
           </span>
           <!-- Probation -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <span class="count-text" style="font-size: small">
-              <b>Probation</b>
-            </span><br />
+            <mat-checkbox *ngIf="isViewOnly === false" formControlName="probationCheckbox" (change)="onProbationCheck($event.checked)">
+              <span class="count-text" style="font-size: small"><b>Probation</b></span>
+            </mat-checkbox>
+            <br />
             <div style="padding-left: 0.75rem;">
               <mat-label class="section-grid-header">Duration</mat-label><br />
               <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="probationDuration" /><br />
@@ -414,9 +417,10 @@
           </span>
           <!-- Driving Prohibition -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <span class="count-text" style="font-size: small">
-              <b>Driving Prohibition</b>
-            </span><br />
+            <mat-checkbox *ngIf="isViewOnly === false" formControlName="drivingProhibitionCheckbox" (change)="onDrivingProhibitionCheck($event.checked)">
+              <span class="count-text" style="font-size: small"><b>Driving Prohibition</b></span>
+            </mat-checkbox>
+            <br />
             <div style="padding-left: 0.75rem;">
               <mat-label class="section-grid-header">Duration</mat-label><br />
               <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="drivingProhibition" /><br />
@@ -450,10 +454,16 @@
             <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y"
               color="primary" (change)="onAbatementChange($event.checked)" [disabled]="isViewOnly"><span
                 class="section-grid-header">Abatement</span>
-            </mat-checkbox><br />
-            <mat-label class="section-grid-header">Stay of Proceedings By</mat-label><br />
-            <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
-            <mat-label class="section-grid-header">Other</mat-label><br />
+            </mat-checkbox><br /><br />
+            <mat-checkbox *ngIf="isViewOnly === false" formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
+              <span class="count-text" style="font-size: small"><b>Stay of Proceedings By</b></span>
+            </mat-checkbox>
+            <br />
+            <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="other" /><br />
+            <mat-checkbox *ngIf="isViewOnly === false" formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
+              <span class="count-text" style="font-size: small"><b>Other</b></span>
+            </mat-checkbox>
+            <br />
             <input matInput formControlName="other" /><br />
           </span>
         </ng-container>

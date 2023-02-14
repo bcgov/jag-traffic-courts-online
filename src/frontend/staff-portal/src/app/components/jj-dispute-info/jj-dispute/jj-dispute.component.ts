@@ -113,7 +113,7 @@ export class JJDisputeComponent implements OnInit {
 
     this.courtAppearanceForm = this.formBuilder.group({
       appearanceTs: [null],
-      room: [null],
+      createdBy: [null],
       reason: [null],
       appCd: [null],
       noAppTs: [null],
@@ -254,7 +254,18 @@ export class JJDisputeComponent implements OnInit {
   private putJJDispute(): void {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = this.courtAppearanceForm.value;
+      console.log(this.lastUpdatedJJDispute);
+
+      // update fields in latest court appearance
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appCd = this.courtAppearanceForm.value.appCd;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs = this.courtAppearanceForm.value.noAppTs;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].clerkRecord = this.courtAppearanceForm.value.clerkRecord;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].defenceCounsel = this.courtAppearanceForm.value.defenceCounsel;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].dattCd = this.courtAppearanceForm.value.dattCd;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].crown = this.courtAppearanceForm.value.crown;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = this.courtAppearanceForm.value.jjSeized;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
     }
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe(response => {
       this.lastUpdatedJJDispute = response;
@@ -307,11 +318,10 @@ export class JJDisputeComponent implements OnInit {
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
         if (!this.isViewOnly) {
-          this.courtAppearanceForm.get('adjudicator').setValue(this.jjIDIR);
-          this.courtAppearanceForm.get('adjudicatorName').setValue(this.jjName);
+          this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
+          this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);
         }
       }
-      console.log(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs, this.courtAppearanceForm);
     });
   }
 

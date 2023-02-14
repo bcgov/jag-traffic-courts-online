@@ -12,10 +12,12 @@
 import { JJDisputeCourtAppearanceRoP } from './jJDisputeCourtAppearanceRoP.model';
 import { JJDisputeRemark } from './jJDisputeRemark.model';
 import { JJDisputedCount } from './jJDisputedCount.model';
+import { JJDisputeNoticeOfHearingYn } from './jJDisputeNoticeOfHearingYn.model';
 import { JJDisputeContactType } from './jJDisputeContactType.model';
 import { JJDisputeDisputantAttendanceType } from './jJDisputeDisputantAttendanceType.model';
 import { FileMetadata } from './fileMetadata.model';
 import { JJDisputeHearingType } from './jJDisputeHearingType.model';
+import { JJDisputeElectronicTicketYn } from './jJDisputeElectronicTicketYn.model';
 import { JJDisputeAppearInCourt } from './jJDisputeAppearInCourt.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
 
@@ -43,6 +45,7 @@ export interface JJDispute {
     status?: JJDisputeStatus;
     hearingType?: JJDisputeHearingType;
     noticeOfDisputeGuid?: string | null;
+    noticeOfHearingYn?: JJDisputeNoticeOfHearingYn;
     occamDisputantGiven1Nm?: string | null;
     occamDisputantGiven2Nm?: string | null;
     occamDisputantGiven3Nm?: string | null;
@@ -54,6 +57,7 @@ export interface JJDispute {
     violationDate?: string | null;
     icbcReceivedDate?: string | null;
     enforcementOfficer?: string | null;
+    electronicTicketYn?: JJDisputeElectronicTicketYn;
     policeDetachment?: string | null;
     courthouseLocation?: string | null;
     offenceLocation?: string | null;

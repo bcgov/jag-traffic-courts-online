@@ -15,6 +15,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   @ViewChild(MatSort) sort = new MatSort();
 
   dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>();
+  tempData: JJDisputeCourtAppearanceRoP[] = [];
   displayedColumns: string[] = [
     "appearanceDate",
     "appearanceTime",
@@ -46,16 +47,17 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.data = this.data?.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
+    this.data.forEach(courtAppearance => {this.tempData.push(courtAppearance)}); // make a copy
+    this.tempData = this.tempData?.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
       return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
     });
-    this.data.shift(); // exclude most recent
-    this.data?.forEach(appearance => {
+    console.log(this.tempData);
+    this.tempData.shift(); // exclude most recent
+    this.tempData?.forEach(appearance => {
       appearance.appearanceDate = new Date(appearance.appearanceTs);
       appearance.appearanceTime = new Date(appearance.appearanceTs);
     })
-    this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.data);
-    console.log("list of appearances", this.data, this.dataSource);
+    this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.tempData);
   }
 }
 

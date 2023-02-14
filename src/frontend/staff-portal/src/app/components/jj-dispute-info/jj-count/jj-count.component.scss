@@ -152,17 +152,31 @@ p {
   }
 
   input.mat-input-element {
-    background-color: #ebebeb;
     font-size: smaller;
     width: 80%;
     align-self: center;
   }
 
+  input.mat-input-element:disabled {
+    background-color: #f1f1f1 !important;
+  }
+
+  input.mat-input-element:enabled {
+    background-color: #fffee6 !important;
+  }
+
   textarea.mat-input-element {
-    background: #fffee6;
     width: 80%;
     font-size: small;
     resize: none;
+  }
+
+  textarea.mat-input-element:disabled {
+    background-color: #f1f1f1 !important;
+  }
+
+  textarea.mat-input-element:enabled{
+    background-color: #fffee6 !important;
   }
 
   .mat-input-element:disabled {
