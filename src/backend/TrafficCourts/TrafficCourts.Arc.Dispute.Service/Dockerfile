@@ -2,7 +2,7 @@
 ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
 ARG RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet
 
-FROM $RUNTIME_IMAGE:6.0 AS base
+FROM $RUNTIME_IMAGE:7.0 AS base
 WORKDIR /app
 EXPOSE 8080
 
@@ -20,7 +20,7 @@ LABEL git.commit.date="$GIT_COMMIT_DATE" \
 ENV APP_VERSION=$GIT_VERSION
 ENV GIT_SHA=$GIT_SHA
 
-FROM $BUILD_IMAGE:6.0 AS build
+FROM $BUILD_IMAGE:7.0 AS build
 WORKDIR /src
 COPY ["TrafficCourts.Arc.Dispute.Service/TrafficCourts.Arc.Dispute.Service.csproj", "TrafficCourts.Arc.Dispute.Service/"]
 RUN dotnet restore "TrafficCourts.Arc.Dispute.Service/TrafficCourts.Arc.Dispute.Service.csproj"

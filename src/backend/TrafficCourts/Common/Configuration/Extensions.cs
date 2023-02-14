@@ -133,14 +133,14 @@ public static class Extensions
             .CreateDefault()
             .AddService(activitySource.Name, serviceInstanceId: Environment.MachineName);
 
-        builder.Services.AddOpenTelemetryTracing(options =>
+        builder.Services.AddOpenTelemetry().WithTracing(builder => 
         {
-            options
+            builder
                 .SetResourceBuilder(resourceBuilder)
-                .AddHttpClientInstrumentation(options =>
+                .AddHttpClientInstrumentation(builder =>
                 {
                     // do not trace calls to splunk
-                    options.FilterHttpRequestMessage = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
+                    builder.FilterHttpRequestMessage = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
                 })
                 .AddAspNetCoreInstrumentation()
                 .AddSource(activitySource.Name)
@@ -148,15 +148,16 @@ public static class Extensions
 
             if (configure is not null)
             {
-                configure(options);
+                configure(builder);
             }
         });
     }
+
     private static void AddMetrics(IServiceCollection services, params string[] meters)
     {
-        services.AddOpenTelemetryMetrics(mb =>
+        services.AddOpenTelemetry().WithMetrics(builder => 
         {
-            mb
+            builder
                 .AddProcessInstrumentation()
                 .AddRuntimeInstrumentation()
                 .AddAspNetCoreInstrumentation()
@@ -164,10 +165,10 @@ public static class Extensions
 
             if (meters.Length != 0)
             {
-                mb.AddMeter(meters);
+                builder.AddMeter(meters);
             }
 
-            mb.AddPrometheusExporter();
+            builder.AddPrometheusExporter();
         });
     }
 }

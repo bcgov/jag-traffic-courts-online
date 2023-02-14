@@ -1,7 +1,7 @@
 ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
-ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/dotnet-60-runtime
+ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/dotnet-70-runtime
 
-FROM $BUILD_IMAGE:6.0 AS build
+FROM $BUILD_IMAGE:7.0 AS build
 WORKDIR /src
 COPY ["Citizen.Service/TrafficCourts.Citizen.Service.csproj", "Citizen.Service/"]
 COPY ["Common/TrafficCourts.Common.csproj", "Common/"]
