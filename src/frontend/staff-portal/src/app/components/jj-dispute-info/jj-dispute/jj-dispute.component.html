@@ -193,7 +193,7 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">APP (P/N/A)</p>
             <p class="section-grid-text">
-              <mat-select *ngIf="!isViewOnly" formControlName="app" style="background:#fffee6">
+              <mat-select *ngIf="!isViewOnly" formControlName="appCd" style="background:#fffee6">
                 <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
                 <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
                 <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
@@ -217,8 +217,8 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">DEF. COUNSEL</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="defenseCounsel" style="width:75px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('defenseCounsel').value }}</span>
+              <input *ngIf="!isViewOnly" formControlName="defenceCounsel" style="width:75px; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('defenceCounsel').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">

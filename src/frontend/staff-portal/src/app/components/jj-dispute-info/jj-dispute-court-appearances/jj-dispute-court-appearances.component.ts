@@ -20,10 +20,10 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
     "appearanceTime",
     "room",
     "reason",
-    "app",
+    "appCd",
     "noAppTs",
     "clerkRecord",
-    "defenseCounsel",
+    "defenceCounsel",
     "dattCd",
     "crown",
     "jjSeized",
@@ -55,6 +55,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
       appearance.appearanceTime = new Date(appearance.appearanceTs);
     })
     this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.data);
+    console.log("list of appearances", this.data, this.dataSource);
   }
 }
 
