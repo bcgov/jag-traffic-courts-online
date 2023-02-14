@@ -228,7 +228,6 @@ public class RandomUtil {
 
 	public static FileHistory createFileHistory() {
 		FileHistory fileHistory = new FileHistory();
-		fileHistory.setTicketNumber(UUID.randomUUID().toString());
 		fileHistory.setDescription(UUID.randomUUID().toString());
 		return fileHistory;
 	}

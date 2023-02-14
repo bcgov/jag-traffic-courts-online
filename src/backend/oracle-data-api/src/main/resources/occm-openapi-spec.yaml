@@ -466,6 +466,45 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       tags:
         - Dispute Update Request
+  /v1/processAuditLogEntry:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditLogEntry'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntryResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Audit Log Entry
+  /v1/auditLogEntryList:
+    get:
+      parameters:
+        - name: ticketNumber
+          in: query
+          description: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntryListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Audit Log Entry
 components:
   securitySchemes:
     basicAuth:
@@ -627,6 +666,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ViolationTicket'
+    AuditLogEntryResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        auditLogEntryId:
+          type: string
+          format: nullable
+        exception:
+          type: string
+          format: nullable
+    AuditLogEntryListResponse:
+      type: object
+      properties:
+        auditLogEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogEntry'
     AuditBase:
       type: object
       properties:
@@ -1044,6 +1101,19 @@ components:
         disputeUpdateReqTypeCd:
           type: string
         requestJsonTxt:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    AuditLogEntry:
+      type: object
+      properties:
+        auditLogEntryId:
+          type: string
+        disputeId:
+          type: string
+        auditLogEntryTypeCd:
+          type: string
+        auditLogEntryTypeDsc:
           type: string
       allOf:
         - $ref: '#/components/schemas/AuditBase'

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.FileHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,11 +44,10 @@ public class FileHistoryController {
 
 		return fileHistoryService.getFileHistoryByTicketNumber(ticketNumber);
 	}
-		
+
 	/**
 	 * POST endpoint that inserts a file history record for given ticketnumber.
 	 *
-	 * @param id (ticket number) of the saved {@link JJDispute} to update
 	 * @return inserted {@link FileHistory}
 	 */
 	@Operation(summary = "Inserts a file history record for the given ticket number.")
@@ -58,11 +56,10 @@ public class FileHistoryController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "An invalid file history record provided. Insert failed.")
 	})
-	@PostMapping("/fileHistory/{ticketNumber}")
+	@PostMapping("/fileHistory")
 	public ResponseEntity<Long> insertFileHistory(
-			@PathVariable("ticketNumber") String ticketNumber, 
 			@RequestBody FileHistory fileHistory) {
 		logger.debug("POST /fileHistory/{ticketNumber} called");
-		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(ticketNumber, fileHistory), HttpStatus.OK);
+		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory), HttpStatus.OK);
 	}
 }
