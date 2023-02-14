@@ -1,8 +1,10 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
@@ -265,4 +267,10 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDisputeCourtAppearanceRoP convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance);
 
+	@AfterMapping
+	public void afterMapping(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount jjDisputeCount, @MappingTarget JJDisputedCount jjDisputedCount) {
+		if (jjDisputedCount.getJjDisputedCountRoP() != null && jjDisputedCount.getJjDisputedCountRoP().getId() == null) {
+			jjDisputedCount.setJjDisputedCountRoP(null);
+		}
+	}
 }

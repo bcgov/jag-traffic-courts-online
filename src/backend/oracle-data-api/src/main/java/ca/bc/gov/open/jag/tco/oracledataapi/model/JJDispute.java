@@ -284,22 +284,23 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String timeToPayReason;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactLawFirmName;
 
-	@Column
+	@Column(nullable = true)
+	@Schema(nullable = true)
 	private String contactGivenName1;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactGivenName2;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactGivenName3;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactSurname;
 

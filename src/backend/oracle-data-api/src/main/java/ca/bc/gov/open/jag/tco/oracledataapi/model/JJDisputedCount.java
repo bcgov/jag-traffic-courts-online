@@ -110,15 +110,15 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * The amount that JJ may enter to overwrite the ticketed fine amount.
 	 */
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
-	private Float LesserOrGreaterAmount;
+	private Float lesserOrGreaterAmount;
 
 	/**
 	 * JJ's decision whether to include surcharge in the calculated fine or not. Surcharge is always 15% of the original fine amount.
 	 */
-	@Column(nullable = false)
-	@Schema(nullable = false)
+	@Column(nullable = true)
+	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private YesNo includesSurcharge;
 

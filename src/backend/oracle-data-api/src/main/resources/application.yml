@@ -115,7 +115,7 @@ repository:
   # Defines the source of the dispute respository. Options are [h2, ords].
   dispute: ${DISPUTE_REPOSITORY_SRC:ords}
   # Defines the source of the jjDispute respository. Options are [h2, ords].
-  jjdispute: ${JJDISPUTE_REPOSITORY_SRC:h2}
+  jjdispute: ${JJDISPUTE_REPOSITORY_SRC:ords}
   # Defines the source of the history respository. Options are [h2, ords].
   history: ${HISTORY_REPOSITORY_SRC:h2}
   
