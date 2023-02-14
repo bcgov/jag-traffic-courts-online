@@ -110,6 +110,11 @@ export class JJCountComponent implements OnInit {
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate);
 
+      // Finding
+      if (this.jjDisputedCount.jjDisputedCountRoP.finding !== this.Finding.GuiltyLesser) {
+        this.form.get('jjDisputedCountRoP').get('lesserDescription').disable();
+      }
+
       // suspended sentence probation fields
       if (this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationDuration || this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationConditions) {
         this.form.get('jjDisputedCountRoP').get('ssProbationCheckbox').setValue(true);
@@ -200,8 +205,8 @@ export class JJCountComponent implements OnInit {
       this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').setValue(null);
       this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').disable();
     } else {
-      this.form.get('jjDisputedCountRoP').get('drivingProhibtion').enable();
-      this.form.get('jjDisptuedCountRoP').get('drivingProhibitionMVASection').enable();
+      this.form.get('jjDisputedCountRoP').get('drivingProhibition').enable();
+      this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').enable();
     }
   }
 
@@ -226,7 +231,7 @@ export class JJCountComponent implements OnInit {
   onProbationCheck(checked: boolean) {
     if (!checked) {
       this.form.get('jjDisputedCountRoP').get('probationDuration').setValue(null);
-      this.form.get('jjDisputedCountRop').get('probationDuration').disable();
+      this.form.get('jjDisputedCountRoP').get('probationDuration').disable();
       this.form.get('jjDisputedCountRoP').get('probationConditions').setValue(null);
       this.form.get('jjDisputedCountRoP').get('probationConditions').disable();
     } else {
@@ -257,6 +262,15 @@ export class JJCountComponent implements OnInit {
 
   onLesserDescriptionKeyup() {
     this.lesserDescriptionFilteredStatutes = this.filterStatutes(this.form.get('jjDisputedCountRoP').get('lesserDescription').value);
+  }
+
+  onFindingChange(value: JJDisputedCountRoPFinding) {
+    if (value == this.Finding.GuiltyLesser) {
+      this.form.get('jjDisputedCountRoP').get('lesserDescription').enable();
+    } else {
+      this.form.get('jjDisputedCountRoP').get('lesserDescription').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('lesserDescription').disable();
+    }
   }
 
   onDrivingProhibitionMVASectionKeyup() {

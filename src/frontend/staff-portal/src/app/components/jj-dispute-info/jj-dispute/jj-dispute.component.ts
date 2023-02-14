@@ -254,7 +254,6 @@ export class JJDisputeComponent implements OnInit {
   private putJJDispute(): void {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
-      console.log(this.lastUpdatedJJDispute);
 
       // update fields in latest court appearance
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appCd = this.courtAppearanceForm.value.appCd;

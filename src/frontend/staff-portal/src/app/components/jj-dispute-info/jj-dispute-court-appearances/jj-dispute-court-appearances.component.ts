@@ -51,7 +51,6 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
     this.tempData = this.tempData?.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
       return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
     });
-    console.log(this.tempData);
     this.tempData.shift(); // exclude most recent
     this.tempData?.forEach(appearance => {
       appearance.appearanceDate = new Date(appearance.appearanceTs);

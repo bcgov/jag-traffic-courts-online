@@ -223,7 +223,7 @@
       </span>
     </ng-container>
     <div [formGroup]="form?.get('jjDisputedCountRoP')">
-      <mat-radio-group formControlName="finding" fxLayout="column">
+      <mat-radio-group formControlName="finding" fxLayout="column" (change)="onFindingChange($event.value)">
         <mat-radio-button [value]="Finding.Guilty">Guilty as charged</mat-radio-button>
         <mat-radio-button [value]="Finding.NotGuilty">Not guilty</mat-radio-button>
         <mat-radio-button [value]="Finding.GuiltyLesser">Not guilty as charged <br />but guilty of lesser / included
@@ -231,7 +231,6 @@
       </mat-radio-group>
       <div style="width:100%; margin-left: 20px">
         <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
-          [readonly]="form.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty || form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty || !form.get('jjDisputedCountRoP').get('finding').value"
           formControlName="lesserDescription" [matAutocomplete]="auto" (keyup)="onLesserDescriptionKeyup()"
           [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
         <mat-autocomplete #auto="matAutocomplete">
@@ -398,7 +397,7 @@
               <input matInput formControlName="jailDuration" /><br />
               <mat-checkbox
                 [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
-                color="primary" (change)="onJailIntermittentChange($event.checked)" [disabled]="isViewOnly"><span
+                color="primary" (change)="onJailIntermittentChange($event.checked)" [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true"><span
                   class="section-grid-header">Intermittent</span></mat-checkbox>
             </div>
           </span>
@@ -459,7 +458,7 @@
               <span class="count-text" style="font-size: small"><b>Stay of Proceedings By</b></span>
             </mat-checkbox>
             <br />
-            <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="other" /><br />
+            <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
             <mat-checkbox *ngIf="isViewOnly === false" formControlName="otherCheckbox" (change)="onOtherCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Other</b></span>
             </mat-checkbox>
