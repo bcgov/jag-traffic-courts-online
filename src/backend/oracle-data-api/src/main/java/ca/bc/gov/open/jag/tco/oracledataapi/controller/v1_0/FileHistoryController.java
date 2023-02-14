@@ -59,7 +59,7 @@ public class FileHistoryController {
 	@PostMapping("/fileHistory")
 	public ResponseEntity<Long> insertFileHistory(
 			@RequestBody FileHistory fileHistory) {
-		logger.debug("POST /fileHistory/{ticketNumber} called");
+		logger.debug("POST /fileHistory called");
 		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory), HttpStatus.OK);
 	}
 }

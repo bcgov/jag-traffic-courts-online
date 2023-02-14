@@ -38,9 +38,6 @@ public class FileHistoryService {
 	 */
 	@Transactional
 	public Long insertFileHistory(FileHistory fileHistory) {
-
-		fileHistory.setFileHistoryId(null);
-		fileHistoryRepository.saveAndFlush(fileHistory);
-		return fileHistory.getFileHistoryId();
+		return fileHistoryRepository.save(fileHistory);
 	}
 }

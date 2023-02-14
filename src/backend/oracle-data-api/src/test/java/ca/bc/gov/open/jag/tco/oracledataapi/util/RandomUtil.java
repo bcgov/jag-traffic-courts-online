@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.AuditLogEntryType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
@@ -228,7 +229,9 @@ public class RandomUtil {
 
 	public static FileHistory createFileHistory() {
 		FileHistory fileHistory = new FileHistory();
-		fileHistory.setDescription(UUID.randomUUID().toString());
+		fileHistory.setFileHistoryId(3L);
+		fileHistory.setDisputeId(5L);
+		fileHistory.setAuditLogEntryType(AuditLogEntryType.INIT);
 		return fileHistory;
 	}
 

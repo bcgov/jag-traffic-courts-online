@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.AuditLogEntryApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.DisputeUpdateRequestApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.HealthApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
@@ -55,6 +56,11 @@ public class OrdsOccamApiClientConfiguration {
 	@Bean
 	public DisputeUpdateRequestApi disputeUpdateRequestApi(ApiClient ordsOccamApiClient) {
 		return new DisputeUpdateRequestApi(ordsOccamApiClient);
+	}
+
+	@Bean
+	public AuditLogEntryApi auditLogEntryApi(ApiClient ordsOccamApiClient) {
+		return new AuditLogEntryApi(ordsOccamApiClient);
 	}
 
 }
