@@ -255,7 +255,7 @@ public class DisputeTicketOptionsPicker {
 		System.out.println("Submit in pop-up clicked");
 
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
-		
+		Thread.sleep(1000);
 		String d = "Email verification required";
 		// identify elements with text()
 		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Email verification required')]"));

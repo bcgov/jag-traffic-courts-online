@@ -30,7 +30,6 @@ public class DisputeTicketUploadPNG {
 		WebDriverManager.instance = null;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test() throws Exception {
 		driver = WebDriverManager.getDriver();
