@@ -27,9 +27,11 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.DisputeResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 @ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = false)
 @Qualifier("jjDisputeRepository")
@@ -49,13 +51,30 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
-	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned) {
-		throw new NotYetImplementedException();
+	public void assignJJDisputeJj(String ticketNumber, String username) {
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeJjPost(username, ticketNumber));
 	}
 
 	@Override
-	public Iterable<JJDispute> findByVtcAssignedTsBefore(Date olderThan) {
-		throw new NotYetImplementedException();
+	public void assignJJDisputeVtc(String ticketNumber, String username) {
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeVtcPost(username, ticketNumber));
+	}
+
+	@Override
+	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs) {
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1UnassignDisputeVtcPost(DateUtil.formatAsDateTimeUTC(assignedBeforeTs), ticketNumber));
+	}
+
+	@Override
+	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssignedTo) {
+		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null, jjAssignedTo);
+		if (response == null)
+			return new ArrayList<JJDispute>();
+
+		// convert a list of TCO ORDS JJDisputes to Oracle Data JJDisputes
+		return response.getJjDisputes().stream()
+				.map(jjDispute -> map(jjDispute))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -65,7 +84,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public List<JJDispute> findAll() {
-		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null);
+		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null, null);
 		if (response == null)
 			return new ArrayList<JJDispute>();
 
@@ -88,7 +107,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	@Override
 	public JJDispute saveAndFlush(JJDispute jjDispute) {
 		try {
-			ResponseResult responseResult = assertNoExceptions(() -> {
+			DisputeResponseResult responseResult = assertNoExceptions(() -> {
 				ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute convert = jjDisputeMapper.convert(jjDispute);
 				return jjDisputeApi.v1UpdateDisputePut(convert);
 			});
@@ -137,8 +156,29 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
 	 * @return
 	 */
-	private ResponseResult assertNoExceptions(Supplier<ResponseResult> m) {
+	private ResponseResult assertNoExceptionsGeneric(Supplier<ResponseResult> m) {
 		ResponseResult result = m.get();
+
+		if (result == null) {
+			// Missing response object.
+			throw new InternalServerErrorException("Invalid ResponseResult object");
+		} else if (result.getException() != null) {
+			// Exception in response exists
+			throw new InternalServerErrorException(result.getException());
+		} else if (!"1".equals(result.getStatus())) {
+			// Status is not 1 (success)
+			throw new InternalServerErrorException("Status is not 1 (success)");
+		} else {
+			return result;
+		}
+	}
+
+	/**
+	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
+	 * @return
+	 */
+	private DisputeResponseResult assertNoExceptions(Supplier<DisputeResponseResult> m) {
+		DisputeResponseResult result = m.get();
 
 		if (result == null) {
 			// Missing response object.

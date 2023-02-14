@@ -84,41 +84,41 @@ export class JJDisputeComponent implements OnInit {
     element?.scrollIntoView(true);
   }
 
-  onRemove(fileId: string) {
+  // onRemove(fileId: string) {
 
-  }
+  // }
 
-  onGetFile(fileId: string) {
+  // onGetFile(fileId: string) {
 
-  }
+  // }
 
-  onUpload(files: FileList) {
-    if (files.length <=0) return;
+  // onUpload(files: FileList) {
+  //   if (files.length <=0) return;
 
-    // upload to coms
-    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
-      .subscribe(fileId => {
+  //   // upload to coms
+  //   this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
+  //     .subscribe(fileId => {
 
-      // add to display of files in DCF
-      let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
-      this.lastUpdatedJJDispute.fileData.push(item);
+  //     // add to display of files in DCF
+  //     let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
+  //     this.lastUpdatedJJDispute.fileData.push(item);
 
-      this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
-    });
+  //     this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
+  //   });
 
-  }
+  // }
 
   ngOnInit() {
     this.getJJDispute();
 
     this.courtAppearanceForm = this.formBuilder.group({
       appearanceTs: [null],
-      room: [null],
+      createdBy: [null],
       reason: [null],
-      app: [null],
+      appCd: [null],
       noAppTs: [null],
       clerkRecord: [null],
-      defenseCounsel: [null],
+      defenceCounsel: [null],
       crown: [null],
       jjSeized: [null],
       adjudicator: [null],
@@ -254,7 +254,17 @@ export class JJDisputeComponent implements OnInit {
   private putJJDispute(): void {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = this.courtAppearanceForm.value;
+
+      // update fields in latest court appearance
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appCd = this.courtAppearanceForm.value.appCd;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs = this.courtAppearanceForm.value.noAppTs;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].clerkRecord = this.courtAppearanceForm.value.clerkRecord;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].defenceCounsel = this.courtAppearanceForm.value.defenceCounsel;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].dattCd = this.courtAppearanceForm.value.dattCd;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].crown = this.courtAppearanceForm.value.crown;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = this.courtAppearanceForm.value.jjSeized;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
     }
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe(response => {
       this.lastUpdatedJJDispute = response;
@@ -307,8 +317,8 @@ export class JJDisputeComponent implements OnInit {
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
         if (!this.isViewOnly) {
-          this.courtAppearanceForm.get('adjudicator').setValue(this.jjIDIR);
-          this.courtAppearanceForm.get('adjudicatorName').setValue(this.jjName);
+          this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
+          this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);
         }
       }
     });

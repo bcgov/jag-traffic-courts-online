@@ -34,7 +34,7 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
 
         AzureKeyCredential credential = new(_apiKey);
         DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
-        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync(_modelId, stream, null, cancellationToken);
+        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.AnalyzeDocumentAsync(WaitUntil.Completed, _modelId, stream, null, cancellationToken);
         await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
 
         return Map(analyseDocumentOperation.Value);
@@ -61,14 +61,14 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
             {
                 field.Value = extractedField.Content;
                 field.FieldConfidence = extractedField.Confidence;
-                field.Type = Enum.GetName(extractedField.ValueType);
+                field.Type = Enum.GetName(extractedField.FieldType);
                 foreach (BoundingRegion region in extractedField.BoundingRegions)
                 {
                     Common.OpenAPIs.OracleDataApi.v1_0.BoundingBox boundingBox = new();
-                    boundingBox.Points.Add(new Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
+                    boundingBox.Points.Add(new Point(region.BoundingPolygon[0].X, region.BoundingPolygon[0].Y));
+                    boundingBox.Points.Add(new Point(region.BoundingPolygon[1].X, region.BoundingPolygon[1].Y));
+                    boundingBox.Points.Add(new Point(region.BoundingPolygon[2].X, region.BoundingPolygon[2].Y));
+                    boundingBox.Points.Add(new Point(region.BoundingPolygon[3].X, region.BoundingPolygon[3].Y));
                     field.BoundingBoxes.Add(boundingBox);
                 }
             }

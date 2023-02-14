@@ -127,7 +127,7 @@ public class BaseTestSuite {
 	}
 
 	/** Helper method to return an instance of Principal */
-	private Principal getPrincipal(String name) {
+	public Principal getPrincipal(String name) {
 		return new Principal() {
 			@Override
 			public String getName() {

@@ -1,5 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.h2;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +21,21 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 @ConditionalOnProperty(name = "repository.jjdispute", havingValue = "h2", matchIfMissing = true)
 @Qualifier("jjDisputeRepository")
 public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaRepository<JJDispute, Long> {
+
+	@Override
+	@Modifying(clearAutomatically = true)
+	@Query("update JJDispute jj set jj.jjAssignedTo = :username where jj.ticketNumber = :ticketNumber")
+	public void assignJJDisputeJj(String ticketNumber, String username);
+
+	@Override
+	@Modifying(clearAutomatically = true)
+	@Query("update JJDispute jj set jj.vtcAssignedTo = :username, jj.vtcAssignedTs = CURRENT_TIMESTAMP() where jj.ticketNumber = :ticketNumber")
+	public void assignJJDisputeVtc(String ticketNumber, String username);
+
+	@Override
+	@Modifying(clearAutomatically = true)
+	@Query("update JJDispute jj set jj.vtcAssignedTo = null, jj.vtcAssignedTs = null where jj.vtcAssignedTs < :assignedBeforeTs and (:ticketNumber is null or jj.ticketNumber = :ticketNumber)")
+	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs);
 
 	@Override
 	@Query("select jj from JJDispute jj where jj.ticketNumber = :ticketNumber")

@@ -213,6 +213,7 @@ services:
       - redis
     ports:
       - "5010:8080"
+      - "8000:8000"
     volumes:
       - data-oracle:/data
 

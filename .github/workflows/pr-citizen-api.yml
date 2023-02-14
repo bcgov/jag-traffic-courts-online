@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.201
+          dotnet-version: 7.0.102
       - name: Build Citizen Api
         run: dotnet build --configuration Release
       - name: Run Tests

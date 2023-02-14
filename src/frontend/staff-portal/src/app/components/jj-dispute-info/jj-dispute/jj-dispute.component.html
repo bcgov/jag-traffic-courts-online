@@ -176,34 +176,33 @@
         <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
           <span class="section-grid-cell">
             <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">{{ courtAppearanceForm.get('appearanceTs').value | date: "MM/dd/YYYY HH:mm"}}</p>
+            <p class="section-grid-text">{{ courtAppearanceForm?.value.appearanceTs | date: "MM/dd/YYYY HH:mm"}}</p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Room</p>
             <p class="section-grid-text">
-              <span>{{ courtAppearanceForm.get('room').value }}</span>
+              <span>{{ courtAppearanceForm?.value.room }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Reason</p>
             <p class="section-grid-text">
-              <span>{{ courtAppearanceForm.get('room').value }}</span>
-            </p>
+              <span>{{ courtAppearanceForm?.value.reason }} </span>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">APP (P/N/A)</p>
             <p class="section-grid-text">
-              <mat-select *ngIf="!isViewOnly" formControlName="app" style="background:#fffee6">
+              <mat-select *ngIf="!isViewOnly" formControlName="appCd" style="background:#fffee6">
                 <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
                 <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
                 <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
               </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('app').value }}</span>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.appCd }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">No APP</p>
-            <p class="section-grid-text">{{ courtAppearanceForm.get('noAppTs').value | date: "MM/dd/YYYY HH:mm"
+            <p class="section-grid-text">{{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm"
               }}&nbsp;<button *ngIf="!isViewOnly" type="button" style="background:#fffee6"
                 (click)="updateNoAPPTs()">Now</button></p>
           </span>
@@ -211,14 +210,14 @@
             <p class="section-grid-header">CLERK REC.</p>
             <p class="section-grid-text">
               <input *ngIf="!isViewOnly" formControlName="clerkRecord" style="width:75px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('clerkRecord').value }}</span>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.clerkRecord }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">DEF. COUNSEL</p>
             <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="defenseCounsel" style="width:75px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('defenseCounsel').value }}</span>
+              <input *ngIf="!isViewOnly" formControlName="defenceCounsel" style="width:75px; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.defenceCounsel }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
@@ -229,7 +228,7 @@
                 <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
                 <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
               </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('dattCd').value }}</span>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
@@ -239,7 +238,7 @@
                 <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
                 <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
               </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('crown').value }}</span>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.crown }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
@@ -249,13 +248,13 @@
                 <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
                 <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
               </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('jjSeized').value }}</span>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.jjSeized }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Judicial Justice</p>
             <p class="section-grid-text">
-              <span>{{ courtAppearanceForm.get('adjudicatorName').value }}</span>
+              <span>{{ courtAppearanceForm?.value.adjudicatorName }}</span>
             </p>
           </span>
           <span class="section-grid-cell" style="grid-column: span 11">
@@ -331,7 +330,7 @@
             <span style="color: black;"><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }}) </b></span>
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div *ngFor="let doc of lastUpdatedJJDispute.fileData">
+        <!-- <div *ngFor="let doc of lastUpdatedJJDispute.fileData">
           <a href="#" onclick="onGetFile(doc.fileId)">{{ doc.fileName }}</a>&nbsp;<button (click)="onRemove(doc.fileId)"><mat-icon>delete</mat-icon>&nbsp;Remove</button>
         </div>
         <mat-form-field class="select-box-only">
@@ -344,7 +343,7 @@
         <button class="large" mat-flat-button type="button" color="primary" onclick="document.getElementById('getFile').click()">
           <mat-icon>upload</mat-icon>&nbsp;Upload File
         </button>
-        <input type="file" id="getFile" style="display:none" accept="image/*,.pdf" (change)="onUpload($event.target.files)">
+        <input type="file" id="getFile" style="display:none" accept="image/*,.pdf" (change)="onUpload($event.target.files)"> -->
       </mat-expansion-panel>
       <mat-expansion-panel [expanded]="true" id="file-history" hideToggle>
         <mat-expansion-panel-header>

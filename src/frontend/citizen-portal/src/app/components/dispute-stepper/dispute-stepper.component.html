@@ -3,7 +3,7 @@
     <mat-icon>done</mat-icon>
   </ng-template>
   <!-- disputant -->
-  <mat-step [completed]="isValid()">
+  <mat-step [completed]="form.valid">
     <ng-template matStepLabel>Contact information</ng-template>
     <app-page>
       <app-page-header>
@@ -14,14 +14,14 @@
 
       <app-disputant-form [form]="form" [mode]="mode"></app-disputant-form>
 
-      <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()" (back)="onStepCancel()"
+      <app-stepper-footer [disableSave]="!form.valid" (save)="disputeStepper.next()" (back)="onStepCancel()"
         [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.backReview'"
         [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true"></app-stepper-footer>
     </app-page>
   </mat-step>
 
   <!-- count & court appearance -->
-  <mat-step [completed]="isValid()">
+  <mat-step [completed]="isCountFormsValid()">
     <ng-template matStepLabel>Counts: Review</ng-template>
     <h2><strong>Court Appearance?</strong></h2>
     <div class="row">
@@ -36,7 +36,7 @@
         </app-alert>
       </div>
     </div>
-    <mat-radio-group [formControl]="additionalForm?.get('request_court_appearance')">
+    <mat-radio-group [formControl]="requestCourtAppearanceFormControl">
       <div>
         <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
           to attend a court hearing</span> <span
@@ -63,14 +63,14 @@
           judicial justice.
         </span>
       </mat-radio-button>
-      <mat-error *ngIf="additionalForm?.controls.request_court_appearance.touched
-            && additionalForm?.controls.request_court_appearance.invalid
-            && additionalForm?.controls.request_court_appearance.errors.required">
+      <mat-error *ngIf="requestCourtAppearanceFormControl.touched
+            && requestCourtAppearanceFormControl.invalid
+            && requestCourtAppearanceFormControl.errors.required">
         {{ "error.required" | translate }}
       </mat-error>
     </mat-radio-group>
     <div class="col mt-4 alert-info-text-color"
-      *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.N">
+      *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.N">
       <app-alert type="warning" icon="info">
         <ng-container #alertContent class="alert-content">
           <span class="text-dark">
@@ -83,7 +83,7 @@
       </app-alert>
     </div>
     <div class="col mt-4 alert-info-text-color"
-      *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.Y">
+      *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y">
       <app-alert type="warning" icon="info">
         <ng-container #alertContent class="alert-content">
           <span class="text-dark">
@@ -97,7 +97,7 @@
       </app-alert>
     </div>
     <div class="col mt-4"
-      *ngIf="(additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
+      *ngIf="(requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
       <app-alert type="warning" icon="info">
         <ng-container #alertContent class="alert-content">
           <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -107,7 +107,7 @@
     </div>
 
     <ng-container *ngFor="let count of counts;">
-      <mat-card class="mat-elevation-z8" *ngIf="additionalForm?.get('request_court_appearance').value">
+      <mat-card class="mat-elevation-z8" *ngIf="requestCourtAppearanceFormControl.value">
         <ng-template matStepLabel>Count {{ count.ticket_count.count_no }}: Review</ng-template>
         <app-page>
           <app-page-header>
@@ -135,7 +135,7 @@
 
             <div class="row mt-4">
               <div
-                [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
+                [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.N ? '' : 'none' }">
                 <label class="w-100">
                   Please provide additional selections below:
                 </label>
@@ -151,7 +151,7 @@
               </div>
 
               <div
-                [ngStyle]="{ 'display': additionalForm?.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
+                [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y ? '' : 'none' }">
                 <label class="w-100">
                   Please provide additional selections below:
                 </label>
@@ -178,14 +178,14 @@
         </app-page>
       </mat-card><br />
     </ng-container>
-    <app-stepper-footer [disableSave]="!isValid()" (save)="disputeStepper.next()"
+    <app-stepper-footer [disableSave]="!isCountFormsValid()" (save)="disputeStepper.next()"
       (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
       [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
     </app-stepper-footer>
   </mat-step>
 
     <!-- aditional -->
-  <mat-step [completed]="additionalForm?.valid">
+  <mat-step [completed]="isAdditionalFormValid()">
     <ng-template matStepLabel>Additional information</ng-template>
     <app-page>
       <app-page-header>
@@ -196,7 +196,7 @@
       </app-page-header>
 
       <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
-        <ng-container *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.N">
+        <ng-container *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.N">
           <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
             <div>{{ countsActions?.request_reduction }}</div>
             <div class="row">
@@ -239,7 +239,7 @@
           </ng-container>
         </ng-container>
 
-        <section *ngIf="additionalForm?.get('request_court_appearance')?.value === RequestCourtAppearance.Y">
+        <section *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y">
           <h3 class="mt-4 mb-2 reduction-text">
           </h3>
           <div class="row">

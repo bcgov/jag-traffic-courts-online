@@ -32,7 +32,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -45,12 +47,13 @@ public class ComsControllerTest
         // Arrange
         var mockFileUploadRequest = new Mock<FileUploadRequest>();
         var comsService = new Mock<IStaffDocumentService>();
-        Guid guid = Guid.NewGuid();
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -74,7 +77,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -98,7 +103,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -122,7 +129,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -146,7 +155,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -170,7 +181,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -194,7 +207,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -218,7 +233,9 @@ public class ComsControllerTest
         DocumentController comsController = new(comsService.Object, mockLogger.Object);
 
         // Act
+#pragma warning disable CS0618 // Type or member is obsolete
         IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);

@@ -57,6 +57,72 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/DisputeResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/assignDisputeJj:
+    post:
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/assignDisputeVtc:
+    post:
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/unassignDisputeVtc:
+    post:
+      parameters:
+        - name: assignedBeforeTs
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/ResponseResult'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -74,6 +140,10 @@ paths:
           schema:
             type: string
         - name: violationTicketId
+          in: query
+          schema:
+            type: string
+        - name: jjAssignedTo
           in: query
           schema:
             type: string
@@ -154,7 +224,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseResult'
+                $ref: '#/components/schemas/DisputeResponseResult'
         '401':
           $ref: '#/components/responses/Unauthorized'
       tags:
@@ -542,6 +612,14 @@ components:
           type: string
           format: date-time
     ResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        exception:
+          type: string
+          format: nullable
+    DisputeResponseResult:
       type: object
       properties:
         status:

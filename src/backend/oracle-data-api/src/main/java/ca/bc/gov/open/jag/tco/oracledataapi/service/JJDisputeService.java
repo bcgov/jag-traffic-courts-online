@@ -86,11 +86,7 @@ public class JJDisputeService {
 		JJDispute jjDispute = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
-
-			// FIXME: setting vtcAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/assignDisputeVtc endpoint
-			jjDispute.setVtcAssignedTo(principal.getName());
-			jjDispute.setVtcAssignedTs(new Date());
-			jjDisputeRepository.saveAndFlush(jjDispute);
+			jjDisputeRepository.assignJJDisputeVtc(ticketNumber, principal.getName());
 
 			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
 
@@ -105,19 +101,10 @@ public class JJDisputeService {
 	 * @return number of records modified.
 	 */
 	public void unassignJJDisputes() {
-		int count = 0;
-
 		// Find all Disputes with an assignedTs older than 1 hour ago.
 		Date hourAgo = DateUtils.addHours(new Date(), -1);
 		logger.debug("Unassigning all jj-disputes older than {}", hourAgo.toInstant());
-		for (JJDispute jjdispute : jjDisputeRepository.findByVtcAssignedTsBefore(hourAgo)) {
-			jjdispute.setVtcAssignedTo(null);
-			jjdispute.setVtcAssignedTs(null);
-			jjDisputeRepository.saveAndFlush(jjdispute);
-			count++;
-		}
-
-		logger.debug("Unassigned {} record(s)", count);
+		jjDisputeRepository.unassignJJDisputeVtc(null, hourAgo);
 	}
 
 	/**
@@ -195,18 +182,10 @@ public class JJDisputeService {
 				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber);
 			}
 
+			jjDisputeRepository.assignJJDisputeJj(ticketNumber, username);
 			if (!StringUtils.isBlank(username)) {
-
-				// FIXME: setting JjAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/assignDisputeJj endpoint
-				jjDispute.setJjAssignedTo(username);
-				jjDisputeRepository.saveAndFlush(jjDispute);
-
 				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", ticketNumber, username);
 			} else {
-				// FIXME: setting JjAssignedTo doesn't work in ORDS, rather call the {{JUSTIN-TCO}}/v1/unassignDisputeJj endpoint
-				jjDispute.setJjAssignedTo(null);
-				jjDisputeRepository.saveAndFlush(jjDispute);
-
 				logger.debug("Unassigned JJDispute with ticket number {} ", ticketNumber);
 			}
 		}

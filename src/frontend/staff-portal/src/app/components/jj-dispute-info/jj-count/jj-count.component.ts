@@ -1,11 +1,8 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { JJDispute } from '../../../services/jj-dispute.service';
 import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatRadioChange } from '@angular/material/radio';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { Subscription } from 'rxjs';
 
@@ -49,7 +46,6 @@ export class JJCountComponent implements OnInit {
   drivingProhibitionFilteredStatutes: Statute[];
 
   constructor(
-    private dialog: MatDialog,
     private lookupsService: LookupsService,
     private formBuilder: FormBuilder,
   ) {
@@ -74,19 +70,25 @@ export class JJCountComponent implements OnInit {
         jjDisputedCountRoP: this.formBuilder.group({
           finding:  [{ value: null, disabled: !this.jjDisputedCount }],
           lesserDescription:  [{ value: null, disabled: !this.jjDisputedCount }],
+          ssProbationCheckbox: [{value: false }],
           ssProbationDuration:  [{ value: null, disabled: !this.jjDisputedCount }],
           ssProbationConditions:  [{ value: null, disabled: !this.jjDisputedCount }],
+          jailCheckbox: [{value: false, disabled: !this.jjDisputedCount}],
           jailDuration:  [{ value: null, disabled: !this.jjDisputedCount }],
           jailIntermittent:  [{ value: null, disabled: !this.jjDisputedCount }],
+          probationCheckbox: [{value: false, disabled: !this.jjDisputedCount }],
           probationDuration:  [{ value: null, disabled: !this.jjDisputedCount }],
           probationConditions:  [{ value: null, disabled: !this.jjDisputedCount }],
+          drivingProhibitionCheckbox: [{value: false, disabled: !this.jjDisputedCount}],
           drivingProhibition:  [{ value: null, disabled: !this.jjDisputedCount }],
           drivingProhibitionMVASection:  [{ value: null, disabled: !this.jjDisputedCount }],
           dismissed:  [{ value: null, disabled: !this.jjDisputedCount }],
           forWantOfProsecution:  [{ value: null, disabled: !this.jjDisputedCount }],
           withdrawn:  [{ value: null, disabled: !this.jjDisputedCount }],
           abatement:  [{ value: null, disabled: !this.jjDisputedCount }],
+          stayOfProceedingsByCheckbox: [{value: false, disabled: !this.jjDisputedCount}],
           stayOfProceedingsBy:  [{ value: null, disabled: !this.jjDisputedCount }],
+          otherCheckbox: [{value: false, disabled: !this.jjDisputedCount}],
           other:  [{ value: null, disabled: !this.jjDisputedCount }],
         })
       });
@@ -106,7 +108,58 @@ export class JJCountComponent implements OnInit {
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
-      this.form.get('revisedDueDate').setValue(this.jjDisputedCount.revisedDueDate);
+      this.form.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate);
+
+      // Finding
+      if (this.jjDisputedCount.jjDisputedCountRoP.finding !== this.Finding.GuiltyLesser) {
+        this.form.get('jjDisputedCountRoP').get('lesserDescription').disable();
+      }
+
+      // suspended sentence probation fields
+      if (this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationDuration || this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationConditions) {
+        this.form.get('jjDisputedCountRoP').get('ssProbationCheckbox').setValue(true);
+      } else {
+        this.form.get('jjDisputedCountRoP').get('ssProbationDuration').disable();
+        this.form.get('jjDisputedCountRoP').get('ssProbationConditions').disable();
+      }
+
+      // Jail fields
+      if (this.jjDisputedCount?.jjDisputedCountRoP?.jailDuration || this.jjDisputedCount?.jjDisputedCountRoP?.jailIntermittent === this.JailIntermittent.Y) {
+        this.form.get('jjDisputedCountRoP').get('jailCheckbox').setValue(true);
+      } else {
+        this.form.get('jjDisputedCountRoP').get('jailDuration').disable();
+        this.form.get('jjDisputedCountRoP').get('jailIntermittent').disable();
+      }
+
+      // Probation fields
+      if (this.jjDisputedCount?.jjDisputedCountRoP?.probationDuration || this.jjDisputedCount?.jjDisputedCountRoP?.probationConditions) {
+        this.form.get('jjDisputedCountRoP').get('probationCheckbox').setValue(true);
+      } else {
+        this.form.get('jjDisputedCountRoP').get('probationDuration').disable();
+        this.form.get('jjDisputedCountRoP').get('probationConditions').disable();
+      }
+
+      // Driving Prohibition fields
+      if (this.jjDisputedCount?.jjDisputedCountRoP?.drivingProhibition || this.jjDisputedCount?.jjDisputedCountRoP?.drivingProhibitionMVASection) {
+        this.form.get('jjDisputedCountRoP').get('drivingProhibitionCheckbox').setValue(true);
+      } else {
+        this.form.get('jjDisputedCountRoP').get('drivingProhibition').disable();
+        this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').disable();
+      }
+
+      // Stay of Proceedings fields
+      if (this.jjDisputedCount?.jjDisputedCountRoP?.stayOfProceedingsBy ) {
+        this.form.get('jjDisputedCountRoP').get('stayOfProceedingsByCheckbox').setValue(true);
+      } else {
+        this.form.get('jjDisputedCountRoP').get('stayOfProceedingsBy').disable();
+      }
+
+      // Other fields
+      if (this.jjDisputedCount?.jjDisputedCountRoP?.other ) {
+        this.form.get('jjDisputedCountRoP').get('otherCheckbox').setValue(true);
+      } else {
+        this.form.get('jjDisputedCountRoP').get('other').disable();
+      }
 
       if(this.isViewOnly || !this.jjDisputedCount) {
         this.form.disable();
@@ -118,6 +171,74 @@ export class JJCountComponent implements OnInit {
         this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N;
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
+    } else {
+      this.form.controls.jjDisputedCountRoP.disable();
+    }
+  }
+
+  onSuspSentenceCheck(checked: boolean) {
+    if (!checked) {
+      this.form.get('jjDisputedCountRoP').get('ssProbationDuration').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('ssProbationDuration').disable();
+      this.form.get('jjDisputedCountRoP').get('ssProbationConditions').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('ssProbationConditions').disable();
+    } else {
+      this.form.get('jjDisputedCountRoP').get('ssProbationDuration').enable();
+      this.form.get('jjDisputedCountRoP').get('ssProbationConditions').enable();
+    }
+  }
+
+  onJailCheck(checked: boolean) {
+    if (!checked) {
+      this.form.get('jjDisputedCountRoP').get('jailDuration').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('jailDuration').disable();
+      this.form.get('jjDisputedCountRoP').get('jailIntermittent').setValue(this.JailIntermittent.N);
+      this.form.get('jjDisputedCountRoP').get('jailIntermittent').disable();
+    } else {
+      this.form.get('jjDisputedCountRoP').get('jailDuration').enable();
+      this.form.get('jjDisputedCountRoP').get('jailIntermittent').enable();
+    }
+  }
+
+  onDrivingProhibitionCheck(checked: boolean) {
+    if (!checked) {
+      this.form.get('jjDisputedCountRoP').get('drivingProhibition').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('drivingProhibition').disable();
+      this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').disable();
+    } else {
+      this.form.get('jjDisputedCountRoP').get('drivingProhibition').enable();
+      this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').enable();
+    }
+  }
+
+  onStayOfProceedingsByCheck(checked: boolean) {
+    if (!checked) {
+      this.form.get('jjDisputedCountRoP').get('stayOfProceedingsBy').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('stayOfProceedingsBy').disable();
+    } else {
+      this.form.get('jjDisputedCountRoP').get('stayOfProceedingsBy').enable();
+    }
+  }
+
+  onOtherCheck(checked: boolean) {
+    if (!checked) {
+      this.form.get('jjDisputedCountRoP').get('other').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('other').disable();
+    } else {
+      this.form.get('jjDisputedCountRoP').enable();
+    }
+  }
+
+  onProbationCheck(checked: boolean) {
+    if (!checked) {
+      this.form.get('jjDisputedCountRoP').get('probationDuration').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('probationDuration').disable();
+      this.form.get('jjDisputedCountRoP').get('probationConditions').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('probationConditions').disable();
+    } else {
+      this.form.get('jjDisputedCountRoP').get('probationDuration').enable();
+      this.form.get('jjDisputedCountRoP').get('probationConditions').enable();
     }
   }
 
@@ -143,6 +264,15 @@ export class JJCountComponent implements OnInit {
 
   onLesserDescriptionKeyup() {
     this.lesserDescriptionFilteredStatutes = this.filterStatutes(this.form.get('jjDisputedCountRoP').get('lesserDescription').value);
+  }
+
+  onFindingChange(value: JJDisputedCountRoPFinding) {
+    if (value == this.Finding.GuiltyLesser) {
+      this.form.get('jjDisputedCountRoP').get('lesserDescription').enable();
+    } else {
+      this.form.get('jjDisputedCountRoP').get('lesserDescription').setValue(null);
+      this.form.get('jjDisputedCountRoP').get('lesserDescription').disable();
+    }
   }
 
   onDrivingProhibitionMVASectionKeyup() {
