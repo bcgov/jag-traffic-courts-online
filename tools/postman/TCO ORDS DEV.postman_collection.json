@@ -345,6 +345,28 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "ticketImageDataGet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\"document_keys\": \r\n        [\r\n          {\r\n          \"rcc_id\": \"12841.0045\",\r\n          \"report_types\": \"NOTICE_OF_DISPUTE,TICKET_IMAGE\"\r\n          }\r\n        ]\r\n    }\r\n"
+				},
+				"url": {
+					"raw": "{{JUSTIN-TCO}}/v1/ticketImageDataGet",
+					"host": [
+						"{{JUSTIN-TCO}}"
+					],
+					"path": [
+						"v1",
+						"ticketImageDataGet"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
