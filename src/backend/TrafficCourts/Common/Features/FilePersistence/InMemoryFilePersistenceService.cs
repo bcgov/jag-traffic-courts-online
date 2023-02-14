@@ -20,7 +20,12 @@ public class InMemoryFilePersistenceService : FilePersistenceService
     {
         ArgumentNullException.ThrowIfNull(filename);
 
-        if (!_cache.TryGetValue(filename, out byte[] buffer))
+        if (!_cache.TryGetValue(filename, out byte[]? buffer))
+        {
+            throw new FileNotFoundException("File not found", filename);
+        }
+
+        if (buffer is null)
         {
             throw new FileNotFoundException("File not found", filename);
         }

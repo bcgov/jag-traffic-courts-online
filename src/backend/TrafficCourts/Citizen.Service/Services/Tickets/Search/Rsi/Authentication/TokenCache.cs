@@ -15,7 +15,7 @@ public class TokenCache : ITokenCache
 
     public Token? GetToken()
     {
-        if (_cache.TryGetValue(CacheKey, out Token token))
+        if (_cache.TryGetValue(CacheKey, out Token? token))
         {
             return token;
         }
