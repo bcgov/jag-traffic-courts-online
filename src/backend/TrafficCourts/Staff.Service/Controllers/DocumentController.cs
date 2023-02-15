@@ -268,7 +268,7 @@ public class DocumentController : StaffControllerBase<DocumentController>
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.Delete)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
     public async Task<IActionResult> DeleteAsync(Guid fileId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Deleting the document from the object storage");

@@ -139,7 +139,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
       || (team === 'A' && this.courtLocations.filter(y => y.code === x.courtAgenId).length <=0))); // or team A and court agency id not found in complete list of courthouses
     this.currentTeam = team;
     this.tableHeight = this.calcTableHeight(425);
-    console.log(team, teamCourthouses, this.dataSource.data, this.data, this.dataSource.filteredData);
   }
 
   getCurrentTeamCounts(): teamCounts {

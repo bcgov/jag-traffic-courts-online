@@ -85,11 +85,16 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onRemove(fileId: string) {
-
+    this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
+    this.documentService.apiDocumentDelete(fileId).subscribe(any => {
+      // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+    });
   }
 
   onGetFile(fileId: string) {
-
+    this.documentService.apiDocumentGet(fileId, 'response').subscribe(any => {
+      console.log(any);
+    });
   }
 
   onUpload(files: FileList) {
@@ -103,7 +108,6 @@ export class JJDisputeComponent implements OnInit {
       let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
       this.lastUpdatedJJDispute.fileData.push(item);
 
-      this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
     });
 
   }
