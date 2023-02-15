@@ -1,5 +1,7 @@
 ﻿using MassTransit;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.Models;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 
@@ -50,19 +52,15 @@ public class CitizenDocumentService : ICitizenDocumentService
             return;
         }
 
-        file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
-        if (string.IsNullOrEmpty(ticketNumber))
-        {
-            ticketNumber = "unknown";
-            _logger.LogDebug("ticket-number value from metadata is empty");
-        }
-
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
         // Save file delete event to file history
         SaveFileHistoryRecord fileHistoryRecord = new();
-        fileHistoryRecord.TicketNumber = ticketNumber;
-        fileHistoryRecord.Description = $"File: {file.FileName} was deleted by the Disputant.";
+        fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
+        // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
+        // since the original description: "File was deleted by Disputant." is missing from the database.
+        // When the description is added to the databse change this
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL;
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
@@ -138,11 +136,23 @@ public class CitizenDocumentService : ICitizenDocumentService
             _logger.LogDebug("ticket-number value from metadata is empty");
         }
 
-        // Save file upload event to file history
-        SaveFileHistoryRecord fileHistoryRecord = new();
-        fileHistoryRecord.TicketNumber = ticketNumber;
-        fileHistoryRecord.Description = $"File: {file.FileName} was uploaded by the Disputant.";
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+        metadata.TryGetValue("notice-of-dispute-id", out string? noticeOfDisputeId);
+        if (string.IsNullOrEmpty(noticeOfDisputeId))
+        {
+            _logger.LogDebug("notice-of-dispute-id value from metadata is empty. Could not save document upload event to File History");
+        }
+
+        if (!string.IsNullOrEmpty(noticeOfDisputeId))
+        {
+            // Save file upload event to file history
+            SaveFileHistoryRecord fileHistoryRecord = new();
+            fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
+            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
+            // since the original description: "File was uploaded by Disputant." is missing from the database.
+            // When the description is added to the databse change this
+            fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL;
+            await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+        }
 
         return id;
     }

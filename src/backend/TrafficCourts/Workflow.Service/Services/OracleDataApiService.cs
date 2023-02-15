@@ -43,7 +43,7 @@ public class OracleDataApiService : IOracleDataApiService
     {
         try
         {
-            return await _client.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory, cancellationToken);
+            return await _client.InsertFileHistoryAsync(fileHistory, cancellationToken);
         }
         catch (Exception)
         {
@@ -138,6 +138,18 @@ public class OracleDataApiService : IOracleDataApiService
         try
         {
             return await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, cancellationToken);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await _client.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
         }
         catch (Exception)
         {

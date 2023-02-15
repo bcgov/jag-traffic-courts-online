@@ -145,8 +145,11 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
     {
         SaveFileHistoryRecord fileHistoryRecord = new()
         {
-            TicketNumber = dispute.TicketNumber,
-            Description = "Dispute update request accepted."
+            DisputeId = dispute.DisputeId,
+            // TODO: This entry type is currently set to: "Dispute contact info updated by citizen"
+            // since the original description: "Dispute update request accepted." is missing from the database.
+            // When the description is added to the databse change this
+            AuditLogEntryType = FileHistoryAuditLogEntryType.CCON
         };
         await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
     }

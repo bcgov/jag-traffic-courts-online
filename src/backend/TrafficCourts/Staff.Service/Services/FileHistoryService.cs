@@ -37,6 +37,6 @@ public class FileHistoryService : IFileHistoryService
 
     public async Task<long> SaveFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory, cancellationToken);
+        return await _oracleDataApi.InsertFileHistoryAsync(fileHistory, cancellationToken);
     }
 }

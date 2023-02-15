@@ -29,10 +29,10 @@ public class FileHistoryControllerTest
         // Arrange
         FileHistory fileHistory1 = new();
         fileHistory1.FileHistoryId = 1;
-        fileHistory1.TicketNumber = "TestTicket01";
+        fileHistory1.DisputeId = 3;
         FileHistory fileHistory2 = new();
         fileHistory2.FileHistoryId =2;
-        fileHistory2.TicketNumber = "TestTicket01";
+        fileHistory2.DisputeId = 4;
         List<FileHistory> fileHistories = new() { fileHistory1, fileHistory2 };
         var fileHistoryService = new Mock<IFileHistoryService>();
         fileHistoryService

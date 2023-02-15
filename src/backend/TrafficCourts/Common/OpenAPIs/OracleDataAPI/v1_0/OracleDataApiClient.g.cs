@@ -270,23 +270,12 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long id, DisputeUpdateRequestStatus disputeUpdateRequestStatus, System.Threading.CancellationToken cancellationToken);
 
-        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber);
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber, System.Threading.CancellationToken cancellationToken);
-
         /// <summary>
         /// Inserts a file history record for the given ticket number.
         /// </summary>
         /// <returns>Ok</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<long> InsertFileHistoryAsync(string ticketNumber, FileHistory body);
+        System.Threading.Tasks.Task<long> InsertFileHistoryAsync(FileHistory body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -294,7 +283,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// </summary>
         /// <returns>Ok</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<long> InsertFileHistoryAsync(string ticketNumber, FileHistory body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<long> InsertFileHistoryAsync(FileHistory body, System.Threading.CancellationToken cancellationToken);
 
         /// <param name="ticketNumber">Ticket number to retrieve related emails.</param>
         /// <returns>OK</returns>
@@ -371,6 +360,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC, System.Threading.CancellationToken cancellationToken);
+
+        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Returns all Dispute records based on the specified optional parameters.
@@ -586,14 +586,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("An invalid JJ Dispute status is provided. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -606,14 +606,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("An invalid JJ Dispute status is provided. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -722,14 +722,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -742,14 +742,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -852,14 +852,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -872,14 +872,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -977,14 +977,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -997,14 +997,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1119,14 +1119,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1139,14 +1139,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1248,14 +1248,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1268,14 +1268,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1361,14 +1361,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1381,14 +1381,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1492,14 +1492,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1512,14 +1512,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1625,14 +1625,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1645,14 +1645,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error. Delete failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1745,14 +1745,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1765,14 +1765,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -1880,14 +1880,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1900,14 +1900,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2021,14 +2021,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -2041,14 +2041,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2157,14 +2157,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -2177,14 +2177,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2286,14 +2286,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("If the email address is > 100 characters", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -2306,14 +2306,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("If the email address is > 100 characters", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2411,14 +2411,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -2431,14 +2431,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2555,14 +2555,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -2575,14 +2575,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error. Save failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2624,134 +2624,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
             }
         }
 
-        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber)
-        {
-            return GetFileHistoryByTicketNumberAsync(ticketNumber, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber, System.Threading.CancellationToken cancellationToken)
-        {
-            if (ticketNumber == null)
-                throw new System.ArgumentNullException("ticketNumber");
-
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/fileHistory/{ticketNumber}");
-            urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("*/*"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        if (status_ == 500)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        if (status_ == 400)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FileHistory>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
         /// <summary>
         /// Inserts a file history record for the given ticket number.
         /// </summary>
         /// <returns>Ok</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<long> InsertFileHistoryAsync(string ticketNumber, FileHistory body)
+        public virtual System.Threading.Tasks.Task<long> InsertFileHistoryAsync(FileHistory body)
         {
-            return InsertFileHistoryAsync(ticketNumber, body, System.Threading.CancellationToken.None);
+            return InsertFileHistoryAsync(body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -2760,17 +2640,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// </summary>
         /// <returns>Ok</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<long> InsertFileHistoryAsync(string ticketNumber, FileHistory body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<long> InsertFileHistoryAsync(FileHistory body, System.Threading.CancellationToken cancellationToken)
         {
-            if (ticketNumber == null)
-                throw new System.ArgumentNullException("ticketNumber");
-
             if (body == null)
                 throw new System.ArgumentNullException("body");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/fileHistory/{ticketNumber}");
-            urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append("api/v1.0/fileHistory");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2806,14 +2682,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -2826,14 +2702,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -2926,14 +2802,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -2946,14 +2822,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3057,14 +2933,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3077,14 +2953,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3178,14 +3054,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3198,14 +3074,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3311,14 +3187,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3331,14 +3207,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error. Save failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3438,14 +3314,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3458,14 +3334,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3562,14 +3438,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3582,14 +3458,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3605,6 +3481,126 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<JJDispute>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber)
+        {
+            return GetFileHistoryByTicketNumberAsync(ticketNumber, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="ticketNumber">Ticket number to retrieve related file history.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber, System.Threading.CancellationToken cancellationToken)
+        {
+            if (ticketNumber == null)
+                throw new System.ArgumentNullException("ticketNumber");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/v1.0/fileHistory/{ticketNumber}");
+            urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("*/*"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 405)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 404)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FileHistory>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -3695,14 +3691,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3715,14 +3711,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error. Getting disputes failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3820,14 +3816,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3840,14 +3836,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error. Unassigned failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -3948,14 +3944,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -3968,14 +3964,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error. Save failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -4087,14 +4083,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request, check parameters.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -4107,14 +4103,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error. Search failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request, check parameters.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -4213,14 +4209,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -4233,14 +4229,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -4338,14 +4334,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 405)
+                        if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -4358,14 +4354,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 404)
@@ -4593,7 +4589,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         public string OccamDisputantSurnameNm { get; set; }
 
         [Newtonsoft.Json.JsonProperty("occamDisputeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string OccamDisputeId { get; set; }
+        public long? OccamDisputeId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("occamViolationTicketUpldId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OccamViolationTicketUpldId { get; set; }
@@ -5560,8 +5556,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("fileHistoryId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long FileHistoryId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ticketNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string TicketNumber { get; set; }
+        [Newtonsoft.Json.JsonProperty("disputeId", Required = Newtonsoft.Json.Required.Always)]
+        public long DisputeId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("auditLogEntryType", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public FileHistoryAuditLogEntryType AuditLogEntryType { get; set; }
 
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
@@ -6425,6 +6426,132 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [System.Runtime.Serialization.EnumMember(Value = @"COURT_OPTIONS")]
         COURT_OPTIONS = 7,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum FileHistoryAuditLogEntryType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
+        UNKNOWN = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ARFL")]
+        ARFL = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CAIN")]
+        CAIN = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CAWT")]
+        CAWT = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CCAN")]
+        CCAN = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CCON")]
+        CCON = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CCWR")]
+        CCWR = 6,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CLEG")]
+        CLEG = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CUEM")]
+        CUEM = 8,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CUEV")]
+        CUEV = 9,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CUIN")]
+        CUIN = 10,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CULG")]
+        CULG = 11,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CUPD")]
+        CUPD = 12,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CUWR")]
+        CUWR = 13,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CUWT")]
+        CUWT = 14,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMCA")]
+        EMCA = 15,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMCF")]
+        EMCF = 16,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMCR")]
+        EMCR = 17,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMDC")]
+        EMDC = 18,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMFD")]
+        EMFD = 19,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMPR")]
+        EMPR = 20,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMRJ")]
+        EMRJ = 21,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMRV")]
+        EMRV = 22,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMST")]
+        EMST = 23,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMUP")]
+        EMUP = 24,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EMVF")]
+        EMVF = 25,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"INIT")]
+        INIT = 26,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"JASG")]
+        JASG = 27,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"JCNF")]
+        JCNF = 28,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"JDIV")]
+        JDIV = 29,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"JPRG")]
+        JPRG = 30,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"RECN")]
+        RECN = 31,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SCAN")]
+        SCAN = 32,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPRC")]
+        SPRC = 33,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SREJ")]
+        SREJ = 34,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SUB")]
+        SUB = 35,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SUPL")]
+        SUPL = 36,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SVAL")]
+        SVAL = 37,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"VREV")]
+        VREV = 38,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"VSUB")]
+        VSUB = 39,
 
     }
 

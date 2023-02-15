@@ -2,6 +2,7 @@
 using Minio.DataModel.Tags;
 using System.Linq;
 using TrafficCourts.Common.Models;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
@@ -80,7 +81,12 @@ public class StaffDocumentService : IStaffDocumentService
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
         // Save file delete event to file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, $"File: {file.FileName} was deleted by the Staff.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+            ticketNumber,
+            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
+            // since the original description: "File was deleted by Staff." is missing from the database.
+            // When the description is added to the databse change this
+            FileHistoryAuditLogEntryType.SUPL);
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
@@ -131,7 +137,12 @@ public class StaffDocumentService : IStaffDocumentService
         }
         
         // Save file upload event to file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, $"File: {file.FileName} was uploaded by the Staff.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+            ticketNumber,
+            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
+            // since the original description: "File was uploaded by Staff." is missing from the database.
+            // When the description is added to the databse change this
+            FileHistoryAuditLogEntryType.SUPL);
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return id;
