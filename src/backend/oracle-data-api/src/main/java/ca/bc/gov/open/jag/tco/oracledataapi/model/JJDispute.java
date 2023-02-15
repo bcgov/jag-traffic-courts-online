@@ -170,9 +170,8 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String occamDisputantSurnameNm;
 
-	@Column(length = 15)
-	@Schema(nullable = true)
-	private String occamDisputeId;
+	@Schema(nullable = false)
+	private Long occamDisputeId;
 
 	@Column(length = 15)
 	@Schema(nullable = true)

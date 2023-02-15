@@ -28,6 +28,20 @@ namespace TrafficCourts.Workflow.Service.Services
             try
             {
                 // prepare file history record
+                if (!string.IsNullOrEmpty(fileHistoryRecord.NoticeOfDisputeId))
+                {
+                    Guid guid = new(fileHistoryRecord.NoticeOfDisputeId);
+                    Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(guid, cancellationToken);
+                    if (dispute != null)
+                    {
+                        fileHistoryRecord.DisputeId = dispute.DisputeId;
+                    }
+                }
+                else if (!string.IsNullOrEmpty(fileHistoryRecord.TicketNumber))
+                {
+                    JJDispute dispute = await _oracleDataApiService.GetJJDisputeAsync(fileHistoryRecord.TicketNumber, false, cancellationToken);
+                    fileHistoryRecord.DisputeId = dispute.OccamDisputeId;
+                }
                 FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
                 long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
                 return id;
