@@ -286,7 +286,7 @@
           </span>
           <span class="section-jj-grid-cell">
             <p class="section-grid-header"><span *ngIf="fineReduction=='yes'">Includes surcharge</span></p>
-            <p class="section-grid-header"><span *ngIf="fineReduction=='no'">&nbsp;<br /><br /></span></p>
+            <p class="section-grid-header"><span *ngIf="fineReduction=='no' || !fineReduction">&nbsp;<br /><br /></span></p>
             <p class="section-jj-grid-text">
               <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
                 (change)="updateInclSurcharge($event.value)" *ngIf="fineReduction=='yes'" [disabled]="!jjDisputedCount">
