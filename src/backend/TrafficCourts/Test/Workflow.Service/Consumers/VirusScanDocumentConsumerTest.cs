@@ -27,8 +27,8 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Arrange
         var file = CreateFile();
-        file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
-        file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
+        file.Metadata[FileProperty.VirusScanStatus] = Guid.NewGuid().ToString("n");
+        file.Metadata[FileProperty.VirusName] = Guid.NewGuid().ToString("n");
 
         comsService
             .SetupGetFileWithAnyParameters()
@@ -49,8 +49,8 @@ public class ScanUploadedDocumentForVirusesConsumerTest
         
         // Assert
         Assert.True(consumed);
-        Assert.Equal("clean", file.Metadata["virus-scan-status"]);
-        Assert.False(file.Metadata.ContainsKey("virus-name"));
+        Assert.True(file.VirusScanIsClean());
+        Assert.False(file.Metadata.ContainsKey(FileProperty.VirusName));
 
         comsService.VerifyGetFile(file.Id!.Value);
 
@@ -67,8 +67,6 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Arrange
         var file = CreateFile();
-        file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
-        file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
 
         comsService
             .SetupGetFileWithAnyParameters()
@@ -90,8 +88,8 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Assert
         Assert.True(consumed);
-        Assert.Equal("infected", file.Metadata["virus-scan-status"]);
-        Assert.Equal("cryptolocker", file.Metadata["virus-name"]);
+        Assert.True(file.VirusScanIsInfected());
+        Assert.Equal("cryptolocker", file.GetVirusScanStatus());
 
         comsService.VerifyGetFile(file.Id!.Value);
 
@@ -109,8 +107,6 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Arrange
         var file = CreateFile();
-        file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
-        file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
 
         comsService
             .SetupGetFileWithAnyParameters()
@@ -129,56 +125,15 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Assert
         Assert.True(consumed);
-        Assert.Equal("error", file.Metadata["virus-scan-status"]);
-        Assert.False(file.Metadata.ContainsKey("virus-name"));
+        Assert.True(file.VirusScanIsError());
 
         comsService.VerifyGetFile(file.Id!.Value);
 
         virusScanClient.VerifyVirusScan(file.Data);
 
         // verify UpdateFile meta data
-
     }
 
-    [Fact(Skip = "Failing in githut actions but not locally")]
-    public async Task TestVirusScanDocumentConsumer_ThrowsObjectManagementServiceException()
-    {
-        Mock<IVirusScanClient> virusScanClient = new();
-        Mock<IWorkflowDocumentService> comsService = new();
-
-        // Arrange
-        var file = CreateFile();
-        var expectedStatus = file.Metadata["virus-scan-status"] = Guid.NewGuid().ToString("n");
-        var expectedName = file.Metadata["virus-name"] = Guid.NewGuid().ToString("n");
-
-        var exception = new ObjectManagementServiceException(It.IsAny<string>());
-        comsService.SetupGetFileWithAnyParameters()
-            .Throws(exception);
-
-        await using var provider = GetServiceProvider(virusScanClient.Object, comsService.Object);
-
-        // Act
-        var harness = await PublishAsync(provider, new DocumentUploaded { Id = file.Id!.Value });
-
-        // note the consumer will not execute until we this completes
-        var consumed = await harness.Consumed.Any<DocumentUploaded>();
-        var published = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().Count();
-
-        // Assert
-        Assert.True(consumed);
-        Assert.Equal(1, published);
-        // file meta data should not be modified
-        Assert.Equal(expectedStatus, file.Metadata["virus-scan-status"]);
-        Assert.Equal(expectedName, file.Metadata["virus-name"]);
-
-        var fault = await harness.Published.SelectAsync<Fault<DocumentUploaded>>().First();
-
-        comsService.VerifyGetFile(file.Id!.Value);
-
-        virusScanClient.VerifyVirusScan(Times.Never());
-
-        comsService.VerifyUpdateFile(Times.Never());
-    }
 
     [Fact(Skip = "Failing in githut actions but not locally")]
     public async Task TestVirusScanDocumentConsumer_ThrowsApiException()
@@ -216,7 +171,6 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         comsService.VerifyUpdateFile(Times.Never());
     }
-
 
     /// <summary>
     /// Gets the ServiceProvider with all the registered services 

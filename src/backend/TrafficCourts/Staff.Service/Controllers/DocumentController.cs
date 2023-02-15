@@ -3,26 +3,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
-using TrafficCourts.Coms.Client.Data.Models;
 using TrafficCourts.Staff.Service.Authentication;
-using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-/// <summary>
-/// Temporary workaround because the unit tests are difficult to refactor at this point
-/// </summary>
-public static class DocumentControllerExtensions
-{
-    [Obsolete("Use UploadDocumentAsync([Required]IFormFile file, [Required][FromHeader] string ticketNumber, CancellationToken cancellationToken)")]
-    public static Task<IActionResult> UploadDocumentAsync(this DocumentController controller, [FromForm] FileUploadRequest fileUploadRequest, CancellationToken cancellationToken)
-    {
-        fileUploadRequest.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
-        return controller.CreateAsync(fileUploadRequest.File, ticketNumber!, cancellationToken);
-    }
-}
-   
 
 public class DocumentController : StaffControllerBase<DocumentController>
 {
