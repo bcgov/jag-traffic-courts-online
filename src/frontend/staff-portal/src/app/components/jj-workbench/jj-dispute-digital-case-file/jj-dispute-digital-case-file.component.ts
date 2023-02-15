@@ -78,7 +78,6 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
       }
     });
     this.dataSource.data = arrayForSort;
-    console.log(jjDisputes, this.dataSource.data);
 
     this.applyFilter();
   }
