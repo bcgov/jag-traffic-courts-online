@@ -106,8 +106,6 @@ public class DisputeTicketUploadPNG {
 		element.sendKeys("claudiu.vlasceanu@nttdata.com");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
-		element.sendKeys("999 999 1234");
 
 		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
 		review.reviewProcess(element, driverWait, driver);
