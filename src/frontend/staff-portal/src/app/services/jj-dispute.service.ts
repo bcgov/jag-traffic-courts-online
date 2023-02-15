@@ -3,6 +3,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject, forkJoin, Subscription } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { CourthouseConfig } from '@config/config.model';
 import { EventEmitter, Injectable } from '@angular/core';
 import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService, UserRepresentation } from './auth.service';
@@ -10,6 +11,7 @@ import { cloneDeep } from "lodash";
 import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
+import { MockConfigService } from 'tests/mocks/mock-config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,7 @@ export class JJDisputeService {
   private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
+  private courtLocations: CourthouseConfig[];
 
   public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
   public jjDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
@@ -30,8 +33,12 @@ export class JJDisputeService {
     private configService: ConfigService,
     private jjApiService: JJService,
     private authService: AuthService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private mockConfigService: MockConfigService,
   ) {
+    if (this.mockConfigService.courtLocations) {
+      this.courtLocations = this.mockConfigService.courtLocations;
+    }
     let observables = {
       jjList: this.authService.getUsersInGroup("judicial-justice"),
       vtcList: this.authService.getUsersInGroup("vtc-staff"),
@@ -293,6 +300,13 @@ export class JJDisputeService {
     + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
     + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
     + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
+
+    // lookup courthouse location
+    if (jjDispute.courtAgenId && !jjDispute.courthouseLocation) {
+      let courtFound = this.courtLocations.filter(x => x.code === jjDispute.courtAgenId);
+      if (courtFound.length > 0) jjDispute.courthouseLocation = courtFound[0].name;
+      else jjDispute.courthouseLocation = jjDispute.courtAgenId;
+    }
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];

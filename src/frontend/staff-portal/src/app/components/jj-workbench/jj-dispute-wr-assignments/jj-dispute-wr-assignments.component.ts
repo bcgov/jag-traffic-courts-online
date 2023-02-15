@@ -39,7 +39,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     "bulkAssign",
     "ticketNumber",
     "submittedTs",
-    "fullName",
+    "occamDisputantName",
     "courthouseLocation",
     "policeDetachment",
     "timeToPayReason",
@@ -133,9 +133,13 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   filterByTeam(team: string) {
     let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
-    this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
+    // let team A have all courthouse locations not found in list so these are not lost
+    this.dataSource.data = this.data.filter(x =>
+      ((teamCourthouses.filter(y => y.code === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
+      || (team === 'A' && this.courtLocations.filter(y => y.code === x.courtAgenId).length <=0))); // or team A and court agency id not found in complete list of courthouses
     this.currentTeam = team;
     this.tableHeight = this.calcTableHeight(425);
+    console.log(team, teamCourthouses, this.dataSource.data, this.data, this.dataSource.filteredData);
   }
 
   getCurrentTeamCounts(): teamCounts {
@@ -144,7 +148,9 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   getTeamCount(team: string): teamCounts {
     let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
-    let teamDisputes = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
+    let teamDisputes = this.data.filter(x =>
+      ((teamCourthouses.filter(y => y.code === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
+      || (team === 'A' && this.courtLocations.filter(y => y.code === x.courtAgenId).length <=0))); // or team A and court agency id not found in complete list of courthouses
     let teamCounts = { team: team, assignedCount: 0, unassignedCount: 0 } as teamCounts;
     if (teamDisputes) {
       let unassignedTeamCounts = teamDisputes.filter(x => !x.jjAssignedTo || x.jjAssignedTo === this.valueOfUnassigned);

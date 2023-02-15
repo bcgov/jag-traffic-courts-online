@@ -84,29 +84,29 @@ export class JJDisputeComponent implements OnInit {
     element?.scrollIntoView(true);
   }
 
-  // onRemove(fileId: string) {
+  onRemove(fileId: string) {
 
-  // }
+  }
 
-  // onGetFile(fileId: string) {
+  onGetFile(fileId: string) {
 
-  // }
+  }
 
-  // onUpload(files: FileList) {
-  //   if (files.length <=0) return;
+  onUpload(files: FileList) {
+    if (files.length <=0) return;
 
-  //   // upload to coms
-  //   this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
-  //     .subscribe(fileId => {
+    // upload to coms
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
+      .subscribe(fileId => {
 
-  //     // add to display of files in DCF
-  //     let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
-  //     this.lastUpdatedJJDispute.fileData.push(item);
+      // add to display of files in DCF
+      let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
+      this.lastUpdatedJJDispute.fileData.push(item);
 
-  //     this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
-  //   });
+      this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
+    });
 
-  // }
+  }
 
   ngOnInit() {
     this.getJJDispute();

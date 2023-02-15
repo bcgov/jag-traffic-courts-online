@@ -31,13 +31,13 @@ export interface JJDisputedCount {
     description?: string | null;
     dueDate?: string | null;
     ticketedFineAmount?: number | null;
+    lesserOrGreaterAmount?: number | null;
     includesSurcharge?: JJDisputedCountIncludesSurcharge;
     revisedDueDate?: string | null;
     totalFineAmount?: number | null;
     violationDate?: string | null;
     comments?: string | null;
     jjDisputedCountRoP?: JJDisputedCountRoP;
-    lesserOrGreaterAmount?: number;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

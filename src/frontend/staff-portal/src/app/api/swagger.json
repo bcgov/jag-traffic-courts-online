@@ -4807,6 +4807,11 @@
             "format": "float",
             "nullable": true
           },
+          "lesserOrGreaterAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
           "includesSurcharge": {
             "$ref": "#/components/schemas/JJDisputedCountIncludesSurcharge"
           },
@@ -4833,10 +4838,6 @@
           },
           "jjDisputedCountRoP": {
             "$ref": "#/components/schemas/JJDisputedCountRoP"
-          },
-          "lesserOrGreaterAmount": {
-            "type": "number",
-            "format": "float"
           },
           "additionalProperties": {
             "type": "object",

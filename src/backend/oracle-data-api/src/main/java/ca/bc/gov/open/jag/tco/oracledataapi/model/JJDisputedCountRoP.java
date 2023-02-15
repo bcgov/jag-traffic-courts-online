@@ -19,7 +19,7 @@ import lombok.Setter;
 //mark class as an Entity
 /**
  * @author 237563
- * 
+ *
  * Represents JJ Record of Proceedings working values for each count
  *
  */
@@ -43,102 +43,111 @@ public class JJDisputedCountRoP extends Auditable<String> {
 	private JJDisputedCountFinding finding;
 
 	/**
-	 * The description of the lesser offence including the statute and act. 
+	 * The description of the lesser offence including the statute and act.
 	 * Example: 92.1(1) MVA - Fail to stop resulting in pursuit
 	 */
 	@Column
 	@Schema(nullable = true)
     private String lesserDescription;
-	
+
 	/**
 	 * Suspended sentence Probation Duration
 	 */
-	@Column(length = 500)
+	@Column(nullable = true, length = 500)
+	@Schema(nullable = true)
 	private String ssProbationDuration;
-	
+
 	/**
 	 * Suspended sentence Probation Conditions
 	 */
-	@Column(length = 500)
+	@Column(nullable = true, length = 500)
+	@Schema(nullable = true)
 	private String ssProbationConditions;
-	
+
 	/**
 	 * Jail Duration
 	 */
-	@Column(length = 500)
+	@Column(nullable = true, length = 500)
+	@Schema(nullable = true)
 	private String jailDuration;
-	
+
 	/**
 	 * Jail Intermittent
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
 	private YesNo jailIntermittent;
-	
+
 	/**
 	 * Probation Duration
 	 */
-	@Column(length = 500)
+	@Column(nullable = true, length = 500)
+	@Schema(nullable = true)
 	private String probationDuration;
-	
+
 	/**
 	 * Probation Conditions
 	 */
-	@Column(length = 1000)
+	@Column(nullable = true, length = 1000)
+	@Schema(nullable = true)
 	private String probationConditions;
-	
+
 	/**
 	 * Driving Prohibition
 	 */
-	@Column(length = 500)
+	@Column(nullable = true, length = 500)
+	@Schema(nullable = true)
 	private String drivingProhibition;
-	
+
 	/**
 	 * Driving Prohibition MVA Section
 	 */
-	@Column(length = 240)
+	@Column(nullable = true, length = 240)
+	@Schema(nullable = true)
 	private String drivingProhibitionMVASection;
-	
+
 	/**
 	 * Dismissed
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
 	private YesNo dismissed;
-	
+
 	/**
 	 * For want of prosecution
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
 	private YesNo forWantOfProsecution;
-	
+
 	/**
 	 * Withdrawn
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
 	private YesNo withdrawn;
-	
+
 	/**
 	 * Abatement
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
 	private YesNo abatement;
-	
+
 	/**
 	 * Stay of Proceedings By
 	 */
-	@Column(length = 500)
+	@Column(nullable = true, length = 500)
+	@Schema(nullable = true)
 	private String stayOfProceedingsBy;
-	
+
 	/**
 	 * Other
 	 */
-	@Column(length = 500)
+	@Column(nullable = true, length = 500)
+	@Schema(nullable = true)
 	private String other;
-	
+
 	@JsonBackReference
 	@OneToOne
 	@JoinColumn(name = "jjdisputedcount_id", referencedColumnName = "id")
