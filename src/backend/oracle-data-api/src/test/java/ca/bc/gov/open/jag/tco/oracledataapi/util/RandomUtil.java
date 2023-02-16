@@ -218,6 +218,8 @@ public class RandomUtil {
 
 	public static EmailHistory createEmailHistory() {
 		EmailHistory emailHistory = new EmailHistory();
+		emailHistory.setEmailHistoryId(3L);
+		emailHistory.setOccamDisputeId(5L);
 		emailHistory.setSubject(UUID.randomUUID().toString());
 		emailHistory.setPlainTextContent(UUID.randomUUID().toString());
 		emailHistory.setSuccessfullySent(YesNo.N);

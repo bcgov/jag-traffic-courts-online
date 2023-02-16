@@ -56,7 +56,7 @@ public class EmailHistoryController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "An invalid email history record provided. Insert failed.")
 	})
-	@PostMapping("/emailHistory/{ticketNumber}")
+	@PostMapping("/emailHistory")
 	public ResponseEntity<Long> insertEmailHistory(
 			@RequestBody EmailHistory emailHistory) {
 		logger.debug("POST /emailHistory/{ticketNumber} called");

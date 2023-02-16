@@ -1,5 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,6 +34,14 @@ public class EmailHistory extends Auditable<String> {
 	@Id
 	@GeneratedValue
 	private Long emailHistoryId;
+
+	/**
+	 * The date and time the email was sent
+	 */
+	@Column
+	@Temporal(TemporalType.TIMESTAMP)
+	@Schema(nullable = false)
+	private Date emailSentTs;
 
 	/**
 	 * FromEmailAddress.

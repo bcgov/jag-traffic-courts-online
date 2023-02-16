@@ -38,9 +38,6 @@ public class EmailHistoryService {
 	 */
 	@Transactional
 	public Long insertEmailHistory(EmailHistory emailHistory) {
-
-		emailHistory.setEmailHistoryId(null);
-		emailHistoryRepository.saveAndFlush(emailHistory);
-		return emailHistory.getEmailHistoryId();
+		return emailHistoryRepository.save(emailHistory);
 	}
 }
