@@ -50,7 +50,7 @@ export interface JJDispute {
     occamDisputantGiven2Nm?: string | null;
     occamDisputantGiven3Nm?: string | null;
     occamDisputantSurnameNm?: string | null;
-    occamDisputeId?: string | null;
+    occamDisputeId?: number;
     occamViolationTicketUpldId?: string | null;
     submittedTs?: string | null;
     issuedTs?: string | null;

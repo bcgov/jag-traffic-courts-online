@@ -47,6 +47,10 @@ export class AuthService {
       );
   }
 
+  public get token(): string {
+    return this.keycloak.getKeycloakInstance().token;
+  }
+
   public get isLoggedIn$(): Observable<boolean> {
     return this._isLoggedIn.asObservable();
   }

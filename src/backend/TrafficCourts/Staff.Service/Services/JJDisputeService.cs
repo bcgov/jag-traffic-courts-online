@@ -35,11 +35,10 @@ public class JJDisputeService : IJJDisputeService
 
         Dictionary<string, string> documentSearchParam = new();
         documentSearchParam.Add("ticket-number", disputeId);
+        if (dispute.NoticeOfDisputeGuid is not null) documentSearchParam.Add("notice-of-dispute-id", dispute.NoticeOfDisputeGuid);
+        documentSearchParam.Add("dispute-id", dispute.Id.ToString());
 
-        // TODO: Add search parameter "notice-of-dispute-id" for returning other documents for the associated dispute that were uploaded by the citizen
-        // when there will be an endpoint to return disputes by ticket number.
-
-        //dispute.FileData = await _documentService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
+        dispute.FileData = await _documentService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
 
         return dispute;
     }

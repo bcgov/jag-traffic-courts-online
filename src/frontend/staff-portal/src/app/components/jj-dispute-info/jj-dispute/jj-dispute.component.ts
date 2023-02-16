@@ -46,7 +46,7 @@ export class JJDisputeComponent implements OnInit {
   remarks: string = "";
   jjList: UserRepresentation[];
   selectedJJ: string;
-  fileTypeToUpload: string="Certified Extract";
+  fileTypeToUpload: string = "Certified Extract";
   filesToUpload: any[] = [];
   dLProvince: string;
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
@@ -84,29 +84,50 @@ export class JJDisputeComponent implements OnInit {
     element?.scrollIntoView(true);
   }
 
-  // onRemove(fileId: string) {
+  onRemove(fileId: string, fileName: string) {
+    const data: DialogOptions = {
+      titleKey: "Remove File?",
+      messageKey: "Are you sure you want to delete file " + fileName + "?",
+      actionTextKey: "Delete",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "delete"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+    .subscribe((action: any) => {
+      if (action) {
+        this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
+        this.documentService.apiDocumentDelete(fileId).subscribe(any => {
+          // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+        });
+      }
+    });
+  }
 
-  // }
+  onGetFile(fileId: string) {
+    this.jjDisputeService.getFileBlob(fileId).subscribe(result => {
+      // TODO: remove the custom function here and replace with generated api call once staff API method
+      // has proper response type documented in swagger json
+      // this.documentService.apiDocumentGet(fileId).subscribe((result:Blob) => {
+      var url = URL.createObjectURL(result);
+      window.open(url);
+    });
+  }
 
-  // onGetFile(fileId: string) {
+  onUpload(files: FileList) {
+    if (files.length <= 0) return;
 
-  // }
+    // upload to coms
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
+      .subscribe(fileId => {
 
-  // onUpload(files: FileList) {
-  //   if (files.length <=0) return;
+        // add to display of files in DCF
+        let item: FileMetadata = { fileId: fileId, fileName: files[0].name };
+        this.lastUpdatedJJDispute.fileData.push(item);
 
-  //   // upload to coms
-  //   this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
-  //     .subscribe(fileId => {
+      });
 
-  //     // add to display of files in DCF
-  //     let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
-  //     this.lastUpdatedJJDispute.fileData.push(item);
-
-  //     this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, false);
-  //   });
-
-  // }
+  }
 
   ngOnInit() {
     this.getJJDispute();

@@ -202,7 +202,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   // called on keyup in filter field
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue?.trim().toLowerCase();
     this.tableHeight = this.calcTableHeight(425);
   }
 

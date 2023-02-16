@@ -170,8 +170,6 @@ internal class ObjectManagementService : IObjectManagementService
                 parameters.Ids,
                 parameters.Path,
                 parameters.Active,
-                false, // deleteMarker
-                true,  // latest
                 parameters.Public,
                 parameters.MimeType,
                 parameters.Name,
