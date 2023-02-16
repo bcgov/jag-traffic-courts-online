@@ -92,8 +92,8 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onGetFile(fileId: string) {
-    this.documentService.apiDocumentGet(fileId, 'response').subscribe(any => {
-      console.log(any);
+    this.jjDisputeService.getFileBlob(fileId).subscribe(blob => {
+      console.log(blob);
     });
   }
 
