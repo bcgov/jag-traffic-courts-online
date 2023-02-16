@@ -39,6 +39,7 @@ model/excludeStatus.model.ts
 model/federatedIdentityRepresentation.model.ts
 model/field.model.ts
 model/fileHistory.model.ts
+model/fileHistoryAuditLogEntryType.model.ts
 model/fileMetadata.model.ts
 model/jJDispute.model.ts
 model/jJDisputeAppearInCourt.model.ts

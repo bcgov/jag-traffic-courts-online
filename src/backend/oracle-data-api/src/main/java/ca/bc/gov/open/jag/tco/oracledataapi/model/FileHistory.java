@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class FileHistory extends Auditable<String> {
-	
+
 	/**
 	 * Primary key
 	 */
@@ -27,18 +28,27 @@ public class FileHistory extends Auditable<String> {
 	@Id
 	@GeneratedValue
 	private Long fileHistoryId;
-		
-    /**
-     * The violation ticket number.
-     */
-    @Column(length = 50)
-    @Schema(nullable = false)
-    private String ticketNumber;
-    
-    /**
+
+	/**
+	 * The occam dispute id.
+	 */
+	@Column
+	@Schema(nullable = false)
+	@NotNull
+	private Long disputeId;
+
+	/**
+	 * File history entry type
+	 */
+	@Column(length = 4)
+	@Schema(nullable = false)
+	@NotNull
+	private AuditLogEntryType auditLogEntryType;
+
+	/**
 	 * description
 	 */
 	@Column(length = 500)
 	@Schema(nullable = true)
-	private String description;    
+	private String description;
 }

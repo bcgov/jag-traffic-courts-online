@@ -88,15 +88,31 @@ public class Mapper
         return disputeRejected;
     }
 
-    public static SaveFileHistoryRecord ToFileHistory(string ticketNumber, string description)
+    public static SaveFileHistoryRecord ToFileHistory(long disputeId, FileHistoryAuditLogEntryType auditLogEntryType)
     {
         SaveFileHistoryRecord fileHistoryRecord = new();
-        fileHistoryRecord.TicketNumber = ticketNumber;
-        fileHistoryRecord.Description = description;
+        fileHistoryRecord.DisputeId = disputeId;
+        fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
         return fileHistoryRecord;
     }
 
-   
+    public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType)
+    {
+        SaveFileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
+        fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
+        return fileHistoryRecord;
+    }
+
+    public static SaveFileHistoryRecord ToFileHistoryWithTicketNumber(string ticketNumber, FileHistoryAuditLogEntryType auditLogEntryType)
+    {
+        SaveFileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.TicketNumber = ticketNumber;
+        fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
+        return fileHistoryRecord;
+    }
+
+
     public static EmailVerificationSend ToEmailVerification(Guid guid)
     {
         EmailVerificationSend emailVerificationSend = new(guid);

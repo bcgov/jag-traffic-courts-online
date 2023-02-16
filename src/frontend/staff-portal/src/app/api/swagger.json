@@ -4184,6 +4184,9 @@
         "additionalProperties": false
       },
       "FileHistory": {
+        "required": [
+          "auditLogEntryType"
+        ],
         "type": "object",
         "properties": {
           "createdBy": {
@@ -4207,9 +4210,12 @@
             "type": "integer",
             "format": "int64"
           },
-          "ticketNumber": {
-            "type": "string",
-            "nullable": true
+          "disputeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "auditLogEntryType": {
+            "$ref": "#/components/schemas/FileHistoryAuditLogEntryType"
           },
           "description": {
             "type": "string",
@@ -4222,6 +4228,51 @@
           }
         },
         "additionalProperties": false
+      },
+      "FileHistoryAuditLogEntryType": {
+        "enum": [
+          "UNKNOWN",
+          "ARFL",
+          "CAIN",
+          "CAWT",
+          "CCAN",
+          "CCON",
+          "CCWR",
+          "CLEG",
+          "CUEM",
+          "CUEV",
+          "CUIN",
+          "CULG",
+          "CUPD",
+          "CUWR",
+          "CUWT",
+          "EMCA",
+          "EMCF",
+          "EMCR",
+          "EMDC",
+          "EMFD",
+          "EMPR",
+          "EMRJ",
+          "EMRV",
+          "EMST",
+          "EMUP",
+          "EMVF",
+          "INIT",
+          "JASG",
+          "JCNF",
+          "JDIV",
+          "JPRG",
+          "RECN",
+          "SCAN",
+          "SPRC",
+          "SREJ",
+          "SUB",
+          "SUPL",
+          "SVAL",
+          "VREV",
+          "VSUB"
+        ],
+        "type": "string"
       },
       "FileMetadata": {
         "type": "object",
@@ -4351,8 +4402,8 @@
             "nullable": true
           },
           "occamDisputeId": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int64"
           },
           "occamViolationTicketUpldId": {
             "type": "string",

@@ -198,7 +198,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(occamDisputantGiven2Nm, target.getOccamDisputantGiven2Nm());
 		assertEquals(occamDisputantGiven3Nm, target.getOccamDisputantGiven3Nm());
 		assertEquals(occamDisputantSurnameNm, target.getOccamDisputantSurnameNm());
-		assertEquals(occamDisputeId, target.getOccamDisputeId());
+		assertEquals(Long.valueOf(occamDisputeId), target.getOccamDisputeId());
 		assertEquals(occamViolationTicketUpldId, target.getOccamViolationTicketUpldId());
 		assertEquals(offenceLocationTxt, target.getOffenceLocation());
 		assertEquals(requestCourtAppearanceYn, target.getAppearInCourt());
