@@ -300,7 +300,7 @@ export class JJDisputeService  {
           }),
       }).pipe(
         map((result:HttpResponse<Blob>) => {
-        return result;
+        return result.body;
       }));
   }
 

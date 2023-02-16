@@ -93,8 +93,10 @@ export class JJDisputeComponent implements OnInit {
 
   onGetFile(fileId: string) {
     this.jjDisputeService.getFileBlob(fileId).subscribe(blob => {
-      console.log(blob);
+      var url = window.URL.createObjectURL(blob);
+      window.open(url);
     });
+    return false; // prevent from navigating away
   }
 
   onUpload(files: FileList) {
