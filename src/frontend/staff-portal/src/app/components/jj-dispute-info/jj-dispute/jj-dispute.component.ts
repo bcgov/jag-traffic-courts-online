@@ -91,12 +91,14 @@ export class JJDisputeComponent implements OnInit {
     });
   }
 
-  onGetFile(fileId: string, fileName: string) {
-    this.jjDisputeService.getFileBlob(fileId).subscribe(blob => {
-      var url = URL.createObjectURL(blob);
-      Object.assign(document.createElement('a'), { href: url, download: fileName }).click();
+  onGetFile(fileId: string) {
+    this.jjDisputeService.getFileBlob(fileId).subscribe(result => {
+      // TODO: remove the custom function here and replace with generated api call once staff API method
+      // has proper response type documented in swagger json
+      // this.documentService.apiDocumentGet(fileId).subscribe((result:Blob) => {
+      var url = URL.createObjectURL(result);
+      window.open(url);
     });
-    return false; // prevent from navigating away
   }
 
   onUpload(files: FileList) {
