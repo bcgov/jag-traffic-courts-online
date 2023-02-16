@@ -1,12 +1,12 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Observable, BehaviorSubject, forkJoin, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { HttpClient, HttpContext, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { CourthouseConfig } from '@config/config.model';
 import { EventEmitter, Injectable } from '@angular/core';
-import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, JJDisputeCourtAppearanceRoP } from 'app/api';
+import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark } from 'app/api';
 import { AuthService, UserRepresentation } from './auth.service';
 import { cloneDeep } from "lodash";
 import { AppState } from 'app/store';
@@ -17,7 +17,7 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 @Injectable({
   providedIn: 'root',
 })
-export class JJDisputeService  {
+export class JJDisputeService {
   private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
@@ -128,7 +128,7 @@ export class JJDisputeService  {
      *
      * @param ticketNumber, jjDispute
      */
-   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
+  public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
       .pipe(
         map((response: any) => {
@@ -296,12 +296,12 @@ export class JJDisputeService  {
           {
             'Authorization': 'Bearer ' + this.authService.token,
             'Accept': '*/*',
-            'Access-Control-Allow-Origin':''
+            'Access-Control-Allow-Origin': ''
           }),
       }).pipe(
-        map((result:HttpResponse<Blob>) => {
-        return result;
-      }));
+        map((result: HttpResponse<Blob>) => {
+          return result.body;
+        }));
   }
 
   private toDisplay(jjDispute: JJDispute): JJDispute {
@@ -313,16 +313,16 @@ export class JJDisputeService  {
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
     jjDispute.jjAssignedToName = this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
-    if (jjDispute.jjAssignedTo?.trim() && !jjDispute.jjAssignedToName ) jjDispute.jjAssignedToName = jjDispute.jjAssignedTo;
+    if (jjDispute.jjAssignedTo?.trim() && !jjDispute.jjAssignedToName) jjDispute.jjAssignedToName = jjDispute.jjAssignedTo;
     jjDispute.vtcAssignedToName = this.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo?.toUpperCase())[0]?.fullName;
     if (jjDispute.vtcAssignedTo?.trim() && !jjDispute.vtcAssignedToName) jjDispute.vtcAssignedToName = jjDispute.vtcAssignedTo;
     jjDispute.address = jjDispute.addressLine1
-    + (jjDispute.addressLine2 ? ", " + jjDispute.addressLine2 : "")
-    + (jjDispute.addressLine3 ? ", " + jjDispute.addressLine3 : "")
-    + (jjDispute.addressCity ? ", " + jjDispute.addressCity: "")
-    + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
-    + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
-    + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
+      + (jjDispute.addressLine2 ? ", " + jjDispute.addressLine2 : "")
+      + (jjDispute.addressLine3 ? ", " + jjDispute.addressLine3 : "")
+      + (jjDispute.addressCity ? ", " + jjDispute.addressCity : "")
+      + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
+      + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
+      + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
 
     // lookup courthouse location
     if (jjDispute.courtAgenId && !jjDispute.courthouseLocation) {

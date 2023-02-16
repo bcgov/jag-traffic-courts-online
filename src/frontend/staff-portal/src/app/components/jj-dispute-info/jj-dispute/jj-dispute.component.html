@@ -333,7 +333,7 @@
         <div *ngFor="let doc of lastUpdatedJJDispute.fileData">
           <!-- <a href="" onclick="onGetFile(doc.fileId)">{{ doc.fileName }}</a>&nbsp;<button (click)="onRemove(doc.fileId)"><mat-icon>delete</mat-icon>&nbsp;Remove</button> -->
            {{ doc.fileName }}&nbsp;
-          <button type="button" style="width:50px !important; border:none; background-color:white;" (click)="onGetFile(doc.fileId)"><mat-icon>download</mat-icon></button>
+          <button type="button" style="width:50px !important; border:none; background-color:white;" (click)="onGetFile(doc.fileId, doc.fileName)"><mat-icon>download</mat-icon></button>
           <button type="button" style="width:50px !important; border:none; background-color:white" (click)="onRemove(doc.fileId)"><mat-icon style="color:red">delete</mat-icon></button>
         </div>
         <mat-form-field class="select-box-only">
