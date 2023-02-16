@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "715deee1-1af9-47e2-8a6d-856de23eca99",
+		"_postman_id": "a5b5acf0-683b-4420-a498-56c971ba4306",
 		"name": "OCCAM ORDS DEV V2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -217,6 +217,50 @@
 					"path": [
 						"v1",
 						"auditLogEntryTypes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuditLogEntryTypeInsert",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n    \"auditLogEntryTypeCd\": \"SUPL\",\r\n    \"auditLogEntryTypeDsc\": \"Staff user scans and uploads a paper document to JUSTIN\",\r\n    \"auditLogEntryTypeShortDsc\": \"Document uploaded by Staff (VTC & Court)\",\r\n    \"activeUseYn\": \"Y\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"EWong\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/processAuditLogEntryType",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"processAuditLogEntryType"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuditLogEntryTypeUpdate",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n    \"auditLogEntryTypeCd\": \"TMEP\",\r\n    \"auditLogEntryTypeDsc\": \"Temp entry\",\r\n    \"auditLogEntryTypeShortDsc\": \"To be deleted\",\r\n    \"activeUseYn\": \"N\",\r\n    \"entDtm\": null,\r\n    \"entUserId\": \"EWong\",\r\n    \"updDtm\": null,\r\n    \"updUserId\": null\r\n}\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/v1/updateAuditLogEntryType",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"v1",
+						"updateAuditLogEntryType"
 					]
 				}
 			},
