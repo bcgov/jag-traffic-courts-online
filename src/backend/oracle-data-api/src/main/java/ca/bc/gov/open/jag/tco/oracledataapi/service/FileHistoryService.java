@@ -17,10 +17,10 @@ public class FileHistoryService {
 
 	@Autowired
 	FileHistoryRepository fileHistoryRepository;
-	
+
 	@PersistenceContext
-    private EntityManager entityManager;
-	
+	private EntityManager entityManager;
+
 	/**
 	 * Retrieves {@link FileHistory} records by Ticket Number, delegating to CrudRepository
 	 * @param ticketNumber the id for which to retrieve file history records
@@ -29,20 +29,15 @@ public class FileHistoryService {
 	public List<FileHistory> getFileHistoryByTicketNumber(String ticketNumber) {
 		return fileHistoryRepository.findByTicketNumber(ticketNumber);
 	}
-	
+
 	/**
-	 * Inserts an email history record
+	 * Inserts a file history record
 	 *
-	 * @param ticketNumber
 	 * @param {@link FileHistory}
 	 * @return
 	 */
 	@Transactional
-	public Long insertFileHistory(String ticketNumber, FileHistory fileHistory) {
-		
-		fileHistory.setFileHistoryId(null);
-		fileHistory.setTicketNumber(ticketNumber);
-		fileHistoryRepository.saveAndFlush(fileHistory);
-		return fileHistory.getFileHistoryId();
+	public Long insertFileHistory(FileHistory fileHistory) {
+		return fileHistoryRepository.save(fileHistory);
 	}
 }

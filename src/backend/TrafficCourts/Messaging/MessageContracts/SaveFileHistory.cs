@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
@@ -11,7 +12,9 @@ namespace TrafficCourts.Messaging.MessageContracts
     /// </summary>
     public class SaveFileHistoryRecord
     {
-        public string Description { get; set; } = String.Empty;
-        public string TicketNumber { get; set; } = String.Empty;
+        public FileHistoryAuditLogEntryType AuditLogEntryType { get; set; }
+        public long? DisputeId { get; set; }
+        public string? NoticeOfDisputeId { get; set; }
+        public string? TicketNumber { get; set; }
     }
 }
