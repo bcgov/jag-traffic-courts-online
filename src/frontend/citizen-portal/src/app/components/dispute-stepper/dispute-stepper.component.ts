@@ -165,10 +165,10 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
     this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
 
-    if (this.countsActions.request_reduction.length > 0) {
+    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N &&  this.countsActions.request_reduction.length > 0) {
       this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required]);
     }
-    if (this.countsActions.request_time_to_pay.length > 0) {
+    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N &&  this.countsActions.request_time_to_pay.length > 0) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
     }
   }
