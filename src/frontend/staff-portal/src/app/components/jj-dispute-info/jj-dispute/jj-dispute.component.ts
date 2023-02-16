@@ -46,7 +46,7 @@ export class JJDisputeComponent implements OnInit {
   remarks: string = "";
   jjList: UserRepresentation[];
   selectedJJ: string;
-  fileTypeToUpload: string="Certified Extract";
+  fileTypeToUpload: string = "Certified Extract";
   filesToUpload: any[] = [];
   dLProvince: string;
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
@@ -91,26 +91,26 @@ export class JJDisputeComponent implements OnInit {
     });
   }
 
-  onGetFile(fileId: string) {
+  onGetFile(fileId: string, fileName: string) {
     this.jjDisputeService.getFileBlob(fileId).subscribe(blob => {
-      var url = window.URL.createObjectURL(blob);
-      window.open(url);
+      var url = URL.createObjectURL(blob);
+      Object.assign(document.createElement('a'), { href: url, download: fileName }).click();
     });
     return false; // prevent from navigating away
   }
 
   onUpload(files: FileList) {
-    if (files.length <=0) return;
+    if (files.length <= 0) return;
 
     // upload to coms
     this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
       .subscribe(fileId => {
 
-      // add to display of files in DCF
-      let item:FileMetadata = {fileId: fileId, fileName: files[0].name};
-      this.lastUpdatedJJDispute.fileData.push(item);
+        // add to display of files in DCF
+        let item: FileMetadata = { fileId: fileId, fileName: files[0].name };
+        this.lastUpdatedJJDispute.fileData.push(item);
 
-    });
+      });
 
   }
 
