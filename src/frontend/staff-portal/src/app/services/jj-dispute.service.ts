@@ -287,7 +287,7 @@ export class JJDisputeService  {
 
   public getFileBlob(fileId: string) {
     return this.http
-      .get(`http://localhost:5005/api/document?fileId=${fileId}`, {
+      .get(`/api/document?fileId=${fileId}`, {
         observe: 'response',
         responseType: 'blob',
         context: new HttpContext(),
