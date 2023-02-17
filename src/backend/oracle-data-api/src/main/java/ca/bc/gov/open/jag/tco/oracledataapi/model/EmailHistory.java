@@ -38,7 +38,7 @@ public class EmailHistory extends Auditable<String> {
 	/**
 	 * The date and time the email was sent
 	 */
-	@Column
+	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Schema(nullable = false)
 	private Date emailSentTs;
@@ -46,15 +46,15 @@ public class EmailHistory extends Auditable<String> {
 	/**
 	 * FromEmailAddress.
 	 */
-	@Column(length = 100)
+	@Column(length = 100, nullable = false)
 	@Size(max = 100)
-	@Schema(maxLength = 100 ,nullable = false)
+	@Schema(maxLength = 100, nullable = false)
 	private String fromEmailAddress;
 
 	/**
 	 * ToEmailAddress.
 	 */
-	@Column(length = 4000)
+	@Column(length = 4000, nullable = false)
 	@Size(max = 4000)
 	@Schema(maxLength = 4000, nullable = false)
 	private String toEmailAddress;
@@ -62,7 +62,7 @@ public class EmailHistory extends Auditable<String> {
 	/**
 	 * ccEmailAddress.
 	 */
-	@Column(length = 4000)
+	@Column(length = 4000, nullable = true)
 	@Size(max = 4000)
 	@Schema(maxLength = 4000, nullable = true)
 	private String ccEmailAddress;
@@ -70,7 +70,7 @@ public class EmailHistory extends Auditable<String> {
 	/**
 	 * bccEmailAddress.
 	 */
-	@Column(length = 4000)
+	@Column(length = 4000, nullable = true)
 	@Size(max = 4000)
 	@Schema(maxLength = 4000, nullable = true)
 	private String bccEmailAddress;
@@ -78,7 +78,7 @@ public class EmailHistory extends Auditable<String> {
 	/**
 	 * Subject
 	 */
-	@Column(length = 1000)
+	@Column(length = 1000, nullable = false)
 	@Size(max = 1000)
 	@Schema(maxLength = 1000, nullable = false)
 	private String subject;
@@ -86,7 +86,7 @@ public class EmailHistory extends Auditable<String> {
 	/**
 	 * Body if HTML
 	 */
-	@Column(length = 4000)
+	@Column(length = 4000, nullable = true)
 	@Size(max = 4000)
 	@Schema(maxLength = 4000, nullable = true)
 	private String htmlContent;
@@ -94,7 +94,7 @@ public class EmailHistory extends Auditable<String> {
 	/**
 	 * Body if Plain text
 	 */
-	@Column(length = 4000)
+	@Column(length = 4000, nullable = true)
 	@Size(max = 4000)
 	@Schema(maxLength = 4000, nullable = true)
 	private String plainTextContent;
@@ -104,7 +104,7 @@ public class EmailHistory extends Auditable<String> {
 	 * Only means a success code issued from email server
 	 * Who knows what happens after that
 	 */
-	@Column
+	@Column(nullable = false)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private YesNo successfullySent;
