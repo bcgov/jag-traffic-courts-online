@@ -8,7 +8,7 @@ public static class ValidationMessages
     public static readonly string DriversLicenceProvinceError = "Drivers Licence Province is not 'BC'. Could not validate Drivers Licence Number.";
     public static readonly string TicketTitleInvalid = @"Ticket title must be 'VIOLATION TICKET'.";
     public static readonly string TicketNumberInvalid = @"Violation ticket number must start with an A and be of the form 'AX00000000'.";
-    public static readonly string CheckboxInvalid = @"Checkbox '{0}' has an unknown value '{1}'. Expecting 'selected' or 'unselected'.";
+    public static readonly string CheckboxInvalid = @"Checkbox '{0}' has an unknown value '{1}'. Expecting ':selected:' or ':unselected:'.";
     public static readonly string CurrencyInvalid = @"Amount '{0}' is not a valid currency value.";
     public static readonly string MVAMustBeSelectedError = @"MVA must be selected under the 'Did commit the offence(s) indicated' section.";
     public static readonly string MVAMustBeCountValue = @"TCO only supports counts with MVA or MVR as the ACT/REG at this time. Read '{0}' for count {1}.";
