@@ -58,8 +58,8 @@ oracle-data-api:
     "TZ": "America/Vancouver"
     "LOOKUP_REPOSITORY_SRC": "ords"
     "DISPUTE_REPOSITORY_SRC": "ords"
-    "JJDISPUTE_REPOSITORY_SRC": "h2"
-    "HISTORY_REPOSITORY_SRC": "h2"
+    "JJDISPUTE_REPOSITORY_SRC": "ords"
+    "HISTORY_REPOSITORY_SRC": "ords"
     "ORDS_API_BASICAUTH_ENABLED": "false"
 
 staff-api:
