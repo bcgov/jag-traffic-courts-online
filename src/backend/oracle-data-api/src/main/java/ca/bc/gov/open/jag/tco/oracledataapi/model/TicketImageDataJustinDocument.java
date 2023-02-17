@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JJDisputeImageDocument {
+public class TicketImageDataJustinDocument {
 
 	/**
 	 * The report type from JUSTIN
@@ -31,7 +31,7 @@ public class JJDisputeImageDocument {
 	@Column(nullable = true)
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
-	private JJDisputeImageDocumentType reportType;
+	private TicketImageDataDocumentType reportType;
 
 	/**
 	 * report format

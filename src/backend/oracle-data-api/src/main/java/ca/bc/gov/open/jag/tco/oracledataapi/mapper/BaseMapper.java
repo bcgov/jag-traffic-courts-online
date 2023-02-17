@@ -4,11 +4,11 @@ import org.mapstruct.Named;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeImageDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCountFinding;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ShortNamedEnum;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 
 public abstract class BaseMapper {
 
@@ -68,9 +68,9 @@ public abstract class BaseMapper {
 	}
 	
 	@Named("mapReportType")
-	protected JJDisputeImageDocumentType mapReportType(String documentType) {
-		JJDisputeImageDocumentType[] values = JJDisputeImageDocumentType.values();
-		for (JJDisputeImageDocumentType type : values) {
+	protected TicketImageDataDocumentType mapReportType(String documentType) {
+		TicketImageDataDocumentType[] values = TicketImageDataDocumentType.values();
+		for (TicketImageDataDocumentType type : values) {
 			if (type.getShortName().equals(documentType)) {
 				return type;
 			}

@@ -642,11 +642,11 @@ components:
     ticketImageDataGetParms:
       type: object
       properties:
-        document_key:
+        document_keys:
           type: array
           items:
-            $ref: '#/components/schemas/documentKey'
-    documentKey:
+            $ref: '#/components/schemas/ticketImageDataDocumentKey'
+    ticketImageDataDocumentKey:
       type: object
       properties:
         rcc_id:
@@ -667,8 +667,8 @@ components:
         documents:
           type: array
           items:
-            $ref: '#/components/schemas/justinDocument'
-    justinDocument:
+            $ref: '#/components/schemas/ticketImageDataJustinDocument'
+    ticketImageDataJustinDocument:
       type: object
       properties:
         report_type:
