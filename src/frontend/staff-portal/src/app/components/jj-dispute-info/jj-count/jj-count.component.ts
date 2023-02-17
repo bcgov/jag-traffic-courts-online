@@ -111,56 +111,58 @@ export class JJCountComponent implements OnInit {
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate);
 
-      // Finding
-      if (this.jjDisputedCount.jjDisputedCountRoP.finding !== this.Finding.GuiltyLesser) {
-        this.form.get('jjDisputedCountRoP').get('lesserDescription').disable();
-      }
+      if (this.jjDisputedCount?.jjDisputedCountRoP) {
+        // Finding
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.finding !== this.Finding.GuiltyLesser) {
+          this.form.get('jjDisputedCountRoP')?.get('lesserDescription')?.disable();
+        }
 
-      // suspended sentence probation fields
-      if (this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationDuration || this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationConditions) {
-        this.form.get('jjDisputedCountRoP').get('ssProbationCheckbox').setValue(true);
-      } else {
-        this.form.get('jjDisputedCountRoP').get('ssProbationDuration').disable();
-        this.form.get('jjDisputedCountRoP').get('ssProbationConditions').disable();
-      }
+        // suspended sentence probation fields
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationDuration || this.jjDisputedCount?.jjDisputedCountRoP?.ssProbationConditions) {
+          this.form.get('jjDisputedCountRoP').get('ssProbationCheckbox').setValue(true);
+        } else {
+          this.form.get('jjDisputedCountRoP').get('ssProbationDuration').disable();
+          this.form.get('jjDisputedCountRoP').get('ssProbationConditions').disable();
+        }
 
-      // Jail fields
-      if (this.jjDisputedCount?.jjDisputedCountRoP?.jailDuration || this.jjDisputedCount?.jjDisputedCountRoP?.jailIntermittent === this.JailIntermittent.Y) {
-        this.form.get('jjDisputedCountRoP').get('jailCheckbox').setValue(true);
-      } else {
-        this.form.get('jjDisputedCountRoP').get('jailDuration').disable();
-        this.form.get('jjDisputedCountRoP').get('jailIntermittent').disable();
-      }
+        // Jail fields
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.jailDuration || this.jjDisputedCount?.jjDisputedCountRoP?.jailIntermittent === this.JailIntermittent.Y) {
+          this.form.get('jjDisputedCountRoP').get('jailCheckbox').setValue(true);
+        } else {
+          this.form.get('jjDisputedCountRoP').get('jailDuration').disable();
+          this.form.get('jjDisputedCountRoP').get('jailIntermittent').disable();
+        }
 
-      // Probation fields
-      if (this.jjDisputedCount?.jjDisputedCountRoP?.probationDuration || this.jjDisputedCount?.jjDisputedCountRoP?.probationConditions) {
-        this.form.get('jjDisputedCountRoP').get('probationCheckbox').setValue(true);
-      } else {
-        this.form.get('jjDisputedCountRoP').get('probationDuration').disable();
-        this.form.get('jjDisputedCountRoP').get('probationConditions').disable();
-      }
+        // Probation fields
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.probationDuration || this.jjDisputedCount?.jjDisputedCountRoP?.probationConditions) {
+          this.form.get('jjDisputedCountRoP').get('probationCheckbox').setValue(true);
+        } else {
+          this.form.get('jjDisputedCountRoP').get('probationDuration').disable();
+          this.form.get('jjDisputedCountRoP').get('probationConditions').disable();
+        }
 
-      // Driving Prohibition fields
-      if (this.jjDisputedCount?.jjDisputedCountRoP?.drivingProhibition || this.jjDisputedCount?.jjDisputedCountRoP?.drivingProhibitionMVASection) {
-        this.form.get('jjDisputedCountRoP').get('drivingProhibitionCheckbox').setValue(true);
-      } else {
-        this.form.get('jjDisputedCountRoP').get('drivingProhibition').disable();
-        this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').disable();
-      }
+        // Driving Prohibition fields
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.drivingProhibition || this.jjDisputedCount?.jjDisputedCountRoP?.drivingProhibitionMVASection) {
+          this.form.get('jjDisputedCountRoP').get('drivingProhibitionCheckbox').setValue(true);
+        } else {
+          this.form.get('jjDisputedCountRoP').get('drivingProhibition').disable();
+          this.form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').disable();
+        }
 
-      // Stay of Proceedings fields
-      if (this.jjDisputedCount?.jjDisputedCountRoP?.stayOfProceedingsBy ) {
-        this.form.get('jjDisputedCountRoP').get('stayOfProceedingsByCheckbox').setValue(true);
-      } else {
-        this.form.get('jjDisputedCountRoP').get('stayOfProceedingsBy').disable();
-      }
+        // Stay of Proceedings fields
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.stayOfProceedingsBy ) {
+          this.form.get('jjDisputedCountRoP').get('stayOfProceedingsByCheckbox').setValue(true);
+        } else {
+          this.form.get('jjDisputedCountRoP').get('stayOfProceedingsBy').disable();
+        }
 
-      // Other fields
-      if (this.jjDisputedCount?.jjDisputedCountRoP?.other ) {
-        this.form.get('jjDisputedCountRoP').get('otherCheckbox').setValue(true);
-      } else {
-        this.form.get('jjDisputedCountRoP').get('other').disable();
-      }
+        // Other fields
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.other ) {
+          this.form.get('jjDisputedCountRoP').get('otherCheckbox').setValue(true);
+        } else {
+          this.form.get('jjDisputedCountRoP').get('other').disable();
+        }
+    }
 
       if(this.isViewOnly || !this.jjDisputedCount) {
         this.form.disable();

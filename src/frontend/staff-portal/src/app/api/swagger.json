@@ -4073,32 +4073,58 @@
             "type": "integer",
             "format": "int64"
           },
+          "emailSentTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "fromEmailAddress": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "toEmailAddress": {
+            "maxLength": 4000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "ccEmailAddress": {
+            "maxLength": 4000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "bccEmailAddress": {
+            "maxLength": 4000,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "subject": {
+            "maxLength": 1000,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "htmlContent": {
+            "maxLength": 4000,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "plainTextContent": {
+            "maxLength": 4000,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "successfullySent": {
             "$ref": "#/components/schemas/EmailHistorySuccessfullySent"
           },
-          "ticketNumber": {
-            "type": "string",
-            "nullable": true
+          "occamDisputeId": {
+            "type": "integer",
+            "format": "int64"
           },
           "additionalProperties": {
             "type": "object",
