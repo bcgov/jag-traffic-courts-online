@@ -16,6 +16,8 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceCrown;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeImageData;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeImageDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
@@ -384,6 +386,48 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(remarkCreatedBy, jjDisputeRemark.getCreatedBy());
 		assertEquals(remarkModifedTs, jjDisputeRemark.getModifiedTs());
 		assertEquals(remarkModifiedBy, jjDisputeRemark.getModifiedBy());
+	}
+	
+	@Test
+	public void testJJDisputeImageData() throws Exception {
+		String createDate = RandomUtil.randomDate().toString();
+		String version = "1.0";	
+		
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetResponseResult source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetResponseResult();
+		source.setCreateDate(createDate);
+		source.setVersion(version);
+
+		String reportType1 = "NOTICE_OF_DISPUTE";
+		String index1 = RandomUtil.randomAlphabetic(5);
+		String partId1 = RandomUtil.randomAlphanumeric(10);
+		String participantName1 = RandomUtil.randomGivenName() + " " + RandomUtil.randomSurname();
+		String reportFormat1 = RandomUtil.randomAlphabetic(5);
+		String data1 = RandomUtil.randomAlphanumeric(1000);
+		
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JustinDocument justinDocument1 = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JustinDocument();
+		justinDocument1.setReportType(reportType1);
+		justinDocument1.setIndex(index1);
+		justinDocument1.setPartId(partId1);
+		justinDocument1.setParticipantName(participantName1);
+		justinDocument1.setReportFormat(reportFormat1);
+		justinDocument1.setData(data1);
+		
+		source.addDocumentsItem(justinDocument1);
+		
+		JJDisputeImageData target = JJDisputeImageDataMapper.convert(source);
+		
+		assertEquals(createDate, target.getCreateDate());
+		assertEquals(version, target.getVersion());
+		
+		JJDisputeImageDocument doc = target.getDocuments().get(0);
+		
+		assertEquals(reportType1, doc.getReportType().getShortName());
+		assertEquals(index1, doc.getIndex());
+		assertEquals(partId1, doc.getPartId());
+		assertEquals(participantName1, doc.getParticipantName());
+		assertEquals(reportFormat1, doc.getReportFormat());
+		assertEquals(data1, doc.getData());
+
 	}
 
 	@Test
