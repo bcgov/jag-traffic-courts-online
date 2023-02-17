@@ -256,15 +256,9 @@ public class DisputeTicketOptionsPicker {
 
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
 		Thread.sleep(1000);
-		String d = "Email verification required";
-		// identify elements with text()
-		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Email verification required')]"));
-		// verify list size
-		if (n.size() > 0) {
-			System.out.println("Text: " + d + " is present. ");
-		} else {
-			System.out.println("Text: " + d + " is not present. ");
-		}
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
+		System.out.println("Email verification required is present on page");
 
 	}
 
