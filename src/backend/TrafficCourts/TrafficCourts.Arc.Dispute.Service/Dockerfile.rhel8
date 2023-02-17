@@ -1,6 +1,6 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
-ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/dotnet-70-runtime
+ARG BUILD_IMAGE=image-registry.openshift-image-registry.svc:5000/0198bb-tools/dotnet-sdk
+ARG RUNTIME_IMAGE=image-registry.openshift-image-registry.svc:5000/0198bb-tools/dotnet-70-runtime:latest
+
 
 FROM $RUNTIME_IMAGE AS base
 WORKDIR /opt/app-root/app
