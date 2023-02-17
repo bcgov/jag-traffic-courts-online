@@ -18,13 +18,16 @@ export interface EmailHistory {
     modifiedBy?: string | null;
     modifiedTs?: string | null;
     emailHistoryId?: number;
+    emailSentTs?: string;
     fromEmailAddress?: string | null;
     toEmailAddress?: string | null;
+    ccEmailAddress?: string | null;
+    bccEmailAddress?: string | null;
     subject?: string | null;
     htmlContent?: string | null;
     plainTextContent?: string | null;
     successfullySent?: EmailHistorySuccessfullySent;
-    ticketNumber?: string | null;
+    occamDisputeId?: number;
     additionalProperties?: { [key: string]: any; } | null;
 }
 
