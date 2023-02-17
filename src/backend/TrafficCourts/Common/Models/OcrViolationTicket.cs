@@ -139,11 +139,11 @@ public class Field
     /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
     public bool? IsCheckboxSelected()
     {
-        if (Value?.Equals("selected", StringComparison.OrdinalIgnoreCase) ?? false)
+        if (Value?.Equals(":selected:", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return true;
         }
-        if (Value?.Equals("unselected", StringComparison.OrdinalIgnoreCase) ?? false)
+        if (Value?.Equals(":unselected:", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return false;
         }
