@@ -9,6 +9,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.AuditLogEntryApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.DisputeUpdateRequestApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.HealthApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.OutgoingEmailApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiClient;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.auth.HttpBasicAuth;
@@ -61,6 +62,11 @@ public class OrdsOccamApiClientConfiguration {
 	@Bean
 	public AuditLogEntryApi auditLogEntryApi(ApiClient ordsOccamApiClient) {
 		return new AuditLogEntryApi(ordsOccamApiClient);
+	}
+
+	@Bean
+	public OutgoingEmailApi outgoingEmailApi(ApiClient ordsOccamApiClient) {
+		return new OutgoingEmailApi(ordsOccamApiClient);
 	}
 
 }

@@ -54,7 +54,7 @@ public class OracleDataApiService : IOracleDataApiService
     {
         try
         {
-            return await _client.InsertEmailHistoryAsync(emailHistory.TicketNumber, emailHistory, cancellationToken);
+            return await _client.InsertEmailHistoryAsync(emailHistory, cancellationToken);
         }
         catch (Exception)
         {

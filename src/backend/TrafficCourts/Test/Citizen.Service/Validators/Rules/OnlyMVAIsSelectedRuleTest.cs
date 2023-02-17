@@ -10,15 +10,15 @@ public class OnlyMVAIsSelectedRuleTest
 {
 
     [Theory]
-    [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", null)]
-    [InlineData("unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", null)]
-    [InlineData("selected", "selected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", @"^MVA must be the only selected.*")]
-    [InlineData("selected", "unselected", "selected", "unselected", "unselected", "unselected", "unselected", "unselected", @"^MVA must be the only selected.*")]
-    [InlineData("selected", "unselected", "unselected", "selected", "unselected", "unselected", "unselected", "unselected", @"^MVA must be the only selected.*")]
-    [InlineData("selected", "unselected", "unselected", "unselected", "selected", "unselected", "unselected", "unselected", @"^MVA must be the only selected.*")]
-    [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "selected", "unselected", "unselected", @"^MVA must be the only selected.*")]
-    [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "unselected", "selected", "unselected", @"^MVA must be the only selected.*")]
-    [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "selected", @"^MVA must be the only selected.*")]
+    [InlineData(":selected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", null)]
+    [InlineData(":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", null)]
+    [InlineData(":selected:", ":selected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", @"^MVA must be the only selected.*")]
+    [InlineData(":selected:", ":unselected:", ":selected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", @"^MVA must be the only selected.*")]
+    [InlineData(":selected:", ":unselected:", ":unselected:", ":selected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", @"^MVA must be the only selected.*")]
+    [InlineData(":selected:", ":unselected:", ":unselected:", ":unselected:", ":selected:", ":unselected:", ":unselected:", ":unselected:", @"^MVA must be the only selected.*")]
+    [InlineData(":selected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":selected:", ":unselected:", ":unselected:", @"^MVA must be the only selected.*")]
+    [InlineData(":selected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":selected:", ":unselected:", @"^MVA must be the only selected.*")]
+    [InlineData(":selected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":unselected:", ":selected:", @"^MVA must be the only selected.*")]
     public async Task TestFieldsBlank(string? mva, string? mca, string? cta, string? wla, string? faa, string? lca, string? tcr, string? other, string? expectedPattern)
     {
         // Given
