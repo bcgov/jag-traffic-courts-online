@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.EmailHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,11 +44,10 @@ public class EmailHistoryController {
 
 		return emailHistoryService.getEmailHistoryByTicketNumber(ticketNumber);
 	}
-		
+
 	/**
 	 * POST endpoint that inserts an email history record for given ticketnumber.
 	 *
-	 * @param id (ticket number) of the saved {@link JJDispute} to update
 	 * @return inserted {@link EmailHistory}
 	 */
 	@Operation(summary = "Inserts an email history record for the given ticket number.")
@@ -58,11 +56,10 @@ public class EmailHistoryController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "An invalid email history record provided. Insert failed.")
 	})
-	@PostMapping("/emailHistory/{ticketNumber}")
+	@PostMapping("/emailHistory")
 	public ResponseEntity<Long> insertEmailHistory(
-			@PathVariable("ticketNumber") String ticketNumber, 
 			@RequestBody EmailHistory emailHistory) {
 		logger.debug("POST /emailHistory/{ticketNumber} called");
-		return new ResponseEntity<Long>(emailHistoryService.insertEmailHistory(ticketNumber, emailHistory), HttpStatus.OK);
+		return new ResponseEntity<Long>(emailHistoryService.insertEmailHistory(emailHistory), HttpStatus.OK);
 	}
 }
