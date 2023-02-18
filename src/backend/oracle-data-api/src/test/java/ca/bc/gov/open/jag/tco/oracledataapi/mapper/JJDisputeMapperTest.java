@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.hibernate.mapping.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +22,12 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCountFinding;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageData;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentKey;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataGetParms;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 public class JJDisputeMapperTest extends BaseTestSuite {
@@ -387,7 +393,9 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 	}
 	
 	@Test
-	public void testJJDisputeImageData() throws Exception {
+	public void testTicketImageData() throws Exception {
+		
+		// Test response ORDS to oracle Data API
 		String createDate = RandomUtil.randomDate().toString();
 		String version = "1.0";	
 		
@@ -395,37 +403,54 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setCreateDate(createDate);
 		source.setVersion(version);
 
-		String reportType1 = "NOTICE_OF_DISPUTE";
-		String index1 = RandomUtil.randomAlphabetic(5);
-		String partId1 = RandomUtil.randomAlphanumeric(10);
-		String participantName1 = RandomUtil.randomGivenName() + " " + RandomUtil.randomSurname();
-		String reportFormat1 = RandomUtil.randomAlphabetic(5);
-		String data1 = RandomUtil.randomAlphanumeric(1000);
+		String reportType = "NOTICE_OF_DISPUTE";
+		String index = RandomUtil.randomAlphabetic(5);
+		String partId = RandomUtil.randomAlphanumeric(10);
+		String participantName = RandomUtil.randomGivenName() + " " + RandomUtil.randomSurname();
+		String reportFormat = RandomUtil.randomAlphabetic(5);
+		String data = RandomUtil.randomAlphanumeric(1000);
 		
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JustinDocument justinDocument1 = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JustinDocument();
-		justinDocument1.setReportType(reportType1);
-		justinDocument1.setIndex(index1);
-		justinDocument1.setPartId(partId1);
-		justinDocument1.setParticipantName(participantName1);
-		justinDocument1.setReportFormat(reportFormat1);
-		justinDocument1.setData(data1);
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument justinDocument = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument();
+		justinDocument.setReportType(reportType);
+		justinDocument.setIndex(index);
+		justinDocument.setPartId(partId);
+		justinDocument.setParticipantName(participantName);
+		justinDocument.setReportFormat(reportFormat);
+		justinDocument.setData(data);
 		
-//		source.addDocumentsItem(justinDocument1);
+		source.addDocumentsItem(justinDocument);
 		
-//		JJDisputeImageData target = JJDisputeImageDataMapper.convert(source);
+		TicketImageData target = TicketImageDataMapper.convert(source);
 		
-//		assertEquals(createDate, target.getCreateDate());
-//		assertEquals(version, target.getVersion());
+		assertEquals(createDate, target.getCreateDate());
+		assertEquals(version, target.getVersion());
 		
-//		JJDisputeImageDocument doc = target.getDocuments().get(0);
+		ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument doc = target.documents.get(0);
 		
-//		assertEquals(reportType1, doc.getReportType().getShortName());
-////		assertEquals(index1, doc.getIndex());
-	//	assertEquals(partId1, doc.getPartId());
-	//	assertEquals(participantName1, doc.getParticipantName());
-//	//	assertEquals(reportFormat1, doc.getReportFormat());
-	//	assertEquals(data1, doc.getData());
-
+		assertEquals(reportType, doc.getReportType().getShortName());
+		assertEquals(index, doc.getIndex());
+		assertEquals(partId, doc.getPartId());
+		assertEquals(participantName, doc.getParticipantName());
+		assertEquals(reportFormat, doc.getReportFormat());
+		assertEquals(data, doc.getData());
+		
+		// Test input parameters Oracle Data API to ORDS
+		String rccId= RandomUtil.randomAlphabetic(5);
+		String reportTypes = "NOTICE_OF_DISPUTE,TICKET_IMAGE";
+		
+		TicketImageDataGetParms parmsSource = new TicketImageDataGetParms();
+		TicketImageDataDocumentKey documentKey = new TicketImageDataDocumentKey();
+		
+		documentKey.setRccId(rccId);
+		documentKey.documentTypes.add(TicketImageDataDocumentType.NOTICE_OF_DISPUTE);
+		documentKey.documentTypes.add(TicketImageDataDocumentType.TICKET_IMAGE);
+		
+		parmsSource.documentKeys.add(documentKey);
+		
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetParms ordsParms = TicketImageDataMapper.convert(parmsSource); 
+		
+		assertEquals(ordsParms.getDocumentKeys().get(0).getRccId(), rccId);
+		assertEquals(ordsParms.getDocumentKeys().get(0).getReportTypes(),reportTypes);
 	}
 
 	@Test

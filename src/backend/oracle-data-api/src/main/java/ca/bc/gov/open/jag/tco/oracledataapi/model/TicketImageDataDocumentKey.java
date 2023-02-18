@@ -39,7 +39,7 @@ public class TicketImageDataDocumentKey {
 	 */
 	@Column
 	@Schema(nullable = true)
-	private String rccId;
+	public String rccId;
 	
 	/**
 	 * All the document types to retrieve for this justin ticket

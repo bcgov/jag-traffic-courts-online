@@ -33,7 +33,17 @@ public abstract class BaseMapper {
 		}
 		return null;
 	}
+	
+	@Named("mapOccamDisputeIdToLong")
+	protected long mapOccamDisputeIdToLong(String occamDisputeId) {
+		return Long.parseLong(occamDisputeId);
+	}
 
+	@Named("mapOccamDisputeIdToString")
+	protected String mapOccamDisputeIdToString(Long occamDisputeId) {
+		return occamDisputeId.toString();
+	}	
+	
 	@Named("mapFindingResult")
 	protected JJDisputedCountFinding mapFindingResult(String statusShortCd) {
 		JJDisputedCountFinding[] values = JJDisputedCountFinding.values();
@@ -76,6 +86,18 @@ public abstract class BaseMapper {
 			}
 		}
 		return null;
+	}
+	
+	@Named("map_report_types")
+	protected String map_report_types(TicketImageDataDocumentType[] reportTypes) {
+		var tempReportTypes = "";
+		var i = 1;
+		for (TicketImageDataDocumentType reportType : reportTypes) {
+			tempReportTypes.concat(reportType.getShortName());
+			if (i != reportTypes.length) tempReportTypes = tempReportTypes.concat(",");
+			i = i +1;
+		}
+		return tempReportTypes;
 	}
 
 	@Named("mapShortNamedEnum")

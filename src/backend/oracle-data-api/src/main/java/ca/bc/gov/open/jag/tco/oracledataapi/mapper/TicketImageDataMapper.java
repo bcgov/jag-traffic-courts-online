@@ -41,10 +41,14 @@ public interface TicketImageDataMapper {
 	
 	// Map parameters from Oracle Data API TicketImageDataGetParms to ORDS TicketImageDataGetParms
 	@Mapping(source = "documentKeys", target = "document_keys")
-	ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetParms convert(TicketImageDataGetParms ticketImageDataGetParms);
+	static
+	ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetParms convert(TicketImageDataGetParms ticketImageDataGetParms) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	// Map parameters from Oracle Data API TicketImageDataDocumentKey to ORDS API TicketImageDataDocumentKey
 	@Mapping(source = "rccId", target="rcc_id")
-	@Mapping(source = "reportTypes", target="report_types")
+	@Mapping(source = "reportTypes", target="report_types", qualifiedByName="map_report_types")
 	ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey convert(TicketImageDataDocumentKey ticketImageDocumentKey);
 }
