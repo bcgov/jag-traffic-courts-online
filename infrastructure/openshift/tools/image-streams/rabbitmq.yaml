@@ -37,3 +37,10 @@ spec:
         imagePullSecret: 'pipeline-docker-hub-pull'
       referencePolicy:
         type: Source
+    - name: '3.11.9-debian-11-r2'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/rabbitmq:3.11.9-debian-11-r2'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      referencePolicy:
+        type: Source

@@ -16,3 +16,10 @@ spec:
         imagePullSecret: 'pipeline-docker-hub-pull'
       referencePolicy:
         type: Source
+    - name: '1.46.0-debian-11-r7'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/redis-exporter:1.46.0-debian-11-r7'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      referencePolicy:
+        type: Source
