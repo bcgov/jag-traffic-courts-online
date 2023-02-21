@@ -18,6 +18,29 @@ namespace TrafficCourts.Staff.Service.Test.Controllers;
 public class JJControllerTest
 {
     [Fact]
+    public async void TestAcceptJJDispute200Result()
+    {
+        // Arrange
+        JJDispute dispute = new();
+        string ticketNumber = "AJ201092461";
+        bool checkVTC = false;
+        dispute.TicketNumber = ticketNumber;
+        List<string> ticketNumbers = new();
+        ticketNumbers.Add(ticketNumber);
+        var jjDisputeService = new Mock<IJJDisputeService>();
+        jjDisputeService
+            .Setup(_ => _.AcceptJJDisputeAsync(ticketNumber, It.IsAny<bool>(), It.IsAny<CancellationToken>()));
+        var mockLogger = new Mock<ILogger<JJController>>();
+        JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await jjDisputeController.AcceptJJDisputeAsync(ticketNumber, checkVTC, CancellationToken.None);
+
+        // Assert
+        var okResult = Assert.IsType<OkResult>(result);
+    }
+
+    [Fact]
     public async void TestAssignJJDisputesToJJ200Result()
     {
         // Mock the OracleDataApi to update a specific JJDispute with ticket number (AJ201092461) to assign it to a JJ, confirm controller updates and assigns the JJ.
