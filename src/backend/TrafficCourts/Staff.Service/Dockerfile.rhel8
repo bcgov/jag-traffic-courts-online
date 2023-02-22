@@ -35,6 +35,7 @@ EXPOSE 8080
 COPY --from=publish /app/publish .
 USER root
 RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
+RUN rpm -e --nodeps $(rpm -qa '*rpm*' '*dnf*' '*libsolv*' '*hawkey*' 'yum*')
 # Run container by default as user with id 1001 (default)
 USER 1001
 ENTRYPOINT ["./entrypoint.sh", "dotnet", "TrafficCourts.Staff.Service.dll"]
