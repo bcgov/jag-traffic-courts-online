@@ -218,13 +218,13 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String countNo = "5";
 		String statuteId = "77";
 		Plea pleaCd = Plea.G;
-		Double ticketedAmt = Double.valueOf("345.67");
+		String ticketedAmt = "345.67";
 		Date fineDueDt =  RandomUtil.randomDate();
 		Date violationDt =  RandomUtil.randomDate();
-		Double adjustedAmt = Double.valueOf("10.53");
+		String adjustedAmt = "10.53";
 		YesNo includesSurchargeYn = YesNo.Y;
 		Date revisedDueDt =  RandomUtil.randomDate();
-		Double totalFineAmt = Double.valueOf("123.45");
+		String totalFineAmt = "123.45";
 		String comments = "comments and more comments";
 		YesNo requestTimeToPayYn = YesNo.Y;
 		YesNo requestReductionYn = YesNo.Y;

@@ -103,14 +103,14 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * The original fine amount from reconciled ticket data.
 	 */
-	@Column
+	@Column(precision = 8, scale = 2)
 	@Schema(nullable = true)
 	private Float ticketedFineAmount;
 
 	/**
 	 * The amount that JJ may enter to overwrite the ticketed fine amount.
 	 */
-	@Column(nullable = true)
+	@Column(precision = 8, scale = 2, nullable = true)
 	@Schema(nullable = true)
 	private Float lesserOrGreaterAmount;
 
@@ -133,7 +133,7 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * The final fine amount to be paid by the disputant.
 	 */
-	@Column
+	@Column(precision = 8, scale = 2)
 	@Schema(nullable = true)
 	private Float totalFineAmount;
 
