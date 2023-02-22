@@ -48,7 +48,8 @@ public class FileHistoryController {
 
 	/**
 	 * POST endpoint that inserts a file history record for given ticketnumber.
-	 *
+	 * 
+	 * @requestBody fileHistory
 	 * @return inserted {@link FileHistory}
 	 */
 	@Operation(summary = "Inserts a file history record for the given ticket number.")
@@ -59,8 +60,8 @@ public class FileHistoryController {
 	})
 	@PostMapping("/fileHistory")
 	public ResponseEntity<Long> insertFileHistory(
-			@RequestBody FileHistory fileHistory, @RequestBody boolean disputantAction, Principal principal) {
+			@RequestBody FileHistory fileHistory) {
 		logger.debug("POST /fileHistory called");
-		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory, disputantAction, principal), HttpStatus.OK);
+		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory), HttpStatus.OK);
 	}
 }

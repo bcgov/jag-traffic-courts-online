@@ -17,6 +17,15 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="actionByApplicationUser">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      WHO
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{ element.actionByApplicationUser }}</span>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="eventDescription">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       DESCRIPTION

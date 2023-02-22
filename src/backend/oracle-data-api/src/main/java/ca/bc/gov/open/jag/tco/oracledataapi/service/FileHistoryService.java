@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
@@ -38,9 +39,9 @@ public class FileHistoryService {
 	 * @return
 	 */
 	@Transactional
-	public Long insertFileHistory(FileHistory fileHistory, boolean disputantAction, Principal principal) {
-		if (disputantAction == true) fileHistory.setActionByApplicationUser("Disputant");
-		else fileHistory.setActionByApplicationUser(principal.getName());
+	public Long insertFileHistory(FileHistory fileHistory) {
+		Principal principal = SecurityContextHolder.getContext().getAuthentication();
+		if (principal != null) fileHistory.setActionByApplicationUser(principal.getName());
 		return fileHistoryRepository.save(fileHistory);
 	}
 }
