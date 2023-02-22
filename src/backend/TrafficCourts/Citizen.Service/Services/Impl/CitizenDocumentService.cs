@@ -57,7 +57,6 @@ public class CitizenDocumentService : ICitizenDocumentService
         // Save file delete event to file history
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
-        fileHistoryRecord.ActionByApplicationUser = "Disputant";
         // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
         // since the original description: "File was deleted by Disputant." is missing from the database.
         // When the description is added to the databse change this
@@ -141,7 +140,6 @@ public class CitizenDocumentService : ICitizenDocumentService
             // Save file upload event to file history
             SaveFileHistoryRecord fileHistoryRecord = new();
             fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
-            fileHistoryRecord.ActionByApplicationUser = "Disputant";
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was uploaded by Disputant." is missing from the database.
             // When the description is added to the databse change this

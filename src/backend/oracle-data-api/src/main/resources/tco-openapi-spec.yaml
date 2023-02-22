@@ -477,7 +477,7 @@ components:
         accUpdUserId:
           type: string
         adjustedAmt:
-          type: string
+          type: double
         appearanceChargeCountId:
           type: string
         commentsTxt:
@@ -539,9 +539,9 @@ components:
         suspSntcProbationDurtnTxt:
           type: string
         ticketedAmt:
-          type: string
+          type: double
         totalFineAmt:
-          type: string
+          type: double
         violationDt:
           type: string
           format: date

@@ -169,8 +169,9 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId, 
-            FileHistoryAuditLogEntryType.SVAL); // Handwritten ticket OCR details validated by staff
+            dispute.DisputeId,
+            FileHistoryAuditLogEntryType.SVAL);  // Handwritten ticket OCR details validated by staff
+
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
