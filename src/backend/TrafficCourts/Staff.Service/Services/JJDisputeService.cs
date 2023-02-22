@@ -122,7 +122,7 @@ public class JJDisputeService : IJJDisputeService
         // Get PartId from Keycloak
         string partId = await GetPartIdAsync(ticketNumber, cancellationToken);
 
-        JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, null, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,

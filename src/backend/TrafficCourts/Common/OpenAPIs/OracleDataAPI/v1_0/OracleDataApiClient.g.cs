@@ -86,20 +86,18 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
         /// <param name="partId">Adjudicator's participant ID</param>
-        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId);
+        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
         /// <param name="partId">Adjudicator's participant ID</param>
-        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Updates each JJ Dispute based on the passed in ticket numbers to assign them to a specific JJ or unassign them if JJ not specified.
@@ -1050,12 +1048,11 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
         /// <param name="partId">Adjudicator's participant ID</param>
-        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId)
+        public virtual System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId)
         {
-            return AcceptJJDisputeAsync(ticketNumber, checkVTCAssigned, partId, courtAppearanceId, System.Threading.CancellationToken.None);
+            return AcceptJJDisputeAsync(ticketNumber, checkVTCAssigned, partId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -1063,10 +1060,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// Updates the status of a particular JJDispute record to ACCEPTED.
         /// </summary>
         /// <param name="partId">Adjudicator's participant ID</param>
-        /// <param name="courtAppearanceId">Court Appearance ID</param>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, long? courtAppearanceId, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, System.Threading.CancellationToken cancellationToken)
         {
             if (ticketNumber == null)
                 throw new System.ArgumentNullException("ticketNumber");
@@ -1081,10 +1077,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
             if (partId != null)
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("partId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(partId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            }
-            if (courtAppearanceId != null)
-            {
-                urlBuilder_.Append(System.Uri.EscapeDataString("courtAppearanceId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(courtAppearanceId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 
@@ -1129,16 +1121,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1147,6 +1129,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)

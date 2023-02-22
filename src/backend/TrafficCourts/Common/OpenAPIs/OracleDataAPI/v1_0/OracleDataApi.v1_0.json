@@ -222,16 +222,6 @@
             "description": "Adjudicator's participant ID",
             "required": false,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "courtAppearanceId",
-            "in": "query",
-            "description": "Court Appearance ID",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
           }
         ],
         "responses": {
@@ -239,12 +229,12 @@
             "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
