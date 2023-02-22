@@ -20,6 +20,14 @@ helm package --dependency-update common-object-management-service/charts/coms/
 Successfully packaged chart and saved it to: common-object-management-service-0.0.8.tgz
 ```
 
+## Pull Charts
+
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm pull bitnami/rabbitmq
+```
+
 ### Installation
 
 #### Prerequisites
