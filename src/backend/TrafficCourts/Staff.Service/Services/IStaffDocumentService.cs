@@ -9,7 +9,7 @@ public interface IStaffDocumentService
     /// Saves the given file object with optional content type and metadata to object store through COMS service
     /// </summary>
     /// <param name="file"></param>
-    /// <param name="metadata"></param>
+    /// <param name="properties">The properties to add to the document</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Id of newly inserted file to the object storage</returns>
     /// <exception cref="ArgumentNullException"><paramref name="file"/> is null.</exception>
@@ -21,7 +21,7 @@ public interface IStaffDocumentService
     /// <exception cref="TagValueTooLongException"></exception>
     /// <exception cref="TooManyTagsException"></exception>
     /// <exception cref="ObjectManagementServiceException">Other error.</exception>
-    Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken);
+    Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> properties, CancellationToken cancellationToken);
 
     /// <summary>
     /// Retrieves a file with data and details through COMS service for the given unique file ID

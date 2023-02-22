@@ -68,24 +68,17 @@ public class CitizenDocumentService : ICitizenDocumentService
     {
         _logger.LogDebug("Getting the file through COMS");
 
-        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        Dictionary<string, string> metadata = comsFile.Metadata;
-
-        if (!metadata.ContainsKey("virus-scan-status"))
+        if (!file.VirusScanIsClean())
         {
-            _logger.LogError("Could not download the document because metadata does not contain the key: virus-scan-status");
-            throw new ObjectManagementServiceException("File could not be downloaded due to the missing metadata key: virus-scan-status");
-        }
+            var scanStatus = file.GetVirusScanStatus();
 
-        metadata.TryGetValue("virus-scan-status", out string? scanStatus);
-        if (!string.IsNullOrEmpty(scanStatus) && scanStatus != "clean")
-        {
             _logger.LogDebug("Trying to download unscanned or virus detected file");
             throw new ObjectManagementServiceException($"File could not be downloaded due to virus scan status. Virus scan status of the file is {scanStatus}");
         }
 
-        return comsFile;
+        return file;
     }
 
     public async Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
