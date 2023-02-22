@@ -16,7 +16,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
-@ConditionalOnProperty(name = "repository.dispute", havingValue = "h2", matchIfMissing = true)
+@ConditionalOnProperty(name = "repository.dispute", havingValue = "h2", matchIfMissing = false)
 @Qualifier("disputeRepository")
 public interface DisputeRepositoryImpl extends DisputeRepository, JpaRepository<Dispute, Long>, DisputeRepositoryCustom {
 

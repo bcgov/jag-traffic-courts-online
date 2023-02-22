@@ -32,7 +32,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
-@ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = false)
+@ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = true)
 @Qualifier("disputeRepository")
 @Repository
 public class DisputeRepositoryImpl implements DisputeRepository {

@@ -33,7 +33,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
-@ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = false)
+@ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = true)
 @Qualifier("jjDisputeRepository")
 @Repository
 public class JJDisputeRepositoryImpl implements JJDisputeRepository {

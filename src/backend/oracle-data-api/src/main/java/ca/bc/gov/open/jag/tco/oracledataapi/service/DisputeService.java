@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -50,9 +48,6 @@ public class DisputeService {
 
 	@Autowired
 	private DisputeUpdateRequestRepository disputeUpdateRequestRepository;
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	/**
 	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
