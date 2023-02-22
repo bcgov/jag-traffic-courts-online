@@ -51,4 +51,11 @@ public class FileHistory extends Auditable<String> {
 	@Column(length = 500)
 	@Schema(nullable = true)
 	private String description;
+	
+	/**
+	 * Action By User
+	 */
+	@Column(length = 240)
+	@Schema(nullable = true)
+	private String actionByApplicationUser;
 }

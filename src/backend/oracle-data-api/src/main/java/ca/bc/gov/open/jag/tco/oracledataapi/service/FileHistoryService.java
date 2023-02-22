@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,9 @@ public class FileHistoryService {
 	 * @return
 	 */
 	@Transactional
-	public Long insertFileHistory(FileHistory fileHistory) {
+	public Long insertFileHistory(FileHistory fileHistory, boolean disputantAction, Principal principal) {
+		if (disputantAction == true) fileHistory.setActionByApplicationUser("Disputant");
+		else fileHistory.setActionByApplicationUser(principal.getName());
 		return fileHistoryRepository.save(fileHistory);
 	}
 }

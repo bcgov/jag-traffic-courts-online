@@ -2619,6 +2619,10 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "actionByApplicationUser": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

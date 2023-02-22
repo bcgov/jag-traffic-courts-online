@@ -4247,6 +4247,10 @@
             "type": "string",
             "nullable": true
           },
+          "actionByApplicationUser": {
+            "type": "string",
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },

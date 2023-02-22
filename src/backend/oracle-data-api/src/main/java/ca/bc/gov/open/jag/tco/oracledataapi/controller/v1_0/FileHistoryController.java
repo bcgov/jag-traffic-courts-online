@@ -1,5 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -58,8 +59,8 @@ public class FileHistoryController {
 	})
 	@PostMapping("/fileHistory")
 	public ResponseEntity<Long> insertFileHistory(
-			@RequestBody FileHistory fileHistory) {
+			@RequestBody FileHistory fileHistory, @RequestBody boolean disputantAction, Principal principal) {
 		logger.debug("POST /fileHistory called");
-		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory), HttpStatus.OK);
+		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory, disputantAction, principal), HttpStatus.OK);
 	}
 }
