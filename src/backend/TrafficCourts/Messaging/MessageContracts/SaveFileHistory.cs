@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MassTransit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace TrafficCourts.Messaging.MessageContracts
         public long? DisputeId { get; set; }
         public string? NoticeOfDisputeId { get; set; }
         public string? TicketNumber { get; set; }
+        public string? ActionByApplicationUser { get; set; }
     }
 }

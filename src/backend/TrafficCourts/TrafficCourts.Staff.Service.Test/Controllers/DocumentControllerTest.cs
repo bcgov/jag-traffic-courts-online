@@ -30,7 +30,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Adjournment", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -47,7 +47,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "", "", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -70,7 +70,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other",  CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -93,7 +93,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -116,7 +116,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -139,7 +139,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -162,7 +162,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -185,7 +185,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -208,7 +208,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);

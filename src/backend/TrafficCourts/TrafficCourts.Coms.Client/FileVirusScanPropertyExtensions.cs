@@ -13,7 +13,9 @@ public static class FileVirusScanPropertyExtensions
         var status = GetProperty(FileProperty.VirusScanStatus, file.Tags);
         if (status is null)
         {
-            status = "undefined";
+            // get this property from metadata 
+            status = GetProperty(FileProperty.VirusScanStatus, file.Metadata);
+            if (status is null) status = "undefined";
         }
 
         return status;

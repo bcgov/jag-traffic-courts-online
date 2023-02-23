@@ -1172,6 +1172,8 @@ components:
           type: string
         auditLogEntryTypeDsc:
           type: string
+        actionByApplicationUser:
+          type: string
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     OutgoingEmail:

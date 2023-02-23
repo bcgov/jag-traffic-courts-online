@@ -16,7 +16,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "COMS_DB_DATABASE": "coms",
-        "COMS_DB_HOST": "coms-db",
+        "COMS_DB_HOST": "localhost",
         "COMS_DB_PASSWORD": "password",
         "COMS_DB_USER": "postgres"
       },

@@ -65,7 +65,7 @@ spec:
                 name: {{ .Values.coms.service.secretName }}
                 key: password
           - name: COMS_DB_HOST
-            value: {{ .Values.coms.host }}
+            value: {{ .Values.coms.db.host }}
           - name: COMS_DB_DATABASE
             valueFrom:
               secretKeyRef:

@@ -13,6 +13,8 @@ import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dia
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
+import { FileHistoryService } from 'app/api';
+import { HistoryRecordService } from 'app/services/history-records.service';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -68,7 +70,8 @@ export class JJDisputeComponent implements OnInit {
     private logger: LoggerService,
     private lookups: LookupsService,
     public config: ConfigService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private historyRecordService: HistoryRecordService
   ) {
     this.jjDisputeService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -99,6 +102,7 @@ export class JJDisputeComponent implements OnInit {
         this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
         this.documentService.apiDocumentDelete(fileId).subscribe(any => {
           // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+        this.refreshFileHistory();
         });
       }
     });
@@ -118,13 +122,13 @@ export class JJDisputeComponent implements OnInit {
     if (files.length <= 0) return;
 
     // upload to coms
-    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0])
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0], this.fileTypeToUpload)
       .subscribe(fileId => {
 
         // add to display of files in DCF
-        let item: FileMetadata = { fileId: fileId, fileName: files[0].name };
+        let item: FileMetadata = { fileId: fileId, fileName: files[0].name, virusScanStatus: "waiting for virus scan..." };
         this.lastUpdatedJJDispute.fileData.push(item);
-
+        this.refreshFileHistory();
       });
 
   }
@@ -343,6 +347,11 @@ export class JJDisputeComponent implements OnInit {
         }
       }
     });
+  }
+
+  refreshFileHistory() {
+    // reset ticket number to trigger file history refresh
+    this.historyRecordService.refreshFileHistory.emit(this.lastUpdatedJJDispute.ticketNumber);
   }
 
   getJJDisputedCount(count: number) {
