@@ -17,14 +17,17 @@ public class JJDisputeService : IJJDisputeService
     private readonly IStaffDocumentService _documentService;
     private readonly IKeycloakService _keycloakService;
     private readonly ILogger<JJDisputeService> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public const string UsernameClaimType = "preferred_username";
 
-    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, ILogger<JJDisputeService> logger)
+    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, ILogger<JJDisputeService> logger, IHttpContextAccessor httpContextAccessor)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _documentService = comsService ?? throw new ArgumentNullException(nameof(comsService));
         _keycloakService = keycloakService ?? throw new ArgumentNullException(nameof(keycloakService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
 
     public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
@@ -54,14 +57,16 @@ public class JJDisputeService : IJJDisputeService
         {
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 jjDispute.OccamDisputeId,
-                FileHistoryAuditLogEntryType.JPRG); // Dispute decision details saved for later
+                FileHistoryAuditLogEntryType.JPRG, // Dispute decision details saved for later
+                GetUserName());
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
         else if (dispute.Status == JJDisputeStatus.CONFIRMED)
         {
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 jjDispute.OccamDisputeId,
-                FileHistoryAuditLogEntryType.JCNF); // Dispute decision confirmed/submitted by JJ
+                FileHistoryAuditLogEntryType.JCNF, // Dispute decision confirmed/submitted by JJ
+                GetUserName());
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
 
@@ -79,7 +84,8 @@ public class JJDisputeService : IJJDisputeService
 
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 dispute.OccamDisputeId,
-                FileHistoryAuditLogEntryType.JASG); // Dispute assigned to JJ
+                FileHistoryAuditLogEntryType.JASG, // Dispute assigned to JJ
+                GetUserName());
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
     }
@@ -90,7 +96,7 @@ public class JJDisputeService : IJJDisputeService
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
-            FileHistoryAuditLogEntryType.VREV); // Dispute returned to JJ for review
+            FileHistoryAuditLogEntryType.VREV, GetUserName()); // Dispute returned to JJ for review
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -104,7 +110,7 @@ public class JJDisputeService : IJJDisputeService
 
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 dispute.OccamDisputeId,
-                FileHistoryAuditLogEntryType.JDIV); // Dispute change of plea required / Divert to court appearance
+                FileHistoryAuditLogEntryType.JDIV, GetUserName()); // Dispute change of plea required / Divert to court appearance
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
             return dispute;
@@ -126,7 +132,7 @@ public class JJDisputeService : IJJDisputeService
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
-            FileHistoryAuditLogEntryType.VSUB); // Dispute approved for resulting by staff
+            FileHistoryAuditLogEntryType.VSUB, GetUserName()); // Dispute approved for resulting by staff
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -179,9 +185,18 @@ public class JJDisputeService : IJJDisputeService
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
-            FileHistoryAuditLogEntryType.JCNF); // Dispute decision confirmed/submitted by JJ
+            FileHistoryAuditLogEntryType.JCNF, GetUserName()); // Dispute decision confirmed/submitted by JJ
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
+    }
+
+    private string GetUserName()
+    {
+        var _httpContext = _httpContextAccessor.HttpContext;
+
+        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
+
+        return username ?? string.Empty;
     }
 }

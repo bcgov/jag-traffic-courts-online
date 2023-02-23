@@ -21,6 +21,8 @@ public class DisputeService : IDisputeService
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public const string UsernameClaimType = "preferred_username";
 
     public DisputeService(
         IOracleDataApiClient oracleDataApi,
@@ -28,7 +30,8 @@ public class DisputeService : IDisputeService
         IFilePersistenceService filePersistenceService,
         ILogger<DisputeService> logger,
         ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
-        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate)
+        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
+        IHttpContextAccessor httpContextAccessor)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
@@ -36,6 +39,7 @@ public class DisputeService : IDisputeService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate;
         _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate;
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
 
     public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
@@ -170,8 +174,8 @@ public class DisputeService : IDisputeService
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.DisputeId,
-            FileHistoryAuditLogEntryType.SVAL);  // Handwritten ticket OCR details validated by staff
-
+            FileHistoryAuditLogEntryType.SVAL,  // Handwritten ticket OCR details validated by staff
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
@@ -183,8 +187,9 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId, 
-            FileHistoryAuditLogEntryType.SCAN); // Dispute canceled by staff
+            dispute.DisputeId,
+            FileHistoryAuditLogEntryType.SCAN, // Dispute canceled by staff
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
@@ -203,8 +208,9 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId, 
-            FileHistoryAuditLogEntryType.SREJ); // Dispute rejected by staff
+            dispute.DisputeId,
+            FileHistoryAuditLogEntryType.SREJ, // Dispute rejected by staff
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
@@ -224,8 +230,9 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId, 
-            FileHistoryAuditLogEntryType.SPRC); // Dispute submitted to ARC by staff
+            dispute.DisputeId,
+            FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
@@ -386,5 +393,15 @@ public class DisputeService : IDisputeService
     public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
     {
         return await _oracleDataApi.GetDisputeUpdateRequestsAsync(disputeId, null, cancellationToken);
+    }
+
+
+    private string GetUserName()
+    {
+        var _httpContext = _httpContextAccessor.HttpContext;
+
+        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
+
+        return username ?? string.Empty;
     }
 }

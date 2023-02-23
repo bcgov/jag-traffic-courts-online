@@ -88,27 +88,30 @@ public class Mapper
         return disputeRejected;
     }
 
-    public static SaveFileHistoryRecord ToFileHistory(long disputeId, FileHistoryAuditLogEntryType auditLogEntryType)
+    public static SaveFileHistoryRecord ToFileHistory(long disputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser)
     {
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.DisputeId = disputeId;
         fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
+        fileHistoryRecord.ActionByApplicationUser= actionByApplicationUser;
         return fileHistoryRecord;
     }
 
-    public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType)
+    public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser)
     {
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
         fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
+        fileHistoryRecord.ActionByApplicationUser = actionByApplicationUser;
         return fileHistoryRecord;
     }
 
-    public static SaveFileHistoryRecord ToFileHistoryWithTicketNumber(string ticketNumber, FileHistoryAuditLogEntryType auditLogEntryType)
+    public static SaveFileHistoryRecord ToFileHistoryWithTicketNumber(string ticketNumber, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser)
     {
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.TicketNumber = ticketNumber;
         fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
+        fileHistoryRecord.ActionByApplicationUser = actionByApplicationUser;
         return fileHistoryRecord;
     }
 

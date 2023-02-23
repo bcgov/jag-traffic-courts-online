@@ -271,12 +271,20 @@ public partial class ObjectManagementClient
                         throw new ApiException<ResponseError>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                     }
                 }
+                catch (Exception ex)
+                {
+                    throw new Exception("Unknown COMS error", ex);
+                }
                 finally
                 {
                     if (disposeResponse_)
                         response_.Dispose();
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Unknown COMS error", ex);
         }
         finally
         {

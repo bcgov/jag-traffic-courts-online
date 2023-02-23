@@ -1,6 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;

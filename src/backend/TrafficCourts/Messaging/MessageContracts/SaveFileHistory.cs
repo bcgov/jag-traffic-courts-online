@@ -17,5 +17,6 @@ namespace TrafficCourts.Messaging.MessageContracts
         public long? DisputeId { get; set; }
         public string? NoticeOfDisputeId { get; set; }
         public string? TicketNumber { get; set; }
+        public string? ActionByApplicationUser { get; set; }
     }
 }

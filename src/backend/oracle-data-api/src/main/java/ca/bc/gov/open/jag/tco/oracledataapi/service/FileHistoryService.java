@@ -40,8 +40,6 @@ public class FileHistoryService {
 	 */
 	@Transactional
 	public Long insertFileHistory(FileHistory fileHistory) {
-		Principal principal = SecurityContextHolder.getContext().getAuthentication();
-		if (principal != null) fileHistory.setActionByApplicationUser(principal.getName());
 		return fileHistoryRepository.save(fileHistory);
 	}
 }

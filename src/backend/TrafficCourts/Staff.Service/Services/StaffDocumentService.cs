@@ -18,15 +18,19 @@ public class StaffDocumentService : IStaffDocumentService
     private readonly IMemoryStreamManager _memoryStreamManager;
     private readonly IBus _bus;
     private readonly ILogger<StaffDocumentService> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public const string UsernameClaimType = "preferred_username";
 
     public StaffDocumentService(
         IObjectManagementService objectManagementService,
         IMemoryStreamManager memoryStreamManager,
+        IHttpContextAccessor httpContextAccessor,
         IBus bus,
         ILogger<StaffDocumentService> logger)
     {
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
         _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -74,7 +78,8 @@ public class StaffDocumentService : IStaffDocumentService
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was deleted by Staff." is missing from the database.
             // When the description is added to the databse change this
-            FileHistoryAuditLogEntryType.SUPL);
+            FileHistoryAuditLogEntryType.SUPL,
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
@@ -118,14 +123,15 @@ public class StaffDocumentService : IStaffDocumentService
         await _bus.PublishWithLog(_logger, virusScan, cancellationToken);
 
         string ticketNumber = GetTicketNumber(properties);
-        
+
         // Save file upload event to file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             ticketNumber,
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was uploaded by Staff." is missing from the database.
             // When the description is added to the databse change this
-            FileHistoryAuditLogEntryType.SUPL);
+            FileHistoryAuditLogEntryType.SUPL,
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return id;
@@ -166,5 +172,15 @@ public class StaffDocumentService : IStaffDocumentService
         }
 
         return ticketNumber;
+    }
+
+
+    private string GetUserName()
+    {
+        var _httpContext = _httpContextAccessor.HttpContext;
+
+        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
+
+        return username ?? string.Empty;
     }
 }
