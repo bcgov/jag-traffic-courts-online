@@ -4322,6 +4322,30 @@
           "fileName": {
             "type": "string",
             "nullable": true
+          },
+          "noticeOfDisputeGuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "virusScanStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputeId": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

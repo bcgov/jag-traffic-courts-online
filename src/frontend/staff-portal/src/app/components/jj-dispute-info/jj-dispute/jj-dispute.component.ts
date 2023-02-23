@@ -126,7 +126,7 @@ export class JJDisputeComponent implements OnInit {
       .subscribe(fileId => {
 
         // add to display of files in DCF
-        let item: FileMetadata = { fileId: fileId, fileName: files[0].name };
+        let item: FileMetadata = { fileId: fileId, fileName: files[0].name, virusScanStatus: "waiting for virus scan..." };
         this.lastUpdatedJJDispute.fileData.push(item);
         this.refreshFileHistory();
       });

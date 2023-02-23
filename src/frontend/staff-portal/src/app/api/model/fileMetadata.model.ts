@@ -14,5 +14,11 @@
 export interface FileMetadata { 
     fileId?: string;
     fileName?: string | null;
+    noticeOfDisputeGuid?: string | null;
+    documentType?: string | null;
+    virusScanStatus?: string | null;
+    documentStatus?: string | null;
+    ticketNumber?: string | null;
+    disputeId?: string | null;
 }
 

@@ -98,7 +98,13 @@ public class StaffDocumentService : IStaffDocumentService
             FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
-                FileName = result.FileName
+                FileName = result.FileName,
+                TicketNumber = result.GetTicketNumber(),
+                DocumentType = GetProperty("document-type", result.Tags),
+                NoticeOfDisputeGuid = GetProperty("notice-of-dispute-id", result.Tags),
+                VirusScanStatus= GetProperty("virus-scan-status", result.Metadata),
+                DocumentStatus = GetProperty("document-status", result.Tags),
+                DisputeId = GetProperty("dispute-id", result.Tags)
             };
 
             fileData.Add(fileMetadata);
@@ -174,8 +180,23 @@ public class StaffDocumentService : IStaffDocumentService
         return ticketNumber;
     }
 
+    private static string? GetProperty(string name, Dictionary<string, string> properties)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(properties);  
 
-    private string GetUserName()
+        properties.TryGetValue(name, out string? value);
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            value = null;
+        }
+
+        return value;
+     }
+
+
+private string GetUserName()
     {
         var _httpContext = _httpContextAccessor.HttpContext;
 
