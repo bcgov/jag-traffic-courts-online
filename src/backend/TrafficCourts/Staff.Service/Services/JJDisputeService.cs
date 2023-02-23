@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -39,12 +40,37 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(disputeId, assignVTC, cancellationToken);
 
+        // search by ticket number
         Dictionary<string, string> documentSearchParam = new();
         documentSearchParam.Add("ticket-number", disputeId);
-        if (dispute.NoticeOfDisputeGuid is not null) documentSearchParam.Add("notice-of-dispute-id", dispute.NoticeOfDisputeGuid);
-        documentSearchParam.Add("dispute-id", dispute.Id.ToString());
+        dispute.FileData = await _documentService.GetFilesBySearchAsync(null, documentSearchParam, cancellationToken);
 
-        dispute.FileData = await _documentService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
+        // search by notice of dispute guid
+        if (dispute.NoticeOfDisputeGuid is not null)
+        {
+            documentSearchParam.Clear();
+            documentSearchParam.Add("notice-of-dispute-id", dispute.NoticeOfDisputeGuid);
+            List<FileMetadata> moreDocs = await _documentService.GetFilesBySearchAsync(null, documentSearchParam, cancellationToken);
+            moreDocs.ForEach(doc =>
+            {
+                if (dispute.FileData.IndexOf(doc) < 0)
+                {
+                    dispute.FileData.Add(doc);
+                }
+            });
+        }
+
+        // Search by dispute id
+        documentSearchParam.Clear();
+        documentSearchParam.Add("dispute-id", dispute.Id.ToString());
+        List<FileMetadata> evenMoreDocs = await _documentService.GetFilesBySearchAsync(null, documentSearchParam, cancellationToken);
+        evenMoreDocs.ForEach(doc =>
+        {
+            if (dispute.FileData.IndexOf(doc) < 0)
+            {
+                dispute.FileData.Add(doc);
+            }
+        });
 
         return dispute;
     }

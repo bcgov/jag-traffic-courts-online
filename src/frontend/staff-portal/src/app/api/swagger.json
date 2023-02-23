@@ -1375,6 +1375,14 @@
               "maxLength": 20,
               "type": "string"
             }
+          },
+          {
+            "name": "documentType",
+            "in": "query",
+            "description": "The document type to associate with this file.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {

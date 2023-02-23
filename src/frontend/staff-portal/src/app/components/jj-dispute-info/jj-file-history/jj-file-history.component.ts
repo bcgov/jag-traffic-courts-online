@@ -31,6 +31,11 @@ export class JJFileHistoryComponent implements OnInit {
     private logger: LoggerService,
     private historyRecordService: HistoryRecordService
   ) {
+    this.historyRecordService.refreshFileHistory.subscribe(ticketNumber => {
+      this.ticketNumber = ticketNumber;
+      this.dataSource = new MatTableDataSource<HistoryRecord>();
+      this.getAllFileHistory();
+    });
   }
 
   ngOnInit(): void {

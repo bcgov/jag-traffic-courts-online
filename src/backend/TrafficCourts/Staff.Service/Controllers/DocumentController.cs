@@ -31,6 +31,7 @@ public class DocumentController : StaffControllerBase<DocumentController>
     /// <param name="file">The file to save in the common object management service and the metadata of the uploaded file to be saved including the document type</param>
     /// <param name="ticketNumber">The ticket number to associate with this file.</param>
     /// <param name="cancellationToken"></param>
+    /// <param name="documentType">The document type to associate with this file.</param>
     /// <response code="200">The document is successfully uploaded and saved.</response>
     /// <response code="400">The request was not well formed. The file and ticket number are required</response>
     /// <response code="401">Unauthenticated.</response>
@@ -51,6 +52,7 @@ public class DocumentController : StaffControllerBase<DocumentController>
         [Required]
         [MaxLength(20)]
         string ticketNumber,
+        string documentType,
         CancellationToken cancellationToken)
     {
         _logger.LogDebug("Uploading the document to the object storage");
@@ -69,6 +71,7 @@ public class DocumentController : StaffControllerBase<DocumentController>
         try
         {
             var metadata = new Dictionary<string, string> { { "ticket-number", ticketNumber } };
+            metadata.Add("document-type", documentType);
             Guid id = await _documentService.SaveFileAsync(file, metadata, cancellationToken);
             return Ok(id);
         }
