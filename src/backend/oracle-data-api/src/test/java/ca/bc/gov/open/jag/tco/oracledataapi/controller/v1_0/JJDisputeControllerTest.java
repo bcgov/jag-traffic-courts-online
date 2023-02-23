@@ -234,7 +234,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
 
 		// Set the status to ACCEPTED
-		jjDisputeController.acceptJJDispute(ticketNumber, false, principal, null, null);
+		jjDisputeController.acceptJJDispute(ticketNumber, false, principal, null);
 
 		// Assert status is set correctly.
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();

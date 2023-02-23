@@ -26,6 +26,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -38,8 +42,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
@@ -67,8 +73,6 @@ public class BaseTestSuite {
 
 	@Autowired
 	protected JJDisputeRepository jjDisputeRepository;
-
-	private Principal principal;
 
 	@BeforeEach
 	protected void beforeEach() throws Exception {
@@ -126,27 +130,19 @@ public class BaseTestSuite {
 		return new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), typeReference);
 	}
 
-	/** Helper method to return an instance of Principal */
-	public Principal getPrincipal(String name) {
-		return new Principal() {
-			@Override
-			public String getName() {
-				return name;
-			}
-		};
-	}
-
 	/** Returns the currently logged in user */
 	protected Principal getPrincipal() {
-		if (principal == null) {
-			principal = getPrincipal("System");
-		}
-		return principal;
+		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
 	/** Sets the currently logged in user */
-	protected void setPrincipal(String name) {
-		this.principal = getPrincipal(name);
+	protected void setPrincipal(String username) {
+		List<GrantedAuthority> authority = new ArrayList<>();
+        authority.add(new SimpleGrantedAuthority("User"));
+
+		CustomUserDetails user = new CustomUserDetails(username == null ? "System" : username, username == null ? "Password" : username, "System", "System", authority);
+		Authentication authentication = new PreAuthenticatedToken(user);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
 	/** Serializes the given object to a json string. */
