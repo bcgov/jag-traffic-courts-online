@@ -14,7 +14,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 
-@ConditionalOnProperty(name = "repository.dispute", havingValue = "h2", matchIfMissing = true)
+@ConditionalOnProperty(name = "repository.dispute", havingValue = "h2", matchIfMissing = false)
 class DisputeServiceH2Test extends BaseTestSuite {
 
 	@Autowired

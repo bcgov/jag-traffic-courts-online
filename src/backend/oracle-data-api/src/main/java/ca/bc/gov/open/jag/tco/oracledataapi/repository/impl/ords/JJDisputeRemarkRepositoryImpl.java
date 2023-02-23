@@ -15,7 +15,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.RemarkResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 
-@ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = false)
+@ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = true)
 @Qualifier("jjDisputeRemarkRepository")
 @Repository
 public class JJDisputeRemarkRepositoryImpl implements JJDisputeRemarkRepository {

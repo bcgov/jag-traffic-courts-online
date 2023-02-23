@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.LookupMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;
 
 @Service
-@ConditionalOnProperty(name = "repository.lookup", havingValue = "ords", matchIfMissing = false)
+@ConditionalOnProperty(name = "repository.lookup", havingValue = "ords", matchIfMissing = true)
 public class LookupServiceImpl extends BaseLookupService {
 
 	@Autowired

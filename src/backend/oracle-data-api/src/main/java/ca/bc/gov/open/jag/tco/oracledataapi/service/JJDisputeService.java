@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -46,9 +44,6 @@ public class JJDisputeService {
 
 	@Autowired
 	private JJDisputeRemarkRepository jjDisputeRemarkRepository;
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	/**
 	 * Retrieves a {@link JJDispute} record by ticketNumber, delegating to CrudRepository
