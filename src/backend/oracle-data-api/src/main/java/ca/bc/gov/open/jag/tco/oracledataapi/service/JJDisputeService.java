@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -12,6 +13,7 @@ import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
@@ -31,6 +34,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 
 @Service
 public class JJDisputeService {
@@ -279,7 +283,10 @@ public class JJDisputeService {
 		YesNo seizedYn = courtAppearance != null ? courtAppearance.getJjSeized() : null;
 		JJDisputeCourtAppearanceAPP aattCd = courtAppearance != null ? courtAppearance.getAppCd() : null;
 		JJDisputeCourtAppearanceDATT dattCd = courtAppearance != null ? courtAppearance.getDattCd() : null;
-		String staffPartId = null; // TODO: Figure out mapping for staffPartId - is it the same partId??
+
+		CustomUserDetails user = (CustomUserDetails) ((PreAuthenticatedToken) principal).getPrincipal();
+		String staffPartId = user.getPartId(); // staffPartId comes from the person currently logged in, the Principal (aka. CustomUserDetails).
+
 		jjDisputeRepository.setStatus(jjDisputeToUpdate.getId(), jjDisputeStatus, principal.getName(), courtAppearanceId, seizedYn , adjudicatorPartId, aattCd, dattCd, staffPartId);
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
@@ -298,11 +305,30 @@ public class JJDisputeService {
 	 * @return
 	 */
 	private JJDisputeCourtAppearanceRoP findCourtAppearanceById(JJDispute jjDispute, Long courtAppearanceId, String partId) {
-		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) && courtAppearanceId != null && partId != null) {
-			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
-					.filter(courtAppearance -> courtAppearance.getId() == courtAppearanceId)
-					.findAny()
-					.orElse(null);
+		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs())) {
+			if (partId != null) {
+
+				if (courtAppearanceId != null) {
+					// Return the first record that matches the courtAppearanceId
+					return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
+							.filter(courtAppearance -> courtAppearance.getId() == courtAppearanceId)
+							.findAny()
+							.orElse(null);
+				}
+
+				// Return the latest record iff the status is ACCEPTED
+				else if (JJDisputeStatus.ACCEPTED.equals(jjDispute.getStatus())) {
+					return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
+							.sorted(new Comparator<JJDisputeCourtAppearanceRoP>() {
+									@Override
+									public int compare(JJDisputeCourtAppearanceRoP o1, JJDisputeCourtAppearanceRoP o2) {
+										return ObjectUtils.compare(o1.getAppearanceTs(), o2.getAppearanceTs());
+									}
+								})
+							.findFirst()
+							.orElse(null);
+				}
+			}
 		}
 		return null;
 	}
