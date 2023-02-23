@@ -64,7 +64,7 @@ public class DisputeTicketOptionsPickerDiffCountry {
 		element.click();
 		Thread.sleep(1000);
 		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-277 > .mat-option-text")));
+				ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-270 > .mat-option-text")));
 		element.click();
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys("98001");
