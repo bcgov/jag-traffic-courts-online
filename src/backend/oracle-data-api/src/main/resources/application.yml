@@ -25,25 +25,6 @@ spring:
       master: ${REDIS_SENTINAL_MASTER:}
       nodes: ${REDIS_SENTINAL_NODES:}
   
-  sql:
-    init:
-      mode: always
-  datasource:
-    driverClassName: org.h2.Driver
-    password: ''
-    url: ${H2_DATASOURCE:jdbc:h2:mem:testdb}
-    username: sa
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
-  jpa:
-    defer-datasource-initialization: true
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-
 management:
   trace:
     http:
@@ -109,16 +90,6 @@ cronjob:
       # A cron-like expression (defaulting to once every 5 minutes), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week.
       cron: ${UNASSIGN_JJDISPUTES_CRON:0 */5 * * * *}
 
-repository:
-  # Defines the source of the lookup respository. Options are [csv, ords].
-  lookup: ${LOOKUP_REPOSITORY_SRC:ords}
-  # Defines the source of the dispute respository. Options are [h2, ords].
-  dispute: ${DISPUTE_REPOSITORY_SRC:ords}
-  # Defines the source of the jjDispute respository. Options are [h2, ords].
-  jjdispute: ${JJDISPUTE_REPOSITORY_SRC:ords}
-  # Defines the source of the history respository. Options are [h2, ords].
-  history: ${HISTORY_REPOSITORY_SRC:h2}
-  
 # ORDS CLIENT properties
 ords:
   rest-api:

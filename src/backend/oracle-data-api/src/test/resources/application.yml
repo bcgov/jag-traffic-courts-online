@@ -11,7 +11,22 @@ logging:
 spring:
   sql:
     init:
-      mode: never
+      mode: always
+  datasource:
+    driverClassName: org.h2.Driver
+    password: ''
+    url: ${H2_DATASOURCE:jdbc:h2:mem:testdb}
+    username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
 
 repository:
   # Defines the source of the lookup respository. Options are [csv, ords].

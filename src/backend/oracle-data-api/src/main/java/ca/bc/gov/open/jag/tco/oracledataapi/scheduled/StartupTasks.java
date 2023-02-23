@@ -18,18 +18,6 @@ public class StartupTasks implements ApplicationListener<ApplicationReadyEvent> 
 	@Value("${codetable.refresh.atStartup}")
 	private boolean refreshAtStartup;
 
-	@Value("${repository.lookup}")
-    protected String lookupRepositorySrc;
-
-	@Value("${repository.dispute}")
-    protected String disputeRepositorySrc;
-
-	@Value("${repository.jjdispute}")
-    protected String jjdisputeRepositorySrc;
-
-	@Value("${repository.history}")
-    protected String historypRepositorySrc;
-
 	@Autowired
 	private LookupService lookupService;
 
@@ -39,11 +27,6 @@ public class StartupTasks implements ApplicationListener<ApplicationReadyEvent> 
 			logger.debug("Refreshing code tables at startup.");
 			lookupService.refresh();
 		}
-
-		logger.info("Lookup repository: {}", lookupRepositorySrc);
-		logger.info("Dispute repository: {}", disputeRepositorySrc);
-		logger.info("JJDispute repository: {}", jjdisputeRepositorySrc);
-		logger.info("History repository: {}", historypRepositorySrc);
 	}
 
 }

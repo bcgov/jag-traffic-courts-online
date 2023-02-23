@@ -19,10 +19,11 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @Transactional
+@Import(DataSourceAutoConfiguration.class)
 public class BaseTestSuite {
 
 	@Autowired
@@ -58,15 +60,6 @@ public class BaseTestSuite {
 
 	@Autowired
 	protected MockMvc mvc;
-
-	@Value("${repository.dispute}")
-    protected String disputeRepositorySrc;
-
-	@Value("${repository.jjdispute}")
-    protected String jjdisputeRepositorySrc;
-
-	@Value("${repository.lookup}")
-    protected String lookupRepositorySrc;
 
 	@Autowired
 	protected DisputeRepository disputeRepository;
@@ -76,13 +69,8 @@ public class BaseTestSuite {
 
 	@BeforeEach
 	protected void beforeEach() throws Exception {
-		// only delete the repo if this is a local H2 repository.
-		if ("h2".equals(disputeRepositorySrc)) {
-			disputeRepository.deleteAll();
-		}
-		if ("h2".equals(jjdisputeRepositorySrc)) {
-			jjDisputeRepository.deleteAll();
-		}
+		disputeRepository.deleteAll();
+		jjDisputeRepository.deleteAll();
 
 		setPrincipal("System");
 	}
