@@ -13,17 +13,17 @@ namespace TrafficCourts.Staff.Service.Controllers;
 
 public class JJController : StaffControllerBase<JJController>
 {
-    private readonly IJJDisputeService _JJDisputeService;
+    private readonly IJJDisputeService _jjDisputeService;
 
     /// <summary>
     /// Default Constructor
     /// </summary>
-    /// <param name="JJDisputeService"></param>
+    /// <param name="jjDisputeService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public JJController(IJJDisputeService JJDisputeService, ILogger<JJController> logger) : base(logger)
+    public JJController(IJJDisputeService jjDisputeService, ILogger<JJController> logger) : base(logger)
     {
-        _JJDisputeService = JJDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
+        _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            ICollection<JJDispute> JJDisputes = await _JJDisputeService.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
+            ICollection<JJDispute> JJDisputes = await _jjDisputeService.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
             return Ok(JJDisputes);
         }
         catch (Exception e)
@@ -61,7 +61,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Returns a single JJ Dispute with the given identifier from the Oracle Data API.
     /// </summary>
-    /// <param name="JJDisputeId">Unique identifier for a specific JJ dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ dispute record.</param>
     /// <param name="assignVTC">boolean to indicate need to assign VTC.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A single JJ dispute record</returns>
@@ -71,7 +71,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="409">The JJDispute has already been assigned to a user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
-    [HttpGet("{JJDisputeId}")]
+    [HttpGet("{jjDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -80,13 +80,13 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputeAsync(string JJDisputeId, bool assignVTC, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, bool assignVTC, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving JJ Dispute from oracle-data-api");
+        _logger.LogDebug("Retrieving JJ Dispute {JJDisputeId} from oracle-data-api", jjDisputeId);
 
         try
         {
-            JJDispute JJDispute = await _JJDisputeService.GetJJDisputeAsync(JJDisputeId, assignVTC, cancellationToken);
+            JJDispute JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, assignVTC, cancellationToken);
             return Ok(JJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -144,7 +144,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="jjDispute"></param>
     /// <param name="cancellationToken"></param>
@@ -165,13 +165,13 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> SubmitAdminResolutionAsync(long jjDisputeId, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
 
         try
         {
-            await _JJDisputeService.SubmitAdminResolutionAsync(ticketNumber, checkVTC, jjDispute, cancellationToken);
+            await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, cancellationToken);
             return Ok(jjDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -201,7 +201,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.
     /// </summary>
-    /// <param name="ticketNumbers">List of Unique identifiers for JJ Dispute records to be assigend/unassigned.</param>
+    /// <param name="jjDisputeIds">List of Unique identifiers for JJ Dispute records to be assigend/unassigned.</param>
     /// <param name="username">IDIR username of the JJ that JJ Dispute(s) will be assigned to, if specified. Otherwise JJ Disputes will be unassigned.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -220,13 +220,13 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Assign)]
-    public async Task<IActionResult> AssignJJDisputesToJJ([BindRequired, FromQuery(Name = "ticketNumbers")] List<string> ticketNumbers, string? username, CancellationToken cancellationToken)
+    public async Task<IActionResult> AssignJJDisputesToJJ([BindRequired, FromQuery(Name = "ticketNumbers")] List<long> jjDisputeIds, string? username, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJ Dispute(s) in oracle-data-api for assigning/unassigning them to/from a JJ");
 
         try
         {
-            await _JJDisputeService.AssignJJDisputesToJJ(ticketNumbers, username, cancellationToken);
+            await _jjDisputeService.AssignJJDisputesToJJ(jjDisputeIds, username, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -252,7 +252,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="cancellationToken"></param>
@@ -265,7 +265,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="405">A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be less than or equal to 256 characters. Update failed.</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("{ticketNumber}/review")]
+    [HttpPut("{jjDisputeId}/review")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -276,7 +276,7 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Review)]
     public async Task<IActionResult> ReviewJJDisputeAsync(
-        string ticketNumber,
+        long jjDisputeId,
         [FromForm]
         [StringLength(256, ErrorMessage = "Remark note cannot exceed 256 characters.")] string remark,
         bool checkVTC,
@@ -286,7 +286,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _JJDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, cancellationToken);
+            await _jjDisputeService.ReviewJJDisputeAsync(jjDisputeId, remark, checkVTC, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -316,7 +316,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE as well as adds an optional remark that explaining why the status was set.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -339,7 +339,7 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.RequireCourtHearing)]
     public async Task<IActionResult> RequireCourtHearingJJDisputeAsync(
-        string ticketNumber,
+        long jjDisputeId,
         [FromForm]
         [StringLength(256, ErrorMessage = "Remark note cannot exceed 256 characters.")] string remark,
         CancellationToken cancellationToken)
@@ -348,7 +348,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _JJDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
+            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(jjDisputeId, remark, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -378,7 +378,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates the status of a particular JJDispute record to ACCEPTED.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -401,7 +401,7 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Accept)]
     public async Task<IActionResult> AcceptJJDisputeAsync(
-        string ticketNumber,
+        long jjDisputeId,
         bool checkVTC,
         CancellationToken cancellationToken)
     {
@@ -409,7 +409,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _JJDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+            await _jjDisputeService.AcceptJJDisputeAsync(jjDisputeId, checkVTC, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -439,7 +439,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates court appearance record as well as the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
@@ -459,8 +459,7 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateCourtAppearance)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(
-        string ticketNumber, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(long jjDisputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");
 
@@ -468,7 +467,7 @@ public class JJController : StaffControllerBase<JJController>
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
 
-            await _JJDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, null, cancellationToken);
+            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(jjDisputeId, null, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -498,7 +497,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates court appearance record as well as the status of a particular JJDispute record to CONFIRMED.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
@@ -508,7 +507,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="404">JJDispute record not found. Update failed.</response>
     /// <response code="405">A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("{ticketNumber}/updatecourtappearance/confirm")]
+    [HttpPut("{jjDisputeId}/updatecourtappearance/confirm")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -518,8 +517,7 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateCourtAppearance)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(
-        string ticketNumber, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(long jjDisputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");
 
@@ -527,7 +525,7 @@ public class JJController : StaffControllerBase<JJController>
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
 
-            await _JJDisputeService.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
+            await _jjDisputeService.ConfirmJJDisputeAsync(jjDisputeId, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)

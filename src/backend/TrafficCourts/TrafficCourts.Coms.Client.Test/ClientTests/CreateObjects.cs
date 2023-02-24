@@ -25,8 +25,8 @@ public class CreateObjects : ObjectManagementBase
     {
         var expected = _fixture.Create<Anonymous>();
 
-        Dictionary<string, string> meta = CreateMetadata(2);
-        Dictionary<string, string> tags = CreateTags(2);
+        IReadOnlyDictionary<string, string> meta = CreateMetadata(2);
+        IReadOnlyDictionary<string, string> tags = CreateTags(2);
 
         string filename = _fixture.Create<string>();
         // if request doesnt go to the method and url, the call will return 404 and ApiException
@@ -51,8 +51,8 @@ public class CreateObjects : ObjectManagementBase
     {
         var expected = _fixture.Create<Anonymous>();
 
-        Dictionary<string, string> meta = CreateMetadata(2);
-        Dictionary<string, string> tags = CreateTags(2);
+        IReadOnlyDictionary<string, string> meta = CreateMetadata(2);
+        IReadOnlyDictionary<string, string> tags = CreateTags(2);
 
         // if request doesnt go to the method and url, the call will return 404 and ApiException
         var mockHttp = new MockHttpMessageHandler();
@@ -76,8 +76,8 @@ public class CreateObjects : ObjectManagementBase
     {
         var expected = _fixture.Create<Anonymous>();
 
-        Dictionary<string, string> meta = CreateMetadata(2);
-        Dictionary<string, string> tags = CreateTags(2);
+        IReadOnlyDictionary<string, string> meta = CreateMetadata(2);
+        IReadOnlyDictionary<string, string> tags = CreateTags(2);
 
         // if request doesnt go to the method and url, the call will return 404 and ApiException
         var mockHttp = new MockHttpMessageHandler();

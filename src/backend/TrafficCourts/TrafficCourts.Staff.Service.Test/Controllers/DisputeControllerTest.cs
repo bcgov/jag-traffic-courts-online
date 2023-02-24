@@ -17,6 +17,7 @@ using TrafficCourts.Staff.Service.Services;
 using TrafficCourts.Staff.Service.Models;
 using Xunit;
 using TrafficCourts.Common.Errors;
+using System.Security.Claims;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
@@ -210,7 +211,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);

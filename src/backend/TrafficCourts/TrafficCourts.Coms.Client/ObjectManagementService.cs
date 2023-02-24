@@ -123,9 +123,9 @@ internal class ObjectManagementService : IObjectManagementService
             string? fileName = GetHeader(response.Headers, "x-amz-meta-name");
 
             var metadataValues = await GetMetadataAsync(id, cancellationToken);
-            IDictionary<string, string>? metadata = Client.Metadata.Create(metadataValues[id]);
+            IReadOnlyDictionary<string, string>? metadata = Client.Metadata.Create(metadataValues[id]);
 
-            IDictionary<string, string>? tags = await GetTagsAsync(id, cancellationToken);
+            IReadOnlyDictionary<string, string>? tags = await GetTagsAsync(id, cancellationToken);
 
             // make a copy of the stream because the FileResponse will dispose of the stream
             var stream = _memoryStreamFactory.GetStream();
@@ -221,6 +221,8 @@ internal class ObjectManagementService : IObjectManagementService
                 results.Add(result);
             }
 
+            results = FilterSearchResults(results, parameters);
+
             return results;
         }
         catch (Exception exception)
@@ -279,6 +281,41 @@ internal class ObjectManagementService : IObjectManagementService
             throw ExceptionHandler("replacing metadata", exception);
         }
 
+        throw new ArgumentException("Cannot add tags to empty object id", nameof(id));
+    }
+
+    public async Task SetTagsAsync(Guid id, IReadOnlyDictionary<string, string> tags, CancellationToken cancellationToken)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Cannot set tags on file with empty object id", nameof(id));
+        }
+
+        try
+        {
+            await _client.ReplaceTaggingAsync(id, tags, null, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            throw ExceptionHandler("replacing tags", exception);
+        }
+    }
+
+    public async Task AddTagsAsync(Guid id, IReadOnlyDictionary<string, string> tags, CancellationToken cancellationToken)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Cannot add tags on file with empty object id", nameof(id));
+        }
+
+        try
+        {
+            await _client.AddTaggingAsync(id, tags, null, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            throw ExceptionHandler("adding tags", exception);
+        }
     }
 
     private static string? GetHeader(IReadOnlyDictionary<string, IEnumerable<string>> headers, string name)
@@ -306,6 +343,55 @@ internal class ObjectManagementService : IObjectManagementService
         }
 
         return string.Empty;
+    }
+
+    /// <summary>
+    /// COMS does like search, we want to do equals comparison.
+    /// </summary>
+    /// <param name="results"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    private List<FileSearchResult> FilterSearchResults(List<FileSearchResult> results, FileSearchParameters parameters)
+    {
+        results = results
+            .Where(result => !TagsMatch(result, parameters) || !MetadataMatch(result, parameters))
+            .ToList();
+
+        return results;
+    }
+
+    /// <summary>
+    /// Checks to ensure all of the tags search properties for match on the result.
+    /// </summary>
+    /// <returns>All of the searched tags match on the result</returns>
+    private static bool TagsMatch(FileSearchResult result, FileSearchParameters parameters)
+    {
+        foreach (var tag in parameters.Tags)
+        {
+            if (result.Tags.TryGetValue(tag.Key, out string? value) && tag.Value != value)
+            {
+                return false; // tag value does not match
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Checks to ensure all of the metadata search properties for match on the result.
+    /// </summary>
+    /// <returns>All of the searched metadata match on the result</returns>
+    private static bool MetadataMatch(FileSearchResult result, FileSearchParameters parameters)
+    {
+        foreach (var metadata in parameters.Metadata)
+        {
+            if (result.Metadata.TryGetValue(metadata.Key, out string? value) && metadata.Value != value)
+            {
+                return false; // metadata value does not match
+            }
+        }
+
+        return true;
     }
 
 #if false // USE_COMS_REPOSITORY
@@ -378,7 +464,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
     }
 
-    private Task<IDictionary<string, string>> GetTagsAsync(Guid id, CancellationToken cancellationToken)
+    private Task<IReadOnlyDictionary<string, string>> GetTagsAsync(Guid id, CancellationToken cancellationToken)
     {
 #if false // USE_COMS_REPOSITORY
         // TODO: need to determine how to get tags, see: https://github.com/bcgov/common-object-management-service/issues/93
@@ -387,7 +473,7 @@ internal class ObjectManagementService : IObjectManagementService
         return Task.FromResult(tags);
 #else
         var items = _repository.GetObjectTags(id);
-        IDictionary<string, string> tags = Factory.CreateTags(items);
+        IReadOnlyDictionary<string, string> tags = Factory.CreateTags(items);
         return Task.FromResult(tags);
 #endif
     }

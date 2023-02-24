@@ -16,9 +16,9 @@ public class FileSearchResult : TimestampUserData
         Guid createdBy, 
         DateTimeOffset createdAt, 
         Guid updatedBy, 
-        DateTimeOffset updatedAt, 
-        IDictionary<string, string>? metadata,
-        IDictionary<string, string>? tags)
+        DateTimeOffset updatedAt,
+        IReadOnlyDictionary<string, string>? metadata,
+        IReadOnlyDictionary<string, string>? tags)
     {
         Id = id;
         FileName = filename;
@@ -39,6 +39,6 @@ public class FileSearchResult : TimestampUserData
     public bool Active { get; set; }
     public bool Public { get; set; }
 
-    public Dictionary<string, string> Metadata { get; private set; }
-    public Dictionary<string, string> Tags { get; private set; }
+    public IReadOnlyDictionary<string, string> Metadata { get; private set; }
+    public IReadOnlyDictionary<string, string> Tags { get; private set; }
 }

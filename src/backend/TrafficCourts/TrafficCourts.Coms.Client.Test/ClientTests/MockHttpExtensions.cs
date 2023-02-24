@@ -4,7 +4,7 @@ namespace TrafficCourts.Coms.Client.Test.ClientTests;
 
 public static class MockHttpExtensions
 {
-    public static MockedRequest WithTags(this MockedRequest request, IDictionary<string, string> items)
+    public static MockedRequest WithTags(this MockedRequest request, IReadOnlyDictionary<string, string> items)
     {
         Dictionary<string, string> values = new();
 
@@ -32,8 +32,8 @@ public static class MockHttpExtensions
 
     public static MockedRequest WithHeaders(
         this MockedRequest request, 
-        bool acceptJson = true, 
-        IDictionary<string, string>? metadata = null)
+        bool acceptJson = true,
+        IReadOnlyDictionary<string, string>? metadata = null)
     {
         Dictionary<string, string> values = new();
         if (acceptJson) values.Add("Accept", "application/json");

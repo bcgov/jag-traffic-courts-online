@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
 using TrafficCourts.Workflow.Service.Services;
 
@@ -31,11 +32,11 @@ public static class MockExtensions
             It.IsAny<CancellationToken>()), Times.Once());
     }
 
-    public static void VerifyUpdateFile(this Mock<IWorkflowDocumentService> mock, Times times)
+    public static void VerifySaveDocumentProperties(this Mock<IWorkflowDocumentService> mock, Times times)
     {
-        mock.Verify(_ => _.UpdateFileAsync(
+        mock.Verify(_ => _.SaveDocumentPropertiesAsync(
             It.IsAny<Guid>(),
-            It.IsAny<Coms.Client.File>(),
+            It.IsAny<DocumentProperties>(),
             It.IsAny<CancellationToken>()), times);
     }
 

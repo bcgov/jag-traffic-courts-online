@@ -15,8 +15,6 @@ public class FileHistoryService : IFileHistoryService
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public const string UsernameClaimType = "preferred_username";
-
 
     public FileHistoryService(
         IOracleDataApiClient oracleDataApi,
@@ -45,10 +43,8 @@ public class FileHistoryService : IFileHistoryService
 
     private string GetUserName()
     {
-        var _httpContext = _httpContextAccessor.HttpContext;
-
-        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
-
+        HttpContext? httpContext = _httpContextAccessor.HttpContext;
+        string? username = httpContext?.User.Identity?.Name;
         return username ?? string.Empty;
     }
 }
