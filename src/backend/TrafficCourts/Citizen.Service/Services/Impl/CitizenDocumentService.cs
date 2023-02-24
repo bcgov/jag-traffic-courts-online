@@ -57,6 +57,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         // Save file delete event to file history
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
+        fileHistoryRecord.ActionByApplicationUser = "Disputant";
         // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
         // since the original description: "File was deleted by Disputant." is missing from the database.
         // When the description is added to the databse change this
@@ -68,24 +69,17 @@ public class CitizenDocumentService : ICitizenDocumentService
     {
         _logger.LogDebug("Getting the file through COMS");
 
-        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        Dictionary<string, string> metadata = comsFile.Metadata;
-
-        if (!metadata.ContainsKey("virus-scan-status"))
+        if (!file.VirusScanIsClean())
         {
-            _logger.LogError("Could not download the document because metadata does not contain the key: virus-scan-status");
-            throw new ObjectManagementServiceException("File could not be downloaded due to the missing metadata key: virus-scan-status");
-        }
+            var scanStatus = file.GetVirusScanStatus();
 
-        metadata.TryGetValue("virus-scan-status", out string? scanStatus);
-        if (!string.IsNullOrEmpty(scanStatus) && scanStatus != "clean")
-        {
             _logger.LogDebug("Trying to download unscanned or virus detected file");
             throw new ObjectManagementServiceException($"File could not be downloaded due to virus scan status. Virus scan status of the file is {scanStatus}");
         }
 
-        return comsFile;
+        return file;
     }
 
     public async Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
@@ -103,7 +97,11 @@ public class CitizenDocumentService : ICitizenDocumentService
             FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
-                FileName = result.FileName
+                FileName = result.FileName,
+                DocumentType = GetProperty("document-type", result.Tags),
+                NoticeOfDisputeGuid = GetProperty("notice-of-dispute-id", result.Tags),
+                VirusScanStatus = GetProperty("virus-scan-status", result.Metadata),
+                DocumentStatus = GetProperty("document-status", result.Tags),
             };
 
             fileData.Add(fileMetadata);
@@ -116,7 +114,7 @@ public class CitizenDocumentService : ICitizenDocumentService
     {
         _logger.LogDebug("Saving file through COMS");
 
-        metadata.Add("staff-review-status", "pending");
+        metadata.Add("document-status", "pending");
 
         using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
 
@@ -147,6 +145,7 @@ public class CitizenDocumentService : ICitizenDocumentService
             // Save file upload event to file history
             SaveFileHistoryRecord fileHistoryRecord = new();
             fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
+            fileHistoryRecord.ActionByApplicationUser = "Disputant";
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was uploaded by Disputant." is missing from the database.
             // When the description is added to the databse change this
@@ -168,5 +167,20 @@ public class CitizenDocumentService : ICitizenDocumentService
         memoryStream.Position = 0;
 
         return memoryStream;
+    }
+
+    private static string? GetProperty(string name, Dictionary<string, string> properties)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(properties);
+
+        properties.TryGetValue(name, out string? value);
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            value = null;
+        }
+
+        return value;
     }
 }

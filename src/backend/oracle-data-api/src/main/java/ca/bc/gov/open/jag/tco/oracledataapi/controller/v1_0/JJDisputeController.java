@@ -211,16 +211,15 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> acceptJJDispute(@PathVariable String ticketNumber,
 			boolean checkVTCAssigned,
 			Principal principal,
-			@RequestParam(required = false) @Parameter(description = "Adjudicator's participant ID") String partId,
-			@RequestParam(required = false) @Parameter(description = "Court Appearance ID") Long courtAppearanceId) {
-		
+			@RequestParam(required = false) @Parameter(description = "Adjudicator's participant ID") String partId) {
+
 		logger.debug("PUT /dispute/{}/accept called", ticketNumber);
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId, courtAppearanceId), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId, null), HttpStatus.OK);
 	}
 
 	/**

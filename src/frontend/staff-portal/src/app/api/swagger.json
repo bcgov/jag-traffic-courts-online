@@ -1375,6 +1375,14 @@
               "maxLength": 20,
               "type": "string"
             }
+          },
+          {
+            "name": "documentType",
+            "in": "query",
+            "description": "The document type to associate with this file.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -4247,6 +4255,10 @@
             "type": "string",
             "nullable": true
           },
+          "actionByApplicationUser": {
+            "type": "string",
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
@@ -4308,6 +4320,30 @@
             "format": "uuid"
           },
           "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "noticeOfDisputeGuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "virusScanStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputeId": {
             "type": "string",
             "nullable": true
           }

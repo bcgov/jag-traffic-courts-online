@@ -222,16 +222,6 @@
             "description": "Adjudicator's participant ID",
             "required": false,
             "schema": { "type": "string" }
-          },
-          {
-            "name": "courtAppearanceId",
-            "in": "query",
-            "description": "Court Appearance ID",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
           }
         ],
         "responses": {
@@ -239,12 +229,12 @@
             "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
@@ -2617,6 +2607,10 @@
             "enum": [ "UNKNOWN", "ARFL", "CAIN", "CAWT", "CCAN", "CCON", "CCWR", "CLEG", "CUEM", "CUEV", "CUIN", "CULG", "CUPD", "CUWR", "CUWT", "EMCA", "EMCF", "EMCR", "EMDC", "EMFD", "EMPR", "EMRJ", "EMRV", "EMST", "EMUP", "EMVF", "INIT", "JASG", "JCNF", "JDIV", "JPRG", "RECN", "SCAN", "SPRC", "SREJ", "SUB", "SUPL", "SVAL", "VREV", "VSUB" ]
           },
           "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "actionByApplicationUser": {
             "type": "string",
             "nullable": true
           }

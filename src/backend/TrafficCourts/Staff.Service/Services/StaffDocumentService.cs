@@ -1,6 +1,4 @@
 ﻿using MassTransit;
-using Minio.DataModel.Tags;
-using System.Linq;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
@@ -8,6 +6,8 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 
 namespace TrafficCourts.Staff.Service.Services;
+
+
 
 /// <summary>
 /// A service for file operations utilizing common object management service client
@@ -18,15 +18,19 @@ public class StaffDocumentService : IStaffDocumentService
     private readonly IMemoryStreamManager _memoryStreamManager;
     private readonly IBus _bus;
     private readonly ILogger<StaffDocumentService> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public const string UsernameClaimType = "preferred_username";
 
     public StaffDocumentService(
         IObjectManagementService objectManagementService,
         IMemoryStreamManager memoryStreamManager,
+        IHttpContextAccessor httpContextAccessor,
         IBus bus,
         ILogger<StaffDocumentService> logger)
     {
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
         _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -35,24 +39,16 @@ public class StaffDocumentService : IStaffDocumentService
     {
         _logger.LogDebug("Getting the file through COMS");
 
-        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        Dictionary<string, string> metadata = comsFile.Metadata;
-
-        if (!metadata.ContainsKey("virus-scan-status"))
+        if (!file.VirusScanIsClean())
         {
-            _logger.LogError("Could not download the document because metadata does not contain the key: virus-scan-status");
-            throw new ObjectManagementServiceException("File could not be downloaded due to the missing metadata key: virus-scan-status");
-        }
-
-        metadata.TryGetValue("virus-scan-status", out string? scanStatus);
-        if (!string.IsNullOrEmpty(scanStatus) && scanStatus != "clean")
-        {
-            _logger.LogDebug("Trying to download unscanned or virus detected file");
+            string scanStatus = file.GetVirusScanStatus();
+            _logger.LogInformation("Cannot download file that has not been successfully scanned for viruses, status is {VirusScanStatus}, expected clean.", scanStatus);
             throw new ObjectManagementServiceException($"File could not be downloaded due to virus scan status. Virus scan status of the file is {scanStatus}");
         }
 
-        return comsFile;
+        return file;
     }
 
     public async Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
@@ -66,17 +62,13 @@ public class StaffDocumentService : IStaffDocumentService
 
         if (searchResults.Count == 0)
         {
+            _logger.LogInformation("File {FileId} not found", fileId);
             return; // file not found
         }
 
         FileSearchResult file = searchResults[0];
 
-        file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
-        if (string.IsNullOrEmpty(ticketNumber))
-        {
-            ticketNumber = "unknown";
-            _logger.LogDebug("ticket-number value from metadata is empty");
-        }
+        string ticketNumber = GetTicketNumber(file);
 
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
@@ -86,7 +78,8 @@ public class StaffDocumentService : IStaffDocumentService
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was deleted by Staff." is missing from the database.
             // When the description is added to the databse change this
-            FileHistoryAuditLogEntryType.SUPL);
+            FileHistoryAuditLogEntryType.SUPL,
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
@@ -105,7 +98,13 @@ public class StaffDocumentService : IStaffDocumentService
             FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
-                FileName = result.FileName
+                FileName = result.FileName,
+                TicketNumber = result.GetTicketNumber(),
+                DocumentType = GetProperty("document-type", result.Tags),
+                NoticeOfDisputeGuid = GetProperty("notice-of-dispute-id", result.Tags),
+                VirusScanStatus= GetProperty("virus-scan-status", result.Metadata),
+                DocumentStatus = GetProperty("document-status", result.Tags),
+                DisputeId = GetProperty("dispute-id", result.Tags)
             };
 
             fileData.Add(fileMetadata);
@@ -114,11 +113,11 @@ public class StaffDocumentService : IStaffDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
-        using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
+        using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, null, properties);
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
@@ -129,20 +128,16 @@ public class StaffDocumentService : IStaffDocumentService
         };
         await _bus.PublishWithLog(_logger, virusScan, cancellationToken);
 
-        metadata.TryGetValue("ticket-number", out string? ticketNumber);
-        if (string.IsNullOrEmpty(ticketNumber))
-        {
-            ticketNumber = "unknown";
-            _logger.LogDebug("ticket-number value from metadata is empty");
-        }
-        
+        string ticketNumber = GetTicketNumber(properties);
+
         // Save file upload event to file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             ticketNumber,
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was uploaded by Staff." is missing from the database.
             // When the description is added to the databse change this
-            FileHistoryAuditLogEntryType.SUPL);
+            FileHistoryAuditLogEntryType.SUPL,
+            GetUserName());
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return id;
@@ -161,4 +156,52 @@ public class StaffDocumentService : IStaffDocumentService
         return memoryStream;
     }
 
+    private string GetTicketNumber(FileSearchResult file)
+    {
+        string? ticketNumber = file.GetTicketNumber();
+        if (string.IsNullOrEmpty(ticketNumber))
+        {
+            ticketNumber = "unknown";
+            _logger.LogDebug("ticket-number value from metadata is empty");
+        }
+
+        return ticketNumber;
+    }
+
+    private string GetTicketNumber(Dictionary<string, string> properties)
+    {
+        string? ticketNumber = properties.GetTicketNumber();
+        if (string.IsNullOrEmpty(ticketNumber))
+        {
+            ticketNumber = "unknown";
+            _logger.LogDebug("ticket-number value from metadata is empty");
+        }
+
+        return ticketNumber;
+    }
+
+    private static string? GetProperty(string name, Dictionary<string, string> properties)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(properties);  
+
+        properties.TryGetValue(name, out string? value);
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            value = null;
+        }
+
+        return value;
+     }
+
+
+    private string GetUserName()
+    {
+        var _httpContext = _httpContextAccessor.HttpContext;
+
+        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
+
+        return username ?? string.Empty;
+    }
 }

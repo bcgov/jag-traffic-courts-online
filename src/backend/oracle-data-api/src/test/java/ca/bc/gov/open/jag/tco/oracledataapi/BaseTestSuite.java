@@ -19,13 +19,18 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -38,13 +43,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @Transactional
+@Import(DataSourceAutoConfiguration.class)
 public class BaseTestSuite {
 
 	@Autowired
@@ -53,32 +61,16 @@ public class BaseTestSuite {
 	@Autowired
 	protected MockMvc mvc;
 
-	@Value("${repository.dispute}")
-    protected String disputeRepositorySrc;
-
-	@Value("${repository.jjdispute}")
-    protected String jjdisputeRepositorySrc;
-
-	@Value("${repository.lookup}")
-    protected String lookupRepositorySrc;
-
 	@Autowired
 	protected DisputeRepository disputeRepository;
 
 	@Autowired
 	protected JJDisputeRepository jjDisputeRepository;
 
-	private Principal principal;
-
 	@BeforeEach
 	protected void beforeEach() throws Exception {
-		// only delete the repo if this is a local H2 repository.
-		if ("h2".equals(disputeRepositorySrc)) {
-			disputeRepository.deleteAll();
-		}
-		if ("h2".equals(jjdisputeRepositorySrc)) {
-			jjDisputeRepository.deleteAll();
-		}
+		disputeRepository.deleteAll();
+		jjDisputeRepository.deleteAll();
 
 		setPrincipal("System");
 	}
@@ -126,27 +118,19 @@ public class BaseTestSuite {
 		return new ObjectMapper().readValue(resultActions.andReturn().getResponse().getContentAsString(), typeReference);
 	}
 
-	/** Helper method to return an instance of Principal */
-	public Principal getPrincipal(String name) {
-		return new Principal() {
-			@Override
-			public String getName() {
-				return name;
-			}
-		};
-	}
-
 	/** Returns the currently logged in user */
 	protected Principal getPrincipal() {
-		if (principal == null) {
-			principal = getPrincipal("System");
-		}
-		return principal;
+		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
 	/** Sets the currently logged in user */
-	protected void setPrincipal(String name) {
-		this.principal = getPrincipal(name);
+	protected void setPrincipal(String username) {
+		List<GrantedAuthority> authority = new ArrayList<>();
+        authority.add(new SimpleGrantedAuthority("User"));
+
+		CustomUserDetails user = new CustomUserDetails(username == null ? "System" : username, username == null ? "Password" : username, "System", "System", authority);
+		Authentication authentication = new PreAuthenticatedToken(user);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
 	/** Serializes the given object to a json string. */

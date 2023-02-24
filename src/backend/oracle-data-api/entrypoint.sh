@@ -8,13 +8,6 @@ set -euo pipefail
 
 # shellcheck disable=SC1091
 
-# if the first two parameters are a sleep command,
-# execute the sleep and remove the parameters
-if [[ "$1" = "sleep" ]] ; then
-  sleep $2
-  shift 2
-fi
-
 VAULT_SECRETS_DIR=/vault/secrets
 
 if [ -d ${VAULT_SECRETS_DIR} ]; then

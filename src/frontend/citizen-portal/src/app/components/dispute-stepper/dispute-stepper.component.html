@@ -53,7 +53,8 @@
       <div>
         <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> to
           attend a court hearing</span> <span
-          matTooltip="Dispute any count or ask for a fine reduction or more time to pay for any count." #tooltip3="matTooltip">
+          matTooltip="Dispute any count or ask for a fine reduction or more time to pay for any count."
+          #tooltip3="matTooltip">
           <mat-icon>info</mat-icon>
         </span>
       </div>
@@ -130,50 +131,50 @@
             </ng-container>
           </app-page-header>
 
-        <form [formGroup]="count?.form" novalidate>
-          <section>
+          <form [formGroup]="count?.form" novalidate>
+            <section>
 
-            <div class="row mt-4">
-              <div
-                [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.N ? '' : 'none' }">
-                <label class="w-100">
-                  Please provide additional selections below:
-                </label>
-                <mat-checkbox [checked]="count?.form.value.request_reduction === RequestReduction.Y ? true:false"
-                  (change)="count?.form.controls.request_reduction.setValue($event.checked ? RequestReduction.Y: RequestReduction.N)"
-                  color="primary" class="w-100"> I would like
-                  to request a fine reduction on this count.</mat-checkbox>
-                <p> and/or</p>
-                <mat-checkbox [checked]="count?.form.value.request_time_to_pay === RequestTimeToPay.Y ? true:false"
-                  (change)="count?.form.controls.request_time_to_pay.setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
-                  color="primary" class="w-100"> I would
-                  like to request time to pay on this count.</mat-checkbox>
-              </div>
-
-              <div
-                [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y ? '' : 'none' }">
-                <label class="w-100">
-                  Please provide additional selections below:
-                </label>
-                <mat-radio-group formControlName="plea_cd">
-                  <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
-                    offence and would like to request a fine reduction and/or time to pay on this count.
-                  </mat-radio-button>
+              <div class="row mt-4">
+                <div
+                  [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.N ? '' : 'none' }">
+                  <label class="w-100">
+                    Please provide additional selections below:
+                  </label>
+                  <mat-checkbox [checked]="count?.form.value.request_reduction === RequestReduction.Y ? true:false"
+                    (change)="count?.form.controls.request_reduction.setValue($event.checked ? RequestReduction.Y: RequestReduction.N)"
+                    color="primary" class="w-100"> I would like
+                    to request a fine reduction on this count.</mat-checkbox>
                   <p> and/or</p>
-                  <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
-                    committed this offence and would like to dispute this count</mat-radio-button>
-                </mat-radio-group>
-              </div>
-            </div>
+                  <mat-checkbox [checked]="count?.form.value.request_time_to_pay === RequestTimeToPay.Y ? true:false"
+                    (change)="count?.form.controls.request_time_to_pay.setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
+                    color="primary" class="w-100"> I would
+                    like to request time to pay on this count.</mat-checkbox>
+                </div>
 
-            <hr />
-            <div class="row">
-              <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked()">
-                Skip this count, no action required.
-              </mat-checkbox>
-            </div>
-          </section>
-        </form>
+                <div
+                  [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y ? '' : 'none' }">
+                  <label class="w-100">
+                    Please provide additional selections below:
+                  </label>
+                  <mat-radio-group formControlName="plea_cd">
+                    <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
+                      offence and would like to request a fine reduction and/or time to pay on this count.
+                    </mat-radio-button>
+                    <p> and/or</p>
+                    <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
+                      committed this offence and would like to dispute this count</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+
+              <hr />
+              <div class="row">
+                <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked()">
+                  Skip this count, no action required.
+                </mat-checkbox>
+              </div>
+            </section>
+          </form>
 
         </app-page>
       </mat-card><br />
@@ -184,7 +185,7 @@
     </app-stepper-footer>
   </mat-step>
 
-    <!-- aditional -->
+  <!-- aditional -->
   <mat-step [completed]="isAdditionalFormValid()">
     <ng-template matStepLabel>Additional information</ng-template>
     <app-page>
@@ -401,6 +402,48 @@
             </app-alert>
           </div>
         </section>
+
+        <div class="row">
+          <div class="col">
+            <app-alert type="info" icon="info">
+              <ng-container class="alert-content" #alertContent>
+                <strong>Did you know? </strong><br>
+                You can make a dispute request by attending a court hearing in person, or you may supply
+                written reasons requesting a fine reduction and/or time to pay without having to attend a
+                court hearing.
+              </ng-container>
+            </app-alert>
+          </div>
+        </div>
+
+        <div class="alert alert-upload" *ngIf="mode === disputeFormMode.UPDATE && fileData$">
+          <div class="row">
+            <div fxFlex>
+              <div fxFlex class="vcenter">
+                <strong>Upload additional supporting documents, if applicable</strong>
+              </div>
+              <div>
+                <button class="large" mat-stroked-button type="button" color="primary"
+                  onclick="document.getElementById('fileInput').click()">
+                  Upload Documents
+                </button>
+                <input type="file" #fileInput id="fileInput" style="display:none" accept="image/*,.pdf"
+                  (change)="onUploadFile($event.target.files)">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div fxFlex>
+              <div fxFlex class="vcenter" *ngFor="let file of fileData$ | async">
+                <a href="javascript:void(0);" (click)="onGetFile(file.fileId)">{{ file.fileName }}</a>
+                <button type="button" style="width: unset !important; border:none; background-color: transparent"
+                  (click)="onRemoveFile(file)">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
       <app-stepper-footer [disableSave]="!isAdditionalFormValid()" (save)="disputeStepper.next()"
         (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"

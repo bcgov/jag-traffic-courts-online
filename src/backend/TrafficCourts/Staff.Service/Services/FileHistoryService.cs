@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -14,6 +15,7 @@ public class FileHistoryService : IFileHistoryService
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    public const string UsernameClaimType = "preferred_username";
 
 
     public FileHistoryService(
@@ -37,6 +39,16 @@ public class FileHistoryService : IFileHistoryService
 
     public async Task<long> SaveFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
     {
+        fileHistory.ActionByApplicationUser = GetUserName();
         return await _oracleDataApi.InsertFileHistoryAsync(fileHistory, cancellationToken);
+    }
+
+    private string GetUserName()
+    {
+        var _httpContext = _httpContextAccessor.HttpContext;
+
+        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
+
+        return username ?? string.Empty;
     }
 }

@@ -233,6 +233,7 @@ public class RandomUtil {
 		fileHistory.setFileHistoryId(3L);
 		fileHistory.setDisputeId(5L);
 		fileHistory.setAuditLogEntryType(AuditLogEntryType.INIT);
+		fileHistory.setActionByApplicationUser(RandomUtil.randomAlphabetic(100));
 		return fileHistory;
 	}
 

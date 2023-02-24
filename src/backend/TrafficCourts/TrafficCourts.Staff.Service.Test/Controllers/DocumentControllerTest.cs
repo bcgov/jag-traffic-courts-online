@@ -9,32 +9,28 @@ using System.Net;
 using System.Threading;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Staff.Service.Controllers;
-using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
-public class ComsControllerTest
+public class DocumentControllerTest
 {
     [Fact]
-    public async void TestUploadDocument200Result()
+    public async void TestCreateAsync200Result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(guid);
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Adjournment", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -45,15 +41,13 @@ public class ComsControllerTest
     public async void TestUploadDocumentMissingTicketnumberMetadataThrows400result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "", "", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -66,20 +60,17 @@ public class ComsControllerTest
     public async void TestUploadDocumentThrowsMetadataInvalidKeyException400result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataInvalidKeyException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other",  CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -92,20 +83,17 @@ public class ComsControllerTest
     public async void TestUploadDocumentThrowsMetadataTooLongException400result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataTooLongException());
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -118,20 +106,17 @@ public class ComsControllerTest
     public async void TestUploadDocumentThrowsTagKeyEmptyExceptionException400result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyEmptyException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -144,20 +129,17 @@ public class ComsControllerTest
     public async void TestUploadDocumentThrowsTagKeyTooLongException400result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyTooLongException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -170,20 +152,17 @@ public class ComsControllerTest
     public async void TestUploadDocumentThrowsTagValueTooLongException400result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TagValueTooLongException(It.IsAny<string>(), It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AB12345678", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -196,20 +175,17 @@ public class ComsControllerTest
     public async void TestUploadDocumentThrowsTooManyTagsException400result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new TooManyTagsException(It.IsAny<int>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -222,20 +198,17 @@ public class ComsControllerTest
     public async void TestUploadDocumentThrowsObjectManagementServiceException500result()
     {
         // Arrange
-        var mockFileUploadRequest = new Mock<FileUploadRequest>();
+        var mockFile = new Mock<IFormFile>();
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        mockFileUploadRequest.Object.Metadata.Add("ticket-number", "AO38375804");
         comsService
             .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Dictionary<string, string>>(), It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-#pragma warning disable CS0618 // Type or member is obsolete
-        IActionResult? result = await comsController.UploadDocumentAsync(mockFileUploadRequest.Object, CancellationToken.None);
-#pragma warning restore CS0618 // Type or member is obsolete
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, "AO38375804", "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -259,10 +232,10 @@ public class ComsControllerTest
             .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(mockFile);
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.GetAsync(guid, CancellationToken.None);
+        IActionResult? result = await sut.GetAsync(guid, CancellationToken.None);
 
         // Assert
         var fileResult = Assert.IsType<FileStreamResult>(result);
@@ -283,10 +256,10 @@ public class ComsControllerTest
             .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.GetAsync(guid, CancellationToken.None);
+        IActionResult? result = await sut.GetAsync(guid, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -310,10 +283,10 @@ public class ComsControllerTest
             .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
-        DocumentController comsController = new(comsService.Object, mockLogger.Object);
+        DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await comsController.GetAsync(guid, CancellationToken.None);
+        IActionResult? result = await sut.GetAsync(guid, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);

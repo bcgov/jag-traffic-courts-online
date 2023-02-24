@@ -97,11 +97,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 
 		<!-- Lombok code generator -->
 		<dependency>
@@ -131,13 +126,6 @@
 			<version>5.7.1</version>
 		</dependency>
 
-		<!-- Test dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- Open Telemetry dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -162,7 +150,7 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>0.2.4</version>
+			<version>0.2.6</version>
 		</dependency>
 
 		<dependency>
@@ -214,6 +202,18 @@
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
+		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -290,7 +290,7 @@
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>6.3.0</version>
+				<version>6.4.0</version>
 				<executions>
 					<execution>
 						<id>ords-occam-api</id>

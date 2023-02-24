@@ -1,0 +1,25 @@
+ARG BUILD_IMAGE=image-registry.openshift-image-registry.svc:5000/0198bb-tools/dotnet-sdk
+ARG RUNTIME_IMAGE=image-registry.openshift-image-registry.svc:5000/0198bb-tools/dotnet-70-runtime:latest
+
+FROM $RUNTIME_IMAGE AS base
+WORKDIR /opt/app-root/app
+EXPOSE 8080
+
+FROM $BUILD_IMAGE:7.0 AS build
+WORKDIR /src
+COPY ["BCGov.VirusScan.Api/BCGov.VirusScan.Api.csproj", "BCGov.VirusScan.Api/"]
+RUN dotnet restore "BCGov.VirusScan.Api/BCGov.VirusScan.Api.csproj"
+COPY . .
+WORKDIR "/src/BCGov.VirusScan.Api"
+RUN dotnet build "BCGov.VirusScan.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "BCGov.VirusScan.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /opt/app-root/app
+COPY --from=publish /app/publish .
+USER root
+RUN rpm -e --nodeps $(rpm -qa '*rpm*' '*dnf*' '*libsolv*' '*hawkey*' 'yum*')
+
+ENTRYPOINT ["dotnet", "BCGov.VirusScan.Api.dll"]

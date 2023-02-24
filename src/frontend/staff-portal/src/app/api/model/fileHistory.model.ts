@@ -21,6 +21,7 @@ export interface FileHistory {
     disputeId?: number;
     auditLogEntryType: FileHistoryAuditLogEntryType;
     description?: string | null;
+    actionByApplicationUser?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 
