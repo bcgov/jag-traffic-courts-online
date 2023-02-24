@@ -9,6 +9,9 @@ import { AppRoutes } from 'app/app.routes';
 import { Store } from '@ngrx/store';
 import { DisputeStore } from '..';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
+import { DocumentService, FileMetadata } from 'app/api';
+import { HttpResponse } from '@angular/common/http';
+import { cloneDeep } from 'lodash';
 
 @Injectable()
 export class DisputeEffects {
@@ -16,6 +19,7 @@ export class DisputeEffects {
     private actions$: StoreActions,
     private router: Router,
     private disputeService: DisputeService,
+    private documentService: DocumentService,
     private store: Store
   ) { }
 
@@ -135,6 +139,54 @@ export class DisputeEffects {
           }),
           catchError(err => {
             return of(Actions.UpdateFailed());
+          })
+        )
+    }))
+  );
+
+  getDocument$ = createEffect(() => this.actions$.pipe(
+    ofType(Actions.GetDocument),
+    mergeMap(action => {
+      return this.documentService.apiDocumentGetGet(action.fileId)
+        .pipe(
+          map((result: HttpResponse<Blob>) => {
+            var url = URL.createObjectURL(result.body);
+            window.open(url);
+            return Actions.GetDocumentSuccess();
+          }),
+          catchError(err => {
+            return of(Actions.GetDocumentFailed());
+          })
+        )
+    }))
+  );
+
+  addDocument$ = createEffect(() => this.actions$.pipe(
+    ofType(Actions.AddDocument),
+    withLatestFrom(this.store.select(DisputeStore.Selectors.Result), this.store.select(DisputeStore.Selectors.FileData)),
+    mergeMap(([action, searchResult, _fileData]) => {
+      return this.documentService.apiDocumentCreatePost(searchResult.token, action.file, "other")
+        .pipe(
+          map(fileId => {
+            return Actions.AddDocumentSuccess({ file: { fileId: fileId, fileName: action.file.name } });
+          }),
+          catchError(err => {
+            return of(Actions.AddDocumentFailed());
+          })
+        )
+    }))
+  );
+
+  removeDocument$ = createEffect(() => this.actions$.pipe(
+    ofType(Actions.RemoveDocument),
+    mergeMap(action => {
+      return this.documentService.apiDocumentDeleteDelete(action.file.fileId)
+        .pipe(
+          map(() => {
+            return Actions.RemoveDocumentSuccess({ fileId: action.file.fileId });
+          }),
+          catchError(err => {
+            return of(Actions.RemoveDocumentFailed());
           })
         )
     }))

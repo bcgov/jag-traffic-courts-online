@@ -1,11 +1,14 @@
+import { HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
+import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeNotFoundDialogComponent } from "@shared/dialogs/dispute-not-found-dialog/dispute-not-found-dialog.component";
 import { DisputeStatusDialogComponent } from "@shared/dialogs/dispute-status-dialog/dispute-status-dialog.component";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputesService, SearchDisputeResult } from "app/api";
+import { DisputesService, FileMetadata, SearchDisputeResult } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { AuthStore } from "app/auth/store";
 import { DisputeStore } from "app/store";
@@ -154,6 +157,31 @@ export class DisputeService {
       return encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
     }).join('&');
     return AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE) + "?" + queryString;
+  }
+
+  removeDocument(file: FileMetadata) {
+    const data: DialogOptions = {
+      titleKey: "Remove File?",
+      messageKey: "Are you sure you want to delete file " + file.fileName + "?",
+      actionTextKey: "Delete",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "delete"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.store.dispatch(DisputeStore.Actions.RemoveDocument({ file }));
+        }
+      });
+  }
+
+  getDocument(fileId: string) {
+    this.store.dispatch(DisputeStore.Actions.GetDocument({ fileId }));
+  }
+
+  uploadDocument(file: File) {
+    this.store.dispatch(DisputeStore.Actions.AddDocument({ file }));
   }
 }
 

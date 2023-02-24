@@ -196,7 +196,7 @@ public class StaffDocumentService : IStaffDocumentService
      }
 
 
-private string GetUserName()
+    private string GetUserName()
     {
         var _httpContext = _httpContextAccessor.HttpContext;
 
