@@ -18,7 +18,6 @@ import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, Coun
 import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { Observable } from "rxjs";
-import { DisputeService } from "app/services/dispute.service";
 import { DisputeStore } from "app/store";
 import { Store } from "@ngrx/store";
 
@@ -59,7 +58,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   matcher = new FormErrorStateMatcher();
 
   // TODO: use ViewChild to detect instead of hardcode
-  countIndex: number = 1;
+  countStepIndex: number = 1;
 
   // Additional
   countsActions: CountsActions;
@@ -142,7 +141,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   onStepSave(): void {
     let isValid = this.formUtilsService.checkValidity(this.form);
 
-    if (this.stepper.selectedIndex === this.countIndex) {
+    if (this.stepper.selectedIndex === this.countStepIndex) {
       this.counts.forEach(count => {
         let countForm = count.form;
         if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
@@ -182,7 +181,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   isCountFormsValid(): boolean {
-    if (this.stepper?.selectedIndex < this.countIndex) {
+    if (this.stepper?.selectedIndex < this.countStepIndex) {
       return false;
     }
 
@@ -203,7 +202,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   isAdditionalFormValid(): boolean {
-    var result = true;
+    var result = this.stepper.selectedIndex > this.countStepIndex;
     if (this.additionalForm?.value.represented_by_lawyer === this.RepresentedByLawyer.Y && !this.legalRepresentationForm?.valid) {
       result = false;
     }

@@ -70,31 +70,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     })
   }
 
-  onSelectContactType(newContactType: any) {
-    this.form.get('contact_given_names').setValue(null);
-    this.form.get('contact_surname').setValue(null);
-    this.form.get('contact_law_firm_name').clearValidators();
-    this.form.get('contact_surname').clearValidators();
-    this.form.get('contact_given_names').clearValidators();
-    this.form.get('contact_law_firm_name').setValue(null);
-    if (newContactType == this.ContactType.Lawyer) {
-      // make all contact info required
-      this.form.get('contact_law_firm_name').addValidators([Validators.required]);
-      this.form.get('contact_surname').addValidators([Validators.required]);
-      this.form.get('contact_given_names').addValidators([Validators.required]);
-    } else if (newContactType == this.ContactType.Individual) {
-      // leave contact info null and not required
-    } else {
-      // only contact names required
-      this.form.get('contact_surname').addValidators([Validators.required]);
-      this.form.get('contact_given_names').addValidators([Validators.required]);
-    }
-    this.form.get('contact_law_firm_name').updateValueAndValidity();
-    this.form.get('contact_surname').updateValueAndValidity();
-    this.form.get('contact_given_names').updateValueAndValidity();
-    this.form.updateValueAndValidity();
-  }
-
   ngOnInit(): void {
     let country = this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift();
     if (!this.form.value.address_country_id && !country) {
@@ -217,6 +192,31 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
 
   get isUSA() {
     return this.countryFormControl.value?.ctryId === this.usa.ctryId;
+  }
+
+  onSelectContactType(newContactType: any) {
+    this.form.get('contact_given_names').setValue(null);
+    this.form.get('contact_surname').setValue(null);
+    this.form.get('contact_law_firm_name').clearValidators();
+    this.form.get('contact_surname').clearValidators();
+    this.form.get('contact_given_names').clearValidators();
+    this.form.get('contact_law_firm_name').setValue(null);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make all contact info required
+      this.form.get('contact_law_firm_name').addValidators([Validators.required]);
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
+    } else if (newContactType == this.ContactType.Individual) {
+      // leave contact info null and not required
+    } else {
+      // only contact names required
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
+    }
+    this.form.get('contact_law_firm_name').updateValueAndValidity();
+    this.form.get('contact_surname').updateValueAndValidity();
+    this.form.get('contact_given_names').updateValueAndValidity();
+    this.form.updateValueAndValidity();
   }
 
   onOptOut() {

@@ -57,8 +57,8 @@ export class DisputeEffects {
 
   getDispute$ = createEffect(() => this.actions$.pipe(
     ofType(Actions.Get),
-    withLatestFrom(this.store.select(DisputeStore.Selectors.Result)),
-    switchMap(([action, searchResult]) => {
+    withLatestFrom(this.store.select(DisputeStore.Selectors.Result), this.store.select(DisputeStore.Selectors.Params)),
+    switchMap(([action, searchResult, params]) => {
       if (!searchResult || !searchResult?.token) {
         return of(Actions.GetFailed());
       }
@@ -69,13 +69,13 @@ export class DisputeEffects {
               return Actions.GetSuccess({ noticeOfDispute });
             } else {
               this.disputeService.openDisputeNotFoundDialog();
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND_DISPUTE)]);
+              this.disputeService.goToUpdateDisputeLanding(params);
               return Actions.GetFailed();
             }
           }),
           catchError(err => {
             this.disputeService.openDisputeNotFoundDialog();
-            this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND_DISPUTE)]);
+            this.disputeService.goToUpdateDisputeLanding(params);
             return of(Actions.GetFailed());
           })
         )
