@@ -1,11 +1,5 @@
-import { AbstractControl, FormGroup, FormControlState, FormControlOptions, ValidatorFn, AsyncValidatorFn } from "@angular/forms";
+import { AbstractControl, FormGroup, FormControlState, FormControlOptions } from "@angular/forms";
 import { NoticeOfDispute as NoticeOfDisputeBase, DisputeCount as DisputeCountBase, DisputantContactInformation as DisputantContactInformationBase, ViolationTicketCount } from "app/api";
-
-export interface FormConfig<T> {
-  value: T,
-  validatorOrOpts?: ValidatorFn | ValidatorFn[] | FormControlOptions,
-  asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[]
-}
 
 export interface DisputantContactInformation extends DisputantContactInformationBase {
   disputant_given_names?: string;

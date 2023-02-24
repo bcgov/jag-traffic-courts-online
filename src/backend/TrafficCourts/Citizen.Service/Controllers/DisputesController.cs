@@ -173,6 +173,18 @@ public class DisputesController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Search for a Dispute.
+    /// </summary>
+    /// <param name="ticketNumber">The violation ticket number. Must start with two upper case letters and end with eight digits.</param>
+    /// <param name="time">The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The dispute was found.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
     [HttpGet("/api/disputes/search")]
     [ProducesResponseType(typeof(SearchDisputeResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -236,6 +248,16 @@ public class DisputesController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Get a Dispute with authentication.
+    /// </summary>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute was found.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a internal server error.</response>
     [Authorize]
     [HttpGet("/api/disputes/{guidHash}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
@@ -275,6 +297,12 @@ public class DisputesController : ControllerBase
             if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
+
+            // Search parameter "notice-of-dispute-id" for returning documents for the associated dispute that were uploaded by the citizen
+            Dictionary<string, string> documentSearchParam = new();
+            documentSearchParam.Add("notice-of-dispute-id", guidHash);
+            result.FileData = await _documentService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
+            
             return Ok(result);
         }
         catch (Exception ex)
@@ -285,82 +313,16 @@ public class DisputesController : ControllerBase
     }
 
     /// <summary>
-    /// Downloads a document for the given unique file ID if the virus scan staus is clean.
+    /// Submits an update request for a Dispute with authentication.
     /// </summary>
-    /// <param name="fileId">Unique identifier for a specific document.</param>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="dispute">The requested fields to update.</param>
     /// <param name="cancellationToken"></param>
-    /// <response code="200">The document is successfully downloaded.</response>
-    /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
-    /// <response code="403">Forbidden, requires jjdispute:read permission.</response>
-    /// <response code="500">There was a server error that prevented the file to be downloaded successfully.</response>
-    /// <returns>The document</returns>
-    [Authorize]
-    [HttpGet("/api/disputes/downloadDocument")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DownloadDocumentAsync(Guid fileId, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            if (String.IsNullOrEmpty(token))
-            {
-                throw new UnauthorizedAccessException("Invalid access_token");
-            }
-
-            Coms.Client.File file = await _documentService.GetFileAsync(fileId, cancellationToken);
-
-            var stream = file.Data;
-            // Reset position to the beginning of the stream
-            stream.Position = 0;
-
-            return File(stream, file.ContentType ?? "application/octet-stream", file.FileName ?? "download");
-        }
-        catch (FileNotFoundException)
-        {
-            return NotFound();
-        }
-        catch (UnauthorizedAccessException e)
-        {
-            _logger.LogError(e, "User is unauthorized. Invalid Access Token");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Unauthorized;
-            problemDetails.Title = e.Source + ": Exception Authorizing User";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            problemDetails.Extensions.Add("errors", e.Message);
-
-            return new ObjectResult(problemDetails);
-        }
-        catch (Coms.Client.ObjectManagementServiceException e)
-        {
-            _logger.LogError(e, "Could not download the document because of ObjectManagementServiceException");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.InternalServerError;
-            problemDetails.Title = e.Source + ": Error getting file from COMS";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error retrieving the document");
-            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
-        }
-    }
-
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a internal server error.</response>
     [Authorize]
     [HttpPut("/api/disputes/{guidHash}")]
     [ProducesResponseType(StatusCodes.Status200OK)]

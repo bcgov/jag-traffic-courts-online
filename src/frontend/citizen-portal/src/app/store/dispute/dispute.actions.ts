@@ -1,9 +1,8 @@
 import { createAction, props } from "@ngrx/store";
 import { NoticeOfDispute } from "@shared/models/dispute-form.model";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputantContactInformation, SearchDisputeResult } from "app/api";
+import { DisputantContactInformation, FileMetadata, SearchDisputeResult } from "app/api";
 import { ActionTypes } from ".";
-import { DisputeStore } from "..";
 
 export const Search = createAction(
   ActionTypes.SEARCH,
@@ -56,4 +55,45 @@ export const UpdateSuccess = createAction(
 
 export const UpdateFailed = createAction(
   ActionTypes.UPDATE_FAILED
+);
+
+export const GetDocument = createAction(
+  ActionTypes.GET_DOCUMENT,
+  props<{ fileId: string }>()
+);
+
+export const GetDocumentSuccess = createAction(
+  ActionTypes.GET_DOCUMENT_SUCCESS,
+);
+
+export const GetDocumentFailed = createAction(
+  ActionTypes.GET_DOCUMENT_FAILED
+);
+
+export const AddDocument = createAction(
+  ActionTypes.ADD_DOCUMENT,
+  props<{ file: File }>()
+);
+
+export const AddDocumentSuccess = createAction(
+  ActionTypes.ADD_DOCUMENT_SUCCESS,
+  props<{ file: FileMetadata }>()
+);
+
+export const AddDocumentFailed = createAction(
+  ActionTypes.ADD_DOCUMENT_FAILED
+);
+
+export const RemoveDocument = createAction(
+  ActionTypes.REMOVE_DOCUMENT,
+  props<{ file: FileMetadata }>()
+);
+
+export const RemoveDocumentSuccess = createAction(
+  ActionTypes.REMOVE_DOCUMENT_SUCCESS,
+  props<{ fileId: string }>()
+);
+
+export const RemoveDocumentFailed = createAction(
+  ActionTypes.REMOVE_DOCUMENT_FAILED
 );

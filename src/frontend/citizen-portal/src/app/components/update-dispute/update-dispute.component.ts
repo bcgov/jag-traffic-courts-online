@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
-import { NoticeOfDisputeFormGroup } from '@shared/models/dispute-form.model';
+import { FileMetadata } from 'app/api';
 import { DisputeService } from 'app/services/dispute.service';
-import { NoticeOfDisputeService, NoticeOfDispute } from 'app/services/notice-of-dispute.service';
+import { NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { DisputeStore } from 'app/store';
-import { filter, take } from 'rxjs';
+import { filter, map, Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-update-dispute',
@@ -19,6 +19,7 @@ export class UpdateDisputeComponent implements OnInit {
   mode: DisputeFormMode = DisputeFormMode.UPDATE;
   noticeOfDispute: NoticeOfDispute;
   ticketType: string;
+  fileData$: Observable<FileMetadata[]>;
 
    constructor(
     private violationTicketService: ViolationTicketService,
@@ -34,6 +35,11 @@ export class UpdateDisputeComponent implements OnInit {
           this.noticeOfDispute = noticeOfDispute;
           this.ticketType = this.violationTicketService.getTicketType(this.noticeOfDispute);
         })
+        this.fileData$ = this.store.select(DisputeStore.Selectors.FileData).pipe(
+          map(i => {
+            return i;
+          })
+        );
         this.store.dispatch(DisputeStore.Actions.Get());
       }
     })
