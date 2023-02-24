@@ -6,9 +6,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageData;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataGetParms;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentKey;
 
 /**
  * This mapper maps from ORDS TicketImageDataGetResponseResult model to Oracle Data API TicketImageData model, and reverse for parameters which 
@@ -31,24 +30,23 @@ public interface TicketImageDataMapper {
 	}
 	
 	// Map Image document from ORDS to Oracle Data API JJDisputeImageDocument model
-	@Mapping(source = "report_type", target = "reportType", qualifiedByName="mapReportType")
-	@Mapping(source = "report_format", target = "reportFormat")
-	@Mapping(source = "part_id", target = "partId")
-	@Mapping(source = "participant_name", target = "participantName")
+	@Mapping(source = "reportType", target = "reportType", qualifiedByName="mapReportType")
+	@Mapping(source = "reportFormat", target = "reportFormat")
+	@Mapping(source = "partId", target = "partId")
+	@Mapping(source = "participantName", target = "participantName")
 	@Mapping(source = "index", target = "index")
 	@Mapping(source = "data", target = "data")
-	TicketImageDataJustinDocument convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JustinDocument ticketImageDocument);
-	
-	// Map parameters from Oracle Data API TicketImageDataGetParms to ORDS TicketImageDataGetParms
-	@Mapping(source = "documentKeys", target = "document_keys")
 	static
-	ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetParms convert(TicketImageDataGetParms ticketImageDataGetParms) {
+	TicketImageDataJustinDocument convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument ticketImageDocument) {
+		return null;
+	};
+	
+	// Map parameters from Oracle Data API TicketImageDataDocumentKey to ORDS API TicketImageDataDocumentKey
+	@Mapping(source = "rccId", target="rccId")
+	@Mapping(source = "reportTypes", target="reportTypes", qualifiedByName="map_report_types")
+	static
+	ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey convert(TicketImageDataDocumentKey ticketImageDocumentKey) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	// Map parameters from Oracle Data API TicketImageDataDocumentKey to ORDS API TicketImageDataDocumentKey
-	@Mapping(source = "rccId", target="rcc_id")
-	@Mapping(source = "reportTypes", target="report_types", qualifiedByName="map_report_types")
-	ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey convert(TicketImageDataDocumentKey ticketImageDocumentKey);
 }

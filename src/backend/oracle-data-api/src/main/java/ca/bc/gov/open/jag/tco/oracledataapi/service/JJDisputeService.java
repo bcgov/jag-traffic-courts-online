@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,10 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentKey;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
@@ -345,7 +349,38 @@ public class JJDisputeService {
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
+	
+	/**
+	 * Gets a Ticket Image by ticketNumber. Callers can optionally throw {@link NoSuchElementException} if not found.
+	 * @param ticketNumber
+	 * @param documentType
+	 * @return
+	 */
+	public TicketImageDataJustinDocument getTicketImageByTicketNumber(String ticketNumber, TicketImageDataDocumentType documentType) {
+		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
+		if (jjDisputes.isEmpty()) {
+			logger.error("Cant find JJDispute by ticketNumber {}.", ticketNumber);
+			return null;
+		}
 
+		// Set input parameters class
+		List<TicketImageDataDocumentType> documentTypes = new ArrayList<TicketImageDataDocumentType>();
+		documentTypes.add(documentType);
+		TicketImageDataDocumentKey documentKey = new TicketImageDataDocumentKey();
+		documentKey.setRccId(jjDisputes.get(0).getJustinRccId());
+		documentKey.setDocumentTypes(documentTypes);
+		logger.debug("getTicketImageByTicketNumber called {} {}", documentKey.getRccId(), documentKey.getDocumentTypes().get(0));
+		
+		// Get justin document by rcc id and document type. There should be one and only one.
+		List<TicketImageDataJustinDocument> ticketImages = jjDisputeRepository.getTicketImageByRccId(documentKey);
+		if (ticketImages.isEmpty()) {
+			logger.error("Cant find Ticket Image by ticketNumber {} and type {}.", ticketNumber, documentType);
+			return null;
+		}
+
+		TicketImageDataJustinDocument ticketImage = ticketImages.get(0);
+		return ticketImage;
+	}
 
 	/**
 	 * Creates a new remark with the user name and surname who added the remark and adds it to the given {@link JJDispute}
@@ -384,5 +419,4 @@ public class JJDisputeService {
 		JJDispute jjDispute = jjDisputes.get(0);
 		return Optional.of(jjDispute);
 	}
-
 }

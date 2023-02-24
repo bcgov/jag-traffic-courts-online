@@ -25,8 +25,8 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageData;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentKey;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataGetParms;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetParms;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
@@ -438,19 +438,16 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String rccId= RandomUtil.randomAlphabetic(5);
 		String reportTypes = "NOTICE_OF_DISPUTE,TICKET_IMAGE";
 		
-		TicketImageDataGetParms parmsSource = new TicketImageDataGetParms();
 		TicketImageDataDocumentKey documentKey = new TicketImageDataDocumentKey();
 		
 		documentKey.setRccId(rccId);
 		documentKey.documentTypes.add(TicketImageDataDocumentType.NOTICE_OF_DISPUTE);
 		documentKey.documentTypes.add(TicketImageDataDocumentType.TICKET_IMAGE);
 		
-		parmsSource.documentKeys.add(documentKey);
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey ordsKey = TicketImageDataMapper.convert(documentKey); 
 		
-		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataGetParms ordsParms = TicketImageDataMapper.convert(parmsSource); 
-		
-		assertEquals(ordsParms.getDocumentKeys().get(0).getRccId(), rccId);
-		assertEquals(ordsParms.getDocumentKeys().get(0).getReportTypes(),reportTypes);
+		assertEquals(ordsKey.getRccId(), rccId);
+		assertEquals(ordsKey.getReportTypes(), reportTypes);
 	}
 
 	@Test

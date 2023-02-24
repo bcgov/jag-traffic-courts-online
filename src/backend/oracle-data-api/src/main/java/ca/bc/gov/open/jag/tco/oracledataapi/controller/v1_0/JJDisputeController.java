@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -243,5 +245,22 @@ public class JJDisputeController {
 		logger.debug("PUT /dispute/{}/confirm called", ticketNumber);
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null, null), HttpStatus.OK);
+	}
+	
+	/**
+	 * GET endpoint that retrieves a justin document 
+	 * @param ticketNumber the primary key of the jj dispute to retrieve
+	 * @param documentType of justin document to retrieve
+	 * @param principal logged in user to assign
+	 * @return a single justin document data some 
+	 */
+	@GetMapping("/dispute/ticketImage/{ticketNumber}/{documentType}")
+	public ResponseEntity<TicketImageDataJustinDocument> getTicketImageData(
+			@PathVariable("ticketNumber") String ticketNumber,
+			@PathVariable("documentType") TicketImageDataDocumentType documentType,
+			Principal principal) {
+		logger.debug("GET /dispute/ticketImage/{}/{} called", ticketNumber, documentType);
+
+		return new ResponseEntity<TicketImageDataJustinDocument>(jjDisputeService.getTicketImageByTicketNumber(ticketNumber, documentType), HttpStatus.OK);
 	}
 }
