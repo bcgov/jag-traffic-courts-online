@@ -19,6 +19,8 @@ import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { Observable } from "rxjs";
 import { DisputeService } from "app/services/dispute.service";
+import { DisputeStore } from "app/store";
+import { Store } from "@ngrx/store";
 
 @Component({
   selector: "app-dispute-stepper",
@@ -76,12 +78,12 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private violationTicketService: ViolationTicketService,
     private noticeOfDisputeService: NoticeOfDisputeService,
-    private disputeService: DisputeService,
     private utilsService: UtilsService,
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
     private config: ConfigService,
+    private store: Store,
     private lookups: LookupsService,
   ) {
     // config or static
@@ -253,16 +255,29 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   onRemoveFile(file: FileMetadata) {
-    this.disputeService.removeDocument(file);
+    const data: DialogOptions = {
+      titleKey: "Remove File?",
+      messageKey: "Are you sure you want to delete file " + file.fileName + "?",
+      actionTextKey: "Delete",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "delete"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.store.dispatch(DisputeStore.Actions.RemoveDocument({ file }));
+        }
+      });
   }
 
   onGetFile(fileId: string) {
-    this.disputeService.getDocument(fileId);
+    this.store.dispatch(DisputeStore.Actions.GetDocument({ fileId }));
   }
 
   onUploadFile(files: FileList) {
     if (files.length <= 0) return;
-    this.disputeService.uploadDocument(files[0]);
+    this.store.dispatch(DisputeStore.Actions.AddDocument({ file: files[0] }));
     this.fileInput.nativeElement.value = null;
   }
 

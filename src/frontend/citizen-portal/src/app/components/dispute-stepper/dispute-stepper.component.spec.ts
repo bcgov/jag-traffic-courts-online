@@ -10,6 +10,8 @@ import { DisputeStepperComponent } from './dispute-stepper.component';
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
+import { StoreModule } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
@@ -32,6 +34,7 @@ describe('DisputeStepperComponent', () => {
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
+        StoreModule.forRoot(provideMockStore),
       ],
       providers: [
         DatePipe,
