@@ -173,6 +173,18 @@ public class DisputesController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Search for a Dispute.
+    /// </summary>
+    /// <param name="ticketNumber">The violation ticket number. Must start with two upper case letters and end with eight digits.</param>
+    /// <param name="time">The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The dispute was found.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
     [HttpGet("/api/disputes/search")]
     [ProducesResponseType(typeof(SearchDisputeResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -236,6 +248,16 @@ public class DisputesController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Get a Dispute with authentication.
+    /// </summary>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute was found.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a internal server error.</response>
     [Authorize]
     [HttpGet("/api/disputes/{guidHash}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
@@ -290,6 +312,17 @@ public class DisputesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Submits an update request for a Dispute with authentication.
+    /// </summary>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="dispute">The requested fields to update.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a internal server error.</response>
     [Authorize]
     [HttpPut("/api/disputes/{guidHash}")]
     [ProducesResponseType(StatusCodes.Status200OK)]

@@ -155,10 +155,12 @@
         "tags": [
           "Disputes"
         ],
+        "summary": "Search for a Dispute.",
         "parameters": [
           {
             "name": "ticketNumber",
             "in": "query",
+            "description": "The violation ticket number. Must start with two upper case letters and end with eight digits.",
             "required": true,
             "schema": {
               "pattern": "^[A-Z]{2}[0-9]{8}$",
@@ -168,6 +170,7 @@
           {
             "name": "time",
             "in": "query",
+            "description": "The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.",
             "required": true,
             "schema": {
               "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
@@ -177,7 +180,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The dispute was found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -197,7 +200,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "The dispute was not found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -217,7 +220,10 @@
             }
           },
           "500": {
-            "description": "Server Error"
+            "description": "There was a server error that prevented the search from completing successfully."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters."
           }
         }
       }
@@ -227,10 +233,12 @@
         "tags": [
           "Disputes"
         ],
+        "summary": "Get a Dispute with authentication.",
         "parameters": [
           {
             "name": "guidHash",
             "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
             "required": true,
             "schema": {
               "type": "string"
@@ -239,7 +247,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The Dispute was found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -259,7 +267,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "The dispute was not found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -279,7 +287,10 @@
             }
           },
           "500": {
-            "description": "Server Error"
+            "description": "There was a internal server error."
+          },
+          "400": {
+            "description": "The uuid doesn't appear to be a valid UUID."
           }
         }
       },
@@ -287,10 +298,12 @@
         "tags": [
           "Disputes"
         ],
+        "summary": "Submits an update request for a Dispute with authentication.",
         "parameters": [
           {
             "name": "guidHash",
             "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
             "required": true,
             "schema": {
               "type": "string"
@@ -298,6 +311,7 @@
           }
         ],
         "requestBody": {
+          "description": "The requested fields to update.",
           "content": {
             "application/json": {
               "schema": {
@@ -318,10 +332,10 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "The Dispute is updated."
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The uuid doesn't appear to be a valid UUID.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -341,7 +355,10 @@
             }
           },
           "500": {
-            "description": "Server Error"
+            "description": "There was a internal server error."
+          },
+          "404": {
+            "description": "The dispute was not found."
           }
         }
       }
