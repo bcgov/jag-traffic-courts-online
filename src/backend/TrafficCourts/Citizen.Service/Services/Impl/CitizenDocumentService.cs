@@ -97,7 +97,11 @@ public class CitizenDocumentService : ICitizenDocumentService
             FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
-                FileName = result.FileName
+                FileName = result.FileName,
+                DocumentType = GetProperty("document-type", result.Tags),
+                NoticeOfDisputeGuid = GetProperty("notice-of-dispute-id", result.Tags),
+                VirusScanStatus = GetProperty("virus-scan-status", result.Metadata),
+                DocumentStatus = GetProperty("document-status", result.Tags),
             };
 
             fileData.Add(fileMetadata);
@@ -110,7 +114,7 @@ public class CitizenDocumentService : ICitizenDocumentService
     {
         _logger.LogDebug("Saving file through COMS");
 
-        metadata.Add("staff-review-status", "pending");
+        metadata.Add("document-status", "pending");
 
         using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
 
@@ -163,5 +167,20 @@ public class CitizenDocumentService : ICitizenDocumentService
         memoryStream.Position = 0;
 
         return memoryStream;
+    }
+
+    private static string? GetProperty(string name, Dictionary<string, string> properties)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(properties);
+
+        properties.TryGetValue(name, out string? value);
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            value = null;
+        }
+
+        return value;
     }
 }

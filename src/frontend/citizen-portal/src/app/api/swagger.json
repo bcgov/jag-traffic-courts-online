@@ -155,10 +155,12 @@
         "tags": [
           "Disputes"
         ],
+        "summary": "Search for a Dispute.",
         "parameters": [
           {
             "name": "ticketNumber",
             "in": "query",
+            "description": "The violation ticket number. Must start with two upper case letters and end with eight digits.",
             "required": true,
             "schema": {
               "pattern": "^[A-Z]{2}[0-9]{8}$",
@@ -168,6 +170,7 @@
           {
             "name": "time",
             "in": "query",
+            "description": "The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.",
             "required": true,
             "schema": {
               "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
@@ -177,7 +180,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The dispute was found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -197,7 +200,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "The dispute was not found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -217,7 +220,10 @@
             }
           },
           "500": {
-            "description": "Server Error"
+            "description": "There was a server error that prevented the search from completing successfully."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters."
           }
         }
       }
@@ -227,10 +233,12 @@
         "tags": [
           "Disputes"
         ],
+        "summary": "Get a Dispute with authentication.",
         "parameters": [
           {
             "name": "guidHash",
             "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
             "required": true,
             "schema": {
               "type": "string"
@@ -239,7 +247,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The Dispute was found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -259,7 +267,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "The dispute was not found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -279,7 +287,10 @@
             }
           },
           "500": {
-            "description": "Server Error"
+            "description": "There was a internal server error."
+          },
+          "400": {
+            "description": "The uuid doesn't appear to be a valid UUID."
           }
         }
       },
@@ -287,10 +298,12 @@
         "tags": [
           "Disputes"
         ],
+        "summary": "Submits an update request for a Dispute with authentication.",
         "parameters": [
           {
             "name": "guidHash",
             "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
             "required": true,
             "schema": {
               "type": "string"
@@ -298,6 +311,7 @@
           }
         ],
         "requestBody": {
+          "description": "The requested fields to update.",
           "content": {
             "application/json": {
               "schema": {
@@ -318,10 +332,10 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "The Dispute is updated."
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The uuid doesn't appear to be a valid UUID.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -341,97 +355,10 @@
             }
           },
           "500": {
-            "description": "Server Error"
-          }
-        }
-      }
-    },
-    "/api/disputes/downloaddocument": {
-      "get": {
-        "tags": [
-          "Disputes"
-        ],
-        "summary": "Downloads a document for the given unique file ID if the virus scan staus is clean.",
-        "parameters": [
-          {
-            "name": "fileId",
-            "in": "query",
-            "description": "Unique identifier for a specific document.",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The document is successfully downloaded."
-          },
-          "400": {
-            "description": "The request was not well formed. Check the parameters.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
+            "description": "There was a internal server error."
           },
           "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "There was a server error that prevented the file to be downloaded successfully."
-          },
-          "403": {
-            "description": "Forbidden, requires jjdispute:read permission."
+            "description": "The dispute was not found."
           }
         }
       }
@@ -516,6 +443,338 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/document/create": {
+      "post": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Creates a new file the document management service along with metadata.",
+        "parameters": [
+          {
+            "name": "guidHash",
+            "in": "header",
+            "description": "The guidHash to associate with this file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentType",
+            "in": "query",
+            "description": "The document type to associate with this file.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The document is successfully uploaded and saved.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. The file and ticket number are required",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:update permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file upload from completing successfully."
+          }
+        }
+      }
+    },
+    "/api/document/get": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Downloads a document for the given unique file ID if the virus scan staus is clean.",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "description": "Unique identifier for a specific document.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document is successfully downloaded."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The file was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file to be downloaded successfully."
+          }
+        }
+      }
+    },
+    "/api/document/delete": {
+      "delete": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Removes the specified document for the given unique file ID.",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "description": "Unique identifier for a specific document.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document is successfully removed."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:delete permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file to be removed successfully."
           }
         }
       }
@@ -1261,6 +1520,44 @@
         },
         "additionalProperties": false
       },
+      "FileMetadata": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "noticeOfDisputeGuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "virusScanStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputeId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JJDisputeHearingType": {
         "enum": [
           "UNKNOWN",
@@ -1563,6 +1860,14 @@
           },
           "violation_ticket": {
             "$ref": "#/components/schemas/ViolationTicket"
+          },
+          "file_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMetadata"
+            },
+            "description": "List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute",
+            "nullable": true
           }
         },
         "additionalProperties": false,

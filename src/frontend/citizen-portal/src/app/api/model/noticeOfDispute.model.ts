@@ -12,6 +12,7 @@
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
+import { FileMetadata } from './fileMetadata.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
 import { ViolationTicket } from './violationTicket.model';
 import { DisputeCount } from './disputeCount.model';
@@ -204,5 +205,9 @@ export interface NoticeOfDispute {
      */
     detachment_location?: string | null;
     violation_ticket?: ViolationTicket;
+    /**
+     * List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute
+     */
+    file_data?: Array<FileMetadata> | null;
 }
 

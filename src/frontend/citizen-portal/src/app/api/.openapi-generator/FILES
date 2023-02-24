@@ -3,6 +3,7 @@ README.md
 api.module.ts
 api/api.ts
 api/disputes.service.ts
+api/document.service.ts
 api/lookup.service.ts
 api/tickets.service.ts
 configuration.ts
@@ -24,6 +25,7 @@ model/disputeRepresentedByLawyer.model.ts
 model/disputeRequestCourtAppearanceYn.model.ts
 model/disputeStatus.model.ts
 model/field.model.ts
+model/fileMetadata.model.ts
 model/jJDisputeHearingType.model.ts
 model/jJDisputeStatus.model.ts
 model/language.model.ts

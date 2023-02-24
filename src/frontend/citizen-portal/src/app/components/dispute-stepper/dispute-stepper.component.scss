@@ -90,6 +90,12 @@ hr {
   margin-bottom: 0.5rem;
 }
 
+.alert-upload {
+  background-color: #ededed !important;
+  border-left: 3px solid #003366;
+  border-radius: 0;
+}
+
 ::ng-deep .alert-info-text-color .alert-warning {
   color: rgb(255, 136, 0) !important;
   border-left: 2px solid rgb(255, 136, 0) !important;

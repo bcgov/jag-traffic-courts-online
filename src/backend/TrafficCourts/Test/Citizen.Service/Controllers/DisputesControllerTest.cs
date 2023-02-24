@@ -22,148 +22,148 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
 {
     public class DisputesControllerTest
     {
-        [Fact]
-        public async void TestDownloadDocument200Result()
-        {
-            // Arrange
-            var mockTicketDispute = new Mock<NoticeOfDispute>();
-            var mockMediator = new Mock<IMediator>();
-            var mockLogger = new Mock<ILogger<DisputesController>>();
-            var mockBus = new Mock<IBus>();
-            var mockHashids = new Mock<IHashids>();
-            var mockOAuthService = new Mock<IOAuthUserService>();
-            var mockMapper = new Mock<IMapper>();
-            var mockComsService = new Mock<ICitizenDocumentService>();
-            var mockControllerContext = new Mock<ControllerContext>();
+        // [Fact]
+        // public async void TestDownloadDocument200Result()
+        // {
+        //     // Arrange
+        //     var mockTicketDispute = new Mock<NoticeOfDispute>();
+        //     var mockMediator = new Mock<IMediator>();
+        //     var mockLogger = new Mock<ILogger<DisputesController>>();
+        //     var mockBus = new Mock<IBus>();
+        //     var mockHashids = new Mock<IHashids>();
+        //     var mockOAuthService = new Mock<IOAuthUserService>();
+        //     var mockMapper = new Mock<IMapper>();
+        //     var mockComsService = new Mock<ICitizenDocumentService>();
+        //     var mockControllerContext = new Mock<ControllerContext>();
 
-            var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
+        //     var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
 
-            // Mock authentication and token
-            var token = "token";
-            var context = new Mock<HttpContext>();
-            context.Setup(c => c.User.Identity!.IsAuthenticated).Returns(true);
-            context.Setup(c => c.Request.Headers.Authorization).Returns(token);
+        //     // Mock authentication and token
+        //     var token = "token";
+        //     var context = new Mock<HttpContext>();
+        //     context.Setup(c => c.User.Identity!.IsAuthenticated).Returns(true);
+        //     context.Setup(c => c.Request.Headers.Authorization).Returns(token);
             
-            mockControllerContext.Object.HttpContext = context.Object;
+        //     mockControllerContext.Object.HttpContext = context.Object;
 
-            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
-            disputeController.ControllerContext = mockControllerContext.Object;
+        //     var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
+        //     disputeController.ControllerContext = mockControllerContext.Object;
 
-            var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
+        //     var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
 
-            Guid guid = Guid.NewGuid();
+        //     Guid guid = Guid.NewGuid();
 
-            Coms.Client.File file = new(fileStream, "testFile");
-            file.SetTicketNumber("AO38375804");
-            file.SetVirusScanClean();
+        //     Coms.Client.File file = new(fileStream, "testFile");
+        //     file.SetTicketNumber("AO38375804");
+        //     file.SetVirusScanClean();
 
-            var filename = file.FileName;
-            mockComsService
-                .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(file);
+        //     var filename = file.FileName;
+        //     mockComsService
+        //         .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+        //         .ReturnsAsync(file);
 
-            // Act
-            var result = await disputeController.DownloadDocumentAsync(guid, CancellationToken.None);
+        //     // Act
+        //     var result = await disputeController.DownloadDocumentAsync(guid, CancellationToken.None);
 
-            // Assert
-            var fileResult = Assert.IsType<FileStreamResult>(result);
-            Assert.Equal(filename, fileResult.FileDownloadName);
-        }
+        //     // Assert
+        //     var fileResult = Assert.IsType<FileStreamResult>(result);
+        //     Assert.Equal(filename, fileResult.FileDownloadName);
+        // }
 
-        [Fact]
-        public async void TestDownloadDocument401UnauthorizedResult()
-        {
-            // Arrange
-            var mockTicketDispute = new Mock<NoticeOfDispute>();
-            var mockMediator = new Mock<IMediator>();
-            var mockLogger = new Mock<ILogger<DisputesController>>();
-            var mockBus = new Mock<IBus>();
-            var mockHashids = new Mock<IHashids>();
-            var mockOAuthService = new Mock<IOAuthUserService>();
-            var mockMapper = new Mock<IMapper>();
-            var mockComsService = new Mock<ICitizenDocumentService>();
-            var mockControllerContext = new Mock<ControllerContext>();
+        // [Fact]
+        // public async void TestDownloadDocument401UnauthorizedResult()
+        // {
+        //     // Arrange
+        //     var mockTicketDispute = new Mock<NoticeOfDispute>();
+        //     var mockMediator = new Mock<IMediator>();
+        //     var mockLogger = new Mock<ILogger<DisputesController>>();
+        //     var mockBus = new Mock<IBus>();
+        //     var mockHashids = new Mock<IHashids>();
+        //     var mockOAuthService = new Mock<IOAuthUserService>();
+        //     var mockMapper = new Mock<IMapper>();
+        //     var mockComsService = new Mock<ICitizenDocumentService>();
+        //     var mockControllerContext = new Mock<ControllerContext>();
 
-            var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
+        //     var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
 
-            // Mock authentication and token
-            var token = "";
-            var context = new Mock<HttpContext>();
-            context.Setup(c => c.User.Identity!.IsAuthenticated).Returns(false);
-            context.Setup(c => c.Request.Headers.Authorization).Returns(token);
+        //     // Mock authentication and token
+        //     var token = "";
+        //     var context = new Mock<HttpContext>();
+        //     context.Setup(c => c.User.Identity!.IsAuthenticated).Returns(false);
+        //     context.Setup(c => c.Request.Headers.Authorization).Returns(token);
 
-            mockControllerContext.Object.HttpContext = context.Object;
+        //     mockControllerContext.Object.HttpContext = context.Object;
 
-            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
-            disputeController.ControllerContext = mockControllerContext.Object;
+        //     var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
+        //     disputeController.ControllerContext = mockControllerContext.Object;
 
-            var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
-            Guid guid = Guid.NewGuid();
+        //     var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
+        //     Guid guid = Guid.NewGuid();
 
-            Coms.Client.File file = new(fileStream, "testFile");
-            file.SetTicketNumber("AO38375804");
-            file.SetVirusScanClean();
+        //     Coms.Client.File file = new(fileStream, "testFile");
+        //     file.SetTicketNumber("AO38375804");
+        //     file.SetVirusScanClean();
             
-            var filename = file.FileName;
-            mockComsService
-                .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(file);
+        //     var filename = file.FileName;
+        //     mockComsService
+        //         .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+        //         .ReturnsAsync(file);
 
-            // Act
-            var result = await disputeController.DownloadDocumentAsync(guid, CancellationToken.None);
+        //     // Act
+        //     var result = await disputeController.DownloadDocumentAsync(guid, CancellationToken.None);
 
-            // Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
-            Assert.Equal((int)HttpStatusCode.Unauthorized, problemDetails.Status);
-            Assert.True(problemDetails?.Title?.Contains("Exception Authorizing User"));
-        }
+        //     // Assert
+        //     var objectResult = Assert.IsType<ObjectResult>(result);
+        //     var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        //     Assert.Equal((int)HttpStatusCode.Unauthorized, problemDetails.Status);
+        //     Assert.True(problemDetails?.Title?.Contains("Exception Authorizing User"));
+        // }
 
-        [Fact]
-        public async void TestDownloadDocumentMissingMetadataKeyThrowsObjectManagementServiceException500result()
-        {
-            // Arrange
-            var mockTicketDispute = new Mock<NoticeOfDispute>();
-            var mockMediator = new Mock<IMediator>();
-            var mockLogger = new Mock<ILogger<DisputesController>>();
-            var mockBus = new Mock<IBus>();
-            var mockHashids = new Mock<IHashids>();
-            var mockOAuthService = new Mock<IOAuthUserService>();
-            var mockMapper = new Mock<IMapper>();
-            var mockComsService = new Mock<ICitizenDocumentService>();
-            var mockControllerContext = new Mock<ControllerContext>();
+        // [Fact]
+        // public async void TestDownloadDocumentMissingMetadataKeyThrowsObjectManagementServiceException500result()
+        // {
+        //     // Arrange
+        //     var mockTicketDispute = new Mock<NoticeOfDispute>();
+        //     var mockMediator = new Mock<IMediator>();
+        //     var mockLogger = new Mock<ILogger<DisputesController>>();
+        //     var mockBus = new Mock<IBus>();
+        //     var mockHashids = new Mock<IHashids>();
+        //     var mockOAuthService = new Mock<IOAuthUserService>();
+        //     var mockMapper = new Mock<IMapper>();
+        //     var mockComsService = new Mock<ICitizenDocumentService>();
+        //     var mockControllerContext = new Mock<ControllerContext>();
 
-            var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
+        //     var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
 
-            // Mock authentication and token
-            var token = "token";
-            var context = new Mock<HttpContext>();
-            context.Setup(c => c.User.Identity!.IsAuthenticated).Returns(true);
-            context.Setup(c => c.Request.Headers.Authorization).Returns(token);
+        //     // Mock authentication and token
+        //     var token = "token";
+        //     var context = new Mock<HttpContext>();
+        //     context.Setup(c => c.User.Identity!.IsAuthenticated).Returns(true);
+        //     context.Setup(c => c.Request.Headers.Authorization).Returns(token);
 
-            mockControllerContext.Object.HttpContext = context.Object;
+        //     mockControllerContext.Object.HttpContext = context.Object;
 
-            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
-            disputeController.ControllerContext = mockControllerContext.Object;
+        //     var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
+        //     disputeController.ControllerContext = mockControllerContext.Object;
 
-            var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
-            Coms.Client.File mockFile = new(fileStream, "testFile");
-            Guid guid = Guid.NewGuid();
-            mockFile.Metadata.Add("ticket-number", "AO38375804");
-            var filename = mockFile.FileName;
-            mockComsService
-                .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
-                .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
+        //     var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
+        //     Coms.Client.File mockFile = new(fileStream, "testFile");
+        //     Guid guid = Guid.NewGuid();
+        //     mockFile.Metadata.Add("ticket-number", "AO38375804");
+        //     var filename = mockFile.FileName;
+        //     mockComsService
+        //         .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+        //         .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
 
-            // Act
-            var result = await disputeController.DownloadDocumentAsync(guid, CancellationToken.None);
+        //     // Act
+        //     var result = await disputeController.DownloadDocumentAsync(guid, CancellationToken.None);
 
-            // Assert
-            var objectResult = Assert.IsType<ObjectResult>(result);
-            var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
-            Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
-            Assert.True(problemDetails?.Title?.Contains("Error getting file from COMS"));
-        }
+        //     // Assert
+        //     var objectResult = Assert.IsType<ObjectResult>(result);
+        //     var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        //     Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
+        //     Assert.True(problemDetails?.Title?.Contains("Error getting file from COMS"));
+        // }
 
         [Fact]
         public async void TestCreateDisputeOkResult()

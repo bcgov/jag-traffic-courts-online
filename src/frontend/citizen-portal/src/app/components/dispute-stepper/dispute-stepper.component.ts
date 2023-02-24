@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy, Input, Output, EventEmitter } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy, Input, Output, EventEmitter, ElementRef } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { MatCheckboxChange } from "@angular/material/checkbox";
@@ -12,11 +12,14 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn } from "app/api";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, FileMetadata } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
+import { Observable } from "rxjs";
+import { DisputeStore } from "app/store";
+import { Store } from "@ngrx/store";
 
 @Component({
   selector: "app-dispute-stepper",
@@ -28,14 +31,17 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   @Input() ticket: ViolationTicket | NoticeOfDispute;
   @Input() ticketCounts: ViolationTicketCount[] = [];
   @Input() disputeCounts: DisputeCount[] = [];
+  @Input() fileData$: Observable<FileMetadata[]>;
   @Input() ticketType: string;
   @Input() mode: DisputeFormMode;
   @Output() saveDispute: EventEmitter<NoticeOfDispute> = new EventEmitter();
 
   @ViewChild(MatStepper) private stepper: MatStepper;
+  @ViewChild("fileInput") private fileInput: ElementRef;
 
   previousButtonIcon = "keyboard_arrow_left";
   defaultLanguage: string;
+  disputeFormMode = DisputeFormMode;
   ticketTypes = TicketTypes;
   Plea = DisputeCountPleaCode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
@@ -52,7 +58,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   matcher = new FormErrorStateMatcher();
 
   // TODO: use ViewChild to detect instead of hardcode
-  countIndex: number = 1;
+  countStepIndex: number = 1;
 
   // Additional
   countsActions: CountsActions;
@@ -76,7 +82,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     private translateService: TranslateService,
     private toastService: ToastService,
     private config: ConfigService,
-    private lookups: LookupsService
+    private store: Store,
+    private lookups: LookupsService,
   ) {
     // config or static
     this.defaultLanguage = this.translateService.getDefaultLang();
@@ -134,7 +141,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   onStepSave(): void {
     let isValid = this.formUtilsService.checkValidity(this.form);
 
-    if (this.stepper.selectedIndex === this.countIndex) {
+    if (this.stepper.selectedIndex === this.countStepIndex) {
       this.counts.forEach(count => {
         let countForm = count.form;
         if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
@@ -165,20 +172,20 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
     this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
 
-    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N &&  this.countsActions.request_reduction.length > 0) {
+    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_reduction.length > 0) {
       this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required]);
     }
-    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N &&  this.countsActions.request_time_to_pay.length > 0) {
+    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_time_to_pay.length > 0) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
     }
   }
 
   isCountFormsValid(): boolean {
-    if (this.stepper?.selectedIndex < this.countIndex) {
+    if (this.stepper?.selectedIndex < this.countStepIndex) {
       return false;
     }
 
-    let allCountsValid: boolean = true;
+    let allCountsValid: boolean = this.requestCourtAppearanceFormControl.valid;
     this.counts.forEach(count => {
       let countForm = count.form;
       if (countForm) {
@@ -195,7 +202,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   isAdditionalFormValid(): boolean {
-    var result = true;
+    var result = this.stepper?.selectedIndex > this.countStepIndex;
     if (this.additionalForm?.value.represented_by_lawyer === this.RepresentedByLawyer.Y && !this.legalRepresentationForm?.valid) {
       result = false;
     }
@@ -244,6 +251,33 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       };
       this.dialog.open(ConfirmDialogComponent, { data });
     }
+  }
+
+  onRemoveFile(file: FileMetadata) {
+    const data: DialogOptions = {
+      titleKey: "Remove File?",
+      messageKey: "Are you sure you want to delete file " + file.fileName + "?",
+      actionTextKey: "Delete",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "delete"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.store.dispatch(DisputeStore.Actions.RemoveDocument({ file }));
+        }
+      });
+  }
+
+  onGetFile(fileId: string) {
+    this.store.dispatch(DisputeStore.Actions.GetDocument({ fileId }));
+  }
+
+  onUploadFile(files: FileList) {
+    if (files.length <= 0) return;
+    this.store.dispatch(DisputeStore.Actions.AddDocument({ file: files[0] }));
+    this.fileInput.nativeElement.value = null;
   }
 
   submitDispute() {
