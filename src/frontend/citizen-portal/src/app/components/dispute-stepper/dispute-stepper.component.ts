@@ -202,7 +202,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   isAdditionalFormValid(): boolean {
-    var result = this.stepper.selectedIndex > this.countStepIndex;
+    var result = this.stepper?.selectedIndex > this.countStepIndex;
     if (this.additionalForm?.value.represented_by_lawyer === this.RepresentedByLawyer.Y && !this.legalRepresentationForm?.valid) {
       result = false;
     }
