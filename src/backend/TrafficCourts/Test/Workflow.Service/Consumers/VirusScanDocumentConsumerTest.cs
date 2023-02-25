@@ -27,8 +27,6 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Arrange
         var file = CreateFile();
-        //file.Metadata[FileProperty.VirusScanStatus] = Guid.NewGuid().ToString("n");
-        //file.Metadata[FileProperty.VirusName] = Guid.NewGuid().ToString("n");
 
         comsService
             .SetupGetFileWithAnyParameters()
@@ -49,8 +47,6 @@ public class ScanUploadedDocumentForVirusesConsumerTest
         
         // Assert
         Assert.True(consumed);
-        //Assert.True(file.VirusScanIsClean());
-        //Assert.False(file.Metadata.ContainsKey(FileProperty.VirusName));
 
         comsService.VerifyGetFile(file.Id!.Value);
 
@@ -88,8 +84,6 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Assert
         Assert.True(consumed);
-        //Assert.True(file.VirusScanIsInfected());
-        //Assert.Equal("cryptolocker", file.GetVirusScanStatus());
 
         comsService.VerifyGetFile(file.Id!.Value);
 
@@ -125,7 +119,6 @@ public class ScanUploadedDocumentForVirusesConsumerTest
 
         // Assert
         Assert.True(consumed);
-        //Assert.True(file.VirusScanIsError());
 
         comsService.VerifyGetFile(file.Id!.Value);
 
