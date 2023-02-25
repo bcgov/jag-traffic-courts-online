@@ -189,7 +189,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   onAssign(element: JJDispute): void {
-    this.bulkUpdateJJAssignedTo([element.ticketNumber], element.jjAssignedTo);
+    this.bulkUpdateJJAssignedTo([element.id], element.jjAssignedTo);
   }
 
   onSelectAll(event: MatCheckboxChange) {
@@ -200,9 +200,9 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  bulkUpdateJJAssignedTo(ticketNumbers: string[], assignTo: string) {
+  bulkUpdateJJAssignedTo(disputeIds: number[], assignTo: string) {
     assignTo = !assignTo || assignTo === this.valueOfUnassigned ? null : assignTo;
-    this.busy = this.jjDisputeService.apiJjAssignPut(ticketNumbers, assignTo).subscribe((response) => {
+    this.busy = this.jjDisputeService.apiJjAssignPut(disputeIds, assignTo).subscribe((response) => {
       this.logger.info(
         'JJDisputeWRAssignmentsComponent::onBulkAssign response',
         response

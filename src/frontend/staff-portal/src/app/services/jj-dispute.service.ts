@@ -98,12 +98,12 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-  public putJJDispute(ticketNumber: string, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
+  public putJJDispute(ticketNumber: string, disputeId: number, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
     let input = cloneDeep(jjDispute);
     if (remarks) {
       this.addRemarks(input, remarks);
     }
-    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, checkVTC, input)
+    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, disputeId, checkVTC, input)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::putJJDispute', response)
@@ -128,8 +128,8 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-  public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
+  public apiJjRequireCourtHearingPut(ticketNumber: string, disputeId: number, remarks?: string): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, disputeId, remarks)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjRequireCourtHearingPut', response)
@@ -149,8 +149,8 @@ export class JJDisputeService {
       );
   }
 
-  public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC: boolean, remarks?: string): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberReviewPut(ticketNumber, checkVTC, remarks)
+  public apiJjDisputeIdReviewPut(disputeId: number, checkVTC: boolean, remarks?: string): Observable<any> {
+    return this.jjApiService.apiJjJjDisputeIdReviewPut(disputeId, checkVTC, remarks)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberReviewPut', response)
@@ -170,8 +170,8 @@ export class JJDisputeService {
       );
   }
 
-  public apiJjAssignPut(ticketNumbers: Array<string>, username: string): Observable<any> {
-    return this.jjApiService.apiJjAssignPut(ticketNumbers, username)
+  public apiJjAssignPut(disputeIds: Array<number>, username: string): Observable<any> {
+    return this.jjApiService.apiJjAssignPut(disputeIds, username)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjAssignPut', response)
@@ -191,8 +191,8 @@ export class JJDisputeService {
       );
   }
 
-  public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC: boolean): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberAcceptPut(ticketNumber, checkVTC)
+  public apiJjTicketNumberAcceptPut(ticketNumber: string, disputeId: number, checkVTC: boolean): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberAcceptPut(ticketNumber, disputeId, checkVTC)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberAcceptPut', response)
@@ -213,8 +213,8 @@ export class JJDisputeService {
   }
 
 
-  public apiJjTicketNumberConfirmPut(ticketNumber: string): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber)
+  public apiJjTicketNumberConfirmPut(disputeId: number): Observable<any> {
+    return this.jjApiService.apiJjJjDisputeIdUpdatecourtappearanceConfirmPut(disputeId)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberConfirmPut', response)
@@ -254,8 +254,8 @@ export class JJDisputeService {
    *
    * @param disputeId
    */
-  public getJJDispute(disputeId: string, assignVTC: boolean): Observable<JJDispute> {
-    return this.jjApiService.apiJjJJDisputeIdGet(disputeId, assignVTC)
+  public getJJDispute(disputeId: number, assignVTC: boolean): Observable<JJDispute> {
+    return this.jjApiService.apiJjJjDisputeIdGet(disputeId, assignVTC)
       .pipe(
         map((response: JJDispute) => {
           this.logger.info('jj-DisputeService::getJJDispute', response)

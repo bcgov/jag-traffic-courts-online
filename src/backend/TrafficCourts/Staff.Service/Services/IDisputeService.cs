@@ -45,6 +45,7 @@ public interface IDisputeService
 
     /// <summary>Updates the status of a particular Dispute record to CANCELLED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -52,6 +53,7 @@ public interface IDisputeService
 
     /// <summary>Updates the status of a particular Dispute record to REJECTED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
+    /// <param name="user"></param>
     /// <param name="rejectedReason">The reason or note (max 256 characters) for the rejection.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
@@ -60,6 +62,7 @@ public interface IDisputeService
 
     /// <summary>Submits a Dispute, setting it's status to PROCESSING.</summary>
     /// <param name="id">Unique identifier of a Dispute record to submit.</param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>

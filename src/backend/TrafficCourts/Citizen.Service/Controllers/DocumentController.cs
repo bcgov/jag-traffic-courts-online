@@ -22,15 +22,10 @@ public class DocumentController : ControllerBase
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="bus"></param>
-    /// <param name="mediator"></param>
     /// <param name="logger"></param>
     /// <param name="hashids"></param>
-    /// <param name="tokenEncoder"></param>
-    /// <param name="oAuthUserService"></param>
-    /// <param name="mapper"></param>
     /// <param name="documentService"></param>
-    /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="logger"/> is null.</exception>
     public DocumentController(ILogger<DisputesController> logger, IHashids hashids, ICitizenDocumentService documentService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

@@ -199,13 +199,6 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
-    //private string GetUserName()
-    //{
-    //    HttpContext? httpContext = _httpContextAccessor.HttpContext;
-    //    string? username = httpContext?.User.Identity?.Name;
-    //    return username ?? string.Empty;
-    //}
-
     private static string GetUserName(ClaimsPrincipal user)
     {
         return user?.Identity?.Name ?? string.Empty;

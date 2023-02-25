@@ -1367,19 +1367,22 @@
         "summary": "Creates a new file the document management service along with metadata.",
         "parameters": [
           {
-            "name": "ticketNumber",
+            "name": "disputeId",
             "in": "header",
-            "description": "The ticket number to associate with this file.",
+            "description": "The TCO dispute id to associate document with.",
             "required": true,
             "schema": {
-              "maxLength": 20,
-              "type": "string"
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
             "name": "documentType",
-            "in": "query",
+            "in": "header",
             "description": "The document type to associate with this file.",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -1930,7 +1933,7 @@
         }
       }
     },
-    "/api/jj/{JJDisputeId}": {
+    "/api/jj/{jjDisputeId}": {
       "get": {
         "tags": [
           "JJ"
@@ -1938,12 +1941,13 @@
         "summary": "Returns a single JJ Dispute with the given identifier from the Oracle Data API.",
         "parameters": [
           {
-            "name": "JJDisputeId",
+            "name": "jjDisputeId",
             "in": "path",
             "description": "Unique identifier for a specific JJ dispute record.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -2090,12 +2094,12 @@
         "summary": "Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.",
         "parameters": [
           {
-            "name": "ticketNumber",
-            "in": "path",
+            "name": "jjDisputeId",
+            "in": "query",
             "description": "Unique identifier for a specific JJ Dispute record.",
-            "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -2104,6 +2108,14 @@
             "description": "boolean to indicate need to check VTC assigned.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2269,7 +2281,8 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "integer",
+                "format": "int64"
               }
             }
           },
@@ -2392,7 +2405,7 @@
         }
       }
     },
-    "/api/jj/{ticketNumber}/review": {
+    "/api/jj/{jjDisputeId}/review": {
       "put": {
         "tags": [
           "JJ"
@@ -2400,12 +2413,13 @@
         "summary": "Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.",
         "parameters": [
           {
-            "name": "ticketNumber",
+            "name": "jjDisputeId",
             "in": "path",
             "description": "Unique identifier for a specific JJ Dispute record.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -2576,9 +2590,17 @@
         "summary": "Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE as well as adds an optional remark that explaining why the status was set.",
         "parameters": [
           {
+            "name": "jjDisputeId",
+            "in": "query",
+            "description": "Unique identifier for a specific JJ Dispute record.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
             "name": "ticketNumber",
             "in": "path",
-            "description": "Unique identifier for a specific JJ Dispute record.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2744,12 +2766,12 @@
         "summary": "Updates the status of a particular JJDispute record to ACCEPTED.",
         "parameters": [
           {
-            "name": "ticketNumber",
-            "in": "path",
+            "name": "jjDisputeId",
+            "in": "query",
             "description": "Unique identifier for a specific JJ Dispute record.",
-            "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -2758,6 +2780,14 @@
             "description": "boolean to indicate need to check VTC assigned.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2899,9 +2929,17 @@
         "summary": "Updates court appearance record as well as the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE.",
         "parameters": [
           {
+            "name": "jjDisputeId",
+            "in": "query",
+            "description": "Unique identifier for a specific JJ Dispute record.",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
             "name": "ticketNumber",
             "in": "path",
-            "description": "Unique identifier for a specific JJ Dispute record.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3038,7 +3076,7 @@
         }
       }
     },
-    "/api/jj/{ticketNumber}/updatecourtappearance/confirm": {
+    "/api/jj/{jjDisputeId}/updatecourtappearance/confirm": {
       "put": {
         "tags": [
           "JJ"
@@ -3046,12 +3084,13 @@
         "summary": "Updates court appearance record as well as the status of a particular JJDispute record to CONFIRMED.",
         "parameters": [
           {
-            "name": "ticketNumber",
+            "name": "jjDisputeId",
             "in": "path",
             "description": "Unique identifier for a specific JJ Dispute record.",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -4344,7 +4383,8 @@
             "nullable": true
           },
           "disputeId": {
-            "type": "string",
+            "type": "integer",
+            "format": "int64",
             "nullable": true
           }
         },
