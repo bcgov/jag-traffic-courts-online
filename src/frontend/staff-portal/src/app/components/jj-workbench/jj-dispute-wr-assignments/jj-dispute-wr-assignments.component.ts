@@ -194,9 +194,9 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   onSelectAll(event: MatCheckboxChange) {
     if (event.checked) {
-      this.dataSource.data.forEach(x => x.bulkAssign);
+      this.dataSource.data.forEach(x => x.bulkAssign = true);
     } else {
-      this.dataSource.data.forEach(x => !x.bulkAssign);
+      this.dataSource.data.forEach(x => x.bulkAssign = false);
     }
   }
 
