@@ -26,7 +26,7 @@ export class JJDisputeEffects {
 
   assignJJDisputes$ = createEffect(() => this.actions$.pipe(
     ofType(Actions.Assign),
-    mergeMap(action => this.jjDisputeService.apiJjAssignPut(action.disputeIds, action.username)
+    mergeMap(action => this.jjDisputeService.apiJjAssignPut(action.ticketNumbers, action.username)
       .pipe(
         map(() => {
           this.store.dispatch(Actions.Get());

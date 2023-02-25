@@ -13,7 +13,7 @@ export const GetSuccess = createAction(
 
 export const Assign = createAction(
   ActionTypes.ASSIGN,
-  props<{ disputeIds: number[], username: string }>()
+  props<{ ticketNumbers: string[], username: string }>()
 );
 
 export const AssignSuccess = createAction(

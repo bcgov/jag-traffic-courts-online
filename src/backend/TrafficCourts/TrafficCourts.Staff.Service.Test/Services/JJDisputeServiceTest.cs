@@ -32,7 +32,7 @@ public class JJDisputeServiceTest
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
 
         // Assert/Act
-        Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.Id, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class JJDisputeServiceTest
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
 
         // Assert/Act
-        Assert.ThrowsAsync<ArgumentException>(() => jJDisputeService.GetPartIdAsync(dispute.Id, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class JJDisputeServiceTest
         _keycloakService.Setup(_ => _.UsersByIdirAsync(dispute.JjAssignedTo, CancellationToken.None)).ReturnsAsync(_userReps.Object);
 
         // Assert/Act
-        Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.Id, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
     }
 
     [Fact]
@@ -99,12 +99,12 @@ public class JJDisputeServiceTest
         _userReps.Add(_userRep.Object);
         _expectedPartIds.Add("1234.5678");
 
-        _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.Id.ToString(), It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
+        _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
         _keycloakService.Setup(_ => _.UsersByIdirAsync(dispute.JjAssignedTo, CancellationToken.None)).ReturnsAsync(_userReps);
         _keycloakService.Setup(_ => _.TryGetPartIds(_userRep.Object)).Returns(_expectedPartIds);
 
         // Act
-        string _actualPartId = await jJDisputeService.GetPartIdAsync(dispute.Id, CancellationToken.None);
+        string _actualPartId = await jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None);
 
         // Assert
         var expectedPartId = Assert.Single(_expectedPartIds);

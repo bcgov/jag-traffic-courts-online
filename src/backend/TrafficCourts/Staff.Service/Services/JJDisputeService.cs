@@ -34,9 +34,9 @@ public class JJDisputeService : IJJDisputeService
         return await _oracleDataApi.GetJJDisputesAsync(jjAssignedTo, null, cancellationToken);
     }
 
-    public async Task<JJDispute> GetJJDisputeAsync(long disputeId, bool assignVTC, CancellationToken cancellationToken)
+    public async Task<JJDispute> GetJJDisputeAsync(long disputeId, string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(disputeId.ToString(), assignVTC, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
 
         // Search by dispute id
         DocumentProperties properties = new() { TcoDisputeId = disputeId };
@@ -57,9 +57,9 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
-    public async Task<JJDispute> SubmitAdminResolutionAsync(long jjDisputeId, bool checkVTC, JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<JJDispute> SubmitAdminResolutionAsync(long disputeId, bool checkVTC, JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(jjDisputeId.ToString(), checkVTC, jjDispute, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(jjDispute.TicketNumber, checkVTC, jjDispute, cancellationToken);
 
         if (dispute.Status == JJDisputeStatus.IN_PROGRESS)
         {
@@ -81,14 +81,14 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
-    public async Task AssignJJDisputesToJJ(List<long> jjDisputeIds, string? username, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
-        await _oracleDataApi.AssignJJDisputesToJJAsync(jjDisputeIds.Select(_ => _.ToString()), username, cancellationToken);
+        await _oracleDataApi.AssignJJDisputesToJJAsync(ticketNumbers, username, cancellationToken);
 
         // Publish file history
-        foreach (long jjDisputeId in jjDisputeIds)
+        foreach (string ticketNumber in ticketNumbers)
         {
-            JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(jjDisputeId.ToString(), false, cancellationToken);
+            JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
 
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 dispute.OccamDisputeId,
@@ -98,9 +98,9 @@ public class JJDisputeService : IJJDisputeService
         }
     }
 
-    public async Task<JJDispute> ReviewJJDisputeAsync(long jjDisputeId, string remark, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(jjDisputeId.ToString(), checkVTC, remark, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, remark, cancellationToken);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
@@ -110,11 +110,11 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
-    public async Task<JJDispute> RequireCourtHearingJJDisputeAsync(long jjDisputeId, string? remark, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string? remark, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         try
         {
-            JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(jjDisputeId.ToString(), remark, cancellationToken);
+            JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
 
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 dispute.OccamDisputeId,
@@ -131,12 +131,12 @@ public class JJDisputeService : IJJDisputeService
 
     }
 
-    public async Task<JJDispute> AcceptJJDisputeAsync(long jjDisputeId, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // Get PartId from Keycloak
-        string partId = await GetPartIdAsync(jjDisputeId, cancellationToken);
+        string partId = await GetPartIdAsync(ticketNumber, cancellationToken);
 
-        JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(jjDisputeId.ToString(), checkVTC, partId, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
@@ -149,23 +149,19 @@ public class JJDisputeService : IJJDisputeService
     /// <summary>
     /// Attempts to retrieve a PartId from Keycloak via the JJDispute's jjAssignedTo IDIR field
     /// </summary>
-    /// <param name="jjDisputeId">JJDispute to retrieve (to reference jjAssignedTo)</param>
+    /// <param name="ticketNumber">JJDispute to retrieve (to reference jjAssignedTo)</param>
     /// <param name="cancellationToken">pass through param</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException">If jjAssignedTo or the PartId in Keycloak is null</exception>
-    public async Task<string> GetPartIdAsync(long jjDisputeId, CancellationToken cancellationToken)
+    public async Task<string> GetPartIdAsync(string ticketNumber, CancellationToken cancellationToken)
     {
         // TCVP-2124
         //  - lookup JJDispute from TCO ORDS
         //  - using jjDispute.jjAssignedTo, lookup partId from keycloakApi
         //  - throw error if either jjAssignedTo or partId is null
         //  - pass partId to _oracleDataApi.AcceptJJDisputeAsync()
-        JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(jjDisputeId.ToString(), false, cancellationToken);
+        JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
         string idirUsername = jjDispute.JjAssignedTo ?? throw new ArgumentNullException("JJDispute is not assigned. Failed to lookup partId.");
-        if (!JJDisputeHearingType.WRITTEN_REASONS.Equals(jjDispute.HearingType))
-        {
-            throw new ArgumentException("JJDispute's HearingType is not WRITTEN_REASONS.");
-        }
 
         ICollection<UserRepresentation> userRepresentations = await _keycloakService.UsersByIdirAsync(idirUsername, cancellationToken);
         if (userRepresentations is not null)
@@ -187,9 +183,9 @@ public class JJDisputeService : IJJDisputeService
         throw new ArgumentNullException("Failed to lookup partId.");
     }
 
-    public async Task<JJDispute> ConfirmJJDisputeAsync(long jjDisputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<JJDispute> ConfirmJJDisputeAsync(string ticketNumber, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.ConfirmJJDisputeAsync(jjDisputeId.ToString(), cancellationToken);
+        JJDispute dispute = await _oracleDataApi.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,

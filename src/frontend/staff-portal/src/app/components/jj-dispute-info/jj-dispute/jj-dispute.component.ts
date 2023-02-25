@@ -171,7 +171,7 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.id).subscribe(response => {
+          this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
             this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
             this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;
             this.putJJDispute();
@@ -241,7 +241,7 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.type === "ticket").subscribe(response => {
+          this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket").subscribe(response => {
             this.lastUpdatedJJDispute.status = this.DisputeStatus.Accepted;
             this.onBackClicked();
           });
@@ -264,8 +264,8 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action?.output?.response) {
           this.remarks = action.output.response;
-          this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.id, this.type === "ticket", this.remarks).subscribe(() => {
-            this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.id], this.selectedJJ).subscribe(response => {
+          this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
+            this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
               this.lastUpdatedJJDispute.status = this.DisputeStatus.Review;
               this.jjDisputeService.refreshDisputes.emit();
               this.onBackClicked();
@@ -305,7 +305,7 @@ export class JJDisputeComponent implements OnInit {
   getJJDispute(): void {
     this.logger.log('JJDisputeComponent::getJJDispute');
 
-    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.id, this.type === "ticket").subscribe(response => {
+    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.id, this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
       this.retrieving = false;
       this.logger.info(
         'JJDisputeComponent::getJJDispute response',
