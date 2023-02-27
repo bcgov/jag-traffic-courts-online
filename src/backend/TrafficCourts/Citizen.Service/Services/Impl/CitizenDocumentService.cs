@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using TrafficCourts.Citizen.Service.Models;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -31,7 +32,7 @@ public class CitizenDocumentService : ICitizenDocumentService
 
     public async Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Deleting the file through COMS");
+        _logger.LogDebug("Deleting the file {FileId} through COMS", fileId);
 
         // find the file so we can get the ticket number and notice of dispute id
         FileSearchParameters searchParameters = new(fileId);
@@ -45,8 +46,9 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         FileSearchResult file = searchResults[0];
 
-        file.Metadata.TryGetValue("notice-of-dispute-id", out string? noticeOfDisputeId);
-        if (string.IsNullOrEmpty(noticeOfDisputeId))
+        DocumentProperties properties = new DocumentProperties(file.Metadata, file.Tags);
+
+        if (properties.NoticeOfDisputeId is null)
         {
             _logger.LogDebug("notice-of-dispute-id value from metadata is empty. Cannot delete the file since it was not uploaded by a disputant");
             return;
@@ -55,36 +57,43 @@ public class CitizenDocumentService : ICitizenDocumentService
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
         // Save file delete event to file history
-        SaveFileHistoryRecord fileHistoryRecord = new();
-        fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
-        fileHistoryRecord.ActionByApplicationUser = "Disputant";
-        // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
-        // since the original description: "File was deleted by Disputant." is missing from the database.
-        // When the description is added to the databse change this
-        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL;
+        SaveFileHistoryRecord fileHistoryRecord = new()
+        {
+            NoticeOfDisputeId = properties.NoticeOfDisputeId.Value.ToString("d"), // dashes
+            ActionByApplicationUser = "Disputant",
+            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
+            // since the original description: "File was deleted by Disputant." is missing from the database.
+            // When the description is added to the databse change this
+            AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL
+        };
+
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
     public async Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Getting the file through COMS");
+        _logger.LogDebug("Getting the file {FileId} through COMS", fileId);
 
         Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        if (!file.VirusScanIsClean())
-        {
-            var scanStatus = file.GetVirusScanStatus();
+        var properties = new DocumentProperties(file.Metadata, file.Tags);
 
-            _logger.LogDebug("Trying to download unscanned or virus detected file");
+        if (!properties.VirusScanIsClean)
+        {
+            string scanStatus = properties.VirusScanStatus;
+            _logger.LogDebug("Trying to download unscanned or virus detected file {FileId}", fileId);
             throw new ObjectManagementServiceException($"File could not be downloaded due to virus scan status. Virus scan status of the file is {scanStatus}");
         }
 
         return file;
     }
 
-    public async Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
+    public async Task<List<FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
+
+        var metadata = properties.ToMetadata();
+        var tags = properties.ToTags();
 
         FileSearchParameters searchParameters = new(null, metadata, tags);
 
@@ -94,14 +103,16 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         foreach (var result in searchResult)
         {
+            properties = new DocumentProperties(result.Metadata, result.Tags);
+
             FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
                 FileName = result.FileName,
-                DocumentType = GetProperty("document-type", result.Tags),
-                NoticeOfDisputeGuid = GetProperty("notice-of-dispute-id", result.Tags),
-                VirusScanStatus = GetProperty("virus-scan-status", result.Metadata),
-                DocumentStatus = GetProperty("document-status", result.Tags),
+                DocumentType = properties.DocumentType,
+                NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
+                VirusScanStatus = properties.VirusScanStatus,
+                DocumentStatus = properties.StaffReviewStatus,
             };
 
             fileData.Add(fileMetadata);
@@ -110,46 +121,39 @@ public class CitizenDocumentService : ICitizenDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
-        metadata.Add("document-status", "pending");
+        properties.DocumentSource = DocumentSource.Citizen;
+        properties.StaffReviewStatus = "pending";
 
-        using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
+        var metadata = properties.ToMetadata();
+        var tags = properties.ToTags();
+
+        using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, tags);
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
         // Publish a message to virus scan the newly uploaded file
-        DocumentUploaded virusScan = new()
-        {
-            Id = id
-        };
-        await _bus.PublishWithLog(_logger, virusScan, cancellationToken);
+        await _bus.PublishWithLog(_logger, new DocumentUploaded { Id = id }, cancellationToken);
 
-        metadata.TryGetValue("ticket-number", out string? ticketNumber);
-        if (string.IsNullOrEmpty(ticketNumber))
-        {
-            ticketNumber = "unknown";
-            _logger.LogDebug("ticket-number value from metadata is empty");
-        }
-
-        metadata.TryGetValue("notice-of-dispute-id", out string? noticeOfDisputeId);
-        if (string.IsNullOrEmpty(noticeOfDisputeId))
+        if (properties.NoticeOfDisputeId is null)
         {
             _logger.LogDebug("notice-of-dispute-id value from metadata is empty. Could not save document upload event to File History");
-        }
-
-        if (!string.IsNullOrEmpty(noticeOfDisputeId))
+        } 
+        else
         {
             // Save file upload event to file history
-            SaveFileHistoryRecord fileHistoryRecord = new();
-            fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
-            fileHistoryRecord.ActionByApplicationUser = "Disputant";
-            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
-            // since the original description: "File was uploaded by Disputant." is missing from the database.
-            // When the description is added to the databse change this
-            fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL;
+            SaveFileHistoryRecord fileHistoryRecord = new()
+            {
+                NoticeOfDisputeId = properties.NoticeOfDisputeId.Value.ToString("d"),
+                ActionByApplicationUser = "Disputant",
+                // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
+                // since the original description: "File was uploaded by Disputant." is missing from the database.
+                // When the description is added to the databse change this
+                AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL
+            };
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
 
@@ -167,20 +171,5 @@ public class CitizenDocumentService : ICitizenDocumentService
         memoryStream.Position = 0;
 
         return memoryStream;
-    }
-
-    private static string? GetProperty(string name, Dictionary<string, string> properties)
-    {
-        ArgumentNullException.ThrowIfNull(name);
-        ArgumentNullException.ThrowIfNull(properties);
-
-        properties.TryGetValue(name, out string? value);
-
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            value = null;
-        }
-
-        return value;
     }
 }

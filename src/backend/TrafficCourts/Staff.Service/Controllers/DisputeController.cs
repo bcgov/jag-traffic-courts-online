@@ -208,7 +208,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            await _disputeService.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
+            await _disputeService.RejectDisputeAsync(disputeId, rejectedReason, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -265,7 +265,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            await _disputeService.ValidateDisputeAsync(disputeId, cancellationToken);
+            await _disputeService.ValidateDisputeAsync(disputeId, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -322,7 +322,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            await _disputeService.CancelDisputeAsync(disputeId, cancellationToken);
+            await _disputeService.CancelDisputeAsync(disputeId, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -432,7 +432,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            await _disputeService.SubmitDisputeAsync(disputeId, cancellationToken);
+            await _disputeService.SubmitDisputeAsync(disputeId, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)

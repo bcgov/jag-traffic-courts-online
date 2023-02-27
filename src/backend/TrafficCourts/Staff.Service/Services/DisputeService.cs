@@ -7,6 +7,7 @@ using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Staff.Service.Models;
 using System.Collections.ObjectModel;
+using System.Security.Claims;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -21,8 +22,6 @@ public class DisputeService : IDisputeService
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public const string UsernameClaimType = "preferred_username";
 
     public DisputeService(
         IOracleDataApiClient oracleDataApi,
@@ -30,8 +29,7 @@ public class DisputeService : IDisputeService
         IFilePersistenceService filePersistenceService,
         ILogger<DisputeService> logger,
         ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
-        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
-        IHttpContextAccessor httpContextAccessor)
+        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
@@ -39,7 +37,6 @@ public class DisputeService : IDisputeService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate;
         _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate;
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
 
     public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
@@ -165,8 +162,10 @@ public class DisputeService : IDisputeService
         return await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
 
-    public async Task ValidateDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task ValidateDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute status setting to validated");
 
         Dispute dispute = await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
@@ -175,12 +174,14 @@ public class DisputeService : IDisputeService
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.DisputeId,
             FileHistoryAuditLogEntryType.SVAL,  // Handwritten ticket OCR details validated by staff
-            GetUserName());
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task CancelDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute cancelled");
 
         Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancellationToken);
@@ -189,7 +190,7 @@ public class DisputeService : IDisputeService
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.DisputeId,
             FileHistoryAuditLogEntryType.SCAN, // Dispute canceled by staff
-            GetUserName());
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
@@ -200,8 +201,10 @@ public class DisputeService : IDisputeService
         await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
-    public async Task RejectDisputeAsync(long disputeId, string rejectedReason, CancellationToken cancellationToken)
+    public async Task RejectDisputeAsync(long disputeId, string rejectedReason, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute rejected");
 
         Dispute dispute = await _oracleDataApi.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
@@ -210,7 +213,7 @@ public class DisputeService : IDisputeService
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.DisputeId,
             FileHistoryAuditLogEntryType.SREJ, // Dispute rejected by staff
-            GetUserName());
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
@@ -221,8 +224,10 @@ public class DisputeService : IDisputeService
         await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
-    public async Task SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task SubmitDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute submitted for approval processing");
 
         // Save and status to PROCESSING
@@ -232,7 +237,7 @@ public class DisputeService : IDisputeService
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.DisputeId,
             FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
-            GetUserName());
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
@@ -395,13 +400,5 @@ public class DisputeService : IDisputeService
         return await _oracleDataApi.GetDisputeUpdateRequestsAsync(disputeId, null, cancellationToken);
     }
 
-
-    private string GetUserName()
-    {
-        var _httpContext = _httpContextAccessor.HttpContext;
-
-        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
-
-        return username ?? string.Empty;
-    }
+    private string GetUserName(ClaimsPrincipal user) => user.Identity?.Name ?? string.Empty;
 }

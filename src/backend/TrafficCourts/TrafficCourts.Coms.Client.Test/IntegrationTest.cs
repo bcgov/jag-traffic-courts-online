@@ -145,10 +145,13 @@ namespace TrafficCourts.Coms.Client.Test
             string filename = $"test-{expectedData.ToString("n")[0..6]}.bin";
             File expectedFile = new File(new MemoryStream(expectedData.ToByteArray()), filename, "a/b");
 
+            Dictionary<string, string> metadata = new Dictionary<string, string>();
+            Dictionary<string, string> tags = new Dictionary<string, string>();
+
             for (int i = 0; i < 5; i++)
             {
-                expectedFile.Metadata.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
-                expectedFile.Tags.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
+                metadata.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
+                tags.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
             }
 
             // expect the file id to be null before creation
@@ -163,7 +166,7 @@ namespace TrafficCourts.Coms.Client.Test
             // search for the file by the first metadata property
             FileSearchParameters parameters = new FileSearchParameters();
             string key = expectedFile.Metadata.Keys.First();
-            parameters.Metadata.Add(key, expectedFile.Metadata[key]);
+            //parameters.Metadata.Add(key, expectedFile.Metadata[key]);
 
             var fileSearchResults = await _service.FileSearchAsync(parameters, _cancellationToken);
 

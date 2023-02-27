@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -29,10 +30,11 @@ public class JJControllerTest
         ticketNumbers.Add(ticketNumber);
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.AcceptJJDisputeAsync(ticketNumber, It.IsAny<bool>(), It.IsAny<CancellationToken>()));
+            .Setup(_ => _.AcceptJJDisputeAsync(ticketNumber, It.IsAny<bool>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
+        
         // Act
         IActionResult? result = await jjDisputeController.AcceptJJDisputeAsync(ticketNumber, checkVTC, CancellationToken.None);
 
@@ -49,16 +51,15 @@ public class JJControllerTest
         JJDispute dispute = new();
         string ticketnumber = "AJ201092461";
         dispute.TicketNumber = ticketnumber;
-        List<string> ticketNumbers = new();
-        ticketNumbers.Add(ticketnumber);
+        List<string> ticketnumbers = new() {  ticketnumber };
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.AssignJJDisputesToJJ(ticketNumbers, "Bruce Wayne", It.IsAny<CancellationToken>()));
+            .Setup(_ => _.AssignJJDisputesToJJ(ticketnumbers, "Bruce Wayne", It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.AssignJJDisputesToJJ(ticketNumbers, "Bruce Wayne", CancellationToken.None);
+        IActionResult? result = await jjDisputeController.AssignJJDisputesToJJ(ticketnumbers, "Bruce Wayne", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkResult>(result);
@@ -75,7 +76,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.AssignJJDisputesToJJ(null!, "Bruce Wayne", It.IsAny<CancellationToken>()))
+            .Setup(_ => _.AssignJJDisputesToJJ(null!, "Bruce Wayne", It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
@@ -97,17 +98,16 @@ public class JJControllerTest
         JJDispute dispute = new();
         string ticketnumber = "invalidTicketNum";
         dispute.TicketNumber = ticketnumber;
-        List<string> ticketNumbers = new();
-        ticketNumbers.Add(ticketnumber);
+        List<string> ticketnumbers = new() { ticketnumber };
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.AssignJJDisputesToJJ(ticketNumbers, "Bruce Wayne", It.IsAny<CancellationToken>()))
+            .Setup(_ => _.AssignJJDisputesToJJ(ticketnumbers, "Bruce Wayne", It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.AssignJJDisputesToJJ(ticketNumbers, "Bruce Wayne", CancellationToken.None);
+        IActionResult? result = await jjDisputeController.AssignJJDisputesToJJ(ticketnumbers, "Bruce Wayne", CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -125,7 +125,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<CancellationToken>()));
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
@@ -147,13 +147,13 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(null!, null!, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(null!, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(ticketnumber, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -171,7 +171,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
@@ -195,7 +195,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.RequireCourtHearingJJDisputeAsync(ticketnumber, null!, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status405MethodNotAllowed, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
@@ -219,7 +219,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<CancellationToken>()));
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
@@ -241,13 +241,13 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(null!, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(null!, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.UpdateCourtAppearanceAndConfirmJJDisputeAsync(ticketnumber, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -265,7 +265,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
@@ -289,7 +289,7 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ConfirmJJDisputeAsync(ticketnumber, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status405MethodNotAllowed, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
@@ -312,13 +312,13 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, false, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(ticketnumber, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -335,13 +335,13 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(null!, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, false, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(null!, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -358,13 +358,13 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber,false, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(ticketnumber, false, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, false, CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
@@ -381,13 +381,13 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, true, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status409Conflict, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(ticketnumber, true, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -400,19 +400,21 @@ public class JJControllerTest
     public async void TestGetJJDisputeThrowsObjectManagementServiceException500Result()
     {
         // Arrange
-        JJDispute dispute = new();
         string ticketnumber = "AJ201092461";
-        dispute.TicketNumber = ticketnumber;
+        JJDispute dispute = new()
+        {
+            TicketNumber = ticketnumber
+        };
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, true, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(ticketnumber, true, CancellationToken.None);
+        IActionResult? result = await jjDisputeController.GetJJDisputeAsync(1, ticketnumber, true, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);

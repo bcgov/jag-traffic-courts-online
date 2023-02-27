@@ -13,7 +13,6 @@ import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dia
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
-import { FileHistoryService } from 'app/api';
 import { HistoryRecordService } from 'app/services/history-records.service';
 
 @Component({
@@ -122,7 +121,7 @@ export class JJDisputeComponent implements OnInit {
     if (files.length <= 0) return;
 
     // upload to coms
-    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.ticketNumber, files[0], this.fileTypeToUpload)
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.id, this.fileTypeToUpload, files[0])
       .subscribe(fileId => {
 
         // add to display of files in DCF
@@ -200,7 +199,7 @@ export class JJDisputeComponent implements OnInit {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances
 
           // update the reason entered, reject dispute and return to TRM home
-          this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.requireCourtHearingReason).subscribe({
+          this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
             next: response => {
               this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
               this.onBackClicked();
@@ -265,7 +264,7 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action?.output?.response) {
           this.remarks = action.output.response;
-          this.jjDisputeService.apiJjTicketNumberReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
+          this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
               this.lastUpdatedJJDispute.status = this.DisputeStatus.Review;
               this.jjDisputeService.refreshDisputes.emit();
@@ -291,7 +290,7 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
     }
-    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe(response => {
+    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe(response => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(
         'JJDisputeComponent::putJJDispute response',
@@ -306,7 +305,7 @@ export class JJDisputeComponent implements OnInit {
   getJJDispute(): void {
     this.logger.log('JJDisputeComponent::getJJDispute');
 
-    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
+    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.id, this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
       this.retrieving = false;
       this.logger.info(
         'JJDisputeComponent::getJJDispute response',

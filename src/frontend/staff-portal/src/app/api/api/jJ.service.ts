@@ -254,20 +254,25 @@ export class JJService {
 
     /**
      * Returns a single JJ Dispute with the given identifier from the Oracle Data API.
-     * @param jJDisputeId Unique identifier for a specific JJ dispute record.
+     * @param jjDisputeId Unique identifier for a specific JJ dispute record.
+     * @param ticketNumber Ticket number for a specific JJ dispute record.
      * @param assignVTC boolean to indicate need to assign VTC.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjJJDisputeIdGet(jJDisputeId: string, assignVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
-    public apiJjJJDisputeIdGet(jJDisputeId: string, assignVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
-    public apiJjJJDisputeIdGet(jJDisputeId: string, assignVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
-    public apiJjJJDisputeIdGet(jJDisputeId: string, assignVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
-        if (jJDisputeId === null || jJDisputeId === undefined) {
-            throw new Error('Required parameter jJDisputeId was null or undefined when calling apiJjJJDisputeIdGet.');
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (jjDisputeId === null || jjDisputeId === undefined) {
+            throw new Error('Required parameter jjDisputeId was null or undefined when calling apiJjJjDisputeIdGet.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (ticketNumber !== undefined && ticketNumber !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>ticketNumber, 'ticketNumber');
+        }
         if (assignVTC !== undefined && assignVTC !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>assignVTC, 'assignVTC');
@@ -313,7 +318,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.get<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "jJDisputeId", value: jJDisputeId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`,
+        return this.httpClient.get<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "jjDisputeId", value: jjDisputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -328,7 +333,7 @@ export class JJService {
 
     /**
      * Updates the status of a particular JJDispute record to ACCEPTED.
-     * @param ticketNumber Unique identifier for a specific JJ Dispute record.
+     * @param ticketNumber Ticket number for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -403,21 +408,26 @@ export class JJService {
 
     /**
      * Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
-     * @param ticketNumber Unique identifier for a specific JJ Dispute record.
+     * @param ticketNumber 
+     * @param jjDisputeId Unique identifier for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
      * @param jJDispute 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberPut(ticketNumber: string, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
-    public apiJjTicketNumberPut(ticketNumber: string, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
-    public apiJjTicketNumberPut(ticketNumber: string, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
-    public apiJjTicketNumberPut(ticketNumber: string, checkVTC?: boolean, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberPut.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (jjDisputeId !== undefined && jjDisputeId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>jjDisputeId, 'jjDisputeId');
+        }
         if (checkVTC !== undefined && checkVTC !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>checkVTC, 'checkVTC');
@@ -672,7 +682,7 @@ export class JJService {
 
     /**
      * Updates court appearance record as well as the status of a particular JJDispute record to CONFIRMED.
-     * @param ticketNumber Unique identifier for a specific JJ Dispute record.
+     * @param ticketNumber Ticket number for a specific JJ Dispute record.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -739,7 +749,7 @@ export class JJService {
 
     /**
      * Updates court appearance record as well as the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE.
-     * @param ticketNumber Unique identifier for a specific JJ Dispute record.
+     * @param ticketNumber Ticket number for a specific JJ Dispute record.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

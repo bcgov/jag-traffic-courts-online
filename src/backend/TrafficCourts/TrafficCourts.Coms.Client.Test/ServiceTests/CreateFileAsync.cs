@@ -29,10 +29,11 @@ public class CreateFileAsync : ObjectManagementServiceTest
     [Fact]
     public async Task should_throw_if_metadata_is_too_long()
     {
-        File file = new(data: GetRandomStream());
-
+        Dictionary<string, string> metadata = new Dictionary<string, string>();
         // metadata prefix is "x-amz-meta-" which is 10 characters long
-        file.Metadata.Add("x", new string('y', 2048 - 1 - 10));
+        metadata.Add("x", new string('y', 2048 - 1 - 10));
+
+        File file = new(data: GetRandomStream(), null, null, metadata, null);
 
         // create strict client to ensure its operations are not called
         _mockClient = new Moq.Mock<IObjectManagementClient>(Moq.MockBehavior.Strict);
@@ -44,9 +45,10 @@ public class CreateFileAsync : ObjectManagementServiceTest
     [MemberData(nameof(InvalidHttpHeaderCharacters))]
     public async Task should_throw_if_metadata_key_has_invalid_characters(char invalidChar)
     {
-        File file = new(data: GetRandomStream());
+        Dictionary<string, string> metadata = new Dictionary<string, string>();
+        metadata.Add(invalidChar.ToString(), "y");
 
-        file.Metadata.Add(invalidChar.ToString(), "y");
+        File file = new(data: GetRandomStream(), null, null, metadata, null);
 
         // create strict client to ensure its operations are not called
         _mockClient = new Moq.Mock<IObjectManagementClient>(Moq.MockBehavior.Strict);

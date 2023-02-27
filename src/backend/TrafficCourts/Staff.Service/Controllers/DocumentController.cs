@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
-
 
 public class DocumentController : StaffControllerBase<DocumentController>
 {
@@ -16,20 +17,19 @@ public class DocumentController : StaffControllerBase<DocumentController>
     /// <summary>
     /// Default Constructor
     /// </summary>
-    /// <param name="comsService"></param>
+    /// <param name="documentService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public DocumentController(IStaffDocumentService comsService, ILogger<DocumentController> logger) : base(logger)
+    public DocumentController(IStaffDocumentService documentService, ILogger<DocumentController> logger) : base(logger)
     {
-        ArgumentNullException.ThrowIfNull(comsService);
-        _documentService = comsService;
+        _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
     }
 
     /// <summary>
     /// Creates a new file the document management service along with metadata.
     /// </summary>
     /// <param name="file">The file to save in the common object management service and the metadata of the uploaded file to be saved including the document type</param>
-    /// <param name="ticketNumber">The ticket number to associate with this file.</param>
+    /// <param name="disputeId">The TCO dispute id to associate document with.</param>
     /// <param name="cancellationToken"></param>
     /// <param name="documentType">The document type to associate with this file.</param>
     /// <response code="200">The document is successfully uploaded and saved.</response>
@@ -50,29 +50,20 @@ public class DocumentController : StaffControllerBase<DocumentController>
         IFormFile file,
         [FromHeader]
         [Required]
-        [MaxLength(20)]
-        string ticketNumber,
+        [Range(1, int.MaxValue)]
+        long disputeId,
+        [FromHeader]
+        [Required]
         string documentType,
         CancellationToken cancellationToken)
     {
+        // note: the range check on disputeId to prevent passing too large numbers in javascript, the max javascript number 
         _logger.LogDebug("Uploading the document to the object storage");
-
-        if (string.IsNullOrEmpty(ticketNumber))
-        {
-            _logger.LogError("Could not upload a document because metadata does not contain the key: ticket-number");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = StatusCodes.Status400BadRequest;
-            problemDetails.Title = "Exception Invoking COMS - Metadata Key does not contain ticket-number";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-
-            return new ObjectResult(problemDetails);
-        }
 
         try
         {
-            var metadata = new Dictionary<string, string> { { "ticket-number", ticketNumber } };
-            metadata.Add("document-type", documentType);
-            Guid id = await _documentService.SaveFileAsync(file, metadata, cancellationToken);
+            DocumentProperties properties = new() { TcoDisputeId = disputeId, DocumentType = documentType };
+            Guid id = await _documentService.SaveFileAsync(file, properties, User, cancellationToken);
             return Ok(id);
         }
         catch (Coms.Client.MetadataInvalidKeyException e)
@@ -263,7 +254,7 @@ public class DocumentController : StaffControllerBase<DocumentController>
 
         try
         {
-            await _documentService.DeleteFileAsync(fileId, cancellationToken);
+            await _documentService.DeleteFileAsync(fileId, User, cancellationToken);
 
             return Ok();
         }
