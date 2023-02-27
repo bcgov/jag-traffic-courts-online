@@ -50,14 +50,17 @@ Set the JDBC URL parameter to "jdbc:h2:file:./data/h2" to connect, username is "
 | REDIS_SENTINAL_NODES        | When redis is configured in a master-slave-sentinel configuration, a comma-separated list of host:port sentinal nodes. ie "redis-sentinel-1:26379,redis-sentinel-2:26380,redis-sentinel-3:26381"
 | SPLUNK_URL                  | 
 | SPLUNK_TOKEN                | 
-| ORDS_API_URL                | The URL to connect to ORDS. (Needs to be set in .env file to connect to ORDS successfully when running through docker-compose)
 | ORDS_API_TIMEOUT            | Connection timeout limit in MS.
 | ORDS_API_RETRY_COUNT        | The maximum number of retry attempts to allow.
 | ORDS_API_RETRY_DELAY        | The Duration of the fixed delays.
-| ORDS_API_BASICAUTH_ENABLED  | If enabled, this will add basic authentication using the credentials below for all ORDS API calls.
-| ORDS_API_BASICAUTH_USERNAME | Basic auth username for calling ORDS.
-| ORDS_API_BASICAUTH_PASSWORD | Basic auth password for calling ORDS.
-| JAVA_OPTS	                  | JVM parameters to be passed to the container. ie, "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
+| ORDS_API_AUTH_ENABLED       | If enabled, this will add basic authentication using the credentials below for all ORDS API calls.
+| ORDS_API_OCCAM_URL          | The URL to connect to ORDS OCCAM. (Needs to be set in .env file to connect to ORDS successfully when running through docker-compose)
+| ORDS_API_OCCAM_USERNAME     | Basic auth username for calling ORDS OCCAM.
+| ORDS_API_OCCAM_PASSWORD     | Basic auth password for calling ORDS OCCAM.
+| ORDS_API_TCO_URL            | The URL to connect to ORDS TCO. (Needs to be set in .env file to connect to ORDS successfully when running through docker-compose)
+| ORDS_API_TCO_USERNAME       | Basic auth username for calling ORDS TCO.
+| ORDS_API_TCO_PASSWORD       | Basic auth password for calling ORDS TCO.
+| JAVA_OPTS                   | JVM parameters to be passed to the container. ie, "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
 
 Note: Redis Standalone and Sentinel modes are mutually exclusive.  Either use host/port variables or master/nodes.
 
