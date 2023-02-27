@@ -18,7 +18,7 @@ internal static class Metadata
     /// <summary>
     /// Creates the Metadata dictionary from the source with the correct <see cref="IEqualityComparer"/>.
     /// </summary>
-    public static Dictionary<string, string> Create(IEnumerable<KeyValuePair<string, string>>? source = null)
+    public static IReadOnlyDictionary<string, string> Create(IEnumerable<KeyValuePair<string, string>>? source = null)
     {
         if (source is null)
         {

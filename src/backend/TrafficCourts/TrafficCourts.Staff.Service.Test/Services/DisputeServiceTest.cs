@@ -27,8 +27,7 @@ public class DisputeServiceTest
             new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, 
             new Mock<ILogger<DisputeService>>().Object,
             Mock.Of<ICancelledDisputeEmailTemplate>(),
-            Mock.Of<IRejectedDisputeEmailTemplate>(),
-            Mock.Of<IHttpContextAccessor>());
+            Mock.Of<IRejectedDisputeEmailTemplate>());
         Dispute dispute = new();
         dispute.DisputeId = 1;
         dispute.ViolationTicket = new();

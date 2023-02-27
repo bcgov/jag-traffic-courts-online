@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Coms.Client;
+﻿using TrafficCourts.Common.Models;
+using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Workflow.Service.Services;
 
@@ -20,31 +21,24 @@ public class WorkflowDocumentService : IWorkflowDocumentService
 
     public async Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Getting the file through COMS");
+        _logger.LogDebug("Getting the file {FileId} through COMS", fileId);
 
         return await _objectManagementService.GetFileAsync(fileId, cancellationToken);
     }
 
-    public async Task UpdateFileAsync(Guid id, Coms.Client.File file, CancellationToken cancellationToken)
-    {
-        _logger.LogDebug("Updating the file through COMS");
-
-        await _objectManagementService.UpdateFileAsync(id, file, cancellationToken);
-    }
-
-    public async Task SetFileMetadataAsync(Guid id, IReadOnlyDictionary<string, string> meta, CancellationToken cancellationToken)
+    public async Task SaveDocumentPropertiesAsync(Guid id, DocumentProperties properties, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
         {
-            throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
+            throw new ArgumentException("Cannot replace save document properties on empty object id", nameof(id));
         }
 
-        ArgumentNullException.ThrowIfNull(meta);
+        ArgumentNullException.ThrowIfNull(properties);
 
-        _logger.LogDebug("Updating the file metadata through COMS");
+        _logger.LogDebug("Updating the file {FileId} properties through COMS", id);
 
-        await _objectManagementService.ReplaceMetadataAsync(id, meta, cancellationToken);
+        var tags = properties.ToTags();
 
-
+        await _objectManagementService.SetTagsAsync(id, tags, cancellationToken);
     }
 }

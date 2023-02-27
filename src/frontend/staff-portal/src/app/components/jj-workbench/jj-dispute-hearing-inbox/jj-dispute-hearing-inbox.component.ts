@@ -108,7 +108,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       updateDispute.jjDisputeCourtAppearanceRoPs[i].adjudicator = element.jjAssignedTo;
     }
 
-    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute, false).subscribe((response: JJDispute) => {
+    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute.id, updateDispute, false).subscribe((response: JJDispute) => {
       this.logger.info(
         'JJDisputeHearingInboxComponent::putJJDispute response',
         response

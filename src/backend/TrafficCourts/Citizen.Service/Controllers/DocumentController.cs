@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Common;
 using TrafficCourts.Common.Errors;
+using TrafficCourts.Common.Models;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -20,15 +22,10 @@ public class DocumentController : ControllerBase
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="bus"></param>
-    /// <param name="mediator"></param>
     /// <param name="logger"></param>
     /// <param name="hashids"></param>
-    /// <param name="tokenEncoder"></param>
-    /// <param name="oAuthUserService"></param>
-    /// <param name="mapper"></param>
     /// <param name="documentService"></param>
-    /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
+    /// <exception cref="ArgumentNullException"> <paramref name="logger"/> is null.</exception>
     public DocumentController(ILogger<DisputesController> logger, IHashids hashids, ICitizenDocumentService documentService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -67,7 +64,7 @@ public class DocumentController : ControllerBase
     {
         _logger.LogDebug("Uploading the document to the object storage");
 
-        if (string.IsNullOrEmpty(guidHash))
+        if (string.IsNullOrEmpty(guidHash) || !_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeId))
         {
             _logger.LogError("Could not upload a document because metadata does not contain the key: notice-of-dispute-id");
             ProblemDetails problemDetails = new();
@@ -80,9 +77,8 @@ public class DocumentController : ControllerBase
 
         try
         {
-            var metadata = new Dictionary<string, string> { { "notice-of-dispute-id", guidHash } };
-            metadata.Add("document-type", documentType);
-            Guid id = await _documentService.SaveFileAsync(file, metadata, cancellationToken);
+            DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeId, DocumentType = documentType };
+            Guid id = await _documentService.SaveFileAsync(file, properties, cancellationToken);
             return Ok(id);
         }
         catch (Coms.Client.MetadataInvalidKeyException e)

@@ -1367,19 +1367,22 @@
         "summary": "Creates a new file the document management service along with metadata.",
         "parameters": [
           {
-            "name": "ticketNumber",
+            "name": "disputeId",
             "in": "header",
-            "description": "The ticket number to associate with this file.",
+            "description": "The TCO dispute id to associate document with.",
             "required": true,
             "schema": {
-              "maxLength": 20,
-              "type": "string"
+              "maximum": 2147483647,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
             "name": "documentType",
-            "in": "query",
+            "in": "header",
             "description": "The document type to associate with this file.",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -1930,7 +1933,7 @@
         }
       }
     },
-    "/api/jj/{JJDisputeId}": {
+    "/api/jj/{jjDisputeId}": {
       "get": {
         "tags": [
           "JJ"
@@ -1938,10 +1941,19 @@
         "summary": "Returns a single JJ Dispute with the given identifier from the Oracle Data API.",
         "parameters": [
           {
-            "name": "JJDisputeId",
+            "name": "jjDisputeId",
             "in": "path",
             "description": "Unique identifier for a specific JJ dispute record.",
             "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ticketNumber",
+            "in": "query",
+            "description": "Ticket number for a specific JJ dispute record.",
             "schema": {
               "type": "string"
             }
@@ -2090,12 +2102,12 @@
         "summary": "Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.",
         "parameters": [
           {
-            "name": "ticketNumber",
-            "in": "path",
+            "name": "jjDisputeId",
+            "in": "query",
             "description": "Unique identifier for a specific JJ Dispute record.",
-            "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           },
           {
@@ -2104,6 +2116,14 @@
             "description": "boolean to indicate need to check VTC assigned.",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2746,7 +2766,7 @@
           {
             "name": "ticketNumber",
             "in": "path",
-            "description": "Unique identifier for a specific JJ Dispute record.",
+            "description": "Ticket number for a specific JJ Dispute record.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2901,7 +2921,7 @@
           {
             "name": "ticketNumber",
             "in": "path",
-            "description": "Unique identifier for a specific JJ Dispute record.",
+            "description": "Ticket number for a specific JJ Dispute record.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3048,7 +3068,7 @@
           {
             "name": "ticketNumber",
             "in": "path",
-            "description": "Unique identifier for a specific JJ Dispute record.",
+            "description": "Ticket number for a specific JJ Dispute record.",
             "required": true,
             "schema": {
               "type": "string"
@@ -4344,7 +4364,8 @@
             "nullable": true
           },
           "disputeId": {
-            "type": "string",
+            "type": "integer",
+            "format": "int64",
             "nullable": true
           }
         },

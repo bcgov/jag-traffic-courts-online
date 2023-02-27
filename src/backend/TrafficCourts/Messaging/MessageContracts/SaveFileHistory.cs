@@ -1,10 +1,4 @@
-﻿using MassTransit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {

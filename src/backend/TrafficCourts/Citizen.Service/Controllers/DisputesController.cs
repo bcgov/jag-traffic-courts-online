@@ -20,6 +20,7 @@ using TrafficCourts.Messaging.Models;
 using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Disputes.DisputantContactInformation;
 using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 using Dispute = TrafficCourts.Citizen.Service.Models.Disputes.Dispute;
+using TrafficCourts.Common.Models;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -298,10 +299,8 @@ public class DisputesController : ControllerBase
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
 
-            // Search parameter "notice-of-dispute-id" for returning documents for the associated dispute that were uploaded by the citizen
-            Dictionary<string, string> documentSearchParam = new();
-            documentSearchParam.Add("notice-of-dispute-id", guidHash);
-            result.FileData = await _documentService.GetFilesBySearchAsync(documentSearchParam, null, cancellationToken);
+            DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid };
+            result.FileData = await _documentService.FindFilesAsync(properties, cancellationToken);
             
             return Ok(result);
         }

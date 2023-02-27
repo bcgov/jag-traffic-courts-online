@@ -25,8 +25,7 @@ public class JJDisputeServiceTest
         var _staffDocumentService = new Mock<IStaffDocumentService>();
         var _keycloakService = new Mock<IKeycloakService>();
         var _logger = new Mock<ILogger<JJDisputeService>>();
-        var _httpContextAccessor = new Mock<IHttpContextAccessor>();
-        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object, _httpContextAccessor.Object);
+        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object);
         JJDispute dispute = new();
         dispute.TicketNumber = "AJ201092461";
 
@@ -45,8 +44,7 @@ public class JJDisputeServiceTest
         var _staffDocumentService = new Mock<IStaffDocumentService>();
         var _keycloakService = new Mock<IKeycloakService>();
         var _logger = new Mock<ILogger<JJDisputeService>>();
-        var _httpContextAccessor = new Mock<IHttpContextAccessor>();
-        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object, _httpContextAccessor.Object);
+        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object);
         JJDispute dispute = new();
         dispute.JjAssignedTo = "ckent";
         dispute.TicketNumber = "AJ201092461";
@@ -67,8 +65,7 @@ public class JJDisputeServiceTest
         var _keycloakService = new Mock<IKeycloakService>();
         var _logger = new Mock<ILogger<JJDisputeService>>();
         var _userReps = new Mock<ICollection<UserRepresentation>>();
-        var _httpContextAccessor = new Mock<IHttpContextAccessor>();
-        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object, _httpContextAccessor.Object);
+        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object);
         JJDispute dispute = new();
         dispute.JjAssignedTo = "ckent";
         dispute.TicketNumber = "AJ201092461";
@@ -93,8 +90,7 @@ public class JJDisputeServiceTest
         var _userReps = new List<UserRepresentation>();
         var _userRep = new Mock<UserRepresentation>();
         var _expectedPartIds = new List<string>();
-        var _httpContextAccessor = new Mock<IHttpContextAccessor>();
-        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object, _httpContextAccessor.Object);
+        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _logger.Object);
         JJDispute dispute = new();
         dispute.JjAssignedTo = "ckent";
         dispute.TicketNumber = "AJ201092461";
@@ -111,7 +107,8 @@ public class JJDisputeServiceTest
         string _actualPartId = await jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None);
 
         // Assert
-        Assert.Equal(_expectedPartIds.First(), _actualPartId);
+        var expectedPartId = Assert.Single(_expectedPartIds);
+        Assert.Equal(expectedPartId, _actualPartId);
     }
 
 }

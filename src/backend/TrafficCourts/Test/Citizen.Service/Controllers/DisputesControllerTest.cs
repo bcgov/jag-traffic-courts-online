@@ -53,9 +53,9 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
 
         //     Guid guid = Guid.NewGuid();
 
-        //     Coms.Client.File file = new(fileStream, "testFile");
-        //     file.SetTicketNumber("AO38375804");
-        //     file.SetVirusScanClean();
+        //    Coms.Client.File file = new(fileStream, "testFile");
+            //file.SetTicketNumber("AO38375804");
+            //file.SetVirusScanClean();
 
         //     var filename = file.FileName;
         //     mockComsService
@@ -100,9 +100,9 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
         //     var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
         //     Guid guid = Guid.NewGuid();
 
-        //     Coms.Client.File file = new(fileStream, "testFile");
-        //     file.SetTicketNumber("AO38375804");
-        //     file.SetVirusScanClean();
+        //    Coms.Client.File file = new(fileStream, "testFile");
+            //file.SetTicketNumber("AO38375804");
+            //file.SetVirusScanClean();
             
         //     var filename = file.FileName;
         //     mockComsService
@@ -146,14 +146,14 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
         //     var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
         //     disputeController.ControllerContext = mockControllerContext.Object;
 
-        //     var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
-        //     Coms.Client.File mockFile = new(fileStream, "testFile");
-        //     Guid guid = Guid.NewGuid();
-        //     mockFile.Metadata.Add("ticket-number", "AO38375804");
-        //     var filename = mockFile.FileName;
-        //     mockComsService
-        //         .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
-        //         .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
+            //var fileStream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("FileData"));
+            //Coms.Client.File mockFile = new(fileStream, "testFile");
+            //Guid guid = Guid.NewGuid();
+            ////mockFile.Metadata.Add("ticket-number", "AO38375804");
+            //var filename = mockFile.FileName;
+            //mockComsService
+            //    .Setup(_ => _.GetFileAsync(guid, It.IsAny<CancellationToken>()))
+            //    .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
 
         //     // Act
         //     var result = await disputeController.DownloadDocumentAsync(guid, CancellationToken.None);

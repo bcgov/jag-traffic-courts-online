@@ -46,5 +46,5 @@ public class FileMetadata
     /// <summary>
     /// JJ Dispute Id dispute-id
     /// </summary>
-    public string? DisputeId { get; set; }
+    public long? DisputeId { get; set; }
 }

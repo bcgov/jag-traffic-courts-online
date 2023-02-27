@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using System.Security.Claims;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -18,17 +19,14 @@ public class JJDisputeService : IJJDisputeService
     private readonly IStaffDocumentService _documentService;
     private readonly IKeycloakService _keycloakService;
     private readonly ILogger<JJDisputeService> _logger;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public const string UsernameClaimType = "preferred_username";
 
-    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, ILogger<JJDisputeService> logger, IHttpContextAccessor httpContextAccessor)
+    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, ILogger<JJDisputeService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _documentService = comsService ?? throw new ArgumentNullException(nameof(comsService));
         _keycloakService = keycloakService ?? throw new ArgumentNullException(nameof(keycloakService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
 
     public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
@@ -36,55 +34,39 @@ public class JJDisputeService : IJJDisputeService
         return await _oracleDataApi.GetJJDisputesAsync(jjAssignedTo, null, cancellationToken);
     }
 
-    public async Task<JJDispute> GetJJDisputeAsync(string disputeId, bool assignVTC, CancellationToken cancellationToken)
+    public async Task<JJDispute> GetJJDisputeAsync(long disputeId, string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(disputeId, assignVTC, cancellationToken);
-
-        // search by ticket number
-        Dictionary<string, string> documentSearchParam = new();
-        documentSearchParam.Add("ticket-number", disputeId);
-        dispute.FileData = await _documentService.GetFilesBySearchAsync(null, documentSearchParam, cancellationToken);
-
-        // search by notice of dispute guid
-        if (dispute.NoticeOfDisputeGuid is not null)
-        {
-            documentSearchParam.Clear();
-            documentSearchParam.Add("notice-of-dispute-id", dispute.NoticeOfDisputeGuid);
-            List<FileMetadata> moreDocs = await _documentService.GetFilesBySearchAsync(null, documentSearchParam, cancellationToken);
-            moreDocs.ForEach(doc =>
-            {
-                if (dispute.FileData.IndexOf(doc) < 0)
-                {
-                    dispute.FileData.Add(doc);
-                }
-            });
-        }
+        JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
 
         // Search by dispute id
-        documentSearchParam.Clear();
-        documentSearchParam.Add("dispute-id", dispute.Id.ToString());
-        List<FileMetadata> evenMoreDocs = await _documentService.GetFilesBySearchAsync(null, documentSearchParam, cancellationToken);
-        evenMoreDocs.ForEach(doc =>
+        DocumentProperties properties = new() { TcoDisputeId = disputeId };
+
+        List<FileMetadata> disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
+
+        // search by notice of dispute guid
+        if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
         {
-            if (dispute.FileData.IndexOf(doc) < 0)
-            {
-                dispute.FileData.Add(doc);
-            }
-        });
+            // create new search properties
+            properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
+            List<FileMetadata> files = await _documentService.FindFilesAsync(properties, cancellationToken);
+            AddUnique(disputeFiles, files);
+        }
+
+        dispute.FileData = disputeFiles;
 
         return dispute;
     }
 
-    public async Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<JJDispute> SubmitAdminResolutionAsync(long disputeId, bool checkVTC, JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(ticketNumber, checkVTC, jjDispute, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(jjDispute.TicketNumber, checkVTC, jjDispute, cancellationToken);
 
         if (dispute.Status == JJDisputeStatus.IN_PROGRESS)
         {
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 jjDispute.OccamDisputeId,
                 FileHistoryAuditLogEntryType.JPRG, // Dispute decision details saved for later
-                GetUserName());
+                GetUserName(user));
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
         else if (dispute.Status == JJDisputeStatus.CONFIRMED)
@@ -92,14 +74,14 @@ public class JJDisputeService : IJJDisputeService
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 jjDispute.OccamDisputeId,
                 FileHistoryAuditLogEntryType.JCNF, // Dispute decision confirmed/submitted by JJ
-                GetUserName());
+                GetUserName(user));
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
 
         return dispute;
     }
 
-    public async Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, CancellationToken cancellationToken)
+    public async Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         await _oracleDataApi.AssignJJDisputesToJJAsync(ticketNumbers, username, cancellationToken);
 
@@ -111,24 +93,24 @@ public class JJDisputeService : IJJDisputeService
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 dispute.OccamDisputeId,
                 FileHistoryAuditLogEntryType.JASG, // Dispute assigned to JJ
-                GetUserName());
+                GetUserName(user));
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
     }
 
-    public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, CancellationToken cancellationToken)
+    public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, remark, cancellationToken);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
-            FileHistoryAuditLogEntryType.VREV, GetUserName()); // Dispute returned to JJ for review
+            FileHistoryAuditLogEntryType.VREV, GetUserName(user)); // Dispute returned to JJ for review
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
     }
 
-    public async Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string? remark, CancellationToken cancellationToken)
+    public async Task<JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string? remark, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         try
         {
@@ -136,7 +118,7 @@ public class JJDisputeService : IJJDisputeService
 
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
                 dispute.OccamDisputeId,
-                FileHistoryAuditLogEntryType.JDIV, GetUserName()); // Dispute change of plea required / Divert to court appearance
+                FileHistoryAuditLogEntryType.JDIV, GetUserName(user)); // Dispute change of plea required / Divert to court appearance
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
             return dispute;
@@ -149,7 +131,7 @@ public class JJDisputeService : IJJDisputeService
 
     }
 
-    public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken)
+    public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // Get PartId from Keycloak
         string partId = await GetPartIdAsync(ticketNumber, cancellationToken);
@@ -158,7 +140,7 @@ public class JJDisputeService : IJJDisputeService
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
-            FileHistoryAuditLogEntryType.VSUB, GetUserName()); // Dispute approved for resulting by staff
+            FileHistoryAuditLogEntryType.VSUB, GetUserName(user)); // Dispute approved for resulting by staff
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -180,10 +162,6 @@ public class JJDisputeService : IJJDisputeService
         //  - pass partId to _oracleDataApi.AcceptJJDisputeAsync()
         JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
         string idirUsername = jjDispute.JjAssignedTo ?? throw new ArgumentNullException("JJDispute is not assigned. Failed to lookup partId.");
-        if (!JJDisputeHearingType.WRITTEN_REASONS.Equals(jjDispute.HearingType))
-        {
-            throw new ArgumentException("JJDispute's HearingType is not WRITTEN_REASONS.");
-        }
 
         ICollection<UserRepresentation> userRepresentations = await _keycloakService.UsersByIdirAsync(idirUsername, cancellationToken);
         if (userRepresentations is not null)
@@ -205,24 +183,33 @@ public class JJDisputeService : IJJDisputeService
         throw new ArgumentNullException("Failed to lookup partId.");
     }
 
-    public async Task<JJDispute> ConfirmJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken)
+    public async Task<JJDispute> ConfirmJJDisputeAsync(string ticketNumber, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
             dispute.OccamDisputeId,
-            FileHistoryAuditLogEntryType.JCNF, GetUserName()); // Dispute decision confirmed/submitted by JJ
+            FileHistoryAuditLogEntryType.JCNF, GetUserName(user)); // Dispute decision confirmed/submitted by JJ
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
     }
 
-    private string GetUserName()
+    private static string GetUserName(ClaimsPrincipal user)
     {
-        var _httpContext = _httpContextAccessor.HttpContext;
+        return user?.Identity?.Name ?? string.Empty;
+    }
+    // ClaimsPrincipal user
 
-        var username = _httpContext?.User.Claims.FirstOrDefault(_ => _.Type == UsernameClaimType)?.Value;
-
-        return username ?? string.Empty;
+    private void AddUnique(List<FileMetadata> target, List<FileMetadata> files)
+    {
+        foreach (var file in files)
+        {
+            // only add unique files
+            if (!target.Any(_ => _.FileId == file.FileId))
+            {
+                target.Add(file);
+            }
+        }
     }
 }

@@ -19,6 +19,6 @@ export interface FileMetadata {
     virusScanStatus?: string | null;
     documentStatus?: string | null;
     ticketNumber?: string | null;
-    disputeId?: string | null;
+    disputeId?: number | null;
 }
 
