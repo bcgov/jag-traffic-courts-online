@@ -20,17 +20,17 @@ public class OrdsTcoApiClientConfiguration {
 		ApiClient apiClient = new ApiClient();
 		// Setting this to null will make it use the baseUrl instead
 		apiClient.setServerIndex(null);
-		apiClient.setBasePath(ordsConfigProperties.getOrdsRestApiTcoUrl());
+		apiClient.setBasePath(ordsConfigProperties.getOrdsApiTcoUrl());
 
-		if(ordsConfigProperties.isOrdsBasicAuthEnabled()) {
+		if(ordsConfigProperties.isOrdsApiAuthEnabled()) {
 			// Set basic auth header with credentials
 			HttpBasicAuth authentication = (HttpBasicAuth) apiClient.getAuthentication("basicAuth");
-			authentication.setUsername(ordsConfigProperties.getOrdsRestApiUsername());
-			authentication.setPassword(ordsConfigProperties.getOrdsRestApiPassword());
+			authentication.setUsername(ordsConfigProperties.getOrdsApiTcoUsername());
+			authentication.setPassword(ordsConfigProperties.getOrdsApiTcoPassword());
 		}
 
 		// Set to true to see actual request/response messages sent/received from ORDs.
-		apiClient.setDebugging(ordsConfigProperties.isOrdsRestApiDebug());
+		apiClient.setDebugging(ordsConfigProperties.isOrdsApiDebug());
 
 		return apiClient;
 	}
