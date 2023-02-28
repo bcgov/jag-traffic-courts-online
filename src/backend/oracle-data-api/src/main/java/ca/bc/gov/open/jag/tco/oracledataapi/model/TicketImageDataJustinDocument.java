@@ -54,7 +54,7 @@ public class TicketImageDataJustinDocument {
 	private String index;
 	
 	/**
-	 * File blob
+	 * File contents as per advice of John Revoy pass this through as JSON friendly base 64 encoded string
 	 */
 	@Schema(nullable = true)
 	private String fileData;

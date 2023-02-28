@@ -1,8 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
 import org.mapstruct.Named;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
@@ -10,13 +8,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCountFinding;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ShortNamedEnum;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
-import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 
 public abstract class BaseMapper {
 	
-	private Logger logger = LoggerFactory.getLogger(DisputeService.class);
-
 	@Named("mapContactType")
 	protected ContactType mapContactType(String statusShortCd) {
 		ContactType[] values = ContactType.values();
@@ -38,16 +32,6 @@ public abstract class BaseMapper {
 		}
 		return null;
 	}
-	
-	@Named("mapOccamDisputeIdToLong")
-	protected long mapOccamDisputeIdToLong(String occamDisputeId) {
-		return Long.parseLong(occamDisputeId);
-	}
-
-	@Named("mapOccamDisputeIdToString")
-	protected String mapOccamDisputeIdToString(Long occamDisputeId) {
-		return occamDisputeId.toString();
-	}	
 	
 	@Named("mapFindingResult")
 	protected JJDisputedCountFinding mapFindingResult(String statusShortCd) {
@@ -81,7 +65,7 @@ public abstract class BaseMapper {
 		}
 		return null;
 	}
-	
+
 	@Named("mapShortNamedEnum")
 	protected String mapShortNamedEnum(ShortNamedEnum code) {
 		return code != null ? code.getShortName() : null;

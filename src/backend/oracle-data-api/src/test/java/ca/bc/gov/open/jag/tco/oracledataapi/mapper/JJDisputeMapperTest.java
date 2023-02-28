@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
@@ -25,8 +26,10 @@ import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 public class JJDisputeMapperTest extends BaseTestSuite {
 
-	//@Autowired
+	@Autowired
 	private JJDisputeMapper jjDisputeMapper;
+	
+	@Autowired
 	private TicketImageDataMapper ticketImageDataMapper;
 
 	@Test
