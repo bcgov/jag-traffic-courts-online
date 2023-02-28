@@ -1,6 +1,7 @@
 package ca.bc.gov.open.ui;
 
 import java.time.Duration;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -176,7 +177,8 @@ public class DisputeTicketOptionsPicker {
 		JavascriptExecutor js12 = (JavascriptExecutor) driver;
 		js12.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ng-star-inserted > .row #primaryButton")));
+		element = driverWait.until(
+				ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ng-star-inserted > .row #primaryButton")));
 		element.click();
 
 		String c = "Additional information";
@@ -230,9 +232,9 @@ public class DisputeTicketOptionsPicker {
 		System.out.println("Click Submit button");
 		Thread.sleep(1000);
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[4]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[4]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
 		js.executeScript("arguments[0].click();", element);
-		
 
 	}
 
@@ -248,24 +250,31 @@ public class DisputeTicketOptionsPicker {
 			subWindowHandler = iterator.next();
 		}
 		driver.switchTo().window(subWindowHandler); // switch to popup window
-		
+
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
 		js.executeScript("arguments[0].click();", element);
 		System.out.println("Submit in pop-up clicked");
 
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
 		Thread.sleep(1000);
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-		.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
 		System.out.println("Email verification required is present on page");
 
 	}
 
 	public void addressInput(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
+		String user;
+
+		user = Calendar.getInstance().getTimeInMillis() + "Test";
+
+		System.out.println("New created user is: " + user);
+
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
-		element.sendKeys("Test");
+		element.sendKeys(user);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
 		element.sendKeys("User");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
