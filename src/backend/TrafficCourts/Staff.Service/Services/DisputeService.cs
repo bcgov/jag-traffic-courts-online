@@ -313,7 +313,7 @@ public class DisputeService : IDisputeService
             {
                 try
                 {
-                    Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeUpdateRequest.DisputeId, cancellationToken);
+                    Dispute dispute = await _oracleDataApi.GetDisputeNoAssignAsync(disputeUpdateRequest.DisputeId, cancellationToken);
 
                     // Fill in record to return
                     disputeWithUpdates.DisputeId = dispute.DisputeId;

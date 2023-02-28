@@ -1,6 +1,8 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
 import org.mapstruct.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
@@ -9,8 +11,11 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCountFinding;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ShortNamedEnum;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
+import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 
 public abstract class BaseMapper {
+	
+	private Logger logger = LoggerFactory.getLogger(DisputeService.class);
 
 	@Named("mapContactType")
 	protected ContactType mapContactType(String statusShortCd) {
@@ -77,29 +82,6 @@ public abstract class BaseMapper {
 		return null;
 	}
 	
-	@Named("mapReportType")
-	protected TicketImageDataDocumentType mapReportType(String documentType) {
-		TicketImageDataDocumentType[] values = TicketImageDataDocumentType.values();
-		for (TicketImageDataDocumentType type : values) {
-			if (type.getShortName().equals(documentType)) {
-				return type;
-			}
-		}
-		return null;
-	}
-	
-	@Named("map_report_types")
-	protected String map_report_types(TicketImageDataDocumentType[] reportTypes) {
-		var tempReportTypes = "";
-		var i = 1;
-		for (TicketImageDataDocumentType reportType : reportTypes) {
-			tempReportTypes.concat(reportType.getShortName());
-			if (i != reportTypes.length) tempReportTypes = tempReportTypes.concat(",");
-			i = i +1;
-		}
-		return tempReportTypes;
-	}
-
 	@Named("mapShortNamedEnum")
 	protected String mapShortNamedEnum(ShortNamedEnum code) {
 		return code != null ? code.getShortName() : null;

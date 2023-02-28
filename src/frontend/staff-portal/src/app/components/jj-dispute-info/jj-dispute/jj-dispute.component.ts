@@ -3,7 +3,7 @@ import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -57,6 +57,10 @@ export class JJDisputeComponent implements OnInit {
   RoPCrown = JJDisputeCourtAppearanceRoPCrown;
   RoPDatt = JJDisputeCourtAppearanceRoPDattCd;
   RoPSeized = JJDisputeCourtAppearanceRoPJjSeized;
+  ElectronicTicket = JJDisputeElectronicTicketYn;
+  NoticeOfHearing = JJDisputeNoticeOfHearingYn;
+  ReportType = TicketImageDataJustinDocumentReportType;
+  DocumentType = DocumentType;
   DisputeStatus = JJDisputeStatus;
   requireCourtHearingReason: string = "";
 
@@ -109,6 +113,16 @@ export class JJDisputeComponent implements OnInit {
 
   onGetFile(fileId: string) {
     this.jjDisputeService.getFileBlob(fileId).subscribe(result => {
+      // TODO: remove the custom function here and replace with generated api call once staff API method
+      // has proper response type documented in swagger json
+      // this.documentService.apiDocumentGet(fileId).subscribe((result:Blob) => {
+      var url = URL.createObjectURL(result);
+      window.open(url);
+    });
+  }
+
+  onGetJustinDocument(documentType: DocumentType) {
+    this.jjDisputeService.getJustinDocument(this.lastUpdatedJJDispute.ticketNumber, documentType).subscribe(result => {
       // TODO: remove the custom function here and replace with generated api call once staff API method
       // has proper response type documented in swagger json
       // this.documentService.apiDocumentGet(fileId).subscribe((result:Blob) => {

@@ -31,7 +31,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentKey;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
@@ -357,28 +356,20 @@ public class JJDisputeService {
 	 * @return
 	 */
 	public TicketImageDataJustinDocument getTicketImageByTicketNumber(String ticketNumber, TicketImageDataDocumentType documentType) {
+	
 		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
 		if (jjDisputes.isEmpty()) {
 			logger.error("Cant find JJDispute by ticketNumber {}.", ticketNumber);
 			return null;
 		}
-
-		// Set input parameters class
-		List<TicketImageDataDocumentType> documentTypes = new ArrayList<TicketImageDataDocumentType>();
-		documentTypes.add(documentType);
-		TicketImageDataDocumentKey documentKey = new TicketImageDataDocumentKey();
-		documentKey.setRccId(jjDisputes.get(0).getJustinRccId());
-		documentKey.setDocumentTypes(documentTypes);
-		logger.debug("getTicketImageByTicketNumber called {} {}", documentKey.getRccId(), documentKey.getDocumentTypes().get(0));
 		
 		// Get justin document by rcc id and document type. There should be one and only one.
-		List<TicketImageDataJustinDocument> ticketImages = jjDisputeRepository.getTicketImageByRccId(documentKey);
-		if (ticketImages.isEmpty()) {
+		TicketImageDataJustinDocument ticketImage = jjDisputeRepository.getTicketImageByRccId(jjDisputes.get(0).getJustinRccId(), documentType.getShortName());
+		if (ticketImage == null) {
 			logger.error("Cant find Ticket Image by ticketNumber {} and type {}.", ticketNumber, documentType);
 			return null;
 		}
 
-		TicketImageDataJustinDocument ticketImage = ticketImages.get(0);
 		return ticketImage;
 	}
 

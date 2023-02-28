@@ -7,8 +7,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentKey;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 
@@ -54,7 +52,7 @@ public interface JJDisputeRepository {
 	public List<JJDispute> findByTicketNumber(String ticketNumber);
 	
 	/** Get a justin document record given ticket number and type */
-	public List<TicketImageDataJustinDocument> getTicketImageByRccId(TicketImageDataDocumentKey documentKey);
+	public TicketImageDataJustinDocument getTicketImageByRccId(String rccId, String reportType);
 
 	/**
 	 * Saves an entity and flushes changes instantly.

@@ -17,9 +17,7 @@ import lombok.Setter;
  *         Represents JJ Document retrieved from justin
  *
  */
-@Entity
 //defining class name as Table name
-@Table
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,7 +26,6 @@ public class TicketImageDataJustinDocument {
 	/**
 	 * The report type from JUSTIN
 	 */
-	@Column(nullable = true)
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private TicketImageDataDocumentType reportType;
@@ -36,36 +33,31 @@ public class TicketImageDataJustinDocument {
 	/**
 	 * report format
 	 */
-	@Column
 	@Schema(nullable = true)
 	private String reportFormat;
 	
 	/**
 	 * JUSTIN Participant Id
 	 */
-	@Column
 	@Schema(nullable = true)
 	private String partId;
 	
 	/**
 	 * Participant Name
 	 */
-	@Column
 	@Schema(nullable = true)
 	private String participantName;
 	
 	/**
 	 * Index
 	 */
-	@Column
 	@Schema(nullable = true)
 	private String index;
 	
 	/**
 	 * File blob
 	 */
-	@Column
 	@Schema(nullable = true)
-	private String data;
+	private byte[] fileData;
 }
 

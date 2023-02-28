@@ -249,7 +249,7 @@ public class JJDisputeController {
 	
 	/**
 	 * GET endpoint that retrieves a justin document 
-	 * @param ticketNumber the primary key of the jj dispute to retrieve
+	 * @param disputeId the primary key of the jj dispute to retrieve
 	 * @param documentType of justin document to retrieve
 	 * @param principal logged in user to assign
 	 * @return a single justin document data some 

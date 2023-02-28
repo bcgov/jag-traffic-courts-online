@@ -25,9 +25,6 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageData;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentKey;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
@@ -52,6 +49,8 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Autowired
 	private JJDisputeMapper jjDisputeMapper;
+	
+	@Autowired
 	private TicketImageDataMapper ticketImageDataMapper;
 
 	public JJDisputeRepositoryImpl(JjDisputeApi jjDisputeApi) {
@@ -113,23 +112,22 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 	
 	@Override
-	public List<TicketImageDataJustinDocument> getTicketImageByRccId(TicketImageDataDocumentKey documentKey) {
+	public TicketImageDataJustinDocument getTicketImageByRccId(String rccId, String reportType) {
 		
 		// set up parameters to pass in
 		TicketImageDataGetParms parms = new TicketImageDataGetParms();
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey docKey = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey(); 
-		docKey = TicketImageDataMapper.convert(documentKey);
-		logger.debug("getTicketImageByTccId called docKey {} {}", docKey.getRccId(), docKey.getReportTypes());
+		docKey.setRccId(rccId);
 		docKey.setRccId("12841.0045"); // TODO : REMOVE!!!!!!!
+		docKey.setReportTypes(reportType);
 		parms.addDocumentKeysItem(docKey); // expects an array of document keys
 
 		TicketImageDataGetResponseResult response = jjDisputeApi.v1TicketImageDataGetPost(parms);
-		if (response == null)
-			return new ArrayList<TicketImageDataJustinDocument>();
+		if (response == null || response.getDocuments().isEmpty())
+			return new TicketImageDataJustinDocument();
 		
-		TicketImageData mappedResponse = TicketImageDataMapper.convert(response);
-		return mappedResponse.getDocuments().stream()
-				.collect(Collectors.toList());
+		TicketImageDataJustinDocument mappedResponse = ticketImageDataMapper.convert(response.getDocuments().get(0));
+		return mappedResponse;
 	}
 
 	@Override

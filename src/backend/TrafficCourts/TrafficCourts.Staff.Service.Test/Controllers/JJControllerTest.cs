@@ -372,6 +372,56 @@ public class JJControllerTest
     }
 
     [Fact]
+    public async void TestGetJustinDocument200Result()
+    {
+        // Arrange
+        TicketImageDataJustinDocument justinDocument = new();
+        string ticketnumber = "AJ201092461";
+        justinDocument.ReportType = TicketImageDataJustinDocumentReportType.TICKET_IMAGE;
+        DocumentType documentType = DocumentType.TICKET_IMAGE;
+        var jjDisputeService = new Mock<IJJDisputeService>();
+
+        jjDisputeService
+            .Setup(_ => _.GetJustinDocumentAsync(ticketnumber, documentType, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(justinDocument);
+        var mockLogger = new Mock<ILogger<JJController>>();
+        JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await jjDisputeController.GetJustinDocument(ticketnumber, documentType, CancellationToken.None);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal(justinDocument, okResult.Value);
+    }
+
+
+
+    [Fact]
+    public async void TestGetJustinDocument404Result()
+    {
+        // Arrange
+        JJDispute dispute = new();
+        string ticketnumber = "AJ201092461";
+        DocumentType documentType = DocumentType.NOTICE_OF_DISPUTE;
+        dispute.TicketNumber = ticketnumber;
+        var jjDisputeService = new Mock<IJJDisputeService>();
+
+        jjDisputeService
+            .Setup(_ => _.GetJustinDocumentAsync(ticketnumber, documentType, It.IsAny<CancellationToken>()))
+            .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
+        var mockLogger = new Mock<ILogger<JJController>>();
+        JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await jjDisputeController.GetJustinDocument(ticketnumber, documentType, CancellationToken.None);
+
+        // Assert
+        var notFoundResult = Assert.IsType<HttpError>(result);
+        Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+    }
+
+    [Fact]
     public async void TestGetJJDisputeDisputeAssigned409Result()
     {
         // Arrange

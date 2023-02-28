@@ -95,6 +95,20 @@ public class DisputeController {
 		}
 		return new ResponseEntity<Dispute>(disputeService.getDisputeById(id), HttpStatus.OK);
 	}
+	
+	/**
+	 * GET endpoint that retrieves the detail of a specific dispute without assigning it
+	 *
+	 * @param id
+	 * @param principal the logged-in user
+	 * @return {@link Dispute}
+	 */
+	@GetMapping("/dispute/noassign/{id}")
+	public ResponseEntity<Dispute> getDisputeNoAssign(@PathVariable Long id, Principal principal) {
+		logger.debug("GET /disputes/noassign/{} called", id);
+		return new ResponseEntity<Dispute>(disputeService.getDisputeById(id), HttpStatus.OK);
+	}
+
 
 	/**
 	 * GET endpoint that finds Dispute statuses by TicketNumber and IssuedTime.

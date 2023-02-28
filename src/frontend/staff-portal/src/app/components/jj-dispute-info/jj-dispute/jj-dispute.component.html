@@ -327,9 +327,15 @@
       <mat-expansion-panel [expanded]="true" id="uploaded-documents" hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <span style="color: black;"><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }}) </b></span>
+            <span style="color: black;"><b>Documents</b></span>
           </mat-panel-title>
         </mat-expansion-panel-header>
+        <span><b>Justin Documents</b></span><br/>
+        <span *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.Y">Electronic Ticket (not available)</span>
+        <button type="button" class="linkbutton" (click)="onGetJustinDocument(DocumentType.TicketImage)" *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.N">Electronic Ticket Image</button><br/>
+        <span *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y">Notice Of Hearing (not available)</span>
+        <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)" *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.N">Notice Of Hearing</button><br /><br />
+        <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br/>
         <div *ngFor="let doc of lastUpdatedJJDispute.fileData">
           <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)" *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>&nbsp;
           <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>

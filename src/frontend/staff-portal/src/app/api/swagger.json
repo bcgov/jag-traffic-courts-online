@@ -2094,6 +2094,139 @@
         }
       }
     },
+    "/api/jj/ticketimage/{ticketNumber}/{documentType}": {
+      "get": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Returns a single Justin Document for a given ticket number and docment type.",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "Ticket number for a specific JJ dispute record.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentType",
+            "in": "path",
+            "description": "indicates document type.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/DocumentType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketImageDataJustinDocument"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketImageDataJustinDocument"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketImageDataJustinDocument"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jj-dispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          }
+        }
+      }
+    },
     "/api/jj/{ticketNumber}": {
       "put": {
         "tags": [
@@ -4077,6 +4210,14 @@
         "additionalProperties": false,
         "description": "Represents a violation ticket notice of dispute."
       },
+      "DocumentType": {
+        "enum": [
+          "UNKNOWN",
+          "NOTICE_OF_DISPUTE",
+          "TICKET_IMAGE"
+        ],
+        "type": "string"
+      },
       "EmailHistory": {
         "type": "object",
         "properties": {
@@ -5300,6 +5441,52 @@
           }
         },
         "additionalProperties": false
+      },
+      "TicketImageDataJustinDocument": {
+        "type": "object",
+        "properties": {
+          "reportType": {
+            "$ref": "#/components/schemas/TicketImageDataJustinDocumentReportType"
+          },
+          "reportFormat": {
+            "type": "string",
+            "nullable": true
+          },
+          "partId": {
+            "type": "string",
+            "nullable": true
+          },
+          "participantName": {
+            "type": "string",
+            "nullable": true
+          },
+          "index": {
+            "type": "string",
+            "nullable": true
+          },
+          "fileData": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            },
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TicketImageDataJustinDocumentReportType": {
+        "enum": [
+          "UNKNOWN",
+          "NOTICE_OF_DISPUTE",
+          "TICKET_IMAGE"
+        ],
+        "type": "string"
       },
       "UserConsentRepresentation": {
         "type": "object",
