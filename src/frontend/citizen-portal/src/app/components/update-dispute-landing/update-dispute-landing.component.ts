@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { JJDisputeStatus } from 'app/api';
-import { AuthStore } from 'app/auth/store';
+import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { DisputeStore } from 'app/store';
 import { BehaviorSubject } from 'rxjs';
@@ -16,11 +16,14 @@ import { BehaviorSubject } from 'rxjs';
 export class UpdateDisputeLandingComponent implements OnInit {
   private state: DisputeStore.State;
   public isEditable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public bcServicesCardInfoLink: string;
 
   constructor(
+    private appConfigService: AppConfigService,
     private disputeService: DisputeService,
     private store: Store,
   ) {
+    this.bcServicesCardInfoLink = this.appConfigService.bcServicesCardInfoLink;
   }
 
   ngOnInit(): void {
