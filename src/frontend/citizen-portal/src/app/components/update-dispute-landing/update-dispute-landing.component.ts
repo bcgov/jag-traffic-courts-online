@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { JJDisputeStatus } from 'app/api';
-import { AuthStore } from 'app/auth/store';
-import { AppConfig } from 'app/services/app-config.service';
+import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { DisputeStore } from 'app/store';
 import { BehaviorSubject } from 'rxjs';
@@ -20,11 +19,11 @@ export class UpdateDisputeLandingComponent implements OnInit {
   public bcServicesCardInfoLink: string;
 
   constructor(
-    private appConfig: AppConfig,
+    private appConfigService: AppConfigService,
     private disputeService: DisputeService,
     private store: Store,
   ) {
-    this.bcServicesCardInfoLink = this.appConfig.bcServicesCardInfoLink;
+    this.bcServicesCardInfoLink = this.appConfigService.bcServicesCardInfoLink;
   }
 
   ngOnInit(): void {
