@@ -59,8 +59,7 @@ autoscaling:
 ##
 coms:
   db: 
-    secretName: patroni-coms
-    host: patroni-coms
+    secretName: common-object-management-service-database
+    host: postgres
   service:
-    secretName: common-object-management-service-coms-basicauth
-
+    secretName: common-object-management-service-basicauth

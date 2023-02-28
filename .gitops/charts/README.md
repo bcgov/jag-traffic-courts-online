@@ -8,6 +8,44 @@ See [Installing Helm](https://helm.sh/docs/intro/install/)
 
 `helm template traffic-court-online --values traffic-court-dev-values.yaml`
 
+
+## Postgres
+
+```
+helm install postgres spilo-0.3.0.tgz --values spilo-postgres-values.yaml
+```
+
+## Keycloak
+
+Generate a random postgres database password for keycloak. Be sure to generate new passwords
+for each environment.
+
+```
+tr -dc A-Za-z0-9 </dev/urandom | head -c 32 ; echo ''
+ujk7CnGm5U6JLppkW7WXmVfPj6de3fUY
+```
+
+Create a database user. Connect to the leader postgres instance terminal,
+
+```
+psql
+CREATE USER keycloak WITH PASSWORD 'ujk7CnGm5U6JLppkW7WXmVfPj6de3fUY';
+CREATE DATABASE keycloak;
+ALTER DATABASE keycloak OWNER TO keycloak;
+```
+
+Create a secret for keycloak deployment, note, the secret name `keycloak-postgres` is arbitrary and must match Helm chart value `externalDatabase.existingSecret`
+
+```
+kubectl create -n 0198bb-dev secret generic keycloak-postgres --from-literal=password=ujk7CnGm5U6JLppkW7WXmVfPj6de3fUY
+```
+
+Deploy Keycloak
+
+```
+helm install keycloak keycloak-13.1.1.tgz --values keycloak-values.yaml
+```
+
 ## Common Object Management Service
 
 To package the COMS helm chart to a tgz, clone the repository into a **temporary** directory
@@ -20,12 +58,33 @@ helm package --dependency-update common-object-management-service/charts/coms/
 Successfully packaged chart and saved it to: common-object-management-service-0.0.8.tgz
 ```
 
+Generate a random postgres database password for keycloak. Be sure to generate new passwords
+for each environment.
+
+```
+tr -dc A-Za-z0-9 </dev/urandom | head -c 32 ; echo ''
+EzkVJNlFdVCvKsEnd8IU8QFdcBF7237j
+```
+
+Create a database user. Connect to the leader postgres instance termial,
+
+```
+psql
+CREATE USER coms WITH PASSWORD 'EzkVJNlFdVCvKsEnd8IU8QFdcBF7237j';
+CREATE DATABASE coms;
+ALTER DATABASE coms OWNER TO coms;
+```
+
+
+
 ## Pull Charts
 
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
+helm pull bitnami/keycloak
 helm pull bitnami/rabbitmq
+helm pull bitnami/redis-cluster
 ```
 
 ### Installation
