@@ -115,9 +115,10 @@ export class JJDisputeComponent implements OnInit {
     this.jjDisputeService.getFileBlob(fileId).subscribe(result => {
       // TODO: remove the custom function here and replace with generated api call once staff API method
       // has proper response type documented in swagger json
-      // this.documentService.apiDocumentGet(fileId).subscribe((result:Blob) => {
-      var url = URL.createObjectURL(result);
-      window.open(url);
+      if (result != null) {
+        var url = URL.createObjectURL(result);
+        window.open(url);
+      } else alert("File contents not found");
     });
   }
 

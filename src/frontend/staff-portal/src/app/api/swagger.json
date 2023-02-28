@@ -5465,11 +5465,7 @@
             "nullable": true
           },
           "fileData": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "byte"
-            },
+            "type": "string",
             "nullable": true
           },
           "additionalProperties": {

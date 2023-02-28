@@ -18,7 +18,7 @@ export interface TicketImageDataJustinDocument {
     partId?: string | null;
     participantName?: string | null;
     index?: string | null;
-    fileData?: Array<string> | null;
+    fileData?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

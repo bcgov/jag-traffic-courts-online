@@ -118,7 +118,6 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 		TicketImageDataGetParms parms = new TicketImageDataGetParms();
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey docKey = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataDocumentKey(); 
 		docKey.setRccId(rccId);
-		docKey.setRccId("12841.0045"); // TODO : REMOVE!!!!!!!
 		docKey.setReportTypes(reportType);
 		parms.addDocumentKeysItem(docKey); // expects an array of document keys
 

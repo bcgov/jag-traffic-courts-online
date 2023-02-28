@@ -26,7 +26,7 @@ public abstract class TicketImageDataMapper extends BaseMapper {
 	@Mapping(source = "partId", target = "partId")
 	@Mapping(source = "participantName", target = "participantName")
 	@Mapping(source = "index", target = "index")
-	@Mapping(source = "data", target = "fileData", qualifiedByName="mapFileData")
+	@Mapping(source = "data", target = "fileData")
 	public abstract TicketImageDataJustinDocument convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument ticketImageDocument);
 	
 	@Named("mapReportType")
@@ -38,10 +38,5 @@ public abstract class TicketImageDataMapper extends BaseMapper {
 			}
 		}
 		return null;
-	}
-	
-	@Named("mapFileData")
-	protected byte[] mapFileData(String data) {
-		return data.getBytes();
 	}
 }

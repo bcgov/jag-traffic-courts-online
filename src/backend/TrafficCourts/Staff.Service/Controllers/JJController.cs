@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
+using System.Text;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -171,13 +172,15 @@ public class JJController : StaffControllerBase<JJController>
         {
             TicketImageDataJustinDocument justinDocument = await _jjDisputeService.GetJustinDocumentAsync(ticketNumber, documentType, cancellationToken);
 
-            MemoryStream stream = new MemoryStream(justinDocument.FileData.First());
-            // Reset position to the beginning of the stream
+            // base 64 decoding (comes from Oracle as base 64 encoded string)
+            var decodedFileData = Convert.FromBase64String(justinDocument.FileData);
+
+            MemoryStream stream = new MemoryStream( decodedFileData );
             stream.Position = 0;
 
-            var fileName = justinDocument.ParticipantName ?? "Disputant" + "_" + justinDocument.ReportType.ToString() ?? "justinDoc" + "." + justinDocument.ReportFormat;
+            var fileName = (justinDocument.ParticipantName ?? "Disputant") + "_" + (justinDocument.ReportType.ToString() ?? "justinDoc") + "." + justinDocument.ReportFormat ?? "pdf";
 
-            return File(stream, justinDocument.ReportFormat ?? "application/octet-stream", fileName);
+            return File(stream, "application/pdf", fileName);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
@@ -189,12 +192,12 @@ public class JJController : StaffControllerBase<JJController>
         }
         catch (ApiException e)
         {
-            _logger.LogError(e, "Error retrieving Justin Document from oracle-data-api");
+            _logger.LogError(e, "Error retrieving Justin Document");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error retrieving Justin Document from oracle-data-api");
+            _logger.LogError(e, "Error retrieving Justin Document");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

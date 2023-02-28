@@ -1,10 +1,9 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import java.sql.Blob;
+
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,6 +57,6 @@ public class TicketImageDataJustinDocument {
 	 * File blob
 	 */
 	@Schema(nullable = true)
-	private byte[] fileData;
+	private String fileData;
 }
 
