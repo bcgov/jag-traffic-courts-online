@@ -28,6 +28,9 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 
 	@Autowired
 	private JJDisputeMapper jjDisputeMapper;
+	
+	@Autowired
+	private TicketImageDataMapper ticketImageDataMapper;
 
 	@Test
 	public void testJJDispute() throws Exception {
@@ -384,6 +387,34 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(remarkCreatedBy, jjDisputeRemark.getCreatedBy());
 		assertEquals(remarkModifedTs, jjDisputeRemark.getModifiedTs());
 		assertEquals(remarkModifiedBy, jjDisputeRemark.getModifiedBy());
+	}
+	
+	@Test
+	public void testTicketImageData() throws Exception {
+		
+		String reportType = "NOTICE_OF_DISPUTE";
+		String index = RandomUtil.randomAlphabetic(5);
+		String partId = RandomUtil.randomAlphanumeric(10);
+		String participantName = RandomUtil.randomGivenName() + " " + RandomUtil.randomSurname();
+		String reportFormat = RandomUtil.randomAlphabetic(5);
+		String data = RandomUtil.randomAlphanumeric(1000);
+		
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument justinDocument = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument();
+		justinDocument.setReportType(reportType);
+		justinDocument.setIndex(index);
+		justinDocument.setPartId(partId);
+		justinDocument.setParticipantName(participantName);
+		justinDocument.setReportFormat(reportFormat);
+		justinDocument.setData(data);
+		
+		ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument doc = ticketImageDataMapper.convert(justinDocument);
+		
+		assertEquals(reportType, doc.getReportType().getShortName());
+		assertEquals(index, doc.getIndex());
+		assertEquals(partId, doc.getPartId());
+		assertEquals(participantName, doc.getParticipantName());
+		assertEquals(reportFormat, doc.getReportFormat());
+		assertEquals(data, doc.getFileData());
 	}
 
 	@Test

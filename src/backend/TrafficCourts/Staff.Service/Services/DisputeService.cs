@@ -73,9 +73,9 @@ public class DisputeService : IDisputeService
         return await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
     }
 
-    public async Task<Dispute> GetDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
     {
-        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, isAssign, cancellationToken);
 
         OcrViolationTicket? ocrViolationTicket = null;
         if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
@@ -254,7 +254,7 @@ public class DisputeService : IDisputeService
     {
         _logger.LogDebug("Email verification sent");
 
-        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
         EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.NoticeOfDisputeGuid));
@@ -313,7 +313,7 @@ public class DisputeService : IDisputeService
             {
                 try
                 {
-                    Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeUpdateRequest.DisputeId, cancellationToken);
+                    Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeUpdateRequest.DisputeId, false, cancellationToken);
 
                     // Fill in record to return
                     disputeWithUpdates.DisputeId = dispute.DisputeId;

@@ -10,7 +10,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ShortNamedEnum;
 
 public abstract class BaseMapper {
-
+	
 	@Named("mapContactType")
 	protected ContactType mapContactType(String statusShortCd) {
 		ContactType[] values = ContactType.values();
@@ -32,7 +32,7 @@ public abstract class BaseMapper {
 		}
 		return null;
 	}
-
+	
 	@Named("mapFindingResult")
 	protected JJDisputedCountFinding mapFindingResult(String statusShortCd) {
 		JJDisputedCountFinding[] values = JJDisputedCountFinding.values();

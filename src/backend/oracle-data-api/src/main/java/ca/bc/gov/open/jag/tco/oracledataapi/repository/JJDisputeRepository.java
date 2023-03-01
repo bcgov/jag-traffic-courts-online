@@ -49,7 +49,7 @@ public interface JJDisputeRepository {
 
 	/** Fetch all records that match by JJDispute.ticketNumber (should only ever be one). */
 	public List<JJDispute> findByTicketNumber(String ticketNumber);
-
+	
 	/**
 	 * Saves an entity and flushes changes instantly.
 	 *

@@ -6,8 +6,9 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { CourthouseConfig } from '@config/config.model';
 import { EventEmitter, Injectable } from '@angular/core';
-import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark } from 'app/api';
+import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType } from 'app/api';
 import { AuthService, UserRepresentation } from './auth.service';
+
 import { cloneDeep } from "lodash";
 import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
@@ -300,6 +301,24 @@ export class JJDisputeService {
           }),
       }).pipe(
         map((result:HttpResponse<Blob>) => {
+        return result.body;
+      }));
+  }
+
+  public getJustinDocument(ticketNumber: string, documentType: DocumentType) {
+    return this.http.get(`api/jj/ticketimage/${ticketNumber}/${documentType.toString()}`, {
+      observe: 'response',
+      responseType: 'blob',
+      context: new HttpContext(),
+      withCredentials: true,
+      headers: new HttpHeaders(
+        {
+          'Authorization': 'Bearer ' + this.authService.token,
+          'Accept':'*/*',
+          'Access-Control-Allow-Origin': ''
+        }),
+    }).pipe(
+      map((result:HttpResponse<Blob>)=> {
         return result.body;
       }));
   }

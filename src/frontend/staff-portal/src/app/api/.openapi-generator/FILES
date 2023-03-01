@@ -33,6 +33,7 @@ model/disputeUpdateRequest.model.ts
 model/disputeUpdateRequestStatus2.model.ts
 model/disputeUpdateRequestUpdateType.model.ts
 model/disputeWithUpdates.model.ts
+model/documentType.model.ts
 model/emailHistory.model.ts
 model/emailHistorySuccessfullySent.model.ts
 model/excludeStatus.model.ts
@@ -75,6 +76,8 @@ model/point.model.ts
 model/problemDetails.model.ts
 model/socialLinkRepresentation.model.ts
 model/statute.model.ts
+model/ticketImageDataJustinDocument.model.ts
+model/ticketImageDataJustinDocumentReportType.model.ts
 model/userConsentRepresentation.model.ts
 model/userRepresentation.model.ts
 model/violationTicket.model.ts

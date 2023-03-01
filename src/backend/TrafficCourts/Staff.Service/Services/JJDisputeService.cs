@@ -57,6 +57,14 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
+    public async Task<TicketImageDataJustinDocument> GetJustinDocumentAsync(string ticketNumber, DocumentType documentType, CancellationToken cancellationToken)
+    {
+        TicketImageDataJustinDocument justinDocument = await _oracleDataApi.GetTicketImageDataAsync(ticketNumber, documentType, cancellationToken);
+
+        return justinDocument;
+    }
+
+
     public async Task<JJDispute> SubmitAdminResolutionAsync(long disputeId, bool checkVTC, JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(jjDispute.TicketNumber, checkVTC, jjDispute, cancellationToken);

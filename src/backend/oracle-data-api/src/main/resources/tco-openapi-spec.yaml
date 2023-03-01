@@ -84,6 +84,26 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
+  /v1/ticketImageDataGet:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ticketImageDataGetParms'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ticketImageDataGetResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
   /v1/assignDisputeVtc:
     post:
       parameters:
@@ -617,6 +637,56 @@ components:
         status:
           type: string
         exception:
+          type: string
+          format: nullable
+    ticketImageDataGetParms:
+      type: object
+      properties:
+        document_keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ticketImageDataDocumentKey'
+    ticketImageDataDocumentKey:
+      type: object
+      properties:
+        rcc_id:
+          type: string
+          format: nullable
+        report_types:
+          type: string
+          format: nullable
+    ticketImageDataGetResponseResult:
+      type: object
+      properties:
+        create_date:
+          type: string
+          format: nullable
+        version:
+          type: string
+          format: nullable
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/ticketImageDataJustinDocument'
+    ticketImageDataJustinDocument:
+      type: object
+      properties:
+        report_type:
+          type: string
+          format: nullable
+        report_format:
+          type: string
+          format: nullable
+        part_id:
+          type: string
+          format: nullable
+        participant_name:
+          type: string
+          format: nullable
+        index:
+          type: string
+          format: nullable
+        data:
           type: string
           format: nullable
     DisputeResponseResult:

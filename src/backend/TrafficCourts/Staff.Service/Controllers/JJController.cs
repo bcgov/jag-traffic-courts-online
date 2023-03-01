@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Net;
+using System.Text;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -138,6 +140,64 @@ public class JJController : StaffControllerBase<JJController>
         catch (Exception e)
         {
             _logger.LogError(e, "Error retrieving JJ dispute from oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Returns a single Justin Document for a given ticket number and docment type.
+    /// </summary>
+    /// <param name="ticketNumber">Ticket number for a specific JJ dispute record.</param>
+    /// <param name="documentType">indicates document type.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A single Ticket Image Data record</returns>
+    /// <response code="200">The document was found.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+    [HttpGet("ticketimage/{ticketNumber}/{documentType}")]
+    [ProducesResponseType(typeof(TicketImageDataJustinDocument), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
+    public async Task<IActionResult> GetJustinDocument(string ticketNumber, DocumentType documentType, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving Justin Documnet {ticketNumber} from oracle-data-api", ticketNumber);
+
+        try
+        {
+            TicketImageDataJustinDocument justinDocument = await _jjDisputeService.GetJustinDocumentAsync(ticketNumber, documentType, cancellationToken);
+
+            // base 64 decoding (comes from Oracle as base 64 encoded string)
+            var decodedFileData = Convert.FromBase64String(justinDocument.FileData);
+
+            MemoryStream stream = new MemoryStream( decodedFileData );
+            stream.Position = 0;
+
+            var fileName = (justinDocument.ParticipantName ?? "Disputant") + "_" + (justinDocument.ReportType.ToString() ?? "justinDoc") + "." + justinDocument.ReportFormat ?? "pdf";
+
+            return File(stream, "application/pdf", fileName);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error retrieving Justin Document");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving Justin Document");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

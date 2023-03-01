@@ -45,7 +45,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Autowired
 	private JJDisputeMapper jjDisputeMapper;
-
+	
 	public JJDisputeRepositoryImpl(JjDisputeApi jjDisputeApi) {
 		this.jjDisputeApi = jjDisputeApi;
 	}
@@ -103,7 +103,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 		}
 		return new ArrayList<JJDispute>();
 	}
-
+	
 	@Override
 	public JJDispute saveAndFlush(JJDispute jjDispute) {
 		try {
