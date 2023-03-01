@@ -54,10 +54,3 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-          - mountPath: /data
-            name: {{ include "oracle-data-api.fullname" . }}-data
-      volumes:
-      - name: {{ include "oracle-data-api.fullname" . }}-data
-        persistentVolumeClaim:
-          claimName: {{ include "oracle-data-api.fullname" . }}-data
