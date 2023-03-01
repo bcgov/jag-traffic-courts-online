@@ -36,6 +36,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.TicketImageDataRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 
 @Service
@@ -45,6 +46,9 @@ public class JJDisputeService {
 
 	@Autowired
 	private JJDisputeRepository jjDisputeRepository;
+	
+	@Autowired
+	private TicketImageDataRepository ticketImageDataRepository;
 
 	@Autowired
 	private JJDisputeRemarkRepository jjDisputeRemarkRepository;
@@ -364,7 +368,7 @@ public class JJDisputeService {
 		}
 		
 		// Get justin document by rcc id and document type. There should be one and only one.
-		TicketImageDataJustinDocument ticketImage = jjDisputeRepository.getTicketImageByRccId(jjDisputes.get(0).getJustinRccId(), documentType.getShortName());
+		TicketImageDataJustinDocument ticketImage = ticketImageDataRepository.getTicketImageByRccId(jjDisputes.get(0).getJustinRccId(), documentType.getShortName());
 		if (ticketImage == null) {
 			logger.error("Cant find Ticket Image by ticketNumber {} and type {}.", ticketNumber, documentType);
 			return null;

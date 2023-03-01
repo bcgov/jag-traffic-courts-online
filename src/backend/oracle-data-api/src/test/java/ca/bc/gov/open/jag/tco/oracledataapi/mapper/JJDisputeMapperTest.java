@@ -414,7 +414,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(partId, doc.getPartId());
 		assertEquals(participantName, doc.getParticipantName());
 		assertEquals(reportFormat, doc.getReportFormat());
-		assertEquals(data.getBytes(), doc.getFileData());
+		assertEquals(data, doc.getFileData());
 	}
 
 	@Test
