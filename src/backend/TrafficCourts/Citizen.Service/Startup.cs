@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NodaTime;
@@ -14,7 +14,6 @@ using TrafficCourts.Citizen.Service.Services.Impl;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
-using TrafficCourts.Common.Features.FilePersistence;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
 
@@ -49,8 +48,6 @@ public static class Startup
         // configure application 
         builder.Services.UseConfigurationValidation();
         builder.UseTicketSearch(logger);
-
-        builder.Services.AddFilePersistence(builder.Configuration);
 
         // Form Recognizer
         builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));

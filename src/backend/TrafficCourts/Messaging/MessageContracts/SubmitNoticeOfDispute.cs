@@ -266,6 +266,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// Filename of JSON serialized OCR data that is saved in object storage.
     /// </summary>
+    [Obsolete("OCR Results save with properties notice of dispute id and document type = 'OCR Result'")]
     public string? OcrTicketFilename { get; set; }
 
     public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();

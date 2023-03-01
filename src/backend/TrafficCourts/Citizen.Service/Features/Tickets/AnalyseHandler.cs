@@ -1,7 +1,6 @@
 using MediatR;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets;
@@ -35,21 +34,18 @@ public static class AnalyseHandler
         private readonly ILogger<Handler> _logger;
         private readonly IFormRecognizerService _formRegognizerService;
         private readonly IFormRecognizerValidator _formRecognizerValidator;
-        private readonly IFilePersistenceService _filePersistenceService;
         private readonly IMemoryStreamManager _memoryStreamManager;
         private readonly IRedisCacheService _redisCacheService;
 
         public Handler(
             IFormRecognizerService formRegognizerService,
             IFormRecognizerValidator formRecognizerValidator,
-            IFilePersistenceService filePersistenceService,
             IMemoryStreamManager memoryStreamManager,
             IRedisCacheService redisCacheService,
             ILogger<Handler> logger)
         {
             _formRegognizerService = formRegognizerService ?? throw new ArgumentNullException(nameof(logger));
             _formRecognizerValidator = formRecognizerValidator ?? throw new ArgumentNullException(nameof(formRecognizerValidator));
-            _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
             _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
             _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

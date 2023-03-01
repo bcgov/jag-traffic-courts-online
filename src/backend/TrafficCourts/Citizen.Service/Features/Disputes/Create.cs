@@ -1,6 +1,5 @@
 using MassTransit;
 using MediatR;
-using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Messaging.MessageContracts;
@@ -9,6 +8,9 @@ using System.Diagnostics;
 using NodaTime;
 using HashidsNet;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Coms.Client;
+using TrafficCourts.Common.Models;
+using System.Text.Json;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
@@ -52,31 +54,42 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             private readonly ILogger _logger;
             private readonly IBus _bus;
             private readonly IRedisCacheService _redisCacheService;
-            private readonly IFilePersistenceService _filePersistenceService;
             private readonly IMapper _mapper;
             private readonly IClock _clock;
             private readonly IHashids _hashids;
+            private readonly IObjectManagementService _objectManagementService;
+            private readonly IMemoryStreamManager _memoryStreamManager;
 
             /// <summary>
             /// Creates the handler.
             /// </summary>
             /// <param name="bus"></param>
             /// <param name="redisCacheService"></param>
-            /// <param name="filePersistenceService"></param>
+            /// <param name="objectManagementService"></param>
+            /// <param name="memoryStreamManager"></param>
             /// <param name="mapper"></param>
             /// <param name="clock"></param>
-            /// <param name="logger"></param>
             /// <param name="hashids"></param>
+            /// <param name="logger"></param>
             /// <exception cref="ArgumentNullException"></exception>
-            public Handler(IBus bus, IRedisCacheService redisCacheService, IFilePersistenceService filePersistenceService, IMapper mapper, IClock clock, ILogger<Handler> logger, IHashids hashids)
+            public Handler(
+                IBus bus, 
+                IRedisCacheService redisCacheService,
+                IObjectManagementService objectManagementService,
+                IMemoryStreamManager memoryStreamManager,
+                IMapper mapper, 
+                IClock clock,
+                IHashids hashids,
+                ILogger<Handler> logger)
             {
                 _bus = bus ?? throw new ArgumentNullException(nameof(bus));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
-                _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
+                _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
+                _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
                 _clock = clock ?? throw new ArgumentNullException(nameof(clock));
-                _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _hashids = hashids ?? throw new ArgumentNullException(nameof(hashids));
+                _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -90,6 +103,9 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 OcrViolationTicket? violationTicket = null;
                 Models.Tickets.ViolationTicket? lookedUpViolationTicket = null;
                 MemoryStream? ticketImageStream = null;
+
+                // create the noticeOfDisputeId
+                Guid noticeOfDisputeId = NewId.NextSequentialGuid();
 
                 try
                 {
@@ -114,13 +130,10 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                             if (ticketImageStream is not null)
                             {
-                                var filename = await _filePersistenceService.SaveFileAsync(ticketImageStream, cancellationToken);
+                                Guid id = await SaveTicketImageAsync(noticeOfDisputeId, ticketImageStream, violationTicket.ImageFilename, cancellationToken);
 
                                 // remove the image from the redis cache, to free-up the space.
                                 await _redisCacheService.DeleteRecordAsync(violationTicket.ImageFilename);
-
-                                // re-set the imagefilename, as it may have potentially changed.
-                                violationTicket.ImageFilename = filename;
                             }
                         }
                         // Check if the ticket id belongs to a Looked Up type of ticket
@@ -150,13 +163,14 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                     SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
 
-                    Guid noticeOfDisputeGuid = NewId.NextSequentialGuid();
-                    submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeGuid;
+                    submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeId;
                     submitNoticeOfDispute.SubmittedTs = _clock.GetCurrentInstant().ToDateTimeUtc();
 
                     if (violationTicket != null)
                     {
-                        submitNoticeOfDispute.OcrTicketFilename = await _filePersistenceService.SaveJsonFileAsync(violationTicket, noticeOfDisputeGuid.ToString(), cancellationToken);
+                        var id = await SaveTicketOcrResultAsync(noticeOfDisputeId, violationTicket, cancellationToken);
+                        // OcrTicketFilename is obsolete, however, this field cannot be empty otherwise violation ticket will not be initialized
+                        submitNoticeOfDispute.OcrTicketFilename = id.ToString("d"); 
                     }
 
                     if (lookedUpViolationTicket != null)
@@ -179,6 +193,50 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     _logger.LogError(exception, "Error creating dispute");
                     return new Response(exception);
                 }
+            }
+
+            /// <summary>
+            /// Saves the ticket image associated with Notice of Dispute
+            /// </summary>
+            private async Task<Guid> SaveTicketImageAsync(Guid noticeOfDisputeId, MemoryStream stream, string filename, CancellationToken cancellationToken)
+            {
+                InternalFileProperties properties = new InternalFileProperties
+                { 
+                    NoticeOfDisputeId = noticeOfDisputeId, 
+                    DocumentType = InternalFileProperties.DocumentTypes.TicketImage
+                };
+
+                var metadata = properties.ToMetadata();
+                var tags = properties.ToTags();
+
+                Coms.Client.File file = new Coms.Client.File(stream, filename, null, metadata, tags);
+                Guid id = await _objectManagementService.CreateFileAsync(file, cancellationToken);
+
+                return id;
+            }
+
+            /// <summary>
+            /// Saves the OCR result associated with Notice of Dispute
+            /// </summary>
+            private async Task<Guid> SaveTicketOcrResultAsync(Guid noticeOfDisputeId, OcrViolationTicket violationTicket, CancellationToken cancellationToken)
+            {
+                InternalFileProperties properties = new InternalFileProperties
+                { 
+                    NoticeOfDisputeId = noticeOfDisputeId, 
+                    DocumentType = InternalFileProperties.DocumentTypes.OcrResult
+                };
+
+                var metadata = properties.ToMetadata();
+                var tags = properties.ToTags();
+
+                using var stream = _memoryStreamManager.GetStream();
+                JsonSerializer.Serialize(stream, violationTicket);
+                stream.Position = 0L;
+
+                Coms.Client.File file = new Coms.Client.File(stream, "ocr-result.json", "application/json", metadata, tags);
+                Guid id = await _objectManagementService.CreateFileAsync(file, cancellationToken);
+
+                return id;
             }
         }
     }

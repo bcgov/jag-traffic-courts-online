@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
 using TrafficCourts.Messaging;
@@ -51,8 +50,6 @@ public static class Startup
         builder.Services.AddAuthentication(builder.Configuration);
 
         builder.Services.AddAuthorization(builder.Configuration);
-
-        builder.Services.AddFilePersistence(builder.Configuration);
 
         builder.Services.AddKeycloakAdminApiClient(builder.Configuration);
         builder.Services.AddTransient<IKeycloakService, KeycloakService>();

@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
@@ -8,6 +7,8 @@ using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Staff.Service.Models;
 using System.Collections.ObjectModel;
 using System.Security.Claims;
+using TrafficCourts.Common.Models;
+using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -21,22 +22,23 @@ public class DisputeService : IDisputeService
     private readonly IRejectedDisputeEmailTemplate _rejectedDisputeEmailTemplate;
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
-    private readonly IFilePersistenceService _filePersistenceService;
+    private readonly IObjectManagementService _objectManagementService;
+
 
     public DisputeService(
         IOracleDataApiClient oracleDataApi,
         IBus bus,
-        IFilePersistenceService filePersistenceService,
-        ILogger<DisputeService> logger,
+        IObjectManagementService objectManagementService,
         ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
-        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate)
+        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
+        ILogger<DisputeService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
-        _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
+        _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
+        _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(cancelledDisputeEmailTemplate));
+        _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(rejectedDisputeEmailTemplate));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate;
-        _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate;
     }
 
     public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
@@ -47,20 +49,13 @@ public class DisputeService : IDisputeService
         {
             try
             {
-                // When reviewing the list of tickets, the JSON is needed to compute SystemDetectedOCRIssues
-                OcrViolationTicket? ocrViolationTicket = null;
-                if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
-                {
-                    // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
-                    ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
-                    dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
-                }
+                dispute.ViolationTicket.OcrViolationTicket = await GetOcrResultsAsync(dispute, cancellationToken);
             }
             catch (Exception ex)
             {
                 // Should never reach here in test or prod, but if so then it means the ocr json data is invalid or not parseable by .NET
                 // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
-                _logger.LogError(ex, "Could not extract object store file reference from json data while retrieving disputes.");
+                _logger.LogError(ex, "Could not get violation ticket OCR results for {DisputeId}", dispute.DisputeId);
             }
         }
 
@@ -77,85 +72,97 @@ public class DisputeService : IDisputeService
     {
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
 
-        OcrViolationTicket? ocrViolationTicket = null;
-        if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
-        {
-            // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
-            ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
-            dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
-        }
+        dispute.ViolationTicket.OcrViolationTicket = await GetOcrResultsAsync(dispute, cancellationToken);
 
         // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
         // If so, retrieve the image from object storage and return it as well.
-        if (ocrViolationTicket != null)
-        {
-            dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(ocrViolationTicket.ImageFilename, cancellationToken);
-        }
+        dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
 
         return dispute;
     }
 
-    /// <summary>
-    /// Extracts the path to the image located in the object store from the JSON string, or null if not filename could be found.
-    /// </summary>
-    /// <param name="json"></param>
-    /// <returns></returns>
-    public string? GetViolationTicketImageFilename(string json)
+    private async Task<OcrViolationTicket?> GetOcrResultsAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        if (json is not null)
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
+        if (file is null)
         {
-            try
-            {
-                JsonElement element = JsonSerializer.Deserialize<JsonElement>(json);
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("ImageFilename", out JsonElement imageFilename))
-                {
-                    return imageFilename.GetString();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Should never reach here in test or prod, but if so then it means the ocr json data is invalid or not parseable by .NET
-                // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
-                _logger.LogError(ex, "Could not extract object store file reference from json data");
-            }
+            return null;
         }
-        return null;
+
+        // deserialize
+        var result = JsonSerializer.Deserialize<OcrViolationTicket>(file.Data);
+        return result;
     }
 
     /// <summary>
     /// Retrieves a image from the object store with the given imageFilename.
     /// </summary>
-    /// <param name="imageFilename"></param>
+    /// <param name="dispute"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(string? imageFilename, CancellationToken cancellationToken)
+    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(imageFilename))
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
+        if (file is null)
         {
             return null;
         }
 
-        using (_logger.BeginScope(new Dictionary<string, object> { ["FileName"] = imageFilename }))
-        {
-            try
-            {
-                MemoryStream stream = await _filePersistenceService.GetFileAsync(imageFilename, cancellationToken);
-                FileMimeType? mimeType = stream.GetMimeType();
-                if (mimeType is null)
-                {
-                    _logger.LogWarning("Could not determine mime type for file");
-                    return null;
-                }
+        MemoryStream stream = new MemoryStream(); // todo: use memory stream manager
+        file.Data.CopyTo(stream);
 
-                return new ViolationTicketImage(stream.ToArray(), mimeType.MimeType);
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, "Could not retrieve image from object storage");
-                throw;
-            }
-        }
+        return new ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
     }
+
+
+    private async Task<Coms.Client.File?> GetFileAsync(Dispute dispute, string documentType, CancellationToken cancellationToken)
+    {
+        if (dispute?.NoticeOfDisputeGuid is null)
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. There is no NoticeOfDisputeGuid", documentType);
+            return null;
+        }
+
+        if (!Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. The NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}' is not valid", documentType, dispute.NoticeOfDisputeGuid);
+            return null;
+        }
+
+        InternalFileProperties properties = new InternalFileProperties
+        {
+            NoticeOfDisputeId = noticeOfDisputeId,
+            DocumentType = documentType
+        };
+
+        var metadata = properties.ToMetadata();
+        var tags = properties.ToTags();
+
+        FileSearchParameters parameters = new FileSearchParameters(null, metadata, tags);
+
+        IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(parameters, cancellationToken);
+
+        if (searchResults.Count == 0)
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. No files found with NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}'", documentType, dispute.NoticeOfDisputeGuid);
+            return null;
+        }
+
+        FileSearchResult searchResult = searchResults[0];
+        if (searchResults.Count > 1)
+        {
+            // more than one? that is a problem
+            _logger.LogInformation("Found {Count} {DocumentType} for {NoticeOfDisputeId}, expected only one. Returning the last created item",
+                searchResults.Count, documentType, noticeOfDisputeId);
+
+            searchResult = searchResults.OrderByDescending(_ => _.CreatedAt).First();
+        }
+
+        // get the document
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(searchResult.Id, cancellationToken);
+        return file;
+    }
+
 
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
