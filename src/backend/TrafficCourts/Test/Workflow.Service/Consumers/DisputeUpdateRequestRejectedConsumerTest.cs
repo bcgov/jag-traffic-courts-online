@@ -40,7 +40,7 @@ public class DisputeUpdateRequestRejectedConsumerTest
         _mockLogger = new();
         _oracleDataApiService = new();
         _oracleDataApiService.Setup(_ => _.UpdateDisputeUpdateRequestStatusAsync(1, DisputeUpdateRequestStatus.REJECTED, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_updateRequest));
-        _oracleDataApiService.Setup(_ => _.GetDisputeByIdAsync(1, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
+        _oracleDataApiService.Setup(_ => _.GetDisputeByIdAsync(1, false, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _context = new();
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);

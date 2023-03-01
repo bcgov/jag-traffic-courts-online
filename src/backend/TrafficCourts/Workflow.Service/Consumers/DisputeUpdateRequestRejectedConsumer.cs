@@ -37,7 +37,7 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
         DisputeUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.REJECTED, context.CancellationToken);
 
         // Get the current Dispute by id
-        Dispute dispute = await _oracleDataApiService.GetDisputeByIdAsync(updateRequest.DisputeId, context.CancellationToken);
+        Dispute dispute = await _oracleDataApiService.GetDisputeByIdAsync(updateRequest.DisputeId, false, context.CancellationToken);
 
         // send confirmation email to end user indicating their request was rejected
         if (dispute.EmailAddressVerified)

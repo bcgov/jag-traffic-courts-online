@@ -97,11 +97,11 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<Dispute> GetDisputeByIdAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeByIdAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
     {
         try
         {
-            return await _client.GetDisputeAsync(disputeId, cancellationToken);
+            return await _client.GetDisputeAsync(disputeId, isAssign, cancellationToken);
         }
         catch (Exception)
         {

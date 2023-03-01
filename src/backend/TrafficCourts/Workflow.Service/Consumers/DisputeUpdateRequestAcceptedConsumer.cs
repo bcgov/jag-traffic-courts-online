@@ -43,7 +43,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
         if (updateRequest.UpdateJson is not null)
         {
             // Get the current Dispute by id
-            Dispute dispute = await _oracleDataApiService.GetDisputeByIdAsync(updateRequest.DisputeId, context.CancellationToken);
+            Dispute dispute = await _oracleDataApiService.GetDisputeByIdAsync(updateRequest.DisputeId, false, context.CancellationToken);
 
             // Extract patched Dispute values per updateType
             Dispute? patch = JsonConvert.DeserializeObject<Dispute>(updateRequest.UpdateJson);

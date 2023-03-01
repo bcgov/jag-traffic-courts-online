@@ -1,7 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import java.sql.Blob;
-
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,7 +14,6 @@ import lombok.Setter;
  *         Represents JJ Document retrieved from justin
  *
  */
-//defining class name as Table name
 @Getter
 @Setter
 @NoArgsConstructor

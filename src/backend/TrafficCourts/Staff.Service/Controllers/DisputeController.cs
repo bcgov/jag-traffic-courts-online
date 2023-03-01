@@ -84,7 +84,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            Dispute dispute = await _disputeService.GetDisputeAsync(disputeId, cancellationToken);
+            Dispute dispute = await _disputeService.GetDisputeAsync(disputeId, true, cancellationToken);
             return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)

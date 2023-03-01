@@ -87,29 +87,20 @@ public class DisputeController {
 	 * @param principal the logged-in user
 	 * @return {@link Dispute}
 	 */
-	@GetMapping("/dispute/{id}")
-	public ResponseEntity<Dispute> getDispute(@PathVariable Long id, Principal principal) {
-		logger.debug("GET /disputes/{} called", id);
-		if (!disputeService.assignDisputeToUser(id, principal)) {
-			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+	@GetMapping("/dispute/{id}/{isAssign}")
+	public ResponseEntity<Dispute> getDispute(
+			@PathVariable Long id, 
+			@PathVariable Boolean isAssign,
+			Principal principal) {
+		logger.debug("GET /dispute/{}/{} called", id, isAssign);
+		if (isAssign == true) { // only assign if parameter is true
+			if (!disputeService.assignDisputeToUser(id, principal)) {
+				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+			}
 		}
 		return new ResponseEntity<Dispute>(disputeService.getDisputeById(id), HttpStatus.OK);
 	}
 	
-	/**
-	 * GET endpoint that retrieves the detail of a specific dispute without assigning it
-	 *
-	 * @param id
-	 * @param principal the logged-in user
-	 * @return {@link Dispute}
-	 */
-	@GetMapping("/dispute/noassign/{id}")
-	public ResponseEntity<Dispute> getDisputeNoAssign(@PathVariable Long id, Principal principal) {
-		logger.debug("GET /disputes/noassign/{} called", id);
-		return new ResponseEntity<Dispute>(disputeService.getDisputeById(id), HttpStatus.OK);
-	}
-
-
 	/**
 	 * GET endpoint that finds Dispute statuses by TicketNumber and IssuedTime.
 	 *

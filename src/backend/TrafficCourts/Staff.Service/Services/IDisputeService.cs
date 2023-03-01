@@ -22,10 +22,11 @@ public interface IDisputeService
 
     /// <summary>Returns a specific dispute from the database.</summary>
     /// <param name="id">Unique identifier of a Dispute record.</param>
+    /// <param name="isAssign">Whether or not to assign a staff member</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>OK</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> GetDisputeAsync(long id, CancellationToken cancellationToken);
+    Task<Dispute> GetDisputeAsync(long id, bool isAssign, CancellationToken cancellationToken);
 
     /// <summary>Updates the properties of a particular Dispute record based on the given values.</summary>
     /// <param name="id">Unique identifier of a Dispute record to modify.</param>
