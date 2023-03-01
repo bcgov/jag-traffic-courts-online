@@ -25,7 +25,7 @@ citizen-api:
     "JWT__AUTHORITY": "https://idtest.gov.bc.ca/login"  
     "JWT__AUDIENCE": "ca.bc.gov.ag.tco.dev"
     "OAuth__USERINFOENDPOINT": "https://idtest.gov.bc.ca/oauth2/userinfo"
-    "COMS__BASEURL": "http://common-object-management-service-coms:3000"
+    "COMS__BASEURL": "http://common-object-management-service:3000"
 
 citizen-web:
   image:
@@ -73,7 +73,7 @@ staff-api:
     "OAuth__TokenUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
     "Swagger__Enabled": "true"
     "MassTransit__Transport": "RabbitMq"
-    "COMS__BASEURL": "http://common-object-management-service-coms:3000"
+    "COMS__BASEURL": "http://common-object-management-service:3000"
 
 staff-web:
   image:
@@ -110,5 +110,5 @@ workflow-service:
     "EmailConfiguration__AllowList": ""
     "EmailConfiguration__EmailVerificationURL": "https://dev.tickets.gov.bc.ca/email/verify"
     "MassTransit__Transport": "RabbitMq"
-    "COMS__BASEURL": "http://common-object-management-service-coms:3000"
-    "VIRUSSCAN__BASEURL": "http://virus-scan-api:8080"
+    "COMS__BASEURL": "http://common-object-management-service:3000"
+    "VIRUSSCAN__BASEURL": "http://virus-scan:8080"
