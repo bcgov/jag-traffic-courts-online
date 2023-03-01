@@ -90,7 +90,7 @@ public class DisputeController {
 	@GetMapping("/dispute/{id}/{isAssign}")
 	public ResponseEntity<Dispute> getDispute(
 			@PathVariable Long id, 
-			@PathVariable Boolean isAssign,
+			@PathVariable boolean isAssign,
 			Principal principal) {
 		logger.debug("GET /dispute/{}/{} called", id, isAssign);
 		if (isAssign == true) { // only assign if parameter is true

@@ -102,7 +102,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
@@ -111,7 +111,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		.andExpect(status().isOk());
 
 		// Assert status and reason are set.
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(DisputeStatus.REJECTED, dispute.getStatus());
 		assertEquals("Just because", dispute.getRejectedReason());
 	}
@@ -126,7 +126,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		setPrincipal("TestUser1");
 
 		// Retrieve it from the controller's endpoint
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 		assertEquals(dispute.getUserAssignedTo(), "TestUser1");
@@ -146,7 +146,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
@@ -165,7 +165,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		.andExpect(status().isOk());
 
 		// Assert status and reason are set.
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(DisputeStatus.REJECTED, dispute.getStatus());
 		assertEquals(longString, dispute.getRejectedReason());
 	}
@@ -177,7 +177,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
@@ -185,7 +185,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		submitDispute(disputeId);
 
 		// Assert status is set, rejected reason is NOT set.
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(DisputeStatus.PROCESSING, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
 	}
@@ -197,7 +197,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
@@ -208,7 +208,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		cancelDispute(disputeId);
 
 		// Assert status is set, rejected reason is NOT set.
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(DisputeStatus.CANCELLED, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
 	}
@@ -220,7 +220,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
@@ -228,7 +228,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		validateDispute(disputeId);
 
 		// Assert status is set, rejected reason is NOT set.
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(DisputeStatus.VALIDATED, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
 	}
@@ -243,7 +243,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals(disputeId, dispute.getDisputeId());
 
 		// Modify dispute with different values
@@ -252,7 +252,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		updateDispute(disputeId, dispute);
 
 		// Assert db contains only the updated dispute record.
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, true);
 		assertEquals("Bruce", dispute.getDisputantSurname());
 		assertEquals("Banner", dispute.getDisputantGivenName1());
 		List<Dispute> disputes = getAllDisputes(null, null);
@@ -307,7 +307,7 @@ class DisputeControllerTest extends BaseTestSuite {
 
 		// Retrieve the Dispute via the Controller
 		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
-				.get("/api/v1.0/dispute/{id}", dispute.getDisputeId())
+				.get("/api/v1.0/dispute/{id}/{isAssign}", dispute.getDisputeId(), true)
 				.principal(getPrincipal()))
 				.andExpect(status().isOk());
 		Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
@@ -417,7 +417,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Load the dispute to confirm the database values are correct
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, false);
 		assertEquals("oldaddress@somewhere.com", dispute.getEmailAddress());
 		assertEquals(Boolean.TRUE, dispute.getEmailAddressVerified());
 
@@ -428,7 +428,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		.andExpect(status().isOk());
 
 		// reload the dispute to confirm the emailAddress has been updated.
-		Dispute updatedDispute = getDispute(disputeId);
+		Dispute updatedDispute = getDispute(disputeId, false);
 		assertEquals("newaddress@somewhere.com", updatedDispute.getEmailAddress());
 		assertEquals(Boolean.FALSE, updatedDispute.getEmailAddressVerified());
 	}
@@ -442,7 +442,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Load the dispute to confirm the database values are correct
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, false);
 		assertEquals("oldaddress@somewhere.com", dispute.getEmailAddress());
 		assertEquals(Boolean.TRUE, dispute.getEmailAddressVerified());
 
@@ -457,7 +457,7 @@ class DisputeControllerTest extends BaseTestSuite {
 				.put("/api/v1.0/dispute/{id}/email/reset", disputeId))
 		.andExpect(status().isOk());
 
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, false);
 		assertNull(dispute.getEmailAddress());
 		assertEquals(Boolean.TRUE, dispute.getEmailAddressVerified());
 	}
@@ -480,7 +480,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Load the dispute to confirm the database values are correct
-		dispute = getDispute(disputeId);
+		dispute = getDispute(disputeId, false);
 		assertEquals("myaddress@somewhere.com", dispute.getEmailAddress());
 		assertEquals(Boolean.FALSE, dispute.getEmailAddressVerified());
 
@@ -490,7 +490,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		.andExpect(status().isOk());
 
 		// reload the dispute to confirm the emailAddress has been updated.
-		Dispute updatedDispute = getDispute(disputeId);
+		Dispute updatedDispute = getDispute(disputeId, false);
 		assertEquals("myaddress@somewhere.com", updatedDispute.getEmailAddress());
 		assertEquals(Boolean.TRUE, updatedDispute.getEmailAddressVerified());
 	}
@@ -608,9 +608,9 @@ class DisputeControllerTest extends BaseTestSuite {
 	 * Issues a GET request to /api/v1.0/dispute/{id}. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
 	 */
-	private Dispute getDispute(Long disputeId) throws Exception {
+	private Dispute getDispute(Long disputeId, boolean isAssign) throws Exception {
 		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
-				.get("/api/v1.0/dispute/{id}", disputeId)
+				.get("/api/v1.0/dispute/{id}/{isAssign}", disputeId, isAssign)
 				.principal(getPrincipal()))
 				.andExpect(status().isOk());
 		Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
