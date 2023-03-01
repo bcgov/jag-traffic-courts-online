@@ -1,7 +1,7 @@
 # Deploy Common Object Management Service
 
 The Common Object Management Service [helm chart](https://github.com/bcgov/common-object-management-service/tree/master/charts/coms)
-can deploy the service, however, it does not support using a separate postgres database.
+can deploy the service, however, it does not support using a separate postgres database. A 
 
 ## Prerequisites
 
@@ -89,4 +89,10 @@ oc create -f configmap.yaml
 
 ```
 oc create -f deploymentconfig.yaml
+```
+
+## Create Service 
+
+```
+oc create -f service.yaml
 ```
