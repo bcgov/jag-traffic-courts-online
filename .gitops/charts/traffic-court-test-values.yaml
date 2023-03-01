@@ -36,7 +36,7 @@ citizen-web:
     {
         "production": false,
         "environment": "Test",
-        "version": "1.55.0",
+        "version": "1.55.1",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -92,7 +92,7 @@ staff-web:
     {
         "production": false,
         "environment": "Test",
-        "version": "1.55.0",
+        "version": "1.55.1",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
