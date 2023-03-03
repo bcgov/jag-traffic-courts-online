@@ -4,5 +4,6 @@
     {
         public long Id { get; set; } = -1;
         public string? Email { get; set; }
+        public string? TicketNumber { get; set; }
     }
 }

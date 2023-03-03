@@ -71,16 +71,16 @@ public class JJDisputeService : IJJDisputeService
 
         if (dispute.Status == JJDisputeStatus.IN_PROGRESS)
         {
-            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-                jjDispute.OccamDisputeId,
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+                jjDispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JPRG, // Dispute decision details saved for later
                 GetUserName(user));
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
         else if (dispute.Status == JJDisputeStatus.CONFIRMED)
         {
-            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-                jjDispute.OccamDisputeId,
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+                jjDispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JCNF, // Dispute decision confirmed/submitted by JJ
                 GetUserName(user));
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -98,8 +98,8 @@ public class JJDisputeService : IJJDisputeService
         {
             JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
 
-            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-                dispute.OccamDisputeId,
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+                dispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JASG, // Dispute assigned to JJ
                 GetUserName(user));
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -110,8 +110,8 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, remark, cancellationToken);
 
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.OccamDisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+            dispute.TicketNumber,
             FileHistoryAuditLogEntryType.VREV, GetUserName(user)); // Dispute returned to JJ for review
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
@@ -124,8 +124,8 @@ public class JJDisputeService : IJJDisputeService
         {
             JJDispute dispute = await _oracleDataApi.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
 
-            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-                dispute.OccamDisputeId,
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+                dispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JDIV, GetUserName(user)); // Dispute change of plea required / Divert to court appearance
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
@@ -146,9 +146,7 @@ public class JJDisputeService : IJJDisputeService
 
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
 
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.OccamDisputeId,
-            FileHistoryAuditLogEntryType.VSUB, GetUserName(user)); // Dispute approved for resulting by staff
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(dispute.TicketNumber, FileHistoryAuditLogEntryType.VSUB, GetUserName(user)); // Dispute approved for resulting by staff
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -195,8 +193,8 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
 
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.OccamDisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+            dispute.TicketNumber,
             FileHistoryAuditLogEntryType.JCNF, GetUserName(user)); // Dispute decision confirmed/submitted by JJ
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 

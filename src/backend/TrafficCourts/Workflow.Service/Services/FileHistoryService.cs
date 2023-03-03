@@ -35,12 +35,14 @@ namespace TrafficCourts.Workflow.Service.Services
                     if (dispute != null)
                     {
                         fileHistoryRecord.DisputeId = dispute.DisputeId;
+                        fileHistoryRecord.TicketNumber = dispute.TicketNumber;
                     }
                 }
                 else if (!string.IsNullOrEmpty(fileHistoryRecord.TicketNumber))
                 {
                     JJDispute dispute = await _oracleDataApiService.GetJJDisputeAsync(fileHistoryRecord.TicketNumber, false, cancellationToken);
                     fileHistoryRecord.DisputeId = dispute.OccamDisputeId;
+                    fileHistoryRecord.NoticeOfDisputeId = dispute.NoticeOfDisputeGuid;
                 }
                 FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
                 long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);

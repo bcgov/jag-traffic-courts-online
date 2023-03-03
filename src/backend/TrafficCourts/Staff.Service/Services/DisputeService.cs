@@ -171,8 +171,8 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SVAL,  // Handwritten ticket OCR details validated by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -187,8 +187,8 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SCAN, // Dispute canceled by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -196,9 +196,6 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
         await _bus.PublishWithLog(_logger, cancelledEvent, cancellationToken);
-
-        var emailMessage = _cancelledDisputeEmailTemplate.Create(dispute);
-        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
     public async Task RejectDisputeAsync(long disputeId, string rejectedReason, ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -210,8 +207,8 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SREJ, // Dispute rejected by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -219,9 +216,6 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
         await _bus.PublishWithLog(_logger, rejectedEvent, cancellationToken);
-
-        var emailMessage = _rejectedDisputeEmailTemplate.Create(dispute);
-        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
     public async Task SubmitDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -234,8 +228,8 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -252,13 +246,14 @@ public class DisputeService : IDisputeService
 
     public async Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Email verification sent");
+        _logger.LogDebug("Email verification resent");
 
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
-        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.NoticeOfDisputeGuid));
-        await _bus.PublishWithLog(_logger, emailVerificationSentEvent, cancellationToken);
+        var message = new ResendEmailVerificationEmail { NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid) };
+
+        await _bus.PublishWithLog(_logger, message, cancellationToken);
 
         return "Email verification sent";
     }
