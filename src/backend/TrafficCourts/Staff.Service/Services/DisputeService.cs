@@ -195,7 +195,7 @@ public class DisputeService : IDisputeService
 
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
-        await _bus.PublishWithLog(_logger, cancelledEvent, cancellationToken);
+        await _bus. PublishWithLog(_logger, cancelledEvent, cancellationToken);
     }
 
     public async Task RejectDisputeAsync(long disputeId, string rejectedReason, ClaimsPrincipal user, CancellationToken cancellationToken)

@@ -10,6 +10,7 @@ public class Mapper
 
         DisputeApproved target = new();
         target.Surname = dispute.DisputantSurname;
+        target.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         target.GivenName1 = dispute.DisputantGivenName1;
         target.GivenName2 = dispute.DisputantGivenName2;
         target.GivenName3 = dispute.DisputantGivenName3;
@@ -85,7 +86,8 @@ public class Mapper
         {
             Reason = dispute.RejectedReason,
             Email = dispute.EmailAddress,
-            TicketNumber = dispute.TicketNumber
+            TicketNumber = dispute.TicketNumber,
+            NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
         };
         return disputeRejected;
     }
@@ -114,6 +116,7 @@ public class Mapper
         disputeCancelled.Id = dispute.DisputeId;
         disputeCancelled.Email = dispute.EmailAddress;
         disputeCancelled.TicketNumber = dispute.TicketNumber;
+        disputeCancelled.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         return disputeCancelled;
     }
 }

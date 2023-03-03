@@ -132,7 +132,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
 
     private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputeUpdateRequestAccepted> context)
     {
-        SendDispuantEmail message = new()
+        SendDisputantEmail message = new()
         {
             Message = _updateRequestAcceptedTemplate.Create(dispute),
             NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),

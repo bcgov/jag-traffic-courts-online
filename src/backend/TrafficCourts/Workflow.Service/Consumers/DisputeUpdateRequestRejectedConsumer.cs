@@ -51,7 +51,7 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
 
     private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputeUpdateRequestRejected> context)
     {
-        SendDispuantEmail message = new()
+        SendDisputantEmail message = new()
         {
             Message = _updateRequestRejectedTemplate.Create(dispute),
             NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),

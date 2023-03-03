@@ -5,7 +5,7 @@ namespace TrafficCourts.Messaging.MessageContracts
     /// <summary>
     /// Raised when a message was successfully sent to a disputant.
     /// </summary>
-    public class DispuantEmailSent
+    public class DisputantEmailSent
     {
         /// <summary>
         /// The email message.
@@ -14,16 +14,21 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The ticket number.
         /// </summary>
-        public string TicketNumber { get; set; } = String.Empty;
+        public string? TicketNumber { get; set; } = String.Empty;
         
         /// <summary>
         /// The notice of dispute identifer.
         /// </summary>
-        public Guid NoticeOfDisputeGuid { get; set; }
+        public Guid? NoticeOfDisputeGuid { get; set; }
 
         /// <summary>
         /// The date and time the message was sent at.
         /// </summary>
         public DateTimeOffset SentAt { get; set; }
+
+        /// <summary>
+        /// Occam dispute Id
+        /// </summary>
+        public long OccamDisputeId { get; set; }
     }
 }

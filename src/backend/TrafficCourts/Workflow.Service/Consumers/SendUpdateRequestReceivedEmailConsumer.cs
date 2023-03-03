@@ -60,7 +60,7 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
             // Send email to disputant to confirm disputant's update request(s) are received and will be reviewed
             EmailMessage emailMessage = _updateRequestReceivedTemplate.Create(dispute);
 
-            await context.PublishWithLog(_logger, new SendDispuantEmail
+            await context.PublishWithLog(_logger, new SendDisputantEmail
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,

@@ -157,7 +157,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             if (dispute?.EmailAddressVerified == true && dispute?.EmailAddress is not null)
             {
                 // Send notification email to user that their change request has been submitted
-                SendDispuantEmail emailMessage = new()
+                SendDisputantEmail emailMessage = new()
                 {
                     Message = _updateRequestReceivedTemplate.Create(dispute),
                     NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),

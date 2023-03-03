@@ -67,7 +67,7 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
             {
                 emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
             }
-            await context.PublishWithLog(_logger, new SendDispuantEmail
+            await context.PublishWithLog(_logger, new SendDisputantEmail
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,
