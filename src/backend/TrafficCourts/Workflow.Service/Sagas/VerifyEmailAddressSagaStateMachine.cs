@@ -67,8 +67,6 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         });
 
         Initially(
-            When(ResendEmailVerificationEmail)
-                .TransitionTo(Active),
             When(RequestEmailVerification)
                 .Then(context => _logger.LogDebug("Email verification started"))
                 .Then(CreateToken)

@@ -251,7 +251,7 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
-        var message = new ResendEmailVerificationEmail { NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid) };
+        var message = new RequestEmailVerification { DisputeId = dispute.DisputeId };
 
         await _bus.PublishWithLog(_logger, message, cancellationToken);
 
