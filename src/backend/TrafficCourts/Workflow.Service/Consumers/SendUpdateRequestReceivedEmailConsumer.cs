@@ -46,7 +46,8 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
                 // TODO: This entry type is currently set to: "Automated notification sent to citizen to verify the updates/changes to their dispute"
                 // The original description: "Email sent to notify Disputant regarding their update request(s) received".
                 // Confirm if this is the correct matching description, if not add the correct one to the database and update this 
-                AuditLogEntryType = FileHistoryAuditLogEntryType.EMVF
+                AuditLogEntryType = FileHistoryAuditLogEntryType.EMVF,
+                ActionByApplicationUser = dispute.UserAssignedTo
             };
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 

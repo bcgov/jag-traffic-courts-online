@@ -68,7 +68,8 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
             // TODO: This entry type is currently set to: "Dispute rejected by staff"
             // since the original description: "Dispute update request rejected." is missing from the database.
             // When the description is added to the databse change this
-            AuditLogEntryType = FileHistoryAuditLogEntryType.SREJ
+            AuditLogEntryType = FileHistoryAuditLogEntryType.SREJ,
+            ActionByApplicationUser = dispute.UserAssignedTo
         };
         await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
     }

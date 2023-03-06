@@ -50,6 +50,7 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
             fileHistoryRecord.AuditLogEntryType = !message.IsUpdateEmailVerification ? 
                 FileHistoryAuditLogEntryType.EMVF : // Email verification complete
                 FileHistoryAuditLogEntryType.CUEV; // Email re-verification complete
+            fileHistoryRecord.ActionByApplicationUser = "Disputant";
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             if (!message.IsUpdateEmailVerification)

@@ -51,7 +51,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid
                 };
 
-                await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
+                await context.PublishWithLog(_logger, sendDisputantEmail, context.CancellationToken);
             }
             else
             {
