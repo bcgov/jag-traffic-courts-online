@@ -28,13 +28,15 @@
               <div>Change your contact information, plea or court options, or upload additional supporting documents to
                 your dispute</div>
             </div>
-            <app-alert type="warning" icon="info">
-              <ng-container #alertContent>
-                A BC Services Card Required. Learn more about
-                <a target="_blank" href="{{bcServicesCardInfoLink}}">BC Services Card app</a>
-              </ng-container>
-            </app-alert>
           </div>
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              A BC Services Card Required. Learn more about
+              <a target="_blank" href="{{bcServicesCardInfoLink}}" style="text-decoration: underline;">
+                BC Services Card app
+              </a>
+            </ng-container>
+          </app-alert>
         </div>
       </div>
     </ng-container>

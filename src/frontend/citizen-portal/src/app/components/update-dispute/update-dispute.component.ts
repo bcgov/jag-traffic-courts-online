@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
-import { FileMetadata } from 'app/api';
-import { DisputeService } from 'app/services/dispute.service';
+import { DisputeService, FileMetadata } from 'app/services/dispute.service';
 import { NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { DisputeStore } from 'app/store';

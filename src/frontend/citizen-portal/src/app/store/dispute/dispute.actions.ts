@@ -1,7 +1,8 @@
 import { createAction, props } from "@ngrx/store";
 import { NoticeOfDispute } from "@shared/models/dispute-form.model";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputantContactInformation, FileMetadata, SearchDisputeResult } from "app/api";
+import { DisputantContactInformation, SearchDisputeResult } from "app/api";
+import { FileMetadata } from "app/services/dispute.service";
 import { ActionTypes } from ".";
 
 export const Search = createAction(
@@ -72,28 +73,10 @@ export const GetDocumentFailed = createAction(
 
 export const AddDocument = createAction(
   ActionTypes.ADD_DOCUMENT,
-  props<{ file: File }>()
-);
-
-export const AddDocumentSuccess = createAction(
-  ActionTypes.ADD_DOCUMENT_SUCCESS,
-  props<{ file: FileMetadata }>()
-);
-
-export const AddDocumentFailed = createAction(
-  ActionTypes.ADD_DOCUMENT_FAILED
+  props<{ file: File, fileType: string, pendingFileStream: string }>()
 );
 
 export const RemoveDocument = createAction(
   ActionTypes.REMOVE_DOCUMENT,
   props<{ file: FileMetadata }>()
-);
-
-export const RemoveDocumentSuccess = createAction(
-  ActionTypes.REMOVE_DOCUMENT_SUCCESS,
-  props<{ fileId: string }>()
-);
-
-export const RemoveDocumentFailed = createAction(
-  ActionTypes.REMOVE_DOCUMENT_FAILED
 );

@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Disputes;
@@ -129,7 +130,7 @@ public class Dispute : DisputantContactInformation
     /// <summary>
     /// Interpreter Required
     /// </summary>
-    [JsonPropertyName("interprer_required")]
+    [JsonPropertyName("interpreter_required")]
     public DisputeInterpreterRequired? InterpreterRequired { get; set; } = DisputeInterpreterRequired.N;
 
     /// <summary>
@@ -155,4 +156,11 @@ public class Dispute : DisputantContactInformation
     /// </summary>
     [JsonPropertyName("dispute_counts")]
     public ICollection<DisputeCount>? DisputeCounts { get; set; }
+
+    /// <summary>
+    /// List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute
+    /// </summary>
+    /// 
+    [JsonPropertyName("file_data")]
+    public List<FileMetadata>? FileData { get; set; }
 }

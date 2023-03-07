@@ -28,7 +28,6 @@ export interface NoticeOfDispute extends NoticeOfDisputeBase {
   address?: string;
   lawyer_full_name?: string;
   __witness_present?: boolean;
-  __interpreter_required?: boolean;
 }
 export type NoticeOfDisputeKeys = keyof NoticeOfDispute;
 export type NoticeOfDisputeFormConfigs = {

@@ -98,4 +98,9 @@ public class DisputeUpdateRequest : DisputeUpdateContactRequest
     /// The type of the document uploaded by the disputant ('Other / Supporting Document' OR 'Application for Adjournment')
     /// </summary>
     public string? DocumentType { get; set; }
+
+    /// <summary>
+    /// The document uploaded was request to be deleted by the disputant
+    /// </summary>
+    public Boolean? DocumentDeleteRequested { get; set; }
 }

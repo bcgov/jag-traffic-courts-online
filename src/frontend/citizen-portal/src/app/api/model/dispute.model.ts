@@ -12,6 +12,7 @@
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
+import { FileMetadata } from './fileMetadata.model';
 import { DisputeCount } from './disputeCount.model';
 import { DisputeRequestCourtAppearanceYn } from './disputeRequestCourtAppearanceYn.model';
 
@@ -171,7 +172,7 @@ export interface Dispute {
      * The disputant requires spoken language interpreter. The language name is indicated in this field.
      */
     interpreter_language_cd?: string | null;
-    interprer_required?: DisputeInterpreterRequired;
+    interpreter_required?: DisputeInterpreterRequired;
     /**
      * The number of witnesses that the disputant intends to call.
      */
@@ -188,5 +189,9 @@ export interface Dispute {
      * Dispute Counts
      */
     dispute_counts?: Array<DisputeCount> | null;
+    /**
+     * List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute
+     */
+    file_data?: Array<FileMetadata> | null;
 }
 
