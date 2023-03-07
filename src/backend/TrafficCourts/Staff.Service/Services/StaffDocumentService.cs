@@ -71,7 +71,6 @@ public class StaffDocumentService : IStaffDocumentService
         // Save file delete event to file history
         SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord
         {
-            DisputeId = properties.TcoDisputeId,
             NoticeOfDisputeId = properties?.NoticeOfDisputeId?.ToString("d"),
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was deleted by Staff." is missing from the database.
@@ -136,6 +135,7 @@ public class StaffDocumentService : IStaffDocumentService
         SaveFileHistoryRecord fileHistoryRecord = new()
         {
             DisputeId = properties.TcoDisputeId,
+            NoticeOfDisputeId = properties.NoticeOfDisputeId?.ToString("d"),
             // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
             // since the original description: "File was uploaded by Staff." is missing from the database.
             // When the description is added to the databse change this

@@ -41,8 +41,24 @@ namespace TrafficCourts.Workflow.Service.Services
                 else if (!string.IsNullOrEmpty(fileHistoryRecord.TicketNumber))
                 {
                     JJDispute dispute = await _oracleDataApiService.GetJJDisputeAsync(fileHistoryRecord.TicketNumber, false, cancellationToken);
-                    fileHistoryRecord.DisputeId = dispute.OccamDisputeId;
-                    fileHistoryRecord.NoticeOfDisputeId = dispute.NoticeOfDisputeGuid;
+                    if (dispute != null)
+                    {
+                        fileHistoryRecord.DisputeId = dispute.OccamDisputeId;
+                        fileHistoryRecord.NoticeOfDisputeId = dispute.NoticeOfDisputeGuid;
+                    }
+                }
+                else if (fileHistoryRecord.DisputeId!= null)
+                {
+                    Dispute? dispute = await _oracleDataApiService.GetDisputeByIdAsync((long)fileHistoryRecord.DisputeId, false, cancellationToken).ConfigureAwait(false);
+                    if (dispute != null)
+                    {
+                        fileHistoryRecord.NoticeOfDisputeId = dispute.NoticeOfDisputeGuid;
+                        fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                    }
+                    else
+                    {
+                        throw new Exception("Dispute not found in save file history");
+                    }
                 }
                 FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
                 long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
