@@ -22,8 +22,8 @@ public class CommonUtils {
 			driver.navigate().refresh();
 
 		} else if (Config.ENVIROMENT.equals(Constants.TST)) {
-			driver.get("");
-			driver.navigate().to("");
+			driver.get("https://test.tickets.gov.bc.ca");
+			driver.navigate().to("https://test.tickets.gov.bc.ca");
 			driver.navigate().refresh();
 		}
 
