@@ -1,6 +1,7 @@
 import { NoticeOfDispute } from "@shared/models/dispute-form.model";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { FileMetadata, SearchDisputeResult } from "app/api";
+import { SearchDisputeResult } from "app/api";
+import { FileMetadata } from "app/services/dispute.service";
 import { CustomState } from "../custom-state";
 
 export interface DisputeState extends CustomState {

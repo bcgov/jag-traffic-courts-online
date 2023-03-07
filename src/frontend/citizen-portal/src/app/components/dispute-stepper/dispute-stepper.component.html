@@ -157,12 +157,15 @@
                     Please provide additional selections below:
                   </label>
                   <mat-radio-group formControlName="plea_cd">
-                    <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
-                      offence and would like to request a fine reduction and/or time to pay on this count.
+                    <mat-radio-button [value]="Plea.G" color="primary" class="w-100"
+                      (change)="count?.form.controls.__skip.setValue(false)">
+                      I agree I committed this offence and would like to request a fine reduction and/or time to pay on
+                      this count.
                     </mat-radio-button>
                     <p> and/or</p>
-                    <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
-                      committed this offence and would like to dispute this count</mat-radio-button>
+                    <mat-radio-button [value]="Plea.N" color="primary" class="w-100"
+                      (change)="count?.form.controls.__skip.setValue(false)">
+                      I do not agree I committed this offence and would like to dispute this count</mat-radio-button>
                   </mat-radio-group>
                 </div>
               </div>
@@ -207,10 +210,10 @@
                     Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
                   </mat-label>
                   <input matInput formControlName="fine_reduction_reason" [errorStateMatcher]="matcher" />
-                  <mat-error *ngIf="(additionalForm.get('fine_reduction_reason')?.dirty
-                        || additionalForm.get('fine_reduction_reason')?.touched)
-                        && additionalForm.get('fine_reduction_reason')?.invalid
-                        && additionalForm.get('fine_reduction_reason')?.hasError('required')">
+                  <mat-error *ngIf="(additionalForm.controls.fine_reduction_reason.dirty
+                        || additionalForm.controls.fine_reduction_reason.touched)
+                        && additionalForm.controls.fine_reduction_reason.invalid
+                        && additionalForm.controls.fine_reduction_reason.hasError('required')">
                     {{ "error.required" | translate }}
                   </mat-error>
                 </mat-form-field>
@@ -228,10 +231,10 @@
                     Please enter your reasons for why you are requesting <strong>time to pay</strong>
                   </mat-label>
                   <input matInput formControlName="time_to_pay_reason" [errorStateMatcher]="matcher" />
-                  <mat-error *ngIf="(additionalForm.get('time_to_pay_reason')?.dirty
-                          || additionalForm.get('time_to_pay_reason')?.touched)
-                          && additionalForm.get('time_to_pay_reason')?.invalid
-                          && additionalForm.get('time_to_pay_reason')?.hasError('required')">
+                  <mat-error *ngIf="(additionalForm.controls.time_to_pay_reason.dirty
+                          || additionalForm.controls.time_to_pay_reason.touched)
+                          && additionalForm.controls.time_to_pay_reason.invalid
+                          && additionalForm.controls.time_to_pay_reason.hasError('required')">
                     {{ "error.required" | translate }}
                   </mat-error>
                 </mat-form-field>
@@ -241,22 +244,20 @@
         </ng-container>
 
         <section *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y">
-          <h3 class="mt-4 mb-2 reduction-text">
-          </h3>
-          <div class="row">
+          <div class="row mt-4">
             <div class="col">
               <mat-checkbox class="me-4 mb-2" color="primary"
-                [checked]="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y ? true:false"
-                (change)="additionalForm.get('represented_by_lawyer')?.setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
+                [checked]="additionalForm.value.represented_by_lawyer === RepresentedByLawyer.Y ? true:false"
+                (change)="onChangeRepresentedByLawyer($event)">
                 I intend to be represented by a lawyer in court.
-                <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y"
+                <span *ngIf="additionalForm.value.represented_by_lawyer === RepresentedByLawyer.Y"
                   style="font-weight: lighter;">
                   Enter lawyer contact details below.
                 </span>
               </mat-checkbox>
             </div>
           </div>
-          <ng-container *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
+          <ng-container *ngIf="additionalForm.value.represented_by_lawyer === RepresentedByLawyer.Y">
             <div [formGroup]="legalRepresentationForm">
               <div class="row">
                 <div class="col-md-6">
@@ -296,9 +297,9 @@
                   <mat-form-field class="w-100">
                     <mat-label>Contact email</mat-label>
                     <input matInput formControlName="lawyer_email" autocomplete="off" [errorStateMatcher]="matcher" />
-                    <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('required')">
+                    <mat-error *ngIf="legalRepresentationForm.controls.lawyer_email.hasError('required')">
                       {{"error.required" | translate}}</mat-error>
-                    <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('email')">
+                    <mat-error *ngIf="legalRepresentationForm.controls.lawyer_email.hasError('email')">
                       {{"error.email_address" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
@@ -308,34 +309,36 @@
 
           <div class="row">
             <div class="col">
-              <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__interpreter_required">
+              <mat-checkbox class="me-4 mb-2" color="primary"
+                [checked]="additionalForm.value.interpreter_required === InterpreterRequired.Y ? true:false"
+                (change)="onChangeInterpreterRequired($event)">
                 I require a language interpreter at the hearing.
               </mat-checkbox>
-              <mat-error *ngIf="additionalForm.get('__interpreter_required')?.hasError('requiredIfTrue')">
+              <mat-error *ngIf="additionalForm.controls.interpreter_required.hasError('requiredIfTrue')">
                 {{ 'error.required' | translate }}
               </mat-error>
             </div>
           </div>
-
-          <div class="row" *ngIf="additionalForm.get('__interpreter_required')?.value">
+          <div class="row" *ngIf="additionalForm.value.interpreter_required === InterpreterRequired.Y">
             <div class="col interpreter-language">
               <mat-form-field class="w-25">
                 <mat-label>
                   {{ "stepper.additional.interpreter_language" | translate }}
                 </mat-label>
                 <mat-select formControlName="interpreter_language_cd"
-                  matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language_cd'))}}">
+                  matTooltip="{{getToolTipDEata(additionalForm.controls.interpreter_language_cd)}}">
                   <mat-option *ngFor="let language of languages" [value]="language.code">
                     {{ language.description }}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="additionalForm.get('interpreter_language_cd')?.hasError('requiredIfTrue')">
+                <mat-error *ngIf="additionalForm.controls.interpreter_language_cd.hasError('requiredIfTrue')">
                   {{ "error.required" | translate }}
                 </mat-error>
               </mat-form-field>
             </div>
           </div>
-          <div class="row">
+
+          <div class="row mb-2">
             <div class="col">
               <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witness_present"
                 (change)="onChangeWitnessPresent($event)">
@@ -343,27 +346,26 @@
               </mat-checkbox>
             </div>
           </div>
-
-          <div class="row" *ngIf="additionalForm.get('__witness_present')?.value">
+          <div class="row" *ngIf="additionalForm.value.__witness_present">
             <div class="col">
               <mat-form-field class="pe-4 w-25">
                 <mat-label>Number of witnesses</mat-label>
                 <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
                   formControlName="witness_no" [errorStateMatcher]="matcher" />
-                <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('requiredIfTrue')">
+                <mat-error *ngIf="additionalForm.controls.witness_no.hasError('requiredIfTrue')">
                   {{ "error.required" | translate }}
                 </mat-error>
-                <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('min')">
+                <mat-error *ngIf="additionalForm.controls.witness_no.hasError('min')">
                   {{ "error.positive_number" | translate }}
                 </mat-error>
-                <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('max')">
+                <mat-error *ngIf="additionalForm.controls.witness_no.hasError('max')">
                   {{ "error.max_number" | translate }}{{ maxWitnesses + 1 }}
                 </mat-error>
               </mat-form-field>
             </div>
           </div>
 
-          <div class="col" *ngIf="additionalForm.get('__witness_present')?.value">
+          <div class="col" *ngIf="additionalForm.value.__witness_present">
             <app-alert type="warning" icon="warning">
               <ng-container #alertContent class="alert-content">
                 <strong>If you are calling a witness please keep the following information in mind:</strong><br />
@@ -373,7 +375,7 @@
               </ng-container>
             </app-alert>
           </div>
-          <div class="col" *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
+          <div class="col" *ngIf="additionalForm.value.represented_by_lawyer === RepresentedByLawyer.Y">
             <app-alert type="warning" icon="warning">
               <ng-container #alertContent class="alert-content">
                 <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to
@@ -384,7 +386,7 @@
               </ng-container>
             </app-alert>
           </div>
-          <div class="col" *ngIf="additionalForm.get('__interpreter_required')?.value">
+          <div class="col" *ngIf="additionalForm.value.interpreter_required">
             <app-alert type="warning" icon="warning">
               <ng-container #alertContent class="alert-content">
                 <strong>The court also provides visual language interpreters (American Sign Language) and CART
@@ -393,7 +395,7 @@
               </ng-container>
             </app-alert>
           </div>
-          <div class="col" *ngIf="additionalForm.get('__witness_present')?.value">
+          <div class="col" *ngIf="additionalForm.value.__witness_present">
             <app-alert type="warning" icon="warning">
               <ng-container #alertContent class="alert-content">
                 <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing
@@ -418,30 +420,37 @@
 
         <div class="alert alert-upload" *ngIf="mode === disputeFormMode.UPDATE && fileData$">
           <div class="row">
-            <div fxFlex>
-              <div fxFlex class="vcenter">
-                <strong>Upload additional supporting documents, if applicable</strong>
-              </div>
-              <div>
-                <button class="large" mat-stroked-button type="button" color="primary"
-                  onclick="document.getElementById('fileInput').click()">
-                  Upload Documents
-                </button>
-                <input type="file" #fileInput id="fileInput" style="display:none" accept="image/*,.pdf"
-                  (change)="onUploadFile($event.target.files)">
-              </div>
+            <div fxFlex class="vcenter">
+              <strong>Upload additional supporting documents, if applicable</strong>
             </div>
           </div>
-          <div class="row">
+          <div class="row vcenter">
             <div fxFlex>
-              <div fxFlex class="vcenter" *ngFor="let file of fileData$ | async">
-                <a href="javascript:void(0);" (click)="onGetFile(file.fileId)">{{ file.fileName }}</a>
+              <mat-form-field style="margin-right: 1rem;">
+                <mat-label>File type for upload</mat-label>
+                <mat-select [(ngModel)]="fileTypeToUpload" [ngModelOptions]="{standalone: true}">
+                  <mat-option value="Adjournment">Adjournment</mat-option>
+                  <mat-option value="Other">Ohter</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button class="large" mat-stroked-button type="button" color="primary"
+                onclick="document.getElementById('fileInput').click()">
+                Upload Documents
+              </button>
+              <input type="file" #fileInput id="fileInput" style="display:none" accept="image/*,.pdf"
+              (change)="onUploadFile($event.target.files)">
+            </div>
+          </div>
+          <div fxLayout="row wrap">
+            <ng-container *ngFor="let file of fileData$ | async">
+              <div *ngIf="!file.deleteRequested" fxFlex="100" class="vcenter">
+                <a href="javascript:void(0);" (click)="onGetFile(file)">{{ file.fileName }}</a>
                 <button type="button" style="width: unset !important; border:none; background-color: transparent"
                   (click)="onRemoveFile(file)">
                   <mat-icon color="warn">delete</mat-icon>
                 </button>
               </div>
-            </div>
+            </ng-container>
           </div>
         </div>
       </form>

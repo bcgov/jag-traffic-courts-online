@@ -12,7 +12,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, FileMetadata } from "app/api";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, DisputeInterpreterRequired } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
@@ -20,6 +20,7 @@ import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { Observable } from "rxjs";
 import { DisputeStore } from "app/store";
 import { Store } from "@ngrx/store";
+import { FileMetadata } from "app/services/dispute.service";
 
 @Component({
   selector: "app-dispute-stepper",
@@ -48,6 +49,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
   RequestReduction = DisputeCountRequestReduction;
+  InterpreterRequired = DisputeInterpreterRequired;
 
   form: NoticeOfDisputeFormGroup;
   requestCourtAppearanceFormControl: FormControl<DisputeRequestCourtAppearanceYn> = new FormControl(null, [Validators.required]);
@@ -68,6 +70,9 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   // Summary
   declared = false;
+
+  // Upload
+  fileTypeToUpload: string = "Adjournment";
 
   // Consume from the service
   languages: Language[] = [];
@@ -96,6 +101,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
+    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance);
 
     this.counts = this.ticketCounts.map(ticketCount => {
       var dispute_count = this.disputeCounts.filter(i => i.count_no === ticketCount.count_no).shift();
@@ -159,12 +165,19 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    if (this.additionalForm?.value.represented_by_lawyer === this.RepresentedByLawyer.N) {
+      this.legalRepresentationForm.reset();
+    }
+
+    var fileData = [];
+    this.fileData$?.subscribe(i => { fileData = i; })
     this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
       ...this.form.value,
       ...this.additionalForm?.value,
       ...this.legalRepresentationForm?.value,
       request_court_appearance: this.requestCourtAppearanceFormControl.value,
-      dispute_counts: this.counts.map(i => i.form.value)
+      dispute_counts: this.counts.map(i => i.form.value),
+      file_data: fileData
     });
   }
 
@@ -210,13 +223,27 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   onChangeRepresentedByLawyer(event: MatCheckboxChange) {
-    this.additionalForm.markAsUntouched();
+    let value = event.checked ? this.RepresentedByLawyer.Y : this.RepresentedByLawyer.N;
+    this.additionalForm.controls.represented_by_lawyer.setValue(value);
+  }
+
+  onChangeInterpreterRequired(event: MatCheckboxChange) {
+    let value = event.checked ? this.InterpreterRequired.Y : this.InterpreterRequired.N;
+    this.additionalForm.controls.interpreter_required.setValue(value);
+    if (value === this.InterpreterRequired.Y) {
+      this.additionalForm.controls.interpreter_language_cd.setValidators([Validators.required]);
+    } else {
+      this.additionalForm.controls.interpreter_language_cd.setValue(null);
+      this.additionalForm.controls.interpreter_language_cd.clearValidators();
+      this.additionalForm.controls.interpreter_language_cd.updateValueAndValidity();
+    }
   }
 
   onChangeWitnessPresent(event: MatCheckboxChange) {
     if (event.checked) {
       this.additionalForm.controls.witness_no.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
+      this.additionalForm.controls.witness_no.setValue(null);
       this.additionalForm.controls.witness_no.clearValidators();
       this.additionalForm.controls.witness_no.updateValueAndValidity();
     }
@@ -270,14 +297,29 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       });
   }
 
-  onGetFile(fileId: string) {
-    this.store.dispatch(DisputeStore.Actions.GetDocument({ fileId }));
+  onGetFile(file: FileMetadata) {
+    if (file.pendingFileStream) {
+      var url = URL.createObjectURL(file.__penfingFile);
+      window.open(url);
+    } else {
+      this.store.dispatch(DisputeStore.Actions.GetDocument({ fileId: file.fileId }));
+    }
   }
 
-  onUploadFile(files: FileList) {
+  async onUploadFile(files: FileList) {
     if (files.length <= 0) return;
-    this.store.dispatch(DisputeStore.Actions.AddDocument({ file: files[0] }));
+
+    const blobToBase64= file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+
+    var pendingFileStream = await blobToBase64(files[0]) as string;
+    this.store.dispatch(DisputeStore.Actions.AddDocument({ file: files[0], fileType: this.fileTypeToUpload, pendingFileStream }));
     this.fileInput.nativeElement.value = null;
+    this.fileTypeToUpload = "Adjournment";
   }
 
   submitDispute() {

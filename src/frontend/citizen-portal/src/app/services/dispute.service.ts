@@ -5,7 +5,7 @@ import { Store } from "@ngrx/store";
 import { DisputeNotFoundDialogComponent } from "@shared/dialogs/dispute-not-found-dialog/dispute-not-found-dialog.component";
 import { DisputeStatusDialogComponent } from "@shared/dialogs/dispute-status-dialog/dispute-status-dialog.component";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputesService, SearchDisputeResult } from "app/api";
+import { DisputesService, FileMetadata as FileMetadataBase, SearchDisputeResult } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { AuthStore } from "app/auth/store";
 import { DisputeStore } from "app/store";
@@ -162,4 +162,8 @@ export enum StatusStepType {
   PROCESSING = "Processing",
   SCHEDULED = "Hearing Scheduled",
   CONFIRMED = "Decision Made",
+}
+
+export interface FileMetadata extends FileMetadataBase {
+  __penfingFile?: Blob;
 }

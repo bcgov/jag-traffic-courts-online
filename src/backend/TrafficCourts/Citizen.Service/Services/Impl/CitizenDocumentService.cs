@@ -121,7 +121,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(string base64FileString, string fileName, DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
@@ -131,7 +131,12 @@ public class CitizenDocumentService : ICitizenDocumentService
         var metadata = properties.ToMetadata();
         var tags = properties.ToTags();
 
-        using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, tags);
+        string[] fileStringSplit = base64FileString.Split(",");
+        byte[] bytes = Convert.FromBase64String(fileStringSplit[1]);
+        MemoryStream stream = new MemoryStream(bytes);
+        //IFormFile file = new FormFile(stream, 0, bytes.Length, fileName, fileName);
+        string contentType = GetStringBetween(base64FileString, "data:", ";base64");
+        using Coms.Client.File comsFile = new(stream, fileName, contentType, metadata, tags);
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
@@ -171,5 +176,18 @@ public class CitizenDocumentService : ICitizenDocumentService
         memoryStream.Position = 0;
 
         return memoryStream;
+    }
+
+    private string GetStringBetween(string input, string startString, string endString)
+    {
+        int startIndex = input.IndexOf(startString) + startString.Length;
+        int endIndex = input.IndexOf(endString, startIndex);
+
+        if (startIndex < 0 || endIndex < 0 || endIndex < startIndex)
+        {
+            return string.Empty;
+        }
+
+        return input.Substring(startIndex, endIndex - startIndex);
     }
 }
