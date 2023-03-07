@@ -9,7 +9,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
-import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount } from "app/api";
+import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount, DisputeInterpreterRequired } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -24,6 +24,7 @@ export class NoticeOfDisputeService {
   RequestReduction = DisputeCountRequestReduction;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   PleaCode = DisputeCountPleaCode;
+  InterpreterRequired = DisputeInterpreterRequired;
   ContactType = DisputeContactTypeCd;
 
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
@@ -65,11 +66,10 @@ export class NoticeOfDisputeService {
     time_to_pay_reason: null,
 
     __witness_present: false,
-    __interpreter_required: false,
+    interpreter_required: this.InterpreterRequired.N,
   }
 
   additionFormValidators: ValidatorFn[] = [
-    FormGroupValidators.requiredIfTrue("__interpreter_required", "interpreter_language_cd"),
     FormGroupValidators.requiredIfTrue("__witness_present", "witness_no"),
   ]
 

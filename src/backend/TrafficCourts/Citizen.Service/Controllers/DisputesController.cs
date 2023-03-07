@@ -21,6 +21,7 @@ using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Dispute
 using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 using Dispute = TrafficCourts.Citizen.Service.Models.Disputes.Dispute;
 using TrafficCourts.Common.Models;
+using System;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -174,7 +175,6 @@ public class DisputesController : ControllerBase
         }
     }
 
-
     /// <summary>
     /// Search for a Dispute.
     /// </summary>
@@ -248,7 +248,6 @@ public class DisputesController : ControllerBase
         }
     }
 
-
     /// <summary>
     /// Get a Dispute with authentication.
     /// </summary>
@@ -301,7 +300,7 @@ public class DisputesController : ControllerBase
 
             DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid };
             result.FileData = await _documentService.FindFilesAsync(properties, cancellationToken);
-            
+
             return Ok(result);
         }
         catch (Exception ex)
@@ -363,6 +362,32 @@ public class DisputesController : ControllerBase
             // Submit request to Workflow Service for processing.
             DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
             request.NoticeOfDisputeGuid = noticeOfDisputeGuid;
+
+            if (dispute.FileData is not null)
+            {
+                var uploadPendingFiles = dispute.FileData.Where(i => !String.IsNullOrEmpty(i.PendingFileStream));
+                foreach (FileMetadata fileMetadata in uploadPendingFiles)
+                {
+                    DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };
+                    Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream, fileMetadata.FileName, properties, cancellationToken);
+                    request.DocumentId = id;
+                    request.DocumentType = fileMetadata.DocumentType;
+                    await _bus.PublishWithLog(_logger, request, cancellationToken);
+                    request.DocumentId = null;
+                    request.DocumentType = null;
+                }
+
+                var deletePendingFiles = dispute.FileData.Where(i => i.DeleteRequested == true && i.FileId is not null);
+                foreach (FileMetadata fileMetadata in deletePendingFiles)
+                {
+                    request.DocumentId = fileMetadata.FileId.Value;
+                    request.DocumentDeleteRequested = true;
+                    await _bus.PublishWithLog(_logger, request, cancellationToken);
+                    request.DocumentId = null;
+                    request.DocumentType = null;
+                }
+            }
+
             await _bus.PublishWithLog(_logger, request, cancellationToken);
 
             return Ok();

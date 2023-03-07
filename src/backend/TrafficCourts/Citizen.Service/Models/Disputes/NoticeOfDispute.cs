@@ -40,11 +40,4 @@ public class NoticeOfDispute : Dispute
     /// </summary>
     [JsonPropertyName("violation_ticket")]
     public Models.Tickets.ViolationTicket? ViolationTicket { get; set; } = null!;
-
-    /// <summary>
-    /// List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute
-    /// </summary>
-    /// 
-    [JsonPropertyName("file_data")]
-    public List<FileMetadata>? FileData { get; set; }
 }

@@ -21,7 +21,7 @@ public interface ICitizenDocumentService
     /// <exception cref="TagValueTooLongException"></exception>
     /// <exception cref="TooManyTagsException"></exception>
     /// <exception cref="ObjectManagementServiceException">Other error.</exception>
-    Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, CancellationToken cancellationToken);
+    Task<Guid> SaveFileAsync(string base64FileString, string fileName, DocumentProperties properties, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the specified file through COMS service for the given unique file ID
