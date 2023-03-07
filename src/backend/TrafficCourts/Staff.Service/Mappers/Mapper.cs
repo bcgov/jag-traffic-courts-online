@@ -119,4 +119,11 @@ public class Mapper
         disputeCancelled.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         return disputeCancelled;
     }
+
+    public static EmailVerificationSend ToEmailVerification(Dispute dispute)
+    {
+        EmailVerificationSend emailVerificationSend = new(new Guid(dispute.NoticeOfDisputeGuid), dispute.TicketNumber, dispute.EmailAddress);
+        return emailVerificationSend;
+    }
+
 }
