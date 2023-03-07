@@ -101,7 +101,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
-    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket).request_court_appearance);
+    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance);
 
     this.counts = this.ticketCounts.map(ticketCount => {
       var dispute_count = this.disputeCounts.filter(i => i.count_no === ticketCount.count_no).shift();
