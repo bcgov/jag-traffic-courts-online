@@ -246,12 +246,12 @@ public class DisputeService : IDisputeService
 
     public async Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Email verification resent");
+        _logger.LogDebug("Email verification sent");
 
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
-        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(dispute);
+        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.NoticeOfDisputeGuid));
         await _bus.PublishWithLog(_logger, emailVerificationSentEvent, cancellationToken);
 
         return "Email verification sent";

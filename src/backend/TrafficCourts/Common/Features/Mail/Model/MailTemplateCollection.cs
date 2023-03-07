@@ -37,15 +37,6 @@
             },
         new MailTemplate()
             {
-                TemplateName = "ReverificationEmailTemplate",
-                Sender = "DoNotReply@tickets.gov.bc.ca",
-                SubjectTemplate = "Verify your email for traffic violation ticket {ticketid}.",
-                HtmlContentTemplate = "To update or reverify your email address for traffic violation ticket {ticketid} click on the following link." +
-                    "<br/><br/><a href='{emailVerificationUrl}?guid={emailVerificationToken}'>{emailVerificationUrl}?guid={emailVerificationToken}</a>" +
-                    "<br/><br/>If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
-            },
-        new MailTemplate()
-            {
                 TemplateName = "VerificationEmailTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Verify your email for traffic violation ticket {ticketid}.",

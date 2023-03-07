@@ -83,11 +83,6 @@ public class RequestEmailVerification : EmailVerificationMessage
 
 public class ResendEmailVerificationEmail : EmailVerificationMessage
 {
-    /// <summary>
-    /// The token encoded in the email used to validate the 
-    /// email was received.
-    /// </summary>
-    public Guid Token { get; set; } = Guid.Empty;
 }
 
 /// <summary>
