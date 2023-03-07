@@ -6,14 +6,16 @@
         <mat-form-field class="w-100">
           <mat-label>Surname</mat-label>
           <input matInput formControlName="disputant_surname" />
-          <mat-error>{{ "error.required" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls.disputant_surname.hasError('required')">{{ "error.required" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls.disputant_surname.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
         </mat-form-field>
       </div>
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label>Given name(s)</mat-label>
           <input matInput formControlName="disputant_given_names" />
-          <mat-error>{{ "error.required" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls.disputant_given_names.hasError('required')">{{ "error.required" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls.disputant_given_names.hasError('maxlength')">{{ "error.max_length" | translate }}30 per name</mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -34,8 +36,9 @@
       <div class="col-md-6" *ngIf="form.get('contact_type').value === ContactType.Lawyer">
         <mat-form-field class="w-100">
           <mat-label>Name of law firm</mat-label>
-          <input matInput formControlName="contact_law_firm_name" />
-          <mat-error>{{ "error.required" | translate }}</mat-error>
+          <input matInput formControlName="contact_law_firm_name"/>
+          <mat-error *ngIf="form.controls.contact_law_firm_name.hasError('required')">{{ "error.required" | translate }}</mat-error>
+          <mat-error *ngIf="form.controls.contact_law_firm_name.hasError('maxlength')">{{ "error.max_length" | translate }}200</mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -45,16 +48,18 @@
         <mat-form-field class="w-100">
           <mat-label *ngIf="form.get('contact_type').value === ContactType.Lawyer">Lawyer surname</mat-label>
           <mat-label *ngIf="form.get('contact_type').value === ContactType.Other">Other surname</mat-label>
-          <input matInput formControlName="contact_surname" />
-          <mat-error>{{ "error.required" | translate }}</mat-error>
+          <input matInput formControlName="contact_surname"/>
+          <mat-error *ngIf="form.controls.contact_surname.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+          <mat-error *ngIf="form.controls.contact_surname.hasError('required')">{{ "error.required" | translate }}</mat-error>
         </mat-form-field>
       </div>
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label *ngIf="form.get('contact_type').value === ContactType.Lawyer">Lawyer given name(s)</mat-label>
           <mat-label *ngIf="form.get('contact_type').value === ContactType.Other">Other given name(s)</mat-label>
-          <input matInput formControlName="contact_given_names" />
-          <mat-error>{{ "error.required" | translate }}</mat-error>
+          <input matInput formControlName="contact_given_names"/>
+          <mat-error *ngIf="form.controls.contact_given_names.hasError('maxlength')">{{ "error.max_length" | translate }}30 each name</mat-error>
+          <mat-error *ngIf="form.controls.contact_given_names.hasError('required')">{{ "error.required" | translate }}</mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -74,15 +79,17 @@
         <div class="col-md-6">
           <mat-form-field class="w-100">
             <mat-label>Mailing address</mat-label>
-            <input matInput formControlName="address" maxlength="300" />
-            <mat-error>{{ "error.required" | translate }}</mat-error>
+            <input matInput formControlName="address" />
+            <mat-error *ngIf="form.controls.address.hasError('required')">{{ "error.required" | translate }}</mat-error>
+            <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate }}100 per line</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">
           <mat-form-field class="w-100">
             <mat-label>City</mat-label>
             <input matInput formControlName="address_city" />
-            <mat-error>{{ "error.required" | translate }}</mat-error>
+            <mat-error *ngIf="form.controls.address_city.hasError('required')">{{ "error.required" | translate }}</mat-error>
+            <mat-error *ngIf="form.controls.address_city.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -107,9 +114,10 @@
               </div>
             </mat-select>
 
-            <input *ngIf="!isUSA && !isCA" matInput formControlName="address_province" maxlength="30" />
+            <input *ngIf="!isUSA && !isCA" matInput formControlName="address_province"/>
 
-            <mat-error>{{ "error.required" | translate }}</mat-error>
+            <mat-error *ngIf="form.controls.address_province.hasError('required')">{{ "error.required" | translate }}</mat-error>
+            <mat-error *ngIf="form.controls.address_province.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
@@ -152,11 +160,12 @@
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label>Email address</mat-label>
-          <input matInput formControlName="email_address" autocomplete="off" />
+          <input matInput formControlName="email_address" autocomplete="off"/>
           <mat-error *ngIf="form.get('email_address')?.hasError('required')">{{"error.required" |
             translate}}</mat-error>
           <mat-error *ngIf="form.get('email_address')?.hasError('email')">{{"error.email_address" |
             translate }}</mat-error>
+          <mat-error *ngIf="form.controls.email_address.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
         </mat-form-field>
       </div>
       <div class="col-md-6">

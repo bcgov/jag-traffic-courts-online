@@ -175,7 +175,8 @@
     "required": "Required",
     "positive_number": "Enter positive number",
     "max_number": "must be a number less than ",
-    "email_address": "Must be a valid email address"
+    "email_address": "Must be a valid email address",
+    "max_length": "Maximum length is "
   },
   "shell_ticket_confirmation": {
     "heading": "Create your traffic ticket",
