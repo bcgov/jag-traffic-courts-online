@@ -1,0 +1,38 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: azure-cognitive-service-custom-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: azure-cognitive-service-custom-proxy
+      app.kubernetes.io/name: azure-cognitive-service-custom-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: azure-cognitive-service-custom-proxy
+        app.kubernetes.io/name: azure-cognitive-service-custom-proxy
+    spec:
+      volumes:
+        - name: forms-recognizer-shared
+          persistentVolumeClaim:
+            claimName: forms-recognizer-shared
+        - name: forms-recognizer-logs
+          persistentVolumeClaim:
+            claimName: forms-recognizer-logs
+      containers:
+        - name: azure-cognitive-service-custom-proxy
+          securityContext:
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            {{- toYaml .Values.proxy.resources | nindent 12 }}
+          ports:
+            - containerPort: 5200
+              protocol: TCP
+          image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"

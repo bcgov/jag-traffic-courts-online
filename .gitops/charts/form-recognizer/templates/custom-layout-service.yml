@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-cognitive-service-custom-layout
+  labels:
+    app.kubernetes.io/instance: azure-cognitive-service-custom-layout
+    app.kubernetes.io/name: azure-cognitive-service-custom-layout
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: azure-cognitive-service-custom-layout
+    app.kubernetes.io/name: azure-cognitive-service-custom-layout
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5000
+      targetPort: 5000
