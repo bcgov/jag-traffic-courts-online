@@ -1,0 +1,29 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: forms-recognizer-logs
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.logs.size }}
+  {{- if .Values.storage.logs.storageClassName }}
+  storageClassName: {{ .Values.storage.logs.storageClassName }}
+  {{- end }}  
+  volumeMode: Filesystem
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: forms-recognizer-shared
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.shared.size }}
+  {{- if .Values.storage.shared.storageClassName }}
+  storageClassName: {{ .Values.storage.shared.storageClassName }}
+  {{- end }}
+  volumeMode: Filesystem
