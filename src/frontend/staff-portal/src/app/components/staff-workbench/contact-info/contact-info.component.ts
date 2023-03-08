@@ -66,15 +66,15 @@ export class ContactInfoComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-      emailAddress: [null, [Validators.email]],
+      emailAddress: [null, [Validators.email, Validators.maxLength(100)]],
       contactTypeCd: [null, [Validators.required]],
-      contactSurnameNm: [null],
-      contactGivenNames: [null],
-      contactLawFirmNm: [null],
-      disputantSurname: [null, [Validators.required]],
-      disputantGivenNames: [null, [Validators.required]],
+      contactSurnameNm: [null, [Validators.maxLength(30)]],
+      contactGivenNames: [null, [Validators.maxLength(92)]],
+      contactLawFirmNm: [null, [Validators.maxLength(200)]],
+      disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
+      disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
       address: [null, [Validators.required, Validators.maxLength(300)]],
-      addressCity: [null, [Validators.required]],
+      addressCity: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
@@ -161,9 +161,9 @@ export class ContactInfoComponent implements OnInit {
   onSelectContactType(newContactType: any) {
     this.form.get('contactGivenNames').setValue(null);
     this.form.get('contactSurnameNm').setValue(null);
-    this.form.get('contactLawFirmNm').clearValidators();
-    this.form.get('contactSurnameNm').clearValidators();
-    this.form.get('contactGivenNames').clearValidators();
+    this.form.get('contactLawFirmNm').removeValidators(Validators.required);
+    this.form.get('contactSurnameNm').removeValidators(Validators.required);
+    this.form.get('contactGivenNames').removeValidators(Validators.required);
     this.form.get('contactLawFirmNm').setValue(null);
     if (newContactType == this.ContactType.Lawyer) {
       // make all contact info required

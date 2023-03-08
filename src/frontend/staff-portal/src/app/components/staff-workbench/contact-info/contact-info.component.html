@@ -99,7 +99,8 @@
                 <mat-form-field class="w-100">
                   <mat-label>Disputant surname</mat-label>
                   <input matInput formControlName="disputantSurname" />
-                  <mat-error>{{ "error.required" | translate }}</mat-error>
+                  <mat-error *ngIf="form.controls.disputantSurname.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                  <mat-error *ngIf="form.controls.disputantSurname.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
                 </mat-form-field>
               </div>
 
@@ -108,7 +109,8 @@
                 <mat-form-field class="w-100">
                   <mat-label>Disputant given name(s)</mat-label>
                   <input matInput formControlName="disputantGivenNames" />
-                  <mat-error>{{ "error.required" | translate }}</mat-error>
+                  <mat-error *ngIf="form.controls.disputantGivenNames.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                  <mat-error *ngIf="form.controls.disputantGivenNames.hasError('maxlength')">{{ "error.max_length" | translate }}30 per name</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -131,7 +133,8 @@
                   <mat-form-field class="w-100">
                     <mat-label>Name of law firm</mat-label>
                     <input matInput formControlName="contactLawFirmNm" />
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.contactLawFirmNm.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.contactLawFirmNm.hasError('maxlength')">{{ "error.max_length" | translate }}200</mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -143,7 +146,8 @@
                   <mat-form-field class="w-100">
                     <mat-label>Contact Surname</mat-label>
                     <input matInput formControlName="contactSurnameNm" />
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.contactSurnameNm.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.contactSurnameNm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
                   </mat-form-field>
                 </div>
 
@@ -152,7 +156,8 @@
                   <mat-form-field class="w-100">
                     <mat-label>Contact Given name(s)</mat-label>
                     <input matInput formControlName="contactGivenNames" />
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.contactGivenNames.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.contactGivenNames.hasError('maxlength')">{{ "error.max_length" | translate }}30 per name</mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -163,8 +168,9 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>Mailing address</mat-label>
-                    <input matInput formControlName="address" maxlength="300"/>
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                    <input matInput formControlName="address" />
+                    <mat-error *ngIf="form.controls.address.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate }}100 per line</mat-error>
                   </mat-form-field>
                 </div>
 
@@ -190,7 +196,8 @@
                   <mat-form-field class="w-100">
                     <mat-label>City</mat-label>
                     <input matInput formControlName="addressCity" />
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.addressCity.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.addressCity.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
                   </mat-form-field>
                 </div>
 
@@ -216,9 +223,9 @@
                       *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId">
                       Province/State</mat-label>
                     <input matInput formControlName="addressProvince"
-                      *ngIf="form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId"
-                      maxlength="30" />
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                      *ngIf="form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId"/>
+                    <mat-error *ngIf="form.controls.addressProvinceProvId.hasError('required') || form.controls.addressProvince.hasError('required')">{{ "error.required" | translate }}</mat-error>
+                    <mat-error *ngIf="form.controls.addressProvince.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -278,7 +285,10 @@
                   <mat-error *ngIf="form.get('emailAddress').hasError('email')">{{
                     "error.email_address" | translate
                     }}</mat-error>
-                </mat-form-field>
+                  <mat-error *ngIf="form.get('emailAddress').hasError('maxlength')">{{
+                    "error.max_length" | translate
+                    }}100</mat-error>
+                  </mat-form-field>
               </div>
             </div>
             <br /><br />
