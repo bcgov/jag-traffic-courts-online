@@ -1,5 +1,6 @@
 ﻿namespace TrafficCourts.Common.Configuration;
 
+[Obsolete]
 public enum TicketStorageType
 {
     /// <summary>
