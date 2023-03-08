@@ -22,23 +22,14 @@ public class OracleDataApiService : IOracleDataApiService
         // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
         if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
         {
-            dispute.ViolationTicket = new();
-            dispute.ViolationTicket.TicketNumber = dispute.TicketNumber;
-            // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
-            List<ViolationTicketCount> violationTicketCounts = new();
-            for (int i = 1; i <= 3; i++)
-            {
-                ViolationTicketCount violationTicketCount = new();
-                violationTicketCount.CountNo = i;
-                violationTicketCounts.Add(violationTicketCount);
-            }
-            dispute.ViolationTicket.ViolationTicketCounts = violationTicketCounts;
+            dispute.ViolationTicket = CreateViolationTicketFromDispute(dispute);
 
             // TODO: initialize ViolationTicket with data from OCR 
         }
 
         return await _client.SaveDisputeAsync(dispute, cancellationToken);
     }
+
     public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
     {
         try
@@ -179,5 +170,20 @@ public class OracleDataApiService : IOracleDataApiService
         {
             throw;
         }
+    }
+
+    private static ViolationTicket CreateViolationTicketFromDispute(Dispute dispute)
+    {
+        ViolationTicket violationTicket = new();
+        violationTicket.TicketNumber = dispute.TicketNumber;
+        // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
+        List<ViolationTicketCount> violationTicketCounts = new();
+        for (int i = 1; i <= 3; i++)
+        {
+            violationTicketCounts.Add(new ViolationTicketCount { CountNo = i });
+        }
+        violationTicket.ViolationTicketCounts = violationTicketCounts;
+
+        return violationTicket;
     }
 }

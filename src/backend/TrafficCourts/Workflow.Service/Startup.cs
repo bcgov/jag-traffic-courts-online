@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Messaging;

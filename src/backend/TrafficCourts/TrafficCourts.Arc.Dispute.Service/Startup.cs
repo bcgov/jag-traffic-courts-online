@@ -1,4 +1,4 @@
-﻿using Renci.SshNet;
+using Renci.SshNet;
 using Serilog;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Service.Configuration;
