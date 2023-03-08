@@ -21,6 +21,8 @@ public enum AuditLogEntryType {
 	CUPD,
 	CUWR,
 	CUWT,
+	DURA,
+	DURR,
 	EMCA,
 	EMCF,
 	EMCR,
@@ -32,6 +34,11 @@ public enum AuditLogEntryType {
 	EMST,
 	EMUP,
 	EMVF,
+	ESUR,
+	FDLD,
+	FDLS,
+	FUPD,
+	FUPS,
 	INIT,
 	JASG,
 	JCNF,
@@ -44,6 +51,7 @@ public enum AuditLogEntryType {
 	SUB,
 	SUPL,
 	SVAL,
+	URSR,
 	VREV,
 	VSUB
 }

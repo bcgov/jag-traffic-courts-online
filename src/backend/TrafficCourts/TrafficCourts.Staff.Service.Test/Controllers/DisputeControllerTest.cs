@@ -233,7 +233,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.AcceptDisputeUpdateRequestAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.AcceptDisputeUpdateRequestAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);

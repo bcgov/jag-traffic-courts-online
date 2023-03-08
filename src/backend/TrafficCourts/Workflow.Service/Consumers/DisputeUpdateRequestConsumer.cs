@@ -73,6 +73,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
                     }, context.CancellationToken);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUEM, context);
             }
         }
 
@@ -85,11 +86,14 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             || !string.IsNullOrEmpty(message.DisputantGivenName1)
             || !string.IsNullOrEmpty(message.DisputantGivenName2)
             || !string.IsNullOrEmpty(message.DisputantGivenName3)
-            || !string.IsNullOrEmpty(message.DisputantSurname)
+            || !string.IsNullOrEmpty(message.DisputantSurname) 
+            || message.ContactType != dispute.ContactTypeCd)
             )
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
+            PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CCON, context);
+            PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUPD, context);
         }
 
         // If some or all address fields have data, send a DISPUTANT_ADDRESS update request
@@ -106,6 +110,8 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
+            PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CCON, context);
+            PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUPD, context);
         }
 
         // If some or all phone fields have data, send a DISPUTANT_PHONE update request
@@ -113,6 +119,8 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_PHONE;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
+            PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CCON, context);
+            PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUPD, context);
         }
 
         // If some or all court options fields have data, send a COURT_OPTIONS update request
@@ -129,10 +137,51 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             || message.InterpreterRequired != null
             || message.WitnessNo != null
             || !string.IsNullOrEmpty(message.FineReductionReason)
-            || !string.IsNullOrEmpty(message.TimeToPayReason))
+            || !string.IsNullOrEmpty(message.TimeToPayReason)
+            || (message.RequestCourtAppearance != dispute.RequestCourtAppearanceYn))
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.COURT_OPTIONS;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
+            if (!string.IsNullOrEmpty(message.InterpreterLanguageCd) && string.IsNullOrEmpty(dispute.InterpreterLanguageCd))
+            {
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CAIN, context);
+            }
+            if (message.WitnessNo != null && (dispute.WitnessNo == null || message.WitnessNo > dispute.WitnessNo) )
+            {
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CAWT, context);
+            }
+            if (message.WitnessNo != null && (dispute.WitnessNo != message.WitnessNo) )
+            {
+                PublishFileHistoryLog(dispute,FileHistoryAuditLogEntryType.CUWT, context);
+            }
+            if (message.RequestCourtAppearance == DisputeRequestCourtAppearanceYn.N && dispute.RequestCourtAppearanceYn == DisputeRequestCourtAppearanceYn.Y)
+            {
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CCWR, context);
+            }
+            if (!string.IsNullOrEmpty(message.LawFirmName) && string.IsNullOrEmpty(dispute.LawFirmName))
+            {
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CLEG, context);
+            }
+            if (!string.IsNullOrEmpty(message.InterpreterLanguageCd) && !string.IsNullOrEmpty(dispute.InterpreterLanguageCd) && message.InterpreterLanguageCd != dispute.InterpreterLanguageCd) 
+            {
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUIN, context);
+            }
+            if (message.LawFirmName != dispute.LawFirmName 
+                || message.LawyerSurname != dispute.LawyerSurname
+                || message.LawyerGivenName1 != dispute.LawyerGivenName1
+                || message.LawyerGivenName2 != dispute.LawyerGivenName2
+                || message.LawyerGivenName3 != dispute.LawyerGivenName3
+                || message.LawyerAddress != dispute.LawyerAddress
+                || message.LawyerPhoneNumber != dispute.LawyerPhoneNumber
+                || message.LawyerEmail != dispute.LawyerEmail)
+            {
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CULG, context);
+            }
+            if (message.FineReductionReason != dispute.FineReductionReason || message.TimeToPayReason != dispute.TimeToPayReason)
+            {
+                PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUWR, context);
+            }
+
         }
 
         // If some or all count fields have data, send a DISPUTE_COUNT request
@@ -166,5 +215,17 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
                 await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
             }
         }
+    }
+
+    private async void PublishFileHistoryLog(Dispute dispute, FileHistoryAuditLogEntryType logType, ConsumeContext<DisputeUpdateRequest> context)
+    {
+        SaveFileHistoryRecord fileHistoryRecord = new()
+        {
+            DisputeId = dispute.DisputeId,
+            NoticeOfDisputeId = dispute.NoticeOfDisputeGuid,
+            AuditLogEntryType = logType,
+            ActionByApplicationUser = "Disputant"
+        };
+        await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
     }
 }

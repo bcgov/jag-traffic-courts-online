@@ -78,26 +78,29 @@ public interface IDisputeService
 
     /// <summary>Resends email verification to consumer.</summary>
     /// <param name="disputeId">Dispute Id for dispute to resend email.</param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken);
+    Task<string> ResendEmailVerificationAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Accepts a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+    Task AcceptDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rejects a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+    Task RejectDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all the existing disputes from the database with pending update requests.

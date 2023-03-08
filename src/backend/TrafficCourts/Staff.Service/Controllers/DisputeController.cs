@@ -374,7 +374,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            string email = await _disputeService.ResendEmailVerificationAsync(disputeId, cancellationToken);
+            string email = await _disputeService.ResendEmailVerificationAsync(disputeId, User, cancellationToken);
             return Ok(email);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -471,7 +471,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
-        await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
+        await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
         return Ok();
     }
 
@@ -487,7 +487,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
-        await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
+        await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
         return Ok();
     }
 

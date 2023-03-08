@@ -25,7 +25,7 @@ public class DisputeUpdateRequestAcceptedConsumerTest
 
     public DisputeUpdateRequestAcceptedConsumerTest()
     {
-        _message = new(1);
+        _message = new(1, "user");
         _dispute = new()
         {
             DisputeId = 1,

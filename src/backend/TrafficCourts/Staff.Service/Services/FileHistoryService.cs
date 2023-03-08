@@ -34,17 +34,4 @@ public class FileHistoryService : IFileHistoryService
     {
         return await _oracleDataApi.GetFileHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
     }
-
-    public async Task<long> SaveFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
-    {
-        fileHistory.ActionByApplicationUser = GetUserName();
-        return await _oracleDataApi.InsertFileHistoryAsync(fileHistory, cancellationToken);
-    }
-
-    private string GetUserName()
-    {
-        HttpContext? httpContext = _httpContextAccessor.HttpContext;
-        string? username = httpContext?.User.Identity?.Name;
-        return username ?? string.Empty;
-    }
 }

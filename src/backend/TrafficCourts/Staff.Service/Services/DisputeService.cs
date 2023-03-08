@@ -193,7 +193,11 @@ public class DisputeService : IDisputeService
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        // Publish submit event (consumer(s) will generate email, etc)
+        // Publish file history of cancellation email
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCA;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        // Publish cancel event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
         await _bus. PublishWithLog(_logger, cancelledEvent, cancellationToken);
     }
@@ -234,6 +238,10 @@ public class DisputeService : IDisputeService
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
+        // publish file history of email sent
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCF;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
         await _bus.PublishWithLog(_logger, approvedEvent, cancellationToken);
@@ -244,14 +252,14 @@ public class DisputeService : IDisputeService
         await _oracleDataApi.DeleteDisputeAsync(disputeId, cancellationToken);
     }
 
-    public async Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<string> ResendEmailVerificationAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Email verification sent");
 
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
 
-        // Publish submit event (consumer(s) will generate email, etc)
-        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.NoticeOfDisputeGuid));
+        // Publish submit event (consumer(s) will generate email, file history)
+        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.NoticeOfDisputeGuid), GetUserName(user));
         await _bus.PublishWithLog(_logger, emailVerificationSentEvent, cancellationToken);
 
         return "Email verification sent";
@@ -261,16 +269,17 @@ public class DisputeService : IDisputeService
     /// Accepts a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    public async Task AcceptDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // TCVP-1975 - consumers of this message are expected to:
         // - call oracle-data-api to patch the Dispute with the DisputeUpdateRequest changes.
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
-        DisputeUpdateRequestAccepted message = new(updateStatusId);
+        DisputeUpdateRequestAccepted message = new(updateStatusId, GetUserName(user));
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 
@@ -278,15 +287,16 @@ public class DisputeService : IDisputeService
     /// Rejects a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    public async Task RejectDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // TCVP-1974 - consumers of this message are expected to:
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was rejected
         // - populate file/email history records
-        DisputeUpdateRequestRejected message = new(updateStatusId);
+        DisputeUpdateRequestRejected message = new(updateStatusId, GetUserName(user));
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 

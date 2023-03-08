@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Mail.Templates;
@@ -25,7 +26,7 @@ public class DisputeUpdateRequestRejectedConsumerTest
 
     public DisputeUpdateRequestRejectedConsumerTest()
     {
-        _message = new(1);
+        _message = new(1, "user");
         _dispute = new()
         {
             DisputeId = 1,

@@ -112,7 +112,8 @@ public class JJDisputeService : IJJDisputeService
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber,
-            FileHistoryAuditLogEntryType.VREV, GetUserName(user)); // Dispute returned to JJ for review
+            FileHistoryAuditLogEntryType.VREV, 
+            GetUserName(user)); // Dispute returned to JJ for review
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -126,7 +127,8 @@ public class JJDisputeService : IJJDisputeService
 
             SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
                 dispute.TicketNumber,
-                FileHistoryAuditLogEntryType.JDIV, GetUserName(user)); // Dispute change of plea required / Divert to court appearance
+                FileHistoryAuditLogEntryType.JDIV, 
+                GetUserName(user)); // Dispute change of plea required / Divert to court appearance
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
             return dispute;
@@ -146,7 +148,10 @@ public class JJDisputeService : IJJDisputeService
 
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
 
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(dispute.TicketNumber, FileHistoryAuditLogEntryType.VSUB, GetUserName(user)); // Dispute approved for resulting by staff
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
+            dispute.TicketNumber, 
+            FileHistoryAuditLogEntryType.VSUB, 
+            GetUserName(user)); // Dispute approved for resulting by staff
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -195,7 +200,8 @@ public class JJDisputeService : IJJDisputeService
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber,
-            FileHistoryAuditLogEntryType.JCNF, GetUserName(user)); // Dispute decision confirmed/submitted by JJ
+            FileHistoryAuditLogEntryType.JCNF, 
+            GetUserName(user)); // Dispute decision confirmed/submitted by JJ
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;

@@ -12,10 +12,12 @@
 /// </summary>
 public class DisputeUpdateRequestAccepted
 {
-    public DisputeUpdateRequestAccepted(long updateRequestId)
+    public DisputeUpdateRequestAccepted(long updateRequestId, string userName)
     {
         UpdateRequestId = updateRequestId;
+        UserName = userName;
     }
 
     public long UpdateRequestId { get; set; }
+    public string UserName { get; set; }
 }
