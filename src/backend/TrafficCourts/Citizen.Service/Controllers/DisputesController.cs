@@ -380,11 +380,7 @@ public class DisputesController : ControllerBase
                 var deletePendingFiles = dispute.FileData.Where(i => i.DeleteRequested == true && i.FileId is not null);
                 foreach (FileMetadata fileMetadata in deletePendingFiles)
                 {
-                    request.DocumentId = fileMetadata.FileId.Value;
-                    request.DocumentDeleteRequested = true;
-                    await _bus.PublishWithLog(_logger, request, cancellationToken);
-                    request.DocumentId = null;
-                    request.DocumentType = null;
+                    await _documentService.DeleteFileAsync(fileMetadata.FileId.Value, cancellationToken);
                 }
             }
 

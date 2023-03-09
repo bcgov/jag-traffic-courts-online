@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from "@angular/core";
-import { DisputeContactTypeCd, DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from "app/api";
+import { DisputeContactTypeCd, DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn, ViolationTicketCount } from "app/api";
 import { LookupsService } from "app/services/lookups.service";
-import { NoticeOfDisputeService, NoticeOfDispute, CountsActions } from "app/services/notice-of-dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute, CountsActions, DisputeCount } from "app/services/notice-of-dispute.service";
 import { ConfigService } from "@config/config.service";
 
 @Component({
@@ -11,6 +11,7 @@ import { ConfigService } from "@config/config.service";
 })
 export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
   @Input() noticeOfDispute: NoticeOfDispute;
+  @Input() ticketCounts: ViolationTicketCount[] = [];
   countsActions: CountsActions;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   ContactType = DisputeContactTypeCd;
@@ -41,5 +42,9 @@ export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
 
   getCountryLongName(countryId: number): string {
     return this.configService.getCtryLongNm(countryId);
+  }
+
+  getCount(disputeCount: DisputeCount): ViolationTicketCount {
+    return this.ticketCounts?.filter(i => i.count_no === disputeCount.count_no).shift();
   }
 }
