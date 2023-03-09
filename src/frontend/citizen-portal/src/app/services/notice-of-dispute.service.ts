@@ -28,27 +28,27 @@ export class NoticeOfDisputeService {
   ContactType = DisputeContactTypeCd;
 
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
-    disputant_surname: { value: null, options: { validators: [Validators.required] } },
-    disputant_given_names: { value: null, options: { validators: [Validators.required] } },
-    contact_given_names: null,
-    contact_surname: null,
-    contact_law_firm_name: null,
+    disputant_surname: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
+    disputant_given_names: { value: null, options: { validators: [Validators.required, Validators.maxLength(92)] } },
+    contact_given_names: { value: null, options: { validators: [Validators.maxLength(92)]}},
+    contact_surname: { value: null, options: { validators: [Validators.maxLength(30)]}},
+    contact_law_firm_name: { value: null, options: { validators: [Validators.maxLength(200)]}},
     contact_type: { value: this.ContactType.Individual, options: { validators: [Validators.required] } },
-    address: { value: null, options: { validators: [Validators.required, Validators.maxLength(300)] } },
-    address_city: { value: null, options: { validators: [Validators.required] } },
+    address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304)] } },
+    address_city: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
     address_province: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
     address_province_country_id: null,
     address_country_id: { value: null, options: { validators: [Validators.required] } },
     address_province_seq_no: { value: null, options: { validators: [Validators.required] } },
     postal_code: { value: null, options: { validators: [Validators.required] } },
     home_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
-    email_address: { value: null, options: { validators: [Validators.required, Validators.email] } },
+    email_address: { value: null, options: { validators: [Validators.required, Validators.email, Validators.maxLength(100)] } },
     drivers_licence_number: { value: null, options: { validators: [Validators.required, Validators.minLength(7), Validators.maxLength(9)] } },
     drivers_licence_province: { value: null, options: { validators: [Validators.required] } },
     drivers_licence_country_id: null,
     drivers_licence_province_seq_no: null
   }
-  
+
   countFormConfigs: DisputeCountFormConfigs = {
     count_no: null,
     plea_cd: null,
@@ -57,14 +57,13 @@ export class NoticeOfDisputeService {
     __skip: false,
     __apply_to_remaining_counts: false,
   }
-  
+
   additionFormConfigs: NoticeOfDisputeFormConfigs = {
     represented_by_lawyer: this.RepresentedByLawyer.N,
     interpreter_language_cd: null,
     witness_no: 0,
-    fine_reduction_reason: null,
-    time_to_pay_reason: null,
-
+    fine_reduction_reason: { value: null, options: { validators: [Validators.maxLength(500)]}},
+    time_to_pay_reason: { value: null, options: {validators: [Validators.maxLength(500)]}},
     __witness_present: false,
     interpreter_required: this.InterpreterRequired.N,
   }
@@ -74,11 +73,11 @@ export class NoticeOfDisputeService {
   ]
 
   legalRepresentationConfigs: NoticeOfDisputeFormConfigs = {
-    law_firm_name: { value: null, options: { validators: [Validators.required] } },
-    lawyer_full_name: { value: null, options: { validators: [Validators.required] } },
-    lawyer_email: { value: null, options: { validators: [Validators.required] } },
+    law_firm_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(200)] } },
+    lawyer_full_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(123)] } },
+    lawyer_email: { value: null, options: { validators: [Validators.required, Validators.email, Validators.maxLength(100)] } },
     lawyer_phone_number: { value: null, options: { validators: [Validators.required] } },
-    lawyer_address: { value: null, options: { validators: [Validators.required] } }
+    lawyer_address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304)] } }
   }
 
   constructor(

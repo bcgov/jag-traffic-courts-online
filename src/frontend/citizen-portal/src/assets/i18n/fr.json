@@ -172,6 +172,7 @@
   },
   "error": {
     "required": "Obligatoire",
-    "email_address": "Doit être une adresse e-mail valide"
+    "email_address": "Doit être une adresse e-mail valide",
+    "max_length": "La longueur maximale est "
   }
 }

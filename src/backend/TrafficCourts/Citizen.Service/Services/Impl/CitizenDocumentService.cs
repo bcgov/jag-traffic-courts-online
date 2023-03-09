@@ -61,10 +61,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         {
             NoticeOfDisputeId = properties.NoticeOfDisputeId.Value.ToString("d"), // dashes
             ActionByApplicationUser = "Disputant",
-            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
-            // since the original description: "File was deleted by Disputant." is missing from the database.
-            // When the description is added to the databse change this
-            AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL
+            AuditLogEntryType = FileHistoryAuditLogEntryType.FDLD
         };
 
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -154,10 +151,7 @@ public class CitizenDocumentService : ICitizenDocumentService
             {
                 NoticeOfDisputeId = properties.NoticeOfDisputeId.Value.ToString("d"),
                 ActionByApplicationUser = "Disputant",
-                // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
-                // since the original description: "File was uploaded by Disputant." is missing from the database.
-                // When the description is added to the databse change this
-                AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL
+                AuditLogEntryType = FileHistoryAuditLogEntryType.FUPD
             };
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }

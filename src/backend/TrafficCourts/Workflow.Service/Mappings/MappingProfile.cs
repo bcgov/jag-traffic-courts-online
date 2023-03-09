@@ -15,9 +15,7 @@ public class MessageContractToDisputeMappingProfile : Profile
             // Automapper can't map from DateOnly -> DateTimeOffset
             .ForMember(dest => dest.DisputantBirthdate, opt => opt.MapFrom(src => new DateTimeOffset(new DateTime(src.DisputantBirthdate.Year, src.DisputantBirthdate.Month, src.DisputantBirthdate.Day))));
         CreateMap<Messaging.MessageContracts.TicketCount, Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicketCount>();
-        //CreateMap<Messaging.MessageContracts.SendEmail, Common.OpenAPIs.OracleDataApi.v1_0.EmailHistory>();
         CreateMap<Messaging.MessageContracts.SaveFileHistoryRecord, Common.OpenAPIs.OracleDataApi.v1_0.FileHistory>();
-
         CreateMap<Common.OpenAPIs.OracleDataApi.v1_0.Dispute, Messaging.MessageContracts.SubmitNoticeOfDispute>()
             .ForMember(dest => dest.NoticeOfDisputeGuid, opt => opt.MapFrom(src => src.NoticeOfDisputeGuid))
             .ForMember(dest => dest.DriversLicenceCountryId, opt => opt.MapFrom(src => src.DriversLicenceIssuedCountryId))

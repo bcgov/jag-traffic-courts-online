@@ -10,6 +10,7 @@ public class Mapper
 
         DisputeApproved target = new();
         target.Surname = dispute.DisputantSurname;
+        target.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         target.GivenName1 = dispute.DisputantGivenName1;
         target.GivenName2 = dispute.DisputantGivenName2;
         target.GivenName3 = dispute.DisputantGivenName3;
@@ -83,18 +84,12 @@ public class Mapper
     {
         DisputeRejected disputeRejected = new()
         {
-            Reason = dispute.RejectedReason
+            Reason = dispute.RejectedReason,
+            Email = dispute.EmailAddress,
+            TicketNumber = dispute.TicketNumber,
+            NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
         };
         return disputeRejected;
-    }
-
-    public static SaveFileHistoryRecord ToFileHistory(long disputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser)
-    {
-        SaveFileHistoryRecord fileHistoryRecord = new();
-        fileHistoryRecord.DisputeId = disputeId;
-        fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
-        fileHistoryRecord.ActionByApplicationUser= actionByApplicationUser;
-        return fileHistoryRecord;
     }
 
     public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser)
@@ -120,6 +115,8 @@ public class Mapper
         DisputeCancelled disputeCancelled = new();
         disputeCancelled.Id = dispute.DisputeId;
         disputeCancelled.Email = dispute.EmailAddress;
+        disputeCancelled.TicketNumber = dispute.TicketNumber;
+        disputeCancelled.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         return disputeCancelled;
     }
 }

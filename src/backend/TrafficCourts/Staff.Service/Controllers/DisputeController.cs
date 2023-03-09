@@ -471,7 +471,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
-        await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
+        await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
         return Ok();
     }
 
@@ -487,7 +487,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
-        await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
+        await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
         return Ok();
     }
 

@@ -7,15 +7,15 @@ using TrafficCourts.Common.Features.Mail;
 namespace TrafficCourts.Workflow.Service.Consumers
 {
     /// <summary>
-    ///     Consumer for DisputeApproved message, which will send an e-mail notification
+    ///     Consumer for DisputeCancelled message, which will send an e-mail notification
     ///     to the disputant, that the dispute was approved for processing.
     /// </summary>
-    public class DisputeApprovedNotifyConsumer : IConsumer<DisputeApproved>
+    public class DisputeCancelledNotifyConsumer : IConsumer<DisputeCancelled>
     {
-        private readonly ILogger<DisputeApprovedNotifyConsumer> _logger;
-        private static readonly string _approveEmailTemplateName = "ProcessingDisputeTemplate";
+        private readonly ILogger<DisputeCancelledNotifyConsumer> _logger;
+        private static readonly string _emailTemplateName = "CancelledDisputeTemplate";
 
-        public DisputeApprovedNotifyConsumer(ILogger<DisputeApprovedNotifyConsumer> logger)
+        public DisputeCancelledNotifyConsumer(ILogger<DisputeCancelledNotifyConsumer> logger)
         {
             _logger = logger;
         }
@@ -26,12 +26,12 @@ namespace TrafficCourts.Workflow.Service.Consumers
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task Consume(ConsumeContext<DisputeApproved> context)
+        public async Task Consume(ConsumeContext<DisputeCancelled> context)
         {
             using var scope = _logger.BeginConsumeScope(context);
 
             // Send email message to the submitter's entered email to notify of dispute approval for processing
-            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _approveEmailTemplateName);
+            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _emailTemplateName);
             if (template is not null)
             {
                 // TODO: there is future ability to opt-out of e-mails... may need to add check to skip over this, if disputant choses so.
@@ -39,15 +39,15 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     From = template.Sender,
                     To = context.Message.Email!,
-                    Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketFileNumber),
-                    TextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
-                    HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
+                    Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketNumber),
+                    TextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketNumber),
+                    HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", context.Message.TicketNumber),
                 };
 
                 var sendDisputantEmail = new SendDisputantEmail()
                 {
-                    Message = emailMessage,
-                    TicketNumber = context.Message.TicketFileNumber,
+                    Message= emailMessage,
+                    TicketNumber= context.Message.TicketNumber,
                     NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid
                 };
 
@@ -55,7 +55,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             }
             else
             {
-                _logger.LogError("Email {Template} not found", _approveEmailTemplateName);
+                _logger.LogError("Email {Template} not found", _emailTemplateName);
             }
         }
     }

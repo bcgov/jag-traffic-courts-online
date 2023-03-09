@@ -9,12 +9,13 @@ public interface ICitizenDocumentService
     /// <summary>
     /// Saves the given file object with optional content type and metadata to object store through COMS service
     /// </summary>
-    /// <param name="file"></param>
+    /// <param name="base64FileString"></param>
+    /// <param name="fileName"></param>
     /// <param name="properties">The document properties</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Id of newly inserted file to the object storage</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="file"/> is null.</exception>
-    /// <exception cref="ArgumentException"><paramref name="file"/> has a null data property.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is null.</exception>
+    /// <exception cref="ArgumentException"><paramref name="fileName"/> has a null data property.</exception>
     /// <exception cref="MetadataInvalidKeyException">A key contains an invalid character</exception>
     /// <exception cref="MetadataTooLongException">The total length of the metadata is too long</exception>
     /// <exception cref="TagKeyTooLongException"></exception>

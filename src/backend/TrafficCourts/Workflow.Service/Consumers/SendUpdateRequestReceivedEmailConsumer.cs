@@ -43,24 +43,19 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
             SaveFileHistoryRecord fileHistoryRecord = new()
             {
                 DisputeId = dispute.DisputeId,
-                // TODO: This entry type is currently set to: "Automated notification sent to citizen to verify the updates/changes to their dispute"
-                // The original description: "Email sent to notify Disputant regarding their update request(s) received".
-                // Confirm if this is the correct matching description, if not add the correct one to the database and update this 
-                AuditLogEntryType = FileHistoryAuditLogEntryType.EMVF
+                AuditLogEntryType = FileHistoryAuditLogEntryType.ESUR,
+                ActionByApplicationUser = dispute.UserAssignedTo
             };
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // File History 
-            // TODO: This entry type is currently set to: "Dispute contact info updated by citizen"
-            // since the original description: "Update request(s) submitted for staff review." is missing from the database.
-            // When the description is added to the databse change this
-            fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.CCON;
+            fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.URSR;
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // Send email to disputant to confirm disputant's update request(s) are received and will be reviewed
             EmailMessage emailMessage = _updateRequestReceivedTemplate.Create(dispute);
 
-            await context.PublishWithLog(_logger, new SendDispuantEmail
+            await context.PublishWithLog(_logger, new SendDisputantEmail
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,

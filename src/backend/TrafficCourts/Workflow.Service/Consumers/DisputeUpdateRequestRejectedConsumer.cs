@@ -51,7 +51,7 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
 
     private async void PublishEmailConfirmation(Dispute dispute, ConsumeContext<DisputeUpdateRequestRejected> context)
     {
-        SendDispuantEmail message = new()
+        SendDisputantEmail message = new()
         {
             Message = _updateRequestRejectedTemplate.Create(dispute),
             NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
@@ -65,10 +65,8 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
         SaveFileHistoryRecord fileHistoryRecord = new()
         {
             DisputeId = dispute.DisputeId,
-            // TODO: This entry type is currently set to: "Dispute rejected by staff"
-            // since the original description: "Dispute update request rejected." is missing from the database.
-            // When the description is added to the databse change this
-            AuditLogEntryType = FileHistoryAuditLogEntryType.SREJ
+            AuditLogEntryType = FileHistoryAuditLogEntryType.DURR,
+            ActionByApplicationUser = context.Message.UserName
         };
         await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
     }

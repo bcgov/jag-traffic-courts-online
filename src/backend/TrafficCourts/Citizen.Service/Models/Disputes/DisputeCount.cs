@@ -7,7 +7,7 @@ namespace TrafficCourts.Citizen.Service.Models.Disputes;
 public class DisputeCount
 {
     /// <summary>
-    /// Represents the dispuant plea on count.
+    /// Represents the disputant plea on count.
     /// </summary>
     [JsonPropertyName("plea_cd")]
     public DisputeCountPleaCode PleaCode { get; set; }

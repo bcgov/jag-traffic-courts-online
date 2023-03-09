@@ -106,16 +106,16 @@ export class TicketInfoComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-      emailAddress: [null, [Validators.email]],
-      disputantSurname: [null, [Validators.required]],
-      disputantGivenNames: [null, [Validators.required]],
+      emailAddress: [null, [Validators.email, Validators.maxLength(100)]],
+      disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
+      disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
       contactTypeCd: [null, [Validators.required]],
-      contactSurnameNm: [null],
-      contactGivenNames: [null],
-      contactLawFirmNm: [null],
+      contactSurnameNm: [null, [Validators.maxLength(30)]],
+      contactGivenNames: [null, [Validators.maxLength(92)]],
+      contactLawFirmNm: [null, [Validators.maxLength(200)]],
       addressCountryId: [null, [Validators.required]],
       address: [null, [Validators.required, Validators.maxLength(300)]],
-      addressCity: [null, [Validators.required]],
+      addressCity: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
@@ -129,9 +129,9 @@ export class TicketInfoComponent implements OnInit {
       rejectedReason: [null, Validators.maxLength(256)],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
-        courtLocation: [null, [Validators.required]],
-        disputantSurname: [null, Validators.required],
-        disputantGivenNames: [null, Validators.required],
+        courtLocation: [null, [Validators.required, Validators.maxLength(50)]],
+        disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
+        disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
         disputantDriversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
         driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
         driversLicenceCountry: [null],
@@ -177,21 +177,21 @@ export class TicketInfoComponent implements OnInit {
   onSelectContactType(newContactType: any) {
     this.form.get('contactGivenNames').setValue(null);
     this.form.get('contactSurnameNm').setValue(null);
-    this.form.get('contactLawFirmNm').clearValidators();
-    this.form.get('contactSurnameNm').clearValidators();
-    this.form.get('contactGivenNames').clearValidators();
+    this.form.get('contactLawFirmNm').removeValidators(Validators.required);
+    this.form.get('contactSurnameNm').removeValidators(Validators.required);
+    this.form.get('contactGivenNames').removeValidators(Validators.required);
     this.form.get('contactLawFirmNm').setValue(null);
     if (newContactType == this.ContactType.Lawyer) {
       // make all contact info required
-      this.form.get('contactLawFirmNm').addValidators([Validators.required]);
-      this.form.get('contactSurnameNm').addValidators([Validators.required]);
-      this.form.get('contactGivenNames').addValidators([Validators.required]);
+      this.form.get('contactLawFirmNm').addValidators(Validators.required);
+      this.form.get('contactSurnameNm').addValidators(Validators.required);
+      this.form.get('contactGivenNames').addValidators(Validators.required);
     } else if (newContactType == this.ContactType.Individual) {
       // leave contact info null and not required
     } else {
       // only contact names required
-      this.form.get('contactSurnameNm').addValidators([Validators.required]);
-      this.form.get('contactGivenNames').addValidators([Validators.required]);
+      this.form.get('contactSurnameNm').addValidators(Validators.required);
+      this.form.get('contactGivenNames').addValidators(Validators.required);
     }
     this.form.get('contactLawFirmNm').updateValueAndValidity();
     this.form.get('contactSurnameNm').updateValueAndValidity();

@@ -115,15 +115,17 @@
         <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value === DetectedOcrIssues.Y">
           <mat-form-field>
             <mat-label>Describe any differences</mat-label>
-            <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues" maxlength="500"
+            <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues"
               rows="4">
             </textarea>
+            <mat-error *ngIf="form.controls.disputant_ocr_issues.hasError('maxlength')">Maximum length is 500</mat-error>
+            <mat-error *ngIf="form.controls.disputant_ocr_issues.hasError('require')">Required</mat-error>
           </mat-form-field>
         </div>
       </div>
     </form><br />
     <div>
-      <button type="button" mat-flat-button color="primary" color="primary" class="large" (click)="onSubmit()">
+      <button type="button" mat-flat-button color="primary" color="primary" class="large" (click)="onSubmit()" [disabled]="!form.valid">
         <mat-icon class="me-2">description</mat-icon>
         Save information and create online ticket
       </button><br /><br />

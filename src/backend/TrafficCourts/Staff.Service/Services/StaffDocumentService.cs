@@ -71,12 +71,8 @@ public class StaffDocumentService : IStaffDocumentService
         // Save file delete event to file history
         SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord
         {
-            DisputeId = properties.TcoDisputeId,
             NoticeOfDisputeId = properties?.NoticeOfDisputeId?.ToString("d"),
-            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
-            // since the original description: "File was deleted by Staff." is missing from the database.
-            // When the description is added to the databse change this
-            AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL,
+            AuditLogEntryType = FileHistoryAuditLogEntryType.FDLS,
             ActionByApplicationUser = GetUserName(user)
         };
 
@@ -135,10 +131,7 @@ public class StaffDocumentService : IStaffDocumentService
         // Save file upload event to file history
         SaveFileHistoryRecord fileHistoryRecord = new()
         {
-            DisputeId = properties.TcoDisputeId,
-            // TODO: This entry type is currently set to: "Document uploaded by Staff (VTC & Court)"
-            // since the original description: "File was uploaded by Staff." is missing from the database.
-            // When the description is added to the databse change this
+            NoticeOfDisputeId = properties.NoticeOfDisputeId?.ToString("d"),
             AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL,
             ActionByApplicationUser = GetUserName(user)
         };

@@ -5,7 +5,7 @@ namespace TrafficCourts.Messaging.MessageContracts
     public class DisputeCount
     {
         /// <summary>
-        /// Represents the dispuant plea on count.
+        /// Represents the disputant plea on count.
         /// </summary>
         public DisputeCountPleaCode PleaCode { get; set; }
 

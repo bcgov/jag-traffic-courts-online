@@ -87,17 +87,19 @@ public interface IDisputeService
     /// Accepts a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+    Task AcceptDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rejects a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+    Task RejectDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all the existing disputes from the database with pending update requests.

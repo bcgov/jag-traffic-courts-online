@@ -3,9 +3,9 @@
 namespace TrafficCourts.Messaging.MessageContracts
 {
     /// <summary>
-    /// Raised when an email should be sent to a dispuant.
+    /// Raised when an email should be sent to a disputant.
     /// </summary>
-    public class SendDispuantEmail
+    public class SendDisputantEmail
     {
         /// <summary>
         /// The email message.
@@ -15,7 +15,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The ticket number.
         /// </summary>
-        public string TicketNumber { get; set; } = String.Empty;
+        public string? TicketNumber { get; set; } = String.Empty;
 
         /// <summary>
         /// The notice of dispute identifer.

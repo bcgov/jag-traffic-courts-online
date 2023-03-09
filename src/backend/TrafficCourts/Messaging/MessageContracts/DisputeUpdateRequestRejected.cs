@@ -11,10 +11,12 @@
 /// </summary>
 public class DisputeUpdateRequestRejected
 {
-    public DisputeUpdateRequestRejected(long updateRequestId)
+    public DisputeUpdateRequestRejected(long updateRequestId, string? userName)
     {
         UpdateRequestId = updateRequestId;
+        UserName = userName;
     }
 
     public long UpdateRequestId { get; set; }
+    public string? UserName { get; set; }
 }

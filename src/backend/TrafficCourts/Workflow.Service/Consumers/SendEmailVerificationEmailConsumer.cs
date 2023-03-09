@@ -24,7 +24,7 @@ public class SendEmailVerificationEmailConsumer : IConsumer<SendEmailVerificatio
 
         var emailMessage = _emailTemplate.Create(context.Message);
 
-        var message = new SendDispuantEmail
+        var message = new SendDisputantEmail
         {
             Message = emailMessage,
             NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,

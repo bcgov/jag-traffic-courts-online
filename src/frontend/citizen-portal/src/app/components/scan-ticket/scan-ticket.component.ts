@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DisputeDisputantDetectedOcrIssues, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
@@ -47,6 +47,8 @@ export class ScanTicketComponent implements OnInit {
     this.form.disable();
     this.form.controls.disputant_detected_ocr_issues.enable();
     this.form.controls.disputant_ocr_issues.enable();
+    this.form.controls.disputant_ocr_issues.addValidators([Validators.maxLength(500)]);
+    this.form.controls.disputant_ocr_issues.updateValueAndValidity();
   }
 
   onSubmit(): void {

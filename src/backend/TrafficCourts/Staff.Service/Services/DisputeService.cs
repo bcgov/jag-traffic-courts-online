@@ -178,8 +178,8 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SVAL,  // Handwritten ticket OCR details validated by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -194,18 +194,19 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SCAN, // Dispute canceled by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        // Publish submit event (consumer(s) will generate email, etc)
-        DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
-        await _bus.PublishWithLog(_logger, cancelledEvent, cancellationToken);
+        // Publish file history of cancellation email
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCA;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        var emailMessage = _cancelledDisputeEmailTemplate.Create(dispute);
-        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
+        // Publish cancel event (consumer(s) will generate email, etc)
+        DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
+        await _bus. PublishWithLog(_logger, cancelledEvent, cancellationToken);
     }
 
     public async Task RejectDisputeAsync(long disputeId, string rejectedReason, ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -217,8 +218,8 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SREJ, // Dispute rejected by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
@@ -226,9 +227,6 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
         await _bus.PublishWithLog(_logger, rejectedEvent, cancellationToken);
-
-        var emailMessage = _rejectedDisputeEmailTemplate.Create(dispute);
-        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
     public async Task SubmitDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -241,10 +239,14 @@ public class DisputeService : IDisputeService
         Dispute dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(
-            dispute.DisputeId,
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
             GetUserName(user));
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        // publish file history of email sent
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCF;
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
@@ -266,7 +268,6 @@ public class DisputeService : IDisputeService
         // Publish a message to resend email verification email (the event will be picked up by the saga to generate email, etc)
         var message = new ResendEmailVerificationEmail { NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid) };
         await _bus.PublishWithLog(_logger, message, cancellationToken);
-
         return "Email verification sent";
     }
 
@@ -274,16 +275,17 @@ public class DisputeService : IDisputeService
     /// Accepts a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    public async Task AcceptDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // TCVP-1975 - consumers of this message are expected to:
         // - call oracle-data-api to patch the Dispute with the DisputeUpdateRequest changes.
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
-        DisputeUpdateRequestAccepted message = new(updateStatusId);
+        DisputeUpdateRequestAccepted message = new(updateStatusId, GetUserName(user));
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 
@@ -291,15 +293,16 @@ public class DisputeService : IDisputeService
     /// Rejects a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    public async Task RejectDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // TCVP-1974 - consumers of this message are expected to:
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was rejected
         // - populate file/email history records
-        DisputeUpdateRequestRejected message = new(updateStatusId);
+        DisputeUpdateRequestRejected message = new(updateStatusId, GetUserName(user));
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 
