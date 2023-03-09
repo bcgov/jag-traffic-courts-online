@@ -96,10 +96,38 @@ hr {
   border-radius: 0;
 }
 
-::ng-deep .alert-info-text-color .alert-warning {
-  color: rgb(255, 136, 0) !important;
-  border-left: 2px solid rgb(255, 136, 0) !important;
-}
-.mat-form-field-infix{
+.mat-form-field-infix {
   width: 200px !important;
+}
+
+::ng-deep {
+  .alert-info-text-color .alert-warning {
+    color: rgb(255, 136, 0) !important;
+    border-left: 2px solid rgb(255, 136, 0) !important;
+  }
+
+  .select-box-only {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+
+      .mat-form-field-flex {
+        padding-top: 0 !important;
+      }
+
+      .mat-select-trigger .mat-select-arrow-wrapper {
+        transform: none !important;
+      }
+    }
+
+    .mat-form-field-underline {
+      bottom: 0;
+    }
+
+    .mat-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
 }
