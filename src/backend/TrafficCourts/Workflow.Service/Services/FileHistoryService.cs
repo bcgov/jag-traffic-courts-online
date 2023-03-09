@@ -36,6 +36,13 @@ namespace TrafficCourts.Workflow.Service.Services
                     {
                         fileHistoryRecord.DisputeId = dispute.DisputeId;
                         fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                        FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
+                        long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
+                        return id;
+                    }
+                    else
+                    {
+                        throw new Exception("Dispute not found in save file history");
                     }
                 }
                 else if (!string.IsNullOrEmpty(fileHistoryRecord.TicketNumber))
@@ -45,6 +52,13 @@ namespace TrafficCourts.Workflow.Service.Services
                     {
                         fileHistoryRecord.DisputeId = dispute.OccamDisputeId;
                         fileHistoryRecord.NoticeOfDisputeId = dispute.NoticeOfDisputeGuid;
+                        FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
+                        long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
+                        return id;
+                    }
+                    else
+                    {
+                        throw new Exception("Dispute not found in save file history");
                     }
                 }
                 else if (fileHistoryRecord.DisputeId!= null)
@@ -54,15 +68,17 @@ namespace TrafficCourts.Workflow.Service.Services
                     {
                         fileHistoryRecord.NoticeOfDisputeId = dispute.NoticeOfDisputeGuid;
                         fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                        FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
+                        long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
+                        return id;
                     }
                     else
                     {
                         throw new Exception("Dispute not found in save file history");
                     }
                 }
-                FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
-                long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
-                return id;
+                else { throw new Exception("No identiifying information for dispute in save file history"); }
+                return -1;
             }
             catch (Exception ex)
             {

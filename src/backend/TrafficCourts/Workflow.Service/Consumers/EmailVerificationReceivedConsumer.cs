@@ -73,20 +73,24 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
                 await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
             }
 
-            // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
-            EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
+            // since the dispute is re-retrieved in this consumer, the email address may have been blanked out in the meantime
+            // if it was dont send another email :)
+            if (!string.IsNullOrEmpty(dispute.EmailAddress)) {
+                // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
+                EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
 
-            // Send email with email update successful content if this event is a result of email update process
-            if (message.IsUpdateEmailVerification)
-            {
-                emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
+                // Send email with email update successful content if this event is a result of email update process
+                if (message.IsUpdateEmailVerification)
+                {
+                    emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
+                }
+                await context.PublishWithLog(_logger, new SendDisputantEmail
+                {
+                    Message = emailMessage,
+                    TicketNumber = dispute.TicketNumber,
+                    NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
+                }, context.CancellationToken);
             }
-            await context.PublishWithLog(_logger, new SendDisputantEmail
-            {
-                Message = emailMessage,
-                TicketNumber = dispute.TicketNumber,
-                NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
-            }, context.CancellationToken);
 
         }
         catch (ApiException ex)
