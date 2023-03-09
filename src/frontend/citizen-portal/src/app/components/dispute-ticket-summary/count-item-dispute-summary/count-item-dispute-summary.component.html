@@ -10,16 +10,16 @@
   <div class="col-lg-7">
     <small class="d-block">For this count I would like to</small>
     <strong>
-      <div *ngIf="disputeCount.__skip || (disputeCount.plea_cd === Plea.G && disputeCount.request_reduction === RequestReduction.N && disputeCount.request_time_to_pay === RequestTimeToPay.N)">
+      <div *ngIf="disputeCount?.__skip || (disputeCount?.plea_cd === Plea.G && disputeCount?.request_reduction === RequestReduction.N && disputeCount?.request_time_to_pay === RequestTimeToPay.N)">
         No action at this time
       </div>
-      <div *ngIf="disputeCount.request_reduction === RequestReduction.Y && disputeCount.plea_cd === Plea.G">
+      <div *ngIf="disputeCount?.request_reduction === RequestReduction.Y && disputeCount?.plea_cd === Plea.G">
         Request a fine reduction
       </div>
-      <div *ngIf="disputeCount.request_time_to_pay === RequestTimeToPay.Y && disputeCount.plea_cd === Plea.G">
+      <div *ngIf="disputeCount?.request_time_to_pay === RequestTimeToPay.Y && disputeCount?.plea_cd === Plea.G">
         Request more time to pay
       </div>
-      <div *ngIf="disputeCount.plea_cd === Plea.N">
+      <div *ngIf="disputeCount?.plea_cd === Plea.N">
         Dispute the charge
       </div>
     </strong>
