@@ -37,6 +37,7 @@ public static class Startup
         builder.Services.AddOracleDataApiClient(builder.Configuration)
             .AddHttpMessageHandler<UserIdentityProviderHandler>();
 
+        builder.Services.AddRecyclableMemoryStreams();
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // Render enums as strings rather than ints

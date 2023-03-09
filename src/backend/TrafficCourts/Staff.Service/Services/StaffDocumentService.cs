@@ -132,7 +132,7 @@ public class StaffDocumentService : IStaffDocumentService
         SaveFileHistoryRecord fileHistoryRecord = new()
         {
             NoticeOfDisputeId = properties.NoticeOfDisputeId?.ToString("d"),
-            AuditLogEntryType = FileHistoryAuditLogEntryType.FUPS,
+            AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL,
             ActionByApplicationUser = GetUserName(user)
         };
 

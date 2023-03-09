@@ -259,16 +259,15 @@ public class DisputeService : IDisputeService
         await _oracleDataApi.DeleteDisputeAsync(disputeId, cancellationToken);
     }
 
-    public async Task<string> ResendEmailVerificationAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Email verification sent");
 
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
 
-        // Publish submit event (consumer(s) will generate email, file history)
-        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.NoticeOfDisputeGuid), GetUserName(user));
-        await _bus.PublishWithLog(_logger, emailVerificationSentEvent, cancellationToken);
-
+        // Publish a message to resend email verification email (the event will be picked up by the saga to generate email, etc)
+        var message = new ResendEmailVerificationEmail { NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid) };
+        await _bus.PublishWithLog(_logger, message, cancellationToken);
         return "Email verification sent";
     }
 

@@ -87,7 +87,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             || !string.IsNullOrEmpty(message.DisputantGivenName2)
             || !string.IsNullOrEmpty(message.DisputantGivenName3)
             || !string.IsNullOrEmpty(message.DisputantSurname) 
-            || message.ContactType != dispute.ContactTypeCd)
+            || message.ContactType != dispute.ContactTypeCd
             )
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;

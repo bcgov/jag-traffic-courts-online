@@ -374,7 +374,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            string email = await _disputeService.ResendEmailVerificationAsync(disputeId, User, cancellationToken);
+            string email = await _disputeService.ResendEmailVerificationAsync(disputeId, cancellationToken);
             return Ok(email);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)

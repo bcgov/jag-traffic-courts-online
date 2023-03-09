@@ -111,9 +111,9 @@ public class Mapper
     }
 
 
-    public static EmailVerificationSend ToEmailVerification(Guid guid, string userName)
+    public static EmailVerificationSend ToEmailVerification(Guid guid)
     {
-        EmailVerificationSend emailVerificationSend = new(guid, userName);
+        EmailVerificationSend emailVerificationSend = new(guid);
         return emailVerificationSend;
     }
 
