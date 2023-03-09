@@ -110,13 +110,6 @@ public class Mapper
         return fileHistoryRecord;
     }
 
-
-    public static EmailVerificationSend ToEmailVerification(Guid guid)
-    {
-        EmailVerificationSend emailVerificationSend = new(guid);
-        return emailVerificationSend;
-    }
-
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
     {
         DisputeCancelled disputeCancelled = new();
