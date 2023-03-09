@@ -11,15 +11,6 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// The email message.
         /// </summary>
         public EmailMessage? Message { get; set; }
-        /// <summary>
-        /// The ticket number.
-        /// </summary>
-        public string? TicketNumber { get; set; } = String.Empty;
-        
-        /// <summary>
-        /// The notice of dispute identifer.
-        /// </summary>
-        public Guid? NoticeOfDisputeGuid { get; set; }
 
         /// <summary>
         /// The date and time the message was sent at.

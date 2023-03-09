@@ -86,8 +86,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             || !string.IsNullOrEmpty(message.DisputantGivenName1)
             || !string.IsNullOrEmpty(message.DisputantGivenName2)
             || !string.IsNullOrEmpty(message.DisputantGivenName3)
-            || !string.IsNullOrEmpty(message.DisputantSurname) 
-            || message.ContactType != dispute.ContactTypeCd
+            || !string.IsNullOrEmpty(message.DisputantSurname)
             )
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
@@ -137,8 +136,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             || message.InterpreterRequired != null
             || message.WitnessNo != null
             || !string.IsNullOrEmpty(message.FineReductionReason)
-            || !string.IsNullOrEmpty(message.TimeToPayReason)
-            || (message.RequestCourtAppearance != dispute.RequestCourtAppearanceYn))
+            || !string.IsNullOrEmpty(message.TimeToPayReason))
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.COURT_OPTIONS;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);

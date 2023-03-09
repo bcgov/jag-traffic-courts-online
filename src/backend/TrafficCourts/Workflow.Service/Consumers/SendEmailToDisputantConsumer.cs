@@ -48,8 +48,6 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
             var message = new DisputantEmailSent
             {
                 Message = emailMessage,
-                TicketNumber = context.Message.TicketNumber,
-                NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
                 SentAt = now,
                 OccamDisputeId = dispute?.DisputeId is not null ? dispute.DisputeId : 0
             };
@@ -63,8 +61,6 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
             var message = new DisputantEmailFiltered
             {
                 Message = emailMessage,
-                TicketNumber = context.Message.TicketNumber,
-                NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
                 FilteredAt = now,
                 OccamDisputeId = dispute?.DisputeId is not null ? dispute.DisputeId : 0
             };
