@@ -44,6 +44,19 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
 
             await _oracleDataApiService.VerifyDisputeEmailAsync(dispute.DisputeId, context.CancellationToken);
 
+            // TCVP-2009
+            // Send acknowledgement email if there are pending update requests
+            // Moved this up in the order of operations to avoid multiple sending of emails if this fails 
+            ICollection<DisputeUpdateRequest> disputeUpdateRequests = await _oracleDataApiService.GetDisputeUpdateRequestsAsync(dispute.DisputeId, Status.PENDING, context.CancellationToken);
+            if (disputeUpdateRequests.Count > 0)
+            {
+                UpdateRequestReceived updateRequestReceived = new()
+                {
+                    NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
+                };
+                await context.PublishWithLog(_logger, updateRequestReceived, context.CancellationToken);
+            }
+
             // File History 
             SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
             fileHistoryRecord.DisputeId = dispute.DisputeId;
@@ -75,17 +88,6 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
                 NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
             }, context.CancellationToken);
 
-            // TCVP-2009
-            // Send acknowledgement email if there are pending update requests
-            ICollection<DisputeUpdateRequest> disputeUpdateRequests = await _oracleDataApiService.GetDisputeUpdateRequestsAsync(dispute.DisputeId, Status.PENDING, context.CancellationToken);
-            if (disputeUpdateRequests.Count > 0)
-            {
-                UpdateRequestReceived updateRequestReceived = new()
-                {
-                    NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
-                };
-                await context.PublishWithLog(_logger, updateRequestReceived, context.CancellationToken);
-            }
         }
         catch (ApiException ex)
         {
