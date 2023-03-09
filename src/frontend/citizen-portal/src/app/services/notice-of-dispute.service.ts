@@ -11,7 +11,7 @@ import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
 import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount, DisputeInterpreterRequired } from "app/api";
 import { AppRoutes } from "app/app.routes";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -172,27 +172,28 @@ export class NoticeOfDisputeService {
       .subscribe((action: boolean) => {
         if (action) {
           input.dispute_counts = input.dispute_counts.filter(i => i.plea_cd);
-          return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
-            this._noticeOfDispute.next(input);
-            if (input.email_address) {
-              this.router.navigate([AppRoutes.EMAILVERIFICATIONREQUIRED], {
-                queryParams: {
-                  email: input.email_address,
-                  token: res.noticeOfDisputeId,
-                  mode: DisputeFormMode.CREATE
-                },
-              });
-            }
-            else {
-              this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUBMIT_SUCCESS)], {
-                queryParams: {
-                  ticketNumber: input.ticket_number,
-                  time: this.datePipe.transform(input.issued_date, "HH:mm"),
-                  mode: DisputeFormMode.CREATE
-                },
-              });
-            }
-          })
+          return this.disputesService.apiDisputesCreatePost(input)
+            .subscribe(res => {
+              this._noticeOfDispute.next(input);
+              if (input.email_address) {
+                this.router.navigate([AppRoutes.EMAILVERIFICATIONREQUIRED], {
+                  queryParams: {
+                    email: input.email_address,
+                    token: res.emailVerificationToken,
+                    mode: DisputeFormMode.CREATE
+                  },
+                });
+              }
+              else {
+                this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUBMIT_SUCCESS)], {
+                  queryParams: {
+                    ticketNumber: input.ticket_number,
+                    time: this.datePipe.transform(input.issued_date, "HH:mm"),
+                    mode: DisputeFormMode.CREATE
+                  },
+                });
+              }
+            })
         }
       });
   }

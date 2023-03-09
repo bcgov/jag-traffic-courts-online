@@ -19,6 +19,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
   ticketType: string;
   ticketTypes = TicketTypes;
   countsActions: CountsActions;
+  disputeFormMode = DisputeFormMode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
 
@@ -32,7 +33,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
     let params = this.route.snapshot.queryParams;
     this.email = params?.email;
     this.token = params?.token;
-    this.mode = params?.mode;
+    this.mode = parseInt(params?.mode);
   }
 
   ngOnInit() {
@@ -44,7 +45,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
   }
 
   get isCreate(): boolean {
-    return this.mode === DisputeFormMode.CREATE
+    return this.mode === DisputeFormMode.CREATE;
   }
 
   resendEmail() {

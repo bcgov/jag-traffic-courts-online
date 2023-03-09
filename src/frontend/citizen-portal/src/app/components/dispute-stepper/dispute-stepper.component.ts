@@ -21,6 +21,7 @@ import { Observable } from "rxjs";
 import { DisputeStore } from "app/store";
 import { Store } from "@ngrx/store";
 import { FileMetadata } from "app/services/dispute.service";
+import { AppConfigService } from "app/services/app-config.service";
 
 @Component({
   selector: "app-dispute-stepper",
@@ -42,6 +43,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   previousButtonIcon = "keyboard_arrow_left";
   defaultLanguage: string;
+  adjournmentFormLink: string;
   disputeFormMode = DisputeFormMode;
   ticketTypes = TicketTypes;
   Plea = DisputeCountPleaCode;
@@ -89,9 +91,11 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     private config: ConfigService,
     private store: Store,
     private lookups: LookupsService,
-  ) {
+    private appConfigService: AppConfigService,
+    ) {
     // config or static
     this.defaultLanguage = this.translateService.getDefaultLang();
+    this.adjournmentFormLink = this.appConfigService.adjournmentFormLink;
 
     this.lookups.languages$.subscribe(languages => {
       this.languages = languages;

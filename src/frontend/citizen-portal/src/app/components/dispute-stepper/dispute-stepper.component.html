@@ -432,24 +432,30 @@
         <div class="alert alert-upload" *ngIf="mode === disputeFormMode.UPDATE && fileData$">
           <div class="row">
             <div fxFlex class="vcenter">
-              <strong>Upload additional supporting documents, if applicable</strong>
+              <strong>Upload / Manage additional supporting documents, if applicable</strong>
             </div>
           </div>
-          <div class="row vcenter">
-            <div fxFlex>
-              <mat-form-field style="margin-right: 1rem;">
+          <div class="row">
+            <div>* Meaningful file name is suggested for easlier identification.</div>
+            <div>* You can download the <a target="_blank" href="{{adjournmentFormLink}}"> adjournment form</a> here
+            </div>
+            <div>* File(s) will only be uploaded when the request is submitted.</div>
+          </div>
+          <div class="row vcenter" style="margin-top: 1rem;">
+            <div fxFlex="50" class="vcenter">
+              <mat-form-field fxFlex class="select-box-only" style="margin-right: 1rem;">
                 <mat-label>File type for upload</mat-label>
                 <mat-select [(ngModel)]="fileTypeToUpload" [ngModelOptions]="{standalone: true}">
-                  <mat-option value="Adjournment">Adjournment</mat-option>
-                  <mat-option value="Other">Ohter</mat-option>
+                  <mat-option value="Adjournment">Application for Adjournment</mat-option>
+                  <mat-option value="Other">Other</mat-option>
                 </mat-select>
               </mat-form-field>
-              <button class="large" mat-stroked-button type="button" color="primary"
+              <button class="large" mat-stroked-button type="button" color="primary" style="height: 3rem;"
                 onclick="document.getElementById('fileInput').click()">
                 Upload Documents
               </button>
               <input type="file" #fileInput id="fileInput" style="display:none" accept="image/*,.pdf"
-              (change)="onUploadFile($event.target.files)">
+                (change)="onUploadFile($event.target.files)">
             </div>
           </div>
           <div fxLayout="row wrap">
