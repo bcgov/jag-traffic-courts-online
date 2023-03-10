@@ -6,6 +6,8 @@ td, th {
     display: flex;
     align-items: center;
     position: relative;
+    border: solid 1px;
+    float:left;
   }
 
   .input[name="searchInput"] {

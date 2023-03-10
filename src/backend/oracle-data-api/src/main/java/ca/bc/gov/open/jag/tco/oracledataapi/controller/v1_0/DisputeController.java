@@ -418,7 +418,7 @@ public class DisputeController {
 	@Operation(summary = "An endpoint that retrieves all DisputeUpdateRequest optionally for a given Dispute, optionally filtered by DisputeUpdateRequestStatus.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. DisputeUpdateRequest record saved."),
-		@ApiResponse(responseCode = "500", description = "Internal Server Error. Save failed.")
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. retrieve update requests failed.")
 	})
 	public ResponseEntity<List<DisputeUpdateRequest>> getDisputeUpdateRequests(
 			@RequestParam(required=false)
