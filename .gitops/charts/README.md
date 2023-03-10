@@ -11,8 +11,10 @@ See [Installing Helm](https://helm.sh/docs/intro/install/)
 
 ## Postgres
 
+Chart Source: https://github.com/pbolduc/spilo-chart
+
 ```
-helm install postgres spilo-0.3.0.tgz --values spilo-postgres-values.yaml
+helm install postgres spilo-0.3.3.tgz --values spilo-postgres-test-values.yaml
 ```
 
 ## Keycloak
