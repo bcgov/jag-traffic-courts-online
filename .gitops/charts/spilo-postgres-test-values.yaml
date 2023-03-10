@@ -1,0 +1,30 @@
+image:
+  repository: image-registry.openshift-image-registry.svc:5000/0198bb-tools/spilo-15
+  tag: "3.0"
+
+fullnameOverride: postgres
+
+persistentVolume:
+  size: 1Gi
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+postgresMajorVersion: 15
+
+podSecurityContext:
+  runAsNonRoot: true
+
+containerSecurityContext:
+  enabled: false
+
+continuousArchive:
+  storage: s3
+  s3:
+    bucket: ag-pssg-tco-trafficticket-test-bkt
+    secretName: postgres-s3-backup-credentials

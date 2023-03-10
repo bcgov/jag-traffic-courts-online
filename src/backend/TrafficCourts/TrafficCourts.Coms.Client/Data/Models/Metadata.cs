@@ -3,19 +3,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrafficCourts.Coms.Client.Data.Models
+namespace TrafficCourts.Coms.Client.Data.Models;
+
+public partial class Metadata
 {
-    public partial class Metadata
-    {
-        public Metadata()
-        {
-            VersionMetadata = new HashSet<VersionMetadatum>();
-        }
+    public int Id { get; set; }
 
-        public int Id { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
+    public string Key { get; set; }
 
-        public virtual ICollection<VersionMetadatum> VersionMetadata { get; set; }
-    }
+    public string Value { get; set; }
+
+    public virtual ICollection<VersionMetadatum> VersionMetadata { get; } = new List<VersionMetadatum>();
 }

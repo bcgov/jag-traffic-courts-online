@@ -3,25 +3,27 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrafficCourts.Coms.Client.Data.Models
+namespace TrafficCourts.Coms.Client.Data.Models;
+
+public partial class Object
 {
-    public partial class Object
-    {
-        public Object()
-        {
-            Versions = new HashSet<Version>();
-        }
+    public Guid Id { get; set; }
 
-        public Guid Id { get; set; }
-        public string Path { get; set; }
-        public bool Public { get; set; }
-        public bool? Active { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public Guid? BucketId { get; set; }
+    public string Path { get; set; }
 
-        public virtual ICollection<Version> Versions { get; set; }
-    }
+    public bool Public { get; set; }
+
+    public bool? Active { get; set; }
+
+    public string CreatedBy { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public string UpdatedBy { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public Guid? BucketId { get; set; }
+
+    public virtual ICollection<Version> Versions { get; } = new List<Version>();
 }
