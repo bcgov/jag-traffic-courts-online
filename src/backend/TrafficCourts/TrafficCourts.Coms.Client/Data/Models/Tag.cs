@@ -3,19 +3,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrafficCourts.Coms.Client.Data.Models
+namespace TrafficCourts.Coms.Client.Data.Models;
+
+public partial class Tag
 {
-    public partial class Tag
-    {
-        public Tag()
-        {
-            VersionTags = new HashSet<VersionTag>();
-        }
+    public int Id { get; set; }
 
-        public int Id { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
+    public string Key { get; set; }
 
-        public virtual ICollection<VersionTag> VersionTags { get; set; }
-    }
+    public string Value { get; set; }
+
+    public virtual ICollection<VersionTag> VersionTags { get; } = new List<VersionTag>();
 }
