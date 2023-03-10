@@ -3,28 +3,31 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrafficCourts.Coms.Client.Data.Models
+namespace TrafficCourts.Coms.Client.Data.Models;
+
+public partial class Version
 {
-    public partial class Version
-    {
-        public Version()
-        {
-            VersionMetadata = new HashSet<VersionMetadatum>();
-            VersionTags = new HashSet<VersionTag>();
-        }
+    public Guid Id { get; set; }
 
-        public Guid Id { get; set; }
-        public string VersionId { get; set; }
-        public Guid ObjectId { get; set; }
-        public string MimeType { get; set; }
-        public bool DeleteMarker { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+    public string S3VersionId { get; set; }
 
-        public virtual Object Object { get; set; }
-        public virtual ICollection<VersionMetadatum> VersionMetadata { get; set; }
-        public virtual ICollection<VersionTag> VersionTags { get; set; }
-    }
+    public Guid ObjectId { get; set; }
+
+    public string MimeType { get; set; }
+
+    public bool DeleteMarker { get; set; }
+
+    public string CreatedBy { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public string UpdatedBy { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public virtual Object Object { get; set; }
+
+    public virtual ICollection<VersionMetadatum> VersionMetadata { get; } = new List<VersionMetadatum>();
+
+    public virtual ICollection<VersionTag> VersionTags { get; } = new List<VersionTag>();
 }

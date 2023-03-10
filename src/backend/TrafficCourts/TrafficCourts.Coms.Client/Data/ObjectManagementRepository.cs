@@ -73,7 +73,7 @@ public class ObjectManagementRepository : IObjectManagementRepository
     private Guid GetVersion(Guid objectId, string versionId)
     {
         Guid id = _context.Versions
-            .Where(_ => _.ObjectId == objectId && _.VersionId == versionId)
+            .Where(_ => _.ObjectId == objectId && _.S3VersionId == versionId)
             .Select(_ => _.Id)
             .SingleOrDefault();
 
