@@ -44,6 +44,8 @@ public class CitizenDocumentService : ICitizenDocumentService
             return; // file not found
         }
 
+        // TODO: check approval status before delete
+
         FileSearchResult file = searchResults[0];
 
         DocumentProperties properties = new DocumentProperties(file.Metadata, file.Tags);

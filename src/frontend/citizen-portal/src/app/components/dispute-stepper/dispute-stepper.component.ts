@@ -14,7 +14,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
 import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, DisputeInterpreterRequired } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count } from "app/services/notice-of-dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count, DisputeCountFormGroup } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { Observable } from "rxjs";
@@ -271,7 +271,11 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     return this.counts?.filter(i => i.form?.value.__skip).length === this.counts.length;
   }
 
-  onSkipChecked() {
+  onSkipChecked(form: DisputeCountFormGroup) {
+    form.controls?.plea_cd.setValue(null);
+    form.controls?.request_reduction.setValue(null);
+    form.controls?.request_time_to_pay.setValue(null);
+
     if (this.isAllCountsSkipped) {
       const data: DialogOptions = {
         titleKey: "Warning",

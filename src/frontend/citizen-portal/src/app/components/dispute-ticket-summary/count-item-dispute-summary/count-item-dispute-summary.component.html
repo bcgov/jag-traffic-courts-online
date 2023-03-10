@@ -2,7 +2,7 @@
   <div class="col-lg-2">
     <div style="display: flex">
       <span class="h2">
-        <strong>Count {{ count.count_no }}</strong>
+        <strong>Count {{ ticketCount.count_no }}</strong>
       </span>
     </div>
   </div>
@@ -10,16 +10,16 @@
   <div class="col-lg-7">
     <small class="d-block">For this count I would like to</small>
     <strong>
-      <div *ngIf="count.__skip || (count.plea_cd === Plea.G && count.request_reduction === RequestReduction.N && count.request_time_to_pay === RequestTimeToPay.N)">
+      <div *ngIf="disputeCount?.__skip || (disputeCount?.plea_cd === Plea.G && disputeCount?.request_reduction === RequestReduction.N && disputeCount?.request_time_to_pay === RequestTimeToPay.N)">
         No action at this time
       </div>
-      <div *ngIf="count.request_reduction === RequestReduction.Y && count.plea_cd === Plea.G">
+      <div *ngIf="disputeCount?.request_reduction === RequestReduction.Y && disputeCount?.plea_cd === Plea.G">
         Request a fine reduction
       </div>
-      <div *ngIf="count.request_time_to_pay === RequestTimeToPay.Y && count.plea_cd === Plea.G">
+      <div *ngIf="disputeCount?.request_time_to_pay === RequestTimeToPay.Y && disputeCount?.plea_cd === Plea.G">
         Request more time to pay
       </div>
-      <div *ngIf="count.plea_cd === Plea.N">
+      <div *ngIf="disputeCount?.plea_cd === Plea.N">
         Dispute the charge
       </div>
     </strong>
@@ -33,10 +33,10 @@
 <div class="row mb-2">
   <div class="offset-lg-2 col-lg-7">
     <small class="d-block">Description of offence</small>
-    <div class="text">{{ count.description | titlecase }}</div>
+    <div class="text">{{ ticketCount.description | titlecase }}</div>
   </div>
   <div class="col-lg-3">
     <small class="d-block">Offence amount</small>
-    <div class="text">{{ count.ticketed_amount | currency }}</div>
+    <div class="text">{{ ticketCount.ticketed_amount | currency }}</div>
   </div>
 </div>

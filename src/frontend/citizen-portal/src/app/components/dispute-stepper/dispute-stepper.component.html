@@ -172,7 +172,7 @@
 
               <hr />
               <div class="row">
-                <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked()">
+                <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4" (change)="onSkipChecked(count?.form)">
                   Skip this count, no action required.
                 </mat-checkbox>
               </div>
@@ -489,7 +489,7 @@
         </ng-container>
       </app-page-header>
 
-      <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
+      <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute" [ticketCounts]="ticketCounts"></app-dispute-ticket-summary>
 
       <div class="col mb-2">
         <app-alert type="warning" icon="warning">

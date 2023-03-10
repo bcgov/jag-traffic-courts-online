@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
 import { CountItemDisputeSummaryComponent } from './count-item-dispute-summary.component';
 
 describe('CountItemDisputeSummaryComponent', () => {
@@ -14,26 +15,16 @@ describe('CountItemDisputeSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CountItemDisputeSummaryComponent);
     component = fixture.componentInstance;
-    component.count = {
-      offenceNumber: 1,
-      ticketedAmount: 100,
-      amountDue: 100,
-      violationDateTime: new Date().toDateString(),
-      offenceDescription: 'Test',
-      invoiceType: 'Traffic Violation Ticket',
-      vehicleDescription: 'Toyota Prius',
-      discountAmount: 0,
-      status: 'NEW',
-      offenceAgreementStatus: null,
-      requestCourtAppearance: 'N',
-      requestReduction: 'N',
-      requestMoreTime: 'N',
-
-      _applyToAllCounts: false,
-      _allowApplyToAllCounts: false,
-      _firstOffence: false,
-      _within30days: false,
-      _amountDue: 0,
+    component.ticketCount = {
+      count_no: 0,
+      description: null,
+      act_or_regulation_name_code:null,
+      section: null,
+      subsection: null,
+      paragraph: null,
+      ticketed_amount: null,
+      is_act: ViolationTicketCountIsAct.Unknown,
+      is_regulation: ViolationTicketCountIsRegulation.Unknown,
     };
     fixture.detectChanges();
   });
