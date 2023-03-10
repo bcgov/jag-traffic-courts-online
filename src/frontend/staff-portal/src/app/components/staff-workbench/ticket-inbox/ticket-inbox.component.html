@@ -1,18 +1,10 @@
 <div>
-  <div class="flex-container" style="width: 40%">
+  <div class="flex-container" style="width: 50%">
     <table>
       <tr>
         <td><span class="BC-Gov-15px-black-text" style="color:green;" ><b>{{ countNewTickets() }} NEW ticket records</b></span> </td>
-        <td style="width:5px">|</td>
-        <td>
-            <select style="border: none;">
-              <option><span class="BC-Gov-15px-black-bold-text"><b>Fraser Valley Region</b>&nbsp;&nbsp;</span></option>
-            </select>
-        </td>
-      </tr>
-      <tr>
-        <td><span class="BC-Gov-15px-blue-text" ><b>Ticket number search:</b></span></td>
         <td colspan="2">
+          <mat-label><span class="BC-Gov-15px-blue-text" style="float:left; text-align:right;"><b>Ticket number search:&nbsp;</b></span></mat-label>
           <div class="inputContainer">
             <input name="searchInput" matInput type="search" (keyup)="applyFilter($event)" autocomplete="off" class="input"/>
             <mat-icon class="inputIcon">search</mat-icon>
@@ -22,8 +14,6 @@
     </table>
   </div>
 </div>
-<br />
-
 <div class="row" style="overflow: auto" [ngStyle]="{'height.px': tableHeight}">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort #tickTbSort="matSort">
 
