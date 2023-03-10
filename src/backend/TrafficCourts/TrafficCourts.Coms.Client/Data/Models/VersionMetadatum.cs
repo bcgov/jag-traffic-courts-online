@@ -3,18 +3,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace TrafficCourts.Coms.Client.Data.Models
-{
-    public partial class VersionMetadatum
-    {
-        public Guid VersionId { get; set; }
-        public int MetadataId { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+namespace TrafficCourts.Coms.Client.Data.Models;
 
-        public virtual Metadata Metadata { get; set; }
-        public virtual Version Version { get; set; }
-    }
+public partial class VersionMetadatum
+{
+    public Guid VersionId { get; set; }
+
+    public int MetadataId { get; set; }
+
+    public string CreatedBy { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public string UpdatedBy { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public virtual Metadata Metadata { get; set; }
+
+    public virtual Version Version { get; set; }
 }
