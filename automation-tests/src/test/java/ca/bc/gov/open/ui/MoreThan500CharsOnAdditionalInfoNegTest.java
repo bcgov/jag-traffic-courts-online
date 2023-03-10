@@ -12,23 +12,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.WebDriverManager;
 
-public class DisputeTicketUploadPNG {
-
+public class MoreThan500CharsOnAdditionalInfoNegTest {
+	
 	private WebDriver driver;
 
-//	@After
-//	public void tearDown() {
-//		driver.close();
-//		driver.quit();
-//	}
-//
-//	@AfterClass
-//	public static void afterClass() {
-//		WebDriverManager.instance = null;
-//	}
+	@After
+	public void tearDown() {
+		driver.close();
+		driver.quit();
+	}
+
+	@AfterClass
+	public static void afterClass() {
+		WebDriverManager.instance = null;
+	}
 
 	@Test
 	public void test() throws Exception {
@@ -94,46 +93,13 @@ public class DisputeTicketUploadPNG {
 		
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
 		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
-		// Click Next
-		JavascriptExecutor js5 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
-		js5.executeScript("arguments[0].click();", element);
-		
-		System.out.println("Click Submit button");
-		Thread.sleep(1000);
-		JavascriptExecutor js3 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Submit request')]")));
-		js3.executeScript("arguments[0].click();", element);
-
-		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
-		popup.popupSubmitWindow(element, driverWait, driver);
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus");
+		// Click on page
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"//html")));
+		element.click();
+		new WebDriverWait(driver, Duration.ofSeconds(20)).until(
+				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 500')]")));
 
 	}
-	
-	public void uploadPNG(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
-		
-		CommonUtils.login();
-
-		Thread.sleep(1000);
-		JavascriptExecutor jse = (JavascriptExecutor) driver;
-		jse.executeScript("scroll(0, 450);");
-		Thread.sleep(1000);
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Dispute your ticket ')]")))
-				.click();
-
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Traffic Ticket ')]")))
-				.click();
-
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Upload ticket image ')]")));
-
-		Thread.sleep(1000);
-		WebElement upload = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("file")));
-		upload.sendKeys(System.getProperty("user.dir") + '/' + "Test.png");
-		
-	}
-
 }

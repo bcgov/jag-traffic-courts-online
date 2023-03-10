@@ -74,6 +74,7 @@ public class WebDriverManager {
 			options.addArguments("test-type");
 			options.setExperimentalOption("prefs", prefs);
 			options.addArguments("start-maximized");
+			options.addArguments("--remote-allow-origins=*");
 			options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1080","--ignore-certificate-errors","--no-sandbox", "--disable-dev-shm-usage");
 			
 			capabilities.setCapability("chrome.binary", file.getAbsolutePath());
