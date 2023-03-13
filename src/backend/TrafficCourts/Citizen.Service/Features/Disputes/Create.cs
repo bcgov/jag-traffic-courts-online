@@ -212,6 +212,9 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 Coms.Client.File file = new Coms.Client.File(stream, filename, null, metadata, tags);
                 Guid id = await _objectManagementService.CreateFileAsync(file, cancellationToken);
 
+                // Publish a message to virus scan the newly uploaded file
+                await _bus.PublishWithLog(_logger, new DocumentUploaded { Id = id }, cancellationToken);
+
                 return id;
             }
 
@@ -235,6 +238,9 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                 Coms.Client.File file = new Coms.Client.File(stream, "ocr-result.json", "application/json", metadata, tags);
                 Guid id = await _objectManagementService.CreateFileAsync(file, cancellationToken);
+
+                // Publish a message to virus scan the newly uploaded file
+                await _bus.PublishWithLog(_logger, new DocumentUploaded { Id = id }, cancellationToken);
 
                 return id;
             }
