@@ -21,3 +21,15 @@ services:
     ports:
       - "8080:8080"
 
+#############################################################################################
+###                            H2 database to support OCR Metrics                         ###
+#############################################################################################
+  h2:
+    image: oscarfonts/h2
+    ports:
+      - "1521:1521"
+      - "81:81"
+    environment:
+      - H2_OPTIONS=-ifNotExists
+    volumes:
+      - ./form-recognizer/metrics/data/db:/opt/h2-data

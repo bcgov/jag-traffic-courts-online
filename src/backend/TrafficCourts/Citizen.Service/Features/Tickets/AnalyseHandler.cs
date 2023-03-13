@@ -16,6 +16,7 @@ public static class AnalyseHandler
         }
 
         public IFormFile Image { get; set; }
+        public bool Validate { get; set; }
     }
 
     public class AnalyseResponse
@@ -81,8 +82,10 @@ public static class AnalyseHandler
                 throw;
             }
 
-            // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
-            await _formRecognizerValidator.ValidateViolationTicketAsync(violationTicket);
+            if (request.Validate) {
+                // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
+                await _formRecognizerValidator.ValidateViolationTicketAsync(violationTicket);
+            }
 
             // Save the violation ticket OCR data into Redis using the generated guid and set it to expire after 1 day from Redis
             await _redisCacheService.SetRecordAsync<OcrViolationTicket>(ticketId, violationTicket, TimeSpan.FromDays(1));

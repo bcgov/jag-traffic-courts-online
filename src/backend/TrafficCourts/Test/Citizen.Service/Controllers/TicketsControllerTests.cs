@@ -29,7 +29,7 @@ public class TicketsControllerTests
             .ReturnsAsync(analyseResponse);
 
         // Act
-        var result = await ticketController.AnalyseAsync(mockImage.Object, CancellationToken.None);
+        var result = await ticketController.AnalyseAsync(mockImage.Object, false, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -53,7 +53,7 @@ public class TicketsControllerTests
             .ReturnsAsync(analyseResponse); // This response has a null (invalid) OcrViolationTicket
 
         // Act
-        var result = await ticketController.AnalyseAsync(mockImage.Object, CancellationToken.None);
+        var result = await ticketController.AnalyseAsync(mockImage.Object, false, CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
