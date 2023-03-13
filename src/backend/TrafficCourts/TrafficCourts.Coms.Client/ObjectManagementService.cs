@@ -354,7 +354,7 @@ internal class ObjectManagementService : IObjectManagementService
     private List<FileSearchResult> FilterSearchResults(List<FileSearchResult> results, FileSearchParameters parameters)
     {
         results = results
-            .Where(result => !TagsMatch(result, parameters) || !MetadataMatch(result, parameters))
+            .Where(result => TagsMatch(result, parameters) && MetadataMatch(result, parameters))
             .ToList();
 
         return results;
