@@ -37,7 +37,7 @@ public class DeleteObject : ObjectManagementBase
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
             .Expect(HttpMethod.Delete, OperationUrl(id))
-            .WithQueryString("versionId", versionId)
+            .WithQueryString("s3VersionId", versionId)
             .Respond(HttpStatusCode.OK, "application/json", JsonSerializer.Serialize(expected));
 
         ObjectManagementClient sut = GetClient(mockHttp);

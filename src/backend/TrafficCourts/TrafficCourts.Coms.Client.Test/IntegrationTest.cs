@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Npgsql;
-using TrafficCourts.Coms.Client.Data;
 using Xunit.Abstractions;
 
 namespace TrafficCourts.Coms.Client.Test
@@ -47,22 +45,9 @@ namespace TrafficCourts.Coms.Client.Test
             _client.ReadResponseAsString = true; // make it easier to debug
             _output = output;
 
-            // create repository (metadata and tag work around)
-            NpgsqlConnectionStringBuilder connectionString = new NpgsqlConnectionStringBuilder();
-            connectionString.Host = configuration.GetValue<string>("DatabaseHost") ?? string.Empty;
-            connectionString.Database = configuration.GetValue<string>("DatabaseName") ?? string.Empty;
-            connectionString.Username = configuration.GetValue<string>("DatabaseUsername") ?? string.Empty;
-            connectionString.Password = configuration.GetValue<string>("DatabasePassword") ?? string.Empty;
-
-            DbContextOptionsBuilder<ObjectManagementContext> builder = new DbContextOptionsBuilder<ObjectManagementContext>();
-            builder.UseNpgsql(connectionString.ConnectionString);
-
-            ObjectManagementContext context = new ObjectManagementContext(builder.Options);
-            IObjectManagementRepository repository = new ObjectManagementRepository(context);
-
             // create service 
             var factory = new MemoryStreamFactory(() => new MemoryStream());
-            _service = new ObjectManagementService(_client, repository, factory, Mock.Of<ILogger<ObjectManagementService>>());
+            _service = new ObjectManagementService(_client, factory, Mock.Of<ILogger<ObjectManagementService>>());
         }
 
         #region ObjectManagementClient
@@ -77,7 +62,7 @@ namespace TrafficCourts.Coms.Client.Test
 
             var file = new FileParameter(new MemoryStream(expected.ToByteArray()), "integration.test");
 
-            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, file, _cancellationToken);
+            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, null, file, _cancellationToken);
 
             _output.WriteLine("Created {0} items", created.Count);
 
@@ -109,7 +94,7 @@ namespace TrafficCourts.Coms.Client.Test
 
             var file = new FileParameter(new MemoryStream(expected.ToByteArray()), "integration.test");
             _client.ReadResponseAsString = true; // make it easier troubleshoot reading the responses
-            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, file, CancellationToken.None);
+            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, null, file, CancellationToken.None);
 
             _output.WriteLine("Created: ");
             foreach (var item in created)

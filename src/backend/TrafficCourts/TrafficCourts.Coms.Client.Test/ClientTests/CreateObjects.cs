@@ -16,7 +16,7 @@ public class CreateObjects : ObjectManagementBase
 
         ObjectManagementClient sut = new ObjectManagementClient(mockHttp.ToHttpClient());
 
-        var actual = await Assert.ThrowsAsync<ArgumentNullException>(() => sut.CreateObjectsAsync(null, null, null!, CancellationToken.None));
+        var actual = await Assert.ThrowsAsync<ArgumentNullException>(() => sut.CreateObjectsAsync(null, null, null, null!, CancellationToken.None));
         Assert.Equal("anyKey", actual.ParamName);
     }
 
@@ -41,7 +41,7 @@ public class CreateObjects : ObjectManagementBase
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        var actual = await sut.CreateObjectsAsync(meta, tags, file, CancellationToken.None);
+        var actual = await sut.CreateObjectsAsync(meta, tags, null, file, CancellationToken.None);
         Assert.NotNull(actual);
         mockHttp.VerifyNoOutstandingExpectation();
     }
@@ -66,7 +66,7 @@ public class CreateObjects : ObjectManagementBase
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        var actual = await sut.CreateObjectsAsync(meta, tags, file, CancellationToken.None);
+        var actual = await sut.CreateObjectsAsync(meta, tags, null, file, CancellationToken.None);
         Assert.NotNull(actual);
         mockHttp.VerifyNoOutstandingExpectation();
     }
@@ -91,7 +91,7 @@ public class CreateObjects : ObjectManagementBase
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        var actual = await sut.CreateObjectsAsync(meta, tags, file, CancellationToken.None);
+        var actual = await sut.CreateObjectsAsync(meta, tags, null, file, CancellationToken.None);
         Assert.NotNull(actual);
         mockHttp.VerifyNoOutstandingExpectation();
     }

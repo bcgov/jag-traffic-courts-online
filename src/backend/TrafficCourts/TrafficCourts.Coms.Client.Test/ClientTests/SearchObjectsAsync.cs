@@ -25,7 +25,7 @@ public class SearchObjectsAsync : ObjectManagementBase
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        await sut.SearchObjectsAsync(meta, objIds, path, active, @public, mimeType, name, tags, CancellationToken.None);
+        await sut.SearchObjectsAsync(meta, objIds, null, path, active, false, false, @public, mimeType, name, tags, CancellationToken.None);
         mockHttp.VerifyNoOutstandingExpectation();
     }
 

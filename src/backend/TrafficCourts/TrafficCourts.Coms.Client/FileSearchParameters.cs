@@ -41,6 +41,9 @@ public class FileSearchParameters
     /// The `name` source for the object Typically a descriptive title or original filename
     /// </summary>
     public string? Name { get; set; }
+
+    public Guid? BucketId { get; set; }
+
     /// <summary>
     /// The canonical S3 path string of the object
     /// </summary>
@@ -57,4 +60,8 @@ public class FileSearchParameters
     /// Boolean on active status
     /// </summary>
     public bool? Active { get; set; }
+
+    public bool? DeleteMarker { get; set; }
+
+    public bool? Latest { get; set; }
 }

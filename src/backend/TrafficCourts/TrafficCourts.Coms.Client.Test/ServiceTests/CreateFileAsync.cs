@@ -81,6 +81,7 @@ public class CreateFileAsync : ObjectManagementServiceTest
         _mockClient.Setup(_ => _.CreateObjectsAsync(
             It.IsAny<IReadOnlyDictionary<string, string>>(),
             It.IsAny<IReadOnlyDictionary<string, string>>(),
+            It.IsAny<Guid?>(),
             It.IsAny<FileParameter>(),
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(() =>
@@ -103,6 +104,7 @@ public class CreateFileAsync : ObjectManagementServiceTest
             _.CreateObjectsAsync(
                 It.Is<IReadOnlyDictionary<string, string>>((_) => _ == file.Metadata),
                 It.Is<IReadOnlyDictionary<string, string>>((_) => _ == file.Tags),
+                It.Is<Guid?>((bucketId) => bucketId == null),
                 It.Is<FileParameter>((_) => _.Data == expectedStream && _.FileName == expectedFilename && _.ContentType == expectedContentType),
                 It.Is<CancellationToken>((cancellationToken) => cancellationToken == cts.Token))
             );
