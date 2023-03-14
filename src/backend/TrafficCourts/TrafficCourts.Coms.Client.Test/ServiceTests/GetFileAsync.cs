@@ -28,14 +28,10 @@ public class GetFileAsync : ObjectManagementServiceTest
             new KeyValuePair<string, string>("type", "picture")
         };
 
-        _mockRepository.Setup(_ => _.GetObjectMetadata(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns(metadata);
-
-        _mockRepository.Setup(_ => _.GetObjectTags(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns(Array.Empty<KeyValuePair<string, string>>());
-
         var stream = GetRandomStream();
         SetupReadObjectReturn(new FileResponse(200, headers, stream, null, null));
+        SetupGetObjectMetadataAsync(new Anonymous2[] { new Anonymous2 { ObjectId = id, Metadata = new List<DBMetadataKeyValue> { new DBMetadataKeyValue { Key = "type", Value = "picture" } } } });
+        SetupGetObjectTagsAsync(new Anonymous3[] { new Anonymous3 { ObjectId = id } });
 
         CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -47,16 +43,12 @@ public class GetFileAsync : ObjectManagementServiceTest
         // assert
         // should have read the object to get the expected found object
         _mockClient.Verify(_ => _.ReadObjectAsync(
-             It.Is<Guid>((actual) => actual == id),
-             It.Is<DownloadMode?>((actual) => actual == DownloadMode.Proxy),
-             It.Is<int?>((actual) => actual == null),
-             It.Is<string?>((actual) => actual == null),
-            It.Is<CancellationToken>((actual) => actual == cts.Token)
+            It.Is<Guid>((objId) => objId == id),
+            It.Is<DownloadMode?>((download) => download == DownloadMode.Proxy),
+            It.Is<int?>((expiresIn) => expiresIn == null),
+            It.Is<string?>((versionId) => versionId == null),
+            It.Is<CancellationToken>((cancellationToken) => cancellationToken == cts.Token)
         ));
-
-        // should have called GetObjectMetadata and GetObjectTags
-        _mockRepository.Verify(_ => _.GetObjectMetadata(It.Is<Guid>(actual => actual == id), It.Is<string>(actual => actual == null)));
-        _mockRepository.Verify(_ => _.GetObjectTags(It.Is<Guid>(actual => actual == id), It.Is<string>(actual => actual == null)));
 
         Assert.NotNull(actualFile);
         Assert.NotNull(actualFile.Data);

@@ -60,8 +60,6 @@ public static partial class Extensions
         // register the public interface
         services.AddTransient<IObjectManagementService, ObjectManagementService>();
 
-        services.AddObjectManagementRepository(); // work around for coms not 
-
         return services;
     }
 

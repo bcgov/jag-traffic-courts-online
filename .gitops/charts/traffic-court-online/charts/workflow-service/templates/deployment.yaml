@@ -63,23 +63,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.coms.service.secretName }}
                 key: password
-          - name: COMS_DB_HOST
-            value: {{ .Values.coms.db.host }}
-          - name: COMS_DB_DATABASE
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.coms.db.secretName }}
-                key: app-db-name
-          - name: COMS_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.coms.db.secretName }}
-                key: app-db-password
-          - name: COMS_DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.coms.db.secretName }}
-                key: app-db-username
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}

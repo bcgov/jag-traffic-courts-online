@@ -19,11 +19,6 @@ services:
       COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
       COMS__USERNAME: ${COMS__USERNAME:-username}
       COMS__PASSWORD: ${COMS__PASSWORD:-password}
-      # COMS database connection string for metadata/tags workaround
-      COMS_DB_DATABASE: coms
-      COMS_DB_HOST: coms-db
-      COMS_DB_PASSWORD: password
-      COMS_DB_USER: postgres
       FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-}
       FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-}
       FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-}
@@ -70,11 +65,6 @@ services:
       COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
       COMS__USERNAME: ${COMS__USERNAME:-username}
       COMS__PASSWORD: ${COMS__PASSWORD:-password}
-      # COMS database connection string for metadata/tags workaround
-      COMS_DB_DATABASE: coms
-      COMS_DB_HOST: coms-db
-      COMS_DB_PASSWORD: password
-      COMS_DB_USER: postgres
       MASSTRANSIT__TRANSPORT: ${MASSTRANSIT__TRANSPORT:-RabbitMq}
       RABBITMQ__HOST: rabbitmq
       RABBITMQ__PORT: 5672
@@ -154,11 +144,6 @@ services:
       COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
       COMS__USERNAME: ${COMS__USERNAME:-username}
       COMS__PASSWORD: ${COMS__PASSWORD:-password}
-      # COMS database connection string for metadata/tags workaround
-      COMS_DB_DATABASE: coms
-      COMS_DB_HOST: coms-db
-      COMS_DB_PASSWORD: password
-      COMS_DB_USER: postgres
       SMTPCONFIGURATION__HOST: ${SMTPCONFIGURATION__HOST:-smtp-server}
       SMTPCONFIGURATION__PORT: ${SMTPCONFIGURATION__PORT:-5025}
       EMAILCONFIGURATION__SENDER: ${EMAILCONFIGURATION__SENDER:-DoNotReply@gov.bc.ca}

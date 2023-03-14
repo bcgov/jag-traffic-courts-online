@@ -1,26 +1,21 @@
-﻿#define USE_COMS_REPOSITORY
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using TrafficCourts.Coms.Client.Data;
+using System.Diagnostics;
 
 namespace TrafficCourts.Coms.Client;
 
 internal class ObjectManagementService : IObjectManagementService
 {
     private readonly IObjectManagementClient _client;
-    private readonly IObjectManagementRepository _repository;
     private readonly IMemoryStreamFactory _memoryStreamFactory;
     private readonly ILogger<ObjectManagementService> _logger;
 
     public ObjectManagementService(
         IObjectManagementClient client, 
-        IObjectManagementRepository repository,
         IMemoryStreamFactory memoryStreamFactory, 
         ILogger<ObjectManagementService> logger)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _memoryStreamFactory = memoryStreamFactory ?? throw new ArgumentNullException(nameof(memoryStreamFactory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -51,7 +46,7 @@ internal class ObjectManagementService : IObjectManagementService
 
         try
         {
-            var created = await _client.CreateObjectsAsync(file.Metadata, file.Tags, parameter, cancellationToken)
+            var created = await _client.CreateObjectsAsync(file.Metadata, file.Tags, bucketId: null, parameter, cancellationToken)
                 .ConfigureAwait(false);
 
             if (created.Count == 0)
@@ -109,7 +104,7 @@ internal class ObjectManagementService : IObjectManagementService
     {
         if (id == Guid.Empty)
         {
-            throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
+            throw new ArgumentException("Cannot get file on empty object id", nameof(id));
         }
 
         _logger.LogDebug("Getting file {FileId}", id);
@@ -122,10 +117,12 @@ internal class ObjectManagementService : IObjectManagementService
             string? contentType = GetHeader(response.Headers, "Content-Type");
             string? fileName = GetHeader(response.Headers, "x-amz-meta-name");
 
-            var metadataValues = await GetMetadataAsync(id, cancellationToken);
-            IReadOnlyDictionary<string, string>? metadata = Client.Metadata.Create(metadataValues[id]);
+            // get the metadata and tags for this object
+            Dictionary<Guid, IList<DBMetadataKeyValue>> metadataValues = await GetMetadataAsync(id, cancellationToken);
+            IReadOnlyDictionary<string, string>? metadata = GetMetadataForId(id, metadataValues);
 
-            IReadOnlyDictionary<string, string>? tags = await GetTagsAsync(id, cancellationToken);
+            Dictionary<Guid, IList<DBTagKeyValue>> tagValues = await GetTagsAsync(id, cancellationToken);
+            IReadOnlyDictionary<string, string>? tags = GetTagsForId(id, tagValues);
 
             // make a copy of the stream because the FileResponse will dispose of the stream
             var stream = _memoryStreamFactory.GetStream();
@@ -168,8 +165,11 @@ internal class ObjectManagementService : IObjectManagementService
             List<DBObject> files = await _client.SearchObjectsAsync(
                 parameters.Metadata,
                 parameters.Ids,
+                parameters.BucketId,
                 parameters.Path,
                 parameters.Active,
+                parameters.DeleteMarker,
+                parameters.Latest,
                 parameters.Public,
                 parameters.MimeType,
                 parameters.Name,
@@ -185,24 +185,21 @@ internal class ObjectManagementService : IObjectManagementService
             _logger.LogDebug("Found {Count} files", files.Count);
 
             // fetch all of the metadata for found files at once
-            var foundIds = files.Select(_ => _.Id).ToList();
-            var objectMetadataById = await GetMetadataAsync(foundIds, cancellationToken);
+            var ids = files.Select(_ => _.Id).ToList();
+            var metadataValues = await GetMetadataAsync(ids, cancellationToken);
+            var tagValues = await GetTagsAsync(ids, cancellationToken);
             
             // allocate list with the correct size based on the number of found files
             List<FileSearchResult> results = new(files.Count);
 
             foreach (var file in files)
             {
-                IEnumerable<KeyValuePair<string, string>> pairs = objectMetadataById[file.Id];
+                // get this files metadata and tags
+                IReadOnlyDictionary<string, string> metadata = GetMetadataForId(file.Id, metadataValues);
+                IReadOnlyDictionary<string, string> tags = GetTagsForId(file.Id, tagValues);
 
                 // filename will be returned in the metadata pairs
-                string filename = GetFileName(pairs);
-
-                // create user metadata without the internal metadata
-                var metadata = Metadata.Create(pairs.Where(Metadata.IsNotInternal));
-
-                // get tags for this file
-                var tags = await GetTagsAsync(file.Id, cancellationToken);
+                string filename = GetFileName(file.Id, metadataValues);
 
                 // creat end user search results
                 var result = new FileSearchResult(
@@ -332,11 +329,16 @@ internal class ObjectManagementService : IObjectManagementService
         return value;
     }
 
-    private string GetFileName(IEnumerable<KeyValuePair<string, string>> metadata)
+    private string GetFileName(Guid id, Dictionary<Guid, IList<DBMetadataKeyValue>> values)
     {
-        foreach (var item in metadata)
+        if (!values.TryGetValue(id, out var items))
         {
-            if (Metadata.IsName(item))
+            return string.Empty;
+        }
+
+        foreach (var item in items)
+        {
+            if (Metadata.IsName(item.Key))
             {
                 return item.Value;
             }
@@ -353,6 +355,9 @@ internal class ObjectManagementService : IObjectManagementService
     /// <returns></returns>
     private List<FileSearchResult> FilterSearchResults(List<FileSearchResult> results, FileSearchParameters parameters)
     {
+        Debug.Assert(results != null);
+        Debug.Assert(parameters != null);
+
         results = results
             .Where(result => TagsMatch(result, parameters) && MetadataMatch(result, parameters))
             .ToList();
@@ -366,6 +371,9 @@ internal class ObjectManagementService : IObjectManagementService
     /// <returns>All of the searched tags match on the result</returns>
     private static bool TagsMatch(FileSearchResult result, FileSearchParameters parameters)
     {
+        Debug.Assert(result != null);
+        Debug.Assert(parameters != null);
+
         foreach (var tag in parameters.Tags)
         {
             if (result.Tags.TryGetValue(tag.Key, out string? value) && tag.Value != value)
@@ -383,6 +391,9 @@ internal class ObjectManagementService : IObjectManagementService
     /// <returns>All of the searched metadata match on the result</returns>
     private static bool MetadataMatch(FileSearchResult result, FileSearchParameters parameters)
     {
+        Debug.Assert(result != null);
+        Debug.Assert(parameters != null);
+
         foreach (var metadata in parameters.Metadata)
         {
             if (result.Metadata.TryGetValue(metadata.Key, out string? value) && metadata.Value != value)
@@ -394,50 +405,17 @@ internal class ObjectManagementService : IObjectManagementService
         return true;
     }
 
-#if false // USE_COMS_REPOSITORY
-    private async Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
-#else
-    private Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
-#endif
+
+    private async Task<Dictionary<Guid, IList<DBMetadataKeyValue>>> GetMetadataAsync(IList<Guid> ids, CancellationToken cancellationToken)
     {
-#if false // USE_COMS_REPOSITORY
+        Debug.Assert(ids != null);
+
         try
         {
-            IList<ObjectMetadata> objectsMetadata = await _client.GetObjectMetadataAsync(ids, cancellationToken).ConfigureAwait(false);
-            
-            // not great we have to flatten out the data, but it makes using a ILookup easier to process on the caller
-            // lookup is like a Dictionary<key,IEnumerable<value>> but if the key does not exist, the enumerable is empty
-            var lookup = Flatten(objectsMetadata).ToLookup(_ => _.Item1, _ => _.Item2);
-            return lookup;
-        }
-        catch (Exception exception)
-        {
-            throw ExceptionHandler("fetch metadata", exception);
-        }
-#else
-        var lookup = GetMetadataFromRepository(ids);
-        return Task.FromResult(lookup);
-#endif
-    }
+            IList<Anonymous2> response = await _client.FetchMetadataAsync(ids, null, cancellationToken).ConfigureAwait(false);
 
-    private ILookup<Guid, KeyValuePair<string, string>> GetMetadataFromRepository(IList<Guid> ids)
-    {
-        try
-        {
-            // hack to make the work around look like non-workaround solution
-            List<(Guid ObjectId, KeyValuePair<string, string> Item)> values = new();
-
-            foreach (var id in ids)
-            {
-                var items = _repository.GetObjectMetadata(id);
-                foreach (var item in items)
-                {
-                    values.Add((id, item));
-                }
-            }
-
-            var lookup = values.ToLookup(_ => _.ObjectId, _ => _.Item);
-            return lookup;
+            var byObjectId = response.ToDictionary(_ => _.ObjectId, _ => _.Metadata);
+            return byObjectId;
         }
         catch (Exception exception)
         {
@@ -445,37 +423,47 @@ internal class ObjectManagementService : IObjectManagementService
         }
     }
 
-    private async Task<ILookup<Guid, KeyValuePair<string, string>>> GetMetadataAsync(Guid id, CancellationToken cancellationToken)
+    private static IReadOnlyDictionary<string, string> GetMetadataForId(Guid id, Dictionary<Guid, IList<DBMetadataKeyValue>> values)
+    {
+        Debug.Assert(values != null);
+
+        if (!values.TryGetValue(id, out var items))
+        {
+            return new Dictionary<string, string>();
+        }
+
+        return items
+            .Where(_ => !Metadata.IsInternal(_.Key))
+            .ToDictionary(_ => _.Key, _ =>  _.Value);
+    }
+
+    private async Task<Dictionary<Guid, IList<DBMetadataKeyValue>>> GetMetadataAsync(Guid id, CancellationToken cancellationToken)
     {
         return await GetMetadataAsync(new[] { id }, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Flattens the collection of object metadata into something that can be converted to a lookup
-    /// </summary>
-    private IEnumerable<Tuple<Guid, KeyValuePair<string, string>>> Flatten(IList<ObjectMetadata> items)
+    private static IReadOnlyDictionary<string, string> GetTagsForId(Guid id, Dictionary<Guid, IList<DBTagKeyValue>> values)
     {
-        foreach (var objectItem in items.Where(_ => _.Metadata != null && _.Metadata.Count > 0))
+        Debug.Assert(values != null);
+
+        if (!values.TryGetValue(id, out var value))
         {
-            foreach (var metaDataItem in objectItem.Metadata)
-            {
-                yield return Tuple.Create(objectItem.Id, new KeyValuePair<string, string>(metaDataItem.Key, metaDataItem.Value));
-            }
+            return new Dictionary<string, string>();
         }
+
+        return value.ToDictionary(_ => _.Key, _ => _.Value);
     }
 
-    private Task<IReadOnlyDictionary<string, string>> GetTagsAsync(Guid id, CancellationToken cancellationToken)
+    private async Task<Dictionary<Guid, IList<DBTagKeyValue>>> GetTagsAsync(Guid id, CancellationToken cancellationToken)
     {
-#if false // USE_COMS_REPOSITORY
-        // TODO: need to determine how to get tags, see: https://github.com/bcgov/common-object-management-service/issues/93
-        // May need to query the database directly in the interim
-        IDictionary<string, string> tags = Factory.CreateTags();
-        return Task.FromResult(tags);
-#else
-        var items = _repository.GetObjectTags(id);
-        IReadOnlyDictionary<string, string> tags = Factory.CreateTags(items);
-        return Task.FromResult(tags);
-#endif
+        return await GetTagsAsync(new[] { id }, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<Dictionary<Guid, IList<DBTagKeyValue>>> GetTagsAsync(IList<Guid> ids, CancellationToken cancellationToken)
+    {
+        var response = await _client.FetchTagsAsync(ids, null, cancellationToken).ConfigureAwait(false);
+        Dictionary<Guid, IList<DBTagKeyValue>> byObjectId = response.ToDictionary(_ => _.ObjectId, _ => _.Tagset);
+        return byObjectId;
     }
 
     private Exception ExceptionHandler(string operation, Exception exception)

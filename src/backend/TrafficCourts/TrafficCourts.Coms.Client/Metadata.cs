@@ -13,7 +13,7 @@ internal static class Metadata
 
     public static bool IsNotInternal(KeyValuePair<string, string> item) => !IsInternal(item.Key);
     public static bool IsInternal(KeyValuePair<string, string> item) => IsInternal(item.Key);
-    public static bool IsName(KeyValuePair<string, string> item) => _comparer.Equals(item.Key, Name);
+    public static bool IsName(string key) => _comparer.Equals(key, Name);
 
     /// <summary>
     /// Creates the Metadata dictionary from the source with the correct <see cref="IEqualityComparer"/>.

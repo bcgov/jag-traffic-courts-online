@@ -25,7 +25,7 @@ namespace TrafficCourts.Coms.Client
     public partial class DBBucket : DBTimestampUserData
     {
         /// <summary>
-        /// The access key id
+        /// S3 account Access Key Id, similar to a username. This value will be redacted from the API response.
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("accessKeyId")]
@@ -35,7 +35,7 @@ namespace TrafficCourts.Coms.Client
         public string AccessKeyId { get; set; } = default!;
 
         /// <summary>
-        /// Determines whether this bucket is considered active
+        /// Determines whether this bucket is considered active in COMS
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("active")]
@@ -44,7 +44,7 @@ namespace TrafficCourts.Coms.Client
         public bool Active { get; set; } = true;
 
         /// <summary>
-        /// The parent directory
+        /// The ID of a bucket
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("bucket")]
@@ -52,6 +52,16 @@ namespace TrafficCourts.Coms.Client
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Bucket { get; set; } = default!;
+
+        /// <summary>
+        /// A human-readable label or title
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("bucketName")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string BucketName { get; set; } = default!;
 
         /// <summary>
         /// The primary identifier for this bucket
@@ -64,17 +74,7 @@ namespace TrafficCourts.Coms.Client
         public System.Guid BucketId { get; set; } = default!;
 
         /// <summary>
-        /// The primary name for this bucket
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("bucketName")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string BucketName { get; set; } = default!;
-
-        /// <summary>
-        /// The bucket resources end point (URL)
+        /// the S3 service URI
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("endpoint")]
@@ -84,7 +84,7 @@ namespace TrafficCourts.Coms.Client
         public string Endpoint { get; set; } = default!;
 
         /// <summary>
-        /// The prefix to path of all objects in the bucket
+        /// The prefix given to objects in the bucket
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("key")]
@@ -94,7 +94,7 @@ namespace TrafficCourts.Coms.Client
         public string Key { get; set; } = default!;
 
         /// <summary>
-        /// The region
+        /// The geographical zone defined by the S3 service where your bucket is located
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("region")]
@@ -103,11 +103,15 @@ namespace TrafficCourts.Coms.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Region { get; set; } = default!;
 
+        /// <summary>
+        /// S3 account Secret Access Key, similar to a password. This value will be redacted from the API response.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("secretAccessKey")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
-        [System.ComponentModel.DataAnnotations.Required]
-        public object SecretAccessKey { get; set; } = default!;
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string SecretAccessKey { get; set; } = default!;
 
     }
 
@@ -183,13 +187,47 @@ namespace TrafficCourts.Coms.Client
         [System.Text.Json.Serialization.JsonPropertyName("bucketId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.Guid? BucketId { get; set; } = default!;
+        public System.Guid BucketId { get; set; } = default!;
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class DBMetadata : Anonymous5
+    public partial class DBMetadata : Anonymous8
     {
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class DBMetadataKeyValue
+    {
+        /// <summary>
+        /// The metadata key
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("key")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Key { get; set; } = default!;
+
+        /// <summary>
+        /// The metadata value
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("value")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Value { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
 
     }
 
@@ -249,13 +287,14 @@ namespace TrafficCourts.Coms.Client
         public System.Guid Id { get; set; } = default!;
 
         /// <summary>
-        /// The unique identifier for the object
+        /// The unique identifier for the bucket
         /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("objectId")]
+        [System.Text.Json.Serialization.JsonPropertyName("bucketId")]
 
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.Guid ObjectId { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.Guid BucketId { get; set; } = default!;
 
         /// <summary>
         /// The unique identifier of the user
@@ -277,8 +316,41 @@ namespace TrafficCourts.Coms.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class DBTags : Anonymous6
+    public partial class DBTags : Anonymous9
     {
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class DBTagKeyValue
+    {
+        /// <summary>
+        /// The tag key
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("key")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Key { get; set; } = default!;
+
+        /// <summary>
+        /// The tag value
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("value")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Value { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
 
     }
 
@@ -413,6 +485,60 @@ namespace TrafficCourts.Coms.Client
 
     }
 
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class DBVersion : DBTimestampUserData
+    {
+        /// <summary>
+        /// The primary identifier for this version
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.Guid Id { get; set; } = default!;
+
+        /// <summary>
+        /// a version identifier created in S3
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string S3VersionId { get; set; } = default!;
+
+        /// <summary>
+        /// The primary identifier for the parent object
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("objectId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.Guid ObjectId { get; set; } = default!;
+
+        /// <summary>
+        /// The MIME Type of the version
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("mimeType")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string MimeType { get; set; } = default!;
+
+        /// <summary>
+        /// Whether or not this version is a S3 delete-marker
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("deleteMarker")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        public bool DeleteMarker { get; set; } = default!;
+
+    }
+
     /// <summary>
     /// Download mode behavior overrides
     /// </summary>
@@ -429,7 +555,7 @@ namespace TrafficCourts.Coms.Client
     }
 
     /// <summary>
-    /// Permission code/type for an object
+    /// Permission code/type
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum PermCode
@@ -453,6 +579,92 @@ namespace TrafficCourts.Coms.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class RequestBucket
+    {
+        /// <summary>
+        /// S3 account Access Key Id, similar to a username.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("accessKeyId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string AccessKeyId { get; set; } = default!;
+
+        /// <summary>
+        /// Whether this bucket is considered active in COMS
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("active")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public bool Active { get; set; } = true;
+
+        /// <summary>
+        /// The ID of a bucket
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("bucket")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Bucket { get; set; } = default!;
+
+        /// <summary>
+        /// A human-readable label or title
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("bucketName")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string BucketName { get; set; } = default!;
+
+        /// <summary>
+        /// the S3 service URI
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("endpoint")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Endpoint { get; set; } = default!;
+
+        /// <summary>
+        /// The prefix given to objects in the bucket
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("key")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Key { get; set; } = default!;
+
+        /// <summary>
+        /// The geographical zone defined by the S3 service where your bucket is located
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("region")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Region { get; set; } = default!;
+
+        /// <summary>
+        /// S3 account Secret Access Key, similar to a password. This value will be redacted from the API response.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("secretAccessKey")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string SecretAccessKey { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class RequestPermissionTuple
     {
 
@@ -472,6 +684,69 @@ namespace TrafficCourts.Coms.Client
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid UserId { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ResponseBucketPerms
+    {
+        /// <summary>
+        /// The unique identifier for the bucket. When `objectPerms=false` only buckets with bucket-level permissions are returned.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("bucketId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Guid BucketId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("permissions")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Collections.Generic.IList<DBBucketPermission> Permissions { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// When `objectPerms=true` response will include buckets containing objects with matching permissions.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ResponseBucketPermsWithObject
+    {
+        /// <summary>
+        /// The unique identifier for the bucket. When `objectPerms=true` response will include buckets containing objects with matching permissions.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("bucketId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Guid BucketId { get; set; } = default!;
+
+        /// <summary>
+        /// Array will be empty.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("permissions")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Collections.Generic.IList<object> Permissions { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -633,10 +908,73 @@ namespace TrafficCourts.Coms.Client
         /// a version identifier created in S3
         /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("VersionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int VersionId { get; set; } = default!;
+        public int S3VersionId { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ResponseObjectPerms
+    {
+        /// <summary>
+        /// The unique identifier for the object. When `bucketPerms=false` only objects with matching object-level permissions are returned.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("objectId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Guid ObjectId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("permissions")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Collections.Generic.IList<DBObjectPermission> Permissions { get; set; } = default!;
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    /// <summary>
+    /// When `objectPerms=true` response will include objects in buckets with matching permissions.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ResponseObjectPermsWithBucket
+    {
+        /// <summary>
+        /// The unique identifier for the object. When `bucketPerms=true` response will include objects in buckets with matching permissions.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("objectId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Guid ObjectId { get; set; } = default!;
+
+        /// <summary>
+        /// Array will be empty.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("permissions")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Collections.Generic.IList<object> Permissions { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -773,10 +1111,10 @@ namespace TrafficCourts.Coms.Client
         /// a version identifier created in S3
         /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("VersionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string VersionId { get; set; } = default!;
+        public string S3VersionId { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -861,6 +1199,33 @@ namespace TrafficCourts.Coms.Client
         public string ETag { get; set; } = default!;
 
         /// <summary>
+        /// S3 Identifier for the bucket
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Bucket")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Bucket { get; set; } = default!;
+
+        /// <summary>
+        /// Key of the object
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Key")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Key { get; set; } = default!;
+
+        /// <summary>
+        /// URL to the resource just uploaded
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Location")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Location { get; set; } = default!;
+
+        /// <summary>
         /// If the object is stored using server-side encryption either with an AWS KMS key or an Amazon S3-managed encryption key, this field specifies the server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).
         /// </summary>
 
@@ -873,43 +1238,10 @@ namespace TrafficCourts.Coms.Client
         /// a version identifier created in S3
         /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("VersionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string VersionId { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class S3TagSet
-    {
-        /// <summary>
-        /// The tag key
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("key")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Key { get; set; } = default!;
-
-        /// <summary>
-        /// The tag value
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Value { get; set; } = default!;
+        public string S3VersionId { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -967,11 +1299,11 @@ namespace TrafficCourts.Coms.Client
         /// a version identifier created in S3
         /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("VersionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string VersionId { get; set; } = default!;
+        public string S3VersionId { get; set; } = default!;
 
         /// <summary>
         /// Specifies whether the object is (true) or is not (false) the latest version of an object.
@@ -1123,6 +1455,12 @@ namespace TrafficCourts.Coms.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class Body : RequestBucket
+    {
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Anonymous : DBObject
     {
         /// <summary>
@@ -1134,6 +1472,25 @@ namespace TrafficCourts.Coms.Client
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string FieldName { get; set; } = default!;
+
+        /// <summary>
+        /// The object MIME Type
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("mimeType")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string MimeType { get; set; } = default!;
+
+        /// <summary>
+        /// The primary identifier for this version in the COMS database
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("versionId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Guid VersionId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("$metadata")]
 
@@ -1152,6 +1509,33 @@ namespace TrafficCourts.Coms.Client
         public string ETag { get; set; } = default!;
 
         /// <summary>
+        /// S3 Identifier for the bucket
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Bucket")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Bucket { get; set; } = default!;
+
+        /// <summary>
+        /// Key of the object
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Key")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Key { get; set; } = default!;
+
+        /// <summary>
+        /// URL to the resource just uploaded
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Location")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Location { get; set; } = default!;
+
+        /// <summary>
         /// If the object is stored using server-side encryption either with an AWS KMS key or an Amazon S3-managed encryption key, this field specifies the server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).
         /// </summary>
 
@@ -1164,10 +1548,10 @@ namespace TrafficCourts.Coms.Client
         /// a version identifier created in S3
         /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("VersionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string VersionId { get; set; } = default!;
+        public string S3VersionId { get; set; } = default!;
 
     }
 
@@ -1184,6 +1568,15 @@ namespace TrafficCourts.Coms.Client
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string FieldName { get; set; } = default!;
 
+        /// <summary>
+        /// The primary identifier for this version in the COMS database
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("versionId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Guid VersionId { get; set; } = default!;
+
         [System.Text.Json.Serialization.JsonPropertyName("$metadata")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
@@ -1201,6 +1594,33 @@ namespace TrafficCourts.Coms.Client
         public string ETag { get; set; } = default!;
 
         /// <summary>
+        /// S3 Identifier for the bucket
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Bucket")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Bucket { get; set; } = default!;
+
+        /// <summary>
+        /// Key of the object
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Key")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Key { get; set; } = default!;
+
+        /// <summary>
+        /// URL to the resource just uploaded
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Location")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Location { get; set; } = default!;
+
+        /// <summary>
         /// If the object is stored using server-side encryption either with an AWS KMS key or an Amazon S3-managed encryption key, this field specifies the server-side encryption algorithm used when storing this object in Amazon S3 (for example, AES256, aws:kms).
         /// </summary>
 
@@ -1213,10 +1633,10 @@ namespace TrafficCourts.Coms.Client
         /// a version identifier created in S3
         /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("VersionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("s3VersionId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string VersionId { get; set; } = default!;
+        public string S3VersionId { get; set; } = default!;
 
     }
 
@@ -1224,16 +1644,16 @@ namespace TrafficCourts.Coms.Client
     public partial class Anonymous2
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("versionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("objectId")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.Guid VersionId { get; set; } = default!;
+        public System.Guid ObjectId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("metadata")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IList<S3TagSet> Metadata { get; set; } = new System.Collections.ObjectModel.Collection<S3TagSet>();
+        public System.Collections.Generic.IList<DBMetadataKeyValue> Metadata { get; set; } = new System.Collections.ObjectModel.Collection<DBMetadataKeyValue>();
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -1250,17 +1670,16 @@ namespace TrafficCourts.Coms.Client
     public partial class Anonymous3
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("versionId")]
+        [System.Text.Json.Serialization.JsonPropertyName("objectId")]
 
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid VersionId { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public System.Guid ObjectId { get; set; } = default!;
 
-        [System.Text.Json.Serialization.JsonPropertyName("metadata")]
+        [System.Text.Json.Serialization.JsonPropertyName("tagset")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IList<S3TagSet> Metadata { get; set; } = new System.Collections.ObjectModel.Collection<S3TagSet>();
+        public System.Collections.Generic.IList<DBTagKeyValue> Tagset { get; set; } = new System.Collections.ObjectModel.Collection<DBTagKeyValue>();
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
@@ -1277,18 +1696,6 @@ namespace TrafficCourts.Coms.Client
     public partial class Anonymous4
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("versionId")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid VersionId { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("tagset")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
-        [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IList<S3TagSet> Tagset { get; set; } = new System.Collections.ObjectModel.Collection<S3TagSet>();
-
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
 
         [System.Text.Json.Serialization.JsonExtensionData]
@@ -1302,6 +1709,75 @@ namespace TrafficCourts.Coms.Client
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Anonymous5
+    {
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class Anonymous6
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("versionId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.Guid VersionId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("metadata")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.IList<DBMetadataKeyValue> Metadata { get; set; } = new System.Collections.ObjectModel.Collection<DBMetadataKeyValue>();
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class Anonymous7
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("versionId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.Guid VersionId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("tagset")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.Never)]   
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.IList<DBTagKeyValue> Tagset { get; set; } = new System.Collections.ObjectModel.Collection<DBTagKeyValue>();
+
+        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class Anonymous8
     {
         /// <summary>
         /// User-defined metadata
@@ -1325,7 +1801,7 @@ namespace TrafficCourts.Coms.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Anonymous6
+    public partial class Anonymous9
     {
         /// <summary>
         /// User-defined tags
