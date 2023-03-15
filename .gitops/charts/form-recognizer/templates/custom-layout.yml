@@ -1,7 +1,7 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: azure-cognitive-service-custom-layout
+  name: {{ include "form-recognizer.fullname" . }}-custom-layout
 spec:
   replicas: 1
   selector:
@@ -17,19 +17,19 @@ spec:
       volumes:
         - name: forms-recognizer-shared
           persistentVolumeClaim:
-            claimName: forms-recognizer-shared
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
         - name: forms-recognizer-logs
           persistentVolumeClaim:
-            claimName: forms-recognizer-logs
+            claimName: {{ include "form-recognizer.fullname" . }}-logs
       containers:
         - name: custom-layout
-          securityContext:
-            capabilities:
-              drop: ["ALL"]
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
+          # securityContext:
+          #   capabilities:
+          #     drop: ["ALL"]
+          #   runAsNonRoot: true
+          #   allowPrivilegeEscalation: false
+          #   seccompProfile:
+          #     type: RuntimeDefault
           resources:
             {{- toYaml .Values.layout.resources | nindent 12 }}
           env:
@@ -57,12 +57,12 @@ spec:
             - name: apikey
               valueFrom:
                 secretKeyRef:
-                  name: forms-recognizer-bcgov-tenant
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
                   key: FORMRECOGNIZER__APIKEY
             - name: billing
               valueFrom:
                 secretKeyRef:
-                  name: forms-recognizer-bcgov-tenant
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
                   key: FORMRECOGNIZER__ENDPOINT
           ports:
             - containerPort: 5000

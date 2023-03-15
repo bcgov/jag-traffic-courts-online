@@ -1,37 +1,37 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: azure-cognitive-service-custom-supervised
+  name: {{ include "form-recognizer.fullname" . }}-custom-supervised
 spec:
   replicas: {{ .Values.supervised.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: azure-cognitive-service-custom-supervised
-      app.kubernetes.io/name: azure-cognitive-service-custom-supervised
+      app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-supervised
+      app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-supervised
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: azure-cognitive-service-custom-supervised
-        app.kubernetes.io/name: azure-cognitive-service-custom-supervised
+        app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-supervised
+        app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-supervised
     spec:
       volumes:
         - name: forms-recognizer-shared
           persistentVolumeClaim:
-            claimName: forms-recognizer-shared
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
         - name: forms-recognizer-logs
           persistentVolumeClaim:
-            claimName: forms-recognizer-logs
+            claimName: {{ include "form-recognizer.fullname" . }}-logs
       containers:
-        - name: azure-cognitive-service-custom-supervised
+        - name: custom-supervised
           resources:
             {{- toYaml .Values.proxy.resources | nindent 12 }}
-          securityContext:
-            capabilities:
-              drop: ["ALL"]
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
+          # securityContext:
+          #   capabilities:
+          #     drop: ["ALL"]
+          #   runAsNonRoot: true
+          #   allowPrivilegeEscalation: false
+          #   seccompProfile:
+          #     type: RuntimeDefault
           env:
             - name: eula
               value: accept
@@ -57,8 +57,8 @@ spec:
             - name: apikey
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.azure.apiKey.secret.name }}
-                  key: {{ .Values.azure.apiKey.secret.key }}
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
+                  key: FORMRECOGNIZER__APIKEY
             - name: billing
               value: {{ .Values.azure.billing.endpoint }}
             - name: CustomFormRecognizer__ContainerPhase

@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: forms-recognizer-logs
+  name: {{ include "form-recognizer.fullname" . }}-logs
 spec:
   accessModes:
     - ReadWriteMany
@@ -16,7 +16,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: forms-recognizer-shared
+  name: {{ include "form-recognizer.fullname" . }}-shared
 spec:
   accessModes:
     - ReadWriteMany

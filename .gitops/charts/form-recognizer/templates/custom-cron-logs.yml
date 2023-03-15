@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: azure-cognitive-service-cleanup-logs
+  name: {{ include "form-recognizer.fullname" . }}-cleanup-logs
 spec:
   schedule: '@daily'
   concurrencyPolicy: Forbid
@@ -12,9 +12,9 @@ spec:
           volumes:
             - name: forms-recognizer-logs
               persistentVolumeClaim:
-                claimName: forms-recognizer-logs
+                claimName: {{ include "form-recognizer.fullname" . }}-logs
           containers:
-            - name: azure-cognitive-service-cleanup-logs
+            - name: {{ include "form-recognizer.fullname" . }}-cleanup-logs
               securityContext:
                 capabilities:
                   drop: ["ALL"]
@@ -22,7 +22,7 @@ spec:
                 allowPrivilegeEscalation: false
                 seccompProfile:
                   type: RuntimeDefault
-              image: alpine:3.14
+              image: alpine:3.17.2
               args:
                 - /bin/sh
                 - '-c'

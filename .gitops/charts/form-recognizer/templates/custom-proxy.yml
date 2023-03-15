@@ -1,38 +1,50 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: azure-cognitive-service-custom-proxy
+  name: {{ include "form-recognizer.fullname" . }}-custom-proxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/instance: azure-cognitive-service-custom-proxy
-      app.kubernetes.io/name: azure-cognitive-service-custom-proxy
+      app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-proxy
+      app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-proxy
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: azure-cognitive-service-custom-proxy
-        app.kubernetes.io/name: azure-cognitive-service-custom-proxy
+        app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-proxy
+        app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-proxy
     spec:
       volumes:
         - name: forms-recognizer-shared
           persistentVolumeClaim:
-            claimName: forms-recognizer-shared
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
         - name: forms-recognizer-logs
           persistentVolumeClaim:
-            claimName: forms-recognizer-logs
+            claimName: {{ include "form-recognizer.fullname" . }}-logs
       containers:
-        - name: azure-cognitive-service-custom-proxy
-          securityContext:
-            capabilities:
-              drop: ["ALL"]
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
+        - name: custom-proxy
+          # securityContext:
+          #   capabilities:
+          #     drop: ["ALL"]
+          #   runAsNonRoot: true
+          #   allowPrivilegeEscalation: false
+          #   seccompProfile:
+          #     type: RuntimeDefault
           resources:
             {{- toYaml .Values.proxy.resources | nindent 12 }}
           ports:
-            - containerPort: 5200
+            - containerPort: 8080
               protocol: TCP
           image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
+          volumeMounts:
+            - name: configuration
+              mountPath: /etc/nginx/nginx.conf
+              readOnly: true
+              subPath: nginx.conf
+      volumes:
+        - name: configuration
+          configMap:
+            name: {{ include "form-recognizer.fullname" . }}-custom-proxy-config
+            items:
+              - key: nginx.conf
+                path: nginx.conf
