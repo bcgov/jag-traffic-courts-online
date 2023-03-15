@@ -1,35 +1,35 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: azure-cognitive-service-custom-api
+  name: {{ include "form-recognizer.fullname" . }}-custom-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/instance: azure-cognitive-service-custom-api
-      app.kubernetes.io/name: azure-cognitive-service-custom-api
+      app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-api
+      app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-api
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: azure-cognitive-service-custom-api
-        app.kubernetes.io/name: azure-cognitive-service-custom-api
+        app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-api
+        app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-api
     spec:
       volumes:
         - name: forms-recognizer-shared
           persistentVolumeClaim:
-            claimName: forms-recognizer-shared
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
         - name: forms-recognizer-logs
           persistentVolumeClaim:
-            claimName: forms-recognizer-logs
+            claimName: {{ include "form-recognizer.fullname" . }}-logs
       containers:
         - name: custom-api
-          securityContext:
-            capabilities:
-              drop: ["ALL"]
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
+          # securityContext:
+          #   capabilities:
+          #     drop: ["ALL"]
+          #   runAsNonRoot: true
+          #   allowPrivilegeEscalation: false
+          #   seccompProfile:
+          #     type: RuntimeDefault
           env:
             - name: eula
               value: accept
@@ -55,12 +55,12 @@ spec:
             - name: apikey
               valueFrom:
                 secretKeyRef:
-                  name: forms-recognizer-bcgov-tenant
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
                   key: FORMRECOGNIZER__APIKEY
             - name: billing
               valueFrom:
                 secretKeyRef:
-                  name: forms-recognizer-bcgov-tenant
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
                   key: FORMRECOGNIZER__ENDPOINT
           ports:
             - containerPort: 5000
