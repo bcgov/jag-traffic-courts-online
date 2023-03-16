@@ -19,16 +19,16 @@ public class DisputeTicketUploadPNG {
 
 	private WebDriver driver;
 
-//	@After
-//	public void tearDown() {
-//		driver.close();
-//		driver.quit();
-//	}
-//
-//	@AfterClass
-//	public static void afterClass() {
-//		WebDriverManager.instance = null;
-//	}
+	@After
+	public void tearDown() {
+		driver.close();
+		driver.quit();
+	}
+
+	@AfterClass
+	public static void afterClass() {
+		WebDriverManager.instance = null;
+	}
 
 	@Test
 	public void test() throws Exception {
