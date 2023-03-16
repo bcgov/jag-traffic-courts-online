@@ -87,7 +87,7 @@ public class DisputeUpdateRequest : DisputeUpdateContactRequest
     /// <summary>
     /// Dispute Counts
     /// </summary>
-    public ICollection<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount>? DisputeCounts { get; set; } = null!;
+    public ICollection<DisputeCount>? DisputeCounts { get; set; } = null!;
 
     /// <summary>
     /// Id of the document uploaded by the disputant

@@ -208,6 +208,10 @@ export interface NoticeOfDispute {
      * Detachment Location
      */
     detachment_location?: string | null;
+    /**
+     * Is court appearance less than 14 days
+     */
+    appearance_less_than_14_days?: boolean | null;
     violation_ticket?: ViolationTicket;
 }
 

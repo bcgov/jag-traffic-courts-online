@@ -254,6 +254,11 @@ public class SubmitNoticeOfDispute
     public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
 
     /// <summary>
+    /// Is court appearance less than 14 days
+    /// </summary>
+    public DisputeAppearanceLessThan14DaysYn AppearanceLessThan14DaysYn { get; set; }
+
+    /// <summary>
     /// The description of the issue with OCR ticket if the citizen has detected any.
     /// </summary>
     public string? DisputantOcrIssues { get; set; }
