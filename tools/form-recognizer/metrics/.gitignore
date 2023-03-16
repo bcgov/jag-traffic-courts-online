@@ -1,0 +1,7 @@
+# Eclipse IDE
+/.classpath
+/.project
+/.settings
+/.springBeans
+/target
+ocr.trace.db
