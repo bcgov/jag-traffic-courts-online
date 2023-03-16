@@ -1,0 +1,38 @@
+server:
+  port: ${SERVER_PORT:8088}
+  
+spring:
+  application:  
+    name: ocr-metrics
+  
+  sql:
+    init:
+      mode: never
+  datasource:
+    driverClassName: org.h2.Driver
+    password: ''
+    # requires H2 to run in docker-compose
+    url: ${H2_DATASOURCE:jdbc:h2:tcp://localhost:1521/ocr}
+    username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    defer-datasource-initialization: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    # set to true to see all HQL queries sent to the database
+    show-sql: false
+    
+  # Use traditional jsp instead of thymeleaf
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+logging:
+  level:
+    ca.bc.gov.open.jag.tco.ocr.metrics: DEBUG
