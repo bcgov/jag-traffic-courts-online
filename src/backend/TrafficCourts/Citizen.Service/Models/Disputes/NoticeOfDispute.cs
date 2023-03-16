@@ -36,6 +36,12 @@ public class NoticeOfDispute : Dispute
     public string? DetachmentLocation { get; set; } = null!;
 
     /// <summary>
+    /// Is court appearance less than 14 days
+    /// </summary>
+    [JsonPropertyName("appearance_less_than_14_days")]
+    public bool? AppearanceLessThan14Days { get; set; } = false;
+
+    /// <summary>
     /// Violation Ticket
     /// </summary>
     [JsonPropertyName("violation_ticket")]

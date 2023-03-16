@@ -67,13 +67,13 @@ export class DisputeEffects {
             if (noticeOfDispute.ticket_number) {
               return Actions.GetSuccess({ noticeOfDispute });
             } else {
-              this.disputeService.openDisputeNotFoundDialog();
+              this.disputeService.openDisputantNotMatchDialog();
               this.disputeService.goToUpdateDisputeLanding(params);
               return Actions.GetFailed();
             }
           }),
           catchError(err => {
-            this.disputeService.openDisputeNotFoundDialog();
+            this.disputeService.openDisputantNotMatchDialog();
             this.disputeService.goToUpdateDisputeLanding(params);
             return of(Actions.GetFailed());
           })

@@ -1659,6 +1659,11 @@
             "description": "Detachment Location",
             "nullable": true
           },
+          "appearance_less_than_14_days": {
+            "type": "boolean",
+            "description": "Is court appearance less than 14 days",
+            "nullable": true
+          },
           "violation_ticket": {
             "$ref": "#/components/schemas/ViolationTicket"
           }

@@ -10,7 +10,7 @@ public class DisputeCount
     /// Represents the disputant plea on count.
     /// </summary>
     [JsonPropertyName("plea_cd")]
-    public DisputeCountPleaCode PleaCode { get; set; }
+    public DisputeCountPleaCode? PleaCode { get; set; }
 
     /// <summary>
     /// The count number. Must be unique within an individual dispute.
