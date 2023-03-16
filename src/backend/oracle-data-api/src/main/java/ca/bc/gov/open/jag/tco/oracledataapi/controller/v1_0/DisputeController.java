@@ -108,8 +108,7 @@ public class DisputeController {
 	 * @param issuedTime the time portion of the Dispute.issuedTs field
 	 * @return {@link Dispute}
 	 * 
-	 * LDAME 2023-03-16 allowed search by ticket number only to be called from c# api to check for 
-	 * presence of other tickets when submiting to arc
+	 * LDAME 2023-03-16 allowed search by ticket number only to be called when submitting to arc
 	 */
 	@Operation(summary = "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.")
 	@ApiResponses({
