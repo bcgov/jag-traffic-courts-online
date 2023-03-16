@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
+import { forEach } from 'lodash';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
@@ -297,9 +298,11 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = this.configService.dispute_error;
+          error?.error?.errors.forEach(error => {
+            errorMsg += " " + error;
+          });
           this.toastService.openErrorToast(errorMsg);
-          this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'DisputeService::submitDispute error has occurred: ',
             error

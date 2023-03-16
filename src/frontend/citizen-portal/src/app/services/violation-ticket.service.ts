@@ -1,12 +1,13 @@
 import { DatePipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LoggerService } from "@core/services/logger.service";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ImageTicketNotFoundDialogComponent } from "@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component";
 import { TicketNotFoundDialogComponent } from "@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component";
+import { WaitForOcrDialogComponent } from "@shared/dialogs/wait-for-ocr-dialog/wait-for-ocr-dialog.component";
 import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
 import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
@@ -107,7 +108,7 @@ export class ViolationTicketService {
       );
   }
 
-  analyseTicket(ticketFile: File, progressRef: NgProgressRef): void {
+  analyseTicket(ticketFile: File, progressRef: NgProgressRef, dialogRef: MatDialogRef<WaitForOcrDialogComponent>): void {
     this.reset();
     this.logger.info("file target", ticketFile);
     if (!this.checkSize(ticketFile?.size)) {
@@ -140,9 +141,12 @@ export class ViolationTicketService {
             else {
               this.onError();
             }
+            progressRef.complete();
+            dialogRef.close();
           },
           error: err => {
             this.onError(err);
+            dialogRef.close();
           }
         })
     })

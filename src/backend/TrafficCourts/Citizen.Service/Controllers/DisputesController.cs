@@ -78,6 +78,13 @@ public class DisputesController : ControllerBase
     public async Task<IActionResult> CreateAsync([FromBody] Models.Disputes.NoticeOfDispute dispute, CancellationToken cancellationToken)
     {
         Create.Request request = new Create.Request(dispute);
+
+        /// Part of the 'send' here is to add the scanned in image of a ticket (if there is one) to COMS and remove from REDIS cache
+        /// In the call to the COMS service to CreateObjectsAsync, when reading the response as a List of TrafficCourts.Coms.Client.Anonymous
+        /// which extends TrafficCourts.Coms.Client.DBObject, it attempts to deserialize the JSON response and fails since
+        /// BucketId returns as null from the service but deserialization is trying to stuff it into System.Guid datatype
+        /// To fix, update BucketId datatype from System.Guid to System.Guid? to make it optional in DBObject in Models.g.cs
+        /// Seems to be explicitly a fault of the code generator that generates Models.g.cs and perhaps not the openapi spec from COMS team
         Create.Response response = await _mediator.Send(request, cancellationToken);
 
         if (response.Exception is not null)

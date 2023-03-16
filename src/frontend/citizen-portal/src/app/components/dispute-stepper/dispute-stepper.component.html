@@ -60,8 +60,7 @@
       </div>
       <mat-radio-button [value]="RequestCourtAppearance.Y">
         <span class="wrap-mat-radio-label">
-          I want to attend a court hearing in person and discuss my ticket with the police officer and
-          judicial justice.
+          I want to attend a court hearing in person.
         </span>
       </mat-radio-button>
       <mat-error *ngIf="requestCourtAppearanceFormControl.touched
@@ -90,7 +89,7 @@
           <span class="text-dark">
             <strong>You have selected that you wish to attend a court hearing in person.
             </strong>
-            A Notice of Hearing will be mailed to you – it will have the date, time and location of your
+            A Notice of Hearing will be sent to you – it will have the date, time and location of your
             hearing. If you fail to appear before the provincial court on your hearing date you will be found
             guilty and the full ticketed amount must be paid immediately.
           </span>
@@ -484,8 +483,7 @@
     <app-page *ngIf="noticeOfDispute">
       <app-page-header>
         <ng-container subHeader>
-          Review the information for each count to ensure details are correct. <strong>Once request has been
-            submitted you may not make changes.</strong>
+          Review the information for each count to ensure details are correct.
         </ng-container>
       </app-page-header>
 
@@ -494,8 +492,7 @@
       <div class="col mb-2">
         <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
-            <strong>Once request has been submitted you may not make changes. Please
-              review and ensure details are correct before submission.</strong>
+            <strong>Please review and ensure details are correct before submission.</strong>
           </ng-container>
         </app-alert>
       </div>

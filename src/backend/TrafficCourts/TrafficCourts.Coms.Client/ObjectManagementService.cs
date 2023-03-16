@@ -160,6 +160,10 @@ internal class ObjectManagementService : IObjectManagementService
         MetadataValidator.Validate(parameters.Metadata);
         TagValidator.Validate(parameters.Tags);
 
+        // 2023-03-15 LDAME if the following line fails it may be due to the generated code of SearchObjectsAsync failing on return code 201
+        // the generated code recognizes 200 as success but does not recognize 201 as success
+        // this may be fixed in a soon upcoming release of COMS
+        // otherwise update the generated code to if (status_ == 200 || status_ == 201)
         try
         {
             List<DBObject> files = await _client.SearchObjectsAsync(
@@ -461,9 +465,20 @@ internal class ObjectManagementService : IObjectManagementService
 
     private async Task<Dictionary<Guid, IList<DBTagKeyValue>>> GetTagsAsync(IList<Guid> ids, CancellationToken cancellationToken)
     {
-        var response = await _client.FetchTagsAsync(ids, null, cancellationToken).ConfigureAwait(false);
-        Dictionary<Guid, IList<DBTagKeyValue>> byObjectId = response.ToDictionary(_ => _.ObjectId, _ => _.Tagset);
-        return byObjectId;
+
+        Debug.Assert(ids != null);
+
+        try
+        {
+            IList<Anonymous3> response = await _client.FetchTagsAsync(ids, null, cancellationToken).ConfigureAwait(false);
+
+            var byObjectId = response.ToDictionary(_ => _.ObjectId, _ => _.Tagset);
+            return byObjectId;
+        }
+        catch (Exception exception)
+        {
+            throw ExceptionHandler("fetch tags", exception);
+        }
     }
 
     private Exception ExceptionHandler(string operation, Exception exception)

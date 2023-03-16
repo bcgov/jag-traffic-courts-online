@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Security.Claims;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
+using TrafficCourts.Common.Errors;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -235,8 +236,18 @@ public class DisputeService : IDisputeService
 
         _logger.LogDebug("Dispute submitted for approval processing");
 
+        // Check for other disputes in processing status with same ticket number
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
+        string? issuedTime = dispute.IssuedTs is not null ? dispute.IssuedTs.Value.ToString("HH:mm") : "";
+        ICollection<DisputeResult> disputeResults = await _oracleDataApi.FindDisputeStatusesAsync(dispute.TicketNumber, null, null, cancellationToken);
+        disputeResults = disputeResults.Where(x => x.DisputeStatus == DisputeResultDisputeStatus.PROCESSING).ToList();
+        if (disputeResults.Count>0)
+        {
+            throw new BadHttpRequestException("Another dispute with the same ticket number is currently being processed.");
+        }
+ 
         // Save and status to PROCESSING
-        Dispute dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
+        dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(

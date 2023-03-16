@@ -45,40 +45,40 @@
         <div class="row mt-2">
           <div class="col-lg-12">
             <small class="d-block"> Violation ticket number </small>
-            <div class="text">{{ form.get('ticket_number').value?.toUpperCase() }}</div>
+            <div class="text">{{ form?.get('ticket_number').value?.toUpperCase() }}</div>
           </div>
         </div>
 
         <div class="row mt-2">
           <div class="col-lg-6">
             <small class="d-block"> Violation date </small>
-            <div class="text">{{ form.get('violation_date').value }}</div>
+            <div class="text">{{ form?.get('violation_date').value }}</div>
           </div>
           <div class="col-lg-6">
             <small class="d-block">Violation time</small>
-            <div class="text">{{ form.get('violation_time').value }}</div>
+            <div class="text">{{ form?.get('violation_time').value }}</div>
           </div>
         </div>
 
         <div class="row mt-2">
           <div class="col-lg-6">
             <small class="d-block"> Surname </small>
-            <div class="text">{{ form.get('disputant_surname').value }}</div>
+            <div class="text">{{ form?.get('disputant_surname').value }}</div>
           </div>
           <div class="col-lg-6">
             <small class="d-block"> Given name(s) </small>
-            <div class="text">{{ form.get('disputant_given_names').value }}</div>
+            <div class="text">{{ form?.get('disputant_given_names').value }}</div>
           </div>
         </div>
 
         <div class="row mt-2">
           <div class="col-lg-6">
             <small class="d-block">Province / State of DL</small>
-            <div class="text">{{ form.get('drivers_licence_province').value }}</div>
+            <div class="text">{{ form?.get('drivers_licence_province').value }}</div>
           </div>
           <div class="col-lg-6">
             <small class="d-block">Driver's licence number</small>
-            <div class="text">{{ form.get('drivers_licence_number').value }}</div>
+            <div class="text">{{ form?.get('drivers_licence_number').value }}</div>
           </div>
         </div>
 
@@ -108,11 +108,11 @@
         <p class="text-dark"><strong>If the information above <span
               style="color: red;">does not match </span></strong>
           what you see on your ticket, please check the box below and describe the difference.</p>
-        <mat-checkbox color="primary" class="w-100" [checked]="form.get('disputant_detected_ocr_issues').value === DetectedOcrIssues.Y ? true:false"
-          (change)="form.get('disputant_detected_ocr_issues').setValue($event.checked? DetectedOcrIssues.Y: DetectedOcrIssues.N)" >
+        <mat-checkbox color="primary" class="w-100" [checked]="form?.get('disputant_detected_ocr_issues').value === DetectedOcrIssues.Y ? true:false"
+          (change)="form?.get('disputant_detected_ocr_issues').setValue($event.checked? DetectedOcrIssues.Y: DetectedOcrIssues.N)" >
           There are differences between the information on the ticket and the information scanned above.
         </mat-checkbox>
-        <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value === DetectedOcrIssues.Y">
+        <div class="row" *ngIf="form?.get('disputant_detected_ocr_issues')?.value === DetectedOcrIssues.Y">
           <mat-form-field>
             <mat-label>Describe any differences</mat-label>
             <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues"

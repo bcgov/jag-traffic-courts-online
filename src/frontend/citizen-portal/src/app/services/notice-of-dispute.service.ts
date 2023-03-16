@@ -3,13 +3,16 @@ import { Injectable } from "@angular/core";
 import { FormBuilder, FormControl, ValidatorFn, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { ConfigService } from "@config/config.service";
+import { LoggerService } from "@core/services/logger.service";
+import { ToastService } from "@core/services/toast.service";
 import { FormControlValidators } from "@core/validators/form-control.validators";
 import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
-import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount, DisputeInterpreterRequired } from "app/api";
+import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount, DisputeInterpreterRequired, Configuration } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable, of } from "rxjs";
 
@@ -86,6 +89,9 @@ export class NoticeOfDisputeService {
     private disputesService: DisputesService,
     private datePipe: DatePipe,
     private fb: FormBuilder,
+    private toastService: ToastService,
+    private configService: ConfigService,
+    private logger: LoggerService
   ) {
   }
 
@@ -162,12 +168,15 @@ export class NoticeOfDisputeService {
 
     const data: DialogOptions = {
       titleKey: "Submit request",
-      messageKey:
-        "When your request is submitted for adjudication, it can no longer be updated. Are you ready to submit your request?",
+      messageKey :
+        "Are you ready to submit your request?",
       actionTextKey: "Submit request",
       cancelTextKey: "Cancel",
-      icon: null,
+      icon: null
     };
+    if (input.ticket_number.substring(0,1) == "A") {
+      data.messageKey = data.messageKey + " Note that handwritten tickets may take several months to process.";
+    }
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: boolean) => {
         if (action) {
@@ -193,6 +202,18 @@ export class NoticeOfDisputeService {
                   },
                 });
               }
+            },
+            error => {
+              var errorMsg = this.configService.dispute_create_error;
+              error?.error?.errors?.forEach(error => {
+                errorMsg += " " + error;
+              });
+              this.toastService.openErrorToast(errorMsg);
+              this.logger.error(
+                'NoticeOfDisputeService::createDispute error has occurred: ',
+                 error
+              );
+              throw error;
             })
         }
       });

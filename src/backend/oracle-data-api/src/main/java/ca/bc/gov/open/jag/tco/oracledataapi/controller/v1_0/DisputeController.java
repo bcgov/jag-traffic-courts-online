@@ -131,11 +131,8 @@ public class DisputeController {
 		if (StringUtils.isBlank(ticketNumber) && issuedTime == null && StringUtils.isBlank(noticeOfDisputeGuid)) {
 			throw new IllegalArgumentException("Either ticketNumber/time or noticeOfDisputeGuid must be specified.");
 		}
-		else if (!StringUtils.isBlank(ticketNumber) && issuedTime == null) {
-			throw new IllegalArgumentException("If ticketNumber is specified, so must issuedTime.");
-		}
 		else if (StringUtils.isBlank(ticketNumber) && issuedTime != null) {
-			throw new IllegalArgumentException("If issuedTime is specified, so must ticketNumber.");
+			throw new IllegalArgumentException("If issuedTime is specified, so must be ticketNumber.");
 		}
 		List<DisputeResult> results = disputeService.findDisputeStatuses(ticketNumber, issuedTime, noticeOfDisputeGuid);
 		logger.debug("  found {} record(s).", results.size());

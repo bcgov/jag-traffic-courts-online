@@ -97,6 +97,19 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
+	public List<DisputeResult> findByTicketNumber(String ticketNumber) {
+		ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(null, null, ticketNumber, null, null);
+		List<Dispute> extractedDisputes = extractDisputes(response);
+
+		// Convert Disputes to DisputeResult objects
+		List<DisputeResult> disputeResults = extractedDisputes.stream()
+				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(), dispute.getStatus()))
+				.collect(Collectors.toList());
+
+		return disputeResults;
+	}
+
+	@Override
 	public void deleteAll() {
 		// no-op. Not needed for ORDS.
 	}
