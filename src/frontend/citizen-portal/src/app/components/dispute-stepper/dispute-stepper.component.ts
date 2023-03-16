@@ -74,7 +74,12 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   declared = false;
 
   // Upload
-  fileTypeToUpload: string = "Adjournment";
+  adjournmentFileType = { key: "Adjournment", value: "Application for Adjournment" };
+  fileTypes = [
+    this.adjournmentFileType,
+    { key: "Other", value: "Other" },
+  ]
+  fileTypeToUpload: string = this.adjournmentFileType.key;
 
   // Consume from the service
   languages: Language[] = [];
@@ -92,7 +97,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     private store: Store,
     private lookups: LookupsService,
     private appConfigService: AppConfigService,
-    ) {
+  ) {
     // config or static
     this.defaultLanguage = this.translateService.getDefaultLang();
     this.adjournmentFormLink = this.appConfigService.adjournmentFormLink;
@@ -226,6 +231,15 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     return result && this.additionalForm?.valid;
   }
 
+  onChangeRequestCourtAppearance() {
+    this.counts.forEach(count => {
+      count.form.controls.plea_cd.setValue(null);
+      count.form.controls.request_reduction.setValue(null);
+      count.form.controls.request_time_to_pay.setValue(null);
+      count.form.controls.__skip.setValue(null);
+    })
+  }
+
   onChangeRepresentedByLawyer(event: MatCheckboxChange) {
     let value = event.checked ? this.RepresentedByLawyer.Y : this.RepresentedByLawyer.N;
     this.additionalForm.controls.represented_by_lawyer.setValue(value);
@@ -314,10 +328,30 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  onUploadClicked() {
+    if (this.fileTypeToUpload === this.adjournmentFileType.key && (<NoticeOfDispute>this.ticket).appearance_less_than_14_days) {
+      const data: DialogOptions = {
+        titleKey: "Court hearing scheduled for less than 14 days",
+        messageKey: "You are requesting an adjournment within 14 days of your court date. To help ensure that your request for an adjournment is processed on time, please contact the Violation Ticket Centre at 1-877-661-8026. If your adjournment is not able to be processed, you may be deemed guilty and your dispute closed. Would you like to proceed?",
+        actionTextKey: "Yes",
+        actionType: "primary",
+        cancelTextKey: "No",
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+        .subscribe((action: any) => {
+          if (action) {
+            this.fileInput.nativeElement.click();
+          }
+        });
+    } else {
+      this.fileInput.nativeElement.click();
+    }
+  }
+
   async onUploadFile(files: FileList) {
     if (files.length <= 0) return;
 
-    const blobToBase64= file => new Promise((resolve, reject) => {
+    const blobToBase64 = file => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
@@ -327,7 +361,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     var pendingFileStream = await blobToBase64(files[0]) as string;
     this.store.dispatch(DisputeStore.Actions.AddDocument({ file: files[0], fileType: this.fileTypeToUpload, pendingFileStream }));
     this.fileInput.nativeElement.value = null;
-    this.fileTypeToUpload = "Adjournment";
+    this.fileTypeToUpload = this.adjournmentFileType.key;
   }
 
   submitDispute() {

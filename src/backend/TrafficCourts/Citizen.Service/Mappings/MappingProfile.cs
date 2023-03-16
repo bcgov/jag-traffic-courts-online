@@ -13,7 +13,9 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
         CreateMap<Models.Disputes.DisputeCount, Messaging.MessageContracts.DisputeCount>();
 
         CreateMap<SubmitNoticeOfDispute, NoticeOfDispute>()
-            .ForMember(dest => dest.ViolationTicket, opt => opt.MapFrom(src => src.ViolationTicket));
+            .ForMember(dest => dest.ViolationTicket, opt => opt.MapFrom(src => src.ViolationTicket))
+            .ForMember(dest => dest.AppearanceLessThan14Days, opt => opt.MapFrom(src => src.AppearanceLessThan14DaysYn == Common.OpenAPIs.OracleDataApi.v1_0.DisputeAppearanceLessThan14DaysYn.Y ? true : false));
+
         CreateMap<Messaging.MessageContracts.DisputeCount, Models.Disputes.DisputeCount>();
         CreateMap<Messaging.MessageContracts.ViolationTicket, Models.Tickets.ViolationTicket>()
             .ForMember(dest => dest.Counts, opt => opt.MapFrom(src => src.ViolationTicketCounts));

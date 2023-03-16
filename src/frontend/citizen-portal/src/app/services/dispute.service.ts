@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
+import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeNotFoundDialogComponent } from "@shared/dialogs/dispute-not-found-dialog/dispute-not-found-dialog.component";
 import { DisputeStatusDialogComponent } from "@shared/dialogs/dispute-status-dialog/dispute-status-dialog.component";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
@@ -124,6 +126,17 @@ export class DisputeService {
 
   openDisputeNotFoundDialog() {
     return this.dialog.open(DisputeNotFoundDialogComponent, { width: '600px' });
+  }
+
+  openDisputantNotMatchDialog() {
+    const data: DialogOptions = {
+      titleKey: "Warning",
+      actionType: "warn",
+      messageKey: `You could not be authenticated as the contact noted on this dispute`,
+      actionTextKey: "Close",
+      cancelHide: true
+    };
+    return this.dialog.open(ConfirmDialogComponent, { data });
   }
 
   showDisputeStatus(state: DisputeStore.State): void {
