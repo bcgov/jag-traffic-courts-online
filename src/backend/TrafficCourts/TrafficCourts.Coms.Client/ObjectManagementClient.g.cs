@@ -927,10 +927,6 @@ public partial class ObjectManagementClient
                 }
             }
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex.InnerException);
-        }
         finally
         {
             if (disposeClient_)
@@ -1054,7 +1050,6 @@ public partial class ObjectManagementClient
                     ProcessResponse(client_, response_);
 
                     var status_ = (int)response_.StatusCode;
-                    // add || status_ == 201
                     if (status_ == 200)
                     {
                         var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.List<DBObject>>(response_, headers_, cancellationToken).ConfigureAwait(false);

@@ -186,7 +186,6 @@ namespace TrafficCourts.Coms.Client
 
         [System.Text.Json.Serialization.JsonPropertyName("bucketId")]
 
-        /// todo: ADD ? BY System.Guid
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public System.Guid? BucketId { get; set; } = default!;
 

@@ -169,7 +169,7 @@ export class NoticeOfDisputeService {
     const data: DialogOptions = {
       titleKey: "Submit request",
       messageKey :
-        "Are you ready to submit your request?",
+        "Are you ready to submit your request? Please ensure your entries are correct.",
       actionTextKey: "Submit request",
       cancelTextKey: "Cancel",
       icon: null
