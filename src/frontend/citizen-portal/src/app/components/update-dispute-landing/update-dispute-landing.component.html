@@ -4,31 +4,29 @@
   </div>
   <div fxLayout="row" fxLayoutAlign="space-between">
     <div fxFlex="32">
-      <div class="option" role="button" (click)="checkStatus()">
-        <div class="option-content">
+      <div class="option">
+        <button type="button" mat-flat-button color="primary" class="large" (click)="checkStatus()">
           <h2><b>Check Status</b></h2>
-        </div>
+        </button>
         <div>Track the status of your dispute from start to finish</div>
       </div>
     </div>
     <ng-container *ngIf="isEditable | async">
       <div fxFlex="32">
-        <div class="option" role="button" (click)="goToUpdateDisputeContact()">
-          <div class="option-content">
+        <div class="option">
+          <button type="button" mat-flat-button color="primary" class="large" (click)="goToUpdateDisputeContact()">
             <h2><b>Change Address</b></h2>
-          </div>
+          </button>
           <div>Update your content name, email, mailing address or phone number</div>
         </div>
       </div>
       <div fxFlex="32">
         <div class="option">
-          <div class="option-content">
-            <div style="padding-bottom: 1rem;" role="button" (click)="goToUpdateDispute()">
-              <h2><b>Change Dispute</b></h2>
-            </div>
-            <div>Change your contact information, plea or court options, or upload additional supporting documents to
-              your dispute</div>
-        </div>
+          <button type="button" mat-flat-button color="primary" class="large"  (click)="goToUpdateDispute()">
+            <h2><b>Change Dispute</b></h2>
+          </button>
+          <div>Change your contact information, plea or court options, or upload additional supporting documents to
+            your dispute<br /></div>
           <app-alert type="warning" icon="info">
             <ng-container #alertContent class="alert-content">
               A BC Services Card Login Is Required.
