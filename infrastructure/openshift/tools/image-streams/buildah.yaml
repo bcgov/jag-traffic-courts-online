@@ -13,11 +13,15 @@ spec:
       from:
         kind: DockerImage
         name: 'registry.redhat.io/rhel8/buildah:8.5-10'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '8.7-5'
       from:
         kind: DockerImage
         name: 'registry.redhat.io/rhel8/buildah:8.7-5'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source

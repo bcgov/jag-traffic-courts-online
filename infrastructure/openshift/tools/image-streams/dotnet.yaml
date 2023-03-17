@@ -14,6 +14,8 @@ spec:
         kind: DockerImage
         name: 'mcr.microsoft.com/dotnet/sdk:7.0'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
 ---
@@ -32,5 +34,7 @@ spec:
       from:
         kind: DockerImage
         name: 'registry.access.redhat.com/ubi8/dotnet-70-runtime:latest'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source

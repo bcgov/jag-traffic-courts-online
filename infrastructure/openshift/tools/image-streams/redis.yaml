@@ -14,6 +14,8 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/redis:6.2.6-debian-10-r158'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '6.2.7-debian-11-r62'
@@ -21,6 +23,8 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/redis:6.2.7-debian-11-r62'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '7.0.5-debian-11-r23'
@@ -28,6 +32,8 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/redis:7.0.5-debian-11-r23'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '7.0.8-debian-11-r13'
@@ -35,5 +41,7 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/redis:7.0.8-debian-11-r13'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
