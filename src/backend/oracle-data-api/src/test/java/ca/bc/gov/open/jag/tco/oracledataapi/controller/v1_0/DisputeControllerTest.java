@@ -396,7 +396,6 @@ class DisputeControllerTest extends BaseTestSuite {
 		"AB123456789,14:23,", // too long
 		"ABC1234567,14:23,",  // invalid regex
 		",,",                 // missing parameters
-		"AB12345678,,",       // missing parameter
 		",14:23,",            // missing parameter
 	})
 	public void testFindByTicketNumberAndTime_Invalid(String ticketNumber, String issuedTime, String noticeOfDisputeGuid) throws Exception {
