@@ -1,0 +1,27 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: form-recognizer-layout-build
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'form-recognizer-layout:2.1-preview'
+  resources: {}
+  successfulBuildsHistoryLimit: 5
+  failedBuildsHistoryLimit: 5
+  strategy:
+    type: Docker
+    dockerStrategy:
+      buildArgs:
+        - name: "VERSION"
+          value: "2.1-preview"
+      dockerfilePath: Dockerfile.layout
+  postCommit: {}
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/bcgov/jag-traffic-courts-online'
+      ref: main
+    contextDir: tools/form-recognizer
+  runPolicy: Serial

@@ -14,5 +14,7 @@ spec:
         kind: DockerImage
         name: 'docker.io/maven:3.8.6-jdk-11'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source

@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
-  name: virus-scan-api
+  name: form-recognizer-layout
   labels:
     usage: runtime-image
 spec:

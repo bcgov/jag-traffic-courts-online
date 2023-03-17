@@ -14,6 +14,8 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/rabbitmq:3.9.13-debian-10-r55'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '3.9.14-debian-10-r2'
@@ -21,6 +23,8 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/rabbitmq:3.9.14-debian-10-r2'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '3.9.26-debian-11-r0'
@@ -28,6 +32,8 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/rabbitmq:3.9.26-debian-11-r0'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '3.10.12-debian-11-r0'
@@ -35,6 +41,8 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/rabbitmq:3.10.12-debian-11-r0'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '3.11.9-debian-11-r2'
@@ -42,5 +50,7 @@ spec:
         kind: DockerImage
         name: 'docker.io/bitnami/rabbitmq:3.11.9-debian-11-r2'
         imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
