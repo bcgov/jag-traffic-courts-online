@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
 	DisputeTicketAttendCourtHearing.class, DisputeTicketByLawyerContactDetails.class, DisputeTicketByOtherContactDetails.class, 
 	DisputeTicketOptionsPicker.class, DisputeTicketOptionsPickerDiffCountry.class, DisputeTicketOptionsPickerDiffCountryFormat.class,
 	DisputeTicketUploadPNG.class, DisputeTicketUploadPNGIncorectRetriveData.class, MoreThan500CharsOnAdditionalInfoNegTest.class,
-	ContactInfoValidationChars.class,
+	ContactInfoValidationChars.class, UploadInfoNotMatchValidationChars.class, AdditionalInfoValidation.class, ContactINfoLawyerValidationChars.class,
 
 })
 
