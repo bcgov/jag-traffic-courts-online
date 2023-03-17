@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { WaitForOcrDialogComponent } from '@shared/dialogs/wait-for-ocr-dialog/wait-for-ocr-dialog.component';
 import { Configuration } from 'app/api';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
+
 
 @Component({
   selector: 'app-find-ticket',
@@ -18,7 +20,8 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
 export class FindTicketComponent implements OnInit {
   private progressRef: NgProgressRef;
   form: FormGroup;
-
+  dialogRef: MatDialogRef<WaitForOcrDialogComponent>;
+  analyzingTicket: boolean = false;
   notFound = false;
   toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s licence number and loation 3. Count Act / Section / Description 4. Fine amount';
   configuration = new Configuration();
@@ -31,6 +34,10 @@ export class FindTicketComponent implements OnInit {
     private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
   ) {
+
+    this.progressRef?.state?.subscribe(value => {
+      if (value.active === false) this.dialogRef?.close();
+    });
   }
 
   ngOnInit(): void {
@@ -61,8 +68,15 @@ export class FindTicketComponent implements OnInit {
 
   onFileChange(event: any) {
     this.logger.log('FindTicketComponent::onFileChange');
-    this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef);
+    this.viewWaitForOcr();
+    this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef, this.dialogRef);
     event.target.value = null; // reset file input
+  }
+
+  viewWaitForOcr(): void {
+    this.dialogRef = this.dialog.open(WaitForOcrDialogComponent, {
+      width: '600px',
+    });
   }
 
   onViewTicketExample(): void {

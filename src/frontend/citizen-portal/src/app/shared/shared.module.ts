@@ -19,6 +19,7 @@ import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ti
 import { ImageRequirementsDialogComponent } from './dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { TicketNotFoundDialogComponent } from './dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
 import { DisputeNotFoundDialogComponent } from './dialogs/dispute-not-found-dialog/dispute-not-found-dialog.component';
+import { WaitForOcrDialogComponent } from './dialogs/wait-for-ocr-dialog/wait-for-ocr-dialog.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { NgxBusyModule } from './modules/ngx-busy/ngx-busy.module';
 import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
@@ -62,6 +63,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         TicketNotFoundDialogComponent,
         ImageTicketNotFoundDialogComponent,
         DisputeNotFoundDialogComponent,
+        WaitForOcrDialogComponent,
         DisputeStatusDialogComponent,
         ResolutionFooterComponent,
         ResolutionHeaderComponent,

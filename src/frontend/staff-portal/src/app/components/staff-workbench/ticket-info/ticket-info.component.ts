@@ -601,7 +601,6 @@ export class TicketInfoComponent implements OnInit {
       cancelTextKey: "Go back",
       icon: "error_outline",
     };
-    this.lastUpdatedDispute.status = 'PROCESSING';
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action) {

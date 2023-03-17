@@ -354,8 +354,12 @@ public class DisputeService {
 			}
 		}
 		// otherwise, find by ticketNumber and time
-		else {
+		else if (issuedTime != null) {
 			disputeResults.addAll(disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime));
+		}
+		
+		else {
+			disputeResults.addAll(disputeRepository.findByTicketNumber(ticketNumber));
 		}
 
 		if (CollectionUtils.isNotEmpty(disputeResults)) {

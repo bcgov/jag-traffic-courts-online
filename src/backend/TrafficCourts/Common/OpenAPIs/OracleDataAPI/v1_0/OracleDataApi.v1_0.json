@@ -1277,7 +1277,7 @@
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
-            "description": "Internal Server Error. Save failed.",
+            "description": "Internal Server Error. retrieve update requests failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {

@@ -107,6 +107,8 @@ public class DisputeController {
 	 * @param ticketNumber of the Dispute.ticketNumber to search for
 	 * @param issuedTime the time portion of the Dispute.issuedTs field
 	 * @return {@link Dispute}
+	 * 
+	 * LDAME 2023-03-16 allowed search by ticket number only to be called when submitting to arc
 	 */
 	@Operation(summary = "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.")
 	@ApiResponses({
@@ -131,11 +133,8 @@ public class DisputeController {
 		if (StringUtils.isBlank(ticketNumber) && issuedTime == null && StringUtils.isBlank(noticeOfDisputeGuid)) {
 			throw new IllegalArgumentException("Either ticketNumber/time or noticeOfDisputeGuid must be specified.");
 		}
-		else if (!StringUtils.isBlank(ticketNumber) && issuedTime == null) {
-			throw new IllegalArgumentException("If ticketNumber is specified, so must issuedTime.");
-		}
 		else if (StringUtils.isBlank(ticketNumber) && issuedTime != null) {
-			throw new IllegalArgumentException("If issuedTime is specified, so must ticketNumber.");
+			throw new IllegalArgumentException("If issuedTime is specified, so must be ticketNumber.");
 		}
 		List<DisputeResult> results = disputeService.findDisputeStatuses(ticketNumber, issuedTime, noticeOfDisputeGuid);
 		logger.debug("  found {} record(s).", results.size());
