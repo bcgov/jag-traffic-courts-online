@@ -130,10 +130,10 @@ public class CitizenDocumentService : ICitizenDocumentService
         var metadata = properties.ToMetadata();
         var tags = properties.ToTags();
 
+        // JavaScript - URL.createObjectURL will include the file type in the base64 string and separate it with a comma
         string[] fileStringSplit = base64FileString.Split(",");
-        byte[] bytes = Convert.FromBase64String(fileStringSplit[1]);
+        byte[] bytes = Convert.FromBase64String(fileStringSplit.Last());
         MemoryStream stream = new MemoryStream(bytes);
-        //IFormFile file = new FormFile(stream, 0, bytes.Length, fileName, fileName);
         string contentType = GetStringBetween(base64FileString, "data:", ";base64");
         using Coms.Client.File comsFile = new(stream, fileName, contentType, metadata, tags);
 

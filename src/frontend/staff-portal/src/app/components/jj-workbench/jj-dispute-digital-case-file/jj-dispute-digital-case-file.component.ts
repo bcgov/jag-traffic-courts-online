@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
-import { Observable } from 'rxjs';
+import { JJDisputeHearingType } from 'app/api';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-jj-dispute-digital-case-file',
@@ -29,6 +29,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     "courthouseLocation",
     "status",
   ];
+  subscription: Subscription;
 
   constructor(
     private jjDisputeService: JJDisputeService,
@@ -40,13 +41,10 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
 
   ngOnInit(): void {
-    this.data$.subscribe(data => {
-      this.refreshData(data);
-    })
   }
 
   ngAfterViewInit() {
@@ -58,13 +56,19 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   }
 
   applyFilter() {
+    if (!this.subscription) {
+      this.subscription = this.data$.subscribe(data => {
+        this.refreshData(data);
+      });
+    }
+
     this.dataSource.filter = this.filterText;
     this.tableHeight = this.calcTableHeight(300);
   }
 
   refreshData(jjDisputes: JJDispute[]): void {
     this.data = jjDisputes;
-    let arrayForSort = [ ... this.data ];
+    let arrayForSort = [... this.data];
     // initially sort by submitted date within status
     arrayForSort = arrayForSort.sort((a, b) => {
       // if they have the same status
@@ -78,7 +82,5 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
       }
     });
     this.dataSource.data = arrayForSort;
-
-    this.applyFilter();
   }
 }
