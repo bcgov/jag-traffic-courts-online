@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-api
+  labels:
+    app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-api
+    app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-api
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-api
+    app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-api
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-layout
+  labels:
+    app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-layout
+    app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-layout
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-layout
+    app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-layout
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-proxy
+  labels:
+    app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-proxy
+    app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-proxy
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-proxy
+    app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-proxy
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "form-recognizer.fullname" . }}-custom-proxy-config
+  name: {{ include "form-recognizer.fullname" . }}-proxy-config
 data:
   nginx.conf: |
     worker_processes 1;
@@ -15,15 +15,15 @@ data:
         sendfile on;
         client_max_body_size 90M;
         upstream docker-api {
-            server {{ include "form-recognizer.fullname" . }}-custom-api:8080;
+            server {{ include "form-recognizer.fullname" . }}-api:5000;
         }
 
         upstream docker-layout {
-            server {{ include "form-recognizer.fullname" . }}-custom-layout:8080;
+            server {{ include "form-recognizer.fullname" . }}-layout:5000;
         }
 
         server {
-            listen 5200;
+            listen 8080;
 
             location = / {
                 proxy_set_header Host $host:$server_port;
