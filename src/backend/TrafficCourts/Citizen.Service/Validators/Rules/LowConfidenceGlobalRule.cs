@@ -5,7 +5,7 @@ namespace TrafficCourts.Citizen.Service.Validators.Rules;
 
 public class LowConfidenceGlobalRule
 {
-    private static readonly float _minViableConfidence = 0.8f;
+    private static readonly float _minViableConfidence = 0.01f;
 
     public static void Run(OcrViolationTicket violationTicket)
     {

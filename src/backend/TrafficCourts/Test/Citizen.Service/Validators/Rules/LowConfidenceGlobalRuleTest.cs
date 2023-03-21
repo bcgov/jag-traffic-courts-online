@@ -9,6 +9,8 @@ namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 
 public class LowConfidenceGlobalRuleTest
 {
+    const float lowConfValue = 0.01f;
+    const float noConfValue = 0.00f;
 
     [Theory]
     [ClassData(typeof(TestData))]
@@ -17,18 +19,18 @@ public class LowConfidenceGlobalRuleTest
         // TCVP-932 if 4, 6, or 8 of a set of specific fields have a low (<80%) confidence, expect to see a global validation error
         // Given
         OcrViolationTicket violationTicket = new();
-        AddField(violationTicket, ViolationTicketTitle, 0.80f);
-        AddField(violationTicket, ViolationTicketNumber, 0.80f);
-        AddField(violationTicket, ViolationDate, 0.80f);
-        AddField(violationTicket, ViolationTime, 0.80f);
-        AddField(violationTicket, OffenceIsMVA, 0.80f);
-        AddField(violationTicket, OffenceIsMCA, 0.80f);
-        AddField(violationTicket, OffenceIsCTA, 0.80f);
-        AddField(violationTicket, OffenceIsWLA, 0.80f);
-        AddField(violationTicket, OffenceIsFAA, 0.80f);
-        AddField(violationTicket, OffenceIsLCA, 0.80f);
-        AddField(violationTicket, OffenceIsTCR, 0.80f);
-        AddField(violationTicket, OffenceIsOther, 0.80f);
+        AddField(violationTicket, ViolationTicketTitle, lowConfValue);
+        AddField(violationTicket, ViolationTicketNumber, lowConfValue);
+        AddField(violationTicket, ViolationDate, lowConfValue);
+        AddField(violationTicket, ViolationTime, lowConfValue);
+        AddField(violationTicket, OffenceIsMVA, lowConfValue);
+        AddField(violationTicket, OffenceIsMCA, lowConfValue);
+        AddField(violationTicket, OffenceIsCTA, lowConfValue);
+        AddField(violationTicket, OffenceIsWLA, lowConfValue);
+        AddField(violationTicket, OffenceIsFAA, lowConfValue);
+        AddField(violationTicket, OffenceIsLCA, lowConfValue);
+        AddField(violationTicket, OffenceIsTCR, lowConfValue);
+        AddField(violationTicket, OffenceIsOther, lowConfValue);
 
         AddField(violationTicket, Surname, fieldConfidences[0]);
         AddField(violationTicket, GivenName, fieldConfidences[1]);
@@ -78,34 +80,34 @@ public class LowConfidenceGlobalRuleTest
         public TestData()
         {
             // 1 count, < 4 fields with low confidence
-            Add(1, new float?[] { 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, true);
-            Add(2, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null, null, null }, true);
+            Add(1, new float?[] { noConfValue, noConfValue, noConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, null, null, null, null, null, null, null, null }, true);
+            Add(2, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, null, null, null, null }, true);
 
             // 1 count, >= 4 fields with low confidence
-            Add(3, new float?[] { 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, false);
-            Add(4, new float?[] { 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, false);
-            Add(5, new float?[] { 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, false);
-            Add(6, new float?[] { 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, null, null, null, null, null, null, null, null }, false);
-            Add(7, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null, null, null }, false);
+            Add(3, new float?[] { noConfValue, noConfValue, noConfValue, noConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, null, null, null, null, null, null, null, null }, false);
+            Add(4, new float?[] { lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, lowConfValue, lowConfValue, lowConfValue, null, null, null, null, null, null, null, null }, false);
+            Add(5, new float?[] { lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, lowConfValue, lowConfValue, null, null, null, null, null, null, null, null }, false);
+            Add(6, new float?[] { lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, lowConfValue, null, null, null, null, null, null, null, null }, false);
+            Add(7, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, null, null, null, null }, false);
 
             // 2 counts, < 6 fields with low confidence
-            Add(8, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null, null }, true);
-            Add(9, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null }, true);
-            Add(10, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, 0.79f, null, null, null }, true);
-            Add(11, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, 0.79f, 0.79f, null, null }, true);
+            Add(8, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, null, null, null }, true);
+            Add(9, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, null, null }, true);
+            Add(10, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, noConfValue, null, null, null }, true);
+            Add(11, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, noConfValue, noConfValue, null, null }, true);
             // // 2 counts, >= 6 fields with low confidence
-            Add(12, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null }, false);
-            Add(13, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null }, false);
-            Add(14, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, 0.79f, 0.79f, 0.79f, null }, false);
-            Add(15, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, null, null, null, null, 0.79f, 0.79f, 0.79f, 0.79f }, false);
+            Add(12, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, null }, false);
+            Add(13, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null }, false);
+            Add(14, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, null, null, null, null, noConfValue, noConfValue, noConfValue, null }, false);
+            Add(15, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, null, null, null, null, noConfValue, noConfValue, noConfValue, noConfValue }, false);
 
             // 3 counts, < 8 fields with low confidence
-            Add(16, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, 0.79f, 0.79f, null, null }, true);
+            Add(16, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, null, null, noConfValue, noConfValue, null, null }, true);
             // 3 counts, >= 8 fields with low confidence
-            Add(17, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, 0.79f, 0.79f, null, null }, false);
+            Add(17, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, noConfValue, null, noConfValue, noConfValue, null, null }, false);
 
             // 3 counts, all okay
-            Add(18, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f }, true);
+            Add(18, new float?[] { lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue, lowConfValue }, true);
         }
     }
 }
