@@ -184,7 +184,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         // TCVP-933 A ticket is considered valid iff
         // - Ticket title reads 'VIOLATION TICKET' at top
         // - Ticket number must start with 'A', another alphabetic character, and then 8 digits
-        // - If the Date of Service is less than 30 days
+        // - If the Date of Service is less than 30 days for handwritten tickets
         List<ValidationRule> rules = new();
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], _ticketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], _violationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
