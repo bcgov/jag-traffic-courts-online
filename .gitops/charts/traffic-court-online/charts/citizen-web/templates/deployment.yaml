@@ -51,6 +51,18 @@ spec:
               readOnly: true
               subPath: app.config.json
             {{- end }}
+            {{- if .Values.authConfig }}
+            - name: configuration
+              mountPath: /usr/share/nginx/html/assets/auth.config.json
+              readOnly: true
+              subPath: auth.config.json
+            {{- end }}
+            {{- if .Values.oidcConfig }}
+            - name: configuration
+              mountPath: /usr/share/nginx/html/assets/oidc.config.json
+              readOnly: true
+              subPath: oidc.config.json
+            {{- end }}
             - name: configuration
               mountPath: /opt/app-root/etc/nginx.default.d/nginx-api-proxy-pass.conf
               readOnly: true
@@ -63,6 +75,14 @@ spec:
             {{- if or .Values.appConfig }}
               - key: app.config.json
                 path: app.config.json
+            {{- end }}
+            {{- if .Values.authConfig }}
+              - key: auth.config.json
+                path: auth.config.json
+            {{- end }}
+            {{- if .Values.oidcConfig }}
+              - key: oidc.config.json
+                path: oidc.config.json
             {{- end }}
               - key: nginx-api-proxy-pass.conf
                 path: nginx-api-proxy-pass.conf
