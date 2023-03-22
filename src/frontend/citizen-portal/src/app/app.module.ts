@@ -137,11 +137,11 @@ export class AppModule {
   ) {
     // Get from main.ts, no need to fetch again
     this.appConfigService.setAppConfig(this.appConfig);
-    this.translateService.addLangs(['en', 'fr']);
+    this.translateService.addLangs(this.availableLanguages);
 
     const currentLanguage = window.navigator.language.substring(0, 2);
 
-    let defaultLanguage = 'en';
+    let defaultLanguage = this.availableLanguages[0];
     if (this.availableLanguages.includes(currentLanguage)) {
       defaultLanguage = currentLanguage;
     }

@@ -161,10 +161,12 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         let countForm = count.form;
         if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
           countForm.controls.plea_cd.patchValue(this.Plea.G);
+        } else {
+          countForm.controls.plea_cd.patchValue(this.Plea.N);
         }
         if (countForm.value.__skip) {
           // TODO: move to onSkipChange
-          countForm.patchValue({ ...this.getCountFormInitValue(count.ticket_count), __skip: true });
+          countForm.patchValue({ ...this.getCountFormInitValue(count.ticket_count), __skip: true, plea_cd: this.Plea.G });
         }
       });
       this.setAdditional();
@@ -234,8 +236,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   onChangeRequestCourtAppearance() {
     this.counts.forEach(count => {
       count.form.controls.plea_cd.setValue(null);
-      count.form.controls.request_reduction.setValue(null);
-      count.form.controls.request_time_to_pay.setValue(null);
+      count.form.controls.request_reduction.setValue(this.RequestReduction.N);
+      count.form.controls.request_time_to_pay.setValue(this.RequestTimeToPay.N);
       count.form.controls.__skip.setValue(null);
     })
   }
