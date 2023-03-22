@@ -46,6 +46,147 @@ citizen-web:
           "dispute":true
         }
       }
+  authConfig: |  
+    {
+      "authority": "https://idtest.gov.bc.ca/login",
+      "clientId": "ca.bc.gov.ag.tco.test",
+      "scope": "openid profile address email",
+      "responseType": "code",
+      "silentRenew": true,
+      "useRefreshToken": true,
+      "renewTimeBeforeTokenExpiresInSeconds": 30,
+      "unauthorizedRoute": "/"
+    }
+  oidcConfig: |  
+    {
+    	"request_parameter_supported": false,
+    	"introspection_endpoint": "https://idtest.gov.bc.ca/oauth2/introspect",
+    	"claims_parameter_supported": false,
+    	"scopes_supported": [
+    		"openid",
+    		"profile",
+    		"email",
+    		"address"
+    	],
+    	"issuer": "https://idtest.gov.bc.ca/oauth2/",
+    	"id_token_encryption_enc_values_supported": [
+    		"A256CBC+HS512",
+    		"A256GCM",
+    		"A192GCM",
+    		"A128GCM",
+    		"A128CBC-HS256",
+    		"A192CBC-HS384",
+    		"A256CBC-HS512",
+    		"A128CBC+HS256"
+    	],
+    	"userinfo_encryption_enc_values_supported": [
+    		"A256CBC+HS512",
+    		"A256GCM",
+    		"A192GCM",
+    		"A128GCM",
+    		"A128CBC-HS256",
+    		"A192CBC-HS384",
+    		"A256CBC-HS512",
+    		"A128CBC+HS256"
+    	],
+    	"authorization_endpoint": "https://idtest.gov.bc.ca/login/oidc/authorize/",
+    	"userinfo_signing_alg_values_supported": [
+    		"PS384",
+    		"RS384",
+    		"RS256",
+    		"none",
+    		"PS256",
+    		"PS512",
+    		"RS512"
+    	],
+    	"claims_supported": [
+    		"sub",
+    		"street_address",
+    		"country",
+    		"age_19_or_over",
+    		"birthdate",
+    		"gender",
+    		"given_names",
+    		"client_id",
+    		"user_type",
+    		"transaction_identifier",
+    		"identification_level",
+    		"email",
+    		"authoritative_party_name",
+    		"address",
+    		"locality",
+    		"sector_identifier_uri",
+    		"transaction_type",
+    		"given_name",
+    		"display_name",
+    		"identity_assurance_level3",
+    		"identity_assurance_level2",
+    		"identity_assurance_level1",
+    		"authoritative_party_identifier",
+    		"identity_assurance_level",
+    		"region",
+    		"postal_code",
+    		"family_name",
+    		"age",
+    		"authentication_zone_identifier"
+    	],
+    	"claim_types_supported": [
+    		"normal"
+    	],
+    	"token_endpoint_auth_methods_supported": [
+    		"client_secret_post",
+    		"client_secret_basic",
+    		"client_secret_jwt",
+    		"private_key_jwt"
+    	],
+    	"token_endpoint": "https://idtest.gov.bc.ca/oauth2/token",
+    	"response_types_supported": [
+    		"code"
+    	],
+    	"request_uri_parameter_supported": false,
+    	"userinfo_encryption_alg_values_supported": [
+    		"RSA-OAEP",
+    		"RSA-OAEP-256",
+    		"RSA1_5"
+    	],
+    	"grant_types_supported": [
+    		"authorization_code"
+    	],
+    	"revocation_endpoint": "https://idtest.gov.bc.ca/oauth2/revoke",
+    	"userinfo_endpoint": "https://idtest.gov.bc.ca/oauth2/userinfo",
+    	"token_endpoint_auth_signing_alg_values_supported": [
+    		"PS384",
+    		"ES384",
+    		"RS384",
+    		"HS256",
+    		"HS512",
+    		"ES256",
+    		"RS256",
+    		"HS384",
+    		"ES512",
+    		"PS256",
+    		"PS512",
+    		"RS512"
+    	],
+    	"id_token_encryption_alg_values_supported": [
+    		"RSA-OAEP",
+    		"RSA-OAEP-256",
+    		"RSA1_5"
+    	],
+    	"jwks_uri": "https://idtest.gov.bc.ca/oauth2/jwk",
+    	"subject_types_supported": [
+    		"pairwise"
+    	],
+    	"id_token_signing_alg_values_supported": [
+    		"PS384",
+    		"RS384",
+    		"RS256",
+    		"none",
+    		"PS256",
+    		"PS512",
+    		"RS512"
+    	]
+    }
 
 oracle-data-api:
   image:

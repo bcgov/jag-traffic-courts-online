@@ -8,6 +8,14 @@ data:
   app.config.json: |-
 {{ include "citizen-web.tplvalues.render" ( dict "value" .Values.appConfig "context" $ ) | indent 4 }}
 {{- end }}
+{{- if .Values.authConfig }}
+  auth.config.json: |-
+{{ include "citizen-web.tplvalues.render" ( dict "value" .Values.authConfig "context" $ ) | indent 4 }}
+{{- end }}
+{{- if .Values.oidcConfig }}
+  auth.config.json: |-
+{{ include "citizen-web.tplvalues.render" ( dict "value" .Values.oidcConfig "context" $ ) | indent 4 }}
+{{- end }}
   nginx-api-proxy-pass.conf: |-
     location /api {
       proxy_pass http://{{ .Release.Name }}-citizen-api.{{ .Values.global.namespace }}.svc.cluster.local:8080/api;
