@@ -1,5 +1,4 @@
-﻿using MassTransit.Internals;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
