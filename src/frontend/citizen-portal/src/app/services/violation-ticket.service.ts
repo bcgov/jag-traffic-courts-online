@@ -328,10 +328,10 @@ export class ViolationTicketService {
     this.reset();
     if (!err) {
       this.dialog.open(TicketNotFoundDialogComponent);
-    } else { // important ones
+    } else {
       if (err.error?.errors?.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
-      || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
-      || this.isErrorMatch(err, "low confidence", false)) {
+        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
+        || this.isErrorMatch(err, "low confidence", false)) {
         var errorMessages = "";
         if (err.error?.errors) {
           err.error.errors.forEach(error => {errorMessages += ". \n" + error});
@@ -342,7 +342,9 @@ export class ViolationTicketService {
         this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
         this.openErrorScenarioTwoDialog();
       }
-      else { // fallback
+      else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
+        this.openErrorScenarioFourDialog();
+      } else { // fallback
         var errorMessages = "";
         if (err.error?.errors) {
           err.error.errors.forEach(error => {errorMessages += ". \n" + error});
@@ -375,6 +377,10 @@ export class ViolationTicketService {
 
   private openErrorScenarioTwoDialog() {
     return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
+  }
+
+  private openErrorScenarioFourDialog() {
+    return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error2");
   }
 
   private openInValidTicketDateDialog() {
