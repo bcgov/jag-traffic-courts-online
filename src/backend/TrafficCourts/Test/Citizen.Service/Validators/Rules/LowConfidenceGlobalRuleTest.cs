@@ -23,14 +23,6 @@ public class LowConfidenceGlobalRuleTest
         AddField(violationTicket, ViolationTicketNumber, lowConfValue);
         AddField(violationTicket, ViolationDate, lowConfValue);
         AddField(violationTicket, ViolationTime, lowConfValue);
-        AddField(violationTicket, OffenceIsMVA, lowConfValue);
-        AddField(violationTicket, OffenceIsMCA, lowConfValue);
-        AddField(violationTicket, OffenceIsCTA, lowConfValue);
-        AddField(violationTicket, OffenceIsWLA, lowConfValue);
-        AddField(violationTicket, OffenceIsFAA, lowConfValue);
-        AddField(violationTicket, OffenceIsLCA, lowConfValue);
-        AddField(violationTicket, OffenceIsTCR, lowConfValue);
-        AddField(violationTicket, OffenceIsOther, lowConfValue);
 
         AddField(violationTicket, Surname, fieldConfidences[0]);
         AddField(violationTicket, GivenName, fieldConfidences[1]);

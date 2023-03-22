@@ -328,14 +328,27 @@ export class ViolationTicketService {
     this.reset();
     if (!err) {
       this.dialog.open(TicketNotFoundDialogComponent);
-    } else {
-      if (this.isErrorMatch(err, "more than 30 days ago.", false)) {
-        this.openErrorScenarioTwoDialog();
-      } else { // fall back option
+    } else { // important ones
+      if (err.error?.errors?.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
+      || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
+      || this.isErrorMatch(err, "low confidence", false)) {
         var errorMessages = "";
         if (err.error?.errors) {
           err.error.errors.forEach(error => {errorMessages += ". \n" + error});
         }
+        this.logger.error("ViolationTicketService:onError critical validation error has occurred",errorMessages);
+        this.openErrorScenarioOneDialog();
+      } else if (!this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
+        this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
+        this.openErrorScenarioTwoDialog();
+      }
+      else { // fallback
+        var errorMessages = "";
+        if (err.error?.errors) {
+          err.error.errors.forEach(error => {errorMessages += ". \n" + error});
+        }
+        this.logger.error("ViolationTicketService:onError validation error has occurred",errorMessages);
+        this.openErrorScenarioOneDialog();
       }
     }
     this.goToFind();
