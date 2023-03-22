@@ -338,13 +338,13 @@ export class ViolationTicketService {
         }
         this.logger.error("ViolationTicketService:onError critical validation error has occurred",errorMessages);
         this.openErrorScenarioOneDialog();
-      } else if (!this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
+      } else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
         this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
         this.openErrorScenarioTwoDialog();
       }
       else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
         this.openErrorScenarioFourDialog();
-      } else { // fallback
+      } else { // fall back option
         var errorMessages = "";
         if (err.error?.errors) {
           err.error.errors.forEach(error => {errorMessages += ". \n" + error});
