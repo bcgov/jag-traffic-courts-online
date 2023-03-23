@@ -293,7 +293,7 @@ export class ViolationTicketService {
       };
       let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
       if (this.ticketType === TicketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
-        dateDiff = this.dateDiff(this.ocrTicket.fields["service_date"].value);
+        dateDiff = this.dateDiff(this.ocrTicket?.fields["service_date"].value);
       }
       // handwritten tickets are additionally checked in the analyze ticket API but cheked again here for <=30 days
       // e-tickets can be <=30 days and camera tickets <=45
@@ -304,7 +304,7 @@ export class ViolationTicketService {
         });
       } else {
         let errMsg = "Issued " + dateDiff.toString() + "days ago on ";
-        if (this.ticketType == TicketTypes.HANDWRITTEN_TICKET) errMsg += this.ocrTicket.fields["service_date"].value.toString();
+        if (this.ticketType == TicketTypes.HANDWRITTEN_TICKET) errMsg += this.ocrTicket?.fields["service_date"].value.toString();
         else errMsg += this.ticket.issued_date.toString();
         this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidTicketDateDialog();

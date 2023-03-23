@@ -43,56 +43,59 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     public static void Sanitize(OcrViolationTicket violationTicket)
     {
         // It can happen that if adjacent text fields has content too close to the common dividing line, the OCR tool can misread both fields thinking one is blank and the other starts with the blank field's text.
-
         // If the Acts/Regs section is blank (should be MVA or MVR) and the adjacent Section text starts with "MVA/R" (shouldn't start with MVA/R), then move the MVA/R text to the correct field.
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count1Section)
-            && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count1ActRegs))
+        void SplitSectionActRegs(string sectionKey, string actRegsKey)
         {
-            string count1Section = violationTicket.Fields[OcrViolationTicket.Count1Section].Value ?? "";
-            if (!violationTicket.Fields[OcrViolationTicket.Count1ActRegs].IsPopulated()
-                && count1Section.StartsWith("M") && count1Section.Length >= 3)
+            if (violationTicket.Fields.ContainsKey(sectionKey) && violationTicket.Fields.ContainsKey(actRegsKey))
             {
-                string actReg = count1Section.Substring(1, 3);
-                violationTicket.Fields[OcrViolationTicket.Count1ActRegs].Value = actReg;
-                violationTicket.Fields[OcrViolationTicket.Count1Section].Value = count1Section.Replace((actReg is not null ? actReg : ""), "")?.Trim();
-            }
-        }
-
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count2Section)
-            && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count2ActRegs))
-        {
-            string count2Section = violationTicket.Fields[OcrViolationTicket.Count2Section].Value ?? "";
-            if (!violationTicket.Fields[OcrViolationTicket.Count2ActRegs].IsPopulated()
-                && count2Section.StartsWith("M") && count2Section.Length >= 3)
-            {
-                string actReg = count2Section.Substring(1, 3);
-                violationTicket.Fields[OcrViolationTicket.Count2ActRegs].Value = actReg;
-                violationTicket.Fields[OcrViolationTicket.Count2Section].Value = count2Section.Replace((actReg is not null ? actReg : ""), "")?.Trim();
-            }
-        }
-
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count3Section)
-            && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count3ActRegs))
-        {
-            string count3Section = violationTicket.Fields[OcrViolationTicket.Count3Section].Value ?? "";
-            if (!violationTicket.Fields[OcrViolationTicket.Count3ActRegs].IsPopulated()
-                && count3Section.StartsWith("M") && count3Section.Length >= 3)
-            {
-                string actReg = count3Section.Substring(1, 3);
-                violationTicket.Fields[OcrViolationTicket.Count3ActRegs].Value = actReg;
-                violationTicket.Fields[OcrViolationTicket.Count1Section].Value = count3Section.Replace((actReg is not null ? actReg : ""), "")?.Trim();
+                string countSection = violationTicket.Fields[sectionKey].Value ?? "";
+                if (!violationTicket.Fields[actRegsKey].IsPopulated()
+                    && countSection.StartsWith("M") && countSection.Length >= 3)
+                {
+                    string actReg = countSection.Substring(1, 3);
+                    violationTicket.Fields[actRegsKey].Value = actReg;
+                    violationTicket.Fields[sectionKey].Value = countSection.Replace((actReg is not null ? actReg : ""), "")?.Trim();
+                }
             }
         }
 
         // If any act regs starts with MU replace with MV since the U is likely a mis-scan of the V
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count1ActRegs))
-            violationTicket.Fields[OcrViolationTicket.Count1ActRegs].Value = violationTicket.Fields[OcrViolationTicket.Count1ActRegs].Value?.Replace("MU", "MV");
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count2ActRegs))
-            violationTicket.Fields[OcrViolationTicket.Count2ActRegs].Value = violationTicket.Fields[OcrViolationTicket.Count2ActRegs].Value?.Replace("MU", "MV");
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count3ActRegs))
-            violationTicket.Fields[OcrViolationTicket.Count3ActRegs].Value = violationTicket.Fields[OcrViolationTicket.Count3ActRegs].Value?.Replace("MU", "MV");
+        void ReplaceMUWithMV(string actRegsKey)
+        {
+            if (violationTicket.Fields.ContainsKey(actRegsKey))
+                violationTicket.Fields[actRegsKey].Value = violationTicket.Fields[actRegsKey].Value?.Replace("MU", "MV");
+        }
 
-        // Pre-process ticket number if scan reads an A Oh as a A Zero replace the Zero with an O in the second position
+        // Pre-process description and act/regs fields for counts if description number contains text of MVA or MVR strip it out and replace blank act/regs field text
+        void GetActRegsFromDescription(string descKey, string actRegsKey)
+        {
+            if (violationTicket.Fields.ContainsKey(actRegsKey) && violationTicket.Fields.ContainsKey(descKey))
+            {
+                string? desc = violationTicket.Fields[descKey].Value;
+                bool actRegPop = violationTicket.Fields[actRegsKey].IsPopulated();
+                if (desc is not null && (desc.Contains("MVA") || desc.Contains("MVR")) && actRegPop == false)
+                {
+                    string actReg = "MVA";
+                    if (desc.Contains("MVR")) actReg = "MVR";
+                    violationTicket.Fields[descKey].Value = violationTicket.Fields[descKey].Value?.Replace(actReg, "");
+                    violationTicket.Fields[actRegsKey].Value = actReg;
+                }
+            }
+        }
+
+        // For each count do the the three sanitization
+        void SanitizeCount(string sectionKey, string actRegsKey, string descKey)
+        {
+            SplitSectionActRegs(sectionKey, actRegsKey);
+            ReplaceMUWithMV(actRegsKey);
+            GetActRegsFromDescription(descKey, actRegsKey);
+        }
+
+        SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description);
+        SanitizeCount(OcrViolationTicket.Count2Section, OcrViolationTicket.Count2ActRegs, OcrViolationTicket.Count2Description);
+        SanitizeCount(OcrViolationTicket.Count3Section, OcrViolationTicket.Count3ActRegs, OcrViolationTicket.Count3Description);
+
+        // Pre-process ticket number if scan reads an A Oh as A Zero replace the Zero with an O in the second position
         // replace A1 with AI
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationTicketNumber))
         {
@@ -107,52 +110,14 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             }
         }
 
-        // Pre-process description and act/regs fields for counts if description number contains text of MVA or MVR strip it out and replace blank act/regs field text
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count1ActRegs) && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count1Description))
-        {
-            string? desc = violationTicket.Fields[OcrViolationTicket.Count1Description].Value;
-            bool actRegPop = violationTicket.Fields[OcrViolationTicket.Count1ActRegs].IsPopulated();
-            if (desc is not null && (desc.Contains("MVA") || desc.Contains("MVR")) && actRegPop == false)
-            {
-                string actReg = "MVA";
-                if (desc.Contains("MVR")) actReg = "MVR";
-                violationTicket.Fields[OcrViolationTicket.Count1Description].Value = violationTicket.Fields[OcrViolationTicket.Count1Description].Value?.Replace(actReg, "");
-                violationTicket.Fields[OcrViolationTicket.Count1ActRegs].Value = actReg;
-            }
-        }
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count2ActRegs) && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count2Description))
-        {
-            string? desc = violationTicket.Fields[OcrViolationTicket.Count2Description].Value;
-            bool actRegPop = violationTicket.Fields[OcrViolationTicket.Count2ActRegs].IsPopulated();
-            if (desc is not null && (desc.Contains("MVA") || desc.Contains("MVR")) && actRegPop == false)
-            {
-                string actReg = "MVA";
-                if (desc.Contains("MVR")) actReg = "MVR";
-                violationTicket.Fields[OcrViolationTicket.Count2Description].Value = violationTicket.Fields[OcrViolationTicket.Count2Description].Value?.Replace(actReg, "");
-                violationTicket.Fields[OcrViolationTicket.Count2ActRegs].Value = actReg;
-            }
-        }
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.Count3ActRegs) && violationTicket.Fields.ContainsKey(OcrViolationTicket.Count3Description))
-        {
-            string? desc = violationTicket.Fields[OcrViolationTicket.Count3Description].Value;
-            bool actRegPop = violationTicket.Fields[OcrViolationTicket.Count3ActRegs].IsPopulated();
-            if (desc is not null && (desc.Contains("MVA") || desc.Contains("MVR")) && actRegPop == false)
-            {
-                string actReg = "MVA";
-                if (desc.Contains("MVR")) actReg = "MVR";
-                violationTicket.Fields[OcrViolationTicket.Count3Description].Value = violationTicket.Fields[OcrViolationTicket.Count3Description].Value?.Replace(actReg, "");
-                violationTicket.Fields[OcrViolationTicket.Count3ActRegs].Value = actReg;
-            }
-        }
-
         // Sometimes reads province into drivers licence number at the front of the text for DL number
+        // if DL province not populated and DL number starts with two chars take first two chars from DL number
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceNumber) && violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceProvince))
         {
             if (!violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].IsPopulated()) // blank DL province
             {
                 string dlNumber = violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value ?? "";
                 if (Regex.IsMatch(dlNumber, @"^[a-zA-Z][a-zA-Z]")) // DL number starts with two chars
-
                 {
                     violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value = dlNumber.Substring(2, dlNumber.Length - 2).Trim();
                     violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].Value = dlNumber.Substring(0, 2); // extract first two chars for province code
