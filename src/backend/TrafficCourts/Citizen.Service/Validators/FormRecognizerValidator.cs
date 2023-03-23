@@ -105,9 +105,17 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             {
                 violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber].Value = ticketNumber.Replace("A0", "AO");
             }
-            if (ticketNumber is not null && ticketNumber.StartsWith("A1"))
+            else if (ticketNumber is not null && ticketNumber.StartsWith("A1"))
             {
                 violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber].Value = ticketNumber.Replace("A1", "AI");
+            }
+            else if (ticketNumber is not null && ticketNumber.StartsWith("A5"))
+            {
+                violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber].Value = ticketNumber.Replace("A5", "AS");
+            }
+            else if (ticketNumber is not null && ticketNumber.StartsWith("A8"))
+            {
+                violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber].Value = ticketNumber.Replace("A8", "AB");
             }
         }
 
@@ -138,7 +146,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.DateOfService].GetDate()?.ToString("yyyy-MM-dd");
 
             // if formatting date of service didnt work or its null or not populated set it to violation date
-            if (!violationTicket.Fields[OcrViolationTicket.DateOfService].IsPopulated() || violationTicket.Fields[OcrViolationTicket.DateOfService] is null)
+            if (violationTicket.Fields[OcrViolationTicket.DateOfService].Value is null || !violationTicket.Fields[OcrViolationTicket.DateOfService].IsPopulated())
                 violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd");
         }
 
