@@ -90,12 +90,12 @@ export class ViolationTicketService {
             if (this.validateTicket(params)) {
               this.goToInitiateResolution(params);
             } else {
-              this.logger.error("ViolationTicketService::searchTicket ticket info not matched");
+              this.logger.error("ViolationTicketService::searchTicket error has occurred:","Ticket info not matched");
               this.onError();
             }
           }
           else {
-            this.logger.error("ViolationTicketService::searchTicket ticket not found");
+            this.logger.error("ViolationTicketService::searchTicket error has occurred:","searchTicket ticket not found");
             this.onError();
           }
           return response;
@@ -111,9 +111,19 @@ export class ViolationTicketService {
   analyseTicket(ticketFile: File, progressRef: NgProgressRef, dialogRef: MatDialogRef<WaitForOcrDialogComponent>): void {
     this.reset();
     this.logger.info("file target", ticketFile);
-    if (!this.checkSize(ticketFile?.size)) {
-      this.logger.info("You must select a file");
+    // catch if no ticketFile passed in
+    if (!ticketFile) {
+      this.logger.error("ViolationTicketService::analyseTicket error has occurred: ", "No file selected.");
       this.openErrorScenarioOneDialog();
+      dialogRef.close();
+      return;
+    }
+    // Check if file too small (0) or too large (over 10MB)
+    var fileSizeError = this.checkSize(ticketFile?.size);
+    if (fileSizeError !== "") {
+      this.logger.error("ViolationTicketService::analyseTicket error has occurred: ", fileSizeError);
+      this.openErrorScenarioOneDialog();
+      dialogRef.close();
       return;
     }
     progressRef.start();
@@ -135,16 +145,19 @@ export class ViolationTicketService {
                 this.router.navigate([AppRoutes.ticketPath(AppRoutes.SCAN)]);
               }
               catch {
-                this.onError();
+                this.logger.error("ViolationTicketService::analyseTicket error has occurred:","Cannot interpret image.");
+                this.openErrorScenarioOneDialog();
               }
             }
             else {
+              this.logger.error("ViolationTicketService::analyseTicket error has occurred:", "no result from API analyse");
               this.onError();
             }
             progressRef.complete();
             dialogRef.close();
           },
           error: err => {
+            this.logger.error("ViolationTicketService::analyseTicket error has occurred:", err);
             this.onError(err);
             dialogRef.close();
           }
@@ -225,7 +238,7 @@ export class ViolationTicketService {
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
-
+    this.logger.info("ViolationTicketService: result of converting to violation ticket", result);
     return result;
   }
 
@@ -280,14 +293,20 @@ export class ViolationTicketService {
       };
       let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
       if (this.ticketType === TicketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
-        dateDiff = this.dateDiff(this.ocrTicket.fields["service_date"].value);
+        dateDiff = this.dateDiff(this.ocrTicket?.fields["service_date"].value);
       }
+      // handwritten tickets are additionally checked in the analyze ticket API but cheked again here for <=30 days
+      // e-tickets can be <=30 days and camera tickets <=45
       if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
         || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
       } else {
+        let errMsg = "Issued " + dateDiff.toString() + "days ago on ";
+        if (this.ticketType == TicketTypes.HANDWRITTEN_TICKET) errMsg += this.ocrTicket?.fields["service_date"].value.toString();
+        else errMsg += this.ticket.issued_date.toString();
+        this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidTicketDateDialog();
       }
     } else {
@@ -313,17 +332,24 @@ export class ViolationTicketService {
       if (err.error?.errors?.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
         || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
         || this.isErrorMatch(err, "low confidence", false)) {
+        var errorMessages = "";
+        if (err.error?.errors) {
+          err.error.errors.forEach(error => {errorMessages += ". \n" + error});
+        }
+        this.logger.error("ViolationTicketService:onError critical validation error has occurred",errorMessages);
         this.openErrorScenarioOneDialog();
-      }
-      else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {
+      } else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
+        this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
         this.openErrorScenarioTwoDialog();
-      }
-      else if (this.isErrorMatch(err, "MVA must be selected under the \"Did commit the offence(s) indicated\" section.")) {
-        this.openErrorScenarioThreeDialog();
       }
       else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
         this.openErrorScenarioFourDialog();
       } else { // fall back option
+        var errorMessages = "";
+        if (err.error?.errors) {
+          err.error.errors.forEach(error => {errorMessages += ". \n" + error});
+        }
+        this.logger.error("ViolationTicketService:onError validation error has occurred",errorMessages);
         this.openErrorScenarioOneDialog();
       }
     }
@@ -353,10 +379,6 @@ export class ViolationTicketService {
     return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
   }
 
-  private openErrorScenarioThreeDialog() {
-    return this.openImageTicketNotFoundDialog("Invalid ticket type", "error3");
-  }
-
   private openErrorScenarioFourDialog() {
     return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error2");
   }
@@ -371,7 +393,9 @@ export class ViolationTicketService {
     return Math.round(diffYear);
   }
 
-  private checkSize(fileSize: number) {
-    return fileSize > 0 && fileSize <= (10 * 1024 * 1024); // less or equal to 10MB
+  private checkSize(fileSize: number): string {
+    if (fileSize <= 0) return "File size is 0MB.";
+    else if (fileSize >= (10*1024*1024)) return "File size is over 10MB."
+    else return "";
   }
 }
