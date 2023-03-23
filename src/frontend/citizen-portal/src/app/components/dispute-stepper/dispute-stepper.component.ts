@@ -288,9 +288,9 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   onSkipChecked(form: DisputeCountFormGroup) {
-    form.controls?.plea_cd.setValue(null);
-    form.controls?.request_reduction.setValue(null);
-    form.controls?.request_time_to_pay.setValue(null);
+    form.controls?.plea_cd.setValue(this.Plea.G);
+    form.controls?.request_reduction.setValue(this.RequestReduction.N);
+    form.controls?.request_time_to_pay.setValue(this.RequestTimeToPay.N);
 
     if (this.isAllCountsSkipped) {
       const data: DialogOptions = {
