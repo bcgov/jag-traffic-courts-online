@@ -42,6 +42,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     /// <param name="violationTicket"></param>
     public static void Sanitize(OcrViolationTicket violationTicket)
     {
+        // TODO: Use TryGetValue to avoid numerous trips back and forth into the dictionary
         // It can happen that if adjacent text fields has content too close to the common dividing line, the OCR tool can misread both fields thinking one is blank and the other starts with the blank field's text.
         // If the Acts/Regs section is blank (should be MVA or MVR) and the adjacent Section text starts with "MVA/R" (shouldn't start with MVA/R), then move the MVA/R text to the correct field.
         void SplitSectionActRegs(string sectionKey, string actRegsKey)
@@ -52,7 +53,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 if (!violationTicket.Fields[actRegsKey].IsPopulated()
                     && countSection.StartsWith("M") && countSection.Length >= 3)
                 {
-                    string actReg = countSection.Substring(1, 3);
+                    string actReg = countSection.Substring(0, 3);
                     violationTicket.Fields[actRegsKey].Value = actReg;
                     violationTicket.Fields[sectionKey].Value = countSection.Replace((actReg is not null ? actReg : ""), "")?.Trim();
                 }
