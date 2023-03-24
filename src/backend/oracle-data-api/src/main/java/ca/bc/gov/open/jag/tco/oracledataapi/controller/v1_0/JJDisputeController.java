@@ -164,7 +164,7 @@ public class JJDisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark, null, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark, null), HttpStatus.OK);
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class JJDisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId), HttpStatus.OK);
 	}
 
 	/**
@@ -244,15 +244,15 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
 		logger.debug("PUT /dispute/{}/confirm called", ticketNumber);
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null), HttpStatus.OK);
 	}
-	
+
 	/**
-	 * GET endpoint that retrieves a justin document 
+	 * GET endpoint that retrieves a justin document
 	 * @param disputeId the primary key of the jj dispute to retrieve
 	 * @param documentType of justin document to retrieve
 	 * @param principal logged in user to assign
-	 * @return a single justin document 
+	 * @return a single justin document
 	 */
 	@GetMapping("/dispute/ticketImage/{ticketNumber}/{documentType}")
 	public ResponseEntity<TicketImageDataJustinDocument> getTicketImageData(
