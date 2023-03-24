@@ -1379,6 +1379,15 @@
             }
           },
           {
+            "name": "noticeOfDisputeId",
+            "in": "header",
+            "description": "The occam dispute id to associate document with.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "documentType",
             "in": "header",
             "description": "The document type to associate with this file.",
@@ -4445,6 +4454,8 @@
           "CUPD",
           "CUWR",
           "CUWT",
+          "DURA",
+          "DURR",
           "EMCA",
           "EMCF",
           "EMCR",
@@ -4456,6 +4467,11 @@
           "EMST",
           "EMUP",
           "EMVF",
+          "ESUR",
+          "FDLD",
+          "FDLS",
+          "FUPD",
+          "FUPS",
           "INIT",
           "JASG",
           "JCNF",
@@ -4468,6 +4484,7 @@
           "SUB",
           "SUPL",
           "SVAL",
+          "URSR",
           "VREV",
           "VSUB"
         ],
@@ -4478,7 +4495,8 @@
         "properties": {
           "fileId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "fileName": {
             "type": "string",
@@ -4507,6 +4525,14 @@
           "disputeId": {
             "type": "integer",
             "format": "int64",
+            "nullable": true
+          },
+          "pendingFileStream": {
+            "type": "string",
+            "nullable": true
+          },
+          "deleteRequested": {
+            "type": "boolean",
             "nullable": true
           }
         },
