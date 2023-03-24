@@ -280,7 +280,7 @@ public class JJDisputeService {
 		}
 
 		// Calculate duplicate data for denormalization
-		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceById(jjDisputeToUpdate, adjudicatorPartId);
+		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceByJJDispute(jjDisputeToUpdate, adjudicatorPartId);
 		Long courtAppearanceId = courtAppearance != null && courtAppearance.getId() != null ? courtAppearance.getId() : null;
 		YesNo seizedYn = courtAppearance != null ? courtAppearance.getJjSeized() : null;
 		JJDisputeCourtAppearanceAPP aattCd = courtAppearance != null ? courtAppearance.getAppCd() : null;
@@ -300,13 +300,13 @@ public class JJDisputeService {
 	}
 
 	/**
-	 * Helper method to find a JJDisputeCourtAppearanceRoP by id (but only if there is a partId)
+	 * Helper method to find a JJDisputeCourtAppearanceRoP for the given JJDispute (but only if there is a partId)
 	 * @param jjDispute
 	 * @param courtAppearanceId
 	 * @param partId
 	 * @return
 	 */
-	private JJDisputeCourtAppearanceRoP findCourtAppearanceById(JJDispute jjDispute, String partId) {
+	private JJDisputeCourtAppearanceRoP findCourtAppearanceByJJDispute(JJDispute jjDispute, String partId) {
 		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) &&
 				partId != null && JJDisputeStatus.ACCEPTED.equals(jjDispute.getStatus())) {
 
