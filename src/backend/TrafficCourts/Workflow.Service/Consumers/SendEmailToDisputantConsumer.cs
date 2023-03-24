@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using NodaTime;
 using TrafficCourts.Common.Features.Mail;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -35,9 +36,13 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
 
         EmailMessage emailMessage = context.Message.Message;
 
+        // try to fill in to if missing
+        if (emailMessage.To.IsNullOrEmpty() && dispute is not null && dispute.EmailAddress is not null && dispute.EmailAddressVerified == true)
+            emailMessage.To = dispute.EmailAddress;
+
         _logger.LogDebug("Calling email sender service");
 
-        var result = await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
+        var result = emailMessage.To.IsNullOrEmpty() ? SendEmailResult.Filtered : await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
 
         var now = _clock.GetCurrentInstant().ToDateTimeOffset();
 

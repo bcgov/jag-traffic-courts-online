@@ -12,7 +12,7 @@
 
 
 export interface FileMetadata { 
-    fileId?: string;
+    fileId?: string | null;
     fileName?: string | null;
     noticeOfDisputeGuid?: string | null;
     documentType?: string | null;
@@ -20,5 +20,7 @@ export interface FileMetadata {
     documentStatus?: string | null;
     ticketNumber?: string | null;
     disputeId?: number | null;
+    pendingFileStream?: string | null;
+    deleteRequested?: boolean | null;
 }
 

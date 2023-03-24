@@ -128,15 +128,20 @@ public class StaffDocumentService : IStaffDocumentService
         // Publish a message to virus scan the newly uploaded file
         await _bus.PublishWithLog(_logger, new DocumentUploaded { Id = id } , cancellationToken);
 
-        // Save file upload event to file history
-        SaveFileHistoryRecord fileHistoryRecord = new()
+        // Save file upload event to file history if valid notice of dispute
+        // TODO: this check is not needed once we have proper test data.  Currently in test data we have supertickets with no associated notice of dispute
+        // which cause this to error out
+        if (properties.NoticeOfDisputeId is not null)
         {
-            NoticeOfDisputeId = properties.NoticeOfDisputeId?.ToString("d"),
-            AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL,
-            ActionByApplicationUser = GetUserName(user)
-        };
+            SaveFileHistoryRecord fileHistoryRecord = new()
+            {
+                NoticeOfDisputeId = properties.NoticeOfDisputeId?.ToString("d"),
+                AuditLogEntryType = FileHistoryAuditLogEntryType.SUPL,
+                ActionByApplicationUser = GetUserName(user)
+            };
 
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+            await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+        }
 
         return id;
     }
