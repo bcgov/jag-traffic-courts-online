@@ -238,7 +238,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       count.form.controls.plea_cd.setValue(null);
       count.form.controls.request_reduction.setValue(this.RequestReduction.N);
       count.form.controls.request_time_to_pay.setValue(this.RequestTimeToPay.N);
-      count.form.controls.__skip.setValue(null);
+      count.form.controls.__skip.setValue(false);
     })
   }
 
@@ -287,10 +287,14 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     return this.counts?.filter(i => i.form?.value.__skip).length === this.counts.length;
   }
 
-  onSkipChecked(form: DisputeCountFormGroup) {
-    form.controls?.plea_cd.setValue(null);
-    form.controls?.request_reduction.setValue(null);
-    form.controls?.request_time_to_pay.setValue(null);
+  onSkipChecked(form: DisputeCountFormGroup, value: boolean) {
+    if (value) {
+      form.controls?.plea_cd.setValue(this.Plea.G);
+    } else {
+      form.controls?.plea_cd.setValue(null);
+    }
+    form.controls?.request_reduction.setValue(this.RequestReduction.N);
+    form.controls?.request_time_to_pay.setValue(this.RequestTimeToPay.N);
 
     if (this.isAllCountsSkipped) {
       const data: DialogOptions = {
