@@ -134,7 +134,7 @@
             <section>
 
               <div class="row mt-4">
-                <div
+                <div *ngIf="count?.form.value.__skip === false"
                   [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.N ? '' : 'none' }">
                   <label class="w-100">
                     Please provide additional selections below:
@@ -150,7 +150,7 @@
                     like to request time to pay on this count.</mat-checkbox>
                 </div>
 
-                <div
+                <div *ngIf="count?.form.value.__skip === false"
                   [ngStyle]="{ 'display': requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y ? '' : 'none' }">
                   <label class="w-100">
                     Please provide additional selections below:
@@ -169,10 +169,10 @@
                 </div>
               </div>
 
-              <hr />
+              <hr *ngIf="count?.form.value.__skip === false" />
               <div class="row">
                 <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4"
-                  (change)="onSkipChecked(count?.form)">
+                  (change)="onSkipChecked(count?.form, $event.value)">
                   Skip this count, no action required.
                 </mat-checkbox>
               </div>

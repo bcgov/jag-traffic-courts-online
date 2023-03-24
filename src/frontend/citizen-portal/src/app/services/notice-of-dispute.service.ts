@@ -161,6 +161,7 @@ export class NoticeOfDisputeService {
     input = this.splitContactGivenNames(input);  // break disputant names into first, second, third
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
+    input.appearance_less_than_14_days = false;  // init to false
 
     input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
       count.request_court_appearance = input.request_court_appearance;
