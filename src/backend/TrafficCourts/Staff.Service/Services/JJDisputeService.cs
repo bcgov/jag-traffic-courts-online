@@ -144,7 +144,9 @@ public class JJDisputeService : IJJDisputeService
     public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // Get PartId from Keycloak
-        string partId = await GetPartIdAsync(ticketNumber, cancellationToken);
+        string partId = await GetPartIdAsync(ticketNumber, cancellationToken) ?? "";
+
+        if (string.IsNullOrEmpty(partId)) throw new PartIdNotFoundException(ticketNumber);
 
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
 
@@ -163,8 +165,7 @@ public class JJDisputeService : IJJDisputeService
     /// <param name="ticketNumber">JJDispute to retrieve (to reference jjAssignedTo)</param>
     /// <param name="cancellationToken">pass through param</param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException">If jjAssignedTo or the PartId in Keycloak is null</exception>
-    public async Task<string> GetPartIdAsync(string ticketNumber, CancellationToken cancellationToken)
+    public async Task<string?> GetPartIdAsync(string ticketNumber, CancellationToken cancellationToken)
     {
         // TCVP-2124
         //  - lookup JJDispute from TCO ORDS
@@ -172,26 +173,30 @@ public class JJDisputeService : IJJDisputeService
         //  - throw error if either jjAssignedTo or partId is null
         //  - pass partId to _oracleDataApi.AcceptJJDisputeAsync()
         JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
-        string idirUsername = jjDispute.JjAssignedTo ?? throw new ArgumentNullException("JJDispute is not assigned. Failed to lookup partId.");
+        string idirUsername = jjDispute.JjAssignedTo ?? "";
 
-        ICollection<UserRepresentation> userRepresentations = await _keycloakService.UsersByIdirAsync(idirUsername, cancellationToken);
-        if (userRepresentations is not null)
+        if (!string.IsNullOrEmpty(idirUsername))
         {
-            foreach (UserRepresentation userRepresentation in userRepresentations)
+            ICollection<UserRepresentation> userRepresentations = await _keycloakService.UsersByIdirAsync(idirUsername, cancellationToken);
+            if (userRepresentations is not null)
             {
-                ICollection<string> partIds = _keycloakService.TryGetPartIds(userRepresentation);
-                if (partIds is not null && partIds.Count > 0)
+                foreach (UserRepresentation userRepresentation in userRepresentations)
                 {
-                    if (partIds.Count > 1)
+                    ICollection<string> partIds = _keycloakService.TryGetPartIds(userRepresentation);
+                    if (partIds is not null && partIds.Count > 0)
                     {
-                        _logger.LogWarning("idirUsername has more than one partId");
+                        if (partIds.Count > 1)
+                        {
+                            _logger.LogWarning("idirUsername has more than one partId");
+                        }
+                        return partIds.First();
                     }
-                    return partIds.First();
                 }
             }
         }
 
-        throw new ArgumentNullException("Failed to lookup partId.");
+        _logger.LogDebug("Failed to lookup partId for {ticketNumber}", ticketNumber);
+        return null;
     }
 
     public async Task<JJDispute> ConfirmJJDisputeAsync(string ticketNumber, ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -224,4 +229,15 @@ public class JJDisputeService : IJJDisputeService
             }
         }
     }
+}
+
+[Serializable]
+public class PartIdNotFoundException : Exception
+{
+    public PartIdNotFoundException(string ticketNumber) : base($"Failed to retrieve a partId for the given ticket number: {ticketNumber}")
+    {
+        TicketNumber = ticketNumber;
+    }
+    
+    public string TicketNumber { get; init; }
 }
