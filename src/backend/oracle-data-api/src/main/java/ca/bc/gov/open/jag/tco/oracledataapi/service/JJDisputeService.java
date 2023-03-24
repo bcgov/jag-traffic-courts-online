@@ -281,7 +281,7 @@ public class JJDisputeService {
 
 		// Calculate duplicate data for denormalization
 		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceById(jjDisputeToUpdate, adjudicatorPartId);
-		Long courtAppearanceId = courtAppearance.getId() != null ? courtAppearance.getId() : null;
+		Long courtAppearanceId = courtAppearance != null && courtAppearance.getId() != null ? courtAppearance.getId() : null;
 		YesNo seizedYn = courtAppearance != null ? courtAppearance.getJjSeized() : null;
 		JJDisputeCourtAppearanceAPP aattCd = courtAppearance != null ? courtAppearance.getAppCd() : null;
 		JJDisputeCourtAppearanceDATT dattCd = courtAppearance != null ? courtAppearance.getDattCd() : null;
