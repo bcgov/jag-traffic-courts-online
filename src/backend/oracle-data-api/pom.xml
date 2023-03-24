@@ -20,7 +20,7 @@
 		<release.train.version>2021.0.4</release.train.version>
 		<spring-cloud-sleuth-otel.version>1.1.0</spring-cloud-sleuth-otel.version>
 		<org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
-		<org.projectlombok.version>1.18.24</org.projectlombok.version>
+		<org.projectlombok.version>1.18.26</org.projectlombok.version>
 		<occam-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.occam</occam-package>
 		<tco-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.tco</tco-package>
 	</properties>
