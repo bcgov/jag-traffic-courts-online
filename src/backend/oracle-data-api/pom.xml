@@ -116,7 +116,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.14</version>
+			<version>1.6.15</version>
 		</dependency>
 
 		<!-- CSV reader - TODO: remove once data is read from Oracle instead -->
