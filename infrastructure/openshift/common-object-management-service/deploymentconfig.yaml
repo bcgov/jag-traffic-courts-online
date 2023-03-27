@@ -6,7 +6,7 @@ metadata:
     app: common-object-management-service
     app.kubernetes.io/part-of: common-object-management-service
     app.kubernetes.io/instance: common-object-management-service
-    app.kubernetes.io/version: 0.3.0
+    app.kubernetes.io/version: 0.4.0
     app.kubernetes.io/component: backend
     app.openshift.io/runtime: nodejs
     app.kubernetes.io/name: common-object-management-service
@@ -147,7 +147,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: common-object-management-service-config
-          image: 'docker.io/bcgovimages/common-object-management-service:latest'
+          image: 'docker.io/bcgovimages/common-object-management-service:0.4'
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst

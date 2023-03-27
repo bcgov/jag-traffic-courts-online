@@ -27,7 +27,7 @@ internal static class RequestBuilder
             return;
         }
 
-        urlBuilder.Append("objId=");
+        urlBuilder.Append("objectId=");
 
         for (int i = 0; i < ids.Count; i++)
         {
