@@ -30,6 +30,7 @@ public class DocumentController : StaffControllerBase<DocumentController>
     /// </summary>
     /// <param name="file">The file to save in the common object management service and the metadata of the uploaded file to be saved including the document type</param>
     /// <param name="disputeId">The TCO dispute id to associate document with.</param>
+    /// <param name="noticeOfDisputeId">The occam dispute id to associate document with.</param>
     /// <param name="cancellationToken"></param>
     /// <param name="documentType">The document type to associate with this file.</param>
     /// <response code="200">The document is successfully uploaded and saved.</response>
@@ -54,6 +55,9 @@ public class DocumentController : StaffControllerBase<DocumentController>
         long disputeId,
         [FromHeader]
         [Required]
+        string noticeOfDisputeId,
+        [FromHeader]
+        [Required]
         string documentType,
         CancellationToken cancellationToken)
     {
@@ -62,7 +66,7 @@ public class DocumentController : StaffControllerBase<DocumentController>
 
         try
         {
-            DocumentProperties properties = new() { TcoDisputeId = disputeId, DocumentType = documentType };
+            DocumentProperties properties = new() { NoticeOfDisputeId = new Guid(noticeOfDisputeId), TcoDisputeId = disputeId, DocumentType = documentType };
             Guid id = await _documentService.SaveFileAsync(file, properties, User, cancellationToken);
             return Ok(id);
         }

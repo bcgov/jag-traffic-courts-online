@@ -32,7 +32,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Adjournment", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Adjournment", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -53,7 +53,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Other",  CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Other",  CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -76,7 +76,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Other", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -99,7 +99,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Other", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -122,7 +122,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Other", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -145,7 +145,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Other", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -168,7 +168,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Other", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
@@ -191,7 +191,7 @@ public class DocumentControllerTest
         DocumentController sut = new(comsService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, "Other", CancellationToken.None);
+        IActionResult? result = await sut.CreateAsync(mockFile.Object, 1, guid.ToString("d"), "Other", CancellationToken.None);
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);

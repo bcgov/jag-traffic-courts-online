@@ -242,17 +242,21 @@ export class DocumentService {
     /**
      * Creates a new file the document management service along with metadata.
      * @param disputeId The TCO dispute id to associate document with.
+     * @param noticeOfDisputeId The occam dispute id to associate document with.
      * @param documentType The document type to associate with this file.
      * @param file 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDocumentPost(disputeId: number, documentType: string, file: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<string>;
-    public apiDocumentPost(disputeId: number, documentType: string, file: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<string>>;
-    public apiDocumentPost(disputeId: number, documentType: string, file: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<string>>;
-    public apiDocumentPost(disputeId: number, documentType: string, file: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDocumentPost(disputeId: number, noticeOfDisputeId: string, documentType: string, file: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<string>;
+    public apiDocumentPost(disputeId: number, noticeOfDisputeId: string, documentType: string, file: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<string>>;
+    public apiDocumentPost(disputeId: number, noticeOfDisputeId: string, documentType: string, file: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<string>>;
+    public apiDocumentPost(disputeId: number, noticeOfDisputeId: string, documentType: string, file: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDocumentPost.');
+        }
+        if (noticeOfDisputeId === null || noticeOfDisputeId === undefined) {
+            throw new Error('Required parameter noticeOfDisputeId was null or undefined when calling apiDocumentPost.');
         }
         if (documentType === null || documentType === undefined) {
             throw new Error('Required parameter documentType was null or undefined when calling apiDocumentPost.');
@@ -264,6 +268,9 @@ export class DocumentService {
         let localVarHeaders = this.defaultHeaders;
         if (disputeId !== undefined && disputeId !== null) {
             localVarHeaders = localVarHeaders.set('disputeId', String(disputeId));
+        }
+        if (noticeOfDisputeId !== undefined && noticeOfDisputeId !== null) {
+            localVarHeaders = localVarHeaders.set('noticeOfDisputeId', String(noticeOfDisputeId));
         }
         if (documentType !== undefined && documentType !== null) {
             localVarHeaders = localVarHeaders.set('documentType', String(documentType));

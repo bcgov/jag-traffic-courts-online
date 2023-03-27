@@ -14,47 +14,37 @@ namespace TrafficCourts.Citizen.Service.Validators
                 .NotNull()
                 .IsInEnum();
 
+            RuleFor(_ => _.RequestReduction)
+                .NotNull()
+                .IsInEnum();
+
+            RuleFor(_ => _.RequestTimeToPay)
+                .NotNull()
+                .IsInEnum();
+
             RuleFor(_ => (int)_.CountNo).InclusiveBetween(1, 3);
 
-            // Validation rules for properties if disputant pleaded guilty
+            RuleFor(_ => _.RequestReduction)
+                .Must(BeYesOrNo)
+                .WithMessage("'Request Reduction' must be yes or no.");
+
             RuleFor(_ => _.RequestTimeToPay)
-                .NotNull()
-                .When(PleaGuilty)
-                .WithMessage("'Request Time To Pay' selection is required to be set since disputant pleaded guilty");
-
-            RuleFor(_ => _.RequestReduction)
-                .NotNull()
-                .When(PleaGuilty)
-                .WithMessage("'Request Reduction' selection is required to be set since disputant pleaded guilty");
-
-            RuleFor(_ => _.RequestReduction)
                 .Must(BeYesOrNo)
-                .When(PleaGuilty)
-                .WithMessage("'Request Reduction' selection is must be Y or N since disputant pleaded guilty");
+                .WithMessage("'Request Time To Pay' must be yes or no.");
 
             RuleFor(_ => _.RequestCourtAppearance)
                 .NotNull()
-                .When(PleaGuilty)
-                .WithMessage("'Request Court Appearance' selection is required to be set since disputant pleaded guilty");
+                .WithMessage("'Request Court Appearance' selection is required to be set.");
 
+            // Validation rules for properties if disputant pleaded guilty
             RuleFor(_ => _.RequestCourtAppearance)
                 .Must(BeYesOrNo)
                 .When(PleaGuilty)
-                .WithMessage("'Request Court Appearance' selection is must be Y or N since disputant pleaded guilty");
+                .WithMessage("'Request Court Appearance' selection must be Y or N since disputant pleaded guilty");
 
             // Validation rules for properties if disputant pleaded not guilty
-            RuleFor(_ => _.RequestTimeToPay)
-                .Must(BeNoOrNull)
-                .When(PleaNotGuilty)
-                .WithMessage("'Request Time To Pay' must not be true since disputant pleaded not guilty");
-
-            RuleFor(_ => _.RequestReduction)
-                .Must(BeNoOrNull)
-                .When(PleaNotGuilty)
-                .WithMessage("'Request Reduction' must not be true since disputant pleaded not guilty");
-
             RuleFor(_ => _.RequestCourtAppearance)
-                .Must(BeYesOrNull)
+                .Must(BeYes)
                 .When(PleaNotGuilty)
                 .WithMessage("'Request Court Appearance' must not be false since disputant pleaded not guilty");
         }
@@ -69,19 +59,15 @@ namespace TrafficCourts.Citizen.Service.Validators
             return count.PleaCode.Equals(DisputeCountPleaCode.N);
         }
 
-        private bool BeYesOrNull(DisputeCountRequestCourtAppearance? value)
+        private bool BeYes(DisputeCountRequestCourtAppearance? value)
         {
-            return value is null || value.Value == DisputeCountRequestCourtAppearance.Y;
+            return value is not null && value.Value == DisputeCountRequestCourtAppearance.Y;
         }
 
-        private bool BeNoOrNull(DisputeCountRequestTimeToPay? value)
+        private bool BeYesOrNo(DisputeCountRequestTimeToPay? value)
         {
-            return value is null || value.Value == DisputeCountRequestTimeToPay.N;
-        }
-
-        private bool BeNoOrNull(DisputeCountRequestReduction? value)
-        {
-            return value is null || value.Value == DisputeCountRequestReduction.N;
+            if (value is null) return false;
+            return value.Value == DisputeCountRequestTimeToPay.Y || value.Value == DisputeCountRequestTimeToPay.N;
         }
 
         private bool BeYesOrNo(DisputeCountRequestReduction? value)

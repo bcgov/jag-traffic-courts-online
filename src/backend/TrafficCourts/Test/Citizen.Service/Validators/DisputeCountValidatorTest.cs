@@ -19,6 +19,24 @@ public class DisputeCountValidatorTest : ValidatorTest<TrafficCourts.Citizen.Ser
             .WithErrorCode(NotNullValidator);
     }
 
+    [Fact]
+    public void ReqeustReduction_must_be_not_null()
+    {
+        TrafficCourts.Citizen.Service.Models.Disputes.DisputeCount model = new();
+        var result = _sut.TestValidate(model);
+
+        result.ShouldHaveValidationErrorFor(_ => _.RequestReduction)
+            .WithErrorCode(NotNullValidator);
+    }
+    [Fact]
+    public void RequestTimeToPay_must_be_not_null()
+    {
+        TrafficCourts.Citizen.Service.Models.Disputes.DisputeCount model = new();
+        var result = _sut.TestValidate(model);
+
+        result.ShouldHaveValidationErrorFor(_ => _.RequestTimeToPay)
+            .WithErrorCode(NotNullValidator);
+    }
     [Theory]
     [InlineData((DisputeCountPleaCode)(-1))]
     [InlineData((DisputeCountPleaCode)4)]
@@ -42,13 +60,12 @@ public class DisputeCountValidatorTest : ValidatorTest<TrafficCourts.Citizen.Ser
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(DisputeCountRequestTimeToPay.Y)]
     [InlineData(DisputeCountRequestTimeToPay.N)]
-    public void RequestTimeToPay_must_be_no_or_null_when_not_guilty_plea(DisputeCountRequestTimeToPay? requestTimeToPay)
+    public void RequestTimeToPay_must_be_yes_or_no(DisputeCountRequestTimeToPay? requestTimeToPay)
     {
         TrafficCourts.Citizen.Service.Models.Disputes.DisputeCount model = new() 
         {
-            PleaCode = DisputeCountPleaCode.N,
             RequestTimeToPay = requestTimeToPay
         };
 
@@ -58,31 +75,25 @@ public class DisputeCountValidatorTest : ValidatorTest<TrafficCourts.Citizen.Ser
     }
 
     [Theory]
-    [InlineData(DisputeCountRequestTimeToPay.UNKNOWN)]
-    [InlineData(DisputeCountRequestTimeToPay.Y)]
-    [InlineData((DisputeCountRequestTimeToPay)(-1))]
-    [InlineData((DisputeCountRequestTimeToPay)10)]
-    public void RequestTimeToPay_must_not_have_other_values_when_not_guilty_plea(DisputeCountRequestTimeToPay? requestTimeToPay)
+    [InlineData(DisputeCountRequestReduction.Y)]
+    [InlineData(DisputeCountRequestReduction.N)]
+    public void RequestReduction_must_be_yes_or_no(DisputeCountRequestReduction? requestReduction)
     {
         TrafficCourts.Citizen.Service.Models.Disputes.DisputeCount model = new()
         {
-            PleaCode = DisputeCountPleaCode.N,
-            RequestTimeToPay = requestTimeToPay
+            RequestReduction = requestReduction
         };
 
         var result = _sut.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(_ => _.RequestTimeToPay)
-            .WithErrorCode(PredicateValidator);
+        result.ShouldNotHaveValidationErrorFor(_ => _.RequestReduction);
     }
 
     public static IEnumerable<object[]> DisputeCountPleaCodeValues()
     {
         foreach (var value in System.Enum.GetValues<DisputeCountPleaCode>())
         {
-            yield return new object[] { value };
+            if (value != DisputeCountPleaCode.UNKNOWN) yield return new object[] { value };
         }
     }
-
-
 }
