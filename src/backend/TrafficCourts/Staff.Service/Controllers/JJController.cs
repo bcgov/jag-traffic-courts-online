@@ -490,6 +490,10 @@ public class JJController : StaffControllerBase<JJController>
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
+        catch (PartIdNotFoundException e)
+        {
+            return new HttpError(StatusCodes.Status400BadRequest, e.Message);
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "Error updating JJDispute status");

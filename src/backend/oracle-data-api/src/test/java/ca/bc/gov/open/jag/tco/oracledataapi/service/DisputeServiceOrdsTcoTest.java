@@ -63,8 +63,7 @@ class DisputeServiceOrdsTcoTest extends BaseTestSuite {
 				JJDisputeStatus.IN_PROGRESS,
 				getPrincipal(),
 				"A custom remark 3. Setting status to IN_PROGRESS ...",
-				"1",
-				Long.valueOf(1l));
+				"1");
 		assertNotNull(jjDisputeDb);
 		assertEquals(ticketNumber, jjDisputeDb.getTicketNumber());
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDisputeDb.getStatus());

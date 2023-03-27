@@ -1,7 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
@@ -32,8 +30,8 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.TicketImageDataRepository;
@@ -46,7 +44,7 @@ public class JJDisputeService {
 
 	@Autowired
 	private JJDisputeRepository jjDisputeRepository;
-	
+
 	@Autowired
 	private TicketImageDataRepository ticketImageDataRepository;
 
@@ -127,7 +125,7 @@ public class JJDisputeService {
 
 		// Update the status of the JJ Dispute if the status is not the same as current one
 		if (jjDispute.getStatus() != null &&  jjDisputeToUpdate.getStatus() != jjDispute.getStatus()) {
-			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null, null, null);
+			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null, null);
 		}
 
 		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "id", "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
@@ -208,7 +206,7 @@ public class JJDisputeService {
 	 * @return the saved JJDispute
 	 */
 	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark,
-			String adjudicatorPartId, Long courtAppearanceId) {
+			String adjudicatorPartId) {
 		if (jjDisputeStatus == null) {
 			logger.error("Attempting to set JJDispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set JJDispute status to null");
@@ -282,7 +280,8 @@ public class JJDisputeService {
 		}
 
 		// Calculate duplicate data for denormalization
-		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceById(jjDisputeToUpdate, courtAppearanceId, adjudicatorPartId);
+		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceByJJDispute(jjDisputeToUpdate, adjudicatorPartId);
+		Long courtAppearanceId = courtAppearance != null && courtAppearance.getId() != null ? courtAppearance.getId() : null;
 		YesNo seizedYn = courtAppearance != null ? courtAppearance.getJjSeized() : null;
 		JJDisputeCourtAppearanceAPP aattCd = courtAppearance != null ? courtAppearance.getAppCd() : null;
 		JJDisputeCourtAppearanceDATT dattCd = courtAppearance != null ? courtAppearance.getDattCd() : null;
@@ -301,37 +300,26 @@ public class JJDisputeService {
 	}
 
 	/**
-	 * Helper method to find a JJDisputeCourtAppearanceRoP by id (but only if there is a partId)
+	 * Helper method to find a JJDisputeCourtAppearanceRoP for the given JJDispute (but only if there is a partId)
 	 * @param jjDispute
 	 * @param courtAppearanceId
 	 * @param partId
 	 * @return
 	 */
-	private JJDisputeCourtAppearanceRoP findCourtAppearanceById(JJDispute jjDispute, Long courtAppearanceId, String partId) {
-		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs())) {
-			if (partId != null) {
+	private JJDisputeCourtAppearanceRoP findCourtAppearanceByJJDispute(JJDispute jjDispute, String partId) {
+		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) &&
+				partId != null && JJDisputeStatus.ACCEPTED.equals(jjDispute.getStatus())) {
 
-				if (courtAppearanceId != null) {
-					// Return the first record that matches the courtAppearanceId
-					return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
-							.filter(courtAppearance -> courtAppearance.getId() == courtAppearanceId)
-							.findAny()
-							.orElse(null);
-				}
-
-				// Return the latest record iff the status is ACCEPTED
-				else if (JJDisputeStatus.ACCEPTED.equals(jjDispute.getStatus())) {
-					return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
-							.sorted(new Comparator<JJDisputeCourtAppearanceRoP>() {
-									@Override
-									public int compare(JJDisputeCourtAppearanceRoP o1, JJDisputeCourtAppearanceRoP o2) {
-										return ObjectUtils.compare(o1.getAppearanceTs(), o2.getAppearanceTs());
-									}
-								})
-							.findFirst()
-							.orElse(null);
-				}
-			}
+			// Return the latest record iff the status is ACCEPTED
+			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
+					.sorted(new Comparator<JJDisputeCourtAppearanceRoP>() {
+						@Override
+						public int compare(JJDisputeCourtAppearanceRoP o1, JJDisputeCourtAppearanceRoP o2) {
+							return ObjectUtils.compare(o1.getAppearanceTs(), o2.getAppearanceTs());
+						}
+					})
+					.findFirst()
+					.orElse(null);
 		}
 		return null;
 	}
@@ -347,12 +335,12 @@ public class JJDisputeService {
 
 		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(id).orElseThrow();
 
-		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark, null, null);
+		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark, null);
 		jjDisputeToUpdate.setHearingType(JJDisputeHearingType.COURT_APPEARANCE);
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
-	
+
 	/**
 	 * Gets a Ticket Image by ticketNumber. Callers can optionally throw {@link NoSuchElementException} if not found.
 	 * @param ticketNumber
@@ -360,13 +348,13 @@ public class JJDisputeService {
 	 * @return
 	 */
 	public TicketImageDataJustinDocument getTicketImageByTicketNumber(String ticketNumber, TicketImageDataDocumentType documentType) {
-	
+
 		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
 		if (jjDisputes.isEmpty()) {
 			logger.error("Cant find JJDispute by ticketNumber {}.", ticketNumber);
 			return null;
 		}
-		
+
 		// Get justin document by rcc id and document type. There should be one and only one.
 		TicketImageDataJustinDocument ticketImage = ticketImageDataRepository.getTicketImageByRccId(jjDisputes.get(0).getJustinRccId(), documentType.getShortName());
 		if (ticketImage == null) {
