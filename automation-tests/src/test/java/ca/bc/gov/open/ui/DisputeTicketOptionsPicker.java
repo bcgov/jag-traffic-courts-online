@@ -23,6 +23,8 @@ public class DisputeTicketOptionsPicker {
 
 	private WebDriver driver;
 
+	private static String user;
+
 	@After
 	public void tearDown() {
 		driver.close();
@@ -78,6 +80,14 @@ public class DisputeTicketOptionsPicker {
 
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
 		popup.popupSubmitWindow(element, driverWait, driver);
+	}
+
+	public static String getUser() {
+		return user;
+	}
+
+	public static void setAppNumScreen(String user) {
+		DisputeTicketOptionsPicker.user = user;
 
 	}
 
@@ -147,32 +157,32 @@ public class DisputeTicketOptionsPicker {
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-3 .mat-checkbox-inner-container")));
+				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-4 .mat-checkbox-inner-container")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
 
 		JavascriptExecutor js1 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-4 .mat-checkbox-inner-container")));
+				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-5 .mat-checkbox-inner-container")));
 		js1.executeScript("arguments[0].click();", element);
 		JavascriptExecutor js2 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-6 .mat-checkbox-inner-container")));
+				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-7 .mat-checkbox-inner-container")));
 		js2.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
 		JavascriptExecutor js3 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
-				.visibilityOfElementLocated(By.cssSelector("#mat-checkbox-7 .mat-checkbox-inner-container")));
+				.visibilityOfElementLocated(By.cssSelector("#mat-checkbox-8 .mat-checkbox-inner-container")));
 		js3.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
 		JavascriptExecutor js4 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
 				.visibilityOfElementLocated(By.cssSelector("#mat-checkbox-9 .mat-checkbox-inner-container")));
 		js4.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-10 .mat-checkbox-inner-container")));
-		element.click();
+//		Thread.sleep(1000);
+//		element = driverWait.until(ExpectedConditions
+//				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-7 .mat-checkbox-inner-container")));
+//		element.click();
 		Thread.sleep(1000);
 		JavascriptExecutor js12 = (JavascriptExecutor) driver;
 		js12.executeScript("window.scrollBy(0,document.body.scrollHeight)");
@@ -267,7 +277,7 @@ public class DisputeTicketOptionsPicker {
 
 	public void addressInput(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
-		String user;
+		// String user;
 
 		user = Calendar.getInstance().getTimeInMillis() + "Test";
 

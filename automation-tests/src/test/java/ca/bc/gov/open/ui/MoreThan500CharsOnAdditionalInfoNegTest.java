@@ -42,21 +42,21 @@ public class MoreThan500CharsOnAdditionalInfoNegTest {
 		new WebDriverWait(driver, Duration.ofSeconds(20)).until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket details')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AS43850853')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AN00893391')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Feb 16, 2023')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'May 24, 2023')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Evans')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Kent')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AB')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'BC')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '12:01')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '12:44')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maya')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'clark')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '9973794')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '3139264')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Letting Vehicles For Hire')]")));
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Pass On Right')]")));
 		System.out.println("File uploaded properly");
 
 		Thread.sleep(1000);
