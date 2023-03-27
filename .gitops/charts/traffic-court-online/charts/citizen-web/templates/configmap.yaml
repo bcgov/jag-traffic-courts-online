@@ -13,7 +13,7 @@ data:
 {{ include "citizen-web.tplvalues.render" ( dict "value" .Values.authConfig "context" $ ) | indent 4 }}
 {{- end }}
 {{- if .Values.oidcConfig }}
-  auth.config.json: |-
+  oidc.config.json: |-
 {{ include "citizen-web.tplvalues.render" ( dict "value" .Values.oidcConfig "context" $ ) | indent 4 }}
 {{- end }}
   nginx-api-proxy-pass.conf: |-
