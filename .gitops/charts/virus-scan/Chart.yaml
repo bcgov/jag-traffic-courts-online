@@ -1,6 +1,6 @@
 apiVersion: v2
 name: virus-scan-service
-description: Chart for deploying a ClamavD on kubernetes as statefulSet
+description: Chart for deploying a virus scanning on kubernetes
 type: application
 version: 0.1.1
 appVersion: 0.104.0

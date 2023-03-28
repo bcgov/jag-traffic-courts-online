@@ -1,6 +1,4 @@
-﻿using BCGov.VirusScan.Api.Features;
-using BCGov.VirusScan.Api.Models;
-using System;
+﻿using BCGov.VirusScan.Api.Models;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 

@@ -28,7 +28,6 @@ public static class DependencyInjectionExtensions
     {
         builder.Services
             .AddOpenTelemetry()
-            //.WithTracing(builder => builder.AddSource(Instrumentation.ActivitySource))
             .WithMetrics(builder =>
             {
                 builder

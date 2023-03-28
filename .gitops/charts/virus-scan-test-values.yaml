@@ -1,10 +1,4 @@
 fullnameOverride: "virus-scan"
 
-clamav:
-  resources:
-    requests:
-      cpu: 500m
-      memory: 2Gi
-    limits:
-      cpu: 500m
-      memory: 2Gi
+env:
+  "CLAMAV__SERVER": "clamav.0198bb-test.svc.cluster.local"

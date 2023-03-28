@@ -13,57 +13,23 @@ service:
   port: 8080
 
 env:
-  "CLAMAV__SERVER": "127.0.0.1"
+  "CLAMAV__SERVER": "localhost"
   "CLAMAV__PORT": "3310"
 
-clamav:
-  # clamav.image -- The clamav docker image
-  image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/clamav
-  # clamav.version -- The clamav docker image version - defaults to .Chart.appVersion
-  tag: "latest"
-  # clamav.imagePullPolicy -- IfNotPresent 
-  imagePullPolicy: IfNotPresent 
-  replicaCount: 1
+image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/virus-scan-api
+# Overrides the image tag whose default is the chart appVersion.
+tag: "latest"
+pullPolicy: IfNotPresent
 
-  freshclam:
-    # clamav.freshclam.mirrors -- A list of clamav mirrors to be used by the clamav service
-    mirrors: https://clamav-mirror.apps.silver.devops.gov.bc.ca
+imagePullSecrets: []
+
+resources:
   limits:
-    # clamav.limits.fileSize -- The largest file size scanable by clamav, in MB
-    fileSize: 30
-    # clamav.limits.scanSize -- The largest scan size permitted in clamav, in MB
-    scanSize: 150
-    # clamav.limits.connectionQueueLength -- Maximum length the queue of pending connections may grow to
-    connectionQueueLength: 100
-    # clamav.limits.maxThreads --Maximum number of threads running at the same time.
-    maxThreads: 4
-    # clamav.sendBufTimeout -- This option specifies how long to wait (in milliseconds) if the send buffer is full, keep low to avoid clamd hanging
-    sendBufTimeout: 500
-
-  resources:
-    # clamav.resources -- The resource requests and limits for the clamav service
-    requests:
-      cpu: 1000m
-      memory: 1Gi
-    limits:
-      cpu: 2000m
-      memory: 2Gi
-
-virusScanService:
-  image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/virus-scan-api
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
-  pullPolicy: IfNotPresent
-
-  imagePullSecrets: []
-
-  resources:
-    limits:
-      cpu: 100m
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 256Mi
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
 
 ## Pod Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod

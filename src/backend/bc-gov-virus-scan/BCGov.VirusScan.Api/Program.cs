@@ -21,7 +21,7 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
         .Enrich.WithExceptionDetails(destructurers);
 });
 
-builder.Services.AddMediatR(typeof(VirusScanController)); // some anchor class
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<VirusScanController>()); // some anchor class
 builder.Services.AddVirusScan();
 builder.AddInstrumentation();
 
