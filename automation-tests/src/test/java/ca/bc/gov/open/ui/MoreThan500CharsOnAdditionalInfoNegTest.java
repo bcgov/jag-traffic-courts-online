@@ -88,8 +88,8 @@ public class MoreThan500CharsOnAdditionalInfoNegTest {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
 
-		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
-		review.reviewProcess(element, driverWait, driver);
+		DisputeTicketUploadPNG review = new DisputeTicketUploadPNG();
+		review.review(element, driverWait, driver);
 		
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
 		element.sendKeys(
