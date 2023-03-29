@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using TrafficCourts.Coms.Client.Monitoring;
 
 namespace TrafficCourts.Coms.Client;
+
 
 internal class ObjectManagementService : IObjectManagementService
 {
@@ -11,11 +13,13 @@ internal class ObjectManagementService : IObjectManagementService
     private readonly ILogger<ObjectManagementService> _logger;
 
     public ObjectManagementService(
-        IObjectManagementClient client, 
-        IMemoryStreamFactory memoryStreamFactory, 
+        IObjectManagementClient client,
+        IMemoryStreamFactory memoryStreamFactory,
         ILogger<ObjectManagementService> logger)
     {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
+        ArgumentNullException.ThrowIfNull(client);
+
+        _client = new InstrumentedObjectManagementClient(client);
         _memoryStreamFactory = memoryStreamFactory ?? throw new ArgumentNullException(nameof(memoryStreamFactory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -110,7 +114,7 @@ internal class ObjectManagementService : IObjectManagementService
         _logger.LogDebug("Getting file {FileId}", id);
 
         try
-        {
+        {            
             FileResponse response = await _client.ReadObjectAsync(id, DownloadMode.Proxy, expiresIn: null, versionId: null, cancellationToken)
                 .ConfigureAwait(false);
 
@@ -188,7 +192,7 @@ internal class ObjectManagementService : IObjectManagementService
             var ids = files.Select(_ => _.Id).ToList();
             var metadataValues = await GetMetadataAsync(ids, cancellationToken);
             var tagValues = await GetTagsAsync(ids, cancellationToken);
-            
+
             // allocate list with the correct size based on the number of found files
             List<FileSearchResult> results = new(files.Count);
 
@@ -236,7 +240,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
 
         ArgumentNullException.ThrowIfNull(file);
-        
+
         if (file.Data is null)
         {
             throw new ArgumentException("Data is required for updating a file", nameof(file));
