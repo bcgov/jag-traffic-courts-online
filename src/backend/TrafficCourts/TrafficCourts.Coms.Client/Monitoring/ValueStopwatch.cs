@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
-namespace TrafficCourts.Common.Diagnostics;
+namespace TrafficCourts.Coms.Client.Monitoring;
 
-internal struct ValueStopwatch
+internal readonly struct ValueStopwatch
 {
     private static readonly double TimestampToTicks = TimeSpan.TicksPerSecond / (double)Stopwatch.Frequency;
 
