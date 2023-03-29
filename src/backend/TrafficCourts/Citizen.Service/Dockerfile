@@ -39,5 +39,5 @@ ENV GIT_SHA=$GIT_SHA
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
+RUN chgrp 0 entrypoint.sh && chmod a+rx,o-rx entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh", "dotnet", "TrafficCourts.Citizen.Service.dll"]
