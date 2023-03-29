@@ -32,6 +32,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeListResp
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
+import net.logstash.logback.argument.StructuredArguments;
 
 @ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = true)
 @Qualifier("jjDisputeRepository")
@@ -45,7 +46,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Autowired
 	private JJDisputeMapper jjDisputeMapper;
-	
+
 	public JJDisputeRepositoryImpl(JjDisputeApi jjDisputeApi) {
 		this.jjDisputeApi = jjDisputeApi;
 	}
@@ -103,7 +104,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 		}
 		return new ArrayList<JJDispute>();
 	}
-	
+
 	@Override
 	public JJDispute saveAndFlush(JJDispute jjDispute) {
 		try {
@@ -112,7 +113,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 				return jjDisputeApi.v1UpdateDisputePut(convert);
 			});
 			if (responseResult.getDisputeId() != null) {
-				logger.debug("Successfully updated the jjDispute through ORDS with dispute id {}", responseResult.getDisputeId());
+				logger.debug("Successfully updated the jjDispute through ORDS with dispute id {}", StructuredArguments.value("disputeId", responseResult.getDisputeId()));
 
 				// There is no endpoint to retrieve a JJDispute by id, so we'll use the ticketNumber that was in the update request (hopefully it wasn't changed)
 				//return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
@@ -122,12 +123,12 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 					throw new InternalServerErrorException("Update was successful, but retrieving the same record failed");
 				}
 				else if (jjDisputes.size() > 1) {
-					logger.error("More than on JJDispute found with the [supposedly-unique] ticketNumber: {}", jjDispute.getTicketNumber());
+					logger.error("More than on JJDispute found with the [supposedly-unique] ticketNumber: {}", StructuredArguments.value("ticketNumber", jjDispute.getTicketNumber()));
 				}
 				return jjDisputes.get(0);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR updating JJDispute to ORDS with data: {}", jjDispute.toString(), e);
+			logger.error("ERROR updating JJDispute to ORDS with data: {}", StructuredArguments.fields(jjDispute), e);
 			throw new InternalServerErrorException(e);
 		}
 

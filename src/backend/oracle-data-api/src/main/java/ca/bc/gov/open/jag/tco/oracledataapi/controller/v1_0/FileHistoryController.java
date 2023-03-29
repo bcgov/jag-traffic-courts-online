@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import net.logstash.logback.argument.StructuredArguments;
 
 @RestController(value = "FileHistoryControllerV1_0")
 @RequestMapping("/api/v1.0")
@@ -40,14 +41,14 @@ public class FileHistoryController {
 			@PathVariable
 			@Parameter(description = "Ticket number to retrieve related file history.")
 			String ticketNumber) {
-		logger.debug("getFileHistoryForTicket called");
+		logger.debug("getFileHistoryForTicket called for ticketNumber: {} ", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return fileHistoryService.getFileHistoryByTicketNumber(ticketNumber);
 	}
 
 	/**
 	 * POST endpoint that inserts a file history record for given ticketnumber.
-	 * 
+	 *
 	 * @requestBody fileHistory
 	 * @return inserted {@link FileHistory}
 	 */
@@ -60,7 +61,7 @@ public class FileHistoryController {
 	@PostMapping("/fileHistory")
 	public ResponseEntity<Long> insertFileHistory(
 			@RequestBody FileHistory fileHistory) {
-		logger.debug("POST /fileHistory called");
+		logger.debug("POST /fileHistory called for saving fileHistory: {}", StructuredArguments.fields(fileHistory));
 		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory), HttpStatus.OK);
 	}
 }

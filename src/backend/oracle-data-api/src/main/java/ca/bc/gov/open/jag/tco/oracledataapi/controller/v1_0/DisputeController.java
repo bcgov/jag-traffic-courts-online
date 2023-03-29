@@ -41,6 +41,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import net.logstash.logback.argument.StructuredArguments;
 
 @RestController(value = "DisputeControllerV1_0")
 @RequestMapping("/api/v1.0")
@@ -76,6 +77,7 @@ public class DisputeController {
 			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
 			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes called");
+		logger.debug("Excludig status: {}", StructuredArguments.value("excludeStatus", excludeStatus));
 		List<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
 		return new ResponseEntity<List<Dispute>>(allDisputes, HttpStatus.OK);
 	}
@@ -89,10 +91,10 @@ public class DisputeController {
 	 */
 	@GetMapping("/dispute/{id}/{isAssign}")
 	public ResponseEntity<Dispute> getDispute(
-			@PathVariable Long id, 
+			@PathVariable Long id,
 			@PathVariable boolean isAssign,
 			Principal principal) {
-		logger.debug("GET /dispute/{}/{} called", id, isAssign);
+		logger.debug("GET /dispute/{}/{} called", StructuredArguments.value("disputeId", id), StructuredArguments.value("isAssign", isAssign));
 		if (isAssign == true) { // only assign if parameter is true
 			if (!disputeService.assignDisputeToUser(id, principal)) {
 				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -100,14 +102,14 @@ public class DisputeController {
 		}
 		return new ResponseEntity<Dispute>(disputeService.getDisputeById(id), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * GET endpoint that finds Dispute statuses by TicketNumber and IssuedTime.
 	 *
 	 * @param ticketNumber of the Dispute.ticketNumber to search for
 	 * @param issuedTime the time portion of the Dispute.issuedTs field
 	 * @return {@link Dispute}
-	 * 
+	 *
 	 * LDAME 2023-03-16 allowed search by ticket number only to be called when submitting to arc
 	 */
 	@Operation(summary = "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.")
@@ -129,7 +131,11 @@ public class DisputeController {
 			@RequestParam(required = false)
 			@Parameter(description = "The noticeOfDisputeGuid of the Dispute to retreive.")
 			String noticeOfDisputeGuid) {
-		logger.debug("GET /disputes/status?ticketNumber={}&issuedTime={}&noticeOfDisputeGuid={} called", ticketNumber, issuedTime == null ? "" : DateFormatUtils.format(issuedTime, DateUtil.TIME_FORMAT), noticeOfDisputeGuid);
+		logger.debug("GET /disputes/status?ticketNumber={}&issuedTime={}&noticeOfDisputeGuid={} called",
+				StructuredArguments.value("ticketNumber", ticketNumber),
+				issuedTime == null ? "" : StructuredArguments.value("issuedTime", DateFormatUtils.format(issuedTime, DateUtil.TIME_FORMAT)),
+						StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
+
 		if (StringUtils.isBlank(ticketNumber) && issuedTime == null && StringUtils.isBlank(noticeOfDisputeGuid)) {
 			throw new IllegalArgumentException("Either ticketNumber/time or noticeOfDisputeGuid must be specified.");
 		}
@@ -137,7 +143,7 @@ public class DisputeController {
 			throw new IllegalArgumentException("If issuedTime is specified, so must be ticketNumber.");
 		}
 		List<DisputeResult> results = disputeService.findDisputeStatuses(ticketNumber, issuedTime, noticeOfDisputeGuid);
-		logger.debug("  found {} record(s).", results.size());
+		logger.debug("  found {} record(s).", StructuredArguments.value("numberOfRecordsFound", results.size()));
 		return new ResponseEntity<List<DisputeResult>>(results, HttpStatus.OK);
 	}
 
@@ -155,7 +161,7 @@ public class DisputeController {
 	})
 	@DeleteMapping("/dispute/{id}")
 	public void deleteDispute(@PathVariable Long id) {
-		logger.debug("DELETE /dispute/{} called", id);
+		logger.debug("DELETE /dispute/{} called", StructuredArguments.value("disputeId", id));
 		disputeService.delete(id);
 	}
 
@@ -168,6 +174,7 @@ public class DisputeController {
 	@PostMapping("/dispute")
 	public Long saveDispute(@RequestBody Dispute dispute) {
 		logger.debug("POST /dispute called");
+		logger.debug("Saving disute: {}", StructuredArguments.fields(dispute));
 		return disputeService.save(dispute).getDisputeId();
 	}
 
@@ -191,7 +198,9 @@ public class DisputeController {
 	@PutMapping("/dispute/{id}/reject")
 	public ResponseEntity<Dispute> rejectDispute(@PathVariable Long id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String rejectedReason,
 			Principal principal) {
-		logger.debug("PUT /dispute/{id}/reject called");
+		logger.debug("PUT /dispute/{}/reject called with rejected reason: {} ",
+				StructuredArguments.value("disputeId", id),
+				StructuredArguments.value("rejectedReason", rejectedReason));
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -216,7 +225,7 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}/validate")
 	public ResponseEntity<Dispute> validateDispute(@PathVariable Long id, Principal principal) {
-		logger.debug("PUT /dispute/{}/validate called", id);
+		logger.debug("PUT /dispute/{}/validate called", StructuredArguments.value("disputeId", id));
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -232,7 +241,7 @@ public class DisputeController {
 	@GetMapping("/dispute/noticeOfDispute/{id}")
 	public ResponseEntity<Dispute> getDisputeByNoticeOfDisputeGuid(
 			@PathVariable(name = "id") @Parameter(description = "The noticeOfDisputeGuid of the Dispute to retreive.") String noticeOfDisputeGuid) {
-		logger.debug("GET /dispute/noticeOfDispute/{id} called");
+		logger.debug("GET /dispute/noticeOfDispute/{} called", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
 		try {
 			Dispute dispute = disputeService.getDisputeByNoticeOfDisputeGuid(noticeOfDisputeGuid);
 			if (dispute == null) {
@@ -240,7 +249,7 @@ public class DisputeController {
 			}
 			return new ResponseEntity<Dispute>(dispute, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR retrieving Dispute with noticeOfDisputeGuid {}", noticeOfDisputeGuid, e);
+			logger.error("ERROR retrieving Dispute with noticeOfDisputeGuid {}", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid), e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -253,7 +262,7 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}/email/verify")
 	public ResponseEntity<Void> verifyDisputeEmail(@PathVariable(name="id") @Parameter(description = "The id of the Dispute to update.") Long id) {
-		logger.debug("PUT /dispute/{}/email/verify called", id);
+		logger.debug("PUT /dispute/{}/email/verify called", StructuredArguments.value("disputeId", id));
 		disputeService.verifyEmail(id);
 		return ResponseEntity.ok().build();
 	}
@@ -274,7 +283,7 @@ public class DisputeController {
 			@Size(min = 1, max = 100)
 			@Parameter(description = "The new email address of the Disputant.")
 			String email) {
-		logger.debug("PUT /dispute/{}/email/reset called", id);
+		logger.debug("PUT /dispute/{}/email/reset called", StructuredArguments.value("disputeId", id));
 		return new ResponseEntity<Dispute>(disputeService.resetEmail(id, email), HttpStatus.OK);
 	}
 
@@ -296,7 +305,7 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}/cancel")
 	public ResponseEntity<Dispute> cancelDispute(@PathVariable Long id, Principal principal) {
-		logger.debug("PUT /dispute/{id}/cancel called");
+		logger.debug("PUT /dispute/{}/cancel called", StructuredArguments.value("disputeId", id));
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -321,7 +330,7 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}/submit")
 	public ResponseEntity<Dispute> submitDispute(@PathVariable Long id, Principal principal) {
-		logger.debug("PUT /dispute/{id}/submit called");
+		logger.debug("PUT /dispute/{}/submit called", StructuredArguments.value("disputeId", id));
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -345,7 +354,7 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}")
 	public ResponseEntity<Dispute> updateDispute(@PathVariable Long id, @RequestBody Dispute dispute, Principal principal) {
-		logger.debug("PUT /dispute/{} called", id);
+		logger.debug("PUT /dispute/{} called", StructuredArguments.value("disputeId", id));
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -401,7 +410,7 @@ public class DisputeController {
 			String noticeOfDisputeGuid,
 			@RequestBody
 			DisputeUpdateRequest disputeUpdateRequest) {
-		logger.debug("POST /dispute/{}/updateRequest called", noticeOfDisputeGuid);
+		logger.debug("POST /dispute/{}/updateRequest called", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
 
 		Long disputeUpdateRequestId = disputeService.saveDisputeUpdateRequest(noticeOfDisputeGuid, disputeUpdateRequest).getDisputeUpdateRequestId();
 		return new ResponseEntity<Long>(disputeUpdateRequestId, HttpStatus.OK);
@@ -426,7 +435,9 @@ public class DisputeController {
 			@RequestParam(required = false)
 			@Parameter(description = "If specified, filter request by DisputeUpdateRequestStatus", example = "PENDING")
 			DisputeUpdateRequestStatus status) {
-		logger.debug("GET /dispute/updateRequests called", id, status);
+		logger.debug("GET /dispute/updateRequests called with disputeId:{} and disputeUpdateRequestStatus:{} ",
+				StructuredArguments.value("disputeId", id),
+				StructuredArguments.value("disputeUpdateRequestStatus", status.toString()));
 		return new ResponseEntity<List<DisputeUpdateRequest>>(disputeService.findDisputeUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
 	}
 
@@ -450,7 +461,7 @@ public class DisputeController {
 			@RequestParam
 			@Parameter(description = "The status of the request record should be updated to.", example = "ACCEPTED")
 			DisputeUpdateRequestStatus disputeUpdateRequestStatus) {
-		logger.debug("PUT /dispute/updateRequest/{} called", updateRequestId);
+		logger.debug("PUT /dispute/updateRequest/{} called", StructuredArguments.value("updateRequestId", updateRequestId));
 
 		DisputeUpdateRequest disputeUpdateRequest = disputeService.updateDisputeUpdateRequest(updateRequestId, disputeUpdateRequestStatus);
 		return new ResponseEntity<DisputeUpdateRequest>(disputeUpdateRequest, HttpStatus.OK);
