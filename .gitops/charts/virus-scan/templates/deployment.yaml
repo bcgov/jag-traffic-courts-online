@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "virusScan.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "virusScan.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "virusScan.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: "9090"
+      labels:
+        {{- include "virusScan.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: virus-scan-service
+        image: "{{ .Values.image }}:{{ .Values.tag }}"
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        env:
+          {{- $env := merge (.Values.env | default dict) -}}
+          {{ range $k, $v := $env }}
+          - name: {{ $k | quote }}
+            value: {{ $v | quote }}
+          {{- end }}
+          - name: TZ
+            value: America/Vancouver
+          - name: ASPNETCORE_URLS
+            value: http://*:8080;http://*:9090
