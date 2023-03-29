@@ -61,7 +61,7 @@ spec:
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           # command: ["/bin/sh"]
-          # args: ["-c", "while true; do echo hello; sleep 10;done"]          
+          # args: ["-c", "while true; do echo hello; sleep 10;done"]
           ports:
             - name: http
               containerPort: 8080

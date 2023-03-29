@@ -15,12 +15,24 @@ spec:
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: "9090"
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/auth-path: auth/k8s-silver
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: {{ .Values.global.vault.role }}  # licenseplate-nonprod or licenseplate-prod are your options
+        vault.hashicorp.com/agent-inject-secret-secrets.env: {{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}virus-scan-api
+        vault.hashicorp.com/agent-inject-template-secrets.env: |
+          {{`{{- with secret `}}"{{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}virus-scan-api"{{` }}
+          {{- range $k, $v := .Data.data }}
+          {{ $k }}={{ $v }}{{ end -}}
+          {{- end `}} }}
       labels:
         {{- include "virusScan.selectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.podSecurityContext.enabled }}
       securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
+      serviceAccountName: {{ .Values.global.licenseplate }}-vault
       containers:
       - name: virus-scan-service
         image: "{{ .Values.image }}:{{ .Values.tag }}"
@@ -29,6 +41,15 @@ spec:
           - name: http
             containerPort: 8080
             protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /v1/clamav/ping
+            port: 8080
+            httpHeaders:
+            - name: Accept
+              value: application/json
+          initialDelaySeconds: 10
+          periodSeconds: 5
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
         env:

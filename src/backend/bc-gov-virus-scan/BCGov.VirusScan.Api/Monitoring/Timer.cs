@@ -48,7 +48,7 @@ public sealed class Timer : Instrument<double>
 
             if (_exception is not null)
             {
-                _tagList.Add("exception_type", _exception.GetType().Name);
+                AddTag("exception_type", _exception.GetType().Name);
             }
 
             _timer.Record(elapsed, _tagList);

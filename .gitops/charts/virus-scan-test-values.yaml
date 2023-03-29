@@ -1,3 +1,10 @@
+# global values
+global:
+  namespace: 0198bb-test
+  vault:
+    role: 0198bb-nonprod
+    path: test/
+    
 fullnameOverride: "virus-scan"
 
 env:

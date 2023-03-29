@@ -1,6 +1,16 @@
 # Default values for clamav.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+# global values
+global:
+  licenseplate: 0198bb
+  namespace:
+  vault:
+    # licenseplate-nonprod or licenseplate-prod
+    role: ''
+    # 'dev/', 'test/' or ''
+    path: ''
+  env:
 
 # nameOverride -- override the name of the clamav chart
 nameOverride: ""
@@ -12,14 +22,23 @@ service:
   # service.port -- The port to be used by the virus scan service
   port: 8080
 
+# Environment Variables
+# To enable swagger UI, can switch the environment to development with
+# "ASPNETCORE_ENVIRONMENT": "Development"
 env:
   "CLAMAV__SERVER": "localhost"
   "CLAMAV__PORT": "3310"
+  "Serilog__Using__0": "Serilog.Sinks.Splunk"
+  "Serilog__Using__1": "Serilog.Sinks.Console"
+  "Serilog__WriteTo__0__Name": "EventCollector"
+  "Serilog__WriteTo__1__Name": "Console"
+  "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+  "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
 
 image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/virus-scan-api
 # Overrides the image tag whose default is the chart appVersion.
 tag: "latest"
-pullPolicy: IfNotPresent
+pullPolicy: Always
 
 imagePullSecrets: []
 

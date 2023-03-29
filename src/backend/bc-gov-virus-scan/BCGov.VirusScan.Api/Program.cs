@@ -1,9 +1,7 @@
 using BCGov.VirusScan.Api.Controllers;
 using BCGov.VirusScan.Api.Monitoring;
-using MediatR;
 using System.Reflection;
 using System.Text.Json.Serialization;
-
 using Serilog;
 using Serilog.Exceptions.Core;
 using Serilog.Exceptions;
@@ -18,7 +16,9 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 
     loggerConfiguration
         .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.WithExceptionDetails(destructurers);
+        .Enrich.WithExceptionDetails(destructurers)
+        .Enrich.WithEnvironmentVariable("HOSTNAME", "MachineName")
+        .Enrich.WithEnvironmentVariable("OPENSHIFT_BUILD_COMMIT", "GIT_SHA");
 });
 
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<VirusScanController>()); // some anchor class

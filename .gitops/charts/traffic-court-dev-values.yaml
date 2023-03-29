@@ -193,13 +193,12 @@ oracle-data-api:
     tag: "1.57.2"
     pullPolicy: Always
   env:
-    "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG"
+    "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
     "TZ": "America/Vancouver"
     "LOOKUP_REPOSITORY_SRC": "ords"
     "DISPUTE_REPOSITORY_SRC": "ords"
     "JJDISPUTE_REPOSITORY_SRC": "ords"
     "HISTORY_REPOSITORY_SRC": "ords"
-    "H2_DATASOURCE": "jdbc:h2:mem:testdb"
     "ORDS_API_AUTH_ENABLED": "true"
 
 staff-api:
