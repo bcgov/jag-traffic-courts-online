@@ -15,8 +15,11 @@ RUN dotnet build "BCGov.VirusScan.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "BCGov.VirusScan.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+COPY entrypoint.sh /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BCGov.VirusScan.Api.dll"]
+RUN chgrp 0 entrypoint.sh && chmod a+rx,o-rx entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh", "dotnet", "BCGov.VirusScan.Api.dll"]
