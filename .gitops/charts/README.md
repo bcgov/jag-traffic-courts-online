@@ -8,6 +8,9 @@ See [Installing Helm](https://helm.sh/docs/intro/install/)
 
 `helm template traffic-court-online --values traffic-court-dev-values.yaml`
 
+## ClamAV
+
+Uses deployment from https://github.com/bcgov/clamav
 
 ## Postgres
 
