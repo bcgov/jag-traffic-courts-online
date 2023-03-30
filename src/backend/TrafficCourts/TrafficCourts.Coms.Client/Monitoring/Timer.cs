@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
 namespace TrafficCourts.Coms.Client.Monitoring;
@@ -11,11 +12,6 @@ internal sealed class Timer : Instrument<double>
     : base(meter, name, unit, description)
     {
         _histogram = meter.CreateHistogram<double>(name, unit, description);
-    }
-
-    public ITimerOperation Start()
-    {
-        return Start(new TagList());
     }
 
     public ITimerOperation Start(TagList tagList)
@@ -33,10 +29,11 @@ internal sealed class Timer : Instrument<double>
         private readonly Timer _timer;
         private readonly ValueStopwatch _valueStopwatch;
         private readonly TagList _tagList;
-        private Exception? _exception;
 
         public TimerMark(Timer timer, TagList tags)
         {
+            ArgumentNullException.ThrowIfNull(timer);
+
             _timer = timer;
             _tagList = tags;
             _valueStopwatch = ValueStopwatch.StartNew();
@@ -45,28 +42,32 @@ internal sealed class Timer : Instrument<double>
         public void Dispose()
         {
             var elapsed = _valueStopwatch.GetElapsedTime();
-
-            if (_exception is not null)
-            {
-                AddTag("exception_type", _exception.GetType().Name);
-
-                if (_exception is ApiException exception)
-                {
-                    AddTag("http_status_code", exception.StatusCode);
-                }
-            }
-
             _timer.Record(elapsed, _tagList);
         }
 
         public void Error(Exception exception)
         {
-            _exception = exception;
+            ArgumentNullException.ThrowIfNull(exception);
+
+            _tagList.Add("exception_type", exception.GetType().Name);
+
+            if (exception is ApiException apiException)
+            {
+                _tagList.Add("http_status_code", apiException.StatusCode);
+            }
         }
 
-        public void AddTag(string name, object value)
+        public TagList Tags 
         {
-            _tagList.Add(name, value);
+            get
+            {
+                var tags = new TagList();
+                foreach (var tag in _tagList)
+                {
+                    tags.Add(tag);
+                }
+                return tags; 
+            } 
         }
     }
 }
