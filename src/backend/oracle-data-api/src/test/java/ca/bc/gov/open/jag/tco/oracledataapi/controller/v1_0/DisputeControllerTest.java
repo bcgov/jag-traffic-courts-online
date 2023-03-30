@@ -707,7 +707,6 @@ class DisputeControllerTest extends BaseTestSuite {
 				.put("/api/v1.0/dispute/{id}/cancel", disputeId)
 				.content(cancelledReason)
 				.principal(getPrincipal()));
-		//Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
 		return resultActions;
 	}
 
