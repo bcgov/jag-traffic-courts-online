@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import net.logstash.logback.argument.StructuredArguments;
 
 @RestController(value = "EmailHistoryControllerV1_0")
 @RequestMapping("/api/v1.0")
@@ -40,7 +41,7 @@ public class EmailHistoryController {
 			@PathVariable
 			@Parameter(description = "Ticket number to retrieve related emails.")
 			String ticketNumber) {
-		logger.debug("getEmailHistoryForTicket called");
+		logger.debug("getEmailHistoryForTicket called for ticketNumber: {} ", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return emailHistoryService.getEmailHistoryByTicketNumber(ticketNumber);
 	}
@@ -59,7 +60,7 @@ public class EmailHistoryController {
 	@PostMapping("/emailHistory")
 	public ResponseEntity<Long> insertEmailHistory(
 			@RequestBody EmailHistory emailHistory) {
-		logger.debug("POST /emailHistory/{ticketNumber} called");
+		logger.debug("POST /emailHistory called to save emailHistory: {}", StructuredArguments.fields(emailHistory));
 		return new ResponseEntity<Long>(emailHistoryService.insertEmailHistory(emailHistory), HttpStatus.OK);
 	}
 }

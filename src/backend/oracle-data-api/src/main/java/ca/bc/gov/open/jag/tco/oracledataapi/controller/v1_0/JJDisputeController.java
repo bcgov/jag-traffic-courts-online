@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import net.logstash.logback.argument.StructuredArguments;
 
 @RestController(value = "JJDisputeControllerV1_0")
 @RequestMapping("/api/v1.0/jj")
@@ -52,7 +53,7 @@ public class JJDisputeController {
 			@PathVariable("ticketNumber") String ticketNumber,
 			@PathVariable("assignVTC") boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("GET /dispute/{}/{} called", ticketNumber, checkVTCAssigned);
+		logger.debug("GET /dispute/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("checkVTCAssigned", checkVTCAssigned));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -103,7 +104,7 @@ public class JJDisputeController {
 			boolean checkVTCAssigned,
 			Principal principal,
 			@RequestBody JJDispute jjDispute) {
-		logger.debug("PUT /dispute/{} called", ticketNumber);
+		logger.debug("PUT /dispute/{} called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -158,7 +159,7 @@ public class JJDisputeController {
 			@RequestBody @Size(max = 256) String remark,
 			boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/review called", ticketNumber);
+		logger.debug("PUT /dispute/{}/review called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -188,7 +189,7 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> requireCourtHearingJJDispute(@PathVariable String ticketNumber,
 			@RequestParam (required = false) @Size(max = 256) String remark,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/requirecourthearing called", ticketNumber);
+		logger.debug("PUT /dispute/{}/requirecourthearing called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.requireCourtHearing(ticketNumber, principal, remark), HttpStatus.OK);
 	}
@@ -215,7 +216,7 @@ public class JJDisputeController {
 			Principal principal,
 			@RequestParam(required = false) @Parameter(description = "Adjudicator's participant ID") String partId) {
 
-		logger.debug("PUT /dispute/{}/accept called", ticketNumber);
+		logger.debug("PUT /dispute/{}/accept called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -242,7 +243,7 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/confirm")
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
-		logger.debug("PUT /dispute/{}/confirm called", ticketNumber);
+		logger.debug("PUT /dispute/{}/confirm called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null), HttpStatus.OK);
 	}
@@ -259,7 +260,7 @@ public class JJDisputeController {
 			@PathVariable("ticketNumber") String ticketNumber,
 			@PathVariable("documentType") TicketImageDataDocumentType documentType,
 			Principal principal) {
-		logger.debug("GET /dispute/ticketImage/{}/{} called", ticketNumber, documentType);
+		logger.debug("GET /dispute/ticketImage/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("documentType", documentType));
 
 		return new ResponseEntity<TicketImageDataJustinDocument>(jjDisputeService.getTicketImageByTicketNumber(ticketNumber, documentType), HttpStatus.OK);
 	}

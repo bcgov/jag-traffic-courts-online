@@ -19,6 +19,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmailListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmailResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.EmailHistoryRepository;
+import net.logstash.logback.argument.StructuredArguments;
 
 @Qualifier("disputeRepository")
 @Repository
@@ -63,7 +64,7 @@ public class EmailHistoryRepositoryImpl implements EmailHistoryRepository {
 				return Long.valueOf(result.getOutgoingEmailId()).longValue();
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR inserting EmailHistory to ORDS with data: {}", emailHistory.toString(), e);
+			logger.error("ERROR inserting EmailHistory to ORDS with data: {}", StructuredArguments.fields(emailHistory), e);
 			throw new InternalServerErrorException(e);
 		}
 
