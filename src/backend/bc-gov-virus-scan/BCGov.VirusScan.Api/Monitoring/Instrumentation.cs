@@ -12,45 +12,54 @@ public static class Instrumentation
 
     static Meter _meter;
 
+    private static readonly Timer _operationDuration;
+    private static readonly Counter<long> _operationErrorTotal;
+
     // scan instruments
-    private static readonly Timer _scanDuration;
     private static readonly Counter<long> _infectedFilesTotal;
-    private static readonly Counter<long> _scannedErrorTotal;
-
-    // ping instruments
-    private static readonly Timer _pingDuration;
-    private static readonly Counter<long> _pingErrorTotal;
-
-    private static readonly Timer _versionDuration;
-    private static readonly Counter<long> _versionErrorTotal;
 
     static Instrumentation()
     {
         _meter = new Meter(MeterName);
 
-        _scanDuration = new Timer(_meter, "scan.duration", "ms", "Elapsed time spent scanning files");
+        _operationDuration = new Timer(_meter, "clamav.operation.duration", "ms", "Elapsed time spent on an ClamAV operation");
+        _operationErrorTotal = _meter.CreateCounter<long>("clamav.operation.errors", "ea", "Number of operations that could not be completed due to an error");
+
         _infectedFilesTotal = _meter.CreateCounter<long>("files.infected", "ea", "Number of infected files detected");
-        _scannedErrorTotal = _meter.CreateCounter<long>("scan.errors", "ea", "Number of files that could not be scanned due to an error");
-
-        _pingDuration = new Timer(_meter, "ping.duration", "ms", "Elapsed time spent sending pings to ClamAV");
-        _pingErrorTotal = _meter.CreateCounter<long>("ping.errors", "ea", "Number of times ping to ClamAV failed");
-
-        _versionDuration = new Timer(_meter, "version.duration", "ms", "Elapsed time spent sending version commands to ClamAV");
-        _versionErrorTotal = _meter.CreateCounter<long>("version.errors", "ea", "Number of times ClamAV version command failed");
     }
 
-    #region Virus Scan
+    public static ITimerOperation BeginOperation(string operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        return _operationDuration.Start(new TagList { { "operation", operation } });
+    }
+
     /// <summary>
-    /// Starts timer and increments the number of files scanned.
+    /// Indicates an operation ended with an error.
     /// </summary>
-    /// <returns>The timer operation</returns>
-    public static ITimerOperation BeginVirusScan()
+    /// <param name="operation"></param>
+    /// <param name="exception"></param>
+    public static void EndOperation(ITimerOperation operation, Exception exception)
     {
-        return _scanDuration.Start();
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(exception);
+
+        // let the timer know there was an excetion
+        operation.Error(exception);
+
+        // increment the error counter and record the same tags as the operation
+        _operationErrorTotal.Add(1, operation.Tags);
     }
 
-    public static void EndVirusScan(VirusScanStatus status)
+    /// <summary>
+    /// Ends the operation with the virus scan status.
+    /// </summary>
+    /// <param name="operation"></param>
+    /// <param name="status"></param>
+    public static void EndOperation(ITimerOperation operation, VirusScanStatus status)
     {
+        ArgumentNullException.ThrowIfNull(operation);
+
         if (status == VirusScanStatus.Infected)
         {
             _infectedFilesTotal.Add(1);
@@ -58,121 +67,15 @@ public static class Instrumentation
     }
 
     /// <summary>
-    /// Ends the operation with error.
-    /// </summary>
-    public static void EndVirusScan(ITimerOperation operation, Exception exception)
-    {
-        End(_scannedErrorTotal, operation, exception);
-    }
-
-    public static void ScanInvalidResponse() => InvalidResponse(_scannedErrorTotal);
-
-    #endregion
-
-    #region Ping
-
-    /// <summary>
-    /// Records the start of a ping operation.
-    /// </summary>
-    /// <returns>The timer operation.</returns>
-
-    public static ITimerOperation BeginPing()
-    {
-        return _pingDuration.Start();
-    }
-
-    public static void EndPing(ITimerOperation operation, bool pong)
-    {
-        operation.AddTag("success", pong);
-    }
-
-    /// <summary>
-    /// The ping operation ended due to an exception.
-    /// </summary>
-    /// <param name="operation"></param>
-    /// <param name="exception"></param>
-    public static void EndPing(ITimerOperation operation, Exception exception)
-    {
-        End(_pingErrorTotal, operation, exception);
-    }
-
-    public static void PingInvalidResponse() => InvalidResponse(_pingErrorTotal);
-
-    #endregion
-
-
-    #region Get Version
-    /// <summary>
-    /// Records the start of a get version operation.
-    /// </summary>
-    /// <returns>The timer operation.</returns>
-    public static ITimerOperation BeginGetVersion()
-    {
-        return _versionDuration.Start();
-    }
-
-    /// <summary>
-    /// The get version operation ended with a result.
-    /// </summary>
-    public static void EndGetVersion(ITimerOperation operation, GetVersionResult version)
-    {
-        if (version is null)
-        {
-            return;
-        }
-
-        if (!string.IsNullOrEmpty(version.Version)) operation.AddTag("software-version", version.Version);
-        if (version.Definition is not null)
-        {
-            if (!string.IsNullOrEmpty(version.Definition.Version)) operation.AddTag("definitions-version", version.Definition.Version);
-            operation.AddTag("definitions-date", version.Definition.Date.ToString("yyyy-MM-ddTHH:mm:ss"));
-        }
-    }
-
-    /// <summary>
-    /// The get version operation ended due to an exception.
-    /// </summary>
-
-    public static void EndGetVersion(ITimerOperation operation, Exception exception)
-    {
-        End(_versionErrorTotal, operation, exception);
-    }
-
-    /// <summary>
-    /// The response returned by Clam AV to a VERSION command could not be parsed.
-    /// </summary>
-    public static void VersionInvalidResponse() => InvalidResponse(_versionErrorTotal);
-    #endregion 
-
-    /// <summary>
     /// Invalid response was detected.
     /// </summary>
-    private static void InvalidResponse(Counter<long> errorCounter)
+    public static void InvalidResponse(ITimerOperation operation)
     {
-        TagList tagList = new()
-        {
-            { "error_type", "Invalid Response" }
-        };
+        ArgumentNullException.ThrowIfNull(operation);
 
-        errorCounter.Add(1, tagList);
-
-    }
-
-    /// <summary>
-    /// The operation ended due to an exception.
-    /// </summary>
-    private static void End(Counter<long> errorTotal, ITimerOperation operation, Exception exception)
-    {
-        // let the timer know there was an excetion
-        operation.Error(exception);
-
-        TagList tagList = new()
-        {
-            { "exception_type", exception.GetType().Name }
-        };
-
-        // increment the error counter
-        errorTotal.Add(1, tagList);
+        // get the same tags from the operation
+        var tags = operation.Tags;
+        tags.Add("error_type", "Invalid Response");
+        _operationErrorTotal.Add(1, tags);
     }
 }
-
