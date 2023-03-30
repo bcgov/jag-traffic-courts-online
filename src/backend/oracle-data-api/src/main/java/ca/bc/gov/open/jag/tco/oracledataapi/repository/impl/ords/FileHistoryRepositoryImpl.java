@@ -19,6 +19,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.AuditLogEntryListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.AuditLogEntryResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.FileHistoryRepository;
+import net.logstash.logback.argument.StructuredArguments;
 
 @Qualifier("fileHistoryRepository")
 @Repository
@@ -64,7 +65,7 @@ public class FileHistoryRepositoryImpl implements FileHistoryRepository{
 				return Long.valueOf(result.getAuditLogEntryId()).longValue();
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR inserting FileHistory to ORDS with data: {}", fileHistory.toString(), e);
+			logger.error("ERROR inserting FileHistory to ORDS with data: {}", StructuredArguments.fields(fileHistory), e);
 			throw new InternalServerErrorException(e);
 		}
 

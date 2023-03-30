@@ -31,6 +31,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
+import net.logstash.logback.argument.StructuredArguments;
 
 @ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = true)
 @Qualifier("disputeRepository")
@@ -157,7 +158,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 				return Optional.empty();
 			}
 			else {
-				logger.debug("Successfully returned the violation ticket from ORDS with dispute id {}", id);
+				logger.debug("Successfully returned the violation ticket from ORDS with dispute id {}", StructuredArguments.value("disputeId", id));
 				Dispute dispute = DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket);
 
 				// Set missing back reference
@@ -176,7 +177,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 				return Optional.ofNullable(dispute);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR retrieving Dispute from ORDS with dispute id {}", id, e);
+			logger.error("ERROR retrieving Dispute from ORDS with dispute id {}", StructuredArguments.value("disputeId", id), e);
 			throw new InternalServerErrorException(e);
 		}
 	}
@@ -196,11 +197,11 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		try {
 			ResponseResult result = assertNoExceptions(() -> violationTicketApi.v1ProcessViolationTicketPost(violationTicket));
 			if (result.getDisputeId() != null) {
-				logger.debug("Successfully saved the dispute through ORDS with dispute id {}", result.getDisputeId());
+				logger.debug("Successfully saved the dispute through ORDS with dispute id {}", StructuredArguments.value("disputeId", result.getDisputeId()));
 				return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}", violationTicket.toString(), e);
+			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}", StructuredArguments.fields(violationTicket), e);
 			throw new InternalServerErrorException(e);
 		}
 
@@ -218,7 +219,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); //FIXME: UTC is a time standard, not a time zone - I think this should be GMT.
 		String dateStr = simpleDateFormat.format(olderThan);
 
-		logger.debug("Unassigning Disputes older than '{}'", dateStr);
+		logger.debug("Unassigning Disputes older than {}", StructuredArguments.value("date", dateStr));
 
 		assertNoExceptions(() -> violationTicketApi.v1UnassignViolationTicketPost(dateStr));
 	}
@@ -238,11 +239,11 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		try {
 			ResponseResult result = assertNoExceptions(() -> violationTicketApi.v1UpdateViolationTicketPut(violationTicket));
 			if (result.getDisputeId() != null) {
-				logger.debug("Successfully updated the dispute through ORDS with dispute id {}", result.getDisputeId());
+				logger.debug("Successfully updated the dispute through ORDS with dispute id {}", StructuredArguments.value("disputeId", result.getDisputeId()));
 				return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR updating Dispute through ORDS with dispute data: {}", violationTicket.toString(), e);
+			logger.error("ERROR updating Dispute through ORDS with dispute data: {}", StructuredArguments.fields(violationTicket), e);
 			throw new InternalServerErrorException(e);
 		}
 
@@ -291,7 +292,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			if (disputesToReturn != null) {
 				for (Dispute dispute : disputesToReturn) {
 					if (dispute.getDisputeCounts() == null) {
-						logger.error("Dispute missing counts. Bad data? DisputeId: {}", dispute.getDisputeId());
+						logger.error("Dispute missing counts. Bad data? DisputeId: {}", StructuredArguments.value("disputeId", dispute.getDisputeId()));
 						dispute.setDisputeCounts(new ArrayList<>());
 					}
 				}

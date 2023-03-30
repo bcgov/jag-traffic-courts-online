@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
-namespace TrafficCourts.Common.Diagnostics;
+namespace TrafficCourts.Coms.Client.Monitoring;
 
-public sealed class Timer : Instrument<double>
+internal sealed class Timer : Instrument<double>
 {
     private readonly Histogram<double> _histogram;
 
@@ -49,6 +49,11 @@ public sealed class Timer : Instrument<double>
             if (_exception is not null)
             {
                 AddTag("exception_type", _exception.GetType().Name);
+
+                if (_exception is ApiException exception)
+                {
+                    AddTag("http_status_code", exception.StatusCode);
+                }
             }
 
             _timer.Record(elapsed, _tagList);

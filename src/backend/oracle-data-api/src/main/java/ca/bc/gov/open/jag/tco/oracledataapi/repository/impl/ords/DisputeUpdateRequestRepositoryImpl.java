@@ -21,6 +21,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.UpdateRequestListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.UpdateRequestResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeUpdateRequestRepository;
+import net.logstash.logback.argument.StructuredArguments;
 
 @Qualifier("disputantUpdateRequestRepository")
 @Repository
@@ -63,11 +64,11 @@ public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestR
 		try {
 			UpdateRequestResponseResult result = assertNoExceptions(() -> disputeUpdateRequestApi.v1ProcessDisputeUpdateRequestPost(updateRequest));
 			if (result.getDisputeUpdateRequestId() != null) {
-				logger.debug("Successfully saved the dispute update request through ORDS for dispute id {}", result.getDisputeId());
+				logger.debug("Successfully saved the dispute update request through ORDS for dispute id {}", StructuredArguments.value("disputeId", result.getDisputeId()));
 				return findById(Long.valueOf(result.getDisputeUpdateRequestId()).longValue()).orElse(null);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR inserting DisputeUpdateRequest to ORDS with update request data: {}", updateRequest.toString(), e);
+			logger.error("ERROR inserting DisputeUpdateRequest to ORDS with update request data: {}", StructuredArguments.fields(updateRequest), e);
 			throw new InternalServerErrorException(e);
 		}
 
@@ -85,13 +86,13 @@ public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestR
 				return Optional.empty();
 			}
 			else {
-				logger.debug("Successfully returned the dispute update request from ORDS with id {}", id);
+				logger.debug("Successfully returned the dispute update request from ORDS with id {}", StructuredArguments.value("disputeUpdateRequestId", id));
 				DisputeUpdateRequest disputeUpdateRequest = DisputeUpdateRequestMapper.INSTANCE.convert(updateRequest);
 
 				return Optional.ofNullable(disputeUpdateRequest);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR retrieving dispute update request from ORDS with id {}", id, e);
+			logger.error("ERROR retrieving dispute update request from ORDS with id {}", StructuredArguments.value("disputeId", id), e);
 			throw new InternalServerErrorException(e);
 		}
 	}
@@ -106,11 +107,11 @@ public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestR
 		try {
 			UpdateRequestResponseResult result = assertNoExceptions(() -> disputeUpdateRequestApi.v1UpdateDisputeUpdateRequestPut(updateRequest));
 			if (result.getDisputeUpdateRequestId() != null) {
-				logger.debug("Successfully updated the dispute update request through ORDS for dispute id {}", result.getDisputeId());
+				logger.debug("Successfully updated the dispute update request through ORDS for dispute id {}", StructuredArguments.value("disputeId", result.getDisputeId()));
 				return findById(Long.valueOf(result.getDisputeUpdateRequestId()).longValue()).orElse(null);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR updating DisputeUpdateRequest through ORDS with update request data: {}", updateRequest.toString(), e);
+			logger.error("ERROR updating DisputeUpdateRequest through ORDS with update request data: {}", StructuredArguments.fields(updateRequest), e);
 			throw new InternalServerErrorException(e);
 		}
 
@@ -125,10 +126,10 @@ public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestR
 
 		try {
 			UpdateRequestResponseResult result = assertNoExceptions(() -> disputeUpdateRequestApi.v1DeleteDisputeUpdateRequestDelete(id, null));
-			logger.debug("Successfully deleted the dispute update request through ORDS with id {}", result.getDisputeUpdateRequestId());
+			logger.debug("Successfully deleted the dispute update request through ORDS with id {}", StructuredArguments.value("disputeUpdateRequestId", id));
 
 		} catch (ApiException e) {
-			logger.error("ERROR deleting DisputeUpdateRequest through ORDS with id: {}", id, e);
+			logger.error("ERROR deleting DisputeUpdateRequest through ORDS with id: {}", StructuredArguments.value("disputeUpdateRequestId", id), e);
 			throw new InternalServerErrorException(e);
 		}
 	}

@@ -33,7 +33,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeUpdateRequestRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
-import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
+import net.logstash.logback.argument.StructuredArguments;
 
 @Service
 public class DisputeService {
@@ -101,7 +101,9 @@ public class DisputeService {
 			// It is an error if the duplicate field TicketNumber has different values.
 			if (ObjectUtils.compare(dispute.getTicketNumber(), dispute.getViolationTicket().getTicketNumber()) != 0) {
 				String msg = String.format("TicketNumber of the Dispute (%s) and ViolationTicket (%s) are different!", dispute.getTicketNumber(), dispute.getViolationTicket().getTicketNumber());
-				logger.error(msg);
+				logger.error("TicketNumber of the Dispute {} and ViolationTicket {} are different!",
+						StructuredArguments.value("disputeTicketNumber", dispute.getTicketNumber()),
+						StructuredArguments.value("violationTicketNumber", dispute.getViolationTicket().getTicketNumber()));
 				throw new ConstraintViolationException(msg, null);
 			}
 		}
@@ -138,9 +140,12 @@ public class DisputeService {
 				for (int i = 0; i < dispute.getDisputeCounts().size(); i++) {
 					BeanUtils.copyProperties(dispute.getDisputeCounts().get(i), disputeCountsToUpdate.get(i), "createdBy", "createdTs", "disputeCountId");
 				}
-				logger.warn("Unexpected number of disputeCounts: " + dispute.getDisputeCounts().size() +
-						" received from the request whereas updatable number of disputeCounts from database is: " + disputeCountsToUpdate.size() +
-						". This should not happen with current dispute update use case unless something has been changed");
+			} else {
+				logger.warn("Unexpected number of disputeCounts: {}" +
+						" received from the request whereas updatable number of disputeCounts from database is: {}" +
+						". This should not happen with current dispute update use case unless something has been changed",
+						StructuredArguments.value("disputeCounts", dispute.getDisputeCounts().size()),
+						StructuredArguments.value("disputeCountsFromDatabase", dispute.getDisputeCounts().size()));
 				// TODO - determine what to do if the disputeCount list sizes don't match
 			}
 		}
@@ -154,11 +159,14 @@ public class DisputeService {
 					for (int i = 0; i < violationTicketCountSize; i++) {
 						BeanUtils.copyProperties(dispute.getViolationTicket().getViolationTicketCounts().get(i), violationTicketCountsToUpdate.get(i), "createdBy", "createdTs", "violationTicketCountId");
 					}
+				} else {
+					logger.warn("Unexpected number of violationTicketCounts: " +
+							" received from the request whereas updatable number of violationTicketCounts from database is: " +
+							". This should not happen with current dispute update use case unless something has been changed",
+							StructuredArguments.value("violationTicketCounts", violationTicketCountSize),
+							StructuredArguments.value("violationTicketCountsFromDatabase", violationTicketCountsToUpdate.size()));
+					// TODO - determine what to do if the violationTicketCount list sizes don't match
 				}
-				logger.warn("Unexpected number of violationTicketCounts: " + violationTicketCountSize +
-						" received from the request whereas updatable number of violationTicketCounts from database is: " + violationTicketCountsToUpdate.size() +
-						". This should not happen with current dispute update use case unless something has been changed");
-				// TODO - determine what to do if the violationTicketCount list sizes don't match
 			}
 		}
 
@@ -207,7 +215,7 @@ public class DisputeService {
 	 */
 	public Dispute setStatus(Long id, DisputeStatus disputeStatus, String rejectedReason) {
 		if (disputeStatus == null) {
-			logger.error("Attempting to set Dispute status to null - bad method call.");
+			logger.error("Attempting to set Dispute status to null for disputeId: {} - bad method call.", StructuredArguments.value("disputeId", id));
 			throw new NotAllowedException("Cannot set Dispute status to null");
 		}
 
@@ -245,7 +253,7 @@ public class DisputeService {
 			throw new NotAllowedException("Changing the status of a Dispute record to %s is not permitted.", DisputeStatus.NEW);
 		default:
 			// This should never happen, but if so, then it means a new DisputeStatus was added and these business rules were not updated accordingly.
-			logger.error("A Dispute record has an unknown status '{}' - bad object state.", dispute.getStatus());
+			logger.error("A Dispute record has an unknown status {} - bad object state.", StructuredArguments.value("disputeStatus", dispute.getStatus().toString()));
 			throw new NotAllowedException("Unknown status of a Dispute record: %s", dispute.getStatus());
 		}
 
@@ -274,7 +282,7 @@ public class DisputeService {
 			disputeRepository.assignDisputeToUser(id, principal.getName());
 			disputeRepository.flushAndClear();
 
-			logger.debug("Dispute with id {} has been assigned to {}", id, principal.getName());
+			logger.debug("Dispute with id {} has been assigned to {}", StructuredArguments.value("disputeId", id), StructuredArguments.value("userName", principal.getName()));
 
 			return true;
 		}
@@ -328,12 +336,11 @@ public class DisputeService {
 	public Dispute getDisputeByNoticeOfDisputeGuid(String noticeOfDisputeGuid) {
 		List<Dispute> findByNoticeOfDisputeGuid = disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid);
 		if (CollectionUtils.isEmpty(findByNoticeOfDisputeGuid)) {
-			String msg = String.format("Dispute could not be found with noticeOfDisputeGuid: %s", noticeOfDisputeGuid);
-			logger.error(msg);
+			logger.error("Dispute could not be found with noticeOfDisputeGuid: {}", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
 			return null;
 		}
 		if (findByNoticeOfDisputeGuid.size() > 1) {
-			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeGuid: " + noticeOfDisputeGuid);
+			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeGuid: {}", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
 		}
 		return findByNoticeOfDisputeGuid.get(0);
 	}
@@ -357,7 +364,7 @@ public class DisputeService {
 		else if (issuedTime != null) {
 			disputeResults.addAll(disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime));
 		}
-		
+
 		else {
 			disputeResults.addAll(disputeRepository.findByTicketNumber(ticketNumber));
 		}
@@ -367,7 +374,7 @@ public class DisputeService {
 			List<JJDispute> jjDisputeResults = jjDisputeRepository.findByTicketNumber(ticketNumber);
 			if (CollectionUtils.isNotEmpty(jjDisputeResults)) {
 				if (jjDisputeResults.size() > 1) {
-					logger.error("More than one JJDispute found for TicketNumber '{}'", ticketNumber, DateUtil.formatAsHourMinuteUTC(issuedTime));
+					logger.error("More than one JJDispute found for TicketNumber {}", StructuredArguments.value("ticketNumber", ticketNumber));
 				}
 				JJDispute jjDispute = jjDisputeResults.get(0);
 				for (DisputeResult disputeResult : disputeResults) {

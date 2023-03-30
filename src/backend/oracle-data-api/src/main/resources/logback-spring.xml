@@ -17,9 +17,14 @@
 		<disableCertificateValidation>true</disableCertificateValidation>
 		<batch_size_count>1</batch_size_count>
 		<connectTimeout>5000</connectTimeout>
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>%msg</pattern>
-		</layout>
+		<messageFormat>json</messageFormat>
+		<layout class="net.logstash.logback.layout.LogstashLayout">
+	        <customFields>
+	        	{
+	        		"Application":"TrafficCourts.OracleDataApi"
+	        	}
+	        </customFields>
+	    </layout>
 	</appender>
 
 	<springProfile name="!test">

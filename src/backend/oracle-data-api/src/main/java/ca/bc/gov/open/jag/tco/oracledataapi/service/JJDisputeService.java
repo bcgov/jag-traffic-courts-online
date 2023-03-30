@@ -36,6 +36,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.TicketImageDataRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
+import net.logstash.logback.argument.StructuredArguments;
 
 @Service
 public class JJDisputeService {
@@ -93,7 +94,7 @@ public class JJDisputeService {
 		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
 			jjDisputeRepository.assignJJDisputeVtc(ticketNumber, principal.getName());
 
-			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
+			logger.debug("JJDispute with ticket Number {} has been assigned to {}", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("userName", principal.getName()));
 
 			return true;
 		}
@@ -108,7 +109,7 @@ public class JJDisputeService {
 	public void unassignJJDisputes() {
 		// Find all Disputes with an assignedTs older than 1 hour ago.
 		Date hourAgo = DateUtils.addHours(new Date(), -1);
-		logger.debug("Unassigning all jj-disputes older than {}", hourAgo.toInstant());
+		logger.debug("Unassigning all jj-disputes older than {}", StructuredArguments.value("date", hourAgo.toInstant()));
 		jjDisputeRepository.unassignJJDisputeVtc(null, hourAgo);
 	}
 
@@ -183,15 +184,15 @@ public class JJDisputeService {
 			JJDispute jjDispute = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 			if (jjDispute == null) {
-				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber + " - element not found.");
+				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: {} - element not found.", StructuredArguments.value("ticketNumber", ticketNumber));
 				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber);
 			}
 
 			jjDisputeRepository.assignJJDisputeJj(ticketNumber, username);
 			if (!StringUtils.isBlank(username)) {
-				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", ticketNumber, username);
+				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("userName", username));
 			} else {
-				logger.debug("Unassigned JJDispute with ticket number {} ", ticketNumber);
+				logger.debug("Unassigned JJDispute with ticket number {} ", StructuredArguments.value("ticketNumber", ticketNumber));
 			}
 		}
 	}
@@ -275,7 +276,7 @@ public class JJDisputeService {
 			break;
 		default:
 			// This should never happen, but if so, then it means a new JJDisputeStatus was added and these business rules were not updated accordingly.
-			logger.error("A JJ Dispute record has an unknown status '{}' - bad object state.", jjDisputeToUpdate.getStatus());
+			logger.error("A JJ Dispute record has an unknown status {} - bad object state.", StructuredArguments.value("disputeStatus", jjDisputeToUpdate.getStatus().toString()));
 			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
 		}
 
@@ -351,14 +352,14 @@ public class JJDisputeService {
 
 		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
 		if (jjDisputes.isEmpty()) {
-			logger.error("Cant find JJDispute by ticketNumber {}.", ticketNumber);
+			logger.error("Cant find JJDispute by ticketNumber {}.", StructuredArguments.value("ticketNumber", ticketNumber));
 			return null;
 		}
 
 		// Get justin document by rcc id and document type. There should be one and only one.
 		TicketImageDataJustinDocument ticketImage = ticketImageDataRepository.getTicketImageByRccId(jjDisputes.get(0).getJustinRccId(), documentType.getShortName());
 		if (ticketImage == null) {
-			logger.error("Cant find Ticket Image by ticketNumber {} and type {}.", ticketNumber, documentType);
+			logger.error("Cant find Ticket Image by ticketNumber {} and type {}.", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("documentType", documentType));
 			return null;
 		}
 
@@ -391,12 +392,12 @@ public class JJDisputeService {
 		// Find a JJDispute by ticketNumber. There should be one and only one record - this field "should" be unique.
 		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
 		if (jjDisputes.isEmpty()) {
-			logger.error("Cant find JJDispute by ticketNumber {}.", ticketNumber);
+			logger.error("Cant find JJDispute by ticketNumber {}.", StructuredArguments.value("ticketNumber", ticketNumber));
 			return Optional.empty();
 		}
 
 		if (jjDisputes.size() > 1) {
-			logger.error("Found more than one JJDispute for the given ticketNumber - should be unique. Using first one found.");
+			logger.error("Found more than one JJDispute for the given ticketNumber {} - should be unique. Using first one found.", StructuredArguments.value("ticketNumber", ticketNumber));
 		}
 
 		JJDispute jjDispute = jjDisputes.get(0);
