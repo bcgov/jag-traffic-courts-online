@@ -176,7 +176,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// Updates the status of a particular Dispute record to REJECTED.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
-    /// <param name="rejectedReason">The reason or note (max 256 characters) the Dispute was cancelled.</param>
+    /// <param name="rejectedReason">The reason or note (max 256 characters) the Dispute was rejected.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -296,6 +296,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// Updates the status of a particular Dispute record to CANCELLED.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
+    /// <param name="cancelledReason">The reason or note (max 256 characters) the Dispute was cancelled.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -316,13 +317,17 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Cancel)]
-    public async Task<IActionResult> CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> CancelDisputeAsync(long disputeId,
+        [FromForm]
+        [Required]
+        [StringLength(256, ErrorMessage = "Cancelled reason cannot exceed 256 characters.")] string cancelledReason,
+        CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "CANCELLED");
 
         try
         {
-            await _disputeService.CancelDisputeAsync(disputeId, User, cancellationToken);
+            await _disputeService.CancelDisputeAsync(disputeId, cancelledReason, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
