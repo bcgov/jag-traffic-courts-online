@@ -77,7 +77,7 @@ public class DisputeController {
 			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
 			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes called");
-		logger.debug("Excludig status: {}", StructuredArguments.value("excludeStatus", excludeStatus));
+		logger.debug("Excluding status: {}", StructuredArguments.value("excludeStatus", excludeStatus));
 		List<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
 		return new ResponseEntity<List<Dispute>>(allDisputes, HttpStatus.OK);
 	}
@@ -304,12 +304,13 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
-	public ResponseEntity<Dispute> cancelDispute(@PathVariable Long id, Principal principal) {
+	public ResponseEntity<Dispute> cancelDispute(@PathVariable Long id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String cancelledReason,
+			Principal principal) {
 		logger.debug("PUT /dispute/{}/cancel called", StructuredArguments.value("disputeId", id));
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Dispute>(disputeService.setStatus(id, DisputeStatus.CANCELLED), HttpStatus.OK);
+		return new ResponseEntity<Dispute>(disputeService.setStatus(id, DisputeStatus.CANCELLED, cancelledReason), HttpStatus.OK);
 	}
 
 	/**

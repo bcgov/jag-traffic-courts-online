@@ -257,7 +257,7 @@ public class DisputeService {
 			throw new NotAllowedException("Unknown status of a Dispute record: %s", dispute.getStatus());
 		}
 
-		disputeRepository.setStatus(id, disputeStatus, DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
+		disputeRepository.setStatus(id, disputeStatus, DisputeStatus.REJECTED.equals(disputeStatus) || DisputeStatus.CANCELLED.equals(disputeStatus) ? rejectedReason : null);
 		disputeRepository.flushAndClear();
 		return disputeRepository.findById(id).orElseThrow();
 	}

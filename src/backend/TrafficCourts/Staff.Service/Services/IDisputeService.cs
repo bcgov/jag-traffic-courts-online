@@ -46,11 +46,12 @@ public interface IDisputeService
 
     /// <summary>Updates the status of a particular Dispute record to CANCELLED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
+    /// <param name="cancelledReason">The reason or note (max 256 characters) for the cancellation.</param>
     /// <param name="user"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task CancelDisputeAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken);
+    Task CancelDisputeAsync(long id, string cancelledReason, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to REJECTED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>

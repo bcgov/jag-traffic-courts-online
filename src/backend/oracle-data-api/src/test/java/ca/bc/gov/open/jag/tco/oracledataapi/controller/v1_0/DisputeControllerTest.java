@@ -205,12 +205,43 @@ class DisputeControllerTest extends BaseTestSuite {
 		submitDispute(disputeId);
 
 		// Set the status to CANCELLED (can only be set to Cancelled after it's first been set to PROCESSING.
-		cancelDispute(disputeId);
+		cancelDispute(disputeId, "Just because");
 
 		// Assert status is set, rejected reason is NOT set.
 		dispute = getDispute(disputeId, true);
 		assertEquals(DisputeStatus.CANCELLED, dispute.getStatus());
-		assertNull(dispute.getRejectedReason());
+		assertEquals("Just because", dispute.getRejectedReason());
+	}
+
+	@Test
+	public void testCancelDispute_400() throws Exception {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		Long disputeId = saveDispute(dispute);
+
+		// Retrieve it from the controller's endpoint
+		dispute = getDispute(disputeId, true);
+		assertEquals(disputeId, dispute.getDisputeId());
+		assertEquals(DisputeStatus.NEW, dispute.getStatus());
+
+		// try using an empty reason (should fail with 400 error)
+		cancelDispute(disputeId, "")
+		.andExpect(status().isBadRequest());
+
+		// try using an long reason, > 256 (should fail with 400 error)
+		cancelDispute(disputeId, RandomStringUtils.random(257))
+		.andExpect(status().isBadRequest());
+
+		String longString = RandomStringUtils.randomAlphabetic(256);
+
+		// Set the status to CANCELLED
+		cancelDispute(disputeId, longString)
+		.andExpect(status().isOk());
+
+		// Assert status and reason are set.
+		dispute = getDispute(disputeId, true);
+		assertEquals(DisputeStatus.CANCELLED, dispute.getStatus());
+		assertEquals(longString, dispute.getRejectedReason());
 	}
 
 	@Test
@@ -671,13 +702,13 @@ class DisputeControllerTest extends BaseTestSuite {
 	 * Issues a PUT request to /api/v1.0/dispute/{id}/cancel. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
 	 */
-	private Dispute cancelDispute(Long disputeId) throws Exception {
+	private ResultActions cancelDispute(Long disputeId, String cancelledReason) throws Exception {
 		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
 				.put("/api/v1.0/dispute/{id}/cancel", disputeId)
-				.principal(getPrincipal()))
-				.andExpect(status().isOk());
-		Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
-		return result;
+				.content(cancelledReason)
+				.principal(getPrincipal()));
+		//Dispute result = mapResult(resultActions, new TypeReference<Dispute>() {});
+		return resultActions;
 	}
 
 	/**
