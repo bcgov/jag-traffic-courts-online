@@ -54,7 +54,7 @@ public sealed class VirusScanService : IVirusScanService
 
     public async Task<bool> PingAsync(CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginPing();
+        using var operation = Instrumentation.BeginOperation("Ping");
 
         try
         {
@@ -66,17 +66,15 @@ public sealed class VirusScanService : IVirusScanService
 
             _logger.LogDebug("Ping response {Response}", response);
 
-            response = ParsePingResponse(response);
+            response = ParsePingResponse(operation, response);
 
             var pong = StringComparer.OrdinalIgnoreCase.Equals(response, "PONG");
-
-            Instrumentation.EndPing(operation, pong);
 
             return pong;
         }
         catch (Exception exception)
         {
-            Instrumentation.EndPing(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             _logger.LogError(exception, "Ping ClamAV using PING command failed.");
             throw new PingException(exception);
         }
@@ -86,7 +84,7 @@ public sealed class VirusScanService : IVirusScanService
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        using var operation = Instrumentation.BeginVirusScan();
+        using var operation = Instrumentation.BeginOperation("VirusScan");
 
         try
         {
@@ -103,15 +101,15 @@ public sealed class VirusScanService : IVirusScanService
 
             _logger.LogDebug("Scan response is '{Response}'", response);
 
-            VirusScanResult result = ParseScanResponse(response);
+            VirusScanResult result = ParseScanResponse(operation, response);
 
-            Instrumentation.EndVirusScan(result.Status);
+            Instrumentation.EndOperation(operation, result.Status);
 
             return result;
         }
         catch (Exception exception)
         {
-            Instrumentation.EndVirusScan(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             _logger.LogError(exception, "Scan file using INSTREAM command failed.");
             return new VirusScanResult { Status = VirusScanStatus.Error };
         }
@@ -121,7 +119,7 @@ public sealed class VirusScanService : IVirusScanService
     {
         ArgumentNullException.ThrowIfNull(sections);
 
-        using var operation = Instrumentation.BeginVirusScan();
+        using var operation = Instrumentation.BeginOperation("VirusScan");
 
         try
         {
@@ -136,16 +134,19 @@ public sealed class VirusScanService : IVirusScanService
             }
 
             // write zero length chunk 
-            await stream.WriteAsync(ZeroLengthChunk, 0, ZeroLengthChunk.Length, cancellationToken);
+            await stream.WriteAsync(ZeroLengthChunk, 0, ZeroLengthChunk.Length, cancellationToken)
+                .ConfigureAwait(false);
 
             string response = await ReadResponseAsync(cancellationToken);
 
-            var result = ParseScanResponse(response);
+            var result = ParseScanResponse(operation, response);
+            Instrumentation.EndOperation(operation, result.Status);
+
             return result;
         }
         catch (Exception exception)
         {
-            Instrumentation.EndVirusScan(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             _logger.LogError(exception, "Scan file using INSTREAM command failed.");
             return new VirusScanResult { Status = VirusScanStatus.Error };
         }
@@ -153,27 +154,26 @@ public sealed class VirusScanService : IVirusScanService
 
     public async Task<GetVersionResult> GetVersionAsync(CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginGetVersion();
+        using var operation = Instrumentation.BeginOperation("Version");
 
         try
         {
             await SendCommandAsync(VersionCommand, cancellationToken);
             string response = await ReadResponseAsync(cancellationToken);
 
-            GetVersionResult version = ParseVersionResponse(response);
+            GetVersionResult version = ParseVersionResponse(operation, response);
 
-            Instrumentation.EndGetVersion(operation, version);
             return version;
         }
         catch (Exception exception)
         {
-            Instrumentation.EndGetVersion(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             _logger.LogError(exception, "Get virus scan version using VERSION command failed.");
             throw new VersionException(exception);
         }
     }
 
-    private string ParsePingResponse(string response)
+    private string ParsePingResponse(ITimerOperation operation, string response)
     {
         // See: https://github.com/Cisco-Talos/clamav/blob/main/clamd/session.c
         // Response will be one of the following:
@@ -188,14 +188,14 @@ public sealed class VirusScanService : IVirusScanService
             return response;
         }
 
-        Instrumentation.PingInvalidResponse();
+        Instrumentation.InvalidResponse(operation);
 
         _logger.LogInformation("Ping response does not end in PONG, actual response is \"{Response}\"", response);
 
         return string.Empty;
     }
 
-    private VirusScanResult ParseScanResponse(string response)
+    private VirusScanResult ParseScanResponse(ITimerOperation operation, string response)
     {
         // see: https://github.com/Cisco-Talos/clamav/blob/main/clamd/scanner.c
         // Response will be one of the following:
@@ -227,14 +227,14 @@ public sealed class VirusScanService : IVirusScanService
             return new VirusScanResult { Status = VirusScanStatus.Error, Error = GetErrorMessage(response) };
         }
 
-        Instrumentation.ScanInvalidResponse();
+        Instrumentation.InvalidResponse(operation);
         _logger.LogInformation("Scan response is invalid, actual response is \"{Response}\"", response);
 
         // unexpected case
         return new VirusScanResult { Status = VirusScanStatus.Error, Error = "Unexpeced response from ClamAV" };
     }
 
-    private GetVersionResult ParseVersionResponse(string response)
+    private GetVersionResult ParseVersionResponse(ITimerOperation operation, string response)
     {
         // If the engine version is not available, the first response will be returned.
         //
@@ -269,7 +269,7 @@ public sealed class VirusScanService : IVirusScanService
 
         if (string.IsNullOrEmpty(release))
         {
-            Instrumentation.VersionInvalidResponse();
+            Instrumentation.InvalidResponse(operation);
         }
 
         return new GetVersionResult(release, engine, engineDate);
