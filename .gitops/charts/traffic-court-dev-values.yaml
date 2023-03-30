@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "1.57.2"
+    tag: "1.57.3"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "1.57.2"
+    tag: "1.57.3"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-06-30-preview"
@@ -29,7 +29,7 @@ citizen-api:
 
 citizen-web:
   image:
-    tag: "1.57.2"
+    tag: "1.57.3"
     pullPolicy: Always
 
   appConfig: |  
@@ -190,7 +190,7 @@ citizen-web:
 
 oracle-data-api:
   image:
-    tag: "1.57.2"
+    tag: "1.57.3"
     pullPolicy: Always
   env:
     "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
@@ -203,7 +203,7 @@ oracle-data-api:
 
 staff-api:
   image:
-    tag: "1.57.2"
+    tag: "1.57.3"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -217,7 +217,7 @@ staff-api:
 
 staff-web:
   image:
-    tag: "1.57.2"
+    tag: "1.57.3"
     pullPolicy: Always
   keycloakConfig: |
     {
@@ -243,7 +243,7 @@ staff-web:
 
 workflow-service:
   image:
-    tag: "1.57.2"
+    tag: "1.57.3"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
