@@ -81,15 +81,6 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
                 await context.PublishWithLog(_logger, message, context.CancellationToken);
             }
         }
-        catch (WebException ex)
-        {
-            HttpWebResponse? errorResponse = ex.Response as HttpWebResponse;
-            if (errorResponse?.StatusCode == HttpStatusCode.NotFound || errorResponse?.StatusCode == HttpStatusCode.BadRequest)
-            {
-                // dont requeue if dispute not found or bad request
-                _logger.LogError(ex.Message, context);
-            }
-        }
         catch (ArgumentNullException ex) // log it and move on
         {
             _logger.LogError(ex.Message, context);
