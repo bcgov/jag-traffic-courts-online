@@ -51,8 +51,8 @@ public class OutgoingEmailMapperTest extends BaseTestSuite{
 		assertEquals(occamDisputeId, Long.valueOf(result.getOccamDisputeId()));
 		assertEquals(subject, result.getEmailSubjectTxt());
 		assertEquals(plainTextContent, result.getPlainTextContent());
-		assertEquals(fromEmailAddress, result.fromEmailAddress(fromEmailAddress));
-		assertEquals(toEmailAddress, result.toEmailAddress(toEmailAddress));
+		assertEquals(fromEmailAddress, result.getFromEmailAddress());
+		assertEquals(toEmailAddress, result.getToEmailAddress());
 		
 		OutgoingEmail outgoingEmail = new OutgoingEmail();
 		outgoingEmail.setOutgoingEmailId(String.valueOf(emailHistoryId));
