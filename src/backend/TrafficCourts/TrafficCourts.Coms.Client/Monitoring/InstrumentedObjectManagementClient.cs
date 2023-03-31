@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
-
-namespace TrafficCourts.Coms.Client.Monitoring;
+﻿namespace TrafficCourts.Coms.Client.Monitoring;
 
 internal class InstrumentedObjectManagementClient : IObjectManagementClient
 {
@@ -17,7 +14,7 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
 
     public Task AddMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("AddMetadata");
+        using var operation = Instrumentation.BeginOperation("AddMetadata");
 
         try
         {
@@ -26,14 +23,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task AddTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("AddTagging");
+        using var operation = Instrumentation.BeginOperation("AddTagging");
 
         try
         {
@@ -42,14 +39,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<List<Anonymous>> CreateObjectsAsync(IReadOnlyDictionary<string, string>? meta, IReadOnlyDictionary<string, string>? tags, Guid? bucketId, FileParameter anyKey, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginCreateObjects();
+        using var operation = Instrumentation.BeginOperation("CreateObjects");
 
         try
         {
@@ -58,14 +55,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndCreateObjects(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task DeleteMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("DeleteMetadata");
+        using var operation = Instrumentation.BeginOperation("DeleteMetadata");
 
         try
         {
@@ -74,14 +71,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<ResponseObjectDeleted> DeleteObjectAsync(Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginDeleteObject();
+        using var operation = Instrumentation.BeginOperation("DeleteObject");
 
         try
         {
@@ -90,7 +87,7 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndDeleteObject(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
 
@@ -98,7 +95,7 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
 
     public Task DeleteTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("DeleteTagging");
+        using var operation = Instrumentation.BeginOperation("DeleteTagging");
 
         try
         {
@@ -107,14 +104,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<IList<Anonymous2>> FetchMetadataAsync(IList<Guid>? ids, IReadOnlyDictionary<string, string>? meta, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginFetchMetadata();
+        using var operation = Instrumentation.BeginOperation("FetchMetadata");
         try
         {
             var response = _client.FetchMetadataAsync(ids, meta, cancellationToken);
@@ -122,14 +119,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndFetchMetadata(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<IList<Anonymous3>> FetchTagsAsync(IList<Guid>? ids, IReadOnlyDictionary<string, string>? tags, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginFetchTags();
+        using var operation = Instrumentation.BeginOperation("FetchTags");
 
         try
         {
@@ -138,14 +135,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndFetchTags(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task HeadObjectAsync(Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("HeadObject");
+        using var operation = Instrumentation.BeginOperation("HeadObject");
 
         try
         {
@@ -154,14 +151,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<List<DBVersion>> ListObjectVersionAsync(Guid objId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("ListObjectVersion");
+        using var operation = Instrumentation.BeginOperation("ListObjectVersion");
 
         try
         {
@@ -170,14 +167,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<FileResponse> ReadObjectAsync(Guid objId, DownloadMode? download, int? expiresIn, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginReadObject();
+        using var operation = Instrumentation.BeginOperation("ReadObject");
 
         try
         {
@@ -186,14 +183,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndReadObject(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task ReplaceMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("ReplaceMetadata");
+        using var operation = Instrumentation.BeginOperation("ReplaceMetadata");
 
         try
         {
@@ -202,14 +199,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task ReplaceTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("ReplaceTagging");
+        using var operation = Instrumentation.BeginOperation("ReplaceTagging");
 
         try
         {
@@ -218,14 +215,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<List<DBObject>> SearchObjectsAsync(IReadOnlyDictionary<string, string>? meta, IList<Guid>? ids, Guid? bucketId, string? path, bool? active, bool? deleteMarker, bool? latest, bool? @public, string? mimeType, string? name, IReadOnlyDictionary<string, string>? tags, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginSearchObjects();
+        using var operation = Instrumentation.BeginOperation("SearchObjects");
 
         try
         {
@@ -234,14 +231,14 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndSearchObjects(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }
 
     public Task<Response> UpdateObjectAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, IReadOnlyDictionary<string, string>? tags, FileParameter anyKey, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOtherOperation("UpdateObject");
+        using var operation = Instrumentation.BeginOperation("UpdateObject");
 
         try
         {
@@ -250,7 +247,7 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
         catch (Exception exception)
         {
-            Instrumentation.EndOtherOperation(operation, exception);
+            Instrumentation.EndOperation(operation, exception);
             throw;
         }
     }

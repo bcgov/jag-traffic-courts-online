@@ -186,13 +186,13 @@ public class DisputeService : IDisputeService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task CancelDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task CancelDisputeAsync(long disputeId, string cancelledReason, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(user);
 
         _logger.LogDebug("Dispute cancelled");
 
-        Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancelledReason, cancellationToken);
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
