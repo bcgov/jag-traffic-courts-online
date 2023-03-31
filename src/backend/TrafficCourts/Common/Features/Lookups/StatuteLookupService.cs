@@ -29,5 +29,23 @@ namespace TrafficCourts.Common.Features.Lookups
 
             return sections[0];
         }
+
+        public async Task<Statute?> GetByIdAsync(string statuteId)
+        {
+            var values = await GetListAsync();
+
+            var sections = values.Where(_ => _.Id == statuteId).ToList();
+            if (sections.Count == 0)
+            {
+                return null;
+            }
+
+            if (sections.Count >= 1)
+            {
+                _logger.LogInformation("{Count} sections were returned matching {Id}, returning first value", sections.Count, statuteId);
+            }
+
+            return sections[0];
+        }
     }
 }

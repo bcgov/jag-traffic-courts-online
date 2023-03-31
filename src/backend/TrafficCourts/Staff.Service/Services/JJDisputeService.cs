@@ -1,10 +1,12 @@
 ﻿using MassTransit;
 using System.Security.Claims;
+using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using JJDisputeStatus = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDisputeStatus;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -18,14 +20,16 @@ public class JJDisputeService : IJJDisputeService
     private readonly IBus _bus;
     private readonly IStaffDocumentService _documentService;
     private readonly IKeycloakService _keycloakService;
+    private readonly IStatuteLookupService _lookupService;
     private readonly ILogger<JJDisputeService> _logger;
 
-    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, ILogger<JJDisputeService> logger)
+    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, IStatuteLookupService lookupService, ILogger<JJDisputeService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _documentService = comsService ?? throw new ArgumentNullException(nameof(comsService));
         _keycloakService = keycloakService ?? throw new ArgumentNullException(nameof(keycloakService));
+        _lookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -53,6 +57,25 @@ public class JJDisputeService : IJJDisputeService
         }
 
         dispute.FileData = disputeFiles;
+
+        // Populate the statute description of each count of the JJDispute
+        foreach (var count in dispute.JjDisputedCounts)
+        {
+            // Find statute by count's statute ID since the ID is stored in the Description field of the JJDisputedCount
+            Statute? statute = await _lookupService.GetByIdAsync(count.Description);
+            if (statute != null)
+            {
+                string statuteDescription = string.Format("{0} {1} {2}",
+                              statute.ActCode, statute.Code, statute.ShortDescriptionText);
+
+                // Set the full description back to the JJDisputedCount as part of the JJDispute to be returned
+                count.Description = statuteDescription;
+            }
+            else
+            {
+                _logger.LogWarning("Failed to return Statute based on the provided {statuteId}", count.Description);
+            }
+        }
 
         return dispute;
     }
