@@ -12,7 +12,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
-import { DisputeContactTypeCd } from 'app/api';
+import { DisputeContactTypeCd, DisputeStatus } from 'app/api';
 
 @Component({
   selector: 'app-contact-info',
@@ -39,6 +39,7 @@ export class ContactInfoComponent implements OnInit {
   public conflict: boolean = false;
   public form: FormGroup;
   public ContactType = DisputeContactTypeCd;
+  public DispStatus = DisputeStatus;
   public collapseObj: any = {
     contactInformation: true
   }
@@ -203,7 +204,7 @@ export class ContactInfoComponent implements OnInit {
           // submit dispute and return to TRM home
           this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe({
             next: response => {
-              this.lastUpdatedDispute.status = 'PROCESSING';
+              this.lastUpdatedDispute.status = this.DispStatus.Processing;
               this.onBack();
             },
             error: err => { },
@@ -251,7 +252,7 @@ export class ContactInfoComponent implements OnInit {
           // udate the reason entered, reject dispute and return to TRM home
           this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
-              this.lastUpdatedDispute.status = 'REJECTED';
+              this.lastUpdatedDispute.status = this.DispStatus.Rejected;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
               this.onBack();
             },
@@ -275,28 +276,22 @@ export class ContactInfoComponent implements OnInit {
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
-        if (action?.output?.response) {
-          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
-          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
+      if (action?.output?.response) {
+        this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+        this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
-          // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute).subscribe({
-            next: response => {
-              this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId).subscribe({
-                next: response => {
-                  this.lastUpdatedDispute.status = 'CANCELLED';
-                  this.lastUpdatedDispute.rejectedReason = action.output.reason;
-                  this.onBack();
-                },
-                error: err => { },
-                complete: () => { }
-              });
-            },
-            error: err => { },
-            complete: () => { }
-          });
-        }
-      });
+        // cancel dispute and return to TRM home since this will be filtered out
+        this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.reason).subscribe({
+          next: response => {
+            this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
+            this.lastUpdatedDispute.rejectedReason = action.output.reason;
+            this.onBack();
+          },
+          error: err => { },
+          complete: () => { }
+        });
+    }
+    });
   }
 
   onKeyPressNumbers(event: any, BCOnly: boolean) {

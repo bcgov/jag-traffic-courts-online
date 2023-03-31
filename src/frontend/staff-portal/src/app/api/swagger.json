@@ -744,6 +744,30 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "cancelledReason"
+                ],
+                "type": "object",
+                "properties": {
+                  "cancelledReason": {
+                    "maxLength": 256,
+                    "minLength": 0,
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "cancelledReason": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The Dispute is updated."

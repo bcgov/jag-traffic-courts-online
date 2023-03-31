@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { CountryCodeValue, CourthouseConfig, ProvinceCodeValue } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
+import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation, DisputeStatus } from 'app/api';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -53,6 +53,7 @@ export class TicketInfoComponent implements OnInit {
   public IsAct = ViolationTicketCountIsAct;
   public IsRegulation = ViolationTicketCountIsRegulation;
   public ContactType = DisputeContactTypeCd;
+  public DispStatus = DisputeStatus;
 
   /**
    * @description
@@ -287,13 +288,13 @@ export class TicketInfoComponent implements OnInit {
 
   // violation ticket borders only for new status
   public applyOverErrThreshold(fieldName: string): boolean {
-    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.status != this.DispStatus.New) return false;
     if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence <= 0.80) return false;
     return true;
   }
 
   public applyUnderErrThreshold(fieldName: string): boolean {
-    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.status != this.DispStatus.New) return false;
     if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence > 0.80) return false;
     return true;
   }
@@ -582,7 +583,7 @@ export class TicketInfoComponent implements OnInit {
   validate(): void {
     this.busy = this.disputeService.validateDispute(this.lastUpdatedDispute.disputeId).subscribe({
       next: response => {
-        this.lastUpdatedDispute.status = "VALIDATED";
+        this.lastUpdatedDispute.status = this.DispStatus.Validated;
         this.form.controls.violationTicket.disable();
       },
       error: err => { },
@@ -609,7 +610,7 @@ export class TicketInfoComponent implements OnInit {
           this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe(
             {
               next: response => {
-                this.lastUpdatedDispute.status ='PROCESSING';
+                this.lastUpdatedDispute.status =this.DispStatus.Processing;
                 this.onBack();
               },
               error: err => { },
@@ -642,7 +643,7 @@ export class TicketInfoComponent implements OnInit {
           this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
               this.onBack();
-              this.lastUpdatedDispute.status = 'REJECTED';
+              this.lastUpdatedDispute.status = this.DispStatus.Rejected;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
             },
             error: err => { },
@@ -666,31 +667,25 @@ export class TicketInfoComponent implements OnInit {
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
-        if (action?.output?.response) {
-          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
-          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
+      if (action?.output?.response) {
+        this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+        this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
-          // no need to pass back byte array with image
-          let tempDispute = this.lastUpdatedDispute;
-          delete tempDispute.violationTicket.violationTicketImage;
+        // no need to pass back byte array with image
+        let tempDispute = this.lastUpdatedDispute;
+        delete tempDispute.violationTicket.violationTicketImage;
 
-          // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe({
-            next: response => {
-              this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId).subscribe({
-                next: response => {
-                  this.lastUpdatedDispute.status = 'CANCELLED';
-                  this.lastUpdatedDispute.rejectedReason = action.output.reason;
-                  this.onBack();
-                },
-                error: err => { },
-                complete: () => { }
-              });
-            },
-            error: err => { },
-            complete: () => { }
-          });
-        }
+        // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
+        this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.response).subscribe({
+          next: response => {
+            this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
+            this.lastUpdatedDispute.rejectedReason = action.output.reason;
+            this.onBack();
+          },
+          error: err => { },
+          complete: () => { }
+        });
+      }
       });
   }
 
@@ -831,7 +826,7 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('driversLicenceProvince').updateValueAndValidity();
         this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
 
-        if (this.lastUpdatedDispute.status !== "NEW") {
+        if (this.lastUpdatedDispute.status !== this.DispStatus.New) {
           this.form.controls.violationTicket.disable();
         }
         this.form.get('violationTicket').updateValueAndValidity();

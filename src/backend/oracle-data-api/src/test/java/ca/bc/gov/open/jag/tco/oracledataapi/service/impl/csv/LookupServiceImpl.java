@@ -13,6 +13,7 @@ import com.opencsv.CSVReaderBuilder;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Agency;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;
 
@@ -59,5 +60,24 @@ public class LookupServiceImpl extends BaseLookupService {
 		}
 		return languages;
 	}
-
+	
+	@Override
+	public List<Agency> getAgencies() throws ApiException {
+		List<Agency> agencies = new ArrayList<Agency>();
+		try (InputStream stream = getClass().getClassLoader().getResourceAsStream("data/agencies.csv");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			for (String[] row : new CSVReaderBuilder(reader).withSkipLines(1).build()) {
+				Agency agency = new Agency();
+				agency.setId(row.length > 0 ? row[0] : null);
+				agency.setName(row.length > 1 ? row[1] : null);
+				agency.setTypeCode(row.length > 2 ? row[2] : null);
+				agencies.add(agency);
+			}
+		}
+		catch (Exception e) {
+			log.error("Could not read agencies.csv", e);
+			return new ArrayList<Agency>();
+		}
+		return agencies;
+	}
 }

@@ -110,15 +110,19 @@ export class DisputeService {
     /**
      * Updates the status of a particular Dispute record to CANCELLED.
      * @param disputeId Unique identifier for a specific Dispute record to cancel.
+     * @param cancelledReason 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeIdCancelPut(disputeId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiDisputeDisputeIdCancelPut(disputeId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputeDisputeIdCancelPut(disputeId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputeDisputeIdCancelPut(disputeId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdCancelPut(disputeId: number, cancelledReason: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputeDisputeIdCancelPut(disputeId: number, cancelledReason: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputeDisputeIdCancelPut(disputeId: number, cancelledReason: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputeDisputeIdCancelPut(disputeId: number, cancelledReason: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdCancelPut.');
+        }
+        if (cancelledReason === null || cancelledReason === undefined) {
+            throw new Error('Required parameter cancelledReason was null or undefined when calling apiDisputeDisputeIdCancelPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -149,6 +153,25 @@ export class DisputeService {
             localVarHttpContext = new HttpContext();
         }
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'multipart/form-data'
+        ];
+
+        const canConsumeForm = this.canConsumeForm(consumes);
+
+        let localVarFormParams: { append(param: string, value: any): any; };
+        let localVarUseForm = false;
+        let localVarConvertFormParamsToString = false;
+        if (localVarUseForm) {
+            localVarFormParams = new FormData();
+        } else {
+            localVarFormParams = new HttpParams({encoder: this.encoder});
+        }
+
+        if (cancelledReason !== undefined) {
+            localVarFormParams = localVarFormParams.append('cancelledReason', <any>cancelledReason) as any || localVarFormParams;
+        }
 
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
@@ -162,7 +185,7 @@ export class DisputeService {
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/cancel`,
-            null,
+            localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
