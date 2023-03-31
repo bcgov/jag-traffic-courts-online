@@ -7,10 +7,9 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { Subscription } from 'rxjs';
-import { CountryCodeValue, CourthouseConfig, ProvinceCodeValue } from '@config/config.model';
+import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation, DisputeStatus } from 'app/api';
+import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation, DisputeStatus, Agency } from 'app/api';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -46,7 +45,6 @@ export class TicketInfoComponent implements OnInit {
   public usa: CountryCodeValue;
   public states: ProvinceCodeValue[];
   public initialDisputeValues: Dispute;
-  public courtLocations: CourthouseConfig[];
   public imageToShow: any;
   public errorThreshold: number = 0.800;
   public courtLocationFlag: OCRMessageToDisplay;
@@ -76,7 +74,6 @@ export class TicketInfoComponent implements OnInit {
     public violationTicketService: ViolationTicketService,
     private disputeService: DisputeService,
     public config: ConfigService,
-    public mockConfigService: MockConfigService,
     public lookupsService: LookupsService,
   ) {
     const today = new Date();
@@ -90,9 +87,10 @@ export class TicketInfoComponent implements OnInit {
       this.provinces = this.config.provincesAndStates.filter(x => x.ctryId === this.canada.ctryId && x.provAbbreviationCd !== this.bc.provAbbreviationCd);
       this.states = this.config.provincesAndStates.filter(x => x.ctryId === this.usa.ctryId);
     }
-    if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations.sort((a, b) => { if (a.name < b.name) return 1; });
-    }
+
+    this.busy = this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
+      this.lookupsService.courthouseAgencies$.next(response);
+    });
 
     this.busy = this.lookupsService.getStatutes().subscribe((response: Statute[]) => {
       this.lookupsService.statutes$.next(response);
@@ -436,8 +434,8 @@ export class TicketInfoComponent implements OnInit {
     putDispute.rejectedReason = this.form.get('rejectedReason').value;
 
     // set dispute courtagenid from violation ticket courthouse location
-    let courtFound = this.courtLocations.filter(x => x.name === putDispute.violationTicket.courtLocation);
-    if (courtFound.length > 0) putDispute.courtAgenId = courtFound[0].code;
+    let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === putDispute.violationTicket.courtLocation);
+    if (courtFound?.length > 0) putDispute.courtAgenId = courtFound[0].id;
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
@@ -739,8 +737,8 @@ export class TicketInfoComponent implements OnInit {
         } else this.initialDisputeValues = this.setFieldsFromJSON(response);
 
         // set court agency id if possible
-        let courtFound = this.courtLocations.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
-        if (courtFound.length > 0) this.initialDisputeValues.courtAgenId = courtFound[0].code;
+        let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
+        if (courtFound?.length > 0) this.initialDisputeValues.courtAgenId = courtFound[0].id;
 
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);

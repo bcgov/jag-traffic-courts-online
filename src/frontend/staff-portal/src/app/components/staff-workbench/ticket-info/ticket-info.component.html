@@ -313,7 +313,7 @@
                             [readonly]="lastUpdatedDispute.status === DispStatus.Validated">
                             <mat-option [value]="initialDisputeValues.violationTicket.courtLocation">{{
                               initialDisputeValues.violationTicket.courtLocation }}</mat-option>
-                            <mat-option *ngFor="let courtLocation of courtLocations" [value]="courtLocation.name">{{
+                            <mat-option *ngFor="let courtLocation of lookupsService.courthouseAgencies" [value]="courtLocation.name">{{
                               courtLocation.name }}</mat-option>
                           </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>

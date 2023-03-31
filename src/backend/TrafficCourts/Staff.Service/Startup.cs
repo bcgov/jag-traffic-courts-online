@@ -67,6 +67,7 @@ public static class Startup
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
+        builder.Services.AddAgencyLookup();
 
         // Add COMS (Object Management Service) Client
         builder.Services.AddObjectManagementService("COMS");

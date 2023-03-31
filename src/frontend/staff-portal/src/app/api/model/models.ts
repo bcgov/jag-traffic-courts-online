@@ -1,3 +1,4 @@
+export * from './agency.model';
 export * from './boundingBox.model';
 export * from './credentialRepresentation.model';
 export * from './dispute.model';

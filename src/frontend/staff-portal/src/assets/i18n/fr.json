@@ -170,6 +170,7 @@
     "dispute_create_error": "Le litige n'a pas pu être créé",
     "statute_error": "Les statuts n’ont pas pu être chargés",
     "language_error": "Les langs n’ont pas pu être chargés",
+    "agency_error": "Les agences n’ont pas pu être chargées",
     "dispute_error": "Les litiges n’ont pas pu être rejugés / sauvegardés."
   },
   "error": {

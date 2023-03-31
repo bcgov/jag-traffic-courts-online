@@ -153,6 +153,7 @@ export class JJDisputeComponent implements OnInit {
 
     this.courtAppearanceForm = this.formBuilder.group({
       appearanceTs: [null],
+      room: [null],
       createdBy: [null],
       reason: [null],
       appCd: [null],
