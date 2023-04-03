@@ -17,31 +17,42 @@ public class SmtpClientFactory : ISmtpClientFactory
 
     public async Task<ISmtpClient> CreateAsync(CancellationToken cancellationToken)
     {
+        using var operation = Instrumentation.Smtp.BeginOperation("Connect");
+
         try
         {
             SmtpClient smtp = new();
-            await smtp.ConnectAsync(_stmpConfiguration.Host, _stmpConfiguration.Port, SecureSocketOptions.Auto, cancellationToken);
+            
+            await smtp.ConnectAsync(_stmpConfiguration.Host, _stmpConfiguration.Port, SecureSocketOptions.Auto, cancellationToken)
+                .ConfigureAwait(false);
+            
             return smtp;
         }
-        catch (ArgumentNullException exception) {
+        catch (ArgumentNullException exception)
+        {
             // host or message is null.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "Host or message is null");
             throw new SmtpConnectFailedException("Host or message is null", exception);
         }
-        catch (ArgumentOutOfRangeException exception) {
+        catch (ArgumentOutOfRangeException exception) 
+        {
             // port is not between 0 and 65535.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "Port is not between 0 and 65535");
             throw new SmtpConnectFailedException("Port is not between 0 and 65535", exception);
         }
         catch (ArgumentException exception)
         {
             // The host is a zero-length string.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "The host is a zero-length string");
             throw new SmtpConnectFailedException("The host is a zero-length string", exception);
         }
         catch (ObjectDisposedException exception)
         {
             // The MailKit.Net.Smtp.SmtpClient has been disposed.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "SmtpClient has been disposed");
             throw new SmtpConnectFailedException("SmtpClient has been disposed", exception);
         }
@@ -49,6 +60,7 @@ public class SmtpClientFactory : ISmtpClientFactory
         {
             // options was set to MailKit.Security.SecureSocketOptions.StartTls and the SMTP
             // server does not support the STARTTLS extension.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "STMP server does not support the STARTTLS extension");
             throw new SmtpConnectFailedException("STMP server does not support the STARTTLS extension", exception);
         }
@@ -61,41 +73,48 @@ public class SmtpClientFactory : ISmtpClientFactory
         catch (System.Net.Sockets.SocketException exceptione)
         {
             // A socket error occurred trying to connect to the remote host.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exceptione, "A socket error occurred trying to connect to the remote host");
             throw new SmtpConnectFailedException("A socket error occurred trying to connect to the remote host", exceptione);
         }
         catch (SslHandshakeException exception)
         {
             // An error occurred during the SSL/TLS negotiations.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "An error occurred during the SSL/TLS negotiations");
             throw new SmtpConnectFailedException("An error occurred during the SSL/TLS negotiations", exception);
         }
         catch (IOException exception)
         {
             // An I/O error occurred.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "An I/O error occurred");
             throw new SmtpConnectFailedException("An I/O error occurred", exception);
         }
         catch (SmtpCommandException exception)
         {
             // An SMTP command failed.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "An SMTP command failed");
             throw new SmtpConnectFailedException("An SMTP command failed", exception);
         }
         catch (SmtpProtocolException exception)
         {
             // An SMTP protocol error occurred.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "An SMTP protocol error occurred");
             throw new SmtpConnectFailedException("An SMTP protocol error occurred", exception);
         }
         catch (InvalidOperationException exception)
         {
             // The MailKit.Net.Smtp.SmtpClient is already connected.
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "The SmtpClient is already connected");
             throw new SmtpConnectFailedException("The SmtpClient is already connected", exception);
         }
         catch (Exception exception)
         {
+            Instrumentation.Smtp.EndOperation(operation, exception);
             _logger.LogError(exception, "General smtp connection exception thrown");
             throw new SmtpConnectFailedException("General smtp connection exception thrown", exception);
         }

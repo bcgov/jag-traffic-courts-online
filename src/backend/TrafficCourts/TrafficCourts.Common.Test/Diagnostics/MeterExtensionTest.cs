@@ -21,22 +21,3 @@ public class MeterExtensionTest
         Assert.NotNull(timer);
     }
 }
-
-public class TimerTest
-{ 
-    [Fact]
-    public void create_timer()
-    {
-        var meter = new Meter("meter");
-
-        Timer timer = new Timer(meter, "timer", "ms", "A timer");
-        using var mark1 = timer.Start();
-
-        var tags = new TagList
-        {
-            { "name", "value" }
-        };
-        using var mark2 = timer.Start(tags);
-    }
-}
-
