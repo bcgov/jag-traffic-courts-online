@@ -23,8 +23,8 @@ public static class Instrumentation
         _meter = new Meter(MeterName);
 
         // Oracle Data API operations
-        _oracleDataApiOperation = new Timer(_meter, "oracle_data_api.operation.duration", "ms", "Elapsed time spent executing a Oracle Data Api operation");
-        _oracleDataApiOperationErrorTotal = _meter.CreateCounter<long>("oracle_data_api.operation.errors", "ea", "Number of times a Oracle Data Api operation not be completed due to an error");
+        _oracleDataApiOperation = new Timer(_meter, "oracledataapi.operation.duration", "ms", "Elapsed time spent executing a Oracle Data Api operation");
+        _oracleDataApiOperationErrorTotal = _meter.CreateCounter<long>("oracledataapi.operation.errors", "ea", "Number of times a Oracle Data Api operation not be completed due to an error");
 
         // SMTP (email) operations
         _smtpOperation = new Timer(_meter, "smtp.operation.duration", "ms", "Elapsed time spent executing a smtp operation");
@@ -33,11 +33,12 @@ public static class Instrumentation
 
     private static ITimerOperation BeginOperation(Timer timer, string operation)
     {
-        ArgumentNullException.ThrowIfNull(operation);
-        // caller with with Async operation name
+        Debug.Assert(timer != null);
+        Debug.Assert(operation != null);
+
         if (operation.EndsWith("Async"))
         {
-            return timer.Start(new TagList { { "operation", operation[..^5] } });
+            operation = operation[..^5];
         }
 
         return timer.Start(new TagList { { "operation", operation } });
