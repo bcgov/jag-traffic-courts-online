@@ -17,7 +17,7 @@ public class SmtpClientFactory : ISmtpClientFactory
 
     public async Task<ISmtpClient> CreateAsync(CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.Smtp.BeginOperation("Connect");
+        using var operation = Instrumentation.Smtp.BeginOperation(nameof(ISmtpClient.ConnectAsync));
 
         try
         {
@@ -70,12 +70,12 @@ public class SmtpClientFactory : ISmtpClientFactory
             _logger.LogError(oce, "The operation was canceled.");
             throw new SmtpConnectFailedException($"The operation was canceled", oce);
         }*/
-        catch (System.Net.Sockets.SocketException exceptione)
+        catch (System.Net.Sockets.SocketException exception)
         {
             // A socket error occurred trying to connect to the remote host.
             Instrumentation.Smtp.EndOperation(operation, exception);
-            _logger.LogError(exceptione, "A socket error occurred trying to connect to the remote host");
-            throw new SmtpConnectFailedException("A socket error occurred trying to connect to the remote host", exceptione);
+            _logger.LogError(exception, "A socket error occurred trying to connect to the remote host");
+            throw new SmtpConnectFailedException("A socket error occurred trying to connect to the remote host", exception);
         }
         catch (SslHandshakeException exception)
         {

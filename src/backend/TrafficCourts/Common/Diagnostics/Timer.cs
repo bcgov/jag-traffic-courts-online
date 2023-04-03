@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
 namespace TrafficCourts.Common.Diagnostics;
@@ -46,7 +47,14 @@ public sealed class Timer : Instrument<double>
         {
             ArgumentNullException.ThrowIfNull(exception);
 
-            _tagList.Add("exception_type", exception.GetType().Name);
+            AddTag("exception_type", exception.GetType().Name);
+        }
+
+        public void AddTag(string key, object? value)
+        {
+            ArgumentNullException.ThrowIfNull(key);
+
+            _tagList.Add(key, value);
         }
 
         public TagList Tags

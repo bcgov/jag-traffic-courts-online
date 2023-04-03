@@ -2,6 +2,7 @@
 using MimeKit.Text;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Common.Features.Mail;
+using MailKit.Net.Smtp;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
@@ -156,7 +157,7 @@ namespace TrafficCourts.Workflow.Service.Services
             ArgumentNullException.ThrowIfNull(client);
             ArgumentNullException.ThrowIfNull(message);
 
-            using var operation = Instrumentation.Smtp.BeginOperation("Send");
+            using var operation = Instrumentation.Smtp.BeginOperation(nameof(ISmtpClient.SendAsync));
 
             try
             {
@@ -174,7 +175,7 @@ namespace TrafficCourts.Workflow.Service.Services
         {
             ArgumentNullException.ThrowIfNull(client);
 
-            using var operation = Instrumentation.Smtp.BeginOperation("Disconnect");
+            using var operation = Instrumentation.Smtp.BeginOperation(nameof(ISmtpClient.DisconnectAsync));
 
             try
             {

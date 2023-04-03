@@ -12,6 +12,7 @@ public interface ITimerOperation : IDisposable
     /// </summary>
     /// <param name="exception"></param>
     void Error(Exception exception);
+    void AddTag(string key, object? value);
 
     /// <summary>
     /// Gets a copy of the operation's tags
