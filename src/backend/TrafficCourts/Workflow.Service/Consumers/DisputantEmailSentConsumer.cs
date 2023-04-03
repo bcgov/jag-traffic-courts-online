@@ -3,6 +3,7 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Workflow.Service.Mappers;
+using System.Net;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
@@ -23,10 +24,24 @@ namespace TrafficCourts.Workflow.Service.Consumers
         public async Task Consume(ConsumeContext<DisputantEmailSent> context)
         {
             using var scope = _logger.BeginConsumeScope(context);
+            _logger.LogDebug("Calling email sent service");
 
-            EmailHistory emailHistory = Mapper.ToEmailHistory(context.Message);
+            try
+            {
+                EmailHistory emailHistory = Mapper.ToEmailHistory(context.Message);
 
-            await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory, context.CancellationToken);
+                await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory, context.CancellationToken);
+            } 
+            catch (WebException ex)
+            {
+                HttpWebResponse? errorResponse = ex.Response as HttpWebResponse;
+                if (errorResponse?.StatusCode == HttpStatusCode.NotFound || errorResponse?.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    // dont requeue if dispute not found or bad request
+                    _logger.LogError(ex.Message, context);
+                }
+
+            }
         }
     }
 }

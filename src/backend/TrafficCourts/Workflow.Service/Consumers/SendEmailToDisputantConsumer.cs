@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using NodaTime;
+using System.Net;
 using TrafficCourts.Common.Features.Mail;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging;
@@ -31,46 +32,62 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
     public async Task Consume(ConsumeContext<SendDisputantEmail> context)
     {
         using var scope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid );
-
-        Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(NoticeOfDisputeGuid: context.Message.NoticeOfDisputeGuid, context.CancellationToken);
-
-        EmailMessage emailMessage = context.Message.Message;
-
-        // try to fill in to if missing
-        if (emailMessage.To.IsNullOrEmpty() && dispute is not null && dispute.EmailAddress is not null && dispute.EmailAddressVerified == true)
-            emailMessage.To = dispute.EmailAddress;
-
         _logger.LogDebug("Calling email sender service");
 
-        var result = emailMessage.To.IsNullOrEmpty() ? SendEmailResult.Filtered : await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
-
-        var now = _clock.GetCurrentInstant().ToDateTimeOffset();
-
-        if (result == SendEmailResult.Success)
+        try
         {
-            _logger.LogDebug("Sending email was successful");
+            // search for dispute log warning if not found
+            Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(NoticeOfDisputeGuid: context.Message.NoticeOfDisputeGuid, context.CancellationToken);
+            if (dispute is null) { 
+                _logger.LogWarning("Sending email without existing dispute", context.Message); 
+            }
 
-            var message = new DisputantEmailSent
+            EmailMessage emailMessage = context.Message.Message;
+
+            // try to fill in to if missing
+            if (emailMessage.To.IsNullOrEmpty() && dispute is not null && dispute.EmailAddress is not null && dispute.EmailAddressVerified == true)
+                emailMessage.To = dispute.EmailAddress;
+
+            var result = emailMessage.To.IsNullOrEmpty() ? SendEmailResult.Filtered : await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
+
+            var now = _clock.GetCurrentInstant().ToDateTimeOffset();
+
+            // Do not log outgoing email if no dispute found since requires dispute id
+            if (result == SendEmailResult.Success && dispute is not null)
             {
-                Message = emailMessage,
-                SentAt = now,
-                OccamDisputeId = dispute?.DisputeId is not null ? dispute.DisputeId : 0
-            };
+                _logger.LogDebug("Sending email was successful");
 
-            if (dispute?.DisputeId is not null) await context.PublishWithLog(_logger, message, context.CancellationToken);
+                var message = new DisputantEmailSent
+                {
+                    Message = emailMessage,
+                    SentAt = now,
+                    OccamDisputeId = dispute.DisputeId
+                };
+
+                await context.PublishWithLog(_logger, message, context.CancellationToken);
+            }
+            // Do not log outgoing email if no dispute found since requires dispute id
+            else if (result == SendEmailResult.Filtered && dispute is not null)
+            {
+                _logger.LogDebug("Sending email was filtered");
+
+                var message = new DisputantEmailFiltered
+                {
+                    Message = emailMessage,
+                    FilteredAt = now,
+                    OccamDisputeId = dispute.DisputeId
+                };
+
+                await context.PublishWithLog(_logger, message, context.CancellationToken);
+            }
         }
-        else if (result == SendEmailResult.Filtered)
+        catch (ArgumentNullException ex) // log it and move on
         {
-            _logger.LogDebug("Sending email was filtered");
-
-            var message = new DisputantEmailFiltered
-            {
-                Message = emailMessage,
-                FilteredAt = now,
-                OccamDisputeId = dispute?.DisputeId is not null ? dispute.DisputeId : 0
-            };
-
-           if (dispute?.DisputeId is not null) await context.PublishWithLog(_logger, message, context.CancellationToken);
+            _logger.LogError(ex.Message, context);
+        }
+        catch (InvalidEmailMessageException ex) // log it and move on
+        {
+            _logger.LogError(ex.Message, context);
         }
     }
 }
