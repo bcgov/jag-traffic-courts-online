@@ -58,4 +58,25 @@ public class LookupController : StaffControllerBase<LookupController>
 
         return Ok(response.Languages);
     }
+
+    /// <summary> 
+    /// Returns a list of agencies.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">OK</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(IList<Agency>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> AgenciesAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving Agencies");
+
+        AgencyLookup.Request request = new();
+        AgencyLookup.Response response = await _mediator.Send(request, cancellationToken);
+
+        return Ok(response.Agencies);
+    }
 }

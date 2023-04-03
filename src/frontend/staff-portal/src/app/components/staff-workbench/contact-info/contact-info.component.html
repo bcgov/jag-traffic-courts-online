@@ -343,12 +343,12 @@
     <app-ticket-request [disputeInfo]="lastUpdatedDispute" *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)"></app-ticket-request>
     <div style="float: right; width: 100%;" *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)">
       <button class="large" mat-flat-button type="button" color="primary"
-        [disabled]="(lastUpdatedDispute.status !== 'NEW' && lastUpdatedDispute.status !== 'REJECTED') || this.form.invalid || this.form.touched"
+        [disabled]="(lastUpdatedDispute.status !== DispStatus.New && lastUpdatedDispute.status !== DispStatus.Rejected) || this.form.invalid || this.form.touched"
         (click)="approve()" style="background-color:  #2ba242;">
         Approve and submit to ARC
       </button>
       <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-        [disabled]="lastUpdatedDispute.status !== 'NEW' || this.form.invalid || this.form.touched" (click)="reject()">
+        [disabled]="lastUpdatedDispute.status !== DispStatus.New || this.form.invalid || this.form.touched" (click)="reject()">
         Reject
       </button>
       <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">

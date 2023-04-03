@@ -1,5 +1,4 @@
 export interface Configuration {
-  courtLocations: CourthouseConfig[];
   countries: CountryCodeValue[];
   statuses: Config<number>[];
   provincesAndStates: ProvinceCodeValue[];
@@ -39,8 +38,4 @@ export class ProvinceCodeValue {
     this.provAbbreviationCd = provAbbreviationCd;
     this.provId = provId;
   }
-}
-
-export interface CourthouseConfig extends Config<string> {
-  jjTeam: string;
 }

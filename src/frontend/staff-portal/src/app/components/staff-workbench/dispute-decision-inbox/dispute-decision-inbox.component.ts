@@ -4,10 +4,9 @@ import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { CourthouseConfig } from '@config/config.model';
 import { JJDisputeStatus } from 'app/api';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { AuthService } from 'app/services/auth.service';
+import { LookupsService } from 'app/services/lookups.service';
 
 @Component({
   selector: 'app-dispute-decision-inbox',
@@ -21,7 +20,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
 
   busy: Subscription;
-  courtLocations: CourthouseConfig[];
   IDIR: string = "";
   currentTeam: string = "All";
   data = [] as JJDispute[];
@@ -40,17 +38,14 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     private logger: LoggerService,
     private jjDisputeService: JJDisputeService,
     private authService: AuthService,
-    private mockConfigService: MockConfigService,
+    private lookupsService: LookupsService
   ) {
-    if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations;
-    }
     this.jjDisputeService.refreshDisputes.subscribe(x => { this.getAll(); })
   }
 
   filterByTeam(team: string) {
-    let teamCourthouses = this.courtLocations.filter(x => (x.jjTeam === team || team === "All"));
-    this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
+    let teamCourthouses = this.lookupsService.courthouseTeams.filter(x => (x.__team === team || team === "All"));
+    this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation || y.id === x.courthouseLocation).length > 0);
     this.tableHeight = this.calcTableHeight(325);
   }
 

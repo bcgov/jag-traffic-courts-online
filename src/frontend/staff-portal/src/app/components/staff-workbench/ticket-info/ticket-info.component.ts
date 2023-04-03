@@ -7,10 +7,9 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { Subscription } from 'rxjs';
-import { CountryCodeValue, CourthouseConfig, ProvinceCodeValue } from '@config/config.model';
+import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
+import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation, DisputeStatus, Agency } from 'app/api';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -46,13 +45,13 @@ export class TicketInfoComponent implements OnInit {
   public usa: CountryCodeValue;
   public states: ProvinceCodeValue[];
   public initialDisputeValues: Dispute;
-  public courtLocations: CourthouseConfig[];
   public imageToShow: any;
   public errorThreshold: number = 0.800;
   public courtLocationFlag: OCRMessageToDisplay;
   public IsAct = ViolationTicketCountIsAct;
   public IsRegulation = ViolationTicketCountIsRegulation;
   public ContactType = DisputeContactTypeCd;
+  public DispStatus = DisputeStatus;
 
   /**
    * @description
@@ -75,7 +74,6 @@ export class TicketInfoComponent implements OnInit {
     public violationTicketService: ViolationTicketService,
     private disputeService: DisputeService,
     public config: ConfigService,
-    public mockConfigService: MockConfigService,
     public lookupsService: LookupsService,
   ) {
     const today = new Date();
@@ -89,9 +87,10 @@ export class TicketInfoComponent implements OnInit {
       this.provinces = this.config.provincesAndStates.filter(x => x.ctryId === this.canada.ctryId && x.provAbbreviationCd !== this.bc.provAbbreviationCd);
       this.states = this.config.provincesAndStates.filter(x => x.ctryId === this.usa.ctryId);
     }
-    if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations.sort((a, b) => { if (a.name < b.name) return 1; });
-    }
+
+    this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
+      this.lookupsService.courthouseAgencies$.next(response);
+    });
 
     this.busy = this.lookupsService.getStatutes().subscribe((response: Statute[]) => {
       this.lookupsService.statutes$.next(response);
@@ -287,13 +286,13 @@ export class TicketInfoComponent implements OnInit {
 
   // violation ticket borders only for new status
   public applyOverErrThreshold(fieldName: string): boolean {
-    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.status != this.DispStatus.New) return false;
     if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence <= 0.80) return false;
     return true;
   }
 
   public applyUnderErrThreshold(fieldName: string): boolean {
-    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.status != this.DispStatus.New) return false;
     if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence > 0.80) return false;
     return true;
   }
@@ -435,8 +434,8 @@ export class TicketInfoComponent implements OnInit {
     putDispute.rejectedReason = this.form.get('rejectedReason').value;
 
     // set dispute courtagenid from violation ticket courthouse location
-    let courtFound = this.courtLocations.filter(x => x.name === putDispute.violationTicket.courtLocation);
-    if (courtFound.length > 0) putDispute.courtAgenId = courtFound[0].code;
+    let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === putDispute.violationTicket.courtLocation);
+    if (courtFound?.length > 0) putDispute.courtAgenId = courtFound[0].id;
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
@@ -582,7 +581,7 @@ export class TicketInfoComponent implements OnInit {
   validate(): void {
     this.busy = this.disputeService.validateDispute(this.lastUpdatedDispute.disputeId).subscribe({
       next: response => {
-        this.lastUpdatedDispute.status = "VALIDATED";
+        this.lastUpdatedDispute.status = this.DispStatus.Validated;
         this.form.controls.violationTicket.disable();
       },
       error: err => { },
@@ -609,7 +608,7 @@ export class TicketInfoComponent implements OnInit {
           this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe(
             {
               next: response => {
-                this.lastUpdatedDispute.status ='PROCESSING';
+                this.lastUpdatedDispute.status =this.DispStatus.Processing;
                 this.onBack();
               },
               error: err => { },
@@ -642,7 +641,7 @@ export class TicketInfoComponent implements OnInit {
           this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
               this.onBack();
-              this.lastUpdatedDispute.status = 'REJECTED';
+              this.lastUpdatedDispute.status = this.DispStatus.Rejected;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
             },
             error: err => { },
@@ -666,31 +665,25 @@ export class TicketInfoComponent implements OnInit {
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
-        if (action?.output?.response) {
-          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
-          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
+      if (action?.output?.response) {
+        this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+        this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
-          // no need to pass back byte array with image
-          let tempDispute = this.lastUpdatedDispute;
-          delete tempDispute.violationTicket.violationTicketImage;
+        // no need to pass back byte array with image
+        let tempDispute = this.lastUpdatedDispute;
+        delete tempDispute.violationTicket.violationTicketImage;
 
-          // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe({
-            next: response => {
-              this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId).subscribe({
-                next: response => {
-                  this.lastUpdatedDispute.status = 'CANCELLED';
-                  this.lastUpdatedDispute.rejectedReason = action.output.reason;
-                  this.onBack();
-                },
-                error: err => { },
-                complete: () => { }
-              });
-            },
-            error: err => { },
-            complete: () => { }
-          });
-        }
+        // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
+        this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.response).subscribe({
+          next: response => {
+            this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
+            this.lastUpdatedDispute.rejectedReason = action.output.reason;
+            this.onBack();
+          },
+          error: err => { },
+          complete: () => { }
+        });
+      }
       });
   }
 
@@ -744,8 +737,8 @@ export class TicketInfoComponent implements OnInit {
         } else this.initialDisputeValues = this.setFieldsFromJSON(response);
 
         // set court agency id if possible
-        let courtFound = this.courtLocations.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
-        if (courtFound.length > 0) this.initialDisputeValues.courtAgenId = courtFound[0].code;
+        let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
+        if (courtFound?.length > 0) this.initialDisputeValues.courtAgenId = courtFound[0].id;
 
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);
@@ -831,7 +824,7 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('driversLicenceProvince').updateValueAndValidity();
         this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
 
-        if (this.lastUpdatedDispute.status !== "NEW") {
+        if (this.lastUpdatedDispute.status !== this.DispStatus.New) {
           this.form.controls.violationTicket.disable();
         }
         this.form.get('violationTicket').updateValueAndValidity();

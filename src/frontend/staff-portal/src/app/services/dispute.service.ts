@@ -212,9 +212,9 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public cancelDispute(disputeId: number): Observable<Dispute> {
+  public cancelDispute(disputeId: number, cancelledReason: string): Observable<Dispute> {
 
-    return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId)
+    return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId, cancelledReason)
       .pipe(
         map((response: any) => {
           this.logger.info('DisputeService::cancelDispute', response)

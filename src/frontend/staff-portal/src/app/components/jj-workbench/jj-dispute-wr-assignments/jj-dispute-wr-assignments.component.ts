@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { CourthouseConfig } from '@config/config.model';
+import { LookupsService } from 'app/services/lookups.service';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { filter, Observable, Subscription } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { JJDisputeHearingType } from 'app/api';
+import { Agency, JJDisputeHearingType } from 'app/api';
 import { UserRepresentation } from 'app/services/auth.service';
 import { AppState } from 'app/store';
 import { select, Store } from '@ngrx/store';
@@ -25,7 +24,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
-  courtLocations: CourthouseConfig[];
   currentTeam: string = "A";
   valueOfUnassigned: string = "";
   bulkjjAssignedTo: string = this.valueOfUnassigned;
@@ -48,16 +46,16 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   constructor(
     private jjDisputeService: JJDisputeService,
     private logger: LoggerService,
-    private mockConfigService: MockConfigService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private lookupsService: LookupsService
   ) {
     this.jjDisputeService.jjList$.subscribe(result => {
       this.jjList = result;
     });
 
-    if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations;
-    }
+    this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
+      this.lookupsService.courthouseAgencies$.next(response);
+    });
 
     this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
     this.data$.subscribe(jjDisputes => {
@@ -132,11 +130,11 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   filterByTeam(team: string) {
-    let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
-    // let team A have all courthouse locations not found in list so these are not lost
+    let teamCourthouses = this.lookupsService.courthouseTeams.filter(x => x.__team === team);
+    // let team D have all courthouse locations not found in list so these are not lost
     this.dataSource.data = this.data.filter(x =>
-      ((teamCourthouses.filter(y => y.code === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
-      || (team === 'A' && this.courtLocations.filter(y => y.code === x.courtAgenId).length <=0))); // or team A and court agency id not found in complete list of courthouses
+      ((teamCourthouses.filter(y => y.id === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
+      || (team === 'D' && this.lookupsService.courthouseTeams.filter(y => y.id === x.courtAgenId).length <=0))); // or team D and court agency id not found in complete list of courthouses
     this.currentTeam = team;
     this.tableHeight = this.calcTableHeight(425);
   }
@@ -146,10 +144,10 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   getTeamCount(team: string): teamCounts {
-    let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
+    let teamCourthouses = this.lookupsService.courthouseTeams.filter(x => x.__team === team);
     let teamDisputes = this.data.filter(x =>
-      ((teamCourthouses.filter(y => y.code === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
-      || (team === 'A' && this.courtLocations.filter(y => y.code === x.courtAgenId).length <=0))); // or team A and court agency id not found in complete list of courthouses
+      ((teamCourthouses.filter(y => y.id === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
+      || (team === 'A' && this.lookupsService.courthouseTeams.filter(y => y.id === x.courtAgenId).length <=0))); // or team A and court agency id not found in complete list of courthouses
     let teamCounts = { team: team, assignedCount: 0, unassignedCount: 0 } as teamCounts;
     if (teamDisputes) {
       let unassignedTeamCounts = teamDisputes.filter(x => !x.jjAssignedTo || x.jjAssignedTo === this.valueOfUnassigned);

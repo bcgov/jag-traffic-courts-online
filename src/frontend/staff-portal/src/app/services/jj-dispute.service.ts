@@ -4,16 +4,16 @@ import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { CourthouseConfig } from '@config/config.model';
 import { EventEmitter, Injectable } from '@angular/core';
-import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType } from 'app/api';
+import { DatePipe } from '@angular/common';
+import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, Agency } from 'app/api';
 import { AuthService, UserRepresentation } from './auth.service';
 
 import { cloneDeep } from "lodash";
 import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
+import { LookupsService } from './lookups.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +21,9 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 export class JJDisputeService {
   private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
+  private _courtLocations: BehaviorSubject<Agency[]> = new BehaviorSubject<Agency[]>([]);
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
-  private courtLocations: CourthouseConfig[];
+  public datepipe: DatePipe = new DatePipe('en-US');
 
   public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
   public jjDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
@@ -37,14 +38,12 @@ export class JJDisputeService {
     private http: HttpClient,
     private authService: AuthService,
     private store: Store<AppState>,
-    private mockConfigService: MockConfigService,
+    private lookupsService: LookupsService,
   ) {
-    if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations;
-    }
     let observables = {
       jjList: this.authService.getUsersInGroup("judicial-justice"),
       vtcList: this.authService.getUsersInGroup("vtc-staff"),
+      courtLocations: this.lookupsService.getCourthouseAgencies()
     };
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
@@ -60,10 +59,11 @@ export class JJDisputeService {
                 else { return 1 }
               }));
             this._vtcList.next(results.vtcList);
+            this._courtLocations.next(results.courtLocations);
             this.store.dispatch(JJDisputeStore.Actions.Get());
           },
           error: err => {
-            this.logger.error("JJDisputeService: Load jjList and vtcList failed")
+            this.logger.error("JJDisputeService: Load jjList and vtcList and court locations failed")
           }
         });
       }
@@ -250,6 +250,14 @@ export class JJDisputeService {
     return this._vtcList.value;
   }
 
+  public get courtLocations(): Agency[] {
+    return this._courtLocations.value;
+  }
+
+  public get courtLocations$(): Observable<Agency[]> {
+    return this._courtLocations.asObservable();
+  }
+
   /**
    * Get the dispute from RSI by Id.
    *
@@ -345,10 +353,21 @@ export class JJDisputeService {
 
     // lookup courthouse location
     if (jjDispute.courtAgenId && !jjDispute.courthouseLocation) {
-      let courtFound = this.courtLocations.filter(x => x.code === jjDispute.courtAgenId);
-      if (courtFound.length > 0) jjDispute.courthouseLocation = courtFound[0].name;
+      let courtFound = this.courtLocations?.filter(x => x.id === jjDispute.courtAgenId);
+      if (courtFound?.length > 0) jjDispute.courthouseLocation = courtFound[0].name;
       else jjDispute.courthouseLocation = jjDispute.courtAgenId;
     }
+
+    // set due dates for counts 30 days except 'S' get 45
+    let dueDate = new Date(jjDispute.issuedTs); // start with service date and add either 30 or 45 days
+    if (jjDispute.ticketNumber.substring(0,1) === "S") dueDate = new Date(dueDate.getTime() + (45 * 1000 * 60 * 60 * 24));
+    else dueDate = new Date(dueDate.getTime() + (30 * 1000 * 60 * 60 * 24));
+    let dueDateString = this.datepipe.transform(dueDate, 'MMM dd,yyyy');
+    jjDispute.jjDisputedCounts.forEach(jjDisputedCount => {
+      if (!jjDisputedCount.dueDate) {
+        jjDisputedCount.dueDate = dueDateString;
+      }
+    });
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];

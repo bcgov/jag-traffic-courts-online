@@ -227,7 +227,7 @@ export class JJCountComponent implements OnInit {
       this.form.get('jjDisputedCountRoP').get('other').setValue(null);
       this.form.get('jjDisputedCountRoP').get('other').disable();
     } else {
-      this.form.get('jjDisputedCountRoP').enable();
+      this.form.get('jjDisputedCountRoP').get('other').enable();
     }
   }
 

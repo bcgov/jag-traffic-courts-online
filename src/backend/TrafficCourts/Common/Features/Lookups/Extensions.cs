@@ -37,4 +37,19 @@ public static partial class Extensions
 
         return services;
     }
+
+    /// <summary>
+    /// Adds agency lookup. Callers must ensure Redis is registered.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddAgencyLookup(this IServiceCollection services)
+    {
+        services.AddTransient<IAgencyLookupService, AgencyLookupService>();
+        services.AddMemoryCache();
+
+        services.AddTransient<IRequestHandler<AgencyLookup.Request, AgencyLookup.Response>, AgencyLookup.Handler>();
+
+        return services;
+    }
 }

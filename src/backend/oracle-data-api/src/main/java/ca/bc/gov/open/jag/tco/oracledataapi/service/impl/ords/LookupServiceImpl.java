@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.LookupMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Agency;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
@@ -31,6 +32,12 @@ public class LookupServiceImpl extends BaseLookupService {
 	public List<Language> getLanguages() throws ApiException {
 		List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language> languages = lookupValuesApi.languagesList().getLanguageCodeValues();
 		return LookupMapper.INSTANCE.convertLanguages(languages);
+	}
+	
+	@Override
+	public List<Agency> getAgencies() throws ApiException {
+		List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Agency> cthAgencies = lookupValuesApi.agenciesList().getAgencyCodeValues();
+		return LookupMapper.INSTANCE.convertAgencies(cthAgencies);
 	}
 
 }
