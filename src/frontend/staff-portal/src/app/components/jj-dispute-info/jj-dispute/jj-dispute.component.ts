@@ -101,15 +101,15 @@ export class JJDisputeComponent implements OnInit {
       icon: "delete"
     };
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
-    .subscribe((action: any) => {
-      if (action) {
-        this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
-        this.documentService.apiDocumentDelete(fileId).subscribe(any => {
-          // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
-        this.refreshFileHistory();
-        });
-      }
-    });
+      .subscribe((action: any) => {
+        if (action) {
+          this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
+          this.documentService.apiDocumentDelete(fileId).subscribe(any => {
+            // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+            this.refreshFileHistory();
+          });
+        }
+      });
   }
 
   onGetFile(fileId: string) {
@@ -125,9 +125,6 @@ export class JJDisputeComponent implements OnInit {
 
   onGetJustinDocument(documentType: DocumentType) {
     this.jjDisputeService.getJustinDocument(this.lastUpdatedJJDispute.ticketNumber, documentType).subscribe(result => {
-      // TODO: remove the custom function here and replace with generated api call once staff API method
-      // has proper response type documented in swagger json
-      // this.documentService.apiDocumentGet(fileId).subscribe((result:Blob) => {
       var url = URL.createObjectURL(result);
       window.open(url);
     });
@@ -145,7 +142,6 @@ export class JJDisputeComponent implements OnInit {
         this.lastUpdatedJJDispute.fileData.push(item);
         this.refreshFileHistory();
       });
-
   }
 
   ngOnInit() {
@@ -192,7 +188,6 @@ export class JJDisputeComponent implements OnInit {
             this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
             this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;
             this.putJJDispute();
-            this.onBackClicked();
           });
         }
       });
@@ -218,8 +213,8 @@ export class JJDisputeComponent implements OnInit {
           // update the reason entered, reject dispute and return to TRM home
           this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
             next: response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
-              this.onBackClicked();
+              this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing; // should be able to remove
+              this.putJJDispute();
             },
             error: err => { },
             complete: () => { }
@@ -259,8 +254,8 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket").subscribe(response => {
-            this.lastUpdatedJJDispute.status = this.DisputeStatus.Accepted;
-            this.onBackClicked();
+            this.lastUpdatedJJDispute.status = this.DisputeStatus.Accepted; // should be able to remove
+            this.putJJDispute();
           });
         }
       });
@@ -283,9 +278,8 @@ export class JJDisputeComponent implements OnInit {
           this.remarks = action.output.response;
           this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.Review;
-              this.jjDisputeService.refreshDisputes.emit();
-              this.onBackClicked();
+              this.lastUpdatedJJDispute.status = this.DisputeStatus.Review; // should be able to remove
+              this.putJJDispute();
             })
           })
         }
