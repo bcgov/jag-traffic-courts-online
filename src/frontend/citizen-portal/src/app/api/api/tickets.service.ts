@@ -107,15 +107,22 @@ export class TicketsService {
     /**
      * Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.
      * @param file 
+     * @param validate Optional. If true, will perform business validation on ocr results. Defaults to true.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiTicketsAnalysePost(file: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<OcrViolationTicket>;
-    public apiTicketsAnalysePost(file: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<OcrViolationTicket>>;
-    public apiTicketsAnalysePost(file: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<OcrViolationTicket>>;
-    public apiTicketsAnalysePost(file: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiTicketsAnalysePost(file: Blob, validate?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<OcrViolationTicket>;
+    public apiTicketsAnalysePost(file: Blob, validate?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<OcrViolationTicket>>;
+    public apiTicketsAnalysePost(file: Blob, validate?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<OcrViolationTicket>>;
+    public apiTicketsAnalysePost(file: Blob, validate?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (file === null || file === undefined) {
             throw new Error('Required parameter file was null or undefined when calling apiTicketsAnalysePost.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (validate !== undefined && validate !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>validate, 'validate');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -184,6 +191,7 @@ export class TicketsService {
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

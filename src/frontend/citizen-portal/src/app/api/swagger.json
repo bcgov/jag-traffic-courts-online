@@ -694,6 +694,16 @@
           "Tickets"
         ],
         "summary": "Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.",
+        "parameters": [
+          {
+            "name": "validate",
+            "in": "query",
+            "description": "Optional. If true, will perform business validation on ocr results. Defaults to true.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
