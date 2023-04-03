@@ -53,7 +53,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
       this.jjList = result;
     });
 
-    this.busy = this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
+    this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
       this.lookupsService.courthouseAgencies$.next(response);
     });
 

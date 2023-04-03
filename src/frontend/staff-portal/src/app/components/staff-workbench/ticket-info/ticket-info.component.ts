@@ -88,7 +88,7 @@ export class TicketInfoComponent implements OnInit {
       this.states = this.config.provincesAndStates.filter(x => x.ctryId === this.usa.ctryId);
     }
 
-    this.busy = this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
+    this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
       this.lookupsService.courthouseAgencies$.next(response);
     });
 
