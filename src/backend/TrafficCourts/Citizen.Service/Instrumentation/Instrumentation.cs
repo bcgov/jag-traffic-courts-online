@@ -55,6 +55,4 @@ public class Instrumentation
             _formRecognizerOperationErrorTotal.Add(1, operation.Tags);
         }
     }
-
-}
 }
