@@ -40,7 +40,7 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        }, meters: new string[] { "MassTransit", "ComsClient" });
+        }, meters: new string[] { "MassTransit", "ComsClient", "CitizenService" });
 
         // Redis
         builder.AddRedis();

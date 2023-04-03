@@ -1,8 +1,8 @@
-﻿using TrafficCourts.Messaging.MessageContracts;
-using MimeKit;
+﻿using MimeKit;
 using MimeKit.Text;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Common.Features.Mail;
+using MailKit.Net.Smtp;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
@@ -27,6 +27,8 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <exception cref="EmailSendFailedException"></exception>
         public async Task<SendEmailResult> SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken)
         {
+            MailKit.Net.Smtp.ISmtpClient? smtp = null;
+
             try
             {
                 // create email message
@@ -72,9 +74,9 @@ namespace TrafficCourts.Workflow.Service.Services
                 }
 
                 // send email asynchronously
-                var smtp = await _smptClientFactory.CreateAsync(cancellationToken);
-                await smtp.SendAsync(email, cancellationToken, null);
-                await smtp.DisconnectAsync(true);
+                smtp = await _smptClientFactory.CreateAsync(cancellationToken);
+
+                await SendAsync(smtp, email, cancellationToken);
 
                 return SendEmailResult.Success;
             }
@@ -140,6 +142,49 @@ namespace TrafficCourts.Workflow.Service.Services
                 // An error connecting to the the SMTP Server
                 _logger.LogError(scfe, "An error connecting to the the SMTP Server");
                 throw new EmailSendFailedException("An error connecting to the the SMTP Server", scfe);
+            }
+            finally
+            {
+                if (smtp is not null && smtp.IsConnected)
+                {
+                    await DisconnectAsync(smtp, cancellationToken);
+                }
+            }
+        }
+
+        private async Task<string> SendAsync(MailKit.Net.Smtp.ISmtpClient client, MimeMessage message, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(client);
+            ArgumentNullException.ThrowIfNull(message);
+
+            using var operation = Instrumentation.Smtp.BeginOperation(nameof(ISmtpClient.SendAsync));
+
+            try
+            {
+                var response = await client.SendAsync(message, cancellationToken, null).ConfigureAwait(false);
+                return response;
+            }
+            catch (Exception exception)
+            {
+                Instrumentation.Smtp.EndOperation(operation, exception);
+                throw;
+            }
+        }
+
+        private async Task DisconnectAsync(MailKit.Net.Smtp.ISmtpClient client, CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(client);
+
+            using var operation = Instrumentation.Smtp.BeginOperation(nameof(ISmtpClient.DisconnectAsync));
+
+            try
+            {
+                await client.DisconnectAsync(true, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                Instrumentation.Smtp.EndOperation(operation, exception);
+                throw;
             }
         }
 
