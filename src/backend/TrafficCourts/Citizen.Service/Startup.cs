@@ -71,6 +71,7 @@ public static class Startup
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
+        builder.Services.AddAgencyLookup();
         builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
         builder.Services.AddTransient<ICitizenDocumentService, CitizenDocumentService>();
 

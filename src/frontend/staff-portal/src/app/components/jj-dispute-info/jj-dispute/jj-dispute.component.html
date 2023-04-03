@@ -99,11 +99,11 @@
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactSurname }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ? lastUpdatedJJDispute.occamDisputantSurnameNm : lastUpdatedJJDispute.contactSurname }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactGivenNames }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ? lastUpdatedJJDispute.occamDisputantGivenNames : lastUpdatedJJDispute.contactGivenNames }}</p>
         </span>
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">Address</p>

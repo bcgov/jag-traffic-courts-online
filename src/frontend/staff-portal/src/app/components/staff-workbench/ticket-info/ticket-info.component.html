@@ -63,7 +63,7 @@
                           <mat-label>Ticket number</mat-label>
                           <input formControlName="ticketNumber" matInput type="text"
                             oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error *ngIf="form.get('violationTicket').get('ticketNumber').hasError('required')">
                             {{ "error.required" | translate }}
                           </mat-error>
@@ -80,7 +80,7 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('violation_date'), 'overErrThreshold': applyOverErrThreshold('violation_date')}">
                           <mat-label>Date</mat-label>
                           <input matInput type="date" placeholder="yyyy-MM-DD" formControlName="violationDate"
-                            [max]="todayDate" [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [max]="todayDate" [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error *ngIf="form.get('violationTicket').get('violationDate').hasError('required')">
                             {{ "error.required" | translate }}
                           </mat-error>
@@ -93,7 +93,7 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('violation_time'), 'overErrThreshold': applyOverErrThreshold('violation_time')}">
                           <mat-label>Time</mat-label>
                           <input matInput type="text" mask="00:00" formControlName="violationTime"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error *ngIf="form.get('violationTicket').get('violationTime').hasError('required')">
                             {{ "error.required" | translate }}</mat-error>
                           <mat-error *ngIf="form.get('violationTicket').get('violationTime').hasError('pattern')">
@@ -117,7 +117,7 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_surname'), 'overErrThreshold': applyOverErrThreshold('disputant_surname')}">
                           <mat-label>Surname</mat-label>
                           <input matInput formControlName="disputantSurname"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error *ngIf="form.get('violationTicket').get('disputantSurname').hasError('required')">{{ "error.required" | translate }}</mat-error>
                           <mat-error *ngIf="form.get('violationTicket').get('disputantSurname').hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
                         </mat-form-field>
@@ -129,7 +129,7 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_given_names'), 'overErrThreshold': applyOverErrThreshold('disputant_given_names')}">
                           <mat-label>Given name(s)</mat-label>
                           <input matInput formControlName="disputantGivenNames"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error *ngIf="form.get('violationTicket').get('disputantGivenNames').hasError('required')">{{ "error.required" | translate }}</mat-error>
                           <mat-error *ngIf="form.get('violationTicket').get('disputantGivenNames').hasError('maxlength')">{{ "error.max_length" | translate }}30 per name}</mat-error>
                         </mat-form-field>
@@ -143,7 +143,7 @@
                           <mat-label>Prov/State of DL</mat-label>
                           <mat-select formControlName="driversLicenceProvince"
                             (selectionChange)="onViolationTicketDLProvinceChange($event.value)"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'">
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated">
                             <mat-option [value]="bc.provAbbreviationCd">{{bc.provNm}}</mat-option>
                             <mat-option *ngFor="let province of provinces" [value]="province.provAbbreviationCd">{{ province.provNm }}
                             </mat-option>
@@ -160,11 +160,11 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('drivers_licence_number'), 'overErrThreshold': applyOverErrThreshold('drivers_licence_number')}">
                           <mat-label>DL number</mat-label>
                           <input matInput formControlName="disputantDriversLicenceNumber" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
-                            autocomplete="off" [readonly]="lastUpdatedDispute.status === 'VALIDATED'"
+                            autocomplete="off" [readonly]="lastUpdatedDispute.status === DispStatus.Validated"
                             *ngIf="form.get('violationTicket').get('driversLicenceProvince').value === bc.provAbbreviationCd" />
                           <input matInput formControlName="disputantDriversLicenceNumber" autocomplete="off"
                             *ngIf="form.get('violationTicket').get('driversLicenceProvince').value !== bc.provAbbreviationCd"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error
                             *ngIf="form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('required')">{{
                             "error.required" |
@@ -194,7 +194,7 @@
                             (keyup)="onFullDescription1Keyup()"
                             (change)="onChangeCount(1, $event.target.value)"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-autocomplete #auto="matAutocomplete" panelWidth="750" (optionSelected)="onChangeCount(1, $event.option.value)">
                             <mat-option [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(1, initialDisputeValues.violationTicket) }}</mat-option>
@@ -212,7 +212,7 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.ticketed_amount')}">
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -234,7 +234,7 @@
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value"
                             (change)="onChangeCount(2, $event.target.value)"
                             (keyup)="onFullDescription2Keyup()"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-autocomplete #auto2="matAutocomplete" panelWidth="750" (optionSelected)="onChangeCount(2, $event.option.value)">
                             <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
@@ -252,7 +252,7 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.ticketed_amount')}">
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -274,7 +274,7 @@
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value"
                             (change)="onChangeCount(3, $event.target.value)"
                             (keyup)="onFullDescription3Keyup()"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-autocomplete #auto3="matAutocomplete" panelWidth="750" (optionSelected)="onChangeCount(3, $event.option.value)">
                             <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(3, initialDisputeValues.violationTicket) }}</mat-option>
@@ -292,7 +292,7 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.ticketed_amount')}">
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -310,10 +310,10 @@
                         <mat-form-field class="w-100"
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('court_location'), 'overErrThreshold': applyOverErrThreshold('court_location')}">
                           <mat-select [formControl]="form.get('violationTicket').get('courtLocation')"
-                            [readonly]="lastUpdatedDispute.status === 'VALIDATED'">
+                            [readonly]="lastUpdatedDispute.status === DispStatus.Validated">
                             <mat-option [value]="initialDisputeValues.violationTicket.courtLocation">{{
                               initialDisputeValues.violationTicket.courtLocation }}</mat-option>
-                            <mat-option *ngFor="let courtLocation of courtLocations" [value]="courtLocation.name">{{
+                            <mat-option *ngFor="let courtLocation of lookupsService.courthouseAgencies" [value]="courtLocation.name">{{
                               courtLocation.name }}</mat-option>
                           </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -326,7 +326,7 @@
               <div style="float: right; width: 100%;" class="row">
                 <button class="large" mat-flat-button type="button" color="primary" (click)="validate()"
                   style="background-color: #2ba242;"
-                  [disabled]="form.get('violationTicket').invalid || lastUpdatedDispute.status !== 'NEW' || form.get('violationTicket').touched || !isStatuteValid(1) || !isStatuteValid(2) || !isStatuteValid(3)">
+                  [disabled]="form.get('violationTicket').invalid || lastUpdatedDispute.status !== DispStatus.New || form.get('violationTicket').touched || !isStatuteValid(1) || !isStatuteValid(2) || !isStatuteValid(3)">
                   Validate
                 </button>
                 <button class="large" mat-flat-button type="submit" color="primary"
@@ -345,10 +345,10 @@
                 {{ flagsForm.get('disputantOcrIssues').value ?
                 flagsForm.get('disputantOcrIssues').value : 'None' }}
               </div><br /><br />
-              <ng-container subHeader *ngIf="lastUpdatedDispute.status == 'NEW'">
+              <ng-container subHeader *ngIf="lastUpdatedDispute.status == DispStatus.New">
                 <h3>System flags</h3>
               </ng-container>
-              <div class="col-lg-12" *ngIf="lastUpdatedDispute.status == 'NEW'">
+              <div class="col-lg-12" *ngIf="lastUpdatedDispute.status == DispStatus.New">
                 <span class="systemFlagList">Violation Ticket</span> <br />
                 <p *ngFor="let systemFlag of violationTicketService.ocrMessages" class="systemFlagList"><span
                     [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
@@ -651,12 +651,12 @@
       <app-ticket-request [disputeInfo]="lastUpdatedDispute" *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)"></app-ticket-request>
       <div style="float: right; width: 100%;" *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)">
         <button class="large" mat-flat-button type="button" color="primary"
-          [disabled]="(lastUpdatedDispute.status !== 'VALIDATED' && lastUpdatedDispute.status !== 'REJECTED') || this.form.invalid || this.form.touched"
+          [disabled]="(lastUpdatedDispute.status !== 'VALIDATED' && lastUpdatedDispute.status !== DispStatus.Rejected) || this.form.invalid || this.form.touched"
           (click)="approve()" style="background-color:  #2ba242;">
           Approve and submit to ARC
         </button>
         <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-          [disabled]="lastUpdatedDispute.status !== 'VALIDATED' || this.form.invalid || this.form.touched"
+          [disabled]="lastUpdatedDispute.status !== DispStatus.Validated || this.form.invalid || this.form.touched"
           (click)="reject()">
           Reject
         </button>

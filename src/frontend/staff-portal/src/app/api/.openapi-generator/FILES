@@ -13,6 +13,7 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/agency.model.ts
 model/boundingBox.model.ts
 model/credentialRepresentation.model.ts
 model/dispute.model.ts

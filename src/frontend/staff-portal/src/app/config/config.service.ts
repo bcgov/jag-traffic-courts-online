@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Config, Configuration, CountryCodeValue, CourthouseConfig, ProvinceCodeValue } from '@config/config.model';
+import { Config, Configuration, CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -27,6 +27,7 @@ export class ConfigService {
     new BehaviorSubject<string>('');
   private statuteError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private languageError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private agencyError: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   private _countries: CountryCodeValue[] = [];
   private _provincesAndStates: ProvinceCodeValue[] = [];
@@ -124,6 +125,13 @@ export class ConfigService {
     return this.languageError.value;
   }
 
+  public get agency_error$(): BehaviorSubject<string> {
+    return this.agencyError;
+  }
+  public get agency_error(): string {
+    return this.agencyError.value;
+  }
+
   public get dispute_create_error$(): BehaviorSubject<string> {
     return this.disputeCreateError;
   }
@@ -134,10 +142,6 @@ export class ConfigService {
 
   public get provincesAndStates(): ProvinceCodeValue[] {
     return [...this._provincesAndStates];
-  }
-
-  public get courtLocations(): CourthouseConfig[] {
-    return [...this.configuration.courtLocations].sort(this.sortConfigByName());
   }
 
   public get countries(): CountryCodeValue[] {
