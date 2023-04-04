@@ -395,7 +395,8 @@ components:
           format: nullable
         jjDecisionDt:
           type: string
-          format: date
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         justinRccId:
           type: string
         icbcReceivedDt:
@@ -450,7 +451,8 @@ components:
           format: nullable
         submittedDt:
           type: string
-          format: date  
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         ticketNumberTxt:
           type: string
         timeToPayReasonTxt:
@@ -523,6 +525,7 @@ components:
         fineDueDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
         includesSurchargeYn:
           type: string
         jailDurationTxt:
@@ -550,6 +553,7 @@ components:
         revisedDueDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
         statuteId:
           type: string
         stayOfProceedingsByTxt:
@@ -565,6 +569,7 @@ components:
         violationDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
         withdrawnYn:
           type: string
       allOf:

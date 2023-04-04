@@ -326,7 +326,7 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute = response;
 
       // set violation date and time
-      let violationDate = this.lastUpdatedJJDispute.violationDate.split("T");
+      let violationDate = this.lastUpdatedJJDispute.issuedTs.split("T");
       this.violationDate = violationDate[0];
       this.violationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
 
@@ -351,6 +351,7 @@ export class JJDisputeComponent implements OnInit {
         });
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
+        this.courtAppearanceForm.controls.appearanceTs.setValue(new Date(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs));
         if (!this.isViewOnly) {
           this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
           this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);

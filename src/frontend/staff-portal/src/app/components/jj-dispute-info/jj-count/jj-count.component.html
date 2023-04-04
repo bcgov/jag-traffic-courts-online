@@ -227,7 +227,7 @@
         <mat-radio-button [value]="Finding.Guilty">Guilty as charged</mat-radio-button>
         <mat-radio-button [value]="Finding.NotGuilty">Not guilty</mat-radio-button>
         <mat-radio-button [value]="Finding.GuiltyLesser">Not guilty as charged <br />but guilty of lesser / included
-          offense section</mat-radio-button>
+          offence section</mat-radio-button>
       </mat-radio-group>
       <div style="width:100%; margin-left: 20px">
         <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
@@ -374,7 +374,7 @@
         <ng-container [formGroup]="form?.get('jjDisputedCountRoP')">
           <!-- Suspended Sentence -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
+            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount" formControlName="ssProbationCheckbox" (change)="onSuspSentenceCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Suspended Sentence</b></span>
             </mat-checkbox>
             <br />
@@ -388,7 +388,7 @@
           </span>
           <!-- Jail -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" formControlName="jailCheckbox" (change)="onJailCheck($event.checked)">
+            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount" formControlName="jailCheckbox" (change)="onJailCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Jail</b></span>
             </mat-checkbox>
             <br />
@@ -397,13 +397,13 @@
               <input matInput formControlName="jailDuration" /><br />
               <mat-checkbox
                 [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
-                color="primary" (change)="onJailIntermittentChange($event.checked)" [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true"><span
+                color="primary" (change)="onJailIntermittentChange($event.checked)" [disabled]="isViewOnly || form.get('jjDisputedCountRoP').get('jailCheckbox').value !== true || !jjDisputedCount"><span
                   class="section-grid-header">Intermittent</span></mat-checkbox>
             </div>
           </span>
           <!-- Probation -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" formControlName="probationCheckbox" (change)="onProbationCheck($event.checked)">
+            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount" formControlName="probationCheckbox" (change)="onProbationCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Probation</b></span>
             </mat-checkbox>
             <br />
@@ -416,7 +416,7 @@
           </span>
           <!-- Driving Prohibition -->
           <span class="section-grid-cell" style="grid-column: span 3">
-            <mat-checkbox *ngIf="isViewOnly === false" formControlName="drivingProhibitionCheckbox" (change)="onDrivingProhibitionCheck($event.checked)">
+            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount" formControlName="drivingProhibitionCheckbox" (change)="onDrivingProhibitionCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Driving Prohibition</b></span>
             </mat-checkbox>
             <br />
@@ -439,22 +439,22 @@
           </span>
           <span class="section-grid-cell checkboxes" style="grid-column: span 3;">
             <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y"
-              color="primary" (change)="onDismissedChange($event.checked)" [disabled]="isViewOnly"><span
+              color="primary" (change)="onDismissedChange($event.checked)" [disabled]="isViewOnly || !jjDisputedCount"><span
                 class="section-grid-header">Dismissed</span>
             </mat-checkbox>
             <mat-checkbox
               [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y"
-              color="primary" (change)="onForWantOfProsecutionChange($event.checked)" [disabled]="isViewOnly"><span
+              color="primary" (change)="onForWantOfProsecutionChange($event.checked)" [disabled]="isViewOnly || !jjDisputedCount"><span
                 class="section-grid-header">For Want of Prosecution</span></mat-checkbox><br />
             <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y"
-              color="primary" (change)="onWithdrawnChange($event.checked)" [disabled]="isViewOnly"><span
+              color="primary" (change)="onWithdrawnChange($event.checked)" [disabled]="isViewOnly || !jjDisputedCount"><span
                 class="section-grid-header">Withdrawn</span>
             </mat-checkbox>
             <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y"
-              color="primary" (change)="onAbatementChange($event.checked)" [disabled]="isViewOnly"><span
+              color="primary" (change)="onAbatementChange($event.checked)" [disabled]="isViewOnly || !jjDisputedCount"><span
                 class="section-grid-header">Abatement</span>
             </mat-checkbox><br /><br />
-            <mat-checkbox *ngIf="isViewOnly === false" formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
+            <mat-checkbox *ngIf="isViewOnly === false" [disabled]="!jjDisputedCount" formControlName="stayOfProceedingsByCheckbox" (change)="onStayOfProceedingsByCheck($event.checked)">
               <span class="count-text" style="font-size: small"><b>Stay of Proceedings By</b></span>
             </mat-checkbox>
             <br />
