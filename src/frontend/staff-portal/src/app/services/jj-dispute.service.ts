@@ -359,17 +359,6 @@ export class JJDisputeService {
       else jjDispute.courthouseLocation = jjDispute.courtAgenId;
     }
 
-    // set due dates for counts 30 days except 'S' get 45
-    // let dueDate = new Date(jjDispute.issuedTs); // start with service date and add either 30 or 45 days
-    // if (jjDispute.ticketNumber.substring(0,1) === "S") dueDate = new Date(dueDate.getTime() + (45 * 1000 * 60 * 60 * 24));
-    // else dueDate = new Date(dueDate.getTime() + (30 * 1000 * 60 * 60 * 24));
-    // let dueDateString = dueDate.toISOString();
-    // jjDispute.jjDisputedCounts.forEach(jjDisputedCount => {
-    //   if (!jjDisputedCount.dueDate) {
-    //     jjDisputedCount.dueDate = dueDateString;
-    //   }
-    // });
-
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
       jjDispute.room = mostRecentCourtAppearance.room;
