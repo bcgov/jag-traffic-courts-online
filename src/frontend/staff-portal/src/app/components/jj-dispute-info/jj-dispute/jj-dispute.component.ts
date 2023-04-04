@@ -184,7 +184,7 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
+          this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + "+00:00"; // record date of decision
           this.putJJDispute().subscribe(response => {
             this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
               this.onBackClicked();
