@@ -40,13 +40,14 @@ export class JJDisputeService {
     private store: Store<AppState>,
     private lookupsService: LookupsService,
   ) {
-    let observables = {
-      jjList: this.authService.getUsersInGroup("judicial-justice"),
-      vtcList: this.authService.getUsersInGroup("vtc-staff"),
-      courtLocations: this.lookupsService.getCourthouseAgencies()
-    };
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
+        let observables = {
+          jjList: this.authService.getUsersInGroup("judicial-justice"),
+          vtcList: this.authService.getUsersInGroup("vtc-staff"),
+          courtLocations: this.lookupsService.getCourthouseAgencies()
+        };
+
         forkJoin(observables).subscribe({
           next: results => {
             this._jjList.next(results.jjList
@@ -357,17 +358,6 @@ export class JJDisputeService {
       if (courtFound?.length > 0) jjDispute.courthouseLocation = courtFound[0].name;
       else jjDispute.courthouseLocation = jjDispute.courtAgenId;
     }
-
-    // set due dates for counts 30 days except 'S' get 45
-    let dueDate = new Date(jjDispute.issuedTs); // start with service date and add either 30 or 45 days
-    if (jjDispute.ticketNumber.substring(0,1) === "S") dueDate = new Date(dueDate.getTime() + (45 * 1000 * 60 * 60 * 24));
-    else dueDate = new Date(dueDate.getTime() + (30 * 1000 * 60 * 60 * 24));
-    let dueDateString = this.datepipe.transform(dueDate, 'MMM dd,yyyy');
-    jjDispute.jjDisputedCounts.forEach(jjDisputedCount => {
-      if (!jjDisputedCount.dueDate) {
-        jjDisputedCount.dueDate = dueDateString;
-      }
-    });
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];

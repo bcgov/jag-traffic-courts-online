@@ -3525,7 +3525,7 @@
         "tags": [
           "Lookup"
         ],
-        "summary": "Returns a list of courthouse agencies.",
+        "summary": "Returns a list of agencies.",
         "responses": {
           "200": {
             "description": "OK",

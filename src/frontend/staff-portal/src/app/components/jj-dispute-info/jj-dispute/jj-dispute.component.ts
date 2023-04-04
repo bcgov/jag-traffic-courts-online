@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -101,15 +101,15 @@ export class JJDisputeComponent implements OnInit {
       icon: "delete"
     };
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
-    .subscribe((action: any) => {
-      if (action) {
-        this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
-        this.documentService.apiDocumentDelete(fileId).subscribe(any => {
-          // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
-        this.refreshFileHistory();
-        });
-      }
-    });
+      .subscribe((action: any) => {
+        if (action) {
+          this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
+          this.documentService.apiDocumentDelete(fileId).subscribe(any => {
+            // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+            this.refreshFileHistory();
+          });
+        }
+      });
   }
 
   onGetFile(fileId: string) {
@@ -125,9 +125,6 @@ export class JJDisputeComponent implements OnInit {
 
   onGetJustinDocument(documentType: DocumentType) {
     this.jjDisputeService.getJustinDocument(this.lastUpdatedJJDispute.ticketNumber, documentType).subscribe(result => {
-      // TODO: remove the custom function here and replace with generated api call once staff API method
-      // has proper response type documented in swagger json
-      // this.documentService.apiDocumentGet(fileId).subscribe((result:Blob) => {
       var url = URL.createObjectURL(result);
       window.open(url);
     });
@@ -145,7 +142,6 @@ export class JJDisputeComponent implements OnInit {
         this.lastUpdatedJJDispute.fileData.push(item);
         this.refreshFileHistory();
       });
-
   }
 
   ngOnInit() {
@@ -188,11 +184,11 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
-            this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-            this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;
-            this.putJJDispute();
-            this.onBackClicked();
+          this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + "+00:00"; // record date of decision
+          this.putJJDispute().subscribe(response => {
+            this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
+              this.onBackClicked();
+            });
           });
         }
       });
@@ -216,13 +212,14 @@ export class JJDisputeComponent implements OnInit {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances
 
           // update the reason entered, reject dispute and return to TRM home
-          this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
-            next: response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
-              this.onBackClicked();
-            },
-            error: err => { },
-            complete: () => { }
+          this.putJJDispute().subscribe(response => {
+            this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
+              next: response => {
+                this.onBackClicked();
+              },
+              error: err => { },
+              complete: () => { }
+            });
           });
         }
       });
@@ -259,7 +256,6 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket").subscribe(response => {
-            this.lastUpdatedJJDispute.status = this.DisputeStatus.Accepted;
             this.onBackClicked();
           });
         }
@@ -280,11 +276,9 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmReasonDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action?.output?.response) {
-          this.remarks = action.output.response;
+          this.remarks = action.output.reason;
           this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.Review;
-              this.jjDisputeService.refreshDisputes.emit();
               this.onBackClicked();
             })
           })
@@ -292,7 +286,7 @@ export class JJDisputeComponent implements OnInit {
       });
   }
 
-  private putJJDispute(): void {
+  private putJJDispute(): Observable<any> {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
 
@@ -307,15 +301,15 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
     }
-    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe(response => {
-      this.lastUpdatedJJDispute = response;
-      this.logger.info(
-        'JJDisputeComponent::putJJDispute response',
-        response
-      );
-      this.jjDisputeService.refreshDisputes.emit();
-      this.onBackClicked();
-    });
+    return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).pipe(
+      map(
+        response => {
+          this.lastUpdatedJJDispute = response;
+          this.logger.info(
+            'JJDisputeComponent::putJJDispute response',
+            response
+          );
+        }));
   }
 
   // get dispute by id
@@ -332,7 +326,7 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute = response;
 
       // set violation date and time
-      let violationDate = this.lastUpdatedJJDispute.violationDate.split("T");
+      let violationDate = this.lastUpdatedJJDispute.issuedTs.split("T");
       this.violationDate = violationDate[0];
       this.violationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
 
@@ -357,6 +351,7 @@ export class JJDisputeComponent implements OnInit {
         });
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
+        this.courtAppearanceForm.controls.appearanceTs.setValue(new Date(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs));
         if (!this.isViewOnly) {
           this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
           this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);
@@ -388,6 +383,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onBackClicked() {
+    this.jjDisputeService.refreshDisputes.emit();
     this.onBack.emit();
   }
 }
