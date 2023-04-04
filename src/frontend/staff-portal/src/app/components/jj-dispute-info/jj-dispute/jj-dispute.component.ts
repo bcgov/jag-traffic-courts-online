@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -184,10 +184,11 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
-            this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-            this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;
-            this.putJJDispute();
+          this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
+          this.putJJDispute().subscribe(response => {
+            this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
+              this.onBackClicked();
+            });
           });
         }
       });
@@ -211,13 +212,14 @@ export class JJDisputeComponent implements OnInit {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances
 
           // update the reason entered, reject dispute and return to TRM home
-          this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
-            next: response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing; // should be able to remove
-              this.putJJDispute();
-            },
-            error: err => { },
-            complete: () => { }
+          this.putJJDispute().subscribe(response => {
+            this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
+              next: response => {
+                this.onBackClicked();
+              },
+              error: err => { },
+              complete: () => { }
+            });
           });
         }
       });
@@ -254,8 +256,7 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket").subscribe(response => {
-            this.lastUpdatedJJDispute.status = this.DisputeStatus.Accepted; // should be able to remove
-            this.putJJDispute();
+            this.onBackClicked();
           });
         }
       });
@@ -275,18 +276,17 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmReasonDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action?.output?.response) {
-          this.remarks = action.output.response;
+          this.remarks = action.output.reason;
           this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.Review; // should be able to remove
-              this.putJJDispute();
+              this.onBackClicked();
             })
           })
         }
       });
   }
 
-  private putJJDispute(): void {
+  private putJJDispute(): Observable<any> {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
 
@@ -301,15 +301,15 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
     }
-    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe(response => {
-      this.lastUpdatedJJDispute = response;
-      this.logger.info(
-        'JJDisputeComponent::putJJDispute response',
-        response
-      );
-      this.jjDisputeService.refreshDisputes.emit();
-      this.onBackClicked();
-    });
+    return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).pipe(
+      map(
+        response => {
+          this.lastUpdatedJJDispute = response;
+          this.logger.info(
+            'JJDisputeComponent::putJJDispute response',
+            response
+          );
+        }));
   }
 
   // get dispute by id
@@ -382,6 +382,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onBackClicked() {
+    this.jjDisputeService.refreshDisputes.emit();
     this.onBack.emit();
   }
 }
