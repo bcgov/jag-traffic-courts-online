@@ -35,10 +35,30 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
 
         AzureKeyCredential credential = new(_apiKey);
         FormRecognizerClient formRecognizerClient = new(_endpoint, credential);
-        Task<RecognizeCustomFormsOperation> operation = formRecognizerClient.StartRecognizeCustomFormsAsync(_modelId, stream, null, cancellationToken);
-        Response<RecognizedFormCollection> response = await operation.WaitForCompletionAsync(cancellationToken);
+
+        Response<RecognizedFormCollection> response =  await RecognizeCustomFormsAsync(formRecognizerClient, _modelId, stream, null, cancellationToken);
 
         return Map(response.Value);
+    }
+
+
+    private async Task<Response<RecognizedFormCollection>> RecognizeCustomFormsAsync(FormRecognizerClient client, string modelId, Stream form, RecognizeCustomFormsOptions? options, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.FormRecognizer.BeginOperation("2.1", "RecognizeCustomFormsAsync");
+
+        try
+        {
+            Task<RecognizeCustomFormsOperation> recognizeOperation = client.StartRecognizeCustomFormsAsync(modelId, form, options, cancellationToken);
+            Response<RecognizedFormCollection> response = await recognizeOperation.WaitForCompletionAsync(cancellationToken)
+                .ConfigureAwait(false);
+            return response;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.FormRecognizer.EndOperation(operation, exception);
+            _logger.LogError(exception, "Form Recognizer operation failed");
+            throw;
+        }
     }
 
     private static OcrViolationTicket Map(RecognizedFormCollection result)

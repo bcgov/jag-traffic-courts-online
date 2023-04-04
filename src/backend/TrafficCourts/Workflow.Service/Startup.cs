@@ -26,7 +26,7 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
-        }, meters: new string[] { "MassTransit", "ComsClient" });
+        }, meters: new string[] { "MassTransit", "ComsClient", "WorkflowService" });
 
         builder.Services.AddControllers();
 
