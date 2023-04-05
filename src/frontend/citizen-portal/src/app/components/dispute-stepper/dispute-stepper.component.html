@@ -36,7 +36,7 @@
         </app-alert>
       </div>
     </div>
-    <mat-radio-group [formControl]="requestCourtAppearanceFormControl" (change)="onChangeRequestCourtAppearance()">
+    <mat-radio-group [formControl]="requestCourtAppearanceFormControl" (change)="onChangeRequestCourtAppearance($event.value)">
       <div>
         <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
           to attend a court hearing</span> <span

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, ViolationTicketCount } from 'app/api';
+import { DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, ViolationTicketCount, NoticeOfDispute } from 'app/api';
 import { DisputeCount } from 'app/services/notice-of-dispute.service';
 
 @Component({
@@ -10,6 +10,7 @@ import { DisputeCount } from 'app/services/notice-of-dispute.service';
 export class CountItemDisputeSummaryComponent implements OnInit {
   @Input() ticketCount: ViolationTicketCount;
   @Input() disputeCount: DisputeCount;
+  @Input() noticeOfDispute: NoticeOfDispute;
   Plea = DisputeCountPleaCode;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   RequestReduction = DisputeCountRequestReduction;

@@ -161,8 +161,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         let countForm = count.form;
         if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
           countForm.controls.plea_cd.patchValue(this.Plea.G);
-        } else {
-          countForm.controls.plea_cd.patchValue(this.Plea.N);
         }
         if (countForm.value.__skip) {
           // TODO: move to onSkipChange
@@ -198,10 +196,10 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
     if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_reduction.length > 0) {
       this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required]);
-    }
+    } else this.additionalForm.controls.fine_reduction_reason.removeValidators([Validators.required]);
     if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_time_to_pay.length > 0) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
-    }
+    } else this.additionalForm.controls.time_to_pay_reason.removeValidators([Validators.required]);
   }
 
   isCountFormsValid(): boolean {
@@ -233,7 +231,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     return result && this.additionalForm?.valid;
   }
 
-  onChangeRequestCourtAppearance() {
+  onChangeRequestCourtAppearance(value: DisputeRequestCourtAppearanceYn) {
+    this.noticeOfDispute.request_court_appearance = value;
     this.counts.forEach(count => {
       count.form.controls.plea_cd.setValue(null);
       count.form.controls.request_reduction.setValue(this.RequestReduction.N);

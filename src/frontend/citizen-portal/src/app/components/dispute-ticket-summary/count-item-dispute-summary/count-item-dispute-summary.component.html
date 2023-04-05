@@ -10,17 +10,20 @@
   <div class="col-lg-7">
     <small class="d-block">For this count I would like to</small>
     <strong>
-      <div *ngIf="disputeCount?.__skip || (disputeCount?.plea_cd === Plea.G && disputeCount?.request_reduction === RequestReduction.N && disputeCount?.request_time_to_pay === RequestTimeToPay.N)">
+      <div *ngIf="disputeCount?.__skip || (disputeCount?.plea_cd === Plea.G && disputeCount?.request_reduction === RequestReduction.N && disputeCount?.request_time_to_pay === RequestTimeToPay.N && noticeOfDispute.request_court_appearance === RequestCourtAppearance.N)">
         No action at this time
       </div>
-      <div *ngIf="disputeCount?.request_reduction === RequestReduction.Y && disputeCount?.plea_cd === Plea.G">
-        Request a fine reduction
+      <div *ngIf="disputeCount?.request_reduction === RequestReduction.Y && disputeCount?.plea_cd === Plea.G && noticeOfDispute.request_court_appearance === RequestCourtAppearance.N">
+        Request a fine reduction with written reasons
       </div>
-      <div *ngIf="disputeCount?.request_time_to_pay === RequestTimeToPay.Y && disputeCount?.plea_cd === Plea.G">
-        Request more time to pay
+      <div *ngIf="disputeCount?.request_time_to_pay === RequestTimeToPay.Y && disputeCount?.plea_cd === Plea.G && noticeOfDispute.request_court_appearance === RequestCourtAppearance.N">
+        Request more time to pay with written reasons
       </div>
       <div *ngIf="disputeCount?.plea_cd === Plea.N">
         Dispute the charge
+      </div>
+      <div *ngIf="disputeCount?.plea_cd === Plea.G && noticeOfDispute.request_court_appearance === RequestCourtAppearance.Y">
+        Request a fine reduction and/or time to pay on this count in court
       </div>
     </strong>
   </div>
