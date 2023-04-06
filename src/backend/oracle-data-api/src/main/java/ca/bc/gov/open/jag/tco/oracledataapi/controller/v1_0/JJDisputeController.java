@@ -271,6 +271,7 @@ public class JJDisputeController {
 	 * DELETE endpoint that deletes a specified {@link JJDispute} as well as its associated data
 	 *
 	 * @param id of the {@link JJDispute} to be deleted
+	 * @param ticketNumber of the {@link JJDispute} to be deleted
 	 */
 	@Operation(summary = "Deletes a particular JJDispute record.")
 	@ApiResponses({
