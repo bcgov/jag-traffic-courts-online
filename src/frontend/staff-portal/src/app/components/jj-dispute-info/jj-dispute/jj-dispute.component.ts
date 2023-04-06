@@ -363,9 +363,11 @@ export class JJDisputeComponent implements OnInit {
         if (!this.isViewOnly) {
           this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
           this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);
-          this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
           this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
-          this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => {}); // assign JJ who opened it
+          if (this.lastUpdatedJJDispute.jjAssignedTo != this.jjIDIR) {
+            this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
+            this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
+          }
         }
       }
     });
