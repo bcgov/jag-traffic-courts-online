@@ -277,7 +277,6 @@ public class JJDisputeController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. JJ Dispute record deleted."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
-		@ApiResponse(responseCode = "404", description = "JJ Dispute record not found. Delete failed."),
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Delete failed.")
 	})
 	@DeleteMapping("/dispute")
