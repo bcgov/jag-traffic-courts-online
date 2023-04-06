@@ -148,8 +148,9 @@
           <p class="section-grid-header">&nbsp;</p>
           <p class="section-jj-grid-text">
             <input formControlName="revisedDueDate" type="date" [hidden]="!(timeToPay=='yes')"
-              style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0"
+              style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0" (change)="showDateHint = false"
               [value]="jjDisputedCount?.revisedDueDate">
+            <mat-hint style="font-size:x-small">{{ jjDisputedCount?.revisedDueDate && showDateHint && timeToPay =='yes' ? jjDisputedCount?.revisedDueDate.substring(0,10) : "" }}</mat-hint>
           </p>
         </span>
         <span class="section-grid-cell">
@@ -325,10 +326,11 @@
           <span class="section-jj-grid-cell">
             <p class="section-grid-header">&nbsp;</p>
             <p class="section-jj-grid-text">
-              <input formControlName="revisedDueDate" type="date" [hidden]="!(timeToPay=='yes')"
+              <input formControlName="revisedDueDate" type="date" [hidden]="!(timeToPay=='yes')" (change)="showDateHint=false"
                 style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0"
                 [value]="jjDisputedCount?.revisedDueDate">
-            </p>
+                <mat-hint style="font-size:x-small">{{ jjDisputedCount?.revisedDueDate && showDateHint && timeToPay =='yes' ? jjDisputedCount?.revisedDueDate.substring(0,10) : "" }}</mat-hint>
+              </p>
           </span>
         </ng-container>
         <div style="padding: 0 0.3rem;" *ngIf="isViewOnly">

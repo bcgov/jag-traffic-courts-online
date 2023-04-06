@@ -184,7 +184,7 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + "+00:00"; // record date of decision
+          this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + ".000+00:00"; // record date of decision
           this.putJJDispute().subscribe(response => {
             this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
               this.onBackClicked();
@@ -241,6 +241,14 @@ export class JJDisputeComponent implements OnInit {
     } else {
       this.putJJDispute();
     }
+    const data: DialogOptions = {
+      titleKey: "Saved",
+      messageKey: "Dispute saved",
+      actionTextKey: "Ok",
+      actionType: "primary",
+      icon: "done"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
   }
 
   public onAccept(): void {
@@ -355,6 +363,9 @@ export class JJDisputeComponent implements OnInit {
         if (!this.isViewOnly) {
           this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
           this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);
+          this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
+          this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
+          this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => {}); // assign JJ who opened it
         }
       }
     });

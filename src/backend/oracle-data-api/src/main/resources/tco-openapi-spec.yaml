@@ -553,7 +553,7 @@ components:
         revisedDueDt:
           type: string
           format: date
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd\")"
         statuteId:
           type: string
         stayOfProceedingsByTxt:
