@@ -40,6 +40,7 @@ export class JJCountComponent implements OnInit {
   timeToPay: string = "";
   fineReduction: string = "";
   inclSurcharge: string = "";
+  showDateHint: boolean = true;
   lesserOrGreaterAmount: number = 0;
   surcharge: number = 0;
   lesserDescriptionFilteredStatutes: Statute[];
@@ -70,6 +71,7 @@ export class JJCountComponent implements OnInit {
         jjDisputedCountRoP: this.formBuilder.group({
           finding:  [{ value: null, disabled: !this.jjDisputedCount }],
           lesserDescription:  [{ value: null, disabled: !this.jjDisputedCount  }],
+          id: [{ value: null }],
           ssProbationCheckbox: [{value: false, disabled: !this.jjDisputedCount  }],
           ssProbationDuration:  [{ value: null, disabled: !this.jjDisputedCount  }],
           ssProbationConditions:  [{ value: null, disabled: !this.jjDisputedCount }],

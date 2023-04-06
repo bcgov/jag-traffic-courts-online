@@ -96,26 +96,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
   }
 
-  public onAssign(element: JJDispute): void {
-    let updateDispute = this.data.filter(x => x.ticketNumber === element.ticketNumber)[0];
-    if (element.jjAssignedTo === "unassigned") updateDispute.jjAssignedTo = null;
-    else updateDispute.jjAssignedTo = element.jjAssignedTo;
-
-    // update most recent court appearance rop
-    if (updateDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
-      let mostRecentCourtAppearance = updateDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
-      let i = updateDispute.jjDisputeCourtAppearanceRoPs.indexOf(mostRecentCourtAppearance);
-      updateDispute.jjDisputeCourtAppearanceRoPs[i].adjudicator = element.jjAssignedTo;
-    }
-
-    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute.id, updateDispute, false).subscribe((response: JJDispute) => {
-      this.logger.info(
-        'JJDisputeHearingInboxComponent::putJJDispute response',
-        response
-      );
-    });
-  }
-
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
