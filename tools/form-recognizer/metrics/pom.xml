@@ -94,8 +94,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<!-- Uncomment to enable devtools (hot-reload of jsp files)
+
+		<!-- Uncomment to enable devtools (hot-reload of jsp files) 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

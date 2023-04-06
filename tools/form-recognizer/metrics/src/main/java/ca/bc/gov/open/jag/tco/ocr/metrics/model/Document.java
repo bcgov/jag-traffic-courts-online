@@ -39,13 +39,17 @@ public class Document {
 	@JoinColumn(name = "documentId")
 	private Set<Field> fields = new HashSet<Field>();
 
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "documentId")
+	private Set<GlobalValidationError> globalValidationErrors = new HashSet<GlobalValidationError>();
+
 	public Document() {
 	}
 
-	public Document(String fileName, Float confidence) {
+	public Document(String fileName, Float confidence, Source source) {
 		this.fileName = fileName;
 		this.confidence = confidence;
-		this.source = Source.OCR;
+		this.source = source;
 	}
 
 	public Integer getDocumentId() {
@@ -70,6 +74,14 @@ public class Document {
 
 	public void setFields(Set<Field> fields) {
 		this.fields = fields;
+	}
+
+	public Set<GlobalValidationError> getGlobalValidationErrors() {
+		return globalValidationErrors;
+	}
+
+	public void setGlobalValidationErrors(Set<GlobalValidationError> globalValidationErrors) {
+		this.globalValidationErrors = globalValidationErrors;
 	}
 
 }

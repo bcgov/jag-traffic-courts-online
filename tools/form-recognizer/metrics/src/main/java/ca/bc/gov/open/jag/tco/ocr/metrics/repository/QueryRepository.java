@@ -17,7 +17,7 @@ public class QueryRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-	public List<FieldComparison> customQuery() {
+	public List<FieldComparison> customQuery(Source source1, Source source2) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select new ca.bc.gov.open.jag.tco.ocr.metrics.model.FieldComparison(d1.fileName, f1.fieldName, f1.content, f2.content, f2.confidence) ");
 		sb.append("from Document d1 join d1.fields f1, Document d2 join d2.fields f2 ");
@@ -32,8 +32,8 @@ public class QueryRepository {
 		sb.append(" )");
 		sb.append("and (length(f1.content) > 0 or length(f2.content) > 0) ");
 		TypedQuery<FieldComparison> query = entityManager.createQuery(sb.toString(), FieldComparison.class);
-		query.setParameter(1, Source.HUMAN);
-		query.setParameter(2, Source.OCR);
+		query.setParameter(1, source1);
+		query.setParameter(2, source2);
 		List<FieldComparison> list = query.getResultList();
 		return list;
 	}
