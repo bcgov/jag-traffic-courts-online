@@ -62,7 +62,7 @@ public class EmailHistoryController {
 	public ResponseEntity<Long> insertEmailHistory(
 			@RequestBody EmailHistory emailHistory) {
 		logger.debug("POST /emailHistory called with: {}", StructuredArguments.fields(emailHistory));
-		// return bad request if occamDisputeId is
+		// return bad request for invalid arguments
 		if (emailHistory.getOccamDisputeId() == null || emailHistory.getOccamDisputeId() == 0)
 			throw new IllegalArgumentException("Occam dispute id is zero or missing.");
 		else if (emailHistory.getHtmlContent() != null && emailHistory.getPlainTextContent() != null )
@@ -72,6 +72,8 @@ public class EmailHistoryController {
 		else if (emailHistory.getToEmailAddress() == null || emailHistory.getToEmailAddress().isBlank())
 			throw new IllegalArgumentException("To address cannot be null or empty");
 		else if (emailHistory.getFromEmailAddress() == null || emailHistory.getFromEmailAddress().isBlank())
+			throw new IllegalArgumentException("From address cannot be null or empty");
+		else if (emailHistory.getSubject() == null ||emailHistory.getSubject().isBlank())
 			throw new IllegalArgumentException("From address cannot be null or empty");
 		else return new ResponseEntity<Long>(emailHistoryService.insertEmailHistory(emailHistory), HttpStatus.OK);
 	}
