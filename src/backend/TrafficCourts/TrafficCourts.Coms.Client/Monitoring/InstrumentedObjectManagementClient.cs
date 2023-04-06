@@ -12,13 +12,43 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
     public string BaseUrl { get => _client.BaseUrl; set => _client.BaseUrl = value; }
     public bool ReadResponseAsString { get => _client.ReadResponseAsString; set => _client.ReadResponseAsString = value; }
 
-    public Task AddMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
+    public async Task AddMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("AddMetadata");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.AddMetadataAsync));
 
         try
         {
-            var response = _client.AddMetadataAsync(meta, objId, versionId, cancellationToken);
+            await _client.AddMetadataAsync(meta, objId, versionId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task AddTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.AddTaggingAsync));
+
+        try
+        {
+            await _client.AddTaggingAsync(objId, tags, versionId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task<List<Anonymous>> CreateObjectsAsync(IReadOnlyDictionary<string, string>? meta, IReadOnlyDictionary<string, string>? tags, Guid? bucketId, FileParameter anyKey, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.CreateObjectsAsync));
+
+        try
+        {
+            var response = await _client.CreateObjectsAsync(meta, tags, bucketId, anyKey, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
@@ -28,14 +58,13 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
     }
 
-    public Task AddTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
+    public async Task DeleteMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("AddTagging");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.DeleteMetadataAsync));
 
         try
         {
-            var response = _client.AddTaggingAsync(objId, tags, versionId, cancellationToken);
-            return response;
+            await _client.DeleteMetadataAsync(meta, objId, versionId, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -44,45 +73,13 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
     }
 
-    public Task<List<Anonymous>> CreateObjectsAsync(IReadOnlyDictionary<string, string>? meta, IReadOnlyDictionary<string, string>? tags, Guid? bucketId, FileParameter anyKey, CancellationToken cancellationToken)
+    public async Task<ResponseObjectDeleted> DeleteObjectAsync(Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("CreateObjects");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.DeleteObjectAsync));
 
         try
         {
-            var response = _client.CreateObjectsAsync(meta, tags, bucketId, anyKey, cancellationToken);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.EndOperation(operation, exception);
-            throw;
-        }
-    }
-
-    public Task DeleteMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
-    {
-        using var operation = Instrumentation.BeginOperation("DeleteMetadata");
-
-        try
-        {
-            var response = _client.DeleteMetadataAsync(meta, objId, versionId, cancellationToken);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.EndOperation(operation, exception);
-            throw;
-        }
-    }
-
-    public Task<ResponseObjectDeleted> DeleteObjectAsync(Guid objId, string? versionId, CancellationToken cancellationToken)
-    {
-        using var operation = Instrumentation.BeginOperation("DeleteObject");
-
-        try
-        {
-            var response = _client.DeleteObjectAsync(objId, versionId, cancellationToken);
+            var response = await _client.DeleteObjectAsync(objId, versionId, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
@@ -93,13 +90,27 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
 
     }
 
-    public Task DeleteTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
+    public async Task DeleteTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("DeleteTagging");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.DeleteTaggingAsync));
 
         try
         {
-            var response = _client.DeleteTaggingAsync(objId, tags, versionId, cancellationToken);
+            await _client.DeleteTaggingAsync(objId, tags, versionId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task<IList<Anonymous2>> FetchMetadataAsync(IList<Guid>? ids, IReadOnlyDictionary<string, string>? meta, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.FetchMetadataAsync));
+        try
+        {
+            var response = await _client.FetchMetadataAsync(ids, meta, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
@@ -109,12 +120,13 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
     }
 
-    public Task<IList<Anonymous2>> FetchMetadataAsync(IList<Guid>? ids, IReadOnlyDictionary<string, string>? meta, CancellationToken cancellationToken)
+    public async Task<IList<Anonymous3>> FetchTagsAsync(IList<Guid>? ids, IReadOnlyDictionary<string, string>? tags, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("FetchMetadata");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.FetchTagsAsync));
+
         try
         {
-            var response = _client.FetchMetadataAsync(ids, meta, cancellationToken);
+            var response = await _client.FetchTagsAsync(ids, tags, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
@@ -124,13 +136,28 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
     }
 
-    public Task<IList<Anonymous3>> FetchTagsAsync(IList<Guid>? ids, IReadOnlyDictionary<string, string>? tags, CancellationToken cancellationToken)
+    public async Task HeadObjectAsync(Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("FetchTags");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.HeadObjectAsync));
 
         try
         {
-            var response = _client.FetchTagsAsync(ids, tags, cancellationToken);
+            await _client.HeadObjectAsync(objId, versionId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task<List<DBVersion>> ListObjectVersionAsync(Guid objId, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.ListObjectVersionAsync));
+
+        try
+        {
+            var response = await _client.ListObjectVersionAsync(objId, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
@@ -140,13 +167,13 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
     }
 
-    public Task HeadObjectAsync(Guid objId, string? versionId, CancellationToken cancellationToken)
+    public async Task<FileResponse> ReadObjectAsync(Guid objId, DownloadMode? download, int? expiresIn, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("HeadObject");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.ReadObjectAsync));
 
         try
         {
-            var response = _client.HeadObjectAsync(objId, versionId, cancellationToken);
+            var response = await _client.ReadObjectAsync(objId, download, expiresIn, versionId, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
@@ -156,13 +183,43 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
     }
 
-    public Task<List<DBVersion>> ListObjectVersionAsync(Guid objId, CancellationToken cancellationToken)
+    public async Task ReplaceMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("ListObjectVersion");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.ReplaceMetadataAsync));
 
         try
         {
-            var response = _client.ListObjectVersionAsync(objId, cancellationToken);
+            await _client.ReplaceMetadataAsync(meta, objId, versionId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task ReplaceTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.ReplaceTaggingAsync));
+
+        try
+        {
+            await _client.ReplaceTaggingAsync(objId, tags, versionId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task<List<DBObject>> SearchObjectsAsync(IReadOnlyDictionary<string, string>? meta, IList<Guid>? ids, Guid? bucketId, string? path, bool? active, bool? deleteMarker, bool? latest, bool? @public, string? mimeType, string? name, IReadOnlyDictionary<string, string>? tags, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.SearchObjectsAsync));
+
+        try
+        {
+            var response = await _client.SearchObjectsAsync(meta, ids, bucketId, path, active, deleteMarker, latest, @public, mimeType, name, tags, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
@@ -172,77 +229,13 @@ internal class InstrumentedObjectManagementClient : IObjectManagementClient
         }
     }
 
-    public Task<FileResponse> ReadObjectAsync(Guid objId, DownloadMode? download, int? expiresIn, string? versionId, CancellationToken cancellationToken)
+    public async Task<Response> UpdateObjectAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, IReadOnlyDictionary<string, string>? tags, FileParameter anyKey, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.BeginOperation("ReadObject");
+        using var operation = Instrumentation.BeginOperation(nameof(IObjectManagementClient.UpdateObjectAsync));
 
         try
         {
-            var response = _client.ReadObjectAsync(objId, download, expiresIn, versionId, cancellationToken);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.EndOperation(operation, exception);
-            throw;
-        }
-    }
-
-    public Task ReplaceMetadataAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, string? versionId, CancellationToken cancellationToken)
-    {
-        using var operation = Instrumentation.BeginOperation("ReplaceMetadata");
-
-        try
-        {
-            var response = _client.ReplaceMetadataAsync(meta, objId, versionId, cancellationToken);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.EndOperation(operation, exception);
-            throw;
-        }
-    }
-
-    public Task ReplaceTaggingAsync(Guid objId, IReadOnlyDictionary<string, string>? tags, string? versionId, CancellationToken cancellationToken)
-    {
-        using var operation = Instrumentation.BeginOperation("ReplaceTagging");
-
-        try
-        {
-            var response = _client.ReplaceTaggingAsync(objId, tags, versionId, cancellationToken);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.EndOperation(operation, exception);
-            throw;
-        }
-    }
-
-    public Task<List<DBObject>> SearchObjectsAsync(IReadOnlyDictionary<string, string>? meta, IList<Guid>? ids, Guid? bucketId, string? path, bool? active, bool? deleteMarker, bool? latest, bool? @public, string? mimeType, string? name, IReadOnlyDictionary<string, string>? tags, CancellationToken cancellationToken)
-    {
-        using var operation = Instrumentation.BeginOperation("SearchObjects");
-
-        try
-        {
-            var response = _client.SearchObjectsAsync(meta, ids, bucketId, path, active, deleteMarker, latest, @public, mimeType, name, tags, cancellationToken);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.EndOperation(operation, exception);
-            throw;
-        }
-    }
-
-    public Task<Response> UpdateObjectAsync(IReadOnlyDictionary<string, string>? meta, Guid objId, IReadOnlyDictionary<string, string>? tags, FileParameter anyKey, CancellationToken cancellationToken)
-    {
-        using var operation = Instrumentation.BeginOperation("UpdateObject");
-
-        try
-        {
-            var response = _client.UpdateObjectAsync(meta, objId, tags, anyKey, cancellationToken);
+            var response = await _client.UpdateObjectAsync(meta, objId, tags, anyKey, cancellationToken).ConfigureAwait(false);
             return response;
         }
         catch (Exception exception)
