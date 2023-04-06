@@ -49,7 +49,7 @@ public interface JJDisputeRepository {
 
 	/** Fetch all records that match by JJDispute.ticketNumber (should only ever be one). */
 	public List<JJDispute> findByTicketNumber(String ticketNumber);
-	
+
 	/**
 	 * Saves an entity and flushes changes instantly.
 	 *
@@ -73,5 +73,13 @@ public interface JJDisputeRepository {
 	 */
 	public void setStatus(Long disputeId, JJDisputeStatus disputeStatus, String userId, Long courtAppearanceId, YesNo seizedYn,
 			String adjudicatorPartId, JJDisputeCourtAppearanceAPP aattCd, JJDisputeCourtAppearanceDATT dattCd, String staffPartId);
+
+	/**
+	 * Deletes a JJ Dispute and all associated records for the given jjDisputeId or ticketNumber
+	 *
+	 * @param id
+	 * @param ticketNumber
+	 */
+	public void deleteByIdOrTicketNumber(Long id, String ticketNumber);
 
 }

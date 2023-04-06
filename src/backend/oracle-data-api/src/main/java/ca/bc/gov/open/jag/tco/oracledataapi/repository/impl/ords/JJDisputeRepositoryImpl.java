@@ -149,6 +149,11 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 				staffPartId));
 	}
 
+	@Override
+	public void deleteByIdOrTicketNumber(Long id, String ticketNumber) {
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1DeleteDisputeDelete(id, ticketNumber));
+	}
+
 	private JJDispute map(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute jjDispute) {
 		return jjDisputeMapper.convert(jjDispute);
 	}

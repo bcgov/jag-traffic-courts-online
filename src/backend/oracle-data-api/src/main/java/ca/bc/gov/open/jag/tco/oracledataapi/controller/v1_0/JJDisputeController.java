@@ -6,11 +6,13 @@ import java.util.List;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -263,5 +265,34 @@ public class JJDisputeController {
 		logger.debug("GET /dispute/ticketImage/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("documentType", documentType));
 
 		return new ResponseEntity<TicketImageDataJustinDocument>(jjDisputeService.getTicketImageByTicketNumber(ticketNumber, documentType), HttpStatus.OK);
+	}
+
+	/**
+	 * DELETE endpoint that deletes a specified {@link JJDispute} as well as its associated data
+	 *
+	 * @param id of the {@link JJDispute} to be deleted
+	 * @param ticketNumber of the {@link JJDispute} to be deleted
+	 */
+	@Operation(summary = "Deletes a particular JJDispute record.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. JJ Dispute record deleted."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Delete failed.")
+	})
+	@DeleteMapping("/dispute")
+	public void deleteDispute(
+			@RequestParam(required = false)
+			@Parameter(description = "If specified, will delete the record of the specified jj dispute by this ID. JJ Dispute ID will take precedence if both ID and ticket number supplied")
+			Long jjDisputeId,
+			@RequestParam(required = false)
+			@Pattern(regexp = "[A-Z]{2}\\d{8}")
+			@Parameter(description = "If specified, will delete the record of the specified jj dispute by this TicketNumber. (Format is XX00000000)", example = "AX12345678")
+			String ticketNumber) {
+		logger.debug("DELETE /dispute called with jjDisputeId: {}, and ticketNumber: {}", StructuredArguments.value("jjDisputeId", jjDisputeId), StructuredArguments.value("ticketNumber", ticketNumber));
+		if (jjDisputeId == null && StringUtils.isBlank(ticketNumber)) {
+			throw new IllegalArgumentException("Either ticketNumber or jjDisputeId must be specified.");
+		}
+
+		jjDisputeService.delete(jjDisputeId, ticketNumber);
 	}
 }
