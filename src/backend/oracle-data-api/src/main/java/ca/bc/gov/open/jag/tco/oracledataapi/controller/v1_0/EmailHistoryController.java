@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.EmailHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -60,7 +61,18 @@ public class EmailHistoryController {
 	@PostMapping("/emailHistory")
 	public ResponseEntity<Long> insertEmailHistory(
 			@RequestBody EmailHistory emailHistory) {
-		logger.debug("POST /emailHistory called to save emailHistory: {}", StructuredArguments.fields(emailHistory));
-		return new ResponseEntity<Long>(emailHistoryService.insertEmailHistory(emailHistory), HttpStatus.OK);
+		logger.debug("POST /emailHistory called with: {}", StructuredArguments.fields(emailHistory));
+		// return bad request if occamDisputeId is
+		if (emailHistory.getOccamDisputeId() == null || emailHistory.getOccamDisputeId() == 0)
+			throw new IllegalArgumentException("Occam dispute id is zero or missing.");
+		else if (emailHistory.getHtmlContent() != null && emailHistory.getPlainTextContent() != null )
+			throw new IllegalArgumentException("Only one of plaintextcontent or htmlcontent can be supplied.");
+		else if (emailHistory.getSuccessfullySent() == null || emailHistory.getSuccessfullySent() == YesNo.UNKNOWN)
+			throw new IllegalArgumentException("parameter successfullySent has unknown value");
+		else if (emailHistory.getToEmailAddress() == null || emailHistory.getToEmailAddress().isBlank())
+			throw new IllegalArgumentException("To address cannot be null or empty");
+		else if (emailHistory.getFromEmailAddress() == null || emailHistory.getFromEmailAddress().isBlank())
+			throw new IllegalArgumentException("From address cannot be null or empty");
+		else return new ResponseEntity<Long>(emailHistoryService.insertEmailHistory(emailHistory), HttpStatus.OK);
 	}
 }

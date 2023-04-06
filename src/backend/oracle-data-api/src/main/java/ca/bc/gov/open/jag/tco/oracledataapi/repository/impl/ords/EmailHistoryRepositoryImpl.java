@@ -57,6 +57,7 @@ public class EmailHistoryRepositoryImpl implements EmailHistoryRepository {
 		}
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail outgoingEmail = OutgoingEmailMapper.INSTANCE.convert(emailHistory);
+		logger.debug("DEBUG saving outgoing email", StructuredArguments.fields(outgoingEmail));
 		try {
 			OutgoingEmailResponseResult result = assertNoExceptions(() -> outgoingEmailApi.v1ProcessOutgoingEmailPost(outgoingEmail));
 			if (result.getOutgoingEmailId() != null) {

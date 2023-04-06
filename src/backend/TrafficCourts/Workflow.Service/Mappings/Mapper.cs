@@ -14,8 +14,17 @@ public class Mapper
         target.ToEmailAddress = src.Message?.To is not null ? src.Message.To : "unknown";
         target.SuccessfullySent = EmailHistorySuccessfullySent.Y;
         target.Subject = src.Message?.Subject is not null ? src.Message.Subject : "unknown";
-        target.HtmlContent = src.Message?.HtmlContent is not null ? src.Message.HtmlContent : "";
-        target.PlainTextContent = src.Message?.TextContent is not null ? src.Message.TextContent : "";
+        // ensure only one of html content or plain text content is set
+        if (src.Message?.HtmlContent is not null && src.Message?.TextContent is not null)
+        {
+            target.HtmlContent = src.Message?.HtmlContent;
+            target.PlainTextContent = null;
+        }
+        else
+        {
+            target.HtmlContent = src.Message?.HtmlContent;
+            target.PlainTextContent = src.Message?.TextContent;
+        }
         target.OccamDisputeId = src.OccamDisputeId;
         target.FromEmailAddress = src.Message?.From is not null ? src.Message.From : "unknown";
         
@@ -32,8 +41,17 @@ public class Mapper
         target.ToEmailAddress = src.Message?.To is not null ? src.Message.To : "unknown";
         target.SuccessfullySent = EmailHistorySuccessfullySent.N;
         target.Subject = src.Message?.Subject is not null ? src.Message.Subject : "unknown";
-        target.HtmlContent = src.Message?.HtmlContent is not null ? src.Message.HtmlContent : "";
-        target.PlainTextContent = src.Message?.TextContent is not null ? src.Message.TextContent : "";
+
+        // ensure only one of html content or plain text content is set
+        if (src.Message?.HtmlContent is not null && src.Message?.TextContent is not null)
+        {
+            target.HtmlContent = src.Message?.HtmlContent;
+            target.PlainTextContent = null;
+        } else
+        {
+            target.HtmlContent = src.Message?.HtmlContent;
+            target.PlainTextContent = src.Message?.TextContent;
+        }
         target.OccamDisputeId = src.OccamDisputeId;
         target.FromEmailAddress = src.Message?.From is not null ? src.Message.From : "unknown";
 
