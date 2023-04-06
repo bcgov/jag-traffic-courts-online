@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
@@ -402,5 +403,15 @@ public class JJDisputeService {
 
 		JJDispute jjDispute = jjDisputes.get(0);
 		return Optional.of(jjDispute);
+	}
+
+	/**
+	 * Deletes a specific {@link Dispute} by using the jjDisputeId or TicketNumber
+	 *
+	 * @param id of the JJDispute to be deleted
+	 * @param ticketNumber of the JJDispute to be deleted
+	 */
+	public void delete(Long id, String ticketNumber) {
+		jjDisputeRepository.deleteByIdOrTicketNumber(id, ticketNumber);
 	}
 }
