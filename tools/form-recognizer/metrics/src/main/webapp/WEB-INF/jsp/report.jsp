@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>OCR Metrics</title>
@@ -31,7 +31,26 @@
 
 	<div class="panel-body">
 		<form:form method="post" modelAttribute="cmd">
+			<table class="table" style="width: auto;">
+				<tr>
+					<td><label>Source 1:</label></td>
+					<td>
+						<form:select path="source1">
+							<form:options items="${sources}"/>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
+					<td><label>Source 2:</label></td>
+					<td>
+						<form:select path="source2">
+							<form:options items="${sources}"/>
+						</form:select>
+					</td>
+				</tr>
+			</table>
 			<button type="submit" class="btn btn-primary" name="save">Get Report</button>
+			
 			<br />
 			<br />
 			<table class="table" style="width: auto;">
