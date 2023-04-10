@@ -19,8 +19,11 @@ public class VerificationEmailTemplate : EmailTemplate<SendEmailVerificationEmai
     }
 
     private const string SubjectTemplate = "Verify your email for traffic violation ticket {0}";
-    private const string TextContentTemplate = @"
-In order to confirm submission of your intent to dispute traffic violation ticket {0} click on the following link.{Environment.NewLine}{Environment.NewLine}{1}{Environment.NewLine}{Environment.NewLine}If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm.";
+    private const string TextContentTemplate = @"In order to confirm submission of your intent to dispute traffic violation ticket {0} click on the following link: 
+
+{1}
+
+If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm.";
 
     public override EmailMessage Create(SendEmailVerificationEmail data)
     {
@@ -33,7 +36,7 @@ In order to confirm submission of your intent to dispute traffic violation ticke
         return sendEmail;
     }
 
-    private Uri CreateEmailVerificationUrl(SendEmailVerificationEmail data)
+    private string CreateEmailVerificationUrl(SendEmailVerificationEmail data)
     {
         // https://tickets.gov.bc.ca/email/verify/{token}
 
@@ -48,6 +51,6 @@ In order to confirm submission of your intent to dispute traffic violation ticke
         var token = _encoder.Encode(new DisputeEmailVerificationToken { NoticeOfDisputeGuid = data.NoticeOfDisputeGuid, Token = data.Token });
         string uri = format + "/" + token;
 
-        return new Uri(uri);
+        return uri;
     }
 }
