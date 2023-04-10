@@ -40,8 +40,8 @@
                 TemplateName = "VerificationEmailTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Verify your email for traffic violation ticket {ticketid}.",
-                PlainContentTemplate = "In order to confirm submission of your intent to dispute traffic violation ticket {ticketid} click on the following link." +
-                    "{Environment.NewLine}{Environment.NewLine}{emailVerificationUrl}?guid={emailVerificationToken}{Environment.NewLine}{Environment.NewLine}" +
+                PlainContentTemplate = "In order to confirm submission of your intent to dispute traffic violation ticket {ticketid} click on the following link: " +
+                    "{emailVerificationUrl}?guid={emailVerificationToken} " +
                     "If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
             },
         new MailTemplate()
@@ -77,8 +77,8 @@
                 TemplateName = "UpdateEmailVerificationTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Verify your email update for traffic violation ticket {ticketid}.",
-                PlainContentTemplate = "TBD (ie. In order to confirm your email update click on the following link.){Environment.NewLine}{Environment.NewLine}" +
-                    "{emailVerificationUrl}?guid={emailVerificationToken}{Environment.NewLine}{Environment.NewLine}" +
+                PlainContentTemplate = "TBD (ie. In order to confirm your email update click on the following link): " +
+                    "{emailVerificationUrl}?guid={emailVerificationToken} " +
                     "If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
             },
         };
