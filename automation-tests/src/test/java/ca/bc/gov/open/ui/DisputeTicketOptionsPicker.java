@@ -107,12 +107,14 @@ public class DisputeTicketOptionsPicker {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
 		element.sendKeys("EA03148599");
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-find-ticket/app-page/app-busy-overlay/div/div/div/div/div/div[2]/div[1]/div/form/div[2]/mat-form-field/div/div[1]/div/ngx-timepicker-field/div/ngx-timepicker-time-control[1]/div/input")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[contains(@placeholder,'HH')]")));
 		element.sendKeys("17");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-find-ticket/app-page/app-busy-overlay/div/div/div/div/div/div[2]/div[1]/div/form/div[2]/mat-form-field/div/div[1]/div/ngx-timepicker-field/div/ngx-timepicker-time-control[2]/div/input")));
-		element.sendKeys("16");
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'MM')]")))
+				.sendKeys("16");
+		
 		System.out.println("Ticket found");
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))

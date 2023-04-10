@@ -80,26 +80,9 @@ public class DisputeTicketOptionsPickerByMail {
 		overview.ticketRequestOverview(element, driverWait, driver);
 		
 		// Switch to pop-up window
-		String parentWindowHandler = driver.getWindowHandle(); // Store your parent window
-		String subWindowHandler = null;
-
-		Set<String> handles = driver.getWindowHandles(); // get all window handles
-		Iterator<String> iterator = handles.iterator();
-		while (iterator.hasNext()) {
-			subWindowHandler = iterator.next();
-		}
-		driver.switchTo().window(subWindowHandler); // switch to popup window
-
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
-		js.executeScript("arguments[0].click();", element);
-		System.out.println("Submit in pop-up clicked");
-		driver.switchTo().window(parentWindowHandler); // switch back to parent window
-
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Dispute your ticket ')]")));
-		System.out.println("Ticket submitted without email");
+		DisputeTicketOptionsPickerByMail popupWindowHandle = new DisputeTicketOptionsPickerByMail();
+		popupWindowHandle.popup(element, driverWait, driver);
+		
 	}
 
 	public static String getUser() {
@@ -139,6 +122,32 @@ public class DisputeTicketOptionsPickerByMail {
 				.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
+		
+	}
+	
+	public void popup(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
+		// Switch to pop-up window
+				String parentWindowHandler = driver.getWindowHandle(); // Store your parent window
+				String subWindowHandler = null;
+
+				Set<String> handles = driver.getWindowHandles(); // get all window handles
+				Iterator<String> iterator = handles.iterator();
+				while (iterator.hasNext()) {
+					subWindowHandler = iterator.next();
+				}
+				driver.switchTo().window(subWindowHandler); // switch to popup window
+
+				JavascriptExecutor js = (JavascriptExecutor) driver;
+				element = driverWait
+						.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
+				js.executeScript("arguments[0].click();", element);
+				System.out.println("Submit in pop-up clicked");
+				driver.switchTo().window(parentWindowHandler); // switch back to parent window
+
+				new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Dispute your ticket ')]")));
+				System.out.println("Ticket submitted without email");
 		
 	}
 
