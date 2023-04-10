@@ -41,7 +41,6 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     To = context.Message.Email!,
                     Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketFileNumber),
                     TextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
-                    HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
                 };
 
                 var sendDisputantEmail = new SendDisputantEmail()
