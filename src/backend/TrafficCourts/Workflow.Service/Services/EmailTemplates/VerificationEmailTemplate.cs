@@ -19,14 +19,8 @@ public class VerificationEmailTemplate : EmailTemplate<SendEmailVerificationEmai
     }
 
     private const string SubjectTemplate = "Verify your email for traffic violation ticket {0}";
-    private const string HtmlContentTemplate = @"
-In order to confirm submission of your intent to dispute traffic violation ticket {0} click on the following link.
-<br/>
-<br/>
-<a href='{1}'>{1}</a>
-<br/>
-<br/>
-If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm.";
+    private const string TextContentTemplate = @"
+In order to confirm submission of your intent to dispute traffic violation ticket {0} click on the following link.{Environment.NewLine}{Environment.NewLine}{1}{Environment.NewLine}{Environment.NewLine}If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm.";
 
     public override EmailMessage Create(SendEmailVerificationEmail data)
     {
@@ -35,7 +29,7 @@ If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8
         sendEmail.From = Sender;
         sendEmail.To = data.EmailAddress;
         sendEmail.Subject = string.Format(SubjectTemplate, data.TicketNumber);
-        sendEmail.HtmlContent = string.Format(HtmlContentTemplate, data.TicketNumber, CreateEmailVerificationUrl(data));
+        sendEmail.TextContent = string.Format(TextContentTemplate, data.TicketNumber, CreateEmailVerificationUrl(data));
         return sendEmail;
     }
 
