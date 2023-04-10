@@ -237,18 +237,17 @@ export class JJDisputeComponent implements OnInit {
     // Update status to in progress unless status is set to review in which case do not change
     if (this.lastUpdatedJJDispute.status !== this.DisputeStatus.Review) {
       this.lastUpdatedJJDispute.status = this.DisputeStatus.InProgress;
-      this.putJJDispute();
-    } else {
-      this.putJJDispute();
     }
-    const data: DialogOptions = {
-      titleKey: "Saved",
-      messageKey: "Dispute saved",
-      actionTextKey: "Ok",
-      actionType: "primary",
-      icon: "done"
-    };
-    this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
+    this.putJJDispute().subscribe(response => {
+      const data: DialogOptions = {
+        titleKey: "Saved",
+        messageKey: "Dispute saved",
+        actionTextKey: "Ok",
+        actionType: "primary",
+        icon: "done"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
+    });
   }
 
   public onAccept(): void {
