@@ -28,6 +28,11 @@ internal static class Instrumentation
     public static ITimerOperation BeginOperation(string operation)
     {
         ArgumentNullException.ThrowIfNull(operation);
+        // caller with with Async operation name
+        if (operation.EndsWith("Async"))
+        {
+            operation = operation[..^5];
+        }
         return _operationDuration.Start(new TagList { { "operation", operation } });
     }
 
