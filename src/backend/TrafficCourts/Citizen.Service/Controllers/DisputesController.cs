@@ -471,7 +471,7 @@ public class DisputesController : ControllerBase
     {
 #if DEBUG 
 #warning Contact Name Comparisons with BC Services Cards have been disabled 
-        return true;
+       return true;
 #endif
         bool result = true;
 
@@ -481,7 +481,7 @@ public class DisputesController : ControllerBase
             var givenNames = message.DisputantGivenName1
                 + (message.DisputantGivenName2 != null ? (" " + message.DisputantGivenName2) : "")
                 + (message.DisputantGivenName3 != null ? (" " + message.DisputantGivenName3) : "");
-            if (message.DisputantSurname.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+            if (!message.DisputantSurname.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
                 || !(message.DisputantGivenName1.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
             {
                 result = false;
@@ -492,7 +492,7 @@ public class DisputesController : ControllerBase
             var givenNames = message.ContactGiven1Nm
                 + (message.ContactGiven2Nm != null ? (" " + message.ContactGiven2Nm) : "")
                 + (message.ContactGiven3Nm != null ? (" " + message.ContactGiven3Nm) : "");
-            if (message.ContactSurnameNm.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+            if (!message.ContactSurnameNm.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
                 || !(message.ContactGiven1Nm.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
             {
                 result = false;
