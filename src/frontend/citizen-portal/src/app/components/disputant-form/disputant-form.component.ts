@@ -109,6 +109,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.form.controls.address_country_id.setValue(country.ctryId);
 
       this.form.controls.postal_code.setValidators([Validators.maxLength(6)]);
+      this.form.controls.postal_code.setValue(null);
       this.form.controls.address_province.setValidators([Validators.maxLength(30)]);
       this.form.controls.address_province.setValue(null);
       this.form.controls.address_province_seq_no.setValidators(null);
@@ -123,7 +124,10 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
 
         if (this.isCA) { // pick BC by default if Canada selected
           this.form.controls.address_province.setValue(this.bc.provNm);
-          this.form.controls.address_province_seq_no.setValue(this.bc.provSeqNo)
+          this.form.controls.address_province_seq_no.setValue(this.bc.provSeqNo);
+          this.form.controls.postal_code.addValidators([Validators.minLength(6), Validators.maxLength(6)]);
+        } else {
+          this.form.controls.postal_code.addValidators([Validators.minLength(5), Validators.maxLength(5)]);
         }
       }
 
