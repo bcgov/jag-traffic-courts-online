@@ -33,11 +33,34 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
         activity?.AddBaggage("ModelId", _modelId);
 
         AzureKeyCredential credential = new(_apiKey);
-        DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
-        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.AnalyzeDocumentAsync(WaitUntil.Completed, _modelId, stream, null, cancellationToken);
-        await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
+        DocumentAnalysisClient client = new(_endpoint, credential);
 
-        return Map(analyseDocumentOperation.Value);
+        var analyzeResult = await AnalyzeDocumentAsync(client, stream, cancellationToken);
+
+        var result = Map(analyzeResult);
+        return result;
+    }
+
+    private async Task<AnalyzeResult> AnalyzeDocumentAsync(DocumentAnalysisClient client, Stream form, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.FormRecognizer.BeginOperation("2022_06_30_preview", "RecognizeForms");
+
+        try
+        {
+            AnalyzeDocumentOperation analyseDocumentOperation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _modelId, form, null, cancellationToken)
+                .ConfigureAwait(false);
+
+            await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            return analyseDocumentOperation.Value;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.FormRecognizer.EndOperation(operation, exception);
+            _logger.LogError(exception, "Form Recognizer operation failed");
+            throw;
+        }
     }
 
     // Create a custom mapping of DocumentFields to a structured object for validation and serialization.
