@@ -58,14 +58,14 @@ export class JJCountComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons ?
       this.formBuilder.group({
-        totalFineAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
-        lesserOrGreaterAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
+        totalFineAmount: [null, [Validators.required, Validators.max(9999), Validators.min(0)]],
+        lesserOrGreaterAmount: [null, [Validators.required, Validators.max(9999), Validators.min(0)]],
         revisedDueDate: [null, [Validators.required]],
         comments: [{ value: null, disabled: !this.jjDisputedCount }]
       }) :
       this.formBuilder.group({
-        totalFineAmount: [null, [Validators.max(9999.99), Validators.min(0.00)]],
-        lesserOrGreaterAmount: [null, [Validators.max(9999.99), Validators.min(0.00)]],
+        totalFineAmount: [null, [Validators.max(9999), Validators.min(0)]],
+        lesserOrGreaterAmount: [null, [Validators.max(9999), Validators.min(0)]],
         revisedDueDate: [null],
         comments: [{ value: null, disabled: !this.jjDisputedCount }],
         jjDisputedCountRoP: this.formBuilder.group({
@@ -306,13 +306,13 @@ export class JJCountComponent implements OnInit {
   updateInclSurcharge(eventValue: string) {
     // surcharge is always 15%
     if (eventValue == "yes") {
-      this.form.get('totalFineAmount').setValue(this.form.get('lesserOrGreaterAmount').value);
+      this.form.get('totalFineAmount').setValue(Math.round(this.form.get('lesserOrGreaterAmount').value));
       this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value / 1.15;
-      this.surcharge = 0.15 * this.lesserOrGreaterAmount;
+      this.surcharge = Math.round(0.15 * this.lesserOrGreaterAmount);
     } else {
-      this.form.get('totalFineAmount').setValue(this.form.get('lesserOrGreaterAmount').value * 1.15);
+      this.form.get('totalFineAmount').setValue(Math.round(this.form.get('lesserOrGreaterAmount').value * 1.15));
       this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
-      this.surcharge = this.form.get('lesserOrGreaterAmount').value * 0.15;
+      this.surcharge = Math.round(this.form.get('lesserOrGreaterAmount').value * 0.15);
     }
   }
 

@@ -26,7 +26,7 @@
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Fine amount</p>
-        <p class="section-grid-text">{{ jjDisputedCount?.ticketedFineAmount | currency }}</p>
+        <p class="section-grid-text">{{ jjDisputedCount?.ticketedFineAmount |currency:'CAD':'symbol-narrow':'1.0-0' }}</p>
       </span>
     </div>
     <hr style="margin: 0 0 0 0" />
@@ -92,17 +92,17 @@
         <span class="section-grid-cell">
           <p class="section-grid-header">Offence Amt</p>
           <p class="section-jj-grid-text">
-            {{ jjDisputedCount?.ticketedFineAmount | currency }}<br /><br />
+            {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}<br /><br />
             <span
               [hidden]="!(fineReduction=='yes' && !(form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
               class="section-grid-header">Lesser/Greater<br /></span>
             <span
               [hidden]="!(fineReduction=='yes' && (form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
               class="section-grid-header" style="color: red;">0
-              < Fine < 9999.99<br />
+              < Fine < 10 000<br />
             </span>
             <span [hidden]="!(fineReduction=='yes')">$ </span><input type="number" [hidden]="!(fineReduction=='yes')"
-              formControlName="lesserOrGreaterAmount" max="9999.99" min="0.00"
+              formControlName="lesserOrGreaterAmount" max="9999" min="0"
               (change)="onChangelesserOrGreaterAmount()"
               style="background-color:#e4f2ff; width: 80%; font-size: smaller; border: 0" />
           </p>
@@ -126,11 +126,11 @@
         <span class="section-grid-cell">
           <p class="section-grid-header">&nbsp;<br /><br /></p>
           <p class="section-jj-grid-text">
-            <span *ngIf="fineReduction=='yes'">{{ lesserOrGreaterAmount | currency }}</span>
+            <span *ngIf="fineReduction=='yes'">{{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
             <span *ngIf="fineReduction=='no'"><br /></span>
           </p>
           <p class="section-jj-grid-text2">
-            <span *ngIf="fineReduction=='yes'">&nbsp;+&nbsp;({{ surcharge | currency }})</span>
+            <span *ngIf="fineReduction=='yes'">&nbsp;+&nbsp;({{ surcharge |currency:'CAD':'symbol-narrow':'1.0-0'}})</span>
             <span *ngIf="fineReduction=='no'"><br /></span>
           </p>
         </span>
@@ -180,13 +180,13 @@
       *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
       style="font-size: small;">
       <span class="section-grid-text">Ticketed amount: </span>
-      {{ jjDisputedCount?.ticketedFineAmount | currency }}
+      {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
     </div>
     <div
       *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
       style="font-size: small;">
       <span class="section-grid-text">Lesser/greater amount: </span>
-      {{ jjDisputedCount?.lesserOrGreaterAmount | currency }}
+      {{ jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
     </div>
 
     <div class="section-grid-header" style="padding-top: 1rem !important;">Includes surcharge</div>
@@ -195,11 +195,11 @@
         }}</span>
       <span style="padding-left: 0.5rem;"
         *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
-        jjDisputedCount?.ticketedFineAmount | currency }}</span>
+        jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
       <span style="padding-left: 0.5rem;"
         *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
-        jjDisputedCount?.lesserOrGreaterAmount | currency }}</span>
-      <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency }})</i></span>
+        jjDisputedCount?.lesserOrGreaterAmount | currency: 'CAD' : 'symbol' : '1.0-0' }}</span>
+      <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0'}})</i></span>
     </div>
 
     <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>
@@ -271,16 +271,16 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">Offence Amt</p>
             <p class="section-jj-grid-text">
-              {{ jjDisputedCount?.ticketedFineAmount | currency }}<br /><br />
+              {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}<br /><br />
               <span
                 [hidden]="!(fineReduction=='yes' && !(form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
                 class="section-grid-header">Lesser/Greater<br /></span>
               <span
                 [hidden]="!(fineReduction=='yes' && (form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
                 class="section-grid-header" style="color: red;">0
-                < Fine < 9999.99 </span>
+                < Fine < 10 000 </span>
                   <span [hidden]="!(fineReduction=='yes')">$ </span><input type="number"
-                    [hidden]="!(fineReduction=='yes')" formControlName="lesserOrGreaterAmount" max="9999.99" min="0.00"
+                    [hidden]="!(fineReduction=='yes')" formControlName="lesserOrGreaterAmount" max="9999" min="0"
                     (change)="onChangelesserOrGreaterAmount()"
                     style="background-color:#e4f2ff; width: 80%; font-size: smaller; border: 0" />
             </p>
@@ -304,11 +304,11 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">&nbsp;<br /><br /></p>
             <p class="section-jj-grid-text">
-              <span *ngIf="fineReduction=='yes'">{{ lesserOrGreaterAmount | currency }}</span>
+              <span *ngIf="fineReduction=='yes'">{{ lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}</span>
               <span *ngIf="fineReduction=='no'"><br /></span>
             </p>
             <p class="section-jj-grid-text2">
-              <span *ngIf="fineReduction=='yes'">&nbsp;+&nbsp;({{ surcharge | currency }})</span>
+              <span *ngIf="fineReduction=='yes'">&nbsp;+&nbsp;({{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0' }})</span>
               <span *ngIf="fineReduction=='no'"><br /></span>
             </p>
           </span>
@@ -339,13 +339,13 @@
             *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
             style="font-size: small;">
             <span class="section-grid-text">Ticketed amount: </span>
-            {{ jjDisputedCount?.ticketedFineAmount | currency }}
+            {{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}
           </div>
           <div
             *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')"
             style="font-size: small;">
             <span class="section-grid-text">Lesser/greater amount: </span>
-            {{ jjDisputedCount?.lesserOrGreaterAmount | currency }}
+            {{ jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0'}}
           </div>
 
           <div class="section-grid-header" style="padding-top: 1rem !important;">Includes surcharge</div>
@@ -354,10 +354,10 @@
               }}</span>
             <span style="padding-left: 0.5rem;"
               *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
-              jjDisputedCount?.ticketedFineAmount | currency }}</span>
+              jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
             <span style="padding-left: 0.5rem;"
               *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
-              jjDisputedCount?.lesserOrGreaterAmount | currency }}</span>
+              jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
             <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency }})</i></span>
           </div>
 
@@ -497,7 +497,7 @@
           <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px; color: #707070;">incl.
             surcharge</span><br />
           <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{
-            jjDisputedCount?.totalFineAmount | currency }}</span>
+            jjDisputedCount?.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
         </p>
       </span>
     </div>
