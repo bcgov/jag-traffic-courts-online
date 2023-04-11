@@ -63,15 +63,25 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
         }
     }
 
-    // Create a custom mapping of DocumentFields to a structured object for validation and serialization.
-    //   (for some reason the Azure.AI.FormRecognizer.DocumentAnalysis.BoundingBoxes are not serialized (always null), so we map ourselves)
+    /// <summary>
+    /// Create a custom mapping of DocumentFields to a structured object for validation and serialization.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// For some reason the Azure.AI.FormRecognizer.DocumentAnalysis.BoundingBoxes are not serialized (always null), so we map ourselves
+    /// </remarks>
     private static OcrViolationTicket Map(AnalyzeResult result)
     {
         using Activity? activity = Diagnostics.Source.StartActivity("Map Analyze Result");
 
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();
-        violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
+        violationTicket.GlobalConfidence = 0f;
+        if (result.Documents is not null && result.Documents.Count > 0)
+        {
+            violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
+        }
 
         foreach (var fieldLabel in IFormRecognizerService.FieldLabels)
         {
