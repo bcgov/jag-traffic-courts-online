@@ -267,6 +267,25 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDisputeCourtAppearanceRoP convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance);
 
+	@Mapping(source = "appearanceTs", target = "appearanceDtm")
+	@Mapping(source = "reason", target = "appearanceReasonTxt")
+	@Mapping(source = "comments", target = "commentsTxt")
+	@Mapping(source = "room", target = "courtroomNumberTxt")
+	@Mapping(source = "id", target = "courtAppearanceId")
+	@Mapping(source = "crown", target = "crownPresenceCd")
+	@Mapping(source = "defenceCounsel", target = "defenceCounselNameTxt")
+	@Mapping(source = "dattCd", target = "defenceCounselPresenceCd")
+	@Mapping(source = "jjDispute.id", target = "disputeId")
+	@Mapping(source = "appCd", target = "disputantPresenceCd")
+	@Mapping(source = "noAppTs", target = "disputantNotPresentDtm")
+	@Mapping(source = "createdTs", target = "entDtm")
+	@Mapping(source = "createdBy", target = "entUserId")
+	@Mapping(source = "adjudicator", target = "judgeOrJjNameTxt")
+	@Mapping(source = "clerkRecord", target = "recordingClerkNameTxt")
+	@Mapping(source = "jjSeized", target = "seizedYn")
+	@Mapping(source = "modifiedTs", target = "updDtm")
+	@Mapping(source = "modifiedBy", target = "updUserId")
+	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance convert(JJDisputeCourtAppearanceRoP jjCourtAppearance);
 	@AfterMapping
 	public void afterMapping(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount jjDisputeCount, @MappingTarget JJDisputedCount jjDisputedCount) {
 		if (jjDisputedCount.getJjDisputedCountRoP() != null && jjDisputedCount.getJjDisputedCountRoP().getId() == null) {
