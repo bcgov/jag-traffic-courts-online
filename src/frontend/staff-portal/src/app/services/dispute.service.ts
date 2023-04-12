@@ -1,7 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2 } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2, DisputeListItem } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
@@ -498,7 +498,17 @@ export interface Dispute extends DisputeBase {
   __RedGreenAlert?: string,
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   __UserAssignedTs?: Date,
-  __SystemDetectedOcrIssues?: boolean // if at least one OCR's field has a confidence level below 80% threshold
+}
+
+export interface Dispute extends DisputeListItem {
+  disputantGivenNames?: string;
+  contactGivenNames?: string;
+  lawyerFullName?: string;
+  address?: string;
+  __DateSubmitted?: Date,
+  __RedGreenAlert?: string,
+  __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
+  __UserAssignedTs?: Date,
 }
 
 export interface DisputeWithUpdates extends DisputeWithUpdatesBase {

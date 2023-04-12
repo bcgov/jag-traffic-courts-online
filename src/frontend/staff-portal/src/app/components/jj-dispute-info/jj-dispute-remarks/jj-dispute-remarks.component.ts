@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnChanges, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeRemark } from 'app/api';
@@ -8,7 +8,7 @@ import { JJDisputeRemark } from 'app/api';
   templateUrl: './jj-dispute-remarks.component.html',
   styleUrls: ['./jj-dispute-remarks.component.scss'],
 })
-export class JJDisputeRemarksComponent implements OnInit {
+export class JJDisputeRemarksComponent implements OnChanges {
   @Input() data: JJDisputeRemark[];
   @ViewChild(MatSort) sort = new MatSort();
 
@@ -23,7 +23,7 @@ export class JJDisputeRemarksComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.data = this.data?.sort((a: JJDisputeRemark, b: JJDisputeRemark) => {
       return Date.parse(a.createdTs) - Date.parse(b.createdTs)
     });

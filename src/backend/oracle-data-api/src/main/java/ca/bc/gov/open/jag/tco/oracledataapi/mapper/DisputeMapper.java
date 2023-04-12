@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
@@ -140,6 +141,28 @@ public interface DisputeMapper {
 	@Mapping(source = "violationTicketCounts", target = "disputeCounts", qualifiedByName="mapCounts")
 	Dispute convertViolationTicketDtoToDispute (ViolationTicket violationTicketDto);
 
+	// Map dispute data from ORDS to Oracle Data API dispute list item model
+	@Mapping(source = "createdTs", target = "createdTs")
+	@Mapping(source = "createdBy", target = "createdBy")
+	@Mapping(source = "modifiedTs", target = "modifiedTs")
+	@Mapping(source = "modifiedBy", target = "modifiedBy")
+	@Mapping(source = "disputeId", target = "disputeId")
+	@Mapping(source = "status", target = "status")
+	@Mapping(source = "submittedTs", target = "submittedTs")
+	@Mapping(source = "disputantSurname", target = "disputantSurname")
+	@Mapping(source = "ticketNumber", target = "ticketNumber")
+	@Mapping(source = "disputantGivenName1", target = "disputantGivenName1")
+	@Mapping(source = "disputantGivenName2", target = "disputantGivenName2")
+	@Mapping(source = "disputantGivenName3", target = "disputantGivenName3")
+	@Mapping(source = "requestCourtAppearanceYn", target = "requestCourtAppearanceYn")
+	@Mapping(source = "emailAddress", target = "emailAddress")
+	@Mapping(source = "emailAddressVerified", target = "emailAddressVerified")
+	@Mapping(source = "filingDate", target = "filingDate")
+	@Mapping(source = "userAssignedTo", target = "userAssignedTo")
+	@Mapping(source = "userAssignedTs", target = "userAssignedTs")
+	@Mapping(source = "disputantDetectedOcrIssues", target = "disputantDetectedOcrIssues")
+	@Mapping(source = "systemDetectedOcrIssues", target = "systemDetectedOcrIssues")
+	DisputeListItem convertDisputeToDisputeListItem (Dispute dispute);
 
 	@Mapping(target = "violationTicket", ignore = true) // ignore back reference mapping
 	@Mapping(source = "entUserId", target = "createdBy")

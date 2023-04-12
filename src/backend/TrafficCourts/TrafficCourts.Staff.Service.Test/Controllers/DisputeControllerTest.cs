@@ -30,11 +30,11 @@ public class DisputeControllerTest
         // Mock the IDisputeService to return a couple Disputes, confirm controller returns them.
 
         // Arrange
-        Dispute dispute1 = new();
+        DisputeListItem dispute1 = new();
         dispute1.DisputeId = 1;
-        Dispute dispute2 = new();
+        DisputeListItem dispute2 = new();
         dispute2.DisputeId =2;
-        List<Dispute> disputes = new() { dispute1, dispute2 };
+        List<DisputeListItem> disputes = new() { dispute1, dispute2 };
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetAllDisputesAsync(null, It.IsAny<CancellationToken>()))
@@ -48,7 +48,7 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        var actual = okResult.Value as List<Dispute>;
+        var actual = okResult.Value as List<DisputeListItem>;
         Assert.NotNull(actual);
         Assert.Equal(2, actual!.Count);
         Assert.Equal(dispute1, actual[0]);

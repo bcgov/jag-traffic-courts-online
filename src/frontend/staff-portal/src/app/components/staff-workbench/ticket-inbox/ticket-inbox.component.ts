@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } fro
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field, DisputeSystemDetectedOcrIssues, DisputeListItem } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
@@ -28,13 +28,14 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     '__FilingDate',
     'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
-    '__SystemDetectedOcrIssues',
+    'systemDetectedOcrIssues',
     'userAssignedTo',
   ];
   disputes: Dispute[] = [];
   public userProfile: KeycloakProfile = {};
   public RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   public DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  public SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -98,7 +99,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
             emailAddressVerified: d.emailAddressVerified,
             emailAddress: d.emailAddress,
-            __SystemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.violationTicket.ocrViolationTicket),
+            systemDetectedOcrIssues: d.systemDetectedOcrIssues,
             __DateSubmitted: new Date(d.submittedTs),
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
             __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
@@ -124,69 +125,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
       this.tableHeight = this.calcTableHeight(425);
     });
-  }
-
-  // data returns Notice of Dispute
-  // which has a property ViolationTicket
-  // which has a property ocrViolationTicket
-  // which is the JSON string for the Azure OCR'd version of a paper ticket
-  // __SystemDetectedOcrIssues should be set to true if any OCR'd field has less than 80% confidence
-  // so this routine will exit with true at the first field of the fields collection that has an OCR error
-  getSystemDetectedOcrIssues(ocrViolationTicket?: OcrViolationTicket): boolean {
-    try {
-      let fields = ocrViolationTicket?.fields;
-      if (fields && fields !== undefined) {
-
-        if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return true; }
-        if (this.getOcrViolationErrors(fields.ticket_number)) { return true; }
-        if (this.getOcrViolationErrors(fields.disputant_surname)) { return true; }
-        if (this.getOcrViolationErrors(fields.disputant_given_names)) { return true; }
-        if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return true; }
-        if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return true; }
-        if (this.getOcrViolationErrors(fields.violation_time)) { return true; }
-        if (this.getOcrViolationErrors(fields.violation_date)) { return true; }
-
-        // seems like a goofy way to process these but this is how the JSON parse returns it
-        // count 1
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.ticketed_amount"])) { return true; }
-
-        // count 2
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.ticketed_amount"])) { return true; }
-
-        // count 3
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.ticketed_amount"])) { return true; }
-
-        if (this.getOcrViolationErrors(fields.court_location)) { return true; }
-        if (this.getOcrViolationErrors(fields.detachment_location)) { return true; }
-        return false;
-      }
-      else return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // return number of validation errors
-  getOcrViolationErrors(field?: Field): boolean {
-    if (field == undefined || field == null) return false;
-    if (field?.fieldConfidence != null && field.fieldConfidence < 0.8) {
-      return true;
-    } else return false;
   }
 
   countNewTickets(): number {

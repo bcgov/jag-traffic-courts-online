@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
@@ -68,7 +71,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "500", description = "Internal Server Error. Getting disputes failed.")
 	})
 	@GetMapping("/disputes")
-	public ResponseEntity<List<Dispute>> getAllDisputes(
+	public ResponseEntity<List<DisputeListItem>> getAllDisputes(
 			@RequestParam(required = false)
 			@DateTimeFormat(pattern = "yyyy-MM-dd")
 			@Parameter(description = "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
@@ -79,7 +82,13 @@ public class DisputeController {
 		logger.debug("GET /disputes called");
 		logger.debug("Excluding status: {}", StructuredArguments.value("excludeStatus", excludeStatus));
 		List<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
-		return new ResponseEntity<List<Dispute>>(allDisputes, HttpStatus.OK);
+		
+		// Convert Disputes to DisputeResult objects
+		List<DisputeListItem> disputeResults = allDisputes.stream()
+				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
+				.collect(Collectors.toList());
+
+		return new ResponseEntity<List<DisputeListItem>>(disputeResults, HttpStatus.OK);
 	}
 
 	/**

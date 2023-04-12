@@ -26,6 +26,11 @@ model/disputeCountRequestReduction.model.ts
 model/disputeCountRequestTimeToPay.model.ts
 model/disputeDisputantDetectedOcrIssues.model.ts
 model/disputeInterpreterRequired.model.ts
+model/disputeListItem.model.ts
+model/disputeListItemDisputantDetectedOcrIssues.model.ts
+model/disputeListItemRequestCourtAppearanceYn.model.ts
+model/disputeListItemStatus.model.ts
+model/disputeListItemSystemDetectedOcrIssues.model.ts
 model/disputeRepresentedByLawyer.model.ts
 model/disputeRequestCourtAppearanceYn.model.ts
 model/disputeStatus.model.ts

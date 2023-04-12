@@ -187,6 +187,7 @@ export class ViolationTicketService {
     let result = <ViolationTicket>{};
     let isDateFound = false;
     let isTimeFound = false;
+    this._systemDetectedOCRIssues = this.SystemDetectedOcrIssues.N;
 
     // Direct convertion
     let keys = Object.keys(source.fields).filter(i => i.toLowerCase().indexOf(".") === -1);

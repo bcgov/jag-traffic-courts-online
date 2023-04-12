@@ -152,17 +152,13 @@ public class JJDisputeService {
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
 
-			// Remove all existing remarks that are associated to this jj dispute
-			jjDisputeToUpdate.getRemarks().clear();
-
-			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
+			// Add the authenticated user's full name to the remark for new remarks
 			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
-				if(StringUtils.isBlank(remark.getUserFullName()))
+				if(remark.getId() == null || remark.getId() == 0) {
 					remark.setUserFullName(principal.getName());
+					jjDisputeRemarkRepository.saveAndFlush(remark);
+				}
 			}
-
-			// Add updated remarks
-			jjDisputeToUpdate.addRemarks(jjDispute.getRemarks());
 		}
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
