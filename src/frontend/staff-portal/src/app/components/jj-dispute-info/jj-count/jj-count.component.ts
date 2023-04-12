@@ -4,7 +4,6 @@ import { JJDispute } from '../../../services/jj-dispute.service';
 import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatRadioChange } from '@angular/material/radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-jj-count',
@@ -34,7 +33,6 @@ export class JJCountComponent implements OnInit {
   Finding = JJDisputedCountRoPFinding;
 
   // Variables
-  busy: Subscription;
   todayDate: Date = new Date();
   form: FormGroup;
   timeToPay: string = "";
@@ -50,9 +48,6 @@ export class JJCountComponent implements OnInit {
     private lookupsService: LookupsService,
     private formBuilder: FormBuilder,
   ) {
-    this.busy = this.lookupsService.getStatutes().subscribe((response: Statute[]) => {
-      this.lookupsService.statutes$.next(response);
-    });
   }
 
   ngOnInit(): void {
@@ -69,29 +64,29 @@ export class JJCountComponent implements OnInit {
         revisedDueDate: [null],
         comments: [{ value: null, disabled: !this.jjDisputedCount }],
         jjDisputedCountRoP: this.formBuilder.group({
-          finding:  [{ value: null, disabled: !this.jjDisputedCount }],
-          lesserDescription:  [{ value: null, disabled: !this.jjDisputedCount  }],
+          finding: [{ value: null, disabled: !this.jjDisputedCount }],
+          lesserDescription: [{ value: null, disabled: !this.jjDisputedCount }],
           id: [{ value: null }],
-          ssProbationCheckbox: [{value: false, disabled: !this.jjDisputedCount  }],
-          ssProbationDuration:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          ssProbationConditions:  [{ value: null, disabled: !this.jjDisputedCount }],
-          jailCheckbox: [{value: false, disabled: !this.jjDisputedCount }],
-          jailDuration:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          jailIntermittent:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          probationCheckbox: [{value: false, disabled: !this.jjDisputedCount  }],
-          probationDuration:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          probationConditions:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          drivingProhibitionCheckbox: [{value: false, disabled: !this.jjDisputedCount }],
-          drivingProhibition:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          drivingProhibitionMVASection:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          dismissed:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          forWantOfProsecution:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          withdrawn:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          abatement:  [{ value: null , disabled: !this.jjDisputedCount }],
-          stayOfProceedingsByCheckbox: [{value: false, disabled: !this.jjDisputedCount }],
-          stayOfProceedingsBy:  [{ value: null, disabled: !this.jjDisputedCount  }],
-          otherCheckbox: [{value: false, disabled: !this.jjDisputedCount }],
-          other:  [{ value: null, disabled: !this.jjDisputedCount  }],
+          ssProbationCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
+          ssProbationDuration: [{ value: null, disabled: !this.jjDisputedCount }],
+          ssProbationConditions: [{ value: null, disabled: !this.jjDisputedCount }],
+          jailCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
+          jailDuration: [{ value: null, disabled: !this.jjDisputedCount }],
+          jailIntermittent: [{ value: null, disabled: !this.jjDisputedCount }],
+          probationCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
+          probationDuration: [{ value: null, disabled: !this.jjDisputedCount }],
+          probationConditions: [{ value: null, disabled: !this.jjDisputedCount }],
+          drivingProhibitionCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
+          drivingProhibition: [{ value: null, disabled: !this.jjDisputedCount }],
+          drivingProhibitionMVASection: [{ value: null, disabled: !this.jjDisputedCount }],
+          dismissed: [{ value: null, disabled: !this.jjDisputedCount }],
+          forWantOfProsecution: [{ value: null, disabled: !this.jjDisputedCount }],
+          withdrawn: [{ value: null, disabled: !this.jjDisputedCount }],
+          abatement: [{ value: null, disabled: !this.jjDisputedCount }],
+          stayOfProceedingsByCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
+          stayOfProceedingsBy: [{ value: null, disabled: !this.jjDisputedCount }],
+          otherCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
+          other: [{ value: null, disabled: !this.jjDisputedCount }],
         })
       });
 
@@ -152,21 +147,21 @@ export class JJCountComponent implements OnInit {
         }
 
         // Stay of Proceedings fields
-        if (this.jjDisputedCount?.jjDisputedCountRoP?.stayOfProceedingsBy ) {
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.stayOfProceedingsBy) {
           this.form.get('jjDisputedCountRoP').get('stayOfProceedingsByCheckbox').setValue(true);
         } else {
           this.form.get('jjDisputedCountRoP').get('stayOfProceedingsBy').disable();
         }
 
         // Other fields
-        if (this.jjDisputedCount?.jjDisputedCountRoP?.other ) {
+        if (this.jjDisputedCount?.jjDisputedCountRoP?.other) {
           this.form.get('jjDisputedCountRoP').get('otherCheckbox').setValue(true);
         } else {
           this.form.get('jjDisputedCountRoP').get('other').disable();
         }
-    }
+      }
 
-      if(this.isViewOnly || !this.jjDisputedCount) {
+      if (this.isViewOnly || !this.jjDisputedCount) {
         this.form.disable();
       }
 

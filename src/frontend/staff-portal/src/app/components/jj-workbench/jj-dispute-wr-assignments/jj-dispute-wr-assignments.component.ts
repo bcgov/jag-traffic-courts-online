@@ -4,10 +4,10 @@ import { MatSort } from '@angular/material/sort';
 import { LookupsService } from 'app/services/lookups.service';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
-import { filter, Observable, Subscription } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Agency, JJDisputeHearingType } from 'app/api';
-import { UserRepresentation } from 'app/services/auth.service';
+import { JJDisputeHearingType } from 'app/api';
+import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { AppState } from 'app/store';
 import { select, Store } from '@ngrx/store';
 
@@ -20,7 +20,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
-  busy: Subscription;
   tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
@@ -44,17 +43,14 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(
+    private authService: AuthService,
     private jjDisputeService: JJDisputeService,
     private logger: LoggerService,
     private store: Store<AppState>,
     private lookupsService: LookupsService
   ) {
-    this.jjDisputeService.jjList$.subscribe(result => {
+    this.authService.jjList$.subscribe(result => {
       this.jjList = result;
-    });
-
-    this.lookupsService.getCourthouseAgencies().subscribe((response: Agency[]) => {
-      this.lookupsService.courthouseAgencies$.next(response);
     });
 
     this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
@@ -71,7 +67,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*80)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 80)
   }
 
   ngAfterViewInit() {
@@ -102,19 +98,19 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     secondKey: string,
     orderBy: 'asc' | 'desc' = 'asc'
   ) {
-  return data.sort((item1, item2) => {
-    if (((item1[firstKey] === this.valueOfUnassigned || !item1[firstKey]) && (item2[firstKey] === this.valueOfUnassigned || !item2[firstKey]))
-     || (item1[firstKey] !== this.valueOfUnassigned && item2[firstKey] !== this.valueOfUnassigned)) {
+    return data.sort((item1, item2) => {
+      if (((item1[firstKey] === this.valueOfUnassigned || !item1[firstKey]) && (item2[firstKey] === this.valueOfUnassigned || !item2[firstKey]))
+        || (item1[firstKey] !== this.valueOfUnassigned && item2[firstKey] !== this.valueOfUnassigned)) {
 
-      if (orderBy === 'asc' && item1[secondKey] <= item2[secondKey]) return -1;
-      if (orderBy === 'asc' && item1[secondKey] > item2[secondKey]) return 1;
-      if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return 1;
-      if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return -1;
-    }
-    let firstKeyResult = 1;
-    if (item1[firstKey] == this.valueOfUnassigned || !item1[firstKey]) firstKeyResult = -1;
-    return firstKeyResult;
-  });
+        if (orderBy === 'asc' && item1[secondKey] <= item2[secondKey]) return -1;
+        if (orderBy === 'asc' && item1[secondKey] > item2[secondKey]) return 1;
+        if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return 1;
+        if (orderBy === 'desc' && item1[secondKey] < item2[secondKey]) return -1;
+      }
+      let firstKeyResult = 1;
+      if (item1[firstKey] == this.valueOfUnassigned || !item1[firstKey]) firstKeyResult = -1;
+      return firstKeyResult;
+    });
   }
 
   backWorkbench(element) {
@@ -133,8 +129,8 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     let teamCourthouses = this.lookupsService.courthouseTeams.filter(x => x.__team === team);
     // let team D have all courthouse locations not found in list so these are not lost
     this.dataSource.data = this.data.filter(x =>
-      ((teamCourthouses.filter(y => y.id === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
-      || (team === 'D' && this.lookupsService.courthouseTeams.filter(y => y.id === x.courtAgenId).length <=0))); // or team D and court agency id not found in complete list of courthouses
+    ((teamCourthouses.filter(y => y.id === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
+      || (team === 'D' && this.lookupsService.courthouseTeams.filter(y => y.id === x.courtAgenId).length <= 0))); // or team D and court agency id not found in complete list of courthouses
     this.currentTeam = team;
     this.tableHeight = this.calcTableHeight(425);
   }
@@ -146,8 +142,8 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   getTeamCount(team: string): teamCounts {
     let teamCourthouses = this.lookupsService.courthouseTeams.filter(x => x.__team === team);
     let teamDisputes = this.data.filter(x =>
-      ((teamCourthouses.filter(y => y.id === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
-      || (team === 'A' && this.lookupsService.courthouseTeams.filter(y => y.id === x.courtAgenId).length <=0))); // or team A and court agency id not found in complete list of courthouses
+    ((teamCourthouses.filter(y => y.id === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
+      || (team === 'A' && this.lookupsService.courthouseTeams.filter(y => y.id === x.courtAgenId).length <= 0))); // or team A and court agency id not found in complete list of courthouses
     let teamCounts = { team: team, assignedCount: 0, unassignedCount: 0 } as teamCounts;
     if (teamDisputes) {
       let unassignedTeamCounts = teamDisputes.filter(x => !x.jjAssignedTo || x.jjAssignedTo === this.valueOfUnassigned);
@@ -161,12 +157,12 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   getAll(team: string): void {
     // filter jj disputes only show new, review, in_progress
-    this.data = this.data.filter(x => (this.jjDisputeService.jjDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
+    // this.data = this.data.filter(x => (this.jjDisputeService.jjDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
     this.data.forEach(jjDispute => {
-       if (!jjDispute.jjAssignedTo) {
-         jjDispute.jjAssignedTo = this.valueOfUnassigned;
-       }
-     });
+      if (!jjDispute.jjAssignedTo) {
+        jjDispute.jjAssignedTo = this.valueOfUnassigned;
+      }
+    });
 
     this.dataSource.data = this.data;
     this.dataSource.sort = this.sort;
@@ -200,7 +196,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   bulkUpdateJJAssignedTo(ticketNumbers: string[], assignTo: string) {
     assignTo = !assignTo || assignTo === this.valueOfUnassigned ? null : assignTo;
-    this.busy = this.jjDisputeService.apiJjAssignPut(ticketNumbers, assignTo).subscribe((response) => {
+    this.jjDisputeService.apiJjAssignPut(ticketNumbers, assignTo).subscribe((response) => {
       this.logger.info(
         'JJDisputeWRAssignmentsComponent::onBulkAssign response',
         response

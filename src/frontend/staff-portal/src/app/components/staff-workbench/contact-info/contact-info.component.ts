@@ -29,7 +29,6 @@ export class ContactInfoComponent implements OnInit {
   public bc: ProvinceCodeValue;
   public canada: CountryCodeValue;
   public usa: CountryCodeValue;
-  public busy: Subscription;
   public initialDisputeValues: Dispute;
   public todayDate: Date = new Date();
   public lastUpdatedDispute: Dispute;
@@ -202,7 +201,7 @@ export class ContactInfoComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           // submit dispute and return to TRM home
-          this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe({
+          this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe({
             next: response => {
               this.lastUpdatedDispute.status = this.DispStatus.Processing;
               this.onBack();
@@ -250,7 +249,7 @@ export class ContactInfoComponent implements OnInit {
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, reject dispute and return to TRM home
-          this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
+          this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
               this.lastUpdatedDispute.status = this.DispStatus.Rejected;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
@@ -276,22 +275,22 @@ export class ContactInfoComponent implements OnInit {
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
-      if (action?.output?.response) {
-        this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
-        this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
+        if (action?.output?.response) {
+          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
-        // cancel dispute and return to TRM home since this will be filtered out
-        this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.reason).subscribe({
-          next: response => {
-            this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
-            this.lastUpdatedDispute.rejectedReason = action.output.reason;
-            this.onBack();
-          },
-          error: err => { },
-          complete: () => { }
-        });
-    }
-    });
+          // cancel dispute and return to TRM home since this will be filtered out
+          this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.reason).subscribe({
+            next: response => {
+              this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
+              this.lastUpdatedDispute.rejectedReason = action.output.reason;
+              this.onBack();
+            },
+            error: err => { },
+            complete: () => { }
+          });
+        }
+      });
   }
 
   onKeyPressNumbers(event: any, BCOnly: boolean) {
@@ -309,7 +308,7 @@ export class ContactInfoComponent implements OnInit {
   putDispute(dispute: Dispute): void {
     this.logger.log('ContactInfoComponent::putDispute', dispute);
 
-    this.busy = this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: Dispute) => {
+    this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: Dispute) => {
       this.logger.info(
         'ContactInfoComponent::putDispute response',
         response
@@ -325,7 +324,7 @@ export class ContactInfoComponent implements OnInit {
   getDispute(): void {
     this.logger.log('ContactInfoComponent::getDispute');
 
-    this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
+    this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
       this.retrieving = false;
       this.logger.info(
         'ContactInfoComponent::getDispute response',
