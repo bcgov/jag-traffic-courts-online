@@ -1280,6 +1280,14 @@
         ],
         "type": "string"
       },
+      "DisputeSystemDetectedOcrIssues": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
       "Field": {
         "type": "object",
         "properties": {
@@ -1653,6 +1661,9 @@
           },
           "disputant_detected_ocr_issues": {
             "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
+          },
+          "system_detected_ocr_issues": {
+            "$ref": "#/components/schemas/DisputeSystemDetectedOcrIssues"
           },
           "disputant_ocr_issues": {
             "type": "string",

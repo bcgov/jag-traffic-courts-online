@@ -254,6 +254,11 @@ public class SubmitNoticeOfDispute
     public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
 
     /// <summary>
+    /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
+    /// </summary>
+    public DisputeSystemDetectedOcrIssues SystemDetectedOcrIssues { get; set; }
+
+    /// <summary>
     /// Is court appearance less than 14 days
     /// </summary>
     public DisputeAppearanceLessThan14DaysYn AppearanceLessThan14DaysYn { get; set; }

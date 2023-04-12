@@ -12,7 +12,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
 import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
 import { FileUtilsService } from "@shared/services/file-utils.service";
-import { DisputeDisputantDetectedOcrIssues, Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
+import { DisputeDisputantDetectedOcrIssues, DisputeSystemDetectedOcrIssues, Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { NgProgressRef } from "ngx-progressbar";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -26,11 +26,13 @@ export class ViolationTicketService {
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private _ticketType: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  private _systemDetectedOCRIssues: DisputeSystemDetectedOcrIssues;
   ocrTicketDateKey = "violation_date";
   ocrTicketTimeKey = "violation_time";
   ocrIssueDetectedKey = "disputant_detected_ocr_issues";
   ocrIssueDescKey = "disputant_ocr_issues";
   DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
   private queryParams: any;
 
   constructor(
@@ -50,6 +52,7 @@ export class ViolationTicketService {
     this.route.queryParams.subscribe((params) => {
       this.queryParams = params;
     });
+    this._systemDetectedOCRIssues = this.SystemDetectedOcrIssues.N;
   }
 
   get ticket$(): Observable<ViolationTicket> {
@@ -58,6 +61,10 @@ export class ViolationTicketService {
 
   get ticket(): ViolationTicket {
     return this._ticket.value;
+  }
+
+  get systemDetectedOCRIssues(): DisputeSystemDetectedOcrIssues {
+    return this._systemDetectedOCRIssues;
   }
 
   private get ocrTicket(): OcrViolationTicket { // not public for current stage
@@ -221,6 +228,9 @@ export class ViolationTicketService {
           result[arrKey][index][key] = value;
         }
       })
+
+      // Determine if any system detected ocr ISSUES
+      if (this.getSystemDetectedOcrIssues(source)) this._systemDetectedOCRIssues = this.SystemDetectedOcrIssues.Y;
     }
 
     // special handling
