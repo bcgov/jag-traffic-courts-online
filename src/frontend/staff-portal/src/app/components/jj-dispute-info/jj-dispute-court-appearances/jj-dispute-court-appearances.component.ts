@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeCourtAppearanceRoP as JJDisputeCourtAppearanceRoPBase } from 'app/api';
-import { JJDisputeService } from 'app/services/jj-dispute.service';
-import { UserRepresentation } from 'app/services/auth.service';
+import { AuthService, UserRepresentation } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-jj-dispute-court-appearances',
@@ -33,9 +32,10 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   jjList: UserRepresentation[];
 
 
-  constructor(private jjDisputeService: JJDisputeService
+  constructor(
+    private authService: AuthService,
   ) {
-    this.jjDisputeService.jjList$.subscribe(result => {
+    this.authService.jjList$.subscribe(result => {
       this.jjList = result;
     });
   }
@@ -47,7 +47,7 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.data.forEach(courtAppearance => {this.tempData.push(courtAppearance)}); // make a copy
+    this.data.forEach(courtAppearance => { this.tempData.push(courtAppearance) }); // make a copy
     this.tempData = this.tempData?.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
       return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
     });

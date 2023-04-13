@@ -4,10 +4,11 @@ import { AppRoutes } from 'app/app.routes';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
 import { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
-import { BehaviorSubject, from, Observable, map, catchError } from 'rxjs';
+import { BehaviorSubject, from, Observable, map, catchError, forkJoin } from 'rxjs';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { ConfigService } from '@config/config.service';
+import { UserGroup } from '@shared/enums/user-group.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +16,13 @@ import { ConfigService } from '@config/config.service';
 export class AuthService {
   private _isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   private _userProfile: BehaviorSubject<KeycloakProfile> = new BehaviorSubject<KeycloakProfile>(null);
+  private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
+  private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
 
   private site: string = "staff-api";
   private roles = [
-    { name: "judicial-justice", redirectUrl: AppRoutes.JJWORKBENCH },
-    { name: "vtc-staff", redirectUrl: AppRoutes.TICKET },
+    { name: UserGroup.JUDICIAL_JUSTICE, redirectUrl: AppRoutes.JJWORKBENCH },
+    { name: UserGroup.VTC_STAFF, redirectUrl: AppRoutes.TICKET },
   ]
 
   constructor(
@@ -30,7 +33,7 @@ export class AuthService {
     private configService: ConfigService,
   ) { }
 
-  public checkAuth(): Observable<boolean> {
+  checkAuth(): Observable<boolean> {
     return from(this.keycloak.isLoggedIn())
       .pipe(
         map((response: boolean) => {
@@ -47,19 +50,19 @@ export class AuthService {
       );
   }
 
-  public get token(): string {
+  get token(): string {
     return this.keycloak.getKeycloakInstance().token;
   }
 
-  public get isLoggedIn$(): Observable<boolean> {
+  get isLoggedIn$(): Observable<boolean> {
     return this._isLoggedIn.asObservable();
   }
 
-  public get isLoggedIn(): boolean {
+  get isLoggedIn(): boolean {
     return this._isLoggedIn.value;
   }
 
-  public loadUserProfile(): Observable<KeycloakProfile> {
+  loadUserProfile(): Observable<KeycloakProfile> {
     return from(this.keycloak.loadUserProfile())
       .pipe(
         map((userProfile: KeycloakProfile) => {
@@ -71,12 +74,49 @@ export class AuthService {
       )
   }
 
-  public get userProfile$(): Observable<KeycloakProfile> {
+  loadUsersLists(): Observable<any> {
+    let observables = {
+      jjList: this.getUsersInGroup(UserGroup.JUDICIAL_JUSTICE),
+      vtcList: this.getUsersInGroup(UserGroup.VTC_STAFF),
+    };
+    return forkJoin(observables).pipe(
+      map(results => {
+        this._jjList.next(results.jjList
+          .map(u => {
+            u.jjDisplayName = u.fullName ? "JJ " + u.fullName : "";
+            return u;
+          })
+          .sort((a, b) => {
+            if (a.fullName < b.fullName) { return -1; }
+            else { return 1 }
+          }));
+        this._vtcList.next(results.vtcList);
+      }
+      ));
+  }
+
+  get userProfile$(): Observable<KeycloakProfile> {
     return this._userProfile.asObservable();
   }
 
-  public get userProfile(): KeycloakProfile {
+  get userProfile(): KeycloakProfile {
     return this._userProfile.value;
+  }
+
+  get jjList$(): Observable<UserRepresentation[]> {
+    return this._jjList.asObservable();
+  }
+
+  get jjList(): UserRepresentation[] {
+    return this._jjList.value;
+  }
+
+  get vtcList$(): Observable<UserRepresentation[]> {
+    return this._vtcList.asObservable();
+  }
+
+  get vtcList(): UserRepresentation[] {
+    return this._vtcList.value;
   }
 
   private getIDIR(user: UserRepresentation | KeycloakProfile): string {
@@ -87,17 +127,17 @@ export class AuthService {
     return user.attributes?.display_name.length > 0 ? user.attributes?.display_name[0] : "";
   }
 
-  public login() {
+  login() {
     this.keycloak.login({ redirectUri: window.location.toString() });
   }
 
-  public logout() {
+  logout() {
     this.keycloak.logout();
     this._isLoggedIn.next(false);
     this._userProfile.next(null);
   }
 
-  public getRedirectUrl(): string {
+  getRedirectUrl(): string {
     var result;
     this.roles.forEach(r => {
       if (this.keycloak.isUserInRole(r.name, this.site)) {
@@ -110,11 +150,11 @@ export class AuthService {
     return result;
   }
 
-  public checkRole(role: string): boolean {
+  checkRole(role: string): boolean {
     return this.keycloak.isUserInRole(role, this.site);
   }
 
-  public getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {
+  getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {
     return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
       .pipe(
         map((response: UserRepresentation[]) => {

@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
+import { JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
-import { Subscription } from 'rxjs';
+import { Observable, filter } from 'rxjs';
 import { JJDisputeStatus } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 import { LookupsService } from 'app/services/lookups.service';
+import { AppState } from 'app/store/app.state';
+import { Store, select } from '@ngrx/store';
 
 @Component({
   selector: 'app-dispute-decision-inbox',
@@ -19,9 +21,9 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
 
-  busy: Subscription;
   IDIR: string = "";
   currentTeam: string = "All";
+  data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
@@ -36,11 +38,11 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   constructor(
     private logger: LoggerService,
-    private jjDisputeService: JJDisputeService,
     private authService: AuthService,
-    private lookupsService: LookupsService
+    private lookupsService: LookupsService,
+    private store: Store<AppState>
   ) {
-    this.jjDisputeService.refreshDisputes.subscribe(x => { this.getAll(); })
+    this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
   }
 
   filterByTeam(team: string) {
@@ -53,9 +55,13 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         this.IDIR = userProfile.idir;
+        this.data$.subscribe(jjDisputes => {
+          this.data = jjDisputes
+            .map(jjDispute => { return { ...jjDispute } });
+          this.getAll();
+        })
       }
     });
-    this.getAll();
   }
 
   ngAfterViewInit() {
@@ -63,7 +69,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
 
   backWorkbench(element) {
@@ -73,16 +79,14 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   getAll(): void {
     this.logger.log('JJDisputeDecisionInboxComponent::getAllDisputes');
 
-    this.jjDisputeService.getJJDisputes().subscribe((response) => {
-      // filter jj disputes only show those in CONFIRMED status or REQUIRE_COURT_HEARING
-      this.data = response.filter(x => x.status == JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.RequireCourtHearing);
-      this.dataSource.data = this.data;
+    // filter jj disputes only show those in CONFIRMED status or REQUIRE_COURT_HEARING
+    this.data = this.data.filter(x => x.status == JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.RequireCourtHearing);
+    this.dataSource.data = this.data;
 
-      // initially sort by decision date within status
-      this.dataSource.data = this.dataSource.data.sort((a, b) => {
-        if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
-      });
-      this.tableHeight = this.calcTableHeight(325);
+    // initially sort by decision date within status
+    this.dataSource.data = this.dataSource.data.sort((a, b) => {
+      if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
     });
+    this.tableHeight = this.calcTableHeight(325);
   }
 }

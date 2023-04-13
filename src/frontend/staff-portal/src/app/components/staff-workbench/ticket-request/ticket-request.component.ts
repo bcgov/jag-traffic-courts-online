@@ -4,7 +4,6 @@ import { DisputeCount, DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, Di
 import { Dispute } from 'app/services/dispute.service';
 import { LookupsService } from 'app/services/lookups.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-request',
@@ -18,7 +17,6 @@ export class TicketRequestComponent implements OnInit {
     contactInformation: true
   }
   public form: FormGroup;
-  public busy: Subscription;
   public countFormFields = {
     pleaCode: [null],
     count: [null],
@@ -43,9 +41,6 @@ export class TicketRequestComponent implements OnInit {
       timeToPayReason: null,
       fineReductionReason: null,
       disputeCounts: this.formBuilder.array([])
-    });
-    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
-      this.lookups.languages$.next(response);
     });
   }
 

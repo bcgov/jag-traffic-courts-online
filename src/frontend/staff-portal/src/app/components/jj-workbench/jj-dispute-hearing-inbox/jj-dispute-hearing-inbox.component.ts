@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
-import { filter, Observable, Subscription } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
@@ -18,7 +18,6 @@ import { AppState } from 'app/store';
 export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
-  busy: Subscription;
 
   jjIDIR: string;
   HearingType = JJDisputeHearingType;
@@ -53,7 +52,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private store: Store<AppState>
   ) {
-    this.jjDisputeService.jjList$.subscribe(result => {
+    this.authService.jjList$.subscribe(result => {
       this.jjList = result;
     });
 
@@ -93,7 +92,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
 
   ngAfterViewInit() {

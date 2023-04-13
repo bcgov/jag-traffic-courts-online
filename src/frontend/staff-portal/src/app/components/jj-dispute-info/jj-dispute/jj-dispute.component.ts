@@ -31,7 +31,6 @@ export class JJDisputeComponent implements OnInit {
   public printFileHistory: boolean = true;
   public printFileRemarks: boolean = true;
 
-  busy: Subscription;
   courtAppearanceForm: FormGroup;
   infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
   infoWidth: number = window.innerWidth;
@@ -77,12 +76,8 @@ export class JJDisputeComponent implements OnInit {
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService
   ) {
-    this.jjDisputeService.jjList$.subscribe(result => {
+    this.authService.jjList$.subscribe(result => {
       this.jjList = result;
-    });
-
-    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
-      this.lookups.languages$.next(response);
     });
   }
 
@@ -323,7 +318,7 @@ export class JJDisputeComponent implements OnInit {
   getJJDispute(): void {
     this.logger.log('JJDisputeComponent::getJJDispute');
 
-    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.id, this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
+    this.jjDisputeService.getJJDispute(this.jjDisputeInfo.id, this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
       this.retrieving = false;
       this.logger.info(
         'JJDisputeComponent::getJJDispute response',
