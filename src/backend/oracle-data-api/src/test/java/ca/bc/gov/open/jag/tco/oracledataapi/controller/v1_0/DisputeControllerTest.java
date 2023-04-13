@@ -33,6 +33,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
@@ -56,7 +57,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testSaveDispute() throws Exception {
 		// Assert db is empty and clean
-		List<Dispute> allDisputes = getAllDisputes(null, null);
+		List<DisputeListItem> allDisputes = getAllDisputes(null, null);
 		assertEquals(0, allDisputes.size());
 
 		// Create a single Dispute
@@ -286,7 +287,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		dispute = getDispute(disputeId, true);
 		assertEquals("Bruce", dispute.getDisputantSurname());
 		assertEquals("Banner", dispute.getDisputantGivenName1());
-		List<Dispute> disputes = getAllDisputes(null, null);
+		List<DisputeListItem> disputes = getAllDisputes(null, null);
 		assertEquals(1, disputes.size());
 	}
 
@@ -310,15 +311,15 @@ class DisputeControllerTest extends BaseTestSuite {
 		saveDispute(dispute3);
 
 		// Assert controller returns all the disputes that were saved if no parameters passed.
-		List<Dispute> allDisputes = getAllDisputes(null, null);
+		List<DisputeListItem> allDisputes = getAllDisputes(null, null);
 		assertEquals(3, allDisputes.size());
 
 		// Assert controller returns all disputes which do not have the specified type.
-		List<Dispute> allDisputesWithStatusAndOlderThan = getAllDisputes(null, DisputeStatus.CANCELLED);
+		List<DisputeListItem> allDisputesWithStatusAndOlderThan = getAllDisputes(null, DisputeStatus.CANCELLED);
 		assertEquals(2, allDisputesWithStatusAndOlderThan.size());
 
 		// Assert controller returns all disputes which do not have the specified type.
-		List<Dispute> allDisputesWithStatus = getAllDisputes(null, DisputeStatus.PROCESSING);
+		List<DisputeListItem> allDisputesWithStatus = getAllDisputes(null, DisputeStatus.PROCESSING);
 		assertEquals(2, allDisputesWithStatus.size());
 	}
 
@@ -651,14 +652,14 @@ class DisputeControllerTest extends BaseTestSuite {
 	 * Issues a GET request to /api/v1.0/disputes. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
 	 */
-	private List<Dispute> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) throws Exception {
+	private List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) throws Exception {
 		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
 				.get("/api/v1.0/disputes")
 				.param("olderThan", olderThan == null ? null : DateFormatUtils.format(olderThan, "yyyy-MM-dd"))
 				.param("excludeStatus", excludeStatus == null ? null : excludeStatus.name())
 				.principal(getPrincipal()))
 				.andExpect(status().isOk());
-		List<Dispute> result = mapResult(resultActions, new TypeReference<List<Dispute>>() {});
+		List<DisputeListItem> result = mapResult(resultActions, new TypeReference<List<DisputeListItem>>() {});
 		return result;
 	}
 

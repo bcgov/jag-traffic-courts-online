@@ -18,6 +18,12 @@ public class NoticeOfDispute : Dispute
     public DisputeDisputantDetectedOcrIssues? DisputantDetectedOcrIssues { get; set; } = DisputeDisputantDetectedOcrIssues.N;
 
     /// <summary>
+    /// Identifier for whether the system has detected any issues with the OCR ticket result or not.
+    /// </summary>
+    [JsonPropertyName("system_detected_ocr_issues")]
+    public DisputeSystemDetectedOcrIssues SystemDetectedOcrIssues { get; set;}
+
+    /// <summary>
     /// The description of the issue with OCR ticket if the citizen has detected any.
     /// </summary>
     [JsonPropertyName("disputant_ocr_issues")]

@@ -11,6 +11,7 @@
  */
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
+import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { FileMetadata } from './fileMetadata.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
@@ -196,6 +197,7 @@ export interface NoticeOfDispute {
      */
     file_data?: Array<FileMetadata> | null;
     disputant_detected_ocr_issues?: DisputeDisputantDetectedOcrIssues;
+    system_detected_ocr_issues?: DisputeSystemDetectedOcrIssues;
     /**
      * The description of the issue with OCR ticket if the citizen has detected any.
      */

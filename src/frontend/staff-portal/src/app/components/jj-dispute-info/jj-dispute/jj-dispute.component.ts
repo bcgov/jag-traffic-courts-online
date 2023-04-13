@@ -37,7 +37,6 @@ export class JJDisputeComponent implements OnInit {
   lastUpdatedJJDispute: JJDispute;
   jjIDIR: string;
   jjName: string;
-  todayDate: Date = new Date();
   retrieving: boolean = true;
   violationDate: string = "";
   violationTime: string = "";
@@ -234,6 +233,9 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.status = this.DisputeStatus.InProgress;
     }
     this.putJJDispute().subscribe(response => {
+      if (this.remarks) {
+        this.remarks = "";
+      }
       const data: DialogOptions = {
         titleKey: "Saved",
         messageKey: "Dispute saved",

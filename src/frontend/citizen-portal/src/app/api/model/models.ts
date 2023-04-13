@@ -12,6 +12,7 @@ export * from './disputeInterpreterRequired.model';
 export * from './disputeRepresentedByLawyer.model';
 export * from './disputeRequestCourtAppearanceYn.model';
 export * from './disputeStatus.model';
+export * from './disputeSystemDetectedOcrIssues.model';
 export * from './field.model';
 export * from './fileMetadata.model';
 export * from './jJDisputeHearingType.model';

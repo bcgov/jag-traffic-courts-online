@@ -10,6 +10,7 @@ using System.Security.Claims;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Common.Errors;
+using Minio.DataModel;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -42,26 +43,10 @@ public class DisputeService : IDisputeService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
     {
-        ICollection<Dispute> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
-
-        foreach(Dispute dispute in disputes)
-        {
-            try
-            {
-                dispute.ViolationTicket.OcrViolationTicket = await GetOcrResultsAsync(dispute, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                // Should never reach here in test or prod, but if so then it means the ocr json data is invalid or not parseable by .NET
-                // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
-                _logger.LogError(ex, "Could not get violation ticket OCR results for {DisputeId}", dispute.DisputeId);
-            }
-        }
-
+        ICollection<DisputeListItem> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
         return disputes;
-
     }
 
     public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)

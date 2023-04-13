@@ -12,7 +12,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountFormGroup, NoticeOfDispute, NoticeOfDisputeFormControls, NoticeOfDisputeFormGroup, NoticeOfDisputeFormConfigs, DisputeCountFormConfigs } from "@shared/models/dispute-form.model";
-import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount, DisputeInterpreterRequired, Configuration } from "app/api";
+import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount, DisputeInterpreterRequired, Configuration, Field, OcrViolationTicket, DisputeSystemDetectedOcrIssues } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable, of } from "rxjs";
 
@@ -162,6 +162,7 @@ export class NoticeOfDisputeService {
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
     input.appearance_less_than_14_days = false;  // init to false
+    console.log(input);
 
     input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
       count.request_court_appearance = input.request_court_appearance;

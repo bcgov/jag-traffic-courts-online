@@ -30,7 +30,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Dispute"
+                    "$ref": "#/components/schemas/DisputeListItem"
                   }
                 }
               },
@@ -38,7 +38,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Dispute"
+                    "$ref": "#/components/schemas/DisputeListItem"
                   }
                 }
               },
@@ -46,7 +46,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Dispute"
+                    "$ref": "#/components/schemas/DisputeListItem"
                   }
                 }
               }
@@ -4095,6 +4095,131 @@
         "type": "string"
       },
       "DisputeInterpreterRequired": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeListItem": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "submittedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputantSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/DisputeListItemStatus"
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddressVerified": {
+            "type": "boolean"
+          },
+          "filingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "requestCourtAppearanceYn": {
+            "$ref": "#/components/schemas/DisputeListItemRequestCourtAppearanceYn"
+          },
+          "userAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "userAssignedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputantDetectedOcrIssues": {
+            "$ref": "#/components/schemas/DisputeListItemDisputantDetectedOcrIssues"
+          },
+          "systemDetectedOcrIssues": {
+            "$ref": "#/components/schemas/DisputeListItemSystemDetectedOcrIssues"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DisputeListItemDisputantDetectedOcrIssues": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeListItemRequestCourtAppearanceYn": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeListItemStatus": {
+        "enum": [
+          "UNKNOWN",
+          "NEW",
+          "VALIDATED",
+          "PROCESSING",
+          "REJECTED",
+          "CANCELLED"
+        ],
+        "type": "string"
+      },
+      "DisputeListItemSystemDetectedOcrIssues": {
         "enum": [
           "UNKNOWN",
           "Y",

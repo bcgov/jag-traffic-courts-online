@@ -232,8 +232,8 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, cancellationToken);
-            return Ok(jjDispute);
+            var updatedJJDispute = await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, cancellationToken);
+            return Ok(updatedJJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {

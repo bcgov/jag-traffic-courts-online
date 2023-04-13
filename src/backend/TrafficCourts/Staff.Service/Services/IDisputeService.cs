@@ -11,7 +11,7 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A collection of Dispute objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
+    Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
 
     /// <summary>Saves new dispute in the oracle database.</summary>
     /// <param name="dispute"></param>

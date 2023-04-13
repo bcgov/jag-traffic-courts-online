@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
@@ -20,8 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
@@ -55,16 +58,23 @@ public class DisputeService {
 	 *
 	 * @return
 	 */
-	public List<Dispute> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
+	public List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
+		List<Dispute> allDisputes = null;
 		if (olderThan == null && excludeStatus == null) {
-			return disputeRepository.findAll();
+			allDisputes =  disputeRepository.findAll();
 		} else if (olderThan == null) {
-			return disputeRepository.findByStatusNot(excludeStatus);
+			allDisputes =  disputeRepository.findByStatusNot(excludeStatus);
 		} else if (excludeStatus == null) {
-			return disputeRepository.findByCreatedTsBefore(olderThan);
+			allDisputes = disputeRepository.findByCreatedTsBefore(olderThan);
 		} else {
-			return disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
+			allDisputes = disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
 		}
+			
+		// Convert Disputes to DisputeListItem objects
+		List<DisputeListItem> disputeListItems = allDisputes.stream()
+				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
+				.collect(Collectors.toList());
+		return disputeListItems;
 	}
 
 	/**

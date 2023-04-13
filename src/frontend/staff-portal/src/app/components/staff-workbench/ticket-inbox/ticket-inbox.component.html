@@ -100,12 +100,12 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="__SystemDetectedOcrIssues">
+      <ng-container matColumnDef="systemDetectedOcrIssues">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
           System Flag
         </th>
         <td mat-cell *matCellDef="let element" class="centerColumn">
-          <mat-checkbox [checked]="element.__SystemDetectedOcrIssues" [indeterminate]="element.__SystemDetectedOcrIssues === null && element.ticketNumber[0] === 'A'" [disabled]="true"></mat-checkbox>
+          <mat-checkbox [checked]="element.systemDetectedOcrIssues === SystemDetectedOcrIssues.Y" [indeterminate]="element.systemDetectedOcrIssues === null && element.ticketNumber[0] === 'A'" [disabled]="true"></mat-checkbox>
         </td>
       </ng-container>
 

@@ -273,7 +273,7 @@ public class JJDisputeController {
 	 * @param id of the {@link JJDispute} to be deleted
 	 * @param ticketNumber of the {@link JJDispute} to be deleted
 	 */
-	@Operation(summary = "Deletes a particular JJDispute record.")
+	@Operation(summary = "Deletes a particular JJDispute record.", operationId = "DeleteJJDispute")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. JJ Dispute record deleted."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
