@@ -33,22 +33,55 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
         activity?.AddBaggage("ModelId", _modelId);
 
         AzureKeyCredential credential = new(_apiKey);
-        DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
-        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.AnalyzeDocumentAsync(WaitUntil.Completed, _modelId, stream, null, cancellationToken);
-        await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
+        DocumentAnalysisClient client = new(_endpoint, credential);
 
-        return Map(analyseDocumentOperation.Value);
+        var analyzeResult = await AnalyzeDocumentAsync(client, stream, cancellationToken);
+
+        var result = Map(analyzeResult);
+        return result;
     }
 
-    // Create a custom mapping of DocumentFields to a structured object for validation and serialization.
-    //   (for some reason the Azure.AI.FormRecognizer.DocumentAnalysis.BoundingBoxes are not serialized (always null), so we map ourselves)
+    private async Task<AnalyzeResult> AnalyzeDocumentAsync(DocumentAnalysisClient client, Stream form, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.FormRecognizer.BeginOperation("2022_06_30_preview", "RecognizeForms");
+
+        try
+        {
+            AnalyzeDocumentOperation analyseDocumentOperation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _modelId, form, null, cancellationToken)
+                .ConfigureAwait(false);
+
+            await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            return analyseDocumentOperation.Value;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.FormRecognizer.EndOperation(operation, exception);
+            _logger.LogError(exception, "Form Recognizer operation failed");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Create a custom mapping of DocumentFields to a structured object for validation and serialization.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// For some reason the Azure.AI.FormRecognizer.DocumentAnalysis.BoundingBoxes are not serialized (always null), so we map ourselves
+    /// </remarks>
     private static OcrViolationTicket Map(AnalyzeResult result)
     {
         using Activity? activity = Diagnostics.Source.StartActivity("Map Analyze Result");
 
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();
-        violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
+        violationTicket.GlobalConfidence = 0f;
+        if (result.Documents is not null && result.Documents.Count > 0)
+        {
+            violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
+        }
 
         foreach (var fieldLabel in IFormRecognizerService.FieldLabels)
         {
