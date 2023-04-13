@@ -157,7 +157,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
 
   getAll(team: string): void {
     // filter jj disputes only show new, review, in_progress
-    // this.data = this.data.filter(x => (this.jjDisputeService.jjDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
+    this.data = this.data.filter(x => (this.jjDisputeService.jjDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
     this.data.forEach(jjDispute => {
       if (!jjDispute.jjAssignedTo) {
         jjDispute.jjAssignedTo = this.valueOfUnassigned;
