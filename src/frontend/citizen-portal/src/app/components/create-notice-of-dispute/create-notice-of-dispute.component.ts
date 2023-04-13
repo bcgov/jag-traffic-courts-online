@@ -38,6 +38,6 @@ export class CreateNoticeOfDisputeComponent implements OnInit {
    * Submit the dispute
    */
   public submitDispute(noticeOfDispute): void {
-    this.noticeOfDisputeService.createNoticeOfDispute(noticeOfDispute, this.violationTicketService.systemDetectedOCRIssues);
+    this.noticeOfDisputeService.createNoticeOfDispute(noticeOfDispute);
   }
 }

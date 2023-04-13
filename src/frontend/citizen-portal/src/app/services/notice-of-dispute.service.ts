@@ -155,14 +155,14 @@ export class NoticeOfDisputeService {
     return this.countFormConfigs;
   }
 
-  createNoticeOfDispute(input: NoticeOfDispute, systemDetectedOCRIssues: DisputeSystemDetectedOcrIssues): void {
+  createNoticeOfDispute(input: NoticeOfDispute): void {
     input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss");
     input = this.splitDisputantGivenNames(input);  // break disputant names into first, second, third
     input = this.splitContactGivenNames(input);  // break disputant names into first, second, third
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
     input.appearance_less_than_14_days = false;  // init to false
-    input.system_detected_ocr_issues = systemDetectedOCRIssues; // system detected OCR issues
+    console.log(input);
 
     input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
       count.request_court_appearance = input.request_court_appearance;

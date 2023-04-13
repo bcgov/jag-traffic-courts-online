@@ -26,11 +26,16 @@ export class ViolationTicketService {
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private _ticketType: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-  private _systemDetectedOCRIssues: DisputeSystemDetectedOcrIssues;
   ocrTicketDateKey = "violation_date";
   ocrTicketTimeKey = "violation_time";
   ocrIssueDetectedKey = "disputant_detected_ocr_issues";
   ocrIssueDescKey = "disputant_ocr_issues";
+  systemDetectOcrIssueKey = "system_detected_ocr_issues";
+  systemKeysToCheck = ["violationTicketTitle", "ticket_number", "disputant_surname", "disputant_given_names", "drivers_licence_province", "drivers_licence_number", "violation_time",
+   "violation_date", "counts.count_no_1.description", "counts.count_no_1.act_or_regulation_name_code", "counts.count_no_1.is_act", "counts.count_no_1.is_regulation", "counts.count_no_1.section",
+   "counts.count_no_1.ticketed_amount", "counts.count_no_2.description", "counts.count_no_2.act_or_regulation_name_code", "counts.count_no_2.is_act", "counts.count_no_2.is_regulation",
+   "counts.count_no_2.section", "counts.count_no_2.ticketed_amount", "counts.count_no_3.description", "counts.count_no_3.act_or_regulation_name_code", "counts.count_no_3.is_act",
+   "counts.count_no_3.is_regulation", "counts.count_no_3.section", "counts.count_no_3.ticketed_amount", "court_location", "detachment_location"];
   DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
   private queryParams: any;
@@ -52,7 +57,6 @@ export class ViolationTicketService {
     this.route.queryParams.subscribe((params) => {
       this.queryParams = params;
     });
-    this._systemDetectedOCRIssues = this.SystemDetectedOcrIssues.N;
   }
 
   get ticket$(): Observable<ViolationTicket> {
@@ -61,10 +65,6 @@ export class ViolationTicketService {
 
   get ticket(): ViolationTicket {
     return this._ticket.value;
-  }
-
-  get systemDetectedOCRIssues(): DisputeSystemDetectedOcrIssues {
-    return this._systemDetectedOCRIssues;
   }
 
   private get ocrTicket(): OcrViolationTicket { // not public for current stage
@@ -187,13 +187,19 @@ export class ViolationTicketService {
     let result = <ViolationTicket>{};
     let isDateFound = false;
     let isTimeFound = false;
-    this._systemDetectedOCRIssues = this.SystemDetectedOcrIssues.N;
+    result[this.systemDetectOcrIssueKey] = this.SystemDetectedOcrIssues.N;
 
-    // Direct convertion
+    // Direct conversion
     let keys = Object.keys(source.fields).filter(i => i.toLowerCase().indexOf(".") === -1);
     keys.forEach(key => {
       let value = this.getValue(key, <Field>source.fields[key]);
       result[key] = value;
+
+      // check for conf level < 0.8 for selected fields
+      if (this.systemKeysToCheck.indexOf(key) >= 0 && result[this.systemDetectOcrIssueKey] === this.SystemDetectedOcrIssues.N) {
+        let fieldConf = source?.fields[key]?.fieldConfidence;
+        if (fieldConf < 0.8) result[this.systemDetectOcrIssueKey] = this.SystemDetectedOcrIssues.Y;
+      }
 
       if (value && key === this.ocrTicketDateKey) {
         isDateFound = true;
@@ -208,6 +214,12 @@ export class ViolationTicketService {
     if (arrayKeys.length > 0) {
       arrayKeys.forEach(arrayKey => {
         let value = this.getValue(arrayKey, <Field>source.fields[arrayKey]);
+
+        // check for conf level < 0.8 for selected fields
+        if (this.systemKeysToCheck.indexOf(arrayKey) >= 0 && result[this.systemDetectOcrIssueKey] === this.SystemDetectedOcrIssues.N) {
+          let fieldConf = source?.fields[arrayKey]?.fieldConfidence;
+          if (fieldConf < 0.8) result[this.systemDetectOcrIssueKey] = this.SystemDetectedOcrIssues.Y;
+        }
         let keySplit = arrayKey.split(".");
 
         let idpos = keySplit[1].lastIndexOf("_");
@@ -229,9 +241,6 @@ export class ViolationTicketService {
           result[arrKey][index][key] = value;
         }
       })
-
-      // Determine if any system detected ocr ISSUES
-      if (this.getSystemDetectedOcrIssues(source)) this._systemDetectedOCRIssues = this.SystemDetectedOcrIssues.Y;
     }
 
     // special handling
@@ -408,68 +417,5 @@ export class ViolationTicketService {
     if (fileSize <= 0) return "File size is 0MB.";
     else if (fileSize >= (10*1024*1024)) return "File size is over 10MB."
     else return "";
-  }
-
-  // data returns Notice of Dispute
-  // which has a property ViolationTicket
-  // which has a property ocrViolationTicket
-  // which is the JSON string for the Azure OCR'd version of a paper ticket
-  // SystemDetectedOcrIssues should be set to true if any OCR'd field has less than 80% confidence
-  // so this routine will exit with true at the first field of the fields collection that has an OCR error
-  getSystemDetectedOcrIssues(ocrViolationTicket?: OcrViolationTicket): boolean {
-    try {
-      let fields = ocrViolationTicket?.fields;
-      if (fields && fields !== undefined) {
-
-        if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return true; }
-        if (this.getOcrViolationErrors(fields.ticket_number)) { return true; }
-        if (this.getOcrViolationErrors(fields.disputant_surname)) { return true; }
-        if (this.getOcrViolationErrors(fields.disputant_given_names)) { return true; }
-        if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return true; }
-        if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return true; }
-        if (this.getOcrViolationErrors(fields.violation_time)) { return true; }
-        if (this.getOcrViolationErrors(fields.violation_date)) { return true; }
-
-        // seems like a goofy way to process these but this is how the JSON parse returns it
-        // count 1
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.ticketed_amount"])) { return true; }
-
-        // count 2
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.ticketed_amount"])) { return true; }
-
-        // count 3
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.ticketed_amount"])) { return true; }
-
-        if (this.getOcrViolationErrors(fields.court_location)) { return true; }
-        if (this.getOcrViolationErrors(fields.detachment_location)) { return true; }
-        return false;
-      }
-      else return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // return number of validation errors
-  getOcrViolationErrors(field?: Field): boolean {
-    if (field == undefined || field == null) return false;
-    if (field?.fieldConfidence != null && field.fieldConfidence < 0.8) {
-      return true;
-    } else return false;
   }
 }
