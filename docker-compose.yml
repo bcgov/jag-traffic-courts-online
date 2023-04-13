@@ -43,9 +43,12 @@ services:
       - "5000:8080"
     restart: always
     depends_on:
-      - rabbitmq
-      - redis
-      - coms
+      coms:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
@@ -86,8 +89,10 @@ services:
       - "5005:8080"
     restart: always
     depends_on:
-      - oracle-data-api
-      - coms
+      oracle-data-api:
+        condition: service_healthy
+      coms:
+        condition: service_healthy
         
   # ###########################################################################################
   # ARC Dispute API                                                                         ###
@@ -161,9 +166,14 @@ services:
       - "5020:8080"
     restart: always
     depends_on:
-      - rabbitmq
-      - coms
-      - redis
+      coms:
+        condition: service_healthy
+      oracle-data-api:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   #############################################################################################
   ###                           Oracle Data API                                             ###
@@ -194,14 +204,20 @@ services:
       ORDS_API_RETRY_DELAY_SEC: ${ORDS_API_RETRY_DELAY_SEC:-5}
       SPRING_SLEUTH_ENABLED: ${SPRING_SLEUTH_ENABLED:-false}
       JAVA_OPTS: ${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     ports:
       - "5010:8080"
       - "8000:8000"
     volumes:
       - data-oracle:/data
-
 
   # ---------------------------------------------------------------------------------------------
   # Virus Scanner
@@ -219,8 +235,9 @@ services:
     ports:
       - "5030:8080"
     depends_on:
-      - clamav
-    
+      clamav:
+        condition: service_healthy
+
   #############################################################################################
   ###                                 TrafficCourt FRONTEND                                 ###
   #############################################################################################
@@ -268,7 +285,11 @@ services:
     volumes:
       - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
     restart: always
-
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   #############################################################################################
   ### Common Object Management Service                                                      ###
@@ -291,23 +312,29 @@ services:
       DB_HOST: "coms-db"
       DB_USERNAME: "postgres"
       DB_PASSWORD: "password"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     depends_on:
-      - coms-db
-      - coms-init
-      - minio-init
+      coms-db-migratation:
+        condition: service_completed_successfully
+      minio-initialize:
+        condition: service_completed_successfully
 
-  coms-init:
+  coms-db-migratation:
     image: bcgovimages/common-object-management-service:latest
-    container_name: coms-init
+    container_name: coms-db-migratation
     environment:
       DB_ENABLED: "true"
       DB_HOST: "coms-db"
       DB_USERNAME: "postgres"
       DB_PASSWORD: "password"
-    depends_on: [coms-db]
     command: ["npm", "run", "migrate"]
-    volumes:
-      - ./.docker/wait-for-postgres.sh:/opt/app-root/src/app/wait-for-postgres.sh
+    depends_on:
+      coms-db:
+        condition: service_healthy
 
   #############################################################################################
   ### Common Object Management Service - database                                           ###
@@ -322,6 +349,11 @@ services:
       POSTGRES_DB: "coms"
     volumes:
       - data-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   #############################################################################################
   ###                           Minio                                                       ###
@@ -341,17 +373,21 @@ services:
       MINIO_ROOT_USER: "username"
       MINIO_ROOT_PASSWORD: "password"
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  minio-init:
-    container_name: minio-init
+  minio-initialize:
     image: minio/mc
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set dockerminio http://minio:9000 username password;
       /usr/bin/mc mb dockerminio/traffic-ticket-dev;
-      /usr/bin/mc policy set public dockerminio/traffic-ticket-dev;
       exit 0;
       "
 
@@ -360,14 +396,20 @@ services:
   #############################################################################################
   clamav:
     container_name: clamav
-    image: 'clamav/clamav:latest_base'
+    image: clamav/clamav:1.0
     environment:
       CLAMAV_NO_MILTERD: "true" # no sendmail filter
     ports:
       - 3310:3310
     volumes:
       - data-clamav:/var/lib/clamav
-      
+    healthcheck:      
+      # clamdcheck.sh is in /usr/local/bin, in the bcgov image, it is in /opt/app-root
+      test: ["CMD-SHELL", "/usr/local/bin/clamdcheck.sh"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   #############################################################################################
   ###                                 REDIS server and UI                                   ###
   #############################################################################################
@@ -380,6 +422,11 @@ services:
       - 6379:6379
     volumes:
       - data-redis:/data
+    healthcheck:      
+      test: ["CMD-SHELL", "redis-cli -a password ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis-ui:
     container_name: redis-ui
@@ -391,7 +438,8 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=password
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     ports:
       - 8082:8081
       
