@@ -4,7 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field, DisputeSystemDetectedOcrIssues, DisputeListItem } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
-import { Subscription } from 'rxjs';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource();
   tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
-  busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',
     '__DateSubmitted',
@@ -45,7 +43,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     private logger: LoggerService,
     private authService: AuthService,
   ) {
-    this.disputeService.refreshDisputes.subscribe(x => {this.getAllDisputes();})
+    this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputes(); })
   }
 
   public async ngOnInit() {
@@ -64,7 +62,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*80)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 80)
   }
 
   getAllDisputes(): void {
@@ -82,7 +80,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
-    this.busy = this.disputeService.getDisputes().subscribe((response) => {
+    this.disputeService.getDisputes().subscribe((response) => {
       this.logger.info(
         'TicketInboxComponent::getAllDisputes response',
         response
