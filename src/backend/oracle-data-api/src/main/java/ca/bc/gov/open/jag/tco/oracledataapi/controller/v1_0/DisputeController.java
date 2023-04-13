@@ -81,14 +81,9 @@ public class DisputeController {
 			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes called");
 		logger.debug("Excluding status: {}", StructuredArguments.value("excludeStatus", excludeStatus));
-		List<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
+		List<DisputeListItem> disputeListItems = disputeService.getAllDisputes(olderThan, excludeStatus);
 		
-		// Convert Disputes to DisputeResult objects
-		List<DisputeListItem> disputeResults = allDisputes.stream()
-				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
-				.collect(Collectors.toList());
-
-		return new ResponseEntity<List<DisputeListItem>>(disputeResults, HttpStatus.OK);
+		return new ResponseEntity<List<DisputeListItem>>(disputeListItems, HttpStatus.OK);
 	}
 
 	/**
