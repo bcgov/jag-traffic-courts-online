@@ -44,7 +44,7 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
 
     private async Task<Response<RecognizedFormCollection>> RecognizeCustomFormsAsync(FormRecognizerClient client, string modelId, Stream form, RecognizeCustomFormsOptions? options, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.FormRecognizer.BeginOperation("2.1", "RecognizeCustomFormsAsync");
+        using var operation = Instrumentation.FormRecognizer.BeginOperation("2.1", "RecognizeForms");
 
         try
         {
