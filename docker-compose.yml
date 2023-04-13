@@ -90,7 +90,7 @@ services:
     restart: always
     depends_on:
       oracle-data-api:
-        condition: service_started # no health check on oracle-data-api
+        condition: service_healthy
       coms:
         condition: service_healthy
         
@@ -166,9 +166,11 @@ services:
       - "5020:8080"
     restart: always
     depends_on:
-      rabbitmq:
-        condition: service_healthy
       coms:
+        condition: service_healthy
+      oracle-data-api:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -202,6 +204,12 @@ services:
       ORDS_API_RETRY_DELAY_SEC: ${ORDS_API_RETRY_DELAY_SEC:-5}
       SPRING_SLEUTH_ENABLED: ${SPRING_SLEUTH_ENABLED:-false}
       JAVA_OPTS: ${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
     depends_on:
       redis:
         condition: service_healthy
@@ -305,7 +313,7 @@ services:
       DB_USERNAME: "postgres"
       DB_PASSWORD: "password"
     healthcheck:
-      test: ["CMD-SHELL", "curl http://localhost:3000/"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/"]
       interval: 5s
       timeout: 5s
       retries: 5
