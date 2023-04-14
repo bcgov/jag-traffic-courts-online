@@ -37,8 +37,9 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
         try
         {
             // search for dispute log warning if not found
-            Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(NoticeOfDisputeGuid: context.Message.NoticeOfDisputeGuid, context.CancellationToken);
-            if (dispute is null) { 
+            Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(context.Message.NoticeOfDisputeGuid, context.CancellationToken);
+            if (dispute is null) 
+            { 
                 _logger.LogWarning("Sending email without existing dispute", context.Message); 
             }
 

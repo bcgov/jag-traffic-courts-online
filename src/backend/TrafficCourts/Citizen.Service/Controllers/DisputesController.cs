@@ -12,7 +12,6 @@ using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common;
-using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.Features.EmailVerificationToken;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -21,6 +20,7 @@ using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Dispute
 using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 using Dispute = TrafficCourts.Citizen.Service.Models.Disputes.Dispute;
 using TrafficCourts.Common.Models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
@@ -175,10 +175,15 @@ public class DisputesController : ControllerBase
 
             return result;
         }
-        catch (RequestTimeoutException ex)
+        catch (RequestTimeoutException exception)
         {
-            _logger.LogError(ex, "Request Timed out");
-            throw;
+            _logger.LogError(exception, "Request timeout verifying email, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error verifying email, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
@@ -206,19 +211,33 @@ public class DisputesController : ControllerBase
             [RegularExpression(Search.Request.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
             CancellationToken cancellationToken)
     {
-
         try
         {
             var message = new SearchDisputeRequest { TicketNumber = ticketNumber, IssuedTime = time };
             var response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(message, cancellationToken);
-            IActionResult result;
 
-            if (response.Message.NoticeOfDisputeGuid is not null)
+            var searchResponse = response.Message;
+            if (searchResponse.IsNotFound)
             {
-                var token = _hashids.EncodeHex(response.Message.NoticeOfDisputeGuid.Value.ToString("n"));
-                _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
-                _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
-                _ = Enum.TryParse(response.Message.HearingType, out JJDisputeHearingType hearingType);
+                _logger.LogDebug("Dispute not found, returning not found");
+                return NotFound();
+            }
+
+            if (searchResponse.IsError)
+            {
+                // TODO: check if logging allows us to correlate this log message with the problem in the message consumer.
+                _logger.LogError("Search returned an error, returning internal server error");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            // dispute is found and not an error, process the response data
+            if (searchResponse.NoticeOfDisputeGuid is not null)
+            {
+                var token = _hashids.EncodeHex(searchResponse.NoticeOfDisputeGuid.Value.ToString("n"));
+                // TODO: we are not detecting if any of these enumeration values could not be parsed
+                _ = Enum.TryParse(searchResponse.DisputeStatus, out DisputeStatus disputeStatus);
+                _ = Enum.TryParse(searchResponse.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
+                _ = Enum.TryParse(searchResponse.HearingType, out JJDisputeHearingType hearingType);
 
                 SearchDisputeResult searchResult = new()
                 {
@@ -228,30 +247,22 @@ public class DisputesController : ControllerBase
                     HearingType = hearingType
                 };
 
-                result = Ok(searchResult);
-            }
-            else if (response.Message.IsError)
-            {
-                _logger.LogError("Unknown search dispute error");
-                result = StatusCode(StatusCodes.Status500InternalServerError);
-            }
-            else
-            {
-                _logger.LogDebug("Dispute not found");
-                result = NotFound("Dispute not found");
+                return Ok(searchResult);
             }
 
-            return result;
+            // TODO: should we return internal server error or not found? This is invalid situation if the data is correct.
+            _logger.LogError("No NoticeOfDisputeGuid on search response, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
-        catch (RequestTimeoutException ex)
+        catch (RequestTimeoutException exception)
         {
-            _logger.LogError(ex, "Request Timed out");
-            throw;
+            _logger.LogError(exception, "Request timeout, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error searching for dispute, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
@@ -282,38 +293,53 @@ public class DisputesController : ControllerBase
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
+                // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
 
+            // can throw
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (!String.IsNullOrEmpty(check))
+            if (check is not null)
             {
-                return BadRequest(check);
+                return check;
             }
 
-            var user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
-            var message = new GetDisputeRequest();
-            message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
-            var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
-            if (response is null || response.Message is null || String.IsNullOrEmpty(response.Message.TicketNumber))
+            // can throw
+            UserInfo? user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
+            
+            GetDisputeRequest message = new()
             {
+                NoticeOfDisputeGuid = noticeOfDisputeGuid
+            };
+
+            // can throw
+            var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
+            if (string.IsNullOrEmpty(response?.Message?.TicketNumber))
+            {
+                _logger.LogInformation("Cound not get dispute or the ticket number is missing, returning not found");
                 return NotFound("Dispute not found");
             }
 
             // Compare Contact Names to BC Services Card
-            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
+            if (!CompareNames(response.Message, user))
+            {
+                _logger.LogDebug("User and dispute names do not match, returning bad request");
+                return BadRequest("Contact names do not match.");
+            }
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
 
             DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid };
+
+            // can throw
             result.FileData = await _documentService.FindFilesAsync(properties, cancellationToken);
 
             return Ok(result);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error getting dispute, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
@@ -345,18 +371,26 @@ public class DisputesController : ControllerBase
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
+                // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
 
+            // can throw
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (!String.IsNullOrEmpty(check))
+            if (check is not null)
             {
-                return BadRequest(check);
+                return check;
             }
 
+            // can throw
             var user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
-            var message = new GetDisputeRequest();
-            message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
+
+            GetDisputeRequest message = new GetDisputeRequest
+            {
+                NoticeOfDisputeGuid = noticeOfDisputeGuid
+            };
+
+            // can throw
             var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
             if (response is null || response.Message is null || String.IsNullOrEmpty(response.Message.TicketNumber))
             {
@@ -376,9 +410,13 @@ public class DisputesController : ControllerBase
                 foreach (FileMetadata fileMetadata in uploadPendingFiles)
                 {
                     DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };
+
+                    // can throw
                     Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream, fileMetadata.FileName, properties, cancellationToken);
                     request.DocumentId = id;
                     request.DocumentType = fileMetadata.DocumentType;
+
+                    // can throw
                     await _bus.PublishWithLog(_logger, request, cancellationToken);
                     request.DocumentId = null;
                     request.DocumentType = null;
@@ -387,18 +425,20 @@ public class DisputesController : ControllerBase
                 var deletePendingFiles = dispute.FileData.Where(i => i.DeleteRequested == true && i.FileId is not null);
                 foreach (FileMetadata fileMetadata in deletePendingFiles)
                 {
+                    // can throw
                     await _documentService.DeleteFileAsync(fileMetadata.FileId.Value, cancellationToken);
                 }
             }
 
+            // can throw
             await _bus.PublishWithLog(_logger, request, cancellationToken);
 
             return Ok();
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error updating dispute, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
@@ -420,13 +460,14 @@ public class DisputesController : ControllerBase
         {
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
+                // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
 
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (!String.IsNullOrEmpty(check))
+            if (check is not null)
             {
-                return BadRequest(check);
+                return check;
             }
 
             // Submit request to Workflow Service for processing.
@@ -436,35 +477,75 @@ public class DisputesController : ControllerBase
 
             return Ok();
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error updating dispute contact information, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
-    private async Task<string> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
+    /// <summary>
+    /// Searches for the dispute by <paramref name="noticeOfDisputeGuid"/>.
+    /// </summary>
+    /// <param name="noticeOfDisputeGuid"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    private async Task<IActionResult?> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
-        // Verify Dispute exists and whose status is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
-        string[] validStatuses = { DisputeStatus.NEW.ToString(), DisputeStatus.VALIDATED.ToString(), DisputeStatus.PROCESSING.ToString() };
+        // Verify Dispute exists and whose value is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
         SearchDisputeRequest searchRequest = new() { NoticeOfDisputeGuid = noticeOfDisputeGuid };
         Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
-        if (response.Message?.NoticeOfDisputeGuid is null)
+
+        var searchResponse = response.Message;
+
+        if (searchResponse.IsNotFound)
         {
-            return "Dispute not found";
+            _logger.LogDebug("Search returned not found, returning not found");
+            return NotFound();
         }
-        else if (response.Message?.DisputeStatus is not null && !validStatuses.Contains(response.Message.DisputeStatus))
+
+        if (searchResponse.NoticeOfDisputeGuid is null)
         {
-            return $"Dispute has a status of {response.Message.DisputeStatus}. Expecting one of NEW, VALIDATED, or PROCESSING.";
+            _logger.LogDebug("Search returned null NoticeOfDisputeGuid, returning not found");
+            return NotFound();
         }
-        else if (response.Message?.JJDisputeStatus is not null)
+
+        if (searchResponse.IsError)
         {
-            return $"JJDispute has status of {response.Message?.JJDisputeStatus}. Must be blank.";
+            _logger.LogDebug("Search returned error, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
-        else
+
+        if (!IsValidDisputeStatus(searchResponse.DisputeStatus))
         {
-            return "";
+            _logger.LogDebug("Dispute status is not valid, returning bad request");
+
+            var status = searchResponse.DisputeStatus ?? "missing";
+            return BadRequest($"Dispute has a status of {status}. Expecting one of NEW, VALIDATED, or PROCESSING.");
         }
+        else if (searchResponse.JJDisputeStatus is not null)
+        {
+            _logger.LogDebug("JJDispute status is not valid, returning bad request");
+            return BadRequest($"JJDispute has status of {searchResponse.JJDisputeStatus}. Must be blank.");
+        }
+
+        _logger.LogDebug("Dispute status is ok, returning null");
+        return null;
+    }
+
+    private static bool IsValidDisputeStatus(string? value)
+    {
+        if (value is null) return false;
+
+        return IsDisputeStatus(value, DisputeStatus.NEW)
+            || IsDisputeStatus(value, DisputeStatus.VALIDATED)
+            || IsDisputeStatus(value, DisputeStatus.PROCESSING);
+    }
+
+
+    private static bool IsDisputeStatus(string value, DisputeStatus status)
+    {
+        return status.ToString() == value;
     }
 
     private bool CompareNames(SubmitNoticeOfDispute message, UserInfo? user)

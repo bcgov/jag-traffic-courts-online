@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using System.Text;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 namespace TrafficCourts.Staff.Service.Mappers;
 
@@ -9,8 +10,13 @@ public class Mapper
         ArgumentNullException.ThrowIfNull(dispute);
 
         DisputeApproved target = new();
+
+        if (dispute.NoticeOfDisputeGuid is not null)
+        {
+            target.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
+        }
+
         target.Surname = dispute.DisputantSurname;
-        target.NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid);
         target.GivenName1 = dispute.DisputantGivenName1;
         target.GivenName2 = dispute.DisputantGivenName2;
         target.GivenName3 = dispute.DisputantGivenName3;
@@ -26,8 +32,10 @@ public class Mapper
         target.StreetAddress = FormatStreetAddress(dispute);
         target.City = dispute.AddressCity;
         // only need two character code (province may be more than two chars if not USA or Canada)
-        if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
-        else target.Province = dispute.AddressProvince;
+        target.Province = dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2
+            ? dispute.AddressProvince[..2]
+            : dispute.AddressProvince;
+
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;
 
@@ -76,8 +84,32 @@ public class Mapper
 
     private static string FormatStreetAddress(Dispute dispute)
     {
-        // TODO: clean this up
-        return dispute.AddressLine1 + ((dispute.AddressLine2 is null) ? "" : ", " + dispute.AddressLine2) + ((dispute.AddressLine3 is null) ? "" : ", " + dispute.AddressLine3);
+        // short circuit, most of the time there is probably one address line
+        if (string.IsNullOrWhiteSpace(dispute.AddressLine2) && string.IsNullOrWhiteSpace(dispute.AddressLine3))
+        {
+            return dispute.AddressLine1;
+        }
+
+        StringBuilder buffer = new StringBuilder();
+
+        void Append(string? value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                if (buffer.Length > 0)
+                {
+                    buffer.Append(", ");
+                }
+
+                buffer.Append(value);
+            }
+        }
+
+        Append(dispute.AddressLine1);
+        Append(dispute.AddressLine2);
+        Append(dispute.AddressLine3);
+
+        return buffer.ToString();
     }
 
     public static DisputeRejected ToDisputeRejected(Dispute dispute)
