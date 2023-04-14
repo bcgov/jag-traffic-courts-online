@@ -25,7 +25,7 @@ public interface OutgoingEmailMapper {
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "updUserId", target = "modifiedBy")
 	@Mapping(source = "updDtm", target = "modifiedTs")
-	@Mapping(source = "occamDisputeId", target = "occamDisputeId")
+	@Mapping(source = "disputeId", target = "occamDisputeId")
 	EmailHistory convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail outgoingEmail);
 
 	// Map Oracle Data API EmailHistory model to ORDS OutgoingEmail data
@@ -37,6 +37,6 @@ public interface OutgoingEmailMapper {
 	@Mapping(target = "entDtm", source = "createdTs")
 	@Mapping(target = "updUserId", source = "modifiedBy")
 	@Mapping(target = "updDtm", source = "modifiedTs")
-	@Mapping(target = "occamDisputeId", source = "occamDisputeId")
+	@Mapping(target = "disputeId", source = "occamDisputeId")
 	ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail convert(EmailHistory emailHistory);
 }
