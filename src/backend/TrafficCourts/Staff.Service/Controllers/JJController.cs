@@ -510,7 +510,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-    /// <response code="403">Forbidden, requires jjdispute:update_court_appearance permission.</response>
+    /// <response code="403">Forbidden, requires jjdispute:update permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
     /// <response code="405">A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
@@ -523,7 +523,7 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateCourtAppearance)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
     public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");
@@ -568,7 +568,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-    /// <response code="403">Forbidden, requires jjdispute:update_court_appearance permission.</response>
+    /// <response code="403">Forbidden, requires jjdispute:update permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
     /// <response code="405">A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
@@ -581,7 +581,7 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateCourtAppearance)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
     public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");

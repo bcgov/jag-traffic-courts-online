@@ -48,7 +48,7 @@ public class OutgoingEmailMapperTest extends BaseTestSuite{
 		// test conversion to ORDS outoingEmail
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.OutgoingEmail result = outgoingEmailMapper.convert(emailHistory);
 		assertEquals(emailHistoryId, Long.valueOf(result.getOutgoingEmailId()));
-		assertEquals(occamDisputeId, Long.valueOf(result.getOccamDisputeId()));
+		assertEquals(occamDisputeId, Long.valueOf(result.getDisputeId()));
 		assertEquals(subject, result.getEmailSubjectTxt());
 		assertEquals(plainTextContent, result.getPlainTextContent());
 		assertEquals(fromEmailAddress, result.getFromEmailAddress());
@@ -56,7 +56,7 @@ public class OutgoingEmailMapperTest extends BaseTestSuite{
 		
 		OutgoingEmail outgoingEmail = new OutgoingEmail();
 		outgoingEmail.setOutgoingEmailId(String.valueOf(emailHistoryId));
-		outgoingEmail.setOccamDisputeId(String.valueOf(occamDisputeId));
+		outgoingEmail.setDisputeId(String.valueOf(occamDisputeId));
 		outgoingEmail.setEmailSubjectTxt(subject);
 		outgoingEmail.setPlainTextContent(plainTextContent);
 		outgoingEmail.setFromEmailAddress(fromEmailAddress);
