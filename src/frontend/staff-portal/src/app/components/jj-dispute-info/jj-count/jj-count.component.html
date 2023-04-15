@@ -358,7 +358,7 @@
             <span style="padding-left: 0.5rem;"
               *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
               jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
-            <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency }})</i></span>
+            <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency: 'CAD':'symbol-narrow':'1.0-0' }})</i></span>
           </div>
 
           <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>

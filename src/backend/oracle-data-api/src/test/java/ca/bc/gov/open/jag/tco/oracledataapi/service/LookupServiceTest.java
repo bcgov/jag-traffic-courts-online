@@ -37,4 +37,25 @@ public class LookupServiceTest extends BaseTestSuite {
 		assertThat("Albanian".equals(result.get(0).getDescription()));
 	}
 
+	@Test
+	public void testGetAgencies() throws ApiException {
+		var result = service.getAgencies();
+
+		assertThat(result).isNotNull();
+		assertThat(result.size() > 0);
+		assertThat("18861.0045".equals(result.get(0).getId()));
+		assertThat("Kelowna Adult Forensic Psychiatric Services".equals(result.get(0).getName()));
+	}
+	
+	@Test
+	public void testGetProinvices() throws ApiException {
+		var result = service.getProvinces();
+		
+		assertThat(result).isNotNull();
+		assertThat(result.size() > 0);
+		assertThat("1".equals(result.get(0).getCtryId()));
+		assertThat("1".equals(result.get(0).getProvSeqNo()));
+		assertThat("British Columbia".equals(result.get(0).getProvNm()));
+		assertThat("BC".equals(result.get(0).getProvAbbreviationCd()));
+	}
 }

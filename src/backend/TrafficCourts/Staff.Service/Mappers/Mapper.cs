@@ -23,6 +23,8 @@ public class Mapper
         target.DisputeCounts = Map(dispute.DisputeCounts);
         target.ViolationTicketCounts = Map(dispute.ViolationTicket.ViolationTicketCounts);
 
+        // TODO: Lookup address province seq no and country id and set addressprovince to abbreviation code
+
         target.StreetAddress = FormatStreetAddress(dispute);
         target.City = dispute.AddressCity;
         // only need two character code (province may be more than two chars if not USA or Canada)

@@ -43,7 +43,7 @@ public class EmailHistoryController : StaffControllerBase<EmailHistoryController
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> GetEmailHistoryRecordsAsync(String ticketNumber, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving all file history records from oracle-data-api for a specified ticket");
+        _logger.LogDebug("Retrieving all email history records from oracle-data-api for a specified ticket");
 
         try
         {
@@ -52,7 +52,7 @@ public class EmailHistoryController : StaffControllerBase<EmailHistoryController
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error retrieving file history records from oracle-data-api");
+            _logger.LogError(e, "Error retrieving email history records from oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

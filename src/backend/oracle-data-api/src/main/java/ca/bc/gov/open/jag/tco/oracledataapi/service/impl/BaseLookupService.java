@@ -11,6 +11,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Agency;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Province;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
 import io.swagger.v3.core.util.Json;
 
@@ -21,6 +22,7 @@ public abstract class BaseLookupService implements LookupService {
 	private static final String STATUTES = "Statutes";
 	private static final String LANGUAGES = "Languages";
 	private static final String AGENCIES = "Agencies";
+	private static final String PROVINCES = "Provinces";
 
 	@Autowired
 	private RedisTemplate<String, String> redis;
@@ -41,6 +43,10 @@ public abstract class BaseLookupService implements LookupService {
 			// replace the Agencies key with a new json-serialized version of the agencies list.
 			log.debug(" refreshing Agencies...");
 			redis.opsForValue().set(AGENCIES, Json.pretty(getAgencies()));
+			
+			// replace the Provinces key with a new json-serialized version of the provinces list.
+			log.debug(" refreshing Provinces...");
+			redis.opsForValue().set(PROVINCES, Json.pretty(getProvinces()));
 
 			log.debug("Code tables in redis refreshed.");
 		} catch (Exception e) {
@@ -56,5 +62,8 @@ public abstract class BaseLookupService implements LookupService {
 	
 	@Override
 	public abstract List<Agency> getAgencies() throws ApiException;
+	
+	@Override
+	public abstract List<Province> getProvinces() throws ApiException;
 
 }

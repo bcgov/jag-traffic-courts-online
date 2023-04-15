@@ -52,4 +52,19 @@ public static partial class Extensions
 
         return services;
     }
+
+    /// <summary>
+    /// Adds province lookup. Callers must ensure Redis is registered.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddProvinceLookup(this IServiceCollection services)
+    {
+        services.AddTransient<IProvinceLookupService, ProvinceLookupService>();
+        services.AddMemoryCache();
+
+        services.AddTransient<IRequestHandler<ProvinceLookup.Request, ProvinceLookup.Response>, ProvinceLookup.Handler>();
+
+        return services;
+    }
 }
