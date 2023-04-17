@@ -309,7 +309,6 @@ export class JJCountComponent implements OnInit {
       this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
       this.surcharge = Math.round(this.form.get('lesserOrGreaterAmount').value * 0.15);
     }
-    console.log(this.jjDisputedCount.count, "updateInclSurcharge", eventValue, this.form.value.totalFineAmount, this.form.value.lesserOrGreaterAmount, this.lesserOrGreaterAmount, this.surcharge);
   }
 
   updateRevisedDueDate(event: MatRadioChange) {
