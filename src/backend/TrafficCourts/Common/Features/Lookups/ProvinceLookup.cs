@@ -14,9 +14,9 @@ public static class ProvinceLookup
 
     public class Response
     {
-        public Response(IList<Province> agencies)
+        public Response(IList<Province> provinces)
         {
-            Provinces = agencies;
+            Provinces = provinces;
         }
 
         public IList<Province> Provinces { get; }
@@ -33,8 +33,8 @@ public static class ProvinceLookup
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            IList<Province> agencies = await _service.GetListAsync();
-            return new Response(agencies);
+            IList<Province> provinces = await _service.GetListAsync();
+            return new Response(provinces);
         }
     }
 }

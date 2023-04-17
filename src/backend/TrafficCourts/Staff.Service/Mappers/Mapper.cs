@@ -1,5 +1,8 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Common.Models;
+
 namespace TrafficCourts.Staff.Service.Mappers;
 
 public class Mapper
@@ -24,12 +27,12 @@ public class Mapper
         target.ViolationTicketCounts = Map(dispute.ViolationTicket.ViolationTicketCounts);
 
         // TODO: Lookup address province seq no and country id and set addressprovince to abbreviation code
+        if (dispute.AddressProvinceSeqNo!= null) target.Province = dispute.AddressProvince;
+        else if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
+        else dispute.AddressProvince= null;
 
         target.StreetAddress = FormatStreetAddress(dispute);
-        target.City = dispute.AddressCity;
-        // only need two character code (province may be more than two chars if not USA or Canada)
-        if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
-        else target.Province = dispute.AddressProvince;
+        target.City = dispute.AddressCity;        
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;
 

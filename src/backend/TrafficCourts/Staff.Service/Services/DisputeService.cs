@@ -11,6 +11,7 @@ using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Common.Errors;
 using Minio.DataModel;
+using TrafficCourts.Common.Features.Lookups;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -25,6 +26,7 @@ public class DisputeService : IDisputeService
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
     private readonly IObjectManagementService _objectManagementService;
+    private readonly IProvinceLookupService _provinceLookupService;
 
 
     public DisputeService(
@@ -33,7 +35,8 @@ public class DisputeService : IDisputeService
         IObjectManagementService objectManagementService,
         ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
         IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
-        ILogger<DisputeService> logger)
+        ILogger<DisputeService> logger,
+        IProvinceLookupService provinceLookupService)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
@@ -41,6 +44,7 @@ public class DisputeService : IDisputeService
         _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(cancelledDisputeEmailTemplate));
         _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(rejectedDisputeEmailTemplate));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(_provinceLookupService));
     }
 
     public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
@@ -244,6 +248,13 @@ public class DisputeService : IDisputeService
         // publish file history of email sent
         fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCF;
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
+        if (dispute.AddressProvinceSeqNo != null)
+        {
+            var provFound = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(dispute.AddressProvinceSeqNo.ToString(), dispute.AddressCountryId.ToString());
+            if (provFound != null) { dispute.AddressProvince = provFound.ProvAbbreviationCd; }
+        }
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
