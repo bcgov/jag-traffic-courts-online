@@ -37,16 +37,13 @@ public class Mapper
 
         // TODO: Lookup address province seq no and country id and set addressprovince to abbreviation code
         if (dispute.AddressProvinceSeqNo!= null) target.Province = dispute.AddressProvince;
+        // only need two character code (province may be more than two chars if not USA or Canada)
         else if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
         else dispute.AddressProvince= null;
 
         target.StreetAddress = FormatStreetAddress(dispute);
         target.City = dispute.AddressCity;        
         target.City = dispute.AddressCity;
-        // only need two character code (province may be more than two chars if not USA or Canada)
-        target.Province = dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2
-            ? dispute.AddressProvince[..2]
-            : dispute.AddressProvince;
 
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;
