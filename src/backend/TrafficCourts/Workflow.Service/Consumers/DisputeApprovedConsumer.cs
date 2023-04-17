@@ -39,11 +39,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
             catch (ApiException ex)
             {
                 _logger.LogError(ex, "ARC API request has failed to create an ARC file");
-                throw;
+                // Don't try again and clog up the queue, just end
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
-                throw;
+                _logger.LogError(ex, "ARC API request has failed to create an ARC file");
             }
             catch (Exception ex)
             {
