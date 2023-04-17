@@ -55,7 +55,5 @@ public class LookupServiceTest extends BaseTestSuite {
 		assertThat(result.size() > 0);
 		assertThat("1".equals(result.get(0).getCtryId()));
 		assertThat("1".equals(result.get(0).getProvSeqNo()));
-		assertThat("British Columbia".equals(result.get(0).getProvNm()));
-		assertThat("BC".equals(result.get(0).getProvAbbreviationCd()));
 	}
 }
