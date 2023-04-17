@@ -24,7 +24,7 @@ citizen-api:
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service:3000"
     "JWT__AUTHORITY": "https://idtest.gov.bc.ca/login"  
-    "JWT__AUDIENCE": "ca.bc.gov.ag.tco.dev"
+    "JWT__AUDIENCE": "ca.bc.gov.ag.tco.test"
     "OAuth__USERINFOENDPOINT": "https://idtest.gov.bc.ca/oauth2/userinfo"
 
 citizen-web:
