@@ -433,14 +433,6 @@ export class TicketInfoComponent implements OnInit {
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    // if address province sequence id and country id are set, also set address province using these values
-    if (putDispute.addressProvinceSeqNo != null) {
-      let provFound = this.config.provincesAndStates.filter(x => x.ctryId === putDispute.addressCountryId && x.provSeqNo === putDispute.addressProvinceSeqNo);
-      if (provFound.length > 0) {
-        putDispute.addressProvince = provFound[0].provAbbreviationCd;
-      }
-    }
-
     this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
