@@ -1,95 +1,96 @@
-"1","1","British Columbia","BC"
-"1","2","Manitoba","MB"
-"1","3","Quebec","PQ"
-"1","4","New Brunswick","NB"
-"1","5","Newfoundland","NL"
-"1","6","Nova Scotia","NS"
-"1","7","Prince Edward Island","PE"
-"1","8","Northwest Territories","NT"
-"1","9","Yukon","YT"
-"1","10","Alberta","AB"
-"1","11","Saskatchewan","SK"
-"1","12","Ontario","ON"
-"1","13","Nunavut","NU"
-"2","1","Washington","WA"
-"2","2","Oregon","OR"
-"2","3","California","CA"
-"2","4","Arizona","AZ"
-"2","5","Nevada","NV"
-"2","6","Texas","TX"
-"2","7","Louisiana","LA"
-"2","8","Mississippi","MS"
-"2","9","Alabama","AL"
-"2","10","Georgia","GA"
-"2","11","North Dakota","ND"
-"2","12","South Dakota","SD"
-"2","13","South Carolina","SC"
-"2","14","North Carolina","NC"
-"2","15","Michigan","MI"
-"2","16","Minnesota","MN"
-"2","17","Kentucky","KY"
-"2","18","Tennessee","TN"
-"2","19","Ohio","OH"
-"2","20","Illinois","IL"
-"2","21","New York","NY"
-"2","22","Colorado","CO"
-"2","23","Florida","FL"
-"2","24","Iowa","IA"
-"2","25","Indiana","IN"
-"2","26","Kansas","KS"
-"2","27","Arkansas","AR"
-"2","28","Alaska","AK"
-"2","29","Montana","MT"
-"2","30","Connecticut","CT"
-"2","31","Delaware","DE"
-"2","32","District of Columbia","DC"
-"2","33","Hawaii","HI"
-"2","34","Idaho","ID"
-"2","35","Maine","ME"
-"2","36","Maryland","MD"
-"2","37","Massachusetts","MA"
-"2","38","Missouri","MO"
-"2","39","Nebraska","NE"
-"2","40","New Hampshire","NH"
-"2","41","New Jersey","NJ"
-"2","42","New Mexico","NM"
-"2","43","Oklahoma","OK"
-"2","44","Pennsylvania","PA"
-"2","45","Rhode Island","RI"
-"2","46","Utah","UT"
-"2","47","Vermont","VT"
-"2","48","Virginia","VA"
-"2","49","West Virginia","WV"
-"2","50","Wisconsin","WI"
-"2","51","Wyoming","WY"
-"4","1","Mexico","ME"
-"4","2","Coahuila","CO"
-"4","3","Chihuahua","CH"
-"4","4","Jalisco","JL"
-"4","5","Nayarit","NA"
-"6","1","Angola Province","AN"
-"60","1","New South Wales","NW"
-"60","2","Queensland","QU"
-"60","3","Victoria","VI"
-"60","4","Western Australia","WA"
-"67","1","MyProvince","MY"
-"93","1","Sao Paulo","SP"
-"93","2","Rio de Janeiro","RI"
-"93","3","Bahia","BA"
-"95","1","Colombia","CO"
-"107","1","Cavite","CA"
-"107","2","Paranaque City","PC"
-"107","3","Central Visayas","CV"
-"107","4","Aklan","AK"
-"107","5","Cebu","CB"
-"107","6","Nueva Ecija","NE"
-"107","7","Pangasinan","PG"
-"107","8","Metro Manila","MM"
-"107","9","Misamis Occidental","MO"
-"107","10","Baguio City","BG"
-"107","11","Sto Tomas Proper","ST"
-"125","1","prov1","XX"
-"127","1","Blah","ON"
-"127","2","Boo","TW"
-"183","1","Ronna","RO"
-"186","1","Unknown Province","UP"
+ctryId,provSeqNo,provNm,provAbbreviationCd
+1,1,British Columbia,BC
+1,2,Manitoba,MB
+1,3,Quebec,PQ
+1,4,New Brunswick,NB
+1,5,Newfoundland,NL
+1,6,Nova Scotia,NS
+1,7,Prince Edward Island,PE
+1,8,Northwest Territories,NT
+1,9,Yukon,YT
+1,10,Alberta,AB
+1,11,Saskatchewan,SK
+1,12,Ontario,ON
+1,13,Nunavut,NU
+2,1,Washington,WA
+2,2,Oregon,OR
+2,3,California,CA
+2,4,Arizona,AZ
+2,5,Nevada,NV
+2,6,Texas,TX
+2,7,Louisiana,LA
+2,8,Mississippi,MS
+2,9,Alabama,AL
+2,10,Georgia,GA
+2,11,North Dakota,ND
+2,12,South Dakota,SD
+2,13,South Carolina,SC
+2,14,North Carolina,NC
+2,15,Michigan,MI
+2,16,Minnesota,MN
+2,17,Kentucky,KY
+2,18,Tennessee,TN
+2,19,Ohio,OH
+2,20,Illinois,IL
+2,21,New York,NY
+2,22,Colorado,CO
+2,23,Florida,FL
+2,24,Iowa,IA
+2,25,Indiana,IN
+2,26,Kansas,KS
+2,27,Arkansas,AR
+2,28,Alaska,AK
+2,29,Montana,MT
+2,30,Connecticut,CT
+2,31,Delaware,DE
+2,32,District of Columbia,DC
+2,33,Hawaii,HI
+2,34,Idaho,ID
+2,35,Maine,ME
+2,36,Maryland,MD
+2,37,Massachusetts,MA
+2,38,Missouri,MO
+2,39,Nebraska,NE
+2,40,New Hampshire,NH
+2,41,New Jersey,NJ
+2,42,New Mexico,NM
+2,43,Oklahoma,OK
+2,44,Pennsylvania,PA
+2,45,Rhode Island,RI
+2,46,Utah,UT
+2,47,Vermont,VT
+2,48,Virginia,VA
+2,49,West Virginia,WV
+2,50,Wisconsin,WI
+2,51,Wyoming,WY
+4,1,Mexico,ME
+4,2,Coahuila,CO
+4,3,Chihuahua,CH
+4,4,Jalisco,JL
+4,5,Nayarit,NA
+6,1,Angola Province,AN
+60,1,New South Wales,NW
+60,2,Queensland,QU
+60,3,Victoria,VI
+60,4,Western Australia,WA
+67,1,MyProvince,MY
+93,1,Sao Paulo,SP
+93,2,Rio de Janeiro,RI
+93,3,Bahia,BA
+95,1,Colombia,CO
+107,1,Cavite,CA
+107,2,Paranaque City,PC
+107,3,Central Visayas,CV
+107,4,Aklan,AK
+107,5,Cebu,CB
+107,6,Nueva Ecija,NE
+107,7,Pangasinan,PG
+107,8,Metro Manila,MM
+107,9,Misamis Occidental,MO
+107,10,Baguio City,BG
+107,11,Sto Tomas Proper,ST
+125,1,prov1,XX
+127,1,Blah,ON
+127,2,Boo,TW
+183,1,Ronna,RO
+186,1,Unknown Province,UP

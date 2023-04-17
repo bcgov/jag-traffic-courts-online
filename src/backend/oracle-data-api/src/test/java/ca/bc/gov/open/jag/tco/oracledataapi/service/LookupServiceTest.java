@@ -48,7 +48,7 @@ public class LookupServiceTest extends BaseTestSuite {
 	}
 	
 	@Test
-	public void testGetProinvices() throws ApiException {
+	public void testGetProvinces() throws ApiException {
 		var result = service.getProvinces();
 		
 		assertThat(result).isNotNull();
