@@ -90,9 +90,9 @@ public class LookupServiceImpl extends BaseLookupService {
 			for (String[] row : new CSVReaderBuilder(reader).withSkipLines(1).build()) {
 				Province province = new Province();
 				province.setCtryId(row.length > 0 ? row[0]: null);
-				province.setProvAbbreviationCd(row.length > 1 ? row[1] : null);
+				province.setProvSeqNo(row.length > 1 ? row[1] : null);
 				province.setProvNm(row.length > 2 ? row[2] : null);
-				province.setProvSeqNo(row.length > 3 ? row[3] : null);
+				province.setProvAbbreviationCd(row.length > 3 ? row[3] : null);
 			}
 		}
 		catch (Exception e) {
