@@ -64,7 +64,7 @@ public class SearchDisputeConsumerTest
     public async Task TestSearchDisputeConsumer_ExpectResponse()
     {
         // Arrange 
-        ICollection<DisputeResult> searchResult = new List<DisputeResult>
+        IList<DisputeResult> searchResult = new List<DisputeResult>
         {
             new()
             {

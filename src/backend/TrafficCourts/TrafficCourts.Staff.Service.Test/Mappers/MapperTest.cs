@@ -20,7 +20,7 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
             Dispute source = new Dispute()
             {
                 ViolationTicket = new ViolationTicket(),
-                NoticeOfDisputeGuid = new Guid().ToString("d"),
+                NoticeOfDisputeGuid = Guid.NewGuid().ToString("d"),
                 DisputeCounts = new List<DisputeCount>()
                 {
                     new DisputeCount { CountNo = count, PleaCode = pleaCode }

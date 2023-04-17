@@ -126,6 +126,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
             TcoDisputeTicket disputeTicket = new()
             {
+                Given_name1= message.GivenName1,
+                Given_name2= message.GivenName2,
+                Given_name3= message.GivenName3,
+                Surname = message.Surname,
                 Ticket_issuance_date = message.TicketIssuanceDate.Value,
                 Ticket_file_number = message.TicketFileNumber,
                 Issuing_organization = message.IssuingOrganization,

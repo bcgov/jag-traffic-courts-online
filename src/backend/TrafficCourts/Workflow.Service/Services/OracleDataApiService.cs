@@ -73,11 +73,11 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid NoticeOfDisputeGuid, CancellationToken cancellationToken)
+    public async Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
         using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetDisputeByNoticeOfDisputeGuidAsync));
 
-        var id = NoticeOfDisputeGuid.ToString(NoticeOfDisputeGuidFormat);
+        string id = noticeOfDisputeGuid.ToString(NoticeOfDisputeGuidFormat);
         try
         {
             var response = await _client.GetDisputeByNoticeOfDisputeGuidAsync(id, cancellationToken).ConfigureAwait(false);
@@ -126,14 +126,24 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<ICollection<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, CancellationToken cancellationToken)
+    public async Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
+        // need to search by ticket number and issue time, or noticeOfDisputeGuid
+
+        if (ticketNumber is null && issuedTime is null && noticeOfDisputeGuid is null)
+        {
+            // no values passed for searching
+            return Array.Empty<DisputeResult>();
+        }
+
+        var noticeOfDisputeId = noticeOfDisputeGuid?.ToString(NoticeOfDisputeGuidFormat);
+
         using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.FindDisputeStatusesAsync));
 
         try
         {
-            var response = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, cancellationToken).ConfigureAwait(false);
-            return response;
+            var response = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeId, cancellationToken).ConfigureAwait(false);
+            return new List<DisputeResult>(response);
         }
         catch (Exception exception)
         {

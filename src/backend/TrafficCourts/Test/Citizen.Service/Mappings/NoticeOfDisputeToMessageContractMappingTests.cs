@@ -92,7 +92,7 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
 
             var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Disputes.DisputeCount>();
 
-            var actual = mapper.Map<Messaging.MessageContracts.DisputeCount>(expected);
+            var actual = mapper.Map<TrafficCourts.Messaging.MessageContracts.DisputeCount>(expected);
 
             Assert.Equal(expected.PleaCode, actual.PleaCode);
             Assert.Equal(expected.RequestTimeToPay, actual.RequestTimeToPay);

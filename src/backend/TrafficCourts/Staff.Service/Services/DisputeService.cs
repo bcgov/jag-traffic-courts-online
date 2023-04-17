@@ -235,19 +235,8 @@ public class DisputeService : IDisputeService
             throw new BadHttpRequestException("Another dispute with the same ticket number is currently being processed.");
         }
  
-        // Save and status to PROCESSING
+        // Status to PROCESSING
         dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
-
-        // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
-            dispute.NoticeOfDisputeGuid,
-            FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
-            GetUserName(user));
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
-
-        // publish file history of email sent
-        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCF;
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
         if (dispute.AddressProvinceSeqNo != null)
@@ -259,6 +248,17 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
         await _bus.PublishWithLog(_logger, approvedEvent, cancellationToken);
+
+        // Publish file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
+            GetUserName(user));
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        // publish file history of email sent
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCF;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
     public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
