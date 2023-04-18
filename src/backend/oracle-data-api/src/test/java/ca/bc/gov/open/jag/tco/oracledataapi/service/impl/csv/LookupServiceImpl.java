@@ -93,6 +93,7 @@ public class LookupServiceImpl extends BaseLookupService {
 				province.setProvSeqNo(row.length > 1 ? row[1] : null);
 				province.setProvNm(row.length > 2 ? row[2] : null);
 				province.setProvAbbreviationCd(row.length > 3 ? row[3] : null);
+				provinces.add(province);
 			}
 		}
 		catch (Exception e) {
