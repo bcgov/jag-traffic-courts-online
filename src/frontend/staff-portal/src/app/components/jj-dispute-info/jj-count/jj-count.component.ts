@@ -167,7 +167,7 @@ export class JJCountComponent implements OnInit {
 
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
-        Object.assign(this.jjDisputedCount, this.form.value);
+        Object.assign(this.jjDisputedCount, this.form.getRawValue()); // get raw value includes disabled fields
         this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N;
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
