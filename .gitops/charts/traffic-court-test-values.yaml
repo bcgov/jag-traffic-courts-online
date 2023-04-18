@@ -17,8 +17,8 @@ citizen-api:
     tag: "1.58.5"
     pullPolicy: Always
   env:
-    "FormRecognizer__ApiVersion": "2022-06-30-preview"
-    "FormRecognizer__ModelId": "ViolationTicket"
+    "FormRecognizer__ApiVersion": "2.1"
+    "FormRecognizer__ModelId": "75f5614c-eded-4413-a3d9-c67281e8402e"
     "Swagger__Enabled": "true"
     "TicketSearch__SearchType": "Mock"
     "MassTransit__Transport": "RabbitMq"
