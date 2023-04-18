@@ -36,6 +36,7 @@ export class JJDisputeComponent implements OnInit {
   infoWidth: number = window.innerWidth;
   lastUpdatedJJDispute: JJDispute;
   jjIDIR: string;
+  formattedCourtAppearanceTs: string = "";
   jjName: string;
   retrieving: boolean = true;
   violationDate: string = "";
@@ -219,10 +220,6 @@ export class JJDisputeComponent implements OnInit {
       });
   }
 
-  updateAppearanceTs() {
-    this.courtAppearanceForm.controls.appearanceTs.setValue(new Date());
-  }
-
   updateNoAPPTs() {
     this.courtAppearanceForm.controls.noAppTs.setValue(new Date());
   }
@@ -355,7 +352,8 @@ export class JJDisputeComponent implements OnInit {
         });
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
-        this.courtAppearanceForm.controls.appearanceTs.setValue(new Date(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs));
+        this.courtAppearanceForm.controls.appearanceTs.setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
+        this.formattedCourtAppearanceTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
         if (!this.isViewOnly) {
           this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
           this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);

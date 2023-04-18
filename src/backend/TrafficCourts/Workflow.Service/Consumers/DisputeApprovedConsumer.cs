@@ -39,11 +39,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
             catch (ApiException ex)
             {
                 _logger.LogError(ex, "ARC API request has failed to create an ARC file");
-                throw;
+                // Don't try again and clog up the queue, just end
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
-                throw;
+                _logger.LogError(ex, "ARC API request has failed to create an ARC file");
             }
             catch (Exception ex)
             {
@@ -126,6 +126,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
             TcoDisputeTicket disputeTicket = new()
             {
+                Given_name1= message.GivenName1,
+                Given_name2= message.GivenName2,
+                Given_name3= message.GivenName3,
+                Surname = message.Surname,
                 Ticket_issuance_date = message.TicketIssuanceDate.Value,
                 Ticket_file_number = message.TicketFileNumber,
                 Issuing_organization = message.IssuingOrganization,

@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Common.Models;
+
 namespace TrafficCourts.Staff.Service.Mappers;
 
 public class Mapper
@@ -24,17 +26,24 @@ public class Mapper
         target.TicketFileNumber = dispute.TicketNumber;
         target.IssuingOrganization = dispute.ViolationTicket.DetachmentLocation;
         target.IssuingLocation = dispute.ViolationTicket.CourtLocation;
-        target.DriversLicence = dispute.DriversLicenceNumber;
+
+        // If DL Province is out of province, do not send drivers licence
+        if (dispute.DriversLicenceIssuedProvinceSeqNo == 1 && dispute.DriversLicenceIssuedCountryId == 1)
+            target.DriversLicence = dispute.DriversLicenceNumber;
+        else target.DriversLicence = "";
 
         target.DisputeCounts = Map(dispute.DisputeCounts);
         target.ViolationTicketCounts = Map(dispute.ViolationTicket.ViolationTicketCounts);
 
-        target.StreetAddress = FormatStreetAddress(dispute);
-        target.City = dispute.AddressCity;
+        // TODO: Lookup address province seq no and country id and set addressprovince to abbreviation code
+        if (dispute.AddressProvinceSeqNo!= null) target.Province = dispute.AddressProvince;
         // only need two character code (province may be more than two chars if not USA or Canada)
-        target.Province = dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2
-            ? dispute.AddressProvince[..2]
-            : dispute.AddressProvince;
+        else if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
+        else dispute.AddressProvince= null;
+
+        target.StreetAddress = FormatStreetAddress(dispute);
+        target.City = dispute.AddressCity;        
+        target.City = dispute.AddressCity;
 
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;

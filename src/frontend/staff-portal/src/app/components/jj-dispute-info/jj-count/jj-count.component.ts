@@ -92,7 +92,7 @@ export class JJCountComponent implements OnInit {
 
     // initialize if no value
     if (this.jjDisputedCount) {
-      if (this.jjDisputedCount.totalFineAmount) {
+      if (this.jjDisputedCount.totalFineAmount != null) {
         this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
       } else {
         this.jjDisputedCount.totalFineAmount = this.jjDisputedCount.ticketedFineAmount;
@@ -101,7 +101,7 @@ export class JJCountComponent implements OnInit {
 
       // initialize form, radio buttons
       this.form.patchValue(this.jjDisputedCount);
-      if (!this.jjDisputedCount.lesserOrGreaterAmount) this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
+      if (this.jjDisputedCount.lesserOrGreaterAmount === null) this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
       this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no") : "";
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
@@ -302,7 +302,7 @@ export class JJCountComponent implements OnInit {
     // surcharge is always 15%
     if (eventValue == "yes") {
       this.form.get('totalFineAmount').setValue(Math.round(this.form.get('lesserOrGreaterAmount').value));
-      this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value / 1.15;
+      this.lesserOrGreaterAmount = Math.round(this.form.get('lesserOrGreaterAmount').value / 1.15);
       this.surcharge = Math.round(0.15 * this.lesserOrGreaterAmount);
     } else {
       this.form.get('totalFineAmount').setValue(Math.round(this.form.get('lesserOrGreaterAmount').value * 1.15));
