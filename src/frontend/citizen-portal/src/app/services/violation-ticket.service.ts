@@ -32,10 +32,10 @@ export class ViolationTicketService {
   ocrIssueDescKey = "disputant_ocr_issues";
   systemDetectOcrIssueKey = "system_detected_ocr_issues";
   systemKeysToCheck = ["violationTicketTitle", "ticket_number", "disputant_surname", "disputant_given_names", "drivers_licence_province", "drivers_licence_number", "violation_time",
-   "violation_date", "counts.count_no_1.description", "counts.count_no_1.act_or_regulation_name_code", "counts.count_no_1.is_act", "counts.count_no_1.is_regulation", "counts.count_no_1.section",
-   "counts.count_no_1.ticketed_amount", "counts.count_no_2.description", "counts.count_no_2.act_or_regulation_name_code", "counts.count_no_2.is_act", "counts.count_no_2.is_regulation",
-   "counts.count_no_2.section", "counts.count_no_2.ticketed_amount", "counts.count_no_3.description", "counts.count_no_3.act_or_regulation_name_code", "counts.count_no_3.is_act",
-   "counts.count_no_3.is_regulation", "counts.count_no_3.section", "counts.count_no_3.ticketed_amount", "court_location", "detachment_location"];
+    "violation_date", "counts.count_no_1.description", "counts.count_no_1.act_or_regulation_name_code", "counts.count_no_1.is_act", "counts.count_no_1.is_regulation", "counts.count_no_1.section",
+    "counts.count_no_1.ticketed_amount", "counts.count_no_2.description", "counts.count_no_2.act_or_regulation_name_code", "counts.count_no_2.is_act", "counts.count_no_2.is_regulation",
+    "counts.count_no_2.section", "counts.count_no_2.ticketed_amount", "counts.count_no_3.description", "counts.count_no_3.act_or_regulation_name_code", "counts.count_no_3.is_act",
+    "counts.count_no_3.is_regulation", "counts.count_no_3.section", "counts.count_no_3.ticketed_amount", "court_location", "detachment_location"];
   DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
   private queryParams: any;
@@ -97,12 +97,12 @@ export class ViolationTicketService {
             if (this.validateTicket(params)) {
               this.goToInitiateResolution(params);
             } else {
-              this.logger.error("ViolationTicketService::searchTicket error has occurred:","Ticket info not matched");
+              this.logger.error("ViolationTicketService::searchTicket error has occurred:", "Ticket info not matched");
               this.onError();
             }
           }
           else {
-            this.logger.error("ViolationTicketService::searchTicket error has occurred:","searchTicket ticket not found");
+            this.logger.error("ViolationTicketService::searchTicket error has occurred:", "searchTicket ticket not found");
             this.onError();
           }
           return response;
@@ -152,7 +152,7 @@ export class ViolationTicketService {
                 this.router.navigate([AppRoutes.ticketPath(AppRoutes.SCAN)]);
               }
               catch {
-                this.logger.error("ViolationTicketService::analyseTicket error has occurred:","Cannot interpret image.");
+                this.logger.error("ViolationTicketService::analyseTicket error has occurred:", "Cannot interpret image.");
                 this.openErrorScenarioOneDialog();
               }
             }
@@ -354,9 +354,9 @@ export class ViolationTicketService {
         || this.isErrorMatch(err, "low confidence", false)) {
         var errorMessages = "";
         if (err.error?.errors) {
-          err.error.errors.forEach(error => {errorMessages += ". \n" + error});
+          err.error.errors.forEach(error => { errorMessages += ". \n" + error });
         }
-        this.logger.error("ViolationTicketService:onError critical validation error has occurred",errorMessages);
+        this.logger.error("ViolationTicketService:onError critical validation error has occurred", errorMessages);
         this.openErrorScenarioOneDialog();
       } else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
         this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
@@ -367,9 +367,9 @@ export class ViolationTicketService {
       } else { // fall back option
         var errorMessages = "";
         if (err.error?.errors) {
-          err.error.errors.forEach(error => {errorMessages += ". \n" + error});
+          err.error.errors.forEach(error => { errorMessages += ". \n" + error });
         }
-        this.logger.error("ViolationTicketService:onError validation error has occurred",errorMessages);
+        this.logger.error("ViolationTicketService:onError validation error has occurred", errorMessages);
         this.openErrorScenarioOneDialog();
       }
     }
@@ -415,7 +415,7 @@ export class ViolationTicketService {
 
   private checkSize(fileSize: number): string {
     if (fileSize <= 0) return "File size is 0MB.";
-    else if (fileSize >= (10*1024*1024)) return "File size is over 10MB."
+    else if (fileSize >= (10 * 1024 * 1024)) return "File size is over 10MB."
     else return "";
   }
 }

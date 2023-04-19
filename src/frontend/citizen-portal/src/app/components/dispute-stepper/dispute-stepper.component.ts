@@ -19,8 +19,8 @@ import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { Observable } from "rxjs";
 import { DisputeStore } from "app/store";
-import { Store } from "@ngrx/store";
-import { FileMetadata } from "app/services/dispute.service";
+import { Store, select } from "@ngrx/store";
+import { DisputeService, FileMetadata } from "app/services/dispute.service";
 import { AppConfigService } from "app/services/app-config.service";
 
 @Component({
@@ -41,11 +41,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   @ViewChild(MatStepper) private stepper: MatStepper;
   @ViewChild("fileInput") private fileInput: ElementRef;
 
+  private state: DisputeStore.State;
   previousButtonIcon = "keyboard_arrow_left";
+  previousButtonKey = "stepper.backReview";
   defaultLanguage: string;
   adjournmentFormLink: string;
-  disputeFormMode = DisputeFormMode;
-  ticketTypes = TicketTypes;
+  DisputeFormMode = DisputeFormMode;
+  TicketTypes = TicketTypes;
   Plea = DisputeCountPleaCode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
@@ -89,6 +91,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private violationTicketService: ViolationTicketService,
     private noticeOfDisputeService: NoticeOfDisputeService,
+    private disputeService: DisputeService,
     private utilsService: UtilsService,
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
@@ -110,7 +113,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
-    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance);
+    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance); // to be removed
+    if (this.mode !== DisputeFormMode.CREATE) {
+      this.previousButtonKey = "cancel";
+      this.store.select(DisputeStore.Selectors.State).subscribe(state => {
+        this.state = state;
+      })
+    }
 
     this.counts = this.ticketCounts.map(ticketCount => {
       var dispute_count = this.disputeCounts.filter(i => i.count_no === ticketCount.count_no).shift();
@@ -150,7 +159,11 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   onStepCancel(): void {
-    this.violationTicketService.goToInitiateResolution();
+    if (this.mode !== DisputeFormMode.CREATE) {
+      this.disputeService.goToUpdateDisputeLanding(this.state.params);
+    } else {
+      this.violationTicketService.goToInitiateResolution();
+    }
   }
 
   onStepSave(): void {
