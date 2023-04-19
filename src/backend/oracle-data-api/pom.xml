@@ -19,7 +19,7 @@
 		<log4j2.version>2.17.1</log4j2.version>
 		<release.train.version>2021.0.4</release.train.version>
 		<spring-cloud-sleuth-otel.version>1.1.0</spring-cloud-sleuth-otel.version>
-		<org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
+		<org.mapstruct.version>1.5.4.Final</org.mapstruct.version>
 		<org.projectlombok.version>1.18.26</org.projectlombok.version>
 		<occam-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.occam</occam-package>
 		<tco-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.tco</tco-package>
@@ -122,7 +122,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.15</version>
+			<version>1.7.0</version>
 		</dependency>
 
 		<!-- CSV reader - TODO: remove once data is read from Oracle instead -->
@@ -243,7 +243,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.8</version>
+				<version>0.8.9</version>
 
 				<executions>
 					<execution>
@@ -296,7 +296,7 @@
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>6.4.0</version>
+				<version>6.5.0</version>
 				<executions>
 					<execution>
 						<id>ords-occam-api</id>

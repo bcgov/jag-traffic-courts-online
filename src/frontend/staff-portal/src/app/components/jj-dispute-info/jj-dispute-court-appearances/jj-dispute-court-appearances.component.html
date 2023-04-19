@@ -1,19 +1,10 @@
 <table fxFlex mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort multiTemplateDataRows>
-  <ng-container matColumnDef="appearanceDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 140px;">
-      Date (MM/DD/YYYY)
+  <ng-container matColumnDef="appearanceTs">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 200px;">
+      Appearance Date/Time
     </th>
     <td mat-cell *matCellDef="let element">
-      <span>{{ element.appearanceDate | date: "MM/dd/YYYY" }}</span>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="appearanceTime">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      Time
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <span>{{ element.appearanceTime | date: "HH:mm" }}</span>
+      <span>{{ element._formattedAppearanceTs}}</span>
     </td>
   </ng-container>
 

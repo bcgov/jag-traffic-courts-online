@@ -10,6 +10,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.mapper.LookupMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Agency;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Province;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;
@@ -39,5 +40,10 @@ public class LookupServiceImpl extends BaseLookupService {
 		List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Agency> cthAgencies = lookupValuesApi.agenciesList().getAgencyCodeValues();
 		return LookupMapper.INSTANCE.convertAgencies(cthAgencies);
 	}
-
+	
+	@Override
+	public List<Province> getProvinces() throws ApiException {
+		List <ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Province> provinces = lookupValuesApi.provincesList().getProvinceCodeValues();
+		return LookupMapper.INSTANCE.convertProvinces(provinces);
+	}
 }

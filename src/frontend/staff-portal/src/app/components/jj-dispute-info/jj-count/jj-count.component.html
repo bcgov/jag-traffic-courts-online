@@ -243,6 +243,26 @@
     </div>
     <hr style="margin: 0 0 0 0" />
   </section>
+  <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance"
+    style="padding: 0 0.2rem;">
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>Findings</h3>
+      </span>
+    </ng-container>
+    <div [formGroup]="form?.get('jjDisputedCountRoP')">
+      <div><span class="section-grid-header">Finding:&nbsp;<br/></span>
+        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty" class="section-jj-grid-text">Guilty as charged</span>
+        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty" class="section-jj-grid-text">Not guilty</span>
+        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser" class="section-jj-grid-text">Not guilty as charged but guilty of lesser / included
+          offence section</span>
+      </div>
+      <div *ngIf="form?.get('jjDisputedCountRoP').get('lesserDescription').value">
+        <span class="section-grid-header">MVA Section&nbsp;</span>
+        <span class="section-jj-grid-text">{{ form.get('jjDisputedCountRoP').get('lesserDescription').value }}</span>
+      </div>
+    </div>
+  </section>
   <section>
     <ng-container subHeader>
       <span class="count-text">
@@ -358,7 +378,7 @@
             <span style="padding-left: 0.5rem;"
               *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
               jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
-            <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency }})</i></span>
+            <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency: 'CAD':'symbol-narrow':'1.0-0' }})</i></span>
           </div>
 
           <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>

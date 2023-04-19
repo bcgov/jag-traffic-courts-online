@@ -30,9 +30,9 @@
     <div style="float:inline">
       <span style="float:left">
         <h1><b>
-            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute</span>
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute&nbsp;</span>
             <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing Ticket Dispute</span>
-            <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
+            <span *ngIf="jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
             - {{ lastUpdatedJJDispute.occamDisputantName }}         </b></h1>
       </span>
       <span style="float:right">
@@ -168,7 +168,7 @@
         <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
           <span class="section-grid-cell">
             <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">{{ courtAppearanceForm?.value.appearanceTs | date: "MM/dd/YYYY HH:mm"}}</p>
+            <p class="section-grid-text">{{ formattedCourtAppearanceTs }}</p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Room</p>
