@@ -72,6 +72,7 @@ export class JJDisputeService {
     if (remarks) {
       this.addRemarks(input, remarks);
     }
+    console.log("just before put", input.jjDisputeCourtAppearanceRoPs[0].noAppTs);
     return this.jjApiService.apiJjTicketNumberPut(ticketNumber, disputeId, checkVTC, input)
       .pipe(
         map((response: any) => {

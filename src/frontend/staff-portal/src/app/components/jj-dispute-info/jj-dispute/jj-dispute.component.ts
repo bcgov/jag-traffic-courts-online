@@ -44,6 +44,9 @@ export class JJDisputeComponent implements OnInit {
   timeToPayCountsHeading: string = "";
   fineReductionCountsHeading: string = "";
   remarks: string = "";
+  noAppTsFormattedDate: string = "";
+  icbcReceivedDateFormattedDate: string = "";
+  submittedDateFormattedDate: string = "";
   jjList: UserRepresentation[];
   selectedJJ: string;
   fileTypeToUpload: string = "Certified Extract";
@@ -68,7 +71,7 @@ export class JJDisputeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private authService: AuthService,
-    private jjDisputeService: JJDisputeService,
+    public jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
     private lookups: LookupsService,
@@ -222,6 +225,8 @@ export class JJDisputeComponent implements OnInit {
 
   updateNoAPPTs() {
     this.courtAppearanceForm.controls.noAppTs.setValue(new Date());
+    this.noAppTsFormattedDate = this.datePipe.transform(new Date(), "MM/dd/yyyy hh:MM");
+    console.log(new Date(), this.courtAppearanceForm.value.noAppTs, this.noAppTsFormattedDate);
   }
 
   onSave(): void {
@@ -233,6 +238,7 @@ export class JJDisputeComponent implements OnInit {
       if (this.remarks) {
         this.remarks = "";
       }
+      console.log("after Put", response.jjDisputeCourtAppearanceRoPs[0].noAppTs);
       const data: DialogOptions = {
         titleKey: "Saved",
         messageKey: "Dispute saved",
@@ -301,6 +307,7 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = this.courtAppearanceForm.value.jjSeized;
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
+      console.log(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs);
     }
     return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).pipe(
       map(
@@ -331,6 +338,10 @@ export class JJDisputeComponent implements OnInit {
       this.violationDate = violationDate[0];
       this.violationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
 
+      // format other date strings
+      this.icbcReceivedDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.icbcReceivedDate).substring(0,10);
+      this.submittedDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.submittedTs).substring(0,10);
+
       // set up headings for written reasons
       this.lastUpdatedJJDispute.jjDisputedCounts.forEach(disputedCount => {
         if (disputedCount.requestTimeToPay === this.RequestTimeToPay.Y) this.timeToPayCountsHeading += "Count " + disputedCount.count.toString() + ", ";
@@ -351,6 +362,7 @@ export class JJDisputeComponent implements OnInit {
           return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
         });
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
+        this.noAppTsFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs);
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
         this.courtAppearanceForm.controls.appearanceTs.setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
         this.formattedCourtAppearanceTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
