@@ -593,6 +593,9 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
 		
 		// Get all update requests with null params
+		results.add(disputeUpdateRequest1);
+		results.add(disputeUpdateRequest3);
+		results.add(disputeUpdateRequest4);
 		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(null, null)).thenReturn(results);
 		controllerResponse = disputeController.getDisputeUpdateRequests(null, null);
 	    resultList = controllerResponse.getBody();
@@ -600,13 +603,20 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(resultList.size(),4);
 				
     	// Get all update requests with pending status
+		results.clear();
+		results.add(disputeUpdateRequest1);
+		results.add(disputeUpdateRequest3);
 		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(null, DisputeUpdateRequestStatus.PENDING)).thenReturn(results);
 		controllerResponse = disputeController.getDisputeUpdateRequests(null, DisputeUpdateRequestStatus.PENDING);
 		resultList = controllerResponse.getBody();
 		assertNotNull(resultList);
 		assertEquals(resultList.size(),2);
+		assertEquals(resultList.get(0).getStatus(), DisputeUpdateRequestStatus.PENDING);
 				
     	// Get all update requests for given dispute id
+		results.clear();
+		results.add(disputeUpdateRequest1);
+		results.add(disputeUpdateRequest2);
 		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(dispute1.getDisputeId(), null)).thenReturn(results);
 		controllerResponse = disputeController.getDisputeUpdateRequests(dispute1.getDisputeId(), null);
 	    resultList = controllerResponse.getBody();
