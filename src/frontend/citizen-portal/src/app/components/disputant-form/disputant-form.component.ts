@@ -58,15 +58,15 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     this.states = this.provincesAndStates.filter(x => x.ctryId === this.usa.ctryId); // USA only
 
     this.countryFormControl.valueChanges.subscribe(country => {
-      this.onCountryChange(country)
+      this.onCountryChange(country, true);
     })
 
     this.provinceFormControl.valueChanges.subscribe(province => {
-      this.onProvinceChange(province)
+      this.onProvinceChange(province);
     })
 
     this.driversLicenceProvinceFormControl.valueChanges.subscribe(province => {
-      this.onDLProvinceChange(province)
+      this.onDLProvinceChange(province);
     })
   }
 
@@ -104,12 +104,14 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     }, 0)
   }
 
-  onCountryChange(country: CountryCodeValue) {
+  onCountryChange(country: CountryCodeValue, isInit?: boolean) {
     setTimeout(() => {
       this.form.controls.address_country_id.setValue(country.ctryId);
 
       this.form.controls.postal_code.setValidators([Validators.maxLength(6)]);
-      this.form.controls.postal_code.setValue(null);
+      if (!isInit) {
+        this.form.controls.postal_code.setValue(null);
+      }
       this.form.controls.address_province.setValidators([Validators.maxLength(30)]);
       this.form.controls.address_province.setValue(null);
       this.form.controls.address_province_seq_no.setValidators(null);

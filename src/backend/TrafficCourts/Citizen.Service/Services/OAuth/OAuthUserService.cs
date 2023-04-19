@@ -33,7 +33,7 @@ namespace TrafficCourts.Citizen.Service.Services
                 _httpClient.DefaultRequestHeaders.Add("Authorization", token);
                 HttpResponseMessage response = await _httpClient.GetAsync(_userInfoEndpoint);
                 var responseBody = response.Content.ReadAsStringAsync().Result;
-                var user = Encoding.UTF8.GetString(Convert.FromBase64String(responseBody.Split(".")[1]));
+                var user = Encoding.UTF8.GetString(DecodeUrlBase64(responseBody.Split(".")[1]));
                 return JsonSerializer.Deserialize<UserInfo>(user);
             }
             catch (Exception ex)
@@ -41,6 +41,12 @@ namespace TrafficCourts.Citizen.Service.Services
                 _logger.LogError(ex, "Could not retrieve user information from OAuth's userInfo service");
                 throw;
             }
+        }
+
+        private static byte[] DecodeUrlBase64(string s)
+        {
+            s = s.Replace('-', '+').Replace('_', '/').PadRight(4 * ((s.Length + 3) / 4), '=');
+            return Convert.FromBase64String(s);
         }
     }
 }

@@ -15,7 +15,7 @@
       <app-disputant-form [form]="form" [mode]="mode"></app-disputant-form>
 
       <app-stepper-footer [disableSave]="!form.valid" (save)="disputeStepper.next()" (back)="onStepCancel()"
-        [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.backReview'"
+        [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="previousButtonKey"
         [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true"></app-stepper-footer>
     </app-page>
   </mat-step>
@@ -36,7 +36,8 @@
         </app-alert>
       </div>
     </div>
-    <mat-radio-group [formControl]="requestCourtAppearanceFormControl" (change)="onChangeRequestCourtAppearance($event.value)">
+    <mat-radio-group [formControl]="requestCourtAppearanceFormControl"
+      (change)="onChangeRequestCourtAppearance($event.value)">
       <div>
         <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
           to attend a court hearing</span> <span
@@ -97,7 +98,7 @@
       </app-alert>
     </div>
     <div class="col mt-4"
-      *ngIf="(requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
+      *ngIf="(requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y) && ticketType === TicketTypes.CAMERA_TICKET">
       <app-alert type="warning" icon="info">
         <ng-container #alertContent class="alert-content">
           <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -438,7 +439,7 @@
           </div>
         </div>
 
-        <div class="alert alert-upload" *ngIf="mode === disputeFormMode.UPDATE && fileData$">
+        <div class="alert alert-upload" *ngIf="mode === DisputeFormMode.UPDATE && fileData$">
           <div class="row">
             <div fxFlex class="vcenter">
               <strong>Upload / Manage additional supporting documents, if applicable</strong>
