@@ -442,7 +442,7 @@ public class DisputeController {
 			DisputeUpdateRequestStatus status) {
 		logger.debug("GET /dispute/updateRequests called with disputeId:{} and disputeUpdateRequestStatus:{} ",
 				StructuredArguments.value("disputeId", id),
-				StructuredArguments.value("disputeUpdateRequestStatus", status.toString()));
+				StructuredArguments.value("disputeUpdateRequestStatus", status != null ? status.toString() : ""));
 		return new ResponseEntity<List<DisputeUpdateRequest>>(disputeService.findDisputeUpdateRequestByDisputeIdAndStatus(id, status), HttpStatus.OK);
 	}
 
