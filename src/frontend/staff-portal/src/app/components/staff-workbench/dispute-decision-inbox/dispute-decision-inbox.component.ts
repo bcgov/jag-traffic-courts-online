@@ -28,7 +28,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "ticketNumber",
-    "jjDecisionDate",
+    "jjDecisionDateFormattedDate",
     "jjAssignedTo",
     "violationDate",
     "fullName",

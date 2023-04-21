@@ -28,12 +28,12 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="jjDecisionDate">
+    <ng-container matColumnDef="jjDecisionDateFormattedDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         DECISION DATE
       </th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.jjDecisionDate | date: "dd-MMM-yyyy" }}</span>
+        <span>{{ element.jjDecisionDateFormattedDate | date: "dd-MMM-yyyy" }}</span>
       </td>
     </ng-container>
 
