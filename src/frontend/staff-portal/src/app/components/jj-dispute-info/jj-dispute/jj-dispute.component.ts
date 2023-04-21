@@ -72,7 +72,7 @@ export class JJDisputeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private authService: AuthService,
-    public jjDisputeService: JJDisputeService,
+    private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
     private lookups: LookupsService,
