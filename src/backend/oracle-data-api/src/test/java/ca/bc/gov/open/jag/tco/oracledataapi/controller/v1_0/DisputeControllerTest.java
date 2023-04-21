@@ -572,7 +572,9 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testGetDisputeUpdateRequests_200() throws Exception {
 		// Setup - create a couple new random Disputes along with a few DisputeUpdateRequests
 		Dispute dispute1 = RandomUtil.createDispute();
+		saveDispute(dispute1);
 		Dispute dispute2 = RandomUtil.createDispute();
+		saveDispute(dispute2);
 		assertEquals(2, IterableUtils.toList(disputeRepository.findAll()).size());
 
 		DisputeUpdateRequest disputeUpdateRequest1 = RandomUtil.createDisputeUpdateRequest(dispute1.getDisputeId(), DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME);
