@@ -572,7 +572,10 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testGetDisputeUpdateRequests_200() throws Exception {
 		// Setup - create a couple new random Disputes along with a few DisputeUpdateRequests
 		Dispute dispute1 = RandomUtil.createDispute();
+		saveDispute(dispute1);
 		Dispute dispute2 = RandomUtil.createDispute();
+		saveDispute(dispute2);
+		assertEquals(2, IterableUtils.toList(disputeRepository.findAll()).size());
 
 		DisputeUpdateRequest disputeUpdateRequest1 = RandomUtil.createDisputeUpdateRequest(dispute1.getDisputeId(), DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME);
 		DisputeUpdateRequest disputeUpdateRequest2 = RandomUtil.createDisputeUpdateRequest(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED, DisputeUpdateRequestType.DISPUTANT_ADDRESS);
@@ -582,16 +585,46 @@ class DisputeControllerTest extends BaseTestSuite {
 		List<DisputeUpdateRequest> results = new ArrayList<DisputeUpdateRequest>();
 		results.add(disputeUpdateRequest2);
 
-		// Mock underlying findDisputeUpdateRequestByDisputeIdAndStatus service
-		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED)).thenReturn(results);
-
 		// issue a GET request, expect 200 and correct ID and status
+		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED)).thenReturn(results);
 		ResponseEntity<List<DisputeUpdateRequest>> controllerResponse = disputeController.getDisputeUpdateRequests(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED);
 		List<DisputeUpdateRequest> resultList = controllerResponse.getBody();
 		assertNotNull(resultList);
 		assertEquals(disputeUpdateRequest2.getDisputeUpdateRequestId(), results.get(0).getDisputeUpdateRequestId());
 		assertEquals(disputeUpdateRequest2.getStatus(), results.get(0).getStatus());
 		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
+		
+		// Get all update requests with null params
+		results.add(disputeUpdateRequest1);
+		results.add(disputeUpdateRequest3);
+		results.add(disputeUpdateRequest4);
+		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(null, null)).thenReturn(results);
+		controllerResponse = disputeController.getDisputeUpdateRequests(null, null);
+	    resultList = controllerResponse.getBody();
+		assertNotNull(resultList);
+		assertEquals(resultList.size(),4);
+				
+    	// Get all update requests with pending status
+		results.clear();
+		results.add(disputeUpdateRequest1);
+		results.add(disputeUpdateRequest3);
+		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(null, DisputeUpdateRequestStatus.PENDING)).thenReturn(results);
+		controllerResponse = disputeController.getDisputeUpdateRequests(null, DisputeUpdateRequestStatus.PENDING);
+		resultList = controllerResponse.getBody();
+		assertNotNull(resultList);
+		assertEquals(resultList.size(),2);
+		assertEquals(resultList.get(0).getStatus(), DisputeUpdateRequestStatus.PENDING);
+				
+    	// Get all update requests for given dispute id
+		results.clear();
+		results.add(disputeUpdateRequest1);
+		results.add(disputeUpdateRequest2);
+		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(dispute1.getDisputeId(), null)).thenReturn(results);
+		controllerResponse = disputeController.getDisputeUpdateRequests(dispute1.getDisputeId(), null);
+	    resultList = controllerResponse.getBody();
+	    assertNotNull(resultList);
+		assertEquals(resultList.size(),2);
+		assertEquals(resultList.get(0).getDisputeId(), dispute1.getDisputeId());	
 	}
 
 	@Test
@@ -613,7 +646,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(DisputeUpdateRequestStatus.ACCEPTED, result.getStatus());
 		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
 	}
-
+	
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
 	private Long saveDispute(Dispute dispute) {
 		return postForObject(fromUriString("/dispute"), dispute, Long.class);
