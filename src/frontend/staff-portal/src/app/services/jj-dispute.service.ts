@@ -184,7 +184,7 @@ export class JJDisputeService {
   // oracle To Date Format converts 2023-04-05T16:00:00+00:00 to MM/DD/YYYY HH:MM where using military 24hr
   // OR 2023-04-05 to 04/05/2023
   public toDateFormat(oracleDate: string): string {
-    if (oracleDate.length < 10) return oracleDate;
+    if (!oracleDate || oracleDate.length < 10) return oracleDate;
 
     let formattedDate = oracleDate.substring(5,7) + "/" + oracleDate.substring(8,10) + "/" + oracleDate.substring(0,4);
     if (oracleDate.length == 11) {
@@ -308,6 +308,7 @@ export class JJDisputeService {
       + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
       + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
       + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
+    jjDispute.jjDecisionDateFormattedDate = this.toDateFormat(jjDispute.jjDecisionDate)?.substring(0,10);
 
     // lookup courthouse location
     if (jjDispute.courtAgenId && !jjDispute.courthouseLocation) {
@@ -352,4 +353,5 @@ export interface JJDispute extends JJDisputeBase {
   occamDisputantName?: string;
   occamDisputantGivenNames?: string;
   address?: string;
+  jjDecisionDateFormattedDate?: string;
 }

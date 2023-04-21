@@ -72,11 +72,11 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Online Submission Date</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ submittedDateFormattedDate | date: "MMM dd, yyyy" }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Date Received from ICBC</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ icbcReceivedDateFormattedDate | date: "MMM dd, yyyy" }}</p>
         </span>
         <ng-container *ngIf="type !== 'ticket'">
           <span class="section-grid-cell">
@@ -194,7 +194,7 @@
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">No APP</p>
-            <p class="section-grid-text">{{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm"
+            <p class="section-grid-text">{{ noAppTsFormattedDate
               }}&nbsp;<button *ngIf="!isViewOnly" type="button" style="background:#fffee6"
                 (click)="updateNoAPPTs()">Now</button></p>
           </span>
@@ -311,7 +311,7 @@
         <div fxFlex></div>
         <div fxFlex>
           <h3>Date Signed</h3>
-          <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
+          <div>{{ jjDecisionDateFormattedDate | date:"MMM dd, yyyy" }}</div>
         </div>
       </div>
     </div>
