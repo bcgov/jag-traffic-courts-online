@@ -16,7 +16,6 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.hibernate.cfg.annotations.ResultsetMappingSecondPass;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -574,6 +573,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Setup - create a couple new random Disputes along with a few DisputeUpdateRequests
 		Dispute dispute1 = RandomUtil.createDispute();
 		Dispute dispute2 = RandomUtil.createDispute();
+		assertEquals(2, IterableUtils.toList(disputeRepository.findAll()).size());
 
 		DisputeUpdateRequest disputeUpdateRequest1 = RandomUtil.createDisputeUpdateRequest(dispute1.getDisputeId(), DisputeUpdateRequestStatus.PENDING, DisputeUpdateRequestType.DISPUTANT_NAME);
 		DisputeUpdateRequest disputeUpdateRequest2 = RandomUtil.createDisputeUpdateRequest(dispute1.getDisputeId(), DisputeUpdateRequestStatus.ACCEPTED, DisputeUpdateRequestType.DISPUTANT_ADDRESS);
@@ -622,7 +622,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	    resultList = controllerResponse.getBody();
 	    assertNotNull(resultList);
 		assertEquals(resultList.size(),2);
-		assertEquals(resultList.get(0).getDisputeId(), dispute1.getDisputeId());						
+		assertEquals(resultList.get(0).getDisputeId(), dispute1.getDisputeId());	
 	}
 
 	@Test
