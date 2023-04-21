@@ -363,7 +363,7 @@ export class TicketInfoComponent implements OnInit {
     putDispute.violationTicket.driversLicenceCountry = this.form.get('violationTicket').get('driversLicenceCountry').value;
     putDispute.violationTicket.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
 
-    // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddThh:mm
+    // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddTHH:mm
     putDispute.violationTicket.issuedTs =
       this.form.get('violationTicket').get('violationDate').value +
       "T" +
