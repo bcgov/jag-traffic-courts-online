@@ -224,9 +224,8 @@ export class JJDisputeComponent implements OnInit {
   }
 
   updateNoAPPTs() {
-    this.courtAppearanceForm.controls.noAppTs.setValue(new Date());
-    this.noAppTsFormattedDate = this.datePipe.transform(new Date(), "MM/dd/yyyy hh:MM");
-    console.log(new Date(), this.courtAppearanceForm.value.noAppTs, this.noAppTsFormattedDate);
+    this.courtAppearanceForm.controls.noAppTs.setValue( this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + "Z");
+    this.noAppTsFormattedDate = this.datePipe.transform(new Date(), "MM/dd/yyyy HH:mm");
   }
 
   onSave(): void {
@@ -238,7 +237,6 @@ export class JJDisputeComponent implements OnInit {
       if (this.remarks) {
         this.remarks = "";
       }
-      console.log("after Put", response.jjDisputeCourtAppearanceRoPs[0].noAppTs);
       const data: DialogOptions = {
         titleKey: "Saved",
         messageKey: "Dispute saved",
@@ -307,7 +305,6 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = this.courtAppearanceForm.value.jjSeized;
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
       this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
-      console.log(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs);
     }
     return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).pipe(
       map(
