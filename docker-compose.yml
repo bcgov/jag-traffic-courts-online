@@ -245,8 +245,6 @@ services:
     container_name: citizen-portal
     build:
       context: ./src/frontend/citizen-portal
-      args:
-        - API_BASE_PATH=${CITIZEN_API_BASE_PATH:-http://citizen-api:8080/api/}
     restart: always
     ports:
       - "8080:8080"
@@ -264,8 +262,6 @@ services:
     container_name: staff-portal
     build:
       context: ./src/frontend/staff-portal
-      args:
-        - API_BASE_PATH=${STAFF_API_BASE_PATH:-http://staff-api:8080/api/}
     restart: always
     ports:
       - "8081:8080"
