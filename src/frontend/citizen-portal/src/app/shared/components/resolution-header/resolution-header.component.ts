@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParamsForSearch } from '@shared/models/query-params-for-search.model';
@@ -18,8 +17,7 @@ export class ResolutionHeaderComponent implements OnInit {
   date: string;
 
   constructor(
-    private route: ActivatedRoute,
-    private datePipe: DatePipe,
+    private route: ActivatedRoute
   ) {
   }
 
@@ -28,8 +26,8 @@ export class ResolutionHeaderComponent implements OnInit {
     this.params = this.route.snapshot.queryParams as QueryParamsForSearch;
     if (this.ticket) {
       this.ticketNumber = this.ticket.ticket_number;
-      this.time = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
-      this.date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-dd");
+      this.time =this.ticket.issued_date.substring(11,16); // hh:mm
+      this.date = this.ticket.issued_date.substring(0,10); // yyyy-mm-dd
     } else if (this.params) {
       this.ticketNumber = this.params?.ticketNumber;
       this.time = this.params?.time;
