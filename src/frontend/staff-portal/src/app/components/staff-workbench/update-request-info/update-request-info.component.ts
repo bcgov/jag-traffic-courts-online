@@ -4,6 +4,7 @@ import { ConfigService } from '@config/config.service';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { DisputeUpdateRequestUpdateType, DisputeUpdateRequestStatus2 } from 'app/api';
 import { DisputantUpdateRequest } from '../../../services/dispute.service';
+import { Observable, forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-update-request-info',
@@ -27,11 +28,10 @@ export class UpdateRequestInfoComponent implements OnInit {
   public RequestUpdateStatus = DisputeUpdateRequestStatus2;
 
   constructor(
-    public config: ConfigService,
+    private config: ConfigService,
     private disputeService: DisputeService,
     private logger: LoggerService,
   ) {
-
   }
 
   public ngOnInit() {
@@ -40,25 +40,37 @@ export class UpdateRequestInfoComponent implements OnInit {
 
   public onSubmit(): void {
     // process accepts and rejects
+    let observables: Observable<any>[] = [];
     this.disputeUpdateRequests.forEach(disputeUpdateRequest => {
-      if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Accepted) {
-        this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).subscribe({
-          next: response => {
-            disputeUpdateRequest.status = this.RequestUpdateStatus.Accepted;
-          },
-          error: err => { },
-          complete: () => { }
-        });
-      } else if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Rejected) {
-        this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).subscribe({
-          next: response => {
-            disputeUpdateRequest.status = this.RequestUpdateStatus.Rejected;
-          },
-          error: err => { },
-          complete: () => { }
-        });      }
+      if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending) {
+        if (disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Accepted) {
+          observables.push(this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).pipe(
+            map(response => {
+              let updateRequest = this.disputeUpdateRequests.filter(i => i.disputeUpdateRequestId === response).shift();
+              if (updateRequest) {
+                updateRequest.status = this.RequestUpdateStatus.Accepted;
+              }
+              return response;
+            })
+          ));
+        } else if (disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Rejected) {
+          observables.push(this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).pipe(
+            map(response => {
+              let updateRequest = this.disputeUpdateRequests.filter(i => i.disputeUpdateRequestId === response).shift();
+              if (updateRequest) {
+                updateRequest.status = this.RequestUpdateStatus.Rejected;
+              }
+              return response;
+            })
+          ));
+        }
+      }
     })
-    this.getDispute();
+    forkJoin(observables).subscribe({
+      next: (response) => { this.getDispute(); },
+      error: (err) => { },
+      complete: () => { }
+    });
   }
 
   // get dispute
@@ -97,8 +109,7 @@ export class UpdateRequestInfoComponent implements OnInit {
       this.disputeUpdateRequests = response;
 
       // sort oldest to newest
-      this.disputeUpdateRequests = this.disputeUpdateRequests.sort((a,b) => {if (b.createdTs < a.createdTs) return -1});
-
+      this.disputeUpdateRequests = this.disputeUpdateRequests.sort((a, b) => { if (b.createdTs < a.createdTs) return -1 });
     });
   }
 
@@ -120,7 +131,7 @@ export class UpdateRequestInfoComponent implements OnInit {
       let prov = this.config.provincesAndStates.filter(x => x.provId === this.initialDisputeValues.addressProvinceCountryId && x.provSeqNo === this.initialDisputeValues.addressProvinceSeqNo);
       if (prov.length > 0) addresString += ` ${prov[0].provAbbreviationCd}`;
     } else if (this.initialDisputeValues.addressProvince) {
-      addresString  += ` ${this.initialDisputeValues.addressProvince}`;
+      addresString += ` ${this.initialDisputeValues.addressProvince}`;
     }
 
     if (this.initialDisputeValues.addressCountryId) {

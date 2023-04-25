@@ -34,31 +34,31 @@ export class DisputeService implements IDisputeService {
     this._disputes = new BehaviorSubject<Dispute[]>(null);
   }
 
-    /**
-     * Get the disputes with pending update requests
-     *
-     * @param none
-     */
-    public getDisputesWithPendingUpdates(): Observable<DisputeWithUpdates[]> {
-      return this.disputeApiService.apiDisputeDisputeswithupdaterequestsGet()
-        .pipe(
-          map((response: DisputeWithUpdates[]) => {
-            this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
-            response.forEach(x => {
-              x.disputantGivenNames = `${x.disputantGivenName1}${x.disputantGivenName2 ? ' ' + x.disputantGivenName2 : ''}${x.disputantGivenName3 ? ' ' + x.disputantGivenName3 : ''}`;
-            });
-            return response;
-          }),
-          catchError((error: any) => {
-            this.toastService.openErrorToast(this.configService.dispute_error);
-            this.logger.error(
-              'DisputeService::getDisputesWithPendingUpdates error has occurred: ',
-              error
-            );
-            throw error;
-          })
-        );
-    }
+  /**
+   * Get the disputes with pending update requests
+   *
+   * @param none
+   */
+  public getDisputesWithPendingUpdates(): Observable<DisputeWithUpdates[]> {
+    return this.disputeApiService.apiDisputeDisputeswithupdaterequestsGet()
+      .pipe(
+        map((response: DisputeWithUpdates[]) => {
+          this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
+          response.forEach(x => {
+            x.disputantGivenNames = `${x.disputantGivenName1}${x.disputantGivenName2 ? ' ' + x.disputantGivenName2 : ''}${x.disputantGivenName3 ? ' ' + x.disputantGivenName3 : ''}`;
+          });
+          return response;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::getDisputesWithPendingUpdates error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
   /**
      * Get the dispute update requests for a particular dispute
@@ -311,64 +311,64 @@ export class DisputeService implements IDisputeService {
       );
   }
 
- /**
- * Accept the dispute update request
- *
- * @param disputeId
- */
-    public acceptDisputeUpdateRequest(updateStatusId: number): Observable<any> {
+  /**
+  * Accept the dispute update request
+  *
+  * @param disputeId
+  */
+  public acceptDisputeUpdateRequest(updateStatusId: number): Observable<number> {
 
-      return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdAcceptPut(updateStatusId)
-        .pipe(
-          map((response: any) => {
-            this.logger.info('DisputeService::acceptDisputeUpdateRequest', response)
-            return response ? response : null
-          }),
-          catchError((error: any) => {
-            var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
-            this.toastService.openErrorToast(errorMsg);
-            this.toastService.openErrorToast(this.configService.dispute_error);
-            this.logger.error(
-              'DisputeService::acceptDisputeUpdateRequest error has occurred: ',
-              error
-            );
-            throw error;
-          })
-        );
-    }
+    return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdAcceptPut(updateStatusId)
+      .pipe(
+        map((response: number) => {
+          this.logger.info('DisputeService::acceptDisputeUpdateRequest', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::acceptDisputeUpdateRequest error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
-     /**
- * Accept the dispute update request
- *
- * @param disputeId
- */
-     public rejectDisputeUpdateRequest(updateStatusId: number): Observable<any> {
+  /**
+* Accept the dispute update request
+*
+* @param disputeId
+*/
+  public rejectDisputeUpdateRequest(updateStatusId: number): Observable<any> {
 
-      return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdRejectPut(updateStatusId)
-        .pipe(
-          map((response: any) => {
-            this.logger.info('DisputeService::rejectDisputeUpdateRequest', response)
-            return response ? response : null
-          }),
-          catchError((error: any) => {
-            var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
-            this.toastService.openErrorToast(errorMsg);
-            this.toastService.openErrorToast(this.configService.dispute_error);
-            this.logger.error(
-              'DisputeService::rejectDisputeUpdateRequest error has occurred: ',
-              error
-            );
-            throw error;
-          })
-        );
-    }
+    return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdRejectPut(updateStatusId)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('DisputeService::rejectDisputeUpdateRequest', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::rejectDisputeUpdateRequest error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
 
- /**
- * Put to Resend Email Verification
- *
- * @param emailVerificationToken
- */
+  /**
+  * Put to Resend Email Verification
+  *
+  * @param emailVerificationToken
+  */
   public resendEmailVerification(disputeId: number): Observable<string> {
     return this.disputeApiService.apiDisputeDisputeIdResendemailverifyPut(disputeId)
       .pipe(
@@ -389,7 +389,7 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public splitDisputantGivenNames(Dispute: Dispute):Dispute {
+  public splitDisputantGivenNames(Dispute: Dispute): Dispute {
     let dispute = Dispute;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -403,7 +403,7 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public splitContactGivenNames(Dispute: Dispute):Dispute {
+  public splitContactGivenNames(Dispute: Dispute): Dispute {
     let dispute = Dispute;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -470,9 +470,9 @@ export class DisputeService implements IDisputeService {
     // split up where commas occur and stuff in address lines 1,2,3
     if (Dispute.address) {
       let addressLines = Dispute.address.split(",");
-      if (addressLines.length > 0) dispute.addressLine1 = addressLines[0].length > 100 ? addressLines[0].substring(0,100) : addressLines[0];
-      if (addressLines.length > 1) dispute.addressLine2 = addressLines[1].length > 100 ? addressLines[1].substring(0,100) : addressLines[1];
-      if (addressLines.length > 2) dispute.addressLine3 = addressLines[2].length > 100 ? addressLines[2].substring(0,100) : addressLines[2];
+      if (addressLines.length > 0) dispute.addressLine1 = addressLines[0].length > 100 ? addressLines[0].substring(0, 100) : addressLines[0];
+      if (addressLines.length > 1) dispute.addressLine2 = addressLines[1].length > 100 ? addressLines[1].substring(0, 100) : addressLines[1];
+      if (addressLines.length > 2) dispute.addressLine3 = addressLines[2].length > 100 ? addressLines[2].substring(0, 100) : addressLines[2];
     }
 
     return dispute;
