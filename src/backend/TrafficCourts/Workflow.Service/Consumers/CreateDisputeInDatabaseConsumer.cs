@@ -62,7 +62,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to process message");
-                // dont try again
+                throw;
             }
         }
     }

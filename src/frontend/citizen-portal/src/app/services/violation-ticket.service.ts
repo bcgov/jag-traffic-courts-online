@@ -85,7 +85,7 @@ export class ViolationTicketService {
 
   searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
     this.reset();
-    this.logger.info("ViolationTicketService:: Search for ticket");
+    this.logger.info("ViolationTicketService:: Search for ticket", this.queryParams);
     if (!params) {
       params = this.queryParams;
     }
@@ -175,7 +175,7 @@ export class ViolationTicketService {
   validateTicket(params?: QueryParamsForSearch): boolean {
     var result = false;
     if (this.ticket && this.ticket.issued_date) {
-      var storedTicketTime = this.ticket.issued_date.substring(11,16); // hh:mm
+      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC");
       if (this.ticket.ticket_number === params.ticketNumber && storedTicketTime === params.time) {
         result = true;
       }
@@ -311,8 +311,6 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC")
       };
-      this.ticket.issued_date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'");
-      console.log(this.ticket.issued_date);
       let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
       if (this.ticketType === TicketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
         dateDiff = this.dateDiff(this.ocrTicket?.fields["service_date"].value);

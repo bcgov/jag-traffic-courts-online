@@ -156,7 +156,7 @@ export class NoticeOfDisputeService {
   }
 
   createNoticeOfDispute(input: NoticeOfDispute): void {
-    input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'");
+    // input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'");
     input = this.splitDisputantGivenNames(input);  // break disputant names into first, second, third
     input = this.splitContactGivenNames(input);  // break disputant names into first, second, third
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
