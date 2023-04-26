@@ -5,6 +5,7 @@ import { Dispute, DisputeService } from '../../../services/dispute.service';
 import { DisputeUpdateRequestUpdateType, DisputeUpdateRequestStatus2 } from 'app/api';
 import { DisputantUpdateRequest } from '../../../services/dispute.service';
 import { Observable, forkJoin, map } from 'rxjs';
+import { ToastService } from '@core/services/toast.service';
 
 @Component({
   selector: 'app-update-request-info',
@@ -12,33 +13,34 @@ import { Observable, forkJoin, map } from 'rxjs';
   styleUrls: ['./update-request-info.component.scss', '../../../app.component.scss']
 })
 export class UpdateRequestInfoComponent implements OnInit {
-  @Input() public disputeInfo: Dispute;
-  @Output() public backInbox: EventEmitter<any> = new EventEmitter();
-  public initialDisputeValues: Dispute;
-  public retrieving: boolean = true;
-  public violationDate: string = "";
-  public infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
-  public violationTime: string = "";
-  public conflict: boolean = false;
-  public collapseObj: any = {
+  @Input() disputeInfo: Dispute;
+  @Output() backInbox: EventEmitter<any> = new EventEmitter();
+  initialDisputeValues: Dispute;
+  retrieving: boolean = true;
+  violationDate: string = "";
+  infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
+  violationTime: string = "";
+  conflict: boolean = false;
+  collapseObj: any = {
     contactInformation: true
   }
-  public disputeUpdateRequests: DisputantUpdateRequest[] = [];
-  public RequestUpdateType = DisputeUpdateRequestUpdateType;
-  public RequestUpdateStatus = DisputeUpdateRequestStatus2;
+  disputeUpdateRequests: DisputantUpdateRequest[] = [];
+  RequestUpdateType = DisputeUpdateRequestUpdateType;
+  RequestUpdateStatus = DisputeUpdateRequestStatus2;
 
   constructor(
     private config: ConfigService,
     private disputeService: DisputeService,
+    private toastService: ToastService,
     private logger: LoggerService,
   ) {
   }
 
-  public ngOnInit() {
+  ngOnInit() {
     this.getDispute();
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     // process accepts and rejects
     let observables: Observable<any>[] = [];
     this.disputeUpdateRequests.forEach(disputeUpdateRequest => {
@@ -67,9 +69,13 @@ export class UpdateRequestInfoComponent implements OnInit {
       }
     })
     forkJoin(observables).subscribe({
-      next: (response) => { this.getDispute(); },
-      error: (err) => { },
-      complete: () => { }
+      next: (response) => {
+        this.toastService.openSuccessToast("Saved.");
+        this.getDispute();
+      },
+      error: (err) => {
+        this.toastService.openErrorToast("There is one or more error(s) when saving. Please review the change(s) and try again.");
+      }
     });
   }
 
@@ -78,10 +84,7 @@ export class UpdateRequestInfoComponent implements OnInit {
     this.logger.log('UpdateRequestInfoComponent::getDispute');
 
     this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
-      this.logger.info(
-        'UpdateRequestInfoComponent::getDispute response',
-        response
-      );
+      this.logger.info('UpdateRequestInfoComponent::getDispute response', response);
 
       this.initialDisputeValues = response;
 
@@ -144,7 +147,7 @@ export class UpdateRequestInfoComponent implements OnInit {
     return addresString;
   }
 
-  public onBack() {
+  onBack() {
     this.backInbox.emit();
   }
 }
