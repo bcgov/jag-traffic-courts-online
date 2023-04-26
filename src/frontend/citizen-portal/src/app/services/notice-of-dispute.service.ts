@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { FormBuilder, FormControl, ValidatorFn, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
@@ -85,6 +86,7 @@ export class NoticeOfDisputeService {
   constructor(
     private router: Router,
     private dialog: MatDialog,
+    private datePipe: DatePipe,
     private disputesService: DisputesService,
     private fb: FormBuilder,
     private toastService: ToastService,
@@ -154,6 +156,7 @@ export class NoticeOfDisputeService {
   }
 
   createNoticeOfDispute(input: NoticeOfDispute): void {
+    input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'");
     input = this.splitDisputantGivenNames(input);  // break disputant names into first, second, third
     input = this.splitContactGivenNames(input);  // break disputant names into first, second, third
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
@@ -195,7 +198,7 @@ export class NoticeOfDisputeService {
                 this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUBMIT_SUCCESS)], {
                   queryParams: {
                     ticketNumber: input.ticket_number,
-                    time: input.issued_date.substring(11,16),
+                    time: this.datePipe.transform(input.issued_date, "HH:mm", "UTC"),
                     mode: DisputeFormMode.CREATE
                   },
                 });

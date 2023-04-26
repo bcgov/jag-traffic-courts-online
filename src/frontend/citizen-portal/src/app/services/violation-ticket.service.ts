@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
@@ -37,12 +38,12 @@ export class ViolationTicketService {
     "counts.count_no_3.is_regulation", "counts.count_no_3.section", "counts.count_no_3.ticketed_amount", "court_location", "detachment_location"];
   DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
-  private _months: string[] = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   private queryParams: any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private datePipe: DatePipe,
     private dialog: MatDialog,
     private logger: LoggerService,
     private ticketService: TicketsService,
@@ -243,11 +244,11 @@ export class ViolationTicketService {
     }
 
     // special handling
-    if (isDateFound || isTimeFound) {
-      result.issued_date = result[this.ocrTicketDateKey] + "T" + result[this.ocrTicketTimeKey] + "Z";
+    if (isDateFound && isTimeFound) {
+      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "yyyy-MM-ddTHH:mm:ss'Z'");
     }
     if (isDateFound) {
-      result[this.ocrTicketDateKey] = this.toDateFormat(result[this.ocrTicketDateKey]);
+      result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, yyyy", "UTC");
     }
     result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
 
@@ -259,21 +260,6 @@ export class ViolationTicketService {
     result[this.ocrIssueDescKey] = null;
     this.logger.info("ViolationTicketService: result of converting to violation ticket", result);
     return result;
-  }
-
-  // using new Date() or datepipe doesnt work well with issued date since it does not have a time zone
-  private toDateFormat(dateString: string): string {
-    let formattedDateString = dateString;
-    // assuming input YYYY-mm-dd output MMM dd, yyyy
-    if (dateString.length >= 10) {
-
-      if (+dateString.substring(5,7)>=1 && +dateString.substring(5,7) <= 12) formattedDateString = this._months[+dateString.substring(5,7)] + " ";
-      else return dateString;
-
-      formattedDateString += dateString.substring(8,10) + ", " + dateString.substring(0,4);
-    }
-
-    return formattedDateString;
   }
 
   private getValue(key: string, field: Field): any { // key for logging only
@@ -323,10 +309,10 @@ export class ViolationTicketService {
     if (this.ticket) {
       let params = paramsInput ?? {
         ticketNumber: this.ticket.ticket_number,
-        time: this.ticket.issued_date.substring(11,16)
+        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC")
       };
-      // format issued_date yyyy-mm-ddThh:mm from yyyy-mm-dd hh:mm
-      this.ticket.issued_date = this.ticket.issued_date.substring(0,10) + "T" + this.ticket.issued_date.substring(11,16) + "Z";
+      this.ticket.issued_date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'");
+      console.log(this.ticket.issued_date);
       let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
       if (this.ticketType === TicketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
         dateDiff = this.dateDiff(this.ocrTicket?.fields["service_date"].value);
