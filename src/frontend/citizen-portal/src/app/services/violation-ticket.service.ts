@@ -43,11 +43,11 @@ export class ViolationTicketService {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private datePipe: DatePipe,
     private dialog: MatDialog,
     private logger: LoggerService,
     private ticketService: TicketsService,
     private fileUtilsService: FileUtilsService,
-    private datePipe: DatePipe,
     private ticketTypePipe: TicketTypePipe,
   ) {
     // auto update ticket type
@@ -244,11 +244,11 @@ export class ViolationTicketService {
     }
 
     // special handling
-    if (isDateFound || isTimeFound) {
-      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "YYYY-MM-ddTHH:mm:ss");
+    if (isDateFound && isTimeFound) {
+      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "yyyy-MM-ddTHH:mm:ss'Z'");
     }
     if (isDateFound) {
-      result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
+      result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, yyyy", "UTC");
     }
     result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
 
@@ -309,7 +309,7 @@ export class ViolationTicketService {
     if (this.ticket) {
       let params = paramsInput ?? {
         ticketNumber: this.ticket.ticket_number,
-        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
+        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC")
       };
       let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
       if (this.ticketType === TicketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
