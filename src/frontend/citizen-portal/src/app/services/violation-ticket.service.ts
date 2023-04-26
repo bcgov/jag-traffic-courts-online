@@ -94,6 +94,7 @@ export class ViolationTicketService {
         map((response: ViolationTicket) => {
           if (response) {
             this._ticket.next(response);
+            this.ticket.issued_date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'"); // e-tickets need this
             if (this.validateTicket(params)) {
               this.goToInitiateResolution(params);
             } else {
