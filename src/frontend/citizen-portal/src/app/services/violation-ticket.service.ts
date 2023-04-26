@@ -175,7 +175,7 @@ export class ViolationTicketService {
   validateTicket(params?: QueryParamsForSearch): boolean {
     var result = false;
     if (this.ticket && this.ticket.issued_date) {
-      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
+      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC");
       if (this.ticket.ticket_number === params.ticketNumber && storedTicketTime === params.time) {
         result = true;
       }
