@@ -477,7 +477,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     public async Task<IActionResult> AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
         await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
-        return Ok();
+        return Ok(updateStatusId);
     }
 
     /// <summary>
@@ -493,7 +493,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     public async Task<IActionResult> RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
         await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
-        return Ok();
+        return Ok(updateStatusId);
     }
 
     /// <summary>
