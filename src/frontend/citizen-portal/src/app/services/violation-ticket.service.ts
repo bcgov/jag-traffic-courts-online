@@ -85,7 +85,7 @@ export class ViolationTicketService {
 
   searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
     this.reset();
-    this.logger.info("ViolationTicketService:: Search for ticket", this.queryParams);
+    this.logger.info("ViolationTicketService:: Search for ticket");
     if (!params) {
       params = this.queryParams;
     }
