@@ -95,7 +95,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     } else if (form.controls.drivers_licence_province) { // have control but no value
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
-
   }
 
   ngAfterViewInit(): void {

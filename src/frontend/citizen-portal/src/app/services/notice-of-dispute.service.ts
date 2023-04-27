@@ -33,9 +33,9 @@ export class NoticeOfDisputeService {
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
     disputant_surname: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
     disputant_given_names: { value: null, options: { validators: [Validators.required, Validators.maxLength(92)] } },
-    contact_given_names: { value: null, options: { validators: [Validators.maxLength(92)]}},
-    contact_surname: { value: null, options: { validators: [Validators.maxLength(30)]}},
-    contact_law_firm_name: { value: null, options: { validators: [Validators.maxLength(200)]}},
+    contact_given_names: { value: null, options: { validators: [Validators.maxLength(92)] } },
+    contact_surname: { value: null, options: { validators: [Validators.maxLength(30)] } },
+    contact_law_firm_name: { value: null, options: { validators: [Validators.maxLength(200)] } },
     contact_type: { value: this.ContactType.Individual, options: { validators: [Validators.required] } },
     address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304)] } },
     address_city: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
@@ -65,8 +65,8 @@ export class NoticeOfDisputeService {
     represented_by_lawyer: this.RepresentedByLawyer.N,
     interpreter_language_cd: null,
     witness_no: 0,
-    fine_reduction_reason: { value: null, options: { validators: [Validators.maxLength(500)]}},
-    time_to_pay_reason: { value: null, options: {validators: [Validators.maxLength(500)]}},
+    fine_reduction_reason: { value: null, options: { validators: [Validators.maxLength(500)] } },
+    time_to_pay_reason: { value: null, options: { validators: [Validators.maxLength(500)] } },
     __witness_present: false,
     interpreter_required: this.InterpreterRequired.N,
   }
@@ -168,13 +168,13 @@ export class NoticeOfDisputeService {
 
     const data: DialogOptions = {
       titleKey: "Submit request",
-      messageKey :
+      messageKey:
         "Are you ready to submit your request? Please ensure your entries are correct.",
       actionTextKey: "Submit request",
       cancelTextKey: "Cancel",
       icon: null
     };
-    if (input.ticket_number.substring(0,1) == "A") {
+    if (input.ticket_number.substring(0, 1) == "A") {
       data.messageKey = data.messageKey + " Note that handwritten tickets may take several months to process.";
     }
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
@@ -203,18 +203,18 @@ export class NoticeOfDisputeService {
                 });
               }
             },
-            error => {
-              var errorMsg = this.configService.dispute_create_error;
-              error?.error?.errors?.forEach(error => {
-                errorMsg += " " + error;
-              });
-              this.toastService.openErrorToast(errorMsg);
-              this.logger.error(
-                'NoticeOfDisputeService::createDispute error has occurred: ',
-                 error
-              );
-              throw error;
-            })
+              error => {
+                var errorMsg = this.configService.dispute_create_error;
+                error?.error?.errors?.forEach(error => {
+                  errorMsg += " " + error;
+                });
+                this.toastService.openErrorToast(errorMsg);
+                this.logger.error(
+                  'NoticeOfDisputeService::createDispute error has occurred: ',
+                  error
+                );
+                throw error;
+              })
         }
       });
   }
