@@ -17,6 +17,7 @@ import { AppRoutes } from "app/app.routes";
 import { NgProgressRef } from "ngx-progressbar";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, catchError } from "rxjs/operators";
+import { NoticeOfDisputeKeys } from "./notice-of-dispute.service";
 
 @Injectable({
   providedIn: "root",
@@ -26,11 +27,12 @@ export class ViolationTicketService {
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private _ticketType: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-  ocrTicketDateKey = "violation_date";
-  ocrTicketTimeKey = "violation_time";
-  ocrIssueDetectedKey = "disputant_detected_ocr_issues";
-  ocrIssueDescKey = "disputant_ocr_issues";
-  systemDetectOcrIssueKey = "system_detected_ocr_issues";
+  ocrTicketDateKey = "violation_date"; // scan-ticket page only
+  ocrTicketTimeKey = "violation_time"; // scan-ticket page only
+  driversLicenceNumberKey: NoticeOfDisputeKeys = "drivers_licence_number";
+  ocrIssueDetectedKey: NoticeOfDisputeKeys = "disputant_detected_ocr_issues";
+  ocrIssueDescKey: NoticeOfDisputeKeys = "disputant_ocr_issues";
+  systemDetectOcrIssueKey: NoticeOfDisputeKeys = "system_detected_ocr_issues";
   systemKeysToCheck = ["violationTicketTitle", "ticket_number", "disputant_surname", "disputant_given_names", "drivers_licence_province", "drivers_licence_number", "violation_time",
     "violation_date", "counts.count_no_1.description", "counts.count_no_1.act_or_regulation_name_code", "counts.count_no_1.is_act", "counts.count_no_1.is_regulation", "counts.count_no_1.section",
     "counts.count_no_1.ticketed_amount", "counts.count_no_2.description", "counts.count_no_2.act_or_regulation_name_code", "counts.count_no_2.is_act", "counts.count_no_2.is_regulation",
@@ -188,48 +190,33 @@ export class ViolationTicketService {
     let result = <ViolationTicket>{};
     let isDateFound = false;
     let isTimeFound = false;
-    result[this.systemDetectOcrIssueKey] = this.SystemDetectedOcrIssues.N;
+    let isOcrIssueDetected = false;
 
-    // Direct conversion
-    let keys = Object.keys(source.fields).filter(i => i.toLowerCase().indexOf(".") === -1);
+    let keys = Object.keys(source.fields);
     keys.forEach(key => {
-      let value = this.getValue(key, <Field>source.fields[key]);
-      result[key] = value;
+      let value = "";
+      // Direct conversion
+      if (key.indexOf(".") === -1) {
+        value = this.getValue(key, <Field>source.fields[key]);
+        result[key] = value;
 
-      // check for conf level < 0.8 for selected fields
-      if (this.systemKeysToCheck.indexOf(key) >= 0 && result[this.systemDetectOcrIssueKey] === this.SystemDetectedOcrIssues.N) {
-        let fieldConf = source?.fields[key]?.fieldConfidence;
-        if (fieldConf < 0.8) result[this.systemDetectOcrIssueKey] = this.SystemDetectedOcrIssues.Y;
-      }
-
-      if (value && key === this.ocrTicketDateKey) {
-        isDateFound = true;
-      }
-      if (value && key === this.ocrTicketTimeKey) {
-        isTimeFound = true;
-      }
-    })
-
-    // Dynamic convertion for object array
-    let arrayKeys = Object.keys(source.fields).filter(i => i.toLowerCase().indexOf(".") > 0 && i.split(".").length === 3);
-    if (arrayKeys.length > 0) {
-      arrayKeys.forEach(arrayKey => {
-        let value = this.getValue(arrayKey, <Field>source.fields[arrayKey]);
-
-        // check for conf level < 0.8 for selected fields
-        if (this.systemKeysToCheck.indexOf(arrayKey) >= 0 && result[this.systemDetectOcrIssueKey] === this.SystemDetectedOcrIssues.N) {
-          let fieldConf = source?.fields[arrayKey]?.fieldConfidence;
-          if (fieldConf < 0.8) result[this.systemDetectOcrIssueKey] = this.SystemDetectedOcrIssues.Y;
+        if (value && key === this.ocrTicketDateKey) {
+          isDateFound = true;
         }
-        let keySplit = arrayKey.split(".");
+        if (value && key === this.ocrTicketTimeKey) {
+          isTimeFound = true;
+        }
+      } else if (key.indexOf(".") > 0 && key.split(".").length === 3) {
+        value = this.getValue(key, <Field>source.fields[key]);
+        let keySplit = key.split(".");
 
         let idpos = keySplit[1].lastIndexOf("_");
         let id = keySplit[1].substring(idpos + 1);
-        let idKey = keySplit[1].substring(0, idpos) ? keySplit[1].substring(0, idpos) : "id";
+        let idKey = keySplit[1].substring(0, idpos) ? keySplit[1].substring(0, idpos) : "";
 
         let arrKey = keySplit[0];
         let index = +id - 1;
-        let key = keySplit[2];
+        let childkey = keySplit[2];
 
         if (index >= 0) {
           if (!result[arrKey]) {
@@ -239,12 +226,20 @@ export class ViolationTicketService {
             result[arrKey][index] = {};
             result[arrKey][index][idKey] = +id;
           }
-          result[arrKey][index][key] = value;
+          result[arrKey][index][childkey] = value;
         }
-      })
-    }
+      }
+
+      // check for conf level < 0.8 for selected fields
+      if (this.systemKeysToCheck.indexOf(key) >= 0 && !isOcrIssueDetected && source?.fields[key]?.fieldConfidence < 0.8) {
+        isOcrIssueDetected = true;
+      }
+    })
 
     // special handling
+    if (result.drivers_licence_number) {
+      result.drivers_licence_number = (<Field>source.fields[this.driversLicenceNumberKey]).value;
+    }
     if (isDateFound && isTimeFound) {
       result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "yyyy-MM-ddTHH:mm:ss'Z'");
     }
@@ -259,6 +254,7 @@ export class ViolationTicketService {
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
+    result[this.systemDetectOcrIssueKey] = isOcrIssueDetected ? this.SystemDetectedOcrIssues.Y : this.SystemDetectedOcrIssues.N;
     this.logger.info("ViolationTicketService: result of converting to violation ticket", result);
     return result;
   }
