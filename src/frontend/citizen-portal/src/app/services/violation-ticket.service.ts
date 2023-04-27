@@ -95,8 +95,8 @@ export class ViolationTicketService {
       .pipe(
         map((response: ViolationTicket) => {
           if (response) {
+            response.issued_date = this.datePipe.transform(response.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'"); // e-tickets need this
             this._ticket.next(response);
-            this.ticket.issued_date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'"); // e-tickets need this
             if (this.validateTicket(params)) {
               this.goToInitiateResolution(params);
             } else {
@@ -240,7 +240,7 @@ export class ViolationTicketService {
     if (result.drivers_licence_number) {
       result.drivers_licence_number = (<Field>source.fields[this.driversLicenceNumberKey]).value;
     }
-    if (isDateFound && isTimeFound) {
+    if (isDateFound || isTimeFound) {
       result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "yyyy-MM-ddTHH:mm:ss'Z'");
     }
     if (isDateFound) {

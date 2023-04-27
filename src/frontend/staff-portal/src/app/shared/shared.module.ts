@@ -14,7 +14,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { MoreOptionsDialogComponent } from './dialogs/more-options-dialog/more-options-dialog.component';
 import { ConfirmReasonDialogComponent } from './dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
-import { ImageRequirementsDialogComponent } from './dialogs/image-requirements-dialog/image-requirements-dialog.component';
+import { TicketImageDialogComponent } from './dialogs/ticket-image-dialog/ticket-image-dialog.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { NgxBusyModule } from './modules/ngx-busy/ngx-busy.module';
 import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
@@ -51,7 +51,7 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         HeaderComponent,
         FooterComponent,
         FeatureFlagDirective,
-        ImageRequirementsDialogComponent,
+        TicketImageDialogComponent
     ],
     imports: [
         CommonModule,

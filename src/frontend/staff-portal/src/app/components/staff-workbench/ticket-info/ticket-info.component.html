@@ -37,9 +37,9 @@
             <ng-container subHeader>
               <h3>Ticket Image</h3>
             </ng-container>
-            <div data-toggle="modal" data-target="#exampleModal" width="150 !important" *ngIf="imageToShow">
+            <div width="150 !important" *ngIf="imageToShow">
               <img [src]="imageToShow" width="150" height="200"><br />
-              <span style="font-size:10px; color:#009cde; align-content: center;" width="150">
+              <span style="font-size:10px; color:#009cde; align-content: center;" width="150" (click)="onExpandTicketImage()">
                 <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
                 <strong> Click to expand ticket image</strong>
               </span>
@@ -663,22 +663,6 @@
         <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">
           Cancel
         </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="exampleModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header" style="justify-content: flex-end;">
-        <h1></h1>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" style="height: 800px; text-align: center;">
-        <img [src]="imageToShow" width="450" height="750">
       </div>
     </div>
   </div>
