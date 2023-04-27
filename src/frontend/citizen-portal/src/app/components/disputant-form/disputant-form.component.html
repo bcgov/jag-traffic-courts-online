@@ -19,7 +19,7 @@
           <mat-error *ngIf="form.controls.disputant_given_names.hasError('required')">{{ "error.required" | translate
             }}</mat-error>
           <mat-error *ngIf="form.controls.disputant_given_names.hasError('maxlength')">{{ "error.max_length" | translate
-            }}90</mat-error>
+            }}30 per name</mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -67,7 +67,7 @@
           <mat-label *ngIf="form.get('contact_type').value === ContactType.Other">Other given name(s)</mat-label>
           <input matInput formControlName="contact_given_names" />
           <mat-error *ngIf="form.controls.contact_given_names.hasError('maxlength')">{{ "error.max_length" | translate
-            }}90</mat-error>
+            }}30 each name</mat-error>
           <mat-error *ngIf="form.controls.contact_given_names.hasError('required')">{{ "error.required" | translate
             }}</mat-error>
         </mat-form-field>
@@ -91,8 +91,8 @@
             <mat-label>Mailing address</mat-label>
             <input matInput formControlName="address" />
             <mat-error *ngIf="form.controls.address.hasError('required')">{{ "error.required" | translate }}</mat-error>
-            <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate
-              }}300</mat-error>
+            <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate }}100 per
+              line</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">

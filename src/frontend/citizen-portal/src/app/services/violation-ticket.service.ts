@@ -192,7 +192,6 @@ export class ViolationTicketService {
     let isTimeFound = false;
     let isOcrIssueDetected = false;
 
-    let keysToCheck = [...this.systemKeysToCheck.filter(i => i.indexOf(".") === -1)];
     let keys = Object.keys(source.fields);
     keys.forEach(key => {
       let value = "";

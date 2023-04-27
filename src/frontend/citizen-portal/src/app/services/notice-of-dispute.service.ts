@@ -32,12 +32,12 @@ export class NoticeOfDisputeService {
 
   noticeOfDisputeFormConfigs: NoticeOfDisputeFormConfigs = {
     disputant_surname: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
-    disputant_given_names: { value: null, options: { validators: [Validators.required, Validators.maxLength(90)] } },
-    contact_given_names: { value: null, options: { validators: [Validators.maxLength(90)] } },
+    disputant_given_names: { value: null, options: { validators: [Validators.required, Validators.maxLength(92)] } },
+    contact_given_names: { value: null, options: { validators: [Validators.maxLength(92)] } },
     contact_surname: { value: null, options: { validators: [Validators.maxLength(30)] } },
     contact_law_firm_name: { value: null, options: { validators: [Validators.maxLength(200)] } },
     contact_type: { value: this.ContactType.Individual, options: { validators: [Validators.required] } },
-    address: { value: null, options: { validators: [Validators.required, Validators.maxLength(300)] } },
+    address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304)] } },
     address_city: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
     address_province: { value: null, options: { validators: [Validators.required, Validators.maxLength(30)] } },
     address_province_country_id: null,
@@ -77,10 +77,10 @@ export class NoticeOfDisputeService {
 
   legalRepresentationConfigs: NoticeOfDisputeFormConfigs = {
     law_firm_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(200)] } },
-    lawyer_full_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(120)] } },
+    lawyer_full_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(123)] } },
     lawyer_email: { value: null, options: { validators: [Validators.required, Validators.email, Validators.maxLength(100)] } },
     lawyer_phone_number: { value: null, options: { validators: [Validators.required] } },
-    lawyer_address: { value: null, options: { validators: [Validators.required, Validators.maxLength(300)] } }
+    lawyer_address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304)] } }
   }
 
   constructor(
