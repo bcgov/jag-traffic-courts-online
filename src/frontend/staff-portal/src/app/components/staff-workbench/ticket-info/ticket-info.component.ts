@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -13,6 +13,7 @@ import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { TicketImageDialogComponent } from '@shared/dialogs/ticket-image-dialog/ticket-image-dialog.component';
 import { ViolationTicketService, OCRMessageToDisplay } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -268,6 +269,22 @@ export class TicketInfoComponent implements OnInit {
           .subscribe((action: any) => {
           });
       })
+  }
+
+
+  public onExpandTicketImage() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { imageToShow: this.imageToShow }
+    dialogConfig.hasBackdrop = false;
+    dialogConfig.position = {
+      top: '200px',
+      left: '0px'
+    }
+    this.dialog.open(TicketImageDialogComponent, dialogConfig).afterClosed()
+      .subscribe((action: any) => {
+    });
   }
 
   public onBack() {
