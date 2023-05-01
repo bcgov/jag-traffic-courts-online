@@ -25,7 +25,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     jjAssignedTo: '',
     appearanceTs: new Date()
   }
-  appearanceDateFilter = new FormControl(new Date());
+  appearanceDateFilter = new FormControl(null);
   tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   jjAssignedToFilter = new FormControl('');
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
@@ -109,9 +109,9 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
       let searchDate = new Date(searchTerms.appearanceTs);
 
       return (record.jjAssignedTo?.toLocaleLowerCase().indexOf(searchTerms.jjAssignedTo?.toLocaleLowerCase()) > -1 || searchTerms?.jjAssignedTo === '' && !record.jjAssignedto)
-        && record.appearanceTs?.getFullYear() === searchDate.getFullYear()
+        && ((record.appearanceTs?.getFullYear() === searchDate.getFullYear()
         && record.appearanceTs?.getMonth() === searchDate.getMonth()
-        && record.appearanceTs?.getDate() === searchDate.getDate();
+        && record.appearanceTs?.getDate() === searchDate.getDate()) || !searchTerms.appearanceTs );
     }
 
     return filterFunction;
@@ -138,8 +138,8 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     // this section allows filtering only on jj IDIR
     this.dataSource.filterPredicate = this.createFilter();
 
-    this.jjAssignedToFilter.setValue(this.jjIDIR);
-    this.appearanceDateFilter.setValue(new Date());
+    this.jjAssignedToFilter.setValue("");
+    this.appearanceDateFilter.setValue(null);
 
     this.tableHeight = this.calcTableHeight(300);
   }
