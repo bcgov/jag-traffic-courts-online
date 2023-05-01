@@ -278,7 +278,7 @@ public class JJDisputeService {
 		}
 
 		// Calculate duplicate data for denormalization
-		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceByJJDispute(jjDisputeToUpdate, adjudicatorPartId);
+		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceByJJDispute(jjDisputeToUpdate, adjudicatorPartId, jjDisputeStatus);
 		Long courtAppearanceId = courtAppearance != null && courtAppearance.getId() != null ? courtAppearance.getId() : null;
 		YesNo seizedYn = courtAppearance != null ? courtAppearance.getJjSeized() : null;
 		JJDisputeCourtAppearanceAPP aattCd = courtAppearance != null ? courtAppearance.getAppCd() : null;
@@ -304,11 +304,11 @@ public class JJDisputeService {
 	 * @param partId
 	 * @return
 	 */
-	private JJDisputeCourtAppearanceRoP findCourtAppearanceByJJDispute(JJDispute jjDispute, String partId) {
+	private JJDisputeCourtAppearanceRoP findCourtAppearanceByJJDispute(JJDispute jjDispute, String partId, JJDisputeStatus jjDisputeStatus) {
 		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) &&
-				partId != null && JJDisputeStatus.ACCEPTED.equals(jjDispute.getStatus())) {
+				partId != null && JJDisputeStatus.ACCEPTED.equals(jjDisputeStatus)) {
 
-			// Return the latest record iff the status is ACCEPTED
+			// TCVP-1968: Return the latest record iff the status is ACCEPTED
 			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
 					.sorted(new Comparator<JJDisputeCourtAppearanceRoP>() {
 						@Override
