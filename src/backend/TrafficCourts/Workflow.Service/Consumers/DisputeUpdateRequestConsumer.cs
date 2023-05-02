@@ -1,5 +1,6 @@
 ﻿using MassTransit;
-using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -40,7 +41,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         {
             UpdateType = DisputeUpdateRequestUpdateType.UNKNOWN,
             Status = DisputeUpdateRequestStatus2.PENDING,
-            UpdateJson = JsonSerializer.Serialize(message)
+            UpdateJson = JsonConvert.SerializeObject(message, new StringEnumConverter())
         };
 
         if (message.EmailAddress is not null)

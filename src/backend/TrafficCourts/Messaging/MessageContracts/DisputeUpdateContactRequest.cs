@@ -1,4 +1,6 @@
 ﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace TrafficCourts.Messaging.MessageContracts;
 
@@ -20,6 +22,7 @@ public class DisputeUpdateContactRequest
     /// <summary>
     /// Contact Type
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public DisputeContactTypeCd ContactType { get; set; }
 
     /// <summary>
