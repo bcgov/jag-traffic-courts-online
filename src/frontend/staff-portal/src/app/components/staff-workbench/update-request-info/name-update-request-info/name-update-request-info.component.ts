@@ -30,7 +30,6 @@ export class NameUpdateRequestInfoComponent implements OnInit {
     try {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
       this.requestReadable = true;
-      console.log("contact type", this.updateRequested.ContactType);
       // check if current and update requested values are equal, if so change status to accepted.
       if (this.disputeInfo.contactTypeCd == this.updateRequested.ContactType &&
         this.disputeInfo.disputantSurname == this.updateRequested.DisputantSurname &&

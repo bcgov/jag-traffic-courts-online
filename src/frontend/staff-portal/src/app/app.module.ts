@@ -52,6 +52,8 @@ import { AuthService } from './services/auth.service';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers, JJDisputeStore } from './store';
+import { CourtOptionsUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/court-options-update-request-info/court-options-update-request-info.component';
+import { CountUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/count-update-request-info/count-update-request-info.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -80,6 +82,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     PhoneUpdateRequestInfoComponent,
     NameUpdateRequestInfoComponent,
     AddressUpdateRequestInfoComponent,
+    CourtOptionsUpdateRequestInfoComponent,
+    CountUpdateRequestInfoComponent,
     ContactInfoComponent,
     TicketStatusComponent,
     TicketRequestComponent,

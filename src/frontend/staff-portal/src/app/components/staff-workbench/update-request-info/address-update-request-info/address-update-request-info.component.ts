@@ -19,6 +19,8 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
   public newProvince: string = "";
   public oldCountry: string = "";
   public newCountry: string = "";
+  public oldDLProvince: string = "";
+  public newDLProvince: string = "";
 
   constructor(
     private logger: LoggerService,
@@ -36,7 +38,7 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
 
       // Get old province name
       if (this.disputeInfo.addressProvinceCountryId !== null) {
-        let oldProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.AddressProvinceCountryId && x.provSeqNo === this.updateRequested.AddressProvinceSeqNo);
+        let oldProv = this.config.provincesAndStates.filter(x => x.ctryId === this.disputeInfo.addressProvinceCountryId && x.provSeqNo === this.disputeInfo.addressProvinceSeqNo);
         if (oldProv.length >0) this.oldProvince = oldProv[0].provNm;
       } else if (this.disputeInfo.addressProvince !== null) this.oldProvince = this.disputeInfo.addressProvince;
 
@@ -54,6 +56,18 @@ export class AddressUpdateRequestInfoComponent implements OnInit {
         let newCountry = this.config.countries.filter(x => x.ctryId === this.updateRequested.AddressCountryId);
         if (newCountry.length > 0) this.newCountry = newCountry[0].ctryLongNm;
       }
+
+      // Get old province name for DL
+      if (this.disputeInfo.driversLicenceIssuedProvinceSeqNo !== null) {
+        let oldDLProv = this.config.provincesAndStates.filter(x => x.ctryId === this.disputeInfo.driversLicenceIssuedCountryId && x.provSeqNo === this.disputeInfo.driversLicenceIssuedProvinceSeqNo);
+        if (oldDLProv.length >0) this.oldDLProvince = oldDLProv[0].provNm;
+      } else if (this.disputeInfo.driversLicenceProvince !== null) this.oldDLProvince = this.disputeInfo.driversLicenceProvince;
+
+      // Get new province name for DL if needed
+      if (this.updateRequested.DriversLicenceIssuedProvSeqNo !== null) {
+        let newDLProv = this.config.provincesAndStates.filter(x => x.ctryId === this.updateRequested.DriversLicenceIssuedCountryId && x.provSeqNo === this.updateRequested.DriversLicenceIssuedProvSeqNo);
+        if (newDLProv.length > 0) this.newDLProvince = newDLProv[0].provNm;
+      } else if (this.updateRequested.DriversLicenceProvince !== null) this.newDLProvince = this.updateRequested.DriversLicenceProvince;
 
     }
     catch (ex) {
@@ -80,4 +94,8 @@ export interface addressUpdateJSON {
   AddressProvinceSeqNo?: number;
   AddressCountryId?: number;
   PostalCode?: string;
+  DriversLicenceNumber?: string;
+  DriversLicenceProvince?: string;
+  DriversLicenceIssuedCountryId?: number;
+  DriversLicenceIssuedProvSeqNo?: number;
 }

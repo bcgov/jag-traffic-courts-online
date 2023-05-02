@@ -7,7 +7,8 @@
       <ng-container #alertContent class="alert-content">
         <div class="d-flex justify-content-between d-print-none">
           <span>
-            <h1 style="margin: 0;">Email verification required</h1>
+            <h1 *ngIf="isCreate" style="margin: 0;">Email verification required</h1>
+            <h1 *ngIf="!isCreate" style="margin: 0;">Email verification may be required</h1>
           </span>
           <a *ngIf="isCreate" class="print-link" (click)="onPrint()">
             <img class="me-2" src="/assets/print-icon.svg" />
@@ -19,11 +20,13 @@
     <hr>
     <div>
       <h2 class="mb-3" style="font-weight:bold;">Next Step</h2>
-      <div class="mb-3 text-body">We need to verify your email address before we can proceed.</div>
-      <div class="mb-3"><span class="text-body">A verification email was sent to : </span><b>{{ email }}</b></div>
+      <div *ngIf="isCreate" class="mb-3 text-body">We need to verify your email address before we can proceed.</div>
+      <div *ngIf="isCreate" class="mb-3"><span class="text-body">A verification email was sent to : </span><b>{{ email }}</b></div>
       <div *ngIf="isCreate" class="mb-3 text-body">Please click on the link in the email to complete your registration.
       </div>
-      <div *ngIf="!isCreate" class="mb-3 text-body">Please click on the link in the email to complete your dispute
+      <div *ngIf="!isCreate" class="mb-3 text-body">If you updated your email address then we need to verify your new email address before we can proceed.</div>
+      <div *ngIf="!isCreate" class="mb-3"><span class="text-body"> A verification email may have been sent to : </span><b>{{ email }}</b></div>
+      <div *ngIf="!isCreate" class="mb-3 text-body">Please click on the link in such an email to complete your dispute
         update request.</div>
     </div>
     <hr>
