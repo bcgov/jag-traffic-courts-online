@@ -27,7 +27,8 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
         CreateMap<Models.Tickets.ViolationTicketCount, Messaging.MessageContracts.TicketCount>()
             .ForMember(dest => dest.Section, opt => opt.MapFrom(src => src.Section));
 
-        CreateMap<DisputantContactInformation, Messaging.MessageContracts.DisputeUpdateContactRequest>();
+        CreateMap<DisputantContactInformation, Messaging.MessageContracts.DisputeUpdateContactRequest>()
+            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd));
         CreateMap<Messaging.MessageContracts.DisputeUpdateContactRequest, Messaging.MessageContracts.DisputeUpdateRequest>();
 
         CreateMap<Dispute, Messaging.MessageContracts.DisputeUpdateRequest>()
