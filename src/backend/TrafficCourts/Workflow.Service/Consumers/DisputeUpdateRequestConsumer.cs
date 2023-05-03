@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Reflection.Metadata;
@@ -80,7 +81,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         }
 
         // If some or all name fields have different data, send a CONTACT_NAME update request
-        if (message.ContactGiven1Nm != dispute?.ContactGiven1Nm
+        if (!message.DisputantSurname.IsNullOrEmpty() && (message.ContactGiven1Nm != dispute?.ContactGiven1Nm
             || message.ContactGiven2Nm != dispute?.ContactGiven2Nm
             || message.ContactGiven3Nm!= dispute?.ContactGiven3Nm
             || message.ContactSurnameNm != dispute?.ContactSurnameNm
@@ -89,7 +90,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             || message.DisputantGivenName2 != dispute?.DisputantGivenName2
             || message.DisputantGivenName3 != dispute?.DisputantGivenName3
             || message.DisputantSurname != dispute?.DisputantSurname
-            )
+            ))
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
@@ -98,7 +99,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         }
 
         // If some or all address fields have data, send a DISPUTANT_ADDRESS update request
-        if (message.AddressLine1 != dispute?.AddressLine1
+        if (!message.AddressLine1.IsNullOrEmpty() && (message.AddressLine1 != dispute?.AddressLine1
             || message.AddressLine2 != dispute?.AddressLine2
             || message.AddressLine3 != dispute?.AddressLine3
             || message.AddressCity != dispute?.AddressCity
@@ -111,7 +112,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             || (message.DriversLicenceProvince != dispute?.DriversLicenceProvince && message.DriversLicenceIssuedProvinceSeqNo is null && message.DriversLicenceNumber is not null)
             || (message.DriversLicenceIssuedCountryId != dispute?.DriversLicenceIssuedCountryId && message.DriversLicenceNumber is not null)
             || (message.DriversLicenceIssuedProvinceSeqNo != dispute?.DriversLicenceIssuedProvinceSeqNo && message.DriversLicenceNumber is not null)
-            )
+            ))
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
@@ -120,7 +121,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         }
 
         // If some or all phone fields have data, send a DISPUTANT_PHONE update request
-        if (message.HomePhoneNumber != dispute?.HomePhoneNumber)
+        if (message.HomePhoneNumber != dispute?.HomePhoneNumber && !message.HomePhoneNumber.IsNullOrEmpty()) 
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_PHONE;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
