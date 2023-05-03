@@ -10,11 +10,11 @@ api:
 layout:
   resources:
     limits:
-      cpu: 2
-      memory: 2000Mi
+      cpu: 4
+      memory: 4000Mi
     requests:
-      cpu: 1
-      memory: 1500Mi
+      cpu: 2
+      memory: 3000Mi
 
 proxy:
   resources:
