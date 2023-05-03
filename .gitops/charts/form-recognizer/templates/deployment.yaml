@@ -267,7 +267,10 @@ spec:
                   name: {{ include "form-recognizer.fullname" . }}-secrets
                   key: FORMRECOGNIZER__APIKEY
             - name: billing
-              value: {{ .Values.azure.billing.endpoint }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
+                  key: FORMRECOGNIZER__ENDPOINT
             - name: CustomFormRecognizer__ContainerPhase
               value: All
             - name: CustomFormRecognizer__LayoutAnalyzeUri

@@ -68,13 +68,6 @@ rabbitmq:
   port: 5672
   virtualHost: ocr
 
-azure:
-  apiKey:
-    secret:
-      key: FORMRECOGNIZER__APIKEY
-  billing:
-    endpoint: https://ag-ocrformrecognizer-dev.cognitiveservices.azure.com/
-
 imagePullSecrets: []
 
 podAnnotations: {}
