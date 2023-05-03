@@ -69,8 +69,10 @@ spec:
             - name: logs
               mountPath: /logs
           image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+          {{- if .Values.api.resources }}
           resources:
             {{- toYaml .Values.api.resources | nindent 12 }}
+          {{- end }}
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -100,8 +102,10 @@ spec:
             claimName: {{ include "form-recognizer.fullname" . }}-logs
       containers:
         - name: azure-form-recognizer-layout
+          {{- if .Values.layout.resources }}
           resources:
             {{- toYaml .Values.layout.resources | nindent 12 }}
+          {{- end }}
           {{- if .Values.layout.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.layout.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
@@ -180,8 +184,10 @@ spec:
             claimName: {{ include "form-recognizer.fullname" . }}-logs
       containers:
         - name: azure-form-recognizer-proxy
+          {{- if .Values.proxy.resources }}
           resources:
             {{- toYaml .Values.proxy.resources | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -227,8 +233,10 @@ spec:
             claimName: {{ include "form-recognizer.fullname" . }}-logs
       containers:
         - name: azure-form-recognizer-supervised
+          {{- if .Values.supervised.resources }}
           resources:
             {{- toYaml .Values.supervised.resources | nindent 12 }}
+          {{- end }}
           env:
             - name: eula
               value: accept
@@ -259,7 +267,10 @@ spec:
                   name: {{ include "form-recognizer.fullname" . }}-secrets
                   key: FORMRECOGNIZER__APIKEY
             - name: billing
-              value: {{ .Values.azure.billing.endpoint }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
+                  key: FORMRECOGNIZER__ENDPOINT
             - name: CustomFormRecognizer__ContainerPhase
               value: All
             - name: CustomFormRecognizer__LayoutAnalyzeUri
