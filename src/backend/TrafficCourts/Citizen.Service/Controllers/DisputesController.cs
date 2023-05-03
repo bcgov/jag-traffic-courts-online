@@ -413,13 +413,10 @@ public class DisputesController : ControllerBase
 
                     // can throw
                     Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream, fileMetadata.FileName, properties, cancellationToken);
-                    request.DocumentId = id;
-                    request.DocumentType = fileMetadata.DocumentType;
 
-                    // can throw
-                    await _bus.PublishWithLog(_logger, request, cancellationToken);
-                    request.DocumentId = null;
-                    request.DocumentType = null;
+                    UploadDocumentRequest uploadDocumentRequest = new() { DocumentId= id, DocumentType = fileMetadata.DocumentType };
+
+                    request.UploadedDocuments?.Add(uploadDocumentRequest);
                 }
 
                 var deletePendingFiles = dispute.FileData.Where(i => i.DeleteRequested == true && i.FileId is not null);

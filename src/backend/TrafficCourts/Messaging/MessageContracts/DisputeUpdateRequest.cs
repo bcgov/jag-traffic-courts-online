@@ -90,6 +90,19 @@ public class DisputeUpdateRequest : DisputeUpdateContactRequest
     public ICollection<DisputeCount>? DisputeCounts { get; set; } = null!;
 
     /// <summary>
+    /// Uploaded documents
+    /// </summary>
+    public ICollection<UploadDocumentRequest>? UploadedDocuments { get; set;} = null!;
+
+    /// <summary>
+    /// The document uploaded was request to be deleted by the disputant
+    /// </summary>
+    public Boolean? DocumentDeleteRequested { get; set; }
+}
+
+public class UploadDocumentRequest
+{
+    /// <summary>
     /// Id of the document uploaded by the disputant
     /// </summary>
     public Guid? DocumentId { get; set; }
@@ -99,8 +112,4 @@ public class DisputeUpdateRequest : DisputeUpdateContactRequest
     /// </summary>
     public string? DocumentType { get; set; }
 
-    /// <summary>
-    /// The document uploaded was request to be deleted by the disputant
-    /// </summary>
-    public Boolean? DocumentDeleteRequested { get; set; }
 }
