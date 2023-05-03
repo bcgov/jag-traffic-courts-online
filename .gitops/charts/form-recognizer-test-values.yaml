@@ -1,0 +1,35 @@
+api:
+  resources:
+    limits:
+      cpu: 20m
+      memory: 100Mi
+    requests:
+      cpu: 10m
+      memory: 75Mi
+
+layout:
+  resources:
+    limits:
+      cpu: 4
+      memory: 4Gi
+    requests:
+      cpu: 2
+      memory: 2Gi
+
+proxy:
+  resources:
+   limits:
+     cpu: 20m
+     memory: 10Mi
+   requests:
+     cpu: 10m
+     memory: 5Mi
+
+supervised:
+  resources:
+    limits:
+      cpu: 20m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 75Mi
