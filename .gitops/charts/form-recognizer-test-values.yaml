@@ -20,16 +20,16 @@ proxy:
   resources:
    limits:
      cpu: 20m
-     memory: 10Mi
+     memory: 128Mi
    requests:
      cpu: 10m
-     memory: 5Mi
+     memory: 64Mi
 
 supervised:
   resources:
     limits:
       cpu: 20m
-      memory: 256Mi
+      memory: 128Mi
     requests:
       cpu: 10m
       memory: 75Mi
