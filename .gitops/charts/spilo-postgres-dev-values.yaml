@@ -24,7 +24,8 @@ containerSecurityContext:
   enabled: false
 
 continuousArchive:
-  storage: s3
-  s3:
-    bucket: ag-pssg-tco-trafficticket-dev-bkt
-    secretName: postgres-s3-backup-credentials
+  enabled: false
+  # storage: s3
+  # s3:
+  #   bucket: ag-pssg-tco-trafficticket-dev-bkt
+  #   secretName: postgres-s3-backup-credentials

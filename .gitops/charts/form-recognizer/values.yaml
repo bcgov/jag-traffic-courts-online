@@ -14,14 +14,6 @@ api:
     # Overrides the image tag whose default is the chart appVersion.
     tag: "2.1-preview"
 
-  resources:
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-
 layout:
   replicaCount: 1
 
@@ -30,14 +22,6 @@ layout:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "2.1-preview"
-
-  resources:
-    limits:
-      cpu: '100m'
-      memory: 512Mi
-    requests:
-      cpu: '100m'
-      memory: 512Mi
 
   containerSecurityContext:
     enabled: true
@@ -55,14 +39,6 @@ proxy:
     # Overrides the image tag whose default is the chart appVersion.
     tag: "stable-alpine"
 
-  resources:
-   limits:
-     cpu: 50m
-     memory: 128Mi
-   requests:
-     cpu: 50m
-     memory: 128Mi
-
 supervised:
   replicaCount: 1
 
@@ -71,14 +47,6 @@ supervised:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "2.1-preview"
-
-  resources:
-    limits:
-      cpu: '100m'
-      memory: 512Mi
-    requests:
-      cpu: '100m'
-      memory: 512Mi
 
 podSecurityContext:
   enabled: false
@@ -99,13 +67,6 @@ rabbitmq:
   host: rabbitmq
   port: 5672
   virtualHost: ocr
-
-azure:
-  apiKey:
-    secret:
-      key: FORMRECOGNIZER__APIKEY
-  billing:
-    endpoint: https://ag-ocrformrecognizer-dev.cognitiveservices.azure.com/
 
 imagePullSecrets: []
 
