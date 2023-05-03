@@ -26,6 +26,14 @@ public class WorkflowDocumentService : IWorkflowDocumentService
         return await _objectManagementService.GetFileAsync(fileId, cancellationToken);
     }
 
+    public async Task RemoveFileAsync(Guid fileId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Removing the file {FileId} through COMS", fileId);
+
+        await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
+        return;
+    }
+
     public async Task SaveDocumentPropertiesAsync(Guid id, DocumentProperties properties, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)

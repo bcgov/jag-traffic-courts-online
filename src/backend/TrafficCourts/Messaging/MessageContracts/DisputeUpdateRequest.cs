@@ -8,6 +8,26 @@ namespace TrafficCourts.Messaging.MessageContracts;
 public class DisputeUpdateRequest : DisputeUpdateContactRequest
 {
     /// <summary>
+    /// Drivers Licence Number
+    /// </summary>
+    public string? DriversLicenceNumber { get; set; }
+
+    /// <summary>
+    /// Drivers Licence Province
+    /// </summary>
+    public string? DriversLicenceProvince { get; set; }
+
+    /// <summary>
+    /// Drivers Licence Country
+    /// </summary>
+    public int? DriversLicenceIssuedCountryId { get; set; }
+
+    /// <summary>
+    /// Drivers licence province seq no 
+    /// </summary>
+    public int? DriversLicenceIssuedProvinceSeqNo { get; set; }
+
+    /// <summary>
     /// represented by lawyer.
     /// </summary>
     public bool? RepresentedByLawyer { get; set; } = null!;

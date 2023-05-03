@@ -289,6 +289,8 @@ public class UpdateRequest
 
     public System.Collections.Generic.ICollection<UpdateDisputeCountRequest>? PatchDisputeCounts { get; set; }
 
+    public ICollection<UploadDocumentRequest>? UploadedDocuments { get; set; } = null!;
+
 }
 
 public partial class UpdateDisputeCountRequest

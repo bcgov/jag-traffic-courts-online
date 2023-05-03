@@ -407,6 +407,7 @@ public class DisputesController : ControllerBase
             if (dispute.FileData is not null)
             {
                 var uploadPendingFiles = dispute.FileData.Where(i => !String.IsNullOrEmpty(i.PendingFileStream));
+                request.UploadedDocuments = new List<UploadDocumentRequest>();
                 foreach (FileMetadata fileMetadata in uploadPendingFiles)
                 {
                     DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };

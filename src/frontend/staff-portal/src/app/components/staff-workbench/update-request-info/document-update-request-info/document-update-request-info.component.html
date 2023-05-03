@@ -1,0 +1,28 @@
+<mat-card *ngIf="updateRequested.UploadedDocuments?.length > 0">
+  <span>
+    <span><b>Uploaded Documents ({{ disputantUpdateRequest.status }})</b></span>
+    <span style="float:right">
+      {{ disputantUpdateRequest.createdTs | date: "MMMM dd, yyyy" }}
+    </span>
+  </span><br /><br />
+
+  <div style="display: grid; grid-template-columns: auto" *ngIf="requestReadable === true">
+    <span><b>Citizen Uploaded Documents ({{updateRequested.UploadedDocuments.length }})</b></span><br/>
+        <div *ngFor="let doc of updateRequested.UploadedDocuments">
+          <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)" *ngIf="disputantUpdateRequest.status != UpdateRequestStatus.Rejected">{{ doc.DocumentType }}</button>&nbsp;
+          <span *ngIf="disputantUpdateRequest.status === UpdateRequestStatus.Rejected">{{ doc.DocumentType }}&nbsp;</span>
+        </div>
+    <br />
+  </div>
+  <div>
+    <span style="float:right" *ngIf="disputantUpdateRequest.status === 'PENDING'">
+      <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+        <mat-button-toggle value="ACCEPTED" *ngIf="requestReadable === true">Accept</mat-button-toggle>
+        <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
+        <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
+      </mat-button-toggle-group>
+    </span>
+  </div>
+  <div *ngIf="requestReadable === false">Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+  <br /><br />
+</mat-card>

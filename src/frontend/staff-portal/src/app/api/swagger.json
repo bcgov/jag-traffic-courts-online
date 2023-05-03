@@ -3139,7 +3139,7 @@
             }
           },
           "403": {
-            "description": "Forbidden, requires jjdispute:update_court_appearance permission.",
+            "description": "Forbidden, requires jjdispute:update permission.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3286,7 +3286,7 @@
             }
           },
           "403": {
-            "description": "Forbidden, requires jjdispute:update_court_appearance permission.",
+            "description": "Forbidden, requires jjdispute:update permission.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3535,6 +3535,39 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/Agency"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lookup/province": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of provinces.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Province"
                   }
                 }
               }
@@ -5602,6 +5635,28 @@
           }
         },
         "additionalProperties": { }
+      },
+      "Province": {
+        "type": "object",
+        "properties": {
+          "ctryId": {
+            "type": "string",
+            "nullable": true
+          },
+          "provSeqNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "provNm": {
+            "type": "string",
+            "nullable": true
+          },
+          "provAbbreviationCd": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "SocialLinkRepresentation": {
         "type": "object",

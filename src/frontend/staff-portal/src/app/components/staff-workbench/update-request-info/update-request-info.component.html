@@ -76,6 +76,7 @@
       <app-address-update-request-info *ngIf="disputantUpdateRequest.updateType === RequestUpdateType.DisputantAddress" [disputeInfo]="initialDisputeValues" [disputantUpdateRequest]="disputantUpdateRequest" (disputantUpdateRequestStatusChange)="onDisputantUpdateRequestStatusChange($event)"></app-address-update-request-info><br />
       <app-court-options-update-request-info *ngIf="disputantUpdateRequest.updateType === RequestUpdateType.CourtOptions" [disputeInfo]="initialDisputeValues" [disputantUpdateRequest]="disputantUpdateRequest" (disputantUpdateRequestStatusChange)="onDisputantUpdateRequestStatusChange($event)"></app-court-options-update-request-info><br />
       <app-count-update-request-info *ngIf="disputantUpdateRequest.updateType === RequestUpdateType.Count" [disputeInfo]="initialDisputeValues" [disputantUpdateRequest]="disputantUpdateRequest" (disputantUpdateRequestStatusChange)="onDisputantUpdateRequestStatusChange($event)"></app-count-update-request-info><br />
+      <app-document-update-request-info *ngIf="disputantUpdateRequest.updateType === RequestUpdateType.DisputantDocument" [disputeInfo]="initialDisputeValues" [disputantUpdateRequest]="disputantUpdateRequest" (disputantUpdateRequestStatusChange)="onDisputantUpdateRequestStatusChange($event)"></app-document-update-request-info><br />
     </div>
     <div style="float: right; width: 100%;">
       <button class="large" mat-flat-button type="button" color="primary" [disabled]="initialDisputeValues.emailAddressVerified !== true && initialDisputeValues.emailAddress"

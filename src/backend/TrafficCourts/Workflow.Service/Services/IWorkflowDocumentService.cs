@@ -22,4 +22,13 @@ public interface IWorkflowDocumentService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task SaveDocumentPropertiesAsync(Guid id, DocumentProperties properties, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Removes a file with data and details through COMS service for the given unique file ID
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>COMS File Object</returns>
+    /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
+    Task RemoveFileAsync(Guid fileId, CancellationToken cancellationToken);
 }

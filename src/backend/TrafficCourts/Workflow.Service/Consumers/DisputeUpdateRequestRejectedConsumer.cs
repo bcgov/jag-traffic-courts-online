@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Newtonsoft.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -12,15 +13,18 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
     private readonly ILogger<DisputeUpdateRequestRejectedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IDisputeUpdateRequestRejectedTemplate _updateRequestRejectedTemplate;
+    private readonly IWorkflowDocumentService _workflowDocumentService;
 
     public DisputeUpdateRequestRejectedConsumer(
         ILogger<DisputeUpdateRequestRejectedConsumer> logger,
         IOracleDataApiService oracleDataApiService,
-        IDisputeUpdateRequestRejectedTemplate updateRequestRejectedTemplate)
+        IDisputeUpdateRequestRejectedTemplate updateRequestRejectedTemplate,
+        IWorkflowDocumentService workflowDocumentService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestRejectedTemplate = updateRequestRejectedTemplate ?? throw new ArgumentNullException(nameof(updateRequestRejectedTemplate));
+        _workflowDocumentService = workflowDocumentService ?? throw new ArgumentNullException();
     }
 
     public async Task Consume(ConsumeContext<DisputeUpdateRequestRejected> context)
@@ -35,6 +39,16 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
 
         // Set the status of the DisputeUpdateRequest object to REJECTED.
         DisputeUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.REJECTED, context.CancellationToken);
+
+        if (updateRequest?.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
+        {
+            // remove document from repository
+            UpdateRequest? patch = JsonConvert.DeserializeObject<UpdateRequest>(updateRequest.UpdateJson);
+            foreach(UploadDocumentRequest doc in patch?.UploadedDocuments)
+            {
+                if (doc.DocumentId is not null) await _workflowDocumentService.RemoveFileAsync((Guid)doc.DocumentId, context.CancellationToken);
+            }
+        }
 
         // Get the current Dispute by id
         Dispute dispute = await _oracleDataApiService.GetDisputeByIdAsync(updateRequest.DisputeId, false, context.CancellationToken);

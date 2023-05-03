@@ -54,6 +54,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducers, JJDisputeStore } from './store';
 import { CourtOptionsUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/court-options-update-request-info/court-options-update-request-info.component';
 import { CountUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/count-update-request-info/count-update-request-info.component';
+import { DocumentUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/document-update-request-info/document-update-request-info.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -80,6 +81,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     TicketInfoComponent,
     UpdateRequestInfoComponent,
     PhoneUpdateRequestInfoComponent,
+    DocumentUpdateRequestInfoComponent,
     NameUpdateRequestInfoComponent,
     AddressUpdateRequestInfoComponent,
     CourtOptionsUpdateRequestInfoComponent,
