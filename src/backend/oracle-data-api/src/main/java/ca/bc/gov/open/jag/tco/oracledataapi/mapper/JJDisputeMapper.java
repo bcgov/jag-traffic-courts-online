@@ -1,6 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -281,8 +280,8 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "jjDispute.id", target = "disputeId")
 	@Mapping(source = "appCd", target = "disputantPresenceCd")
 	@Mapping(source = "noAppTs", target = "disputantNotPresentDtm")
-	@Mapping(target = "durationHoursTxt", ignore = true) // ignore back reference mapping
-	@Mapping(target = "durationMinutesTxt", ignore = true) // ignore back reference mapping
+	@Mapping(target = "durationHours", ignore = true) // ignore back reference mapping
+	@Mapping(target = "durationMinutes", ignore = true) // ignore back reference mapping
 	@Mapping(source = "createdTs", target = "entDtm")
 	@Mapping(source = "createdBy", target = "entUserId")
 	@Mapping(source = "adjudicator", target = "judgeOrJjNameTxt")
@@ -295,12 +294,12 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Named("getDurationInMinutes")
 	public short getDurationInMinutes(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance) {
 		short duration = (short)0;
-		if (!StringUtils.isBlank(jjCourtAppearance.getDurationHoursTxt())) {
-			short hours = Short.parseShort(jjCourtAppearance.getDurationHoursTxt());
+		if (jjCourtAppearance.getDurationHours() != null && jjCourtAppearance.getDurationHours() > 0) {
+			short hours = jjCourtAppearance.getDurationHours().shortValue();
 			duration = (short) (hours * 60);
 		}
-		if (!StringUtils.isBlank(jjCourtAppearance.getDurationMinutesTxt())) {
-			short minutes = Short.parseShort(jjCourtAppearance.getDurationMinutesTxt());
+		if (jjCourtAppearance.getDurationMinutes() != null && jjCourtAppearance.getDurationMinutes() > 0) {
+			short minutes = jjCourtAppearance.getDurationMinutes().shortValue();
 			duration += minutes;
 		}
 		return duration;

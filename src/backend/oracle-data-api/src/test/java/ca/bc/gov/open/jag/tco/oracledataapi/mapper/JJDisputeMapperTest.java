@@ -436,8 +436,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String courtAppearanceCreatedBy = "5";
 		Date courtAppearanceModifedTs =  RandomUtil.randomDate();
 		String courtAppearanceModifiedBy = "6";
-		String durationHoursTxt = "1";
-		String durationMinutesTxt = "15";
+		Integer durationHours = 1;
+		Integer durationMinutes = 15;
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
 
@@ -453,8 +453,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		courtAppearance.setDefenceCounselPresenceCd(defenceCounselPresenceCd.toString());
 		courtAppearance.setDisputantNotPresentDtm(disputantNotPresentDtm);
 		courtAppearance.setDisputantPresenceCd(disputantPresenceCd.toString());
-		courtAppearance.setDurationHoursTxt(durationHoursTxt);
-		courtAppearance.setDurationMinutesTxt(durationMinutesTxt);
+		courtAppearance.setDurationHours(durationHours);
+		courtAppearance.setDurationMinutes(durationMinutes);
 		courtAppearance.setEntDtm(courtAppearanceTs);
 		courtAppearance.setEntUserId(courtAppearanceCreatedBy);
 		courtAppearance.setJudgeOrJjNameTxt(judgeOrJjNameTxt);
