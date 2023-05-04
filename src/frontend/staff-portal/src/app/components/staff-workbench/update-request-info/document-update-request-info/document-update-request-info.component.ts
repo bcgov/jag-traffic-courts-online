@@ -31,7 +31,6 @@ export class DocumentUpdateRequestInfoComponent implements OnInit {
     try {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
       this.requestReadable = true;
-      console.log(this.updateRequested);
     }
     catch (ex) {
       // Just dont crash, fail gracefully

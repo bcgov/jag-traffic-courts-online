@@ -146,7 +146,6 @@ export class ContactInfoComponent implements OnInit {
         this.form.get('driversLicenceNumber').addValidators([Validators.required]);
       }
       this.form.get('driversLicenceNumber').updateValueAndValidity();
-      console.log(this.form.getRawValue(), provFound, provId);
     }, 5)
   }
 
