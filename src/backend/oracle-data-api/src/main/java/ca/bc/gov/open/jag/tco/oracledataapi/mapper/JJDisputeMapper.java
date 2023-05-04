@@ -5,6 +5,7 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
@@ -258,6 +259,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "disputeId", target = "jjDispute.id")
 	@Mapping(source = "disputantPresenceCd", target = "appCd")
 	@Mapping(source = "disputantNotPresentDtm", target = "noAppTs")
+	@Mapping(source = ".", target = "duration", qualifiedByName="getDurationInMinutes")
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "judgeOrJjNameTxt", target = "adjudicator")
@@ -278,6 +280,8 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "jjDispute.id", target = "disputeId")
 	@Mapping(source = "appCd", target = "disputantPresenceCd")
 	@Mapping(source = "noAppTs", target = "disputantNotPresentDtm")
+	@Mapping(target = "durationHours", ignore = true) // ignore back reference mapping
+	@Mapping(target = "durationMinutes", ignore = true) // ignore back reference mapping
 	@Mapping(source = "createdTs", target = "entDtm")
 	@Mapping(source = "createdBy", target = "entUserId")
 	@Mapping(source = "adjudicator", target = "judgeOrJjNameTxt")
@@ -286,6 +290,21 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "modifiedTs", target = "updDtm")
 	@Mapping(source = "modifiedBy", target = "updUserId")
 	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance convert(JJDisputeCourtAppearanceRoP jjCourtAppearance);
+
+	@Named("getDurationInMinutes")
+	public short getDurationInMinutes(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance) {
+		short duration = (short)0;
+		if (jjCourtAppearance.getDurationHours() != null && jjCourtAppearance.getDurationHours() > 0) {
+			short hours = jjCourtAppearance.getDurationHours().shortValue();
+			duration = (short) (hours * 60);
+		}
+		if (jjCourtAppearance.getDurationMinutes() != null && jjCourtAppearance.getDurationMinutes() > 0) {
+			short minutes = jjCourtAppearance.getDurationMinutes().shortValue();
+			duration += minutes;
+		}
+		return duration;
+	}
+
 	@AfterMapping
 	public void afterMapping(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDisputeCount jjDisputeCount, @MappingTarget JJDisputedCount jjDisputedCount) {
 		if (jjDisputedCount.getJjDisputedCountRoP() != null && jjDisputedCount.getJjDisputedCountRoP().getId() == null) {

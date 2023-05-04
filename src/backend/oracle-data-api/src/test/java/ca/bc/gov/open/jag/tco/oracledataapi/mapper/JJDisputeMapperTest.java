@@ -28,7 +28,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 
 	@Autowired
 	private JJDisputeMapper jjDisputeMapper;
-	
+
 	@Autowired
 	private TicketImageDataMapper ticketImageDataMapper;
 
@@ -388,17 +388,17 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(remarkModifedTs, jjDisputeRemark.getModifiedTs());
 		assertEquals(remarkModifiedBy, jjDisputeRemark.getModifiedBy());
 	}
-	
+
 	@Test
 	public void testTicketImageData() throws Exception {
-		
+
 		String reportType = "NOTICE_OF_DISPUTE";
 		String index = RandomUtil.randomAlphabetic(5);
 		String partId = RandomUtil.randomAlphanumeric(10);
 		String participantName = RandomUtil.randomGivenName() + " " + RandomUtil.randomSurname();
 		String reportFormat = RandomUtil.randomAlphabetic(5);
 		String data = RandomUtil.randomAlphanumeric(1000);
-		
+
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument justinDocument = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument();
 		justinDocument.setReportType(reportType);
 		justinDocument.setIndex(index);
@@ -406,9 +406,9 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		justinDocument.setParticipantName(participantName);
 		justinDocument.setReportFormat(reportFormat);
 		justinDocument.setData(data);
-		
+
 		ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument doc = ticketImageDataMapper.convert(justinDocument);
-		
+
 		assertEquals(reportType, doc.getReportType().getShortName());
 		assertEquals(index, doc.getIndex());
 		assertEquals(partId, doc.getPartId());
@@ -436,6 +436,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String courtAppearanceCreatedBy = "5";
 		Date courtAppearanceModifedTs =  RandomUtil.randomDate();
 		String courtAppearanceModifiedBy = "6";
+		Integer durationHours = 1;
+		Integer durationMinutes = 15;
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
 
@@ -451,6 +453,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		courtAppearance.setDefenceCounselPresenceCd(defenceCounselPresenceCd.toString());
 		courtAppearance.setDisputantNotPresentDtm(disputantNotPresentDtm);
 		courtAppearance.setDisputantPresenceCd(disputantPresenceCd.toString());
+		courtAppearance.setDurationHours(durationHours);
+		courtAppearance.setDurationMinutes(durationMinutes);
 		courtAppearance.setEntDtm(courtAppearanceTs);
 		courtAppearance.setEntUserId(courtAppearanceCreatedBy);
 		courtAppearance.setJudgeOrJjNameTxt(judgeOrJjNameTxt);
@@ -462,6 +466,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 
 		JJDispute target = jjDisputeMapper.convert(source);
 		JJDisputeCourtAppearanceRoP courtAppearanceRoP = target.getJjDisputeCourtAppearanceRoPs().get(0);
+		// Expected duration value is set to 75 minutes because initial duration values expected to be mapped above are set to 1 hour and 15 minutes
+		short duration = (short)75;
 
 		assertEquals(Long.valueOf(courtAppearanceId), courtAppearanceRoP.getId());
 		assertEquals(courtroomNumberTxt, courtAppearanceRoP.getRoom());
@@ -476,6 +482,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(judgeOrJjNameTxt, courtAppearanceRoP.getAdjudicator());
 		assertEquals(defenceCounselPresenceCd, courtAppearanceRoP.getDattCd());
 		assertEquals(commentsTxt, courtAppearanceRoP.getComments());
+		assertEquals(duration, courtAppearanceRoP.getDuration());
 		assertEquals(courtAppearanceTs, courtAppearanceRoP.getCreatedTs());
 		assertEquals(courtAppearanceCreatedBy, courtAppearanceRoP.getCreatedBy());
 		assertEquals(courtAppearanceModifedTs, courtAppearanceRoP.getModifiedTs());
