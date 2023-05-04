@@ -146,6 +146,7 @@ export class ContactInfoComponent implements OnInit {
         this.form.get('driversLicenceNumber').addValidators([Validators.required]);
       }
       this.form.get('driversLicenceNumber').updateValueAndValidity();
+      console.log(this.form.getRawValue(), provFound, provId);
     }, 5)
   }
 
@@ -184,7 +185,24 @@ export class ContactInfoComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    this.putDispute({ ...this.lastUpdatedDispute, ...this.form.value });
+    this.lastUpdatedDispute.disputantSurname = this.form.get('disputantSurname').value;
+    this.lastUpdatedDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
+    this.lastUpdatedDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
+    this.lastUpdatedDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
+    this.lastUpdatedDispute.driversLicenceIssuedCountryId = this.form.get('driversLicenceCountryId').value;
+    this.lastUpdatedDispute.driversLicenceIssuedProvinceSeqNo = this.form.get('driversLicenceProvinceSeqNo').value;
+    this.lastUpdatedDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
+    this.lastUpdatedDispute.emailAddress = this.form.get('emailAddress').value;
+    this.lastUpdatedDispute.address = this.form.get('address').value;
+    this.lastUpdatedDispute.addressCity = this.form.get('addressCity').value;
+    this.lastUpdatedDispute.addressProvince = this.form.get('addressProvince').value;
+    this.lastUpdatedDispute.addressProvinceCountryId = this.form.get('addressProvinceCountryId').value;
+    this.lastUpdatedDispute.addressProvinceSeqNo = this.form.get('addressProvinceSeqNo').value;
+    this.lastUpdatedDispute.addressCountryId = this.form.get('addressCountryId').value;
+    this.lastUpdatedDispute.postalCode = this.form.get('postalCode').value;
+    this.lastUpdatedDispute.rejectedReason = this.form.get('rejectedReason').value;
+
+    this.putDispute(this.lastUpdatedDispute);
   }
 
   public approve(): void {
