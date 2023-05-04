@@ -30,7 +30,7 @@ export class PhoneUpdateRequestInfoComponent implements OnInit {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
       this.requestReadable = true;
       // check if current and update requested values are equal, if so change status to accepted.
-      if (this.disputeInfo.homePhoneNumber == this.updateRequested.HomePhoneNumber && this.disputantUpdateRequest.status === this.UpdateRequestStatus.Pending)  {
+      if (this.disputeInfo.homePhoneNumber === this.updateRequested.HomePhoneNumber && this.disputantUpdateRequest.status === this.UpdateRequestStatus.Pending)  {
         this.disputantUpdateRequest.status = this.UpdateRequestStatus.Accepted;
         this.disputantUpdateRequestStatusChange.emit(this.disputantUpdateRequest);
       }

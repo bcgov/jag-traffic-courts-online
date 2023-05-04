@@ -31,17 +31,17 @@ export class NameUpdateRequestInfoComponent implements OnInit {
       this.updateRequested = JSON.parse(this.disputantUpdateRequest.updateJson);
       this.requestReadable = true;
       // check if current and update requested values are equal, if so change status to accepted.
-      if (this.disputeInfo.contactTypeCd == this.updateRequested.ContactType &&
-        this.disputeInfo.disputantSurname == this.updateRequested.DisputantSurname &&
-        this.disputeInfo.disputantGivenName1 == this.updateRequested.DisputantGivenName1 &&
-        this.disputeInfo.disputantGivenName2 == this.updateRequested.DisputantGivenName2 &&
-        this.disputeInfo.disputantGivenName3 == this.updateRequested.DisputantGivenName3 &&
-        this.disputeInfo.contactSurnameNm == this.updateRequested.ContactSurnameNm &&
-        this.disputeInfo.contactGiven1Nm == this.updateRequested.ContactGiven1Nm &&
-        this.disputeInfo.contactGiven2Nm == this.updateRequested.ContactGiven2Nm &&
-        this.disputeInfo.contactGiven3Nm == this.updateRequested.ContactGiven3Nm &&
-        this.disputeInfo.contactLawFirmNm == this.updateRequested.ContactLawFirmNm &&
-        this.disputantUpdateRequest.status == DisputeUpdateRequestStatus2.Pending)  {
+      if (this.disputeInfo.contactTypeCd === this.updateRequested.ContactType &&
+        this.disputeInfo.disputantSurname === this.updateRequested.DisputantSurname &&
+        this.disputeInfo.disputantGivenName1 === this.updateRequested.DisputantGivenName1 &&
+        this.disputeInfo.disputantGivenName2 === this.updateRequested.DisputantGivenName2 &&
+        this.disputeInfo.disputantGivenName3 === this.updateRequested.DisputantGivenName3 &&
+        this.disputeInfo.contactSurnameNm === this.updateRequested.ContactSurnameNm &&
+        this.disputeInfo.contactGiven1Nm === this.updateRequested.ContactGiven1Nm &&
+        this.disputeInfo.contactGiven2Nm === this.updateRequested.ContactGiven2Nm &&
+        this.disputeInfo.contactGiven3Nm === this.updateRequested.ContactGiven3Nm &&
+        this.disputeInfo.contactLawFirmNm === this.updateRequested.ContactLawFirmNm &&
+        this.disputantUpdateRequest.status === DisputeUpdateRequestStatus2.Pending)  {
         this.disputantUpdateRequest.status = DisputeUpdateRequestStatus2.Accepted;
         this.disputantUpdateRequestStatusChange.emit(this.disputantUpdateRequest);
       }

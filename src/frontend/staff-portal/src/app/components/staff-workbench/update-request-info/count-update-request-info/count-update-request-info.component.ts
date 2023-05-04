@@ -34,7 +34,7 @@ export class CountUpdateRequestInfoComponent implements OnInit {
 
       // update for display
       this.updateRequested.DisputeCounts.forEach(count => {
-        let oldCount = this.disputeInfo.disputeCounts.filter(x => x.countNo == count.CountNo);
+        let oldCount = this.disputeInfo.disputeCounts.filter(x => x.countNo === count.CountNo);
         if (oldCount.length > 0) {
           count.OldPleaCode = oldCount[0].pleaCode;
           count.OldRequestReduction = oldCount[0].requestReduction;

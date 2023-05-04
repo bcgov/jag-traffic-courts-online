@@ -15,13 +15,13 @@
     <span class="section-grid-cell">
       <p class="section-grid-header">Requested Update</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactType != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactType !== null">
       <p class="section-grid-header">Contact Type</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactType != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactType !== null">
       <p class="section-grid-text" >{{ disputeInfo.contactTypeCd }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactType != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactType !== null">
       <p class="section-grid-text">{{ updateRequested.ContactType }}</p>
     </span>
     <span class="section-grid-cell" *ngIf="updateRequested.DisputantSurname">
@@ -60,49 +60,49 @@
     <span class="section-grid-cell" *ngIf="updateRequested.DisputantGivenName3">
       <p class="section-grid-text">{{ updateRequested.DisputantGivenName3 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Surname</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text" >{{ disputeInfo.contactSurnameNm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactSurnameNm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Given Name One</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text" >{{ disputeInfo.contactGiven1Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactGiven1Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Given Name Two</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text" >{{ disputeInfo.contactGiven2Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactGiven2Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Given Name Three</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text" >{{ disputeInfo.contactGiven3Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactGiven3Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType == ContactTypeCd.Lawyer">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer">
       <p class="section-grid-header">Contact Law Firm Name</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType == ContactTypeCd.Lawyer">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer">
       <p class="section-grid-text" >{{ disputeInfo.contactLawFirmNm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType == ContactTypeCd.Lawyer">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer">
       <p class="section-grid-text">{{ updateRequested.ContactLawFirmNm }}</p>
     </span>
     <br />
@@ -138,34 +138,34 @@
     <span class="section-grid-cell" *ngIf="updateRequested.DisputantGivenName3">
       <p class="section-grid-text">{{ updateRequested.DisputantGivenName3 }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Surname</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactSurnameNm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactSurnameNm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Given Name One</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven1Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactGiven1Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Given Name Two</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven2Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactGiven2Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-header">Contact Given Name Three</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType != ContactTypeCd.Individual">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactGiven3Nm && updateRequested.ContactType !== ContactTypeCd.Individual">
       <p class="section-grid-text">{{ updateRequested.ContactGiven3Nm }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType == ContactTypeCd.Lawyer">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer">
       <p class="section-grid-header">Contact Law Firm Name</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType == ContactTypeCd.Lawyer">
+    <span class="section-grid-cell" *ngIf="updateRequested.ContactLawFirmNm && updateRequested.ContactType === ContactTypeCd.Lawyer">
       <p class="section-grid-text">{{ updateRequested.ContactLawFirmNm }}</p>
     </span>
     <br />

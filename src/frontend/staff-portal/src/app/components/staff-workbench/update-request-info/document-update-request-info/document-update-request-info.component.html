@@ -9,7 +9,7 @@
   <div style="display: grid; grid-template-columns: auto" *ngIf="requestReadable === true">
     <span><b>Citizen Uploaded Documents ({{updateRequested.UploadedDocuments.length }})</b></span><br/>
         <div *ngFor="let doc of updateRequested.UploadedDocuments">
-          <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)" *ngIf="disputantUpdateRequest.status != UpdateRequestStatus.Rejected">{{ doc.DocumentType }}</button>&nbsp;
+          <button type="button" class="linkbutton" (click)="onGetFile(doc.DocumentId)" *ngIf="disputantUpdateRequest.status !== UpdateRequestStatus.Rejected">{{ doc.DocumentType }}</button>&nbsp;
           <span *ngIf="disputantUpdateRequest.status === UpdateRequestStatus.Rejected">{{ doc.DocumentType }}&nbsp;</span>
         </div>
     <br />
