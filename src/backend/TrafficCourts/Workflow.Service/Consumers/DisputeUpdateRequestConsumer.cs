@@ -1,5 +1,8 @@
 ﻿using MassTransit;
-using System.Text.Json;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Reflection.Metadata;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -40,7 +43,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         {
             UpdateType = DisputeUpdateRequestUpdateType.UNKNOWN,
             Status = DisputeUpdateRequestStatus2.PENDING,
-            UpdateJson = JsonSerializer.Serialize(message)
+            UpdateJson = JsonConvert.SerializeObject(message, new StringEnumConverter())
         };
 
         if (message.EmailAddress is not null)
@@ -77,17 +80,17 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             }
         }
 
-        // If some or all name fields have data, send a CONTACT_NAME update request
-        if (!string.IsNullOrEmpty(message.ContactGiven1Nm)
-            || !string.IsNullOrEmpty(message.ContactGiven2Nm)
-            || !string.IsNullOrEmpty(message.ContactGiven3Nm)
-            || !string.IsNullOrEmpty(message.ContactSurnameNm)
-            || !string.IsNullOrEmpty(message.ContactLawFirmName)
-            || !string.IsNullOrEmpty(message.DisputantGivenName1)
-            || !string.IsNullOrEmpty(message.DisputantGivenName2)
-            || !string.IsNullOrEmpty(message.DisputantGivenName3)
-            || !string.IsNullOrEmpty(message.DisputantSurname)
-            )
+        // If some or all name fields have different data, send a CONTACT_NAME update request
+        if (!message.DisputantSurname.IsNullOrEmpty() && (message.ContactGiven1Nm != dispute?.ContactGiven1Nm
+            || message.ContactGiven2Nm != dispute?.ContactGiven2Nm
+            || message.ContactGiven3Nm!= dispute?.ContactGiven3Nm
+            || message.ContactSurnameNm != dispute?.ContactSurnameNm
+            || message.ContactLawFirmName != dispute?.ContactLawFirmNm
+            || message.DisputantGivenName1 != dispute?.DisputantGivenName1
+            || message.DisputantGivenName2 != dispute?.DisputantGivenName2
+            || message.DisputantGivenName3 != dispute?.DisputantGivenName3
+            || message.DisputantSurname != dispute?.DisputantSurname
+            ))
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
@@ -96,16 +99,20 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         }
 
         // If some or all address fields have data, send a DISPUTANT_ADDRESS update request
-        if (!string.IsNullOrEmpty(message.AddressLine1)
-            || !string.IsNullOrEmpty(message.AddressLine2)
-            || !string.IsNullOrEmpty(message.AddressLine3)
-            || !string.IsNullOrEmpty(message.AddressCity)
-            || !string.IsNullOrEmpty(message.AddressProvince)
-            || !string.IsNullOrEmpty(message.PostalCode)
-            || message.AddressProvinceCountryId is not null
-            || message.AddressProvinceSeqNo is not null
-            || message.AddressCountryId is not null
-            )
+        if (!message.AddressLine1.IsNullOrEmpty() && (message.AddressLine1 != dispute?.AddressLine1
+            || message.AddressLine2 != dispute?.AddressLine2
+            || message.AddressLine3 != dispute?.AddressLine3
+            || message.AddressCity != dispute?.AddressCity
+            || (message.AddressProvince != dispute?.AddressProvince && message.AddressProvinceSeqNo == null)
+            || message.PostalCode != dispute?.PostalCode
+            || message.AddressProvinceCountryId != dispute?.AddressProvinceCountryId
+            || message.AddressProvinceSeqNo != dispute?.AddressProvinceSeqNo
+            || message.AddressCountryId != dispute?.AddressCountryId
+            || (message.DriversLicenceNumber != dispute?.DriversLicenceNumber && message.DriversLicenceNumber is not null)
+            || (message.DriversLicenceProvince != dispute?.DriversLicenceProvince && message.DriversLicenceIssuedProvinceSeqNo is null && message.DriversLicenceNumber is not null)
+            || (message.DriversLicenceIssuedCountryId != dispute?.DriversLicenceIssuedCountryId && message.DriversLicenceNumber is not null)
+            || (message.DriversLicenceIssuedProvinceSeqNo != dispute?.DriversLicenceIssuedProvinceSeqNo && message.DriversLicenceNumber is not null)
+            ))
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
@@ -114,7 +121,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         }
 
         // If some or all phone fields have data, send a DISPUTANT_PHONE update request
-        if (message.HomePhoneNumber is not null)
+        if (message.HomePhoneNumber != dispute?.HomePhoneNumber && !message.HomePhoneNumber.IsNullOrEmpty()) 
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_PHONE;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
@@ -123,55 +130,56 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         }
 
         // If some or all court options fields have data, send a COURT_OPTIONS update request
-        if (!string.IsNullOrEmpty(message.InterpreterLanguageCd)
-            || message.RepresentedByLawyer != null
-            || !string.IsNullOrEmpty(message.LawFirmName)
-            || !string.IsNullOrEmpty(message.LawyerSurname)
-            || !string.IsNullOrEmpty(message.LawyerGivenName1)
-            || !string.IsNullOrEmpty(message.LawyerGivenName2)
-            || !string.IsNullOrEmpty(message.LawyerGivenName3)
-            || !string.IsNullOrEmpty(message.LawyerAddress)
-            || !string.IsNullOrEmpty(message.LawyerPhoneNumber)
-            || !string.IsNullOrEmpty(message.LawyerEmail)
-            || message.InterpreterRequired != null
-            || message.WitnessNo != null
-            || !string.IsNullOrEmpty(message.FineReductionReason)
-            || !string.IsNullOrEmpty(message.TimeToPayReason))
+        if (message.RepresentedByLawyer != null && (message.InterpreterLanguageCd != dispute?.InterpreterLanguageCd
+            || message.RepresentedByLawyer != (dispute?.RepresentedByLawyer == DisputeRepresentedByLawyer.Y)
+            || message.RequestCourtAppearance != dispute?.RequestCourtAppearanceYn
+            || message.LawFirmName != dispute?.LawFirmName
+            || message.LawyerSurname != dispute?.LawyerSurname
+            || message.LawyerGivenName1 != dispute?.LawyerGivenName1
+            || message.LawyerGivenName2 != dispute?.LawyerGivenName2
+            || message.LawyerGivenName3 != dispute?.LawyerGivenName3
+            || message.LawyerAddress != dispute?.LawyerAddress
+            || message.LawyerPhoneNumber != dispute?.LawyerPhoneNumber
+            || message.LawyerEmail != dispute?.LawyerEmail
+            || message.InterpreterRequired != (dispute?.InterpreterRequired == DisputeInterpreterRequired.Y)
+            || message.WitnessNo != dispute?.WitnessNo
+            || message.FineReductionReason != dispute?.FineReductionReason
+            || message.TimeToPayReason != dispute?.TimeToPayReason))
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.COURT_OPTIONS;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
-            if (!string.IsNullOrEmpty(message.InterpreterLanguageCd) && string.IsNullOrEmpty(dispute.InterpreterLanguageCd))
+            if (message.InterpreterLanguageCd != dispute?.InterpreterLanguageCd ||message.InterpreterRequired != (dispute?.InterpreterRequired == DisputeInterpreterRequired.Y))
             {
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CAIN, context);
             }
-            if (message.WitnessNo != null && (dispute.WitnessNo == null || message.WitnessNo > dispute.WitnessNo) )
+            if (message.WitnessNo != dispute?.WitnessNo && (dispute?.WitnessNo == null || message.WitnessNo > dispute.WitnessNo) )
             {
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CAWT, context);
             }
-            if (message.WitnessNo != null && (dispute.WitnessNo != message.WitnessNo) )
+            if (message.WitnessNo != null && (dispute?.WitnessNo != message.WitnessNo) )
             {
                 PublishFileHistoryLog(dispute,FileHistoryAuditLogEntryType.CUWT, context);
             }
-            if (message.RequestCourtAppearance == DisputeRequestCourtAppearanceYn.N && dispute.RequestCourtAppearanceYn == DisputeRequestCourtAppearanceYn.Y)
+            if (message.RequestCourtAppearance == DisputeRequestCourtAppearanceYn.N && dispute?.RequestCourtAppearanceYn == DisputeRequestCourtAppearanceYn.Y)
             {
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CCWR, context);
             }
-            if (!string.IsNullOrEmpty(message.LawFirmName) && string.IsNullOrEmpty(dispute.LawFirmName))
+            if (!string.IsNullOrEmpty(message.LawFirmName) && string.IsNullOrEmpty(dispute?.LawFirmName))
             {
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CLEG, context);
             }
-            if (!string.IsNullOrEmpty(message.InterpreterLanguageCd) && !string.IsNullOrEmpty(dispute.InterpreterLanguageCd) && message.InterpreterLanguageCd != dispute.InterpreterLanguageCd) 
+            if (!string.IsNullOrEmpty(message.InterpreterLanguageCd) && !string.IsNullOrEmpty(dispute?.InterpreterLanguageCd) && message.InterpreterLanguageCd != dispute.InterpreterLanguageCd) 
             {
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUIN, context);
             }
-            if (message.LawFirmName != dispute.LawFirmName 
-                || message.LawyerSurname != dispute.LawyerSurname
-                || message.LawyerGivenName1 != dispute.LawyerGivenName1
-                || message.LawyerGivenName2 != dispute.LawyerGivenName2
-                || message.LawyerGivenName3 != dispute.LawyerGivenName3
-                || message.LawyerAddress != dispute.LawyerAddress
-                || message.LawyerPhoneNumber != dispute.LawyerPhoneNumber
-                || message.LawyerEmail != dispute.LawyerEmail)
+            if (message.LawFirmName != dispute?.LawFirmName 
+                || message.LawyerSurname != dispute?.LawyerSurname
+                || message.LawyerGivenName1 != dispute?.LawyerGivenName1
+                || message.LawyerGivenName2 != dispute?.LawyerGivenName2
+                || message.LawyerGivenName3 != dispute?.LawyerGivenName3
+                || message.LawyerAddress != dispute?.LawyerAddress
+                || message.LawyerPhoneNumber != dispute?.LawyerPhoneNumber
+                || message.LawyerEmail != dispute?.LawyerEmail)
             {
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CULG, context);
             }
@@ -179,24 +187,36 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             {
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUWR, context);
             }
-
         }
 
         // If some or all count fields have data, send a DISPUTE_COUNT request
         if (message.DisputeCounts != null && message.DisputeCounts.Count > 0)
         {
-            disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.COUNT;
-            await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
+            var anyCountUpdated = false;
+            foreach(TrafficCourts.Messaging.MessageContracts.DisputeCount disputeCount in message.DisputeCounts)
+            {
+                TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount? countFound = dispute?.DisputeCounts.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
+                if (countFound != null)
+                {
+                    if (disputeCount.PleaCode != countFound.PleaCode || disputeCount.RequestReduction != countFound.RequestReduction || disputeCount.RequestTimeToPay != countFound.RequestTimeToPay) 
+                    { 
+                        anyCountUpdated = true;
+                    }
+                }
+            }
+            if (anyCountUpdated == true)
+            {
+                disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.COUNT;
+                await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
+            }
         }
 
-        // If the message contains a documentId, send a DISPUTANT_DOCUMENT request
-        if (message.DocumentId is not null && message.DocumentId != Guid.Empty)
+        // If the message contains any documentId, send a DISPUTANT_DOCUMENT request for them
+        if (message.UploadedDocuments?.Count > 0)
         {
             disputeUpdateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT;
             await _oracleDataApiService.SaveDisputeUpdateRequestAsync(message.NoticeOfDisputeGuid.ToString(), disputeUpdateRequest, context.CancellationToken);
         }
-
-        // TODO: ensure security so only requests authenticated with BCSC can do COURT_OPTIONS, COUNT, DOCUMENTS
 
         // If at least one DisputeUpdateRequest was saved ...
         if (disputeUpdateRequest.UpdateType != DisputeUpdateRequestUpdateType.UNKNOWN)

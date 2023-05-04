@@ -80,6 +80,7 @@ model/models.ts
 model/ocrViolationTicket.model.ts
 model/point.model.ts
 model/problemDetails.model.ts
+model/province.model.ts
 model/socialLinkRepresentation.model.ts
 model/statute.model.ts
 model/ticketImageDataJustinDocument.model.ts

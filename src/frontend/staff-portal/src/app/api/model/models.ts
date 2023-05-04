@@ -64,6 +64,7 @@ export * from './language.model';
 export * from './ocrViolationTicket.model';
 export * from './point.model';
 export * from './problemDetails.model';
+export * from './province.model';
 export * from './socialLinkRepresentation.model';
 export * from './statute.model';
 export * from './ticketImageDataJustinDocument.model';

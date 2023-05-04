@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ public class DisputeUpdateRequestRejectedConsumerTest
     private readonly Mock<ILogger<DisputeUpdateRequestRejectedConsumer>> _mockLogger;
     private readonly Mock<IOracleDataApiService> _oracleDataApiService;
     private readonly Mock<ConsumeContext<DisputeUpdateRequestRejected>> _context;
+    private readonly Mock<IWorkflowDocumentService> _workflowDocumentService;
     private readonly DisputeUpdateRequestRejectedConsumer _consumer;
 
     public DisputeUpdateRequestRejectedConsumerTest()
@@ -40,13 +42,14 @@ public class DisputeUpdateRequestRejectedConsumerTest
 
         _mockLogger = new();
         _oracleDataApiService = new();
+        _workflowDocumentService= new();
         _oracleDataApiService.Setup(_ => _.UpdateDisputeUpdateRequestStatusAsync(1, DisputeUpdateRequestStatus.REJECTED, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_updateRequest));
         _oracleDataApiService.Setup(_ => _.GetDisputeByIdAsync(1, false, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _context = new();
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
 
-        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputeUpdateRequestRejectedTemplate());
+        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputeUpdateRequestRejectedTemplate(), _workflowDocumentService.Object);
     }
 
     [Fact]

@@ -39,6 +39,7 @@ public class DisputeUpdateRequestAcceptedConsumerTest
         _mockLogger = new();
         _oracleDataApiService = new();
         _oracleDataApiService.Setup(_ => _.UpdateDisputeUpdateRequestStatusAsync(1, DisputeUpdateRequestStatus.ACCEPTED, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_updateRequest));
+        _oracleDataApiService.Setup(_ => _.UpdateDisputeUpdateRequestStatusAsync(1, DisputeUpdateRequestStatus.PENDING, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_updateRequest));
         _oracleDataApiService.Setup(_ => _.GetDisputeByIdAsync(1, false, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _oracleDataApiService.Setup(_ => _.UpdateDisputeAsync(1, _dispute, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
         _context = new();
@@ -74,7 +75,7 @@ public class DisputeUpdateRequestAcceptedConsumerTest
         // Arrange
         _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
         _updateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_NAME;
-        _updateRequest.UpdateJson = "{ \"contactGiven1Nm\": \"fname1\", \"contactGiven2Nm\": \"fname2\", \"contactGiven3Nm\": \"fname3\", \"contactSurnameNm\": \"lname\", \"contactLawFirmNm\":\"lawFirmNm\", \"contactType\":\"I\", \"disputantGivenName1\": \"gname1\", \"disputantGivenName2\": \"gname2\", \"disputantGivenName3\": \"gname3\", \"disputantSurname\": \"sname\" }";
+        _updateRequest.UpdateJson = "{ \"ContactGiven1Nm\": \"fname1\", \"ContactGiven2Nm\": \"fname2\", \"ContactGiven3Nm\": \"fname3\", \"ContactSurnameNm\": \"lname\", \"ContactLawFirmNm\":\"lawFirmNm\", \"ContactType\":\"INDIVIDUAL\", \"DisputantGivenName1\": \"gname1\", \"DisputantGivenName2\": \"gname2\", \"DisputantGivenName3\": \"gname3\", \"DisputantSurname\": \"sname\" }";
 
         // Act
         await _consumer.Consume(_context.Object);
@@ -97,7 +98,7 @@ public class DisputeUpdateRequestAcceptedConsumerTest
         // Arrange
         _updateRequest.Status = DisputeUpdateRequestStatus2.ACCEPTED;
         _updateRequest.UpdateType = DisputeUpdateRequestUpdateType.DISPUTANT_PHONE;
-        _updateRequest.UpdateJson = "{ \"homePhoneNumber\": \"2505556666\" }";
+        _updateRequest.UpdateJson = "{ \"HomePhoneNumber\": \"2505556666\" }";
 
         // Act
         await _consumer.Consume(_context.Object);

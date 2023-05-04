@@ -8,6 +8,26 @@ namespace TrafficCourts.Messaging.MessageContracts;
 public class DisputeUpdateRequest : DisputeUpdateContactRequest
 {
     /// <summary>
+    /// Drivers Licence Number
+    /// </summary>
+    public string? DriversLicenceNumber { get; set; }
+
+    /// <summary>
+    /// Drivers Licence Province
+    /// </summary>
+    public string? DriversLicenceProvince { get; set; }
+
+    /// <summary>
+    /// Drivers Licence Country
+    /// </summary>
+    public int? DriversLicenceIssuedCountryId { get; set; }
+
+    /// <summary>
+    /// Drivers licence province seq no 
+    /// </summary>
+    public int? DriversLicenceIssuedProvinceSeqNo { get; set; }
+
+    /// <summary>
     /// represented by lawyer.
     /// </summary>
     public bool? RepresentedByLawyer { get; set; } = null!;
@@ -90,6 +110,19 @@ public class DisputeUpdateRequest : DisputeUpdateContactRequest
     public ICollection<DisputeCount>? DisputeCounts { get; set; } = null!;
 
     /// <summary>
+    /// Uploaded documents
+    /// </summary>
+    public ICollection<UploadDocumentRequest>? UploadedDocuments { get; set;} = null!;
+
+    /// <summary>
+    /// The document uploaded was request to be deleted by the disputant
+    /// </summary>
+    public Boolean? DocumentDeleteRequested { get; set; }
+}
+
+public class UploadDocumentRequest
+{
+    /// <summary>
     /// Id of the document uploaded by the disputant
     /// </summary>
     public Guid? DocumentId { get; set; }
@@ -99,8 +132,4 @@ public class DisputeUpdateRequest : DisputeUpdateContactRequest
     /// </summary>
     public string? DocumentType { get; set; }
 
-    /// <summary>
-    /// The document uploaded was request to be deleted by the disputant
-    /// </summary>
-    public Boolean? DocumentDeleteRequested { get; set; }
 }

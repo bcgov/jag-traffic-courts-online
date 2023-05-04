@@ -27,12 +27,18 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
         CreateMap<Models.Tickets.ViolationTicketCount, Messaging.MessageContracts.TicketCount>()
             .ForMember(dest => dest.Section, opt => opt.MapFrom(src => src.Section));
 
-        CreateMap<DisputantContactInformation, Messaging.MessageContracts.DisputeUpdateContactRequest>();
+        CreateMap<DisputantContactInformation, Messaging.MessageContracts.DisputeUpdateContactRequest>()
+            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd));
         CreateMap<Messaging.MessageContracts.DisputeUpdateContactRequest, Messaging.MessageContracts.DisputeUpdateRequest>();
 
         CreateMap<Dispute, Messaging.MessageContracts.DisputeUpdateRequest>()
             .ForMember(dest => dest.RepresentedByLawyer, opt => opt.MapFrom(src => src.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y ? true : false))
             .ForMember(dest => dest.InterpreterRequired, opt => opt.MapFrom(src => src.InterpreterRequired == Common.OpenAPIs.OracleDataApi.v1_0.DisputeInterpreterRequired.Y ? true : false))
+            .ForMember(dest => dest.DriversLicenceNumber, opt => opt.MapFrom(src => src.DriversLicenceNumber))
+            .ForMember(dest => dest.DriversLicenceIssuedCountryId, opt => opt.MapFrom(src => src.DriversLicenceCountryId))
+            .ForMember(dest => dest.DriversLicenceIssuedProvinceSeqNo, opt => opt.MapFrom(src => src.DriversLicenceProvinceSeqNo))
+            .ForMember(dest => dest.DriversLicenceProvince, opt => opt.MapFrom(src => src.DriversLicenceProvince))
+            .ForMember(dest => dest.RequestCourtAppearance, opt => opt.MapFrom(src => src.RequestCourtAppearanceYn))
             .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts));
         CreateMap<Models.Disputes.DisputeCount, Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount>();
     }
