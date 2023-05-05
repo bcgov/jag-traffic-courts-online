@@ -134,7 +134,7 @@ export class ContactInfoComponent implements OnInit {
       let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
       if (!provFound) return;
       this.form.get("driversLicenceProvince").setValue(provFound.provNm);
-      this.form.get("driversLicencIssuedCountryId").setValue(provFound.ctryId);
+      this.form.get("driversLicenceIssuedCountryId").setValue(provFound.ctryId);
       this.form.get("driversLicenceIssuedProvinceSeqNo").setValue(provFound.provSeqNo);
       if (provFound.provAbbreviationCd === this.bc.provAbbreviationCd) {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
