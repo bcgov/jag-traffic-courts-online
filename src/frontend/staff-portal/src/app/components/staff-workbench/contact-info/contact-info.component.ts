@@ -85,8 +85,8 @@ export class ContactInfoComponent implements OnInit {
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       driversLicenceProvinceProvId: [null],
-      driversLicenceCountryId: [null],
-      driversLicenceProvinceSeqNo: [null],
+      driversLicenceIssuedCountryId: [null],
+      driversLicenceIssuedProvinceSeqNo: [null],
     });
     this.getDispute();
   }
@@ -102,13 +102,13 @@ export class ContactInfoComponent implements OnInit {
       this.form.get('addressProvinceProvId').setValue(null);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
-      this.form.get('driversLicenceProvinceSeqNo').setValidators(null);
+      this.form.get('driversLicenceIssuedProvinceSeqNo').setValidators(null);
 
       if (ctryId === this.canada.ctryId || ctryId === this.usa.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('driversLicenceIssuedProvinceSeqNo').addValidators([Validators.required]);
       } else this.form.get('addressProvince').addValidators([Validators.required]);
 
       if (ctryId == this.canada.ctryId) {
@@ -125,7 +125,7 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceProvId").updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
-      this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
+      this.form.get("driversLicenceIssuedProvinceSeqNo").updateValueAndValidity();
     }, 5);
   }
 
@@ -134,8 +134,8 @@ export class ContactInfoComponent implements OnInit {
       let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
       if (!provFound) return;
       this.form.get("driversLicenceProvince").setValue(provFound.provNm);
-      this.form.get("driversLicenceCountryId").setValue(provFound.ctryId);
-      this.form.get("driversLicenceProvinceSeqNo").setValue(provFound.provSeqNo);
+      this.form.get("driversLicenceIssuedCountryId").setValue(provFound.ctryId);
+      this.form.get("driversLicenceIssuedProvinceSeqNo").setValue(provFound.provSeqNo);
       if (provFound.provAbbreviationCd === this.bc.provAbbreviationCd) {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
         this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
@@ -343,8 +343,6 @@ export class ContactInfoComponent implements OnInit {
 
       // set provId for drivers Licence and address this field is only good client side as angular dropdown needs a single value key to behave well, doesnt like two part key of ctryid & seqno
       this.form.patchValue(this.initialDisputeValues);
-      this.form.get('driversLicenceCountryId').setValue(this.initialDisputeValues.driversLicenceIssuedCountryId);
-      this.form.get('driversLicenceProvinceSeqNo').setValue(this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
       let provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.driversLicenceIssuedCountryId && x.provSeqNo === this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo).shift();
       if (provFound) {
         this.form.get('driversLicenceProvinceProvId').setValue(provFound.provId);
@@ -355,13 +353,13 @@ export class ContactInfoComponent implements OnInit {
       this.form.get('addressProvince').setValidators([Validators.maxLength(30)]);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
-      this.form.get("driversLicenceProvinceSeqNo").setValidators(null);
+      this.form.get("driversLicenceIssuedProvinceSeqNo").setValidators(null);
 
       if (this.form.get('addressCountryId').value === this.canada.ctryId || this.form.get('addressCountryId').value === this.usa.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('driversLicenceIssuedProvinceSeqNo').addValidators([Validators.required]);
       }
 
       if (this.form.get('addressCountryId').value == this.canada.ctryId) {
@@ -373,7 +371,7 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceProvId").updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
-      this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
+      this.form.get("driversLicenceIssuedProvinceSeqNo").updateValueAndValidity();
     });
   }
 
