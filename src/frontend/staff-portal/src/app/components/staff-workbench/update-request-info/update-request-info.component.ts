@@ -6,6 +6,9 @@ import { DisputeUpdateRequestUpdateType, DisputeUpdateRequestStatus2 } from 'app
 import { DisputantUpdateRequest } from '../../../services/dispute.service';
 import { Observable, forkJoin, map } from 'rxjs';
 import { ToastService } from '@core/services/toast.service';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-update-request-info',
@@ -31,6 +34,7 @@ export class UpdateRequestInfoComponent implements OnInit {
   constructor(
     private config: ConfigService,
     private disputeService: DisputeService,
+    private dialog: MatDialog,
     private toastService: ToastService,
     private logger: LoggerService,
   ) {
@@ -70,11 +74,22 @@ export class UpdateRequestInfoComponent implements OnInit {
     })
     forkJoin(observables).subscribe({
       next: (response) => {
-        this.toastService.openSuccessToast("Saved.");
-        this.getDispute();
+        const data: DialogOptions = {
+          titleKey: "Disputant Update Requests",
+          icon: "ok",
+          actionType: "green",
+          messageKey:
+          "Your acceptances & rejections have been queued.  Allow a few minutes for them to take effect.",
+          actionTextKey: "Ok",
+          cancelHide: true
+        };
+        this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+          .subscribe((action: any) => {
+            this.getDispute();
+          });
       },
       error: (err) => {
-        this.toastService.openErrorToast("There is one or more error(s) when saving. Please review the change(s) and try again.");
+        this.toastService.openErrorToast("There  one or more error(s) when saving. Please review the change(s) and try again.");
       }
     });
   }

@@ -17,3 +17,21 @@ public enum CheckEmailVerificationTokenStatus
     /// </summary>
     Invalid
 }
+
+public enum CheckDisputeUpdateRequestTokenStatus
+{
+    /// <summary>
+    /// No active dispute update request in progress
+    /// </summary>
+    NotFound = 0,
+
+    /// <summary>
+    /// The supplied token is valid.
+    /// </summary>
+    Valid,
+
+    /// <summary>
+    /// The supplied token is not correct.
+    /// </summary>
+    Invalid
+}
