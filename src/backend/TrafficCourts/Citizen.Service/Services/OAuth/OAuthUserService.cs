@@ -1,13 +1,6 @@
-﻿using StackExchange.Redis;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text;
-using System.Buffers;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Models.OAuth;
-using System.Configuration;
-using Microsoft.Extensions.Caching.Distributed;
-using FlatFiles.TypeMapping;
 using System.Security.Cryptography;
 
 namespace TrafficCourts.Citizen.Service.Services;
@@ -31,7 +24,7 @@ public class OAuthUserService : IOAuthUserService
         _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
     }
 
-    public async Task<TrafficCourts.Citizen.Service.Models.OAuth.UserInfo?> GetUserInfoAsync<UserInfo>(string token, CancellationToken cancellationToken)
+    public async Task<Models.OAuth.UserInfo?> GetUserInfoAsync<UserInfo>(string token, CancellationToken cancellationToken)
     {
         try
         {
@@ -48,7 +41,7 @@ public class OAuthUserService : IOAuthUserService
         catch (Exception ex)
         {
             // attempt to retrieve from Redis cache using hashed access token
-            TrafficCourts.Citizen.Service.Models.OAuth.UserInfo? user = await GetCachedUserInfo(token);
+            Models.OAuth.UserInfo? user = await GetCachedUserInfo(token);
             return user;
         }
     }
@@ -71,7 +64,7 @@ public class OAuthUserService : IOAuthUserService
         try
         {
             var hashedToken = CreateMD5(token);
-            TrafficCourts.Citizen.Service.Models.OAuth.UserInfo? user = await _redisCacheService.GetRecordAsync<TrafficCourts.Citizen.Service.Models.OAuth.UserInfo?>(hashedToken);
+            UserInfo? user = await _redisCacheService.GetRecordAsync<UserInfo?>(hashedToken);
             if (user == null) { throw new FileNotFoundException("User not found"); }
             return user;
         } catch (Exception ex) {
