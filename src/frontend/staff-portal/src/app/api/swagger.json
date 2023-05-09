@@ -5281,6 +5281,8 @@
           "REQUIRE_MORE_INFO",
           "ACCEPTED",
           "REVIEW",
+          "CONCLUDED",
+          "CANCELLED",
           "HEARING_SCHEDULED"
         ],
         "type": "string"
@@ -5532,6 +5534,8 @@
           "UNKNOWN",
           "GUILTY",
           "NOT_GUILTY",
+          "CANCELLED",
+          "PAID_PRIOR_TO_APPEARANCE",
           "GUILTY_LESSER"
         ],
         "type": "string"

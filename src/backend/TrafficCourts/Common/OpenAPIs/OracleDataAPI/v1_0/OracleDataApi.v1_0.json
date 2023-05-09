@@ -198,6 +198,92 @@
         }
       }
     },
+    "/api/v1.0/jj/dispute/{ticketNumber}/conclude": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates the status of a particular JJDispute record to CONCLUDED.",
+        "operationId": "concludeJJDispute",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "checkVTCAssigned",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "500": {
+            "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          }
+        }
+      }
+    },
+    "/api/v1.0/jj/dispute/{ticketNumber}/cancel": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates the status of a particular JJDispute record to CANCELLED.",
+        "operationId": "cancelJJDispute",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "checkVTCAssigned",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "500": {
+            "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          }
+        }
+      }
+    },
     "/api/v1.0/jj/dispute/{ticketNumber}/accept": {
       "put": {
         "tags": [ "jj-dispute-controller" ],
@@ -1559,7 +1645,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [ "UNKNOWN", "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
+            "enum": [ "UNKNOWN", "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "CONCLUDED", "CANCELLED", "HEARING_SCHEDULED" ]
           },
           "hearingType": {
             "type": "string",
@@ -1992,7 +2078,7 @@
           "finding": {
             "type": "string",
             "nullable": true,
-            "enum": [ "UNKNOWN", "GUILTY", "NOT_GUILTY", "GUILTY_LESSER" ]
+            "enum": [ "UNKNOWN", "GUILTY", "NOT_GUILTY", "CANCELLED", "PAID_PRIOR_TO_APPEARANCE", "GUILTY_LESSER" ]
           },
           "lesserDescription": {
             "type": "string",
@@ -2935,7 +3021,7 @@
           "jjDisputeStatus": {
             "type": "string",
             "nullable": true,
-            "enum": [ "UNKNOWN", "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
+            "enum": [ "UNKNOWN", "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "CONCLUDED", "CANCELLED", "HEARING_SCHEDULED" ]
           },
           "jjDisputeHearingType": {
             "type": "string",

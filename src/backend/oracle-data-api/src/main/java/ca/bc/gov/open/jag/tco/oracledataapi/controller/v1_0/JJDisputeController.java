@@ -171,6 +171,61 @@ public class JJDisputeController {
 	}
 
 	/**
+	 * PUT endpoint that updates the JJDispute, setting the status to CONCLUDED.
+	 *
+	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
+	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
+	 * @param principal, the logged-in user
+	 * @return {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJDispute record to CONCLUDED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{ticketNumber}/conclude")
+	public ResponseEntity<JJDispute> concludeJJDispute(@PathVariable String ticketNumber,
+			boolean checkVTCAssigned,
+			Principal principal) {
+		logger.debug("PUT /dispute/{}/conclude called", StructuredArguments.value("ticketNumber", ticketNumber));
+
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONCLUDED, principal, null, null), HttpStatus.OK);
+	}
+	/**
+	 * PUT endpoint that updates the JJDispute, setting the status to CANCELLED.
+	 *
+	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
+	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
+	 * @param principal, the logged-in user
+	 * @return {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJDispute record to CANCELLED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{ticketNumber}/cancel")
+	public ResponseEntity<JJDispute> cancelJJDispute(@PathVariable String ticketNumber,
+			boolean checkVTCAssigned,
+			Principal principal) {
+		logger.debug("PUT /dispute/{}/cancel called", StructuredArguments.value("ticketNumber", ticketNumber));
+
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CANCELLED, principal, null, null), HttpStatus.OK);
+	}
+
+	/**
 	 * PUT endpoint that updates the JJDispute, setting the status to REQUIRE_COURT_HEARING and hearing Type to COURT_APPEARANCE.
 	 *
 	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
