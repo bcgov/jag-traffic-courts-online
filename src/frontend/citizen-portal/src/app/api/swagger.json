@@ -770,6 +770,59 @@
           }
         }
       }
+    },
+    "/api/user/whoami": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Return userinfo for given access token",
+        "responses": {
+          "200": {
+            "description": "The UserInfo was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The access token doesn't appear to be a valid access token.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a internal server error."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1813,6 +1866,44 @@
           },
           "descriptionText": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserInfo": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The email address.",
+            "nullable": true
+          },
+          "display_name": {
+            "type": "string",
+            "description": "The display name",
+            "nullable": true
+          },
+          "given_name": {
+            "type": "string",
+            "description": "The given name",
+            "nullable": true
+          },
+          "given_names": {
+            "type": "string",
+            "description": "The given names",
+            "nullable": true
+          },
+          "family_name": {
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "The birthdate.",
+            "format": "date",
             "nullable": true
           }
         },
