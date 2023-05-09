@@ -158,7 +158,22 @@ class JJDisputeServiceTest extends BaseTestSuite {
 			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
 		});
 	}
+	
+	@ParameterizedTest
+	@EnumSource(value = JJDisputeStatus.class,names = { "DATA_UPDATE", "NEW", "REQUIRE_COURT_HEARING", "IN_PROGRESS", "REQUIRE_MORE_INFO", "CONFIRMED", "ACCEPTED",  "REVIEW", "CONCLUDED", "CANCELLED" })
+	void testSetStatusToCONCLUDED_200(JJDisputeStatus jjDisputeStatus) {
+		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
+		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.CONCLUDED);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
+	}
 
+	@ParameterizedTest
+	@EnumSource(value = JJDisputeStatus.class,names = { "DATA_UPDATE", "NEW", "REQUIRE_COURT_HEARING", "IN_PROGRESS", "REQUIRE_MORE_INFO", "CONFIRMED", "ACCEPTED",  "REVIEW", "CONCLUDED", "CANCELLED" })
+	void testSetStatusToCANCELLED_200(JJDisputeStatus jjDisputeStatus) {
+		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
+		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.CANCELLED);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
+	}
 	private JJDispute saveDispute(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDispute = RandomUtil.createJJDispute();
 		jjDispute.setStatus(jjDisputeStatus);

@@ -1388,6 +1388,8 @@
           "REQUIRE_MORE_INFO",
           "ACCEPTED",
           "REVIEW",
+          "CONCLUDED",
+          "CANCELLED",
           "HEARING_SCHEDULED"
         ],
         "type": "string"

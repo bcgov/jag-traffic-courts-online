@@ -266,4 +266,54 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
 	}
 
+	@Test
+	public void testSetJJDisputeStatusToConcluded() {
+		// Create a single JJ Dispute with status NEW
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		// Add the required authority role
+		List<GrantedAuthority> authority = new ArrayList<>();
+		authority.add(new SimpleGrantedAuthority("User"));
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
+		Principal principal = new PreAuthenticatedToken(user);
+		jjDisputeRepository.saveAndFlush(jjDispute);
+
+		// Retrieve it from the controller's endpoint
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
+		assertEquals(JJDisputeStatus.NEW, jjDispute.getStatus());
+
+		// Set the status to CONCLUDED
+		jjDisputeController.concludeJJDispute(ticketNumber, false, principal);
+
+		// Assert status is set correctly.
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(JJDisputeStatus.CONCLUDED, jjDispute.getStatus());
+	}
+	
+
+	@Test
+	public void testSetJJDisputeStatusToCancelled() {
+		// Create a single JJ Dispute with status NEW
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		// Add the required authority role
+		List<GrantedAuthority> authority = new ArrayList<>();
+		authority.add(new SimpleGrantedAuthority("User"));
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
+		Principal principal = new PreAuthenticatedToken(user);
+		jjDisputeRepository.saveAndFlush(jjDispute);
+
+		// Retrieve it from the controller's endpoint
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
+		assertEquals(JJDisputeStatus.NEW, jjDispute.getStatus());
+
+		// Set the status to CONCLUDED
+		jjDisputeController.cancelJJDispute(ticketNumber, false, principal);
+
+		// Assert status is set correctly.
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(JJDisputeStatus.CANCELLED, jjDispute.getStatus());
+	}
 }
