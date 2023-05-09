@@ -11,12 +11,14 @@
  */
 
 
-export type JJDisputedCountRoPFinding = 'UNKNOWN' | 'GUILTY' | 'NOT_GUILTY' | 'GUILTY_LESSER';
+export type JJDisputedCountRoPFinding = 'UNKNOWN' | 'GUILTY' | 'NOT_GUILTY' | 'CANCELLED' | 'PAID_PRIOR_TO_APPEARANCE' | 'GUILTY_LESSER';
 
 export const JJDisputedCountRoPFinding = {
     Unknown: 'UNKNOWN' as JJDisputedCountRoPFinding,
     Guilty: 'GUILTY' as JJDisputedCountRoPFinding,
     NotGuilty: 'NOT_GUILTY' as JJDisputedCountRoPFinding,
+    Cancelled: 'CANCELLED' as JJDisputedCountRoPFinding,
+    PaidPriorToAppearance: 'PAID_PRIOR_TO_APPEARANCE' as JJDisputedCountRoPFinding,
     GuiltyLesser: 'GUILTY_LESSER' as JJDisputedCountRoPFinding
 };
 
