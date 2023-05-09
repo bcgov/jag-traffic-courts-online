@@ -225,6 +225,7 @@ public class JJDisputeService {
 		// - current status must be NEW, IN_PROGRESS, REVIEW, CONFIRMED, HEARING_SCHEDULED to change to CONFIRMED
 		// - current status must be NEW, REVIEW, IN_PROGRESS, or same to change to REQUIRE_COURT_HEARING, DATA_UPDATE, REQUIRE_MORE_INFO
 		// - current status must be CONFIRMED to change to ACCEPTED
+		// - current status can be anything to change to CANCELLED or CONCLUDED
 		switch (jjDisputeStatus) {
 		case HEARING_SCHEDULED:
 			if (!List.of(JJDisputeStatus.REQUIRE_COURT_HEARING, JJDisputeStatus.HEARING_SCHEDULED).contains(jjDisputeToUpdate.getStatus())) {
@@ -270,6 +271,10 @@ public class JJDisputeService {
 			if (!List.of(JJDisputeStatus.CONFIRMED, JJDisputeStatus.ACCEPTED).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
+			break;
+		case CANCELLED:
+			break;
+		case CONCLUDED:
 			break;
 		default:
 			// This should never happen, but if so, then it means a new JJDisputeStatus was added and these business rules were not updated accordingly.
