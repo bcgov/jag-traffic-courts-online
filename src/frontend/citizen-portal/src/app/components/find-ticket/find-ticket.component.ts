@@ -9,6 +9,8 @@ import { WaitForOcrDialogComponent } from '@shared/dialogs/wait-for-ocr-dialog/w
 import { Configuration } from 'app/api';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -23,7 +25,7 @@ export class FindTicketComponent implements OnInit {
   dialogRef: MatDialogRef<WaitForOcrDialogComponent>;
   analyzingTicket: boolean = false;
   notFound = false;
-  toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s licence number and loation 3. Count Act / Section / Description 4. Fine amount';
+  toolTipData = 'If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver\'s Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing.';
   configuration = new Configuration();
 
   constructor(
@@ -83,6 +85,17 @@ export class FindTicketComponent implements OnInit {
     this.dialog.open(TicketExampleDialogComponent, {
       width: '600px',
     });
+  }
+
+  onViewTicketUploadManual(): void {
+      const data: DialogOptions = {
+        titleKey: "Upload Ticket",
+        actionType: "primary",
+        messageKey: `If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing. `,
+        actionTextKey: "Close",
+        cancelHide: true
+      };
+      this.dialog.open(ConfirmDialogComponent, { data });
   }
 
   onViewImageRequirements(): void {
