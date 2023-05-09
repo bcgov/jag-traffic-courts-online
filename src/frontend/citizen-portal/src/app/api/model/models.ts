@@ -24,6 +24,7 @@ export * from './point.model';
 export * from './problemDetails.model';
 export * from './searchDisputeResult.model';
 export * from './statute.model';
+export * from './userInfo.model';
 export * from './violationTicket.model';
 export * from './violationTicketCount.model';
 export * from './violationTicketCountIsAct.model';

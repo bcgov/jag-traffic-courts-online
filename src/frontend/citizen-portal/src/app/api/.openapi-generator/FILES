@@ -6,6 +6,7 @@ api/disputes.service.ts
 api/document.service.ts
 api/lookup.service.ts
 api/tickets.service.ts
+api/user.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -37,6 +38,7 @@ model/point.model.ts
 model/problemDetails.model.ts
 model/searchDisputeResult.model.ts
 model/statute.model.ts
+model/userInfo.model.ts
 model/violationTicket.model.ts
 model/violationTicketCount.model.ts
 model/violationTicketCountIsAct.model.ts

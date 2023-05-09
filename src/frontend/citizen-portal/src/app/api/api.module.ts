@@ -6,6 +6,7 @@ import { DisputesService } from './api/disputes.service';
 import { DocumentService } from './api/document.service';
 import { LookupService } from './api/lookup.service';
 import { TicketsService } from './api/tickets.service';
+import { UserService } from './api/user.service';
 
 @NgModule({
   imports:      [],
