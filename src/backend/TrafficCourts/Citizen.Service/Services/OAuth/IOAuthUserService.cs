@@ -7,10 +7,9 @@ namespace TrafficCourts.Citizen.Service.Services
         /// <summary>
         /// Get user information
         /// </summary>
-        /// <typeparam name="UserInfo"></typeparam>
         /// <param name="token"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task<Models.OAuth.UserInfo?> GetUserInfoAsync<UserInfo>(string token, CancellationToken cancellationToken);
+        /// <returns>The user info for the user authenticated with <paramref name="token"/>, or null.</returns>
+        Task<Models.OAuth.UserInfo?> GetUserInfoAsync(string token, CancellationToken cancellationToken);
     }
 }

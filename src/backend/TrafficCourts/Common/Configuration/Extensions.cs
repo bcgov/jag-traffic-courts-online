@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Metrics;
@@ -11,6 +12,7 @@ using Serilog.Exceptions.Destructurers;
 using StackExchange.Redis;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using TrafficCourts.Common.Configuration.Validation;
 
 namespace TrafficCourts.Common.Configuration;
 
@@ -26,14 +28,35 @@ public static class Extensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        // keep in case someone is using these options
         builder.Services.ConfigureValidatableSetting<RedisOptions>(builder.Configuration.GetSection(RedisOptions.Section));
 
-        builder.Services.AddSingleton<IConnectionMultiplexer>(serviceProvider =>
+        // create a single ConnectionMultiplexer and register the instance and return that for Redis based IDistributedCache 
+        var connectionString = GetRedisConnectionString(builder.Configuration).ConnectionString;
+        if (!string.IsNullOrEmpty(connectionString))
         {
-            var configuration = serviceProvider.GetRequiredService<RedisOptions>();
-            ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configuration.ConnectionString);
-            return connectionMultiplexer;
-        });
+            // TODO: defer connecting to Redis until we need the connection, otherwise failing to connect at start up will cause the service to fail to start
+            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(connectionString);
+
+            builder.Services.AddSingleton(connectionMultiplexer);
+
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
+            });
+        }
+        else
+        {
+            throw new SettingsValidationException(nameof(RedisOptions), nameof(RedisOptions.ConnectionString), "is required");
+        }
+    }
+
+    private static RedisOptions GetRedisConnectionString(IConfiguration configuration)
+    {
+        IConfigurationSection section = configuration.GetSection(RedisOptions.Section);
+        RedisOptions options = new();
+        section.Bind(options);
+        return options;
     }
 
     /// <summary>
