@@ -8,7 +8,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType } from 'app/api';
 import { AuthService } from './auth.service';
-import { cloneDeep, forEach } from "lodash";
+import { cloneDeep } from "lodash";
 import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
