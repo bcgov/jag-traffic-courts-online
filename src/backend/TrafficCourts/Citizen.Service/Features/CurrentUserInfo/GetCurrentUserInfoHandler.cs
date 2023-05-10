@@ -53,7 +53,7 @@ public class GetCurrentUserInfoHandler : IRequestHandler<GetCurrentUserInfoReque
 
         bool isAuthenticated = context.User?.Identity?.IsAuthenticated ?? false;
 
-        if (isAuthenticated)
+        if (!isAuthenticated)
         {
             _logger.LogInformation("User is not authenticated");
             return string.Empty;

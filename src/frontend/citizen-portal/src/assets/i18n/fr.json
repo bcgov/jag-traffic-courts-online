@@ -168,7 +168,8 @@
     "dispute_validation_error": "Votre litige comporte une erreur qui doit être corrigée avant que vous ne puissiez soumettre",
     "ticket_error": "Le ticket n'a pas pu être récupéré",
     "dispute_create_error": "Le litige n'a pas pu être créé",
-    "language_error": "Les langs n’ont pas pu être chargés"
+    "language_error": "Les langs n’ont pas pu être chargés",
+    "user_error": "Les informations utilisateur n’ont pas pu être récupérées"
   },
   "error": {
     "required": "Obligatoire",

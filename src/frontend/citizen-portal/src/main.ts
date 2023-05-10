@@ -18,6 +18,7 @@ forkJoin([
 
   authConfig.redirectUrl = window.location.origin;
   authConfig.postLogoutRedirectUri = window.location.origin;
+  console.log("main.ts", authConfig.redirectUrl);
 
   // Note: Authority must NOT have trailing slash
   var authority = authConfig.authority;
