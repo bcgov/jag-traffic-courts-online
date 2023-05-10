@@ -27,7 +27,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <response code="500">There was a internal server error.</response>
         [Authorize]
         [HttpGet("whoami")]
-        [ProducesResponseType(typeof(UserInfo), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> WhoAmI(CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 return NotFound();
             }
 
-            return Ok(response.UserInfo);
+            return Ok();
         }
     }
 }

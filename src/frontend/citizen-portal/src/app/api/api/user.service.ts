@@ -20,8 +20,6 @@ import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
 import { ProblemDetails } from '../model/problemDetails.model';
-// @ts-ignore
-import { UserInfo } from '../model/userInfo.model';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -94,9 +92,9 @@ export class UserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiUserWhoamiGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<UserInfo>;
-    public apiUserWhoamiGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<UserInfo>>;
-    public apiUserWhoamiGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<UserInfo>>;
+    public apiUserWhoamiGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiUserWhoamiGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiUserWhoamiGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
     public apiUserWhoamiGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -139,7 +137,7 @@ export class UserService {
             }
         }
 
-        return this.httpClient.get<UserInfo>(`${this.configuration.basePath}/api/user/whoami`,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/api/user/whoami`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

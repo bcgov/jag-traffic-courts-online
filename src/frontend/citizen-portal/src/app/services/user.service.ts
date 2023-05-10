@@ -1,22 +1,22 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { UserService as UserBaseService, UserInfo } from 'app/api';
+import { UserService as UserBaseService } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 export interface IUserService {
-  user$: Observable<UserInfo>;
-  user: UserInfo;
-  getUser(): Observable<UserInfo>;
+  response$: Observable<any>;
+  response: any;
+  getUser(): Observable<any>;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService implements IUserService {
-  private _user: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(null);
+  private _response: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(
     private toastService: ToastService,
@@ -31,14 +31,14 @@ export class UserService implements IUserService {
      *
      * @param none
      */
-  public getUser(): Observable<UserInfo> {
+  public getUser(): Observable<any> {
     return this.userService.apiUserWhoamiGet()
       .pipe(
-        map((response: UserInfo) =>
+        map((response: any) =>
           response ? response : null
         ),
         tap((user) =>
-          this.logger.info('UserService::getUser', user)
+          this.logger.info('UserService::getUser')
         ),
         catchError((error: any) => {
           this.toastService.openErrorToast(this.configService.user_error);
@@ -51,11 +51,11 @@ export class UserService implements IUserService {
       );
   }
 
-  public get user$(): Observable<UserInfo> {
-    return this._user.asObservable();
+  public get response$(): Observable<any> {
+    return this._response.asObservable();
   }
 
-  public get user(): UserInfo {
-    return this._user.value;
+  public get response(): any {
+    return this._response.value;
   }
 }

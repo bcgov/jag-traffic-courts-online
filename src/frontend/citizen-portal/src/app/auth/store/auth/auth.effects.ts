@@ -6,11 +6,10 @@ import { of, map, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { UserService } from '../../../services/user.service';
-import { UserInfo } from 'app/api';
 
 @Injectable()
 export class AuthEffects {
-  private _user: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(null);
+  _userResponse:any;
 
   constructor(
     private actions$: StoreActions,
@@ -33,9 +32,7 @@ export class AuthEffects {
     switchMap((action) => {
       if (action.payload.isAuthenticated) {
         // cache identity information server side
-        this.userService.getUser().subscribe((response: UserInfo) => {
-          this._user.next(response);
-        });
+        this.userService.getUser().subscribe((response: any) => {});
 
         // redirect
         let url = localStorage.getItem("url");
