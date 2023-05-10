@@ -309,7 +309,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(ticketNumber, jjDispute.getTicketNumber());
 		assertEquals(JJDisputeStatus.NEW, jjDispute.getStatus());
 
-		// Set the status to CONCLUDED
+		// Set the status to CANCELLED
 		jjDisputeController.cancelJJDispute(ticketNumber, false, principal);
 
 		// Assert status is set correctly.

@@ -3,7 +3,7 @@ import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Observable, Subscription, map } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -53,6 +53,7 @@ export class JJDisputeComponent implements OnInit {
   filesToUpload: any[] = [];
   dLProvince: string;
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
+  Finding = JJDisputedCountRoPFinding;
   RequestReduction = JJDisputedCountRequestReduction;
   HearingType = JJDisputeHearingType;
   RoPApp = JJDisputeCourtAppearanceRoPAppCd;
@@ -67,6 +68,8 @@ export class JJDisputeComponent implements OnInit {
   ContactType = JJDisputeContactType;
   requireCourtHearingReason: string = "";
   jjDecisionDateFormattedDate: string;
+  concludeStatusOnly: boolean = false;
+  cancelStatusOnly: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -375,6 +378,7 @@ export class JJDisputeComponent implements OnInit {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
           }
         }
+        this.determineIfConcludeOrCancel();
       }
     });
   }
@@ -395,6 +399,60 @@ export class JJDisputeComponent implements OnInit {
         jjDisputedCount = updatedJJDisputedCount;
       }
     });
+    this.determineIfConcludeOrCancel();
+  }
+
+  determineIfConcludeOrCancel() {
+    this.concludeStatusOnly = false;
+    this.cancelStatusOnly = false;
+    let cancelledCount = 0;
+    let countCount = 0;
+    let paidPriorToAppearancCount = 0;
+    this.lastUpdatedJJDispute.jjDisputedCounts.forEach(jjDisputedCount => {
+      countCount++;
+      if (jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.Cancelled) cancelledCount++;
+      if (jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.PaidPriorToAppearance) paidPriorToAppearancCount++;
+    });
+    if (cancelledCount === countCount && countCount > 0) this.cancelStatusOnly = true;
+    else if (cancelledCount + paidPriorToAppearancCount >= countCount && countCount > 0) this.concludeStatusOnly = true;
+  }
+
+  onCancelled() {
+    const data: DialogOptions = {
+      titleKey: "Cancel Dispute",
+      messageKey: "All counts have been recorded as cancelled.  The dispute will be recorded as cancelled.",
+      actionTextKey: "Ok",
+      actionType: "green",
+      icon: "info",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        this.putJJDispute().subscribe(response => {
+          this.jjDisputeService.apiJjTicketNumberCancelPut(this.lastUpdatedJJDispute.ticketNumber, false).subscribe(response => {
+            this.onBackClicked();
+          });
+        });
+      });
+  }
+
+  onConcluded() {
+    const data: DialogOptions = {
+      titleKey: "Conclude Dispute",
+      messageKey: "All counts have been recorded as cancelled or paid prior to appearance.  The dispute will be recorded as concluded.",
+      actionTextKey: "Ok",
+      actionType: "green",
+      icon: "info",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        this.putJJDispute().subscribe(response => {
+          this.jjDisputeService.apiJjTicketNumberConcludePut(this.lastUpdatedJJDispute.ticketNumber, false).subscribe(response => {
+            this.onBackClicked();
+          });
+        });
+      });
   }
 
   getLanguageDesc(code: string): string {
