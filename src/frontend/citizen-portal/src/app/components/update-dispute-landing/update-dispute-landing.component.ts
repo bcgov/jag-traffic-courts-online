@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { JJDisputeHearingType, JJDisputeStatus } from 'app/api';
+import { JJDisputeStatus } from 'app/api';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { DisputeStore } from 'app/store';
@@ -15,7 +15,6 @@ import { BehaviorSubject } from 'rxjs';
 
 export class UpdateDisputeLandingComponent implements OnInit {
   private state: DisputeStore.State;
-  private nonEditableStatus = [JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded];
   public isEditable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public bcServicesCardInfoLink: string;
 
@@ -35,8 +34,7 @@ export class UpdateDisputeLandingComponent implements OnInit {
           if (state.result) {
             this.state = state;
             let dispute = state.result;
-            if (dispute && !dispute.jjdispute_status || dispute.jjdispute_status === JJDisputeStatus.Unknown
-              || (!this.nonEditableStatus.includes(dispute.jjdispute_status) && dispute.hearing_type === JJDisputeHearingType.CourtAppearance)) {
+            if (dispute && !dispute.jjdispute_status || dispute?.jjdispute_status === JJDisputeStatus.Unknown) {
               this.isEditable.next(true);
             } else {
               this.isEditable.next(false);
