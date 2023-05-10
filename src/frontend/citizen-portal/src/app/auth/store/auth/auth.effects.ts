@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { Actions as StoreActions, createEffect, ofType } from '@ngrx/effects';
 import { switchMap } from 'rxjs/operators';
 import { Actions } from '.';
-import { of, map, BehaviorSubject } from 'rxjs';
+import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { UserService } from '../../../services/user.service';
 
 @Injectable()
 export class AuthEffects {
-  _userResponse:any;
 
   constructor(
     private actions$: StoreActions,

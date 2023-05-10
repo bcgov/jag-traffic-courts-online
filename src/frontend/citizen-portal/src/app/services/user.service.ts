@@ -7,8 +7,6 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 export interface IUserService {
-  response$: Observable<any>;
-  response: any;
   getUser(): Observable<any>;
 }
 
@@ -16,7 +14,6 @@ export interface IUserService {
   providedIn: 'root',
 })
 export class UserService implements IUserService {
-  private _response: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(
     private toastService: ToastService,
@@ -49,13 +46,5 @@ export class UserService implements IUserService {
           throw error;
         })
       );
-  }
-
-  public get response$(): Observable<any> {
-    return this._response.asObservable();
-  }
-
-  public get response(): any {
-    return this._response.value;
   }
 }

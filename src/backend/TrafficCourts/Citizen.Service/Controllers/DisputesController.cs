@@ -281,16 +281,18 @@ public class DisputesController : ControllerBase
     {
         try
         {
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
+            {
+                return BadRequest("Invalid User");
+            }
+
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
                 // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
-
-            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
-            UserInfo? user = userInfoResponse.UserInfo;
-
-            // since we need to compare names and we couldn't get the current user, should we just return now?
 
             // can throw
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
@@ -355,17 +357,18 @@ public class DisputesController : ControllerBase
     {
         try
         {
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
+            {
+                return BadRequest("Invalid User");
+            }
+
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
                 // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
-
-            // can throw
-            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
-            UserInfo? user = userInfoResponse.UserInfo;
-
-            // since we need to compare names and we couldn't get the current user, should we just return now?
 
             // can throw
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
