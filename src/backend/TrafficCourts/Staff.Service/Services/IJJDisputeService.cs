@@ -83,6 +83,26 @@ public interface IJJDisputeService
     /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
     Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken);
 
+    /// <summary>Updates the status of a particular JJDispute record to CONCLUDED.</summary>
+    /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="user">The user executing the operation</param>    
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
+    Task<JJDispute> ConcludeJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken);
+
+    /// <summary>Updates the status of a particular JJDispute record to CANCELLED.</summary>
+    /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="user">The user executing the operation</param>    
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
+    Task<JJDispute> CancelJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken);
+
     /// <summary>Updates the status of a particular JJDispute record to CONFIRMED.</summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
     /// <param name="user">The user executing the operation</param>    

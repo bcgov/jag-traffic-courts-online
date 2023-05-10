@@ -21,9 +21,9 @@ export class JJDisputeService {
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
   public datepipe: DatePipe = new DatePipe('en-US');
 
-  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
+  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted, JJDisputeStatus.Concluded, JJDisputeStatus.Cancelled];
   public jjDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
-  public jjDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
+  public jjDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded];
   public jjDisputeStatusDisplay: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.InProgress, JJDisputeStatus.Review, JJDisputeStatus.RequireMoreInfo];
 
   constructor(
@@ -174,6 +174,47 @@ export class JJDisputeService {
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'jj-DisputeService::apiJjTicketNumberAcceptPut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+  public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC: boolean): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberConcludePut(ticketNumber, checkVTC)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberConcludePut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberConcludePut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC: boolean): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberCancelPut(ticketNumber, checkVTC)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberCancelPut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberCancelPut error has occurred: ',
             error
           );
           throw error;

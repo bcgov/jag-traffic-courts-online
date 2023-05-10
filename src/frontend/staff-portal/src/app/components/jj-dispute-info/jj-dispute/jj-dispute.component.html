@@ -407,20 +407,26 @@
       <div fxFlex>
       </div>
       <button fxFlex="30" class="large" mat-flat-button type="button" color="primary"
-        style="margin-right: 20px;" (click)="onRequireCourtHearing()" *ngIf="type !== 'ticket' && lastUpdatedJJDispute.status != DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status != DisputeStatus.Accepted">
+        style="margin-right: 20px;" (click)="onRequireCourtHearing()" *ngIf="type !== 'ticket' && lastUpdatedJJDispute.status != DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status != DisputeStatus.Accepted && lastUpdatedJJDispute.status !== DisputeStatus.Cancelled && lastUpdatedJJDispute.status !== DisputeStatus.Concluded && concludeStatusOnly === false && cancelStatusOnly === false">
         {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Require Court Hearing' : 'Adjourn/Continue' }}
       </button>
       <button fxFlex="30" class="large" mat-flat-button type="button" color="primary"
-        style="margin-right: 20px;" (click)="onSave()" *ngIf="type !== 'ticket' && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0">
+        style="margin-right: 20px;" (click)="onSave()" *ngIf="type !== 'ticket' && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && cancelStatusOnly === false && concludeStatusOnly === false">
         Save & Finish Later
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()" *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0">
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()" *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false">
         Confirm
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed">
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()" *ngIf="concludeStatusOnly === true && cancelStatusOnly === false">
+        Conclude
+      </button>
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()" *ngIf="cancelStatusOnly === true && concludeStatusOnly === false">
+        Cancel
+      </button>
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false">
         Accept
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing">
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()" *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing || lastUpdatedJJDispute.status === DisputeStatus.Cancelled || lastUpdatedJJDispute.status === DisputeStatus.Concluded">
         Back
       </button>
     </div><br /><br />

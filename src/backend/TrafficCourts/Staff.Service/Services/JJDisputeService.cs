@@ -182,6 +182,20 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
+    public async Task<JJDispute> ConcludeJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
+    {
+        JJDispute dispute = await _oracleDataApi.ConcludeJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+
+        return dispute;
+    }
+
+    public async Task<JJDispute> CancelJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
+    {
+        JJDispute dispute = await _oracleDataApi.CancelJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+
+        return dispute;
+    }
+
     /// <summary>
     /// Attempts to retrieve a PartId from Keycloak via the JJDispute's jjAssignedTo IDIR field
     /// </summary>
