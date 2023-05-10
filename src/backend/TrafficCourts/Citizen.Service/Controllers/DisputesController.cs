@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using TrafficCourts.Citizen.Service.Features.CurrentUserInfo;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Models.Disputes;
@@ -13,15 +14,13 @@ using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
 using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Disputes.DisputantContactInformation;
-using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 using Dispute = TrafficCourts.Citizen.Service.Models.Disputes.Dispute;
-using TrafficCourts.Common.Models;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
+using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -34,7 +33,6 @@ public class DisputesController : ControllerBase
     private readonly ILogger<DisputesController> _logger;
     private readonly IHashids _hashids;
     private readonly IDisputeEmailVerificationTokenEncoder _tokenEncoder;
-    private readonly IOAuthUserService _oAuthUserService;
     private readonly IMapper _mapper;
     private readonly ICitizenDocumentService _documentService;
 
@@ -46,18 +44,16 @@ public class DisputesController : ControllerBase
     /// <param name="logger"></param>
     /// <param name="hashids"></param>
     /// <param name="tokenEncoder"></param>
-    /// <param name="oAuthUserService"></param>
     /// <param name="mapper"></param>
     /// <param name="documentService"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
-    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper, ICitizenDocumentService documentService)
+    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IMapper mapper, ICitizenDocumentService documentService)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _hashids = hashids ?? throw new ArgumentNullException(nameof(hashids));
         _tokenEncoder = tokenEncoder ?? throw new ArgumentNullException(nameof(tokenEncoder));
-        _oAuthUserService = oAuthUserService ?? throw new ArgumentNullException(nameof(oAuthUserService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
     }
@@ -285,10 +281,11 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            if (String.IsNullOrEmpty(token))
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
             {
-                throw new UnauthorizedAccessException("Invalid access_token");
+                return BadRequest("Invalid User");
             }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
@@ -304,9 +301,6 @@ public class DisputesController : ControllerBase
                 return check;
             }
 
-            // can throw
-            UserInfo? user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
-            
             GetDisputeRequest message = new()
             {
                 NoticeOfDisputeGuid = noticeOfDisputeGuid
@@ -363,10 +357,11 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            if (String.IsNullOrEmpty(token))
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
             {
-                throw new UnauthorizedAccessException("Invalid access_token");
+                return BadRequest("Invalid User");
             }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
@@ -381,9 +376,6 @@ public class DisputesController : ControllerBase
             {
                 return check;
             }
-
-            // can throw
-            var user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
 
             GetDisputeRequest message = new GetDisputeRequest
             {

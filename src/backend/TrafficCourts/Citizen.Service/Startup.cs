@@ -42,6 +42,8 @@ public static class Startup
                 .AddRedisInstrumentation();
         }, meters: new string[] { "MassTransit", "ComsClient", "CitizenService" });
 
+        builder.Services.AddHttpContextAccessor();
+
         // Redis
         builder.AddRedis();
 

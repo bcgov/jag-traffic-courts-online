@@ -6,6 +6,7 @@ api/disputes.service.ts
 api/document.service.ts
 api/lookup.service.ts
 api/tickets.service.ts
+api/user.service.ts
 configuration.ts
 encoder.ts
 git_push.sh

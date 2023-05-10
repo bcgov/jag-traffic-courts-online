@@ -770,6 +770,42 @@
           }
         }
       }
+    },
+    "/api/user/whoami": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Return userinfo for given access token",
+        "responses": {
+          "200": {
+            "description": "The UserInfo was found."
+          },
+          "404": {
+            "description": "The access token doesn't appear to be a valid access token.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a internal server error."
+          }
+        }
+      }
     }
   },
   "components": {

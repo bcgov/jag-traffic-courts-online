@@ -174,13 +174,12 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var mockBus = new Mock<IBus>();
             var mockHashids = new Mock<IHashids>();
-            var mockOAuthService = new Mock<IOAuthUserService>();
             var mockMapper = new Mock<IMapper>();
             var mockComsService = new Mock<ICitizenDocumentService>();
 
             var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
 
-            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockOAuthService.Object, mockMapper.Object, mockComsService.Object);
+            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockMapper.Object, mockComsService.Object);
             var request = new Create.Request(mockTicketDispute.Object);
             var createResponse = new Create.Response();
 

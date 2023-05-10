@@ -89,7 +89,7 @@ export class UpdateRequestInfoComponent implements OnInit {
           });
       },
       error: (err) => {
-        this.toastService.openErrorToast("There is one or more error(s) when saving. Please review the change(s) and try again.");
+        this.toastService.openErrorToast("There are one or more error(s) when saving. Please review the change(s) and try again.");
       }
     });
   }
