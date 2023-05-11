@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    ca.bc.gov.open.jag.tco.keycloakuserinitializer: DEBUG
+
+# IDIR API Client Properties
+idir:
+  api:
+    client:
+      # OAuth client id for calling IDIR API
+      id: ${IDIR_API_CLIENT_ID:id}
+      # OAuth client secret for calling IDIR API
+      secret: ${IDIR_API_CLIENT_SECRET:secret}
+    # If true, will enable debugging for all API calls to see request/response objects
+    debug: ${IDIR_API_DEBUG:false}
+    
+# Keycloak Client Properties
+keycloak:
+  server:
+    url: ${KEYCLOAK_SERVER_URL:localhost}
+  realm: ${KEYCLOAK_REALM:realm}
+  client:
+    id: ${KEYCLOAK_CLIENT_ID:id}
+    secret: ${KEYCLOAK_CLIENT_SECRET:secret}
