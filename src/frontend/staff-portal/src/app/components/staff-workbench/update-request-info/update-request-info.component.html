@@ -27,6 +27,9 @@
         <h3>Ticket Information</h3>
       </span>
     </ng-container>
+    <div style="float: right; width: 100%;" *ngIf="initialDisputeValues.emailAddressVerified !== true && initialDisputeValues.emailAddress">
+      <h3 style="color:red"><b>The email address for this dispute is not validated.  Email address must be validated or the submit button here will be grayed out.</b></h3>
+    </div>
     <div style="display: grid; grid-template-columns: auto auto auto auto auto; width:100%">
       <span class="section-grid-cell">
         <p class="section-grid-header">Surname</p>
@@ -89,7 +92,7 @@
       </button>
     </div>
     <div style="float: right; width: 100%;" *ngIf="initialDisputeValues.emailAddressVerified !== true && initialDisputeValues.emailAddress">
-      Email address must be validated if present to process requests.
+      <h3 style="color:red"><b>The email address for this dispute is not validated.  Email address must be validated or the submit button here will be grayed out.</b></h3>
     </div>
   </div>
 </div>
