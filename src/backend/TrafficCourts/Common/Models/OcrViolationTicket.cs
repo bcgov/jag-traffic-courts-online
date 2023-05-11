@@ -159,7 +159,7 @@ public class Field
             {
                 Regex rg = new(_dateRegex);
                 Match match = rg.Match(Value);
-                if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
+                if (match.Groups.Count >= 4) // 3 + index 0 (the Value itself)
                 {
                     int year = int.Parse(match.Groups[1].Value);
                     if (year < 100)
@@ -174,7 +174,7 @@ public class Field
                 {
                     // pattern didn't match.  Try extracting all digits. If there are 8, convert to a date.
                     string newValue = Regex.Replace(Value, @"\D", ""); // replace all non digits with null
-                    if (newValue.Length == 8)
+                    if (newValue.Length >= 8 && newValue.Length <=9)
                     {
                         int year = int.Parse(newValue[..4]);
                         int month = int.Parse(newValue.Substring(4, 2));

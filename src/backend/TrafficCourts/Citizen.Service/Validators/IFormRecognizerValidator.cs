@@ -11,5 +11,5 @@ public interface IFormRecognizerValidator
     ///    ie. Count ticket amounts must be numeric
     ///    ie. Drivers Licence must be 7 digits
     /// </summary>
-    public Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket);
+    public Task<OcrViolationTicket> ValidateViolationTicketAsync(OcrViolationTicket violationTicket);
 }

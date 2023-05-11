@@ -18,29 +18,30 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         _lookupService = lookupService;
     }
 
-    public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket)
+    public async Task<OcrViolationTicket> ValidateViolationTicketAsync(OcrViolationTicket violationTicket)
     {
-        Sanitize(violationTicket);
+        violationTicket = Sanitize(violationTicket);
 
         ApplyGlobalRules(violationTicket);
 
         // abort validation if this is not a valid Violation Ticket.
         if (violationTicket.GlobalValidationErrors.Count > 0)
         {
-            return;
+            return violationTicket;
         }
 
         await ApplyFieldRules(violationTicket);
 
         // TCVP-932 Reject ticket if certain fields have a low confidence value (this is determined after all the fields have been validated and their datatype confirmed)
         LowConfidenceGlobalRule.Run(violationTicket);
+        return violationTicket;
     }
 
     /// <summary>
     /// Cleans up the scanned data from a poor OCR scan.
     /// </summary>
     /// <param name="violationTicket"></param>
-    public static void Sanitize(OcrViolationTicket violationTicket)
+    public OcrViolationTicket Sanitize(OcrViolationTicket violationTicket)
     {
         // TODO: Use TryGetValue to avoid numerous trips back and forth into the dictionary
         // It can happen that if adjacent text fields has content too close to the common dividing line, the OCR tool can misread both fields thinking one is blank and the other starts with the blank field's text.
@@ -58,6 +59,12 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                     violationTicket.Fields[sectionKey].Value = countSection.Replace((actReg is not null ? actReg : ""), "")?.Trim();
                 }
             }
+        }
+
+        void StripDollarSigns(string key)
+        {
+            if (violationTicket.Fields.ContainsKey(key))
+                violationTicket.Fields[key].Value= violationTicket.Fields[key].Value?.Replace("$", "");
         }
 
         // If any act regs starts with MU replace with MV since the U is likely a mis-scan of the V
@@ -85,16 +92,17 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
 
         // For each count do the the three sanitization
-        void SanitizeCount(string sectionKey, string actRegsKey, string descKey)
+        void SanitizeCount(string sectionKey, string actRegsKey, string descKey, string ticketedAmountKey)
         {
             SplitSectionActRegs(sectionKey, actRegsKey);
             ReplaceMUWithMV(actRegsKey);
             GetActRegsFromDescription(descKey, actRegsKey);
+            StripDollarSigns(ticketedAmountKey);
         }
 
-        SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description);
-        SanitizeCount(OcrViolationTicket.Count2Section, OcrViolationTicket.Count2ActRegs, OcrViolationTicket.Count2Description);
-        SanitizeCount(OcrViolationTicket.Count3Section, OcrViolationTicket.Count3ActRegs, OcrViolationTicket.Count3Description);
+        SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description, OcrViolationTicket.Count1TicketAmount);
+        SanitizeCount(OcrViolationTicket.Count2Section, OcrViolationTicket.Count2ActRegs, OcrViolationTicket.Count2Description, OcrViolationTicket.Count2TicketAmount);
+        SanitizeCount(OcrViolationTicket.Count3Section, OcrViolationTicket.Count3ActRegs, OcrViolationTicket.Count3Description, OcrViolationTicket.Count3TicketAmount);
 
         // Pre-process ticket number if scan reads an A Oh as A Zero replace the Zero with an O in the second position
         // replace A1 with AI
@@ -150,6 +158,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd");
         }
 
+        return violationTicket;
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
