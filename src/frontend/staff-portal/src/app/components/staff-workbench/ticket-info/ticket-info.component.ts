@@ -284,7 +284,7 @@ export class TicketInfoComponent implements OnInit {
     }
     this.dialog.open(TicketImageDialogComponent, dialogConfig).afterClosed()
       .subscribe((action: any) => {
-    });
+      });
   }
 
   public onBack() {
@@ -441,8 +441,8 @@ export class TicketInfoComponent implements OnInit {
     putDispute.rejectedReason = this.form.get('rejectedReason').value;
 
     // set dispute courtagenid from violation ticket courthouse location
-    let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === putDispute.violationTicket.courtLocation);
-    if (courtFound?.length > 0) putDispute.courtAgenId = courtFound[0].id;
+    let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === putDispute.violationTicket.courtLocation).shift();
+    putDispute.courtAgenId = courtFound?.id;
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
