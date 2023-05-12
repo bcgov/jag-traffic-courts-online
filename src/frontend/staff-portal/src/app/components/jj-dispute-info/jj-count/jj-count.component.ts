@@ -108,7 +108,7 @@ export class JJCountComponent implements OnInit {
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate);
 
-      if (this.jjDisputedCount?.jjDisputedCountRoP) {
+      if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance ) {
         // Finding
         if (this.jjDisputedCount?.jjDisputedCountRoP?.finding !== this.Finding.GuiltyLesser) {
           this.form.get('jjDisputedCountRoP')?.get('lesserDescription')?.disable();
@@ -168,7 +168,7 @@ export class JJCountComponent implements OnInit {
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
         Object.assign(this.jjDisputedCount, this.form.getRawValue()); // get raw value includes disabled fields
-        this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N;
+        this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N);
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
     }
