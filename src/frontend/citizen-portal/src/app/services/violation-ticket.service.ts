@@ -247,11 +247,14 @@ export class ViolationTicketService {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, yyyy", "UTC");
     }
     result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
+    result.counts.forEach(count => {
+      count.ticketed_amount = +count.ticketed_amount;
+    })
 
     // set ticket_id to imageFilename returned from Ocr
     result.ticket_id = source.imageFilename;
 
-    // add extra fields for notcie of dispute
+    // add extra fields for notice of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
     result[this.systemDetectOcrIssueKey] = isOcrIssueDetected ? this.SystemDetectedOcrIssues.Y : this.SystemDetectedOcrIssues.N;

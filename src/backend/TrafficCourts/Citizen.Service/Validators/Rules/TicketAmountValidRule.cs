@@ -20,8 +20,7 @@ public class TicketAmountValidRule : ValidationRule
             {
                 AddValidationError(String.Format(ValidationMessages.CurrencyInvalid, Field.Value));
             }
-        }
-
+        } 
         return Task.CompletedTask;
     }
 }
