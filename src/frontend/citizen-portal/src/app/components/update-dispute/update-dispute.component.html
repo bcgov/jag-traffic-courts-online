@@ -13,7 +13,8 @@
 
   <app-dispute-stepper *ngIf="noticeOfDispute" [ticket]="noticeOfDispute"
     [ticketCounts]="noticeOfDispute.violation_ticket.counts" [disputeCounts]="noticeOfDispute.dispute_counts"
-    [ticketType]="ticketType" [fileData$]="fileData$" [mode]="mode" (saveDispute)="submitDispute($event)"></app-dispute-stepper>
+    [ticketType]="ticketType" [fileData$]="fileData$" [mode]="mode"
+    (saveDispute)="submitDispute($event)"></app-dispute-stepper>
 
   <app-resolution-footer></app-resolution-footer>
 </app-page>
