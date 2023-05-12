@@ -27,7 +27,6 @@ public class TcoUserDataLoader {
 		List<TcoUser> users = new ArrayList<TcoUser>();
 		try (
 			InputStream is = getFileAsIOStream("data/tco-user-list.csv");
-			//InputStream stream = TcoUserDataLoader.class.getClassLoader().getResourceAsStream("data/tco-user-list.csv");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 			users.addAll(new CsvToBeanBuilder<TcoUser>(reader)
 					.withType(TcoUser.class)
