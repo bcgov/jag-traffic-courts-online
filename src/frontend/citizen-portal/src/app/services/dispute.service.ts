@@ -96,6 +96,7 @@ export class DisputeService {
         noticeOfDispute.disputant_given_names = [noticeOfDispute.disputant_given_name1, noticeOfDispute.disputant_given_name2, noticeOfDispute.disputant_given_name3].filter(i => i).join(" ");
         noticeOfDispute.lawyer_full_name = [noticeOfDispute.lawyer_given_name1, noticeOfDispute.lawyer_given_name2, noticeOfDispute.lawyer_given_name3, noticeOfDispute.lawyer_surname].filter(i => i).join(" ");
         noticeOfDispute.address = [noticeOfDispute.address_line1, noticeOfDispute.address_line2, noticeOfDispute.address_line3].filter(i => i).join(",");
+        noticeOfDispute.violation_ticket.counts = noticeOfDispute.violation_ticket.counts.filter(count => count.description || count.section || count.ticketed_amount);
         return noticeOfDispute;
       }))
   }
