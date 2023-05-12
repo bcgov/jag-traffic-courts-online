@@ -33,3 +33,21 @@ services:
       - H2_OPTIONS=-ifNotExists
     volumes:
       - ./form-recognizer/metrics/data/db:/opt/h2-data
+      
+#############################################################################################
+###                                 Keycloak User Initializer                             ###
+#############################################################################################
+  keycloak-user-init:
+    container_name: keycloak-init
+    environment:
+      IDIR_API_CLIENT_ID: ${IDIR_API_CLIENT_ID:-id}
+      IDIR_API_CLIENT_SECRET: ${IDIR_API_CLIENT_SECRET:-secret}
+      IDIR_API_DEBUG: ${IDIR_API_DEBUG:-false}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-id}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-secret}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-realm}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL:-localhost}
+    build:
+      context: ./keycloak-user-initializer
+    ports:
+      - "8081:8080"
