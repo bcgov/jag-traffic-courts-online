@@ -20,11 +20,6 @@ public class KeycloakInitializerController {
 	@Autowired
     KeycloakService service;
 	
-	@GetMapping("/ping")
-	public String index() {
-		return "Greetings from Keycloak App!";
-	}
-	
 	/**
 	 * GET endpoint that retrieves the user data from the Keycloak for the given userName
 	 * @param userName
