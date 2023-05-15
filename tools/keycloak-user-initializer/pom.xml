@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<idir-package>ca.bc.gov.open.jag.tco.keycloakuserinitializer.idir</idir-package>
+		<target.fileName>${project.artifactId}-${project.version}</target.fileName>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -138,6 +139,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${target.fileName}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
