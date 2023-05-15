@@ -12,13 +12,13 @@ From the /tools folder,
 `docker-compose up -d --build keycloak-user-init`
 
 ## Swagger
-Visit [http://localhost:8081/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+Visit [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
 
 The main endpoint is `/api/user/create` in order to trigger initializing users in Keycloak from the provided CSV file.
 
 ```
 curl -X 'POST' \
-  'http://localhost:8080/api/user/create' \
+  'http://localhost:8081/api/user/create' \
   -H 'accept: */*' \
   -d ''
 ```
@@ -31,7 +31,7 @@ GET request to `/api/user/{userName}` by providing Keycloak username of the user
 
 ```
 curl -X 'GET' \
-  'http://localhost:8080/api/user/d29c519aa0e04de5aa1e5e39f27299da%40idir' \
+  'http://localhost:8081/api/user/d29c519aa0e04de5aa1e5e39f27299da%40idir' \
   -H 'accept: */*'
 ```
 
@@ -127,7 +127,7 @@ GET request to `/api/user/idir/{userName}` by providing email of the IDIR user a
 
 ```
 curl -X 'GET' \
-  'http://localhost:8080/api/user/idir/example%40email.com \
+  'http://localhost:8081/api/user/idir/example%40email.com \
   -H 'accept: */*'
 ```
 
