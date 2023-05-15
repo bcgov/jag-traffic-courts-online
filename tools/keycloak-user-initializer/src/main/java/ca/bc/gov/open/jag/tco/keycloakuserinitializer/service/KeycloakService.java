@@ -53,6 +53,9 @@ public class KeycloakService {
         List<UserRepresentation> userResult = usersResource.search(userName, true);
 
         if (userResult != null && !userResult.isEmpty()) {
+        	if (userResult.size() > 1) {
+				logger.warn("More than one user is found for the given userName {} ", userName);
+			}
 			return userResult.get(0);
 		}
         return null;
@@ -60,9 +63,14 @@ public class KeycloakService {
 	
 	public EnvironmentIdirUsersGet200ResponseDataInner getIdirUser(String userName) {
 		EnvironmentIdirUsersGet200Response response = usersApi.environmentIdirUsersGet(Environment.DEV, null, null, userName, null);
-		List<EnvironmentIdirUsersGet200ResponseDataInner> data = response.getData();
-		if (data != null && !data.isEmpty()) {
-			return data.get(0);
+		if (response.getData() != null) {
+			List<EnvironmentIdirUsersGet200ResponseDataInner> data = response.getData();
+			if (data != null && !data.isEmpty()) {
+				if (data.size() > 1) {
+					logger.warn("More than one user is found for the given userName {} ", userName);
+				}
+				return data.get(0);
+			}
 		}
         return null;
 	}
@@ -73,7 +81,7 @@ public class KeycloakService {
 
         if (userResult != null && !userResult.isEmpty()) {
         	for (TcoUser tcoUser : userResult) {
-				System.out.println(tcoUser.toString());
+				logger.info(tcoUser.toString());
 			}
 			return userResult;
 		}
