@@ -162,9 +162,11 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     }
 
                     SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
-                    if (dispute.AppearanceLessThan14Days is true)
-                        submitNoticeOfDispute.AppearanceLessThan14DaysYn = DisputeAppearanceLessThan14DaysYn.Y;
-                    else submitNoticeOfDispute.AppearanceLessThan14DaysYn = DisputeAppearanceLessThan14DaysYn.N;
+                    
+                    submitNoticeOfDispute.AppearanceLessThan14DaysYn = dispute.AppearanceLessThan14Days is true 
+                        ? DisputeAppearanceLessThan14DaysYn.Y 
+                        : DisputeAppearanceLessThan14DaysYn.N;
+
                     submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeId;
                     submitNoticeOfDispute.SubmittedTs = _clock.GetCurrentInstant().ToDateTimeUtc();
 
