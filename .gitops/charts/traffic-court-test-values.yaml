@@ -20,7 +20,7 @@ citizen-api:
     "FormRecognizer__ApiVersion": "2.1"
     "FormRecognizer__ModelId": "75f5614c-eded-4413-a3d9-c67281e8402e"
     "Swagger__Enabled": "true"
-    "TicketSearch__SearchType": "Mock"
+    "TicketSearch__SearchType": "RoadSafety"
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service:3000"
     "JWT__AUTHORITY": "https://idtest.gov.bc.ca/login"  

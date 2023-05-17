@@ -246,18 +246,6 @@ Develop the `citizen-portal`. Run the associated API, `citizen-api`.  This start
 docker-compose -f docker-compose.yml up -d citizen-api
 ```
 
-Run `citizen-api` and have the backend logs go to [local Seq](http://localhost:8001),
-
-```
-docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml up -d citizen-api
-```
-
-To stop when running Seq,
-
-```
-docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml down
-```
-
 Run `citizen-api` and have the backend logs go to [local Splunk](http://localhost:8000)
 
 Note, this is currently getting an error: "Error response from daemon: network ... not found"
@@ -364,6 +352,12 @@ docker-compose -f docker-compose.yml -f .docker/docker-compose-ocr.yml up -d
 
 Use 2.1 as the FORMRECOGNIZER__APIVERSION to target Form Recognizer running locally in Docker (or in OpenShift).
 Use 2022-06-30-preview to target Form Recognizer running in Azure cloud (which runs the latest api version, not 2.1).
+
+The API key and Billing URL are found in the Azure Portal. Either Key 1 or Key 2 can be used for the API key.
+
+![ Form Recognizer](docs/form-recognizer-api-key-and-billing-url.png)
+
+See [Form Recognizer Containers (2.1)](https://learn.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/containers/form-recognizer-container-install-run?view=form-recog-2.1.0&preserve-view=true&tabs=read) and [Form Recognizer Containers (3.0)](https://learn.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/containers/form-recognizer-container-install-run?view=form-recog-3.0.0&tabs=read) for information.
 
 ## Debugging
 
