@@ -1,35 +1,36 @@
 api:
+  replicaCount: 2
   resources:
     limits:
-      cpu: 20m
-      memory: 100Mi
+      cpu: 500m
+      memory: 256Mi
     requests:
-      cpu: 10m
-      memory: 75Mi
+      cpu: 100m
+      memory: 128Mi
 
 layout:
   resources:
     limits:
       cpu: 8
-      memory: 8Gi
+      memory: 6Gi
     requests:
-      cpu: 4
+      cpu: 500m
       memory: 4Gi
 
 proxy:
   resources:
    limits:
-     cpu: 20m
-     memory: 128Mi
+     cpu: 100m
+     memory: 256Mi
    requests:
-     cpu: 10m
+     cpu: 50m
      memory: 64Mi
 
 supervised:
   resources:
     limits:
-      cpu: 20m
-      memory: 128Mi
+      cpu: 200m
+      memory: 256Mi
     requests:
-      cpu: 10m
-      memory: 75Mi
+      cpu: 100m
+      memory: 128Mi
