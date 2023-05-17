@@ -148,4 +148,6 @@ Add route
 
 ## RabbitMQ
 
+`helm upgrade rabbitmq-dev .\rabbitmq-11.10.0.tgz --values .\rabbitmq-values.yaml`
+
 ## Redis

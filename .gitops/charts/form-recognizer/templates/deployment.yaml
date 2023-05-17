@@ -3,7 +3,7 @@ apiVersion: apps/v1
 metadata:
   name: {{ include "form-recognizer.fullname" . }}-api
 spec:
-  replicas: 1
+  replicas: {{ .Values.api.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-api
@@ -63,6 +63,15 @@ spec:
           ports:
             - containerPort: 5000
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
           volumeMounts:
             - name: shared
               mountPath: /shared
@@ -79,7 +88,7 @@ apiVersion: apps/v1
 metadata:
   name: {{ include "form-recognizer.fullname" . }}-layout
 spec:
-  replicas: 1
+  replicas: {{ .Values.layout.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-layout
@@ -161,7 +170,7 @@ apiVersion: apps/v1
 metadata:
   name: {{ include "form-recognizer.fullname" . }}-proxy
 spec:
-  replicas: 1
+  replicas: {{ .Values.proxy.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-proxy
@@ -191,6 +200,16 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
+          # /ready will be proxied to the api
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
           image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
           volumeMounts:
             - name: configuration

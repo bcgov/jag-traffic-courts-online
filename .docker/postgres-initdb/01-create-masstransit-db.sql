@@ -1,0 +1,7 @@
+CREATE ROLE masstransit WITH 
+  NOSUPERUSER
+  NOCREATEDB
+  NOINHERIT
+  LOGIN 
+  PASSWORD 'password';
+CREATE DATABASE masstransit WITH OWNER = masstransit;
