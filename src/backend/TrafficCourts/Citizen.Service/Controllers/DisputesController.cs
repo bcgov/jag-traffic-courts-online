@@ -86,7 +86,7 @@ public class DisputesController : ControllerBase
         if (response.Exception is not null)
         {
             _logger.LogInformation(response.Exception, "Failed to create Notice of Dispute");
-            return StatusCode(StatusCodes.Status500InternalServerError, response.Exception);
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         return Ok(response);
