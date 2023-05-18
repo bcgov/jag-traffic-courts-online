@@ -39,7 +39,7 @@ namespace TrafficCourts.Citizen.Service
 
             builder.Services.ConfigureValidatableSetting<RsiServiceOptions>(builder.Configuration.GetSection(Section));
 
-            builder.Services.AddHttpClient<AuthenticationClient>((serviceProvider, client) =>
+            builder.Services.AddHttpClient<OpenIdAuthenticationClient>((serviceProvider, client) =>
             {
                 var options = serviceProvider.GetRequiredService<RsiServiceOptions>();
                 var uri = options.AuthenticationUrl;
@@ -62,11 +62,12 @@ namespace TrafficCourts.Citizen.Service
             builder.Services.AddTransient<ITokenCache, TokenCache>();
 
             builder.Services.AddTransient<AuthenticationHandler>();
-            builder.Services.AddTransient<IAuthenticationClient, AuthenticationClient>();
+            // seems the OpenId endpoint does not work and we need to get access token via basic auth now
+            ////builder.Services.AddTransient<IAuthenticationClient, OpenIdAuthenticationClient>();
+            builder.Services.AddTransient<IAuthenticationClient, BasicAuthAuthenticationClient>();
 
             builder.Services.AddTransient<ITicketInvoiceSearchService, RoadSafetyTicketSearchService>();
             builder.Services.AddHostedService<AccessTokenUpdateWorker>();
-
         }
 
         public static void UseMockTickets(WebApplicationBuilder builder, Serilog.ILogger logger)
