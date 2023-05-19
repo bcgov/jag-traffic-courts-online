@@ -73,7 +73,7 @@ public static class Startup
         // Add COMS (Object Management Service) Client
         builder.Services.AddObjectManagementService("COMS");
 
-        builder.Services.AddMediatR(assembly);
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
         AddSwagger(builder, assembly, logger);
     }
