@@ -162,10 +162,9 @@ public static class Extensions
                 .SetResourceBuilder(resourceBuilder)
                 .AddHttpClientInstrumentation(builder =>
                 {
-                    // do not trace calls to splunk
-                    builder.FilterHttpRequestMessage = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
+                    builder.FilterHttpRequestMessage = HttpClientRequestFilter;
                 })
-                .AddAspNetCoreInstrumentation()
+                .AddAspNetCoreInstrumentation(options => options.Filter = AspNetCoreRequestFilter)
                 .AddSource(activitySource.Name)
                 .AddJaegerExporter();
 
@@ -174,6 +173,18 @@ public static class Extensions
                 configure(builder);
             }
         });
+    }
+
+    private static bool AspNetCoreRequestFilter(Microsoft.AspNetCore.Http.HttpContext httpContext)
+    {
+        // do not trace metrics calls to GET /metrics
+        return httpContext.Request.Method != "GET" || httpContext.Request.Path != "/metrics";
+    }
+
+    private static bool HttpClientRequestFilter(HttpRequestMessage message)
+    {
+        // do not trace calls to splunk
+        return message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
     }
 
     private static void AddMetrics(IServiceCollection services, params string[] meters)
