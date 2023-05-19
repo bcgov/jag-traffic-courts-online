@@ -85,7 +85,7 @@ public static class Startup
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // add MediatR handlers in this program
-        builder.Services.AddMediatR(assembly);
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
         // use lowercase routes
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);

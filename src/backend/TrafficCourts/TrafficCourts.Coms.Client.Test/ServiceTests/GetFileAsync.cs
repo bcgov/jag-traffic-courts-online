@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Moq;
-using Newtonsoft.Json.Linq;
+﻿using Moq;
 
 namespace TrafficCourts.Coms.Client.Test.ServiceTests;
 

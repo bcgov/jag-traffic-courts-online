@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using TrafficCourts.Coms.Client.Monitoring;
@@ -135,7 +134,7 @@ internal class ObjectManagementService : IObjectManagementService
             var file = new File(id, stream, fileName, contentType, metadata, tags);
             return file;
         }
-        catch (ApiException exception) when (exception.StatusCode == StatusCodes.Status404NotFound)
+        catch (ApiException exception) when (exception.StatusCode == /*StatusCodes.Status404NotFound*/ 404) // StatusCodes Class requires Package: Microsoft.AspNetCore.App.Ref v7.0.5, so use constant
         {
             _logger.LogInformation(exception, "File not found with id {FileId}", id);
             throw new FileNotFoundException($"File with {id} not found");

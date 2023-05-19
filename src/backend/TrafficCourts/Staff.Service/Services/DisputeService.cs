@@ -1,17 +1,15 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Staff.Service.Mappers;
-using System.Text.Json;
-using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Staff.Service.Models;
 using System.Collections.ObjectModel;
 using System.Security.Claims;
-using TrafficCourts.Common.Models;
-using TrafficCourts.Coms.Client;
-using TrafficCourts.Common.Errors;
-using Minio.DataModel;
+using System.Text.Json;
 using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Common.Models;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Coms.Client;
+using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Staff.Service.Mappers;
+using TrafficCourts.Staff.Service.Models;
 
 namespace TrafficCourts.Staff.Service.Services;
 
