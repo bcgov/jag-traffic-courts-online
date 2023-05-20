@@ -178,7 +178,7 @@ public static class Extensions
     private static bool AspNetCoreRequestFilter(Microsoft.AspNetCore.Http.HttpContext httpContext)
     {
         // do not trace metrics calls to GET /metrics
-        return httpContext.Request.Method != "GET" && httpContext.Request.Path != "/metrics";
+       return !(httpContext.Request.Method == "GET" && httpContext.Request.Path == "/metrics");
     }
 
     private static bool HttpClientRequestFilter(HttpRequestMessage message)
