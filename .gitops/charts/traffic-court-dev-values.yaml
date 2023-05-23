@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "1.60.6"
+    tag: "1.60.7"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "1.60.6"
+    tag: "1.60.7"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2.1"
@@ -26,18 +26,17 @@ citizen-api:
     "JWT__AUDIENCE": "ca.bc.gov.ag.tco.dev"
     "OAuth__USERINFOENDPOINT": "https://idtest.gov.bc.ca/oauth2/userinfo"
     "COMS__BASEURL": "http://common-object-management-service:3000"
-    "Serilog__MinimumLevel__Default": "Debug"
 
 citizen-web:
   image:
-    tag: "1.60.6"
+    tag: "1.60.7"
     pullPolicy: Always
 
   appConfig: |  
     {
         "production": false,
         "environment": "Dev",
-        "version": "1.60.6",
+        "version": "1.60.7",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -191,7 +190,7 @@ citizen-web:
 
 oracle-data-api:
   image:
-    tag: "1.60.6"
+    tag: "1.60.7"
     pullPolicy: Always
   env:
     "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
@@ -204,7 +203,7 @@ oracle-data-api:
 
 staff-api:
   image:
-    tag: "1.60.6"
+    tag: "1.60.7"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -218,7 +217,7 @@ staff-api:
 
 staff-web:
   image:
-    tag: "1.60.6"
+    tag: "1.60.7"
     pullPolicy: Always
   keycloakConfig: |
     {
@@ -234,7 +233,7 @@ staff-web:
     {
         "production": false,
         "environment": "Dev",
-        "version": "1.60.6",
+        "version": "1.60.7",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
@@ -244,7 +243,7 @@ staff-web:
 
 workflow-service:
   image:
-    tag: "1.60.6"
+    tag: "1.60.7"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
