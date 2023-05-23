@@ -160,10 +160,7 @@ public static class Extensions
         {
             builder
                 .SetResourceBuilder(resourceBuilder)
-                .AddHttpClientInstrumentation(builder =>
-                {
-                    builder.FilterHttpRequestMessage = HttpClientRequestFilter;
-                })
+                .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation(options => options.Filter = AspNetCoreRequestFilter)
                 .AddSource(activitySource.Name)
                 .AddJaegerExporter();
