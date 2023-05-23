@@ -1,4 +1,6 @@
 ﻿using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
@@ -34,6 +36,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
             }
             catch (HttpRequestException ex)
             {
+                // TODO: should we be catching ApiException?
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
                 var innerException = ex.InnerException;
                 _logger.LogError(ex, "Error searching for RSI ticket");
@@ -59,39 +62,59 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 
             if (response is not null && response.Items is not null)
             {
-                IEnumerable<Invoice> invoices = await GetInvoicesAsync(response.Items);
+                IEnumerable<Invoice> invoices = await GetInvoicesAsync(response.Items, cancellationToken).ConfigureAwait(false);
                 return invoices.ToList();
             }
 
+            _logger.LogInformation("No invoice numbers returned, returning empty result");
             return Array.Empty<Invoice>();
         }
 
-        private async Task<IEnumerable<Invoice>> GetInvoicesAsync(IEnumerable<Item> items)
+        private async Task<IEnumerable<Invoice>> GetInvoicesAsync(IEnumerable<Item> items, CancellationToken cancellationToken)
         {
-            if (items == null)
+            var invoiceNumbers = items.Select(item => GetInvoiceNumber(item?.SelectedInvoice?.Reference))
+                .Where(invoiceNumber => invoiceNumber != string.Empty)
+                .ToList();
+
+            if (invoiceNumbers.Count == 0)
             {
+                _logger.LogInformation("Could not get ticket invoice numbers, returning empty result");
                 return Enumerable.Empty<Invoice>();
             }
 
-            var invoices = new ConcurrentBag<Invoice>();
+            List<Task<Invoice>> getInvoiceTasks = new List<Task<Invoice>>(invoiceNumbers.Count);
 
-            await Parallel.ForEachAsync(items, async (item, cancellationToken) =>
+            foreach (var invoiceNumber in invoiceNumbers)
             {
-                if (item?.SelectedInvoice?.Reference is not null)
-                {
-                    // Reference will have this format: https://host/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/EZ020004602
-                    string reference = item.SelectedInvoice.Reference;
-                    if (reference.Length != 0)
-                    {
-                        string invoiceNumber = reference.Substring(reference.Length - 1);
-                        var invoice = await _api.GetInvoice(invoiceNumber, cancellationToken);
-                        invoices.Add(invoice);
-                    }
-                }
-            });
+                getInvoiceTasks.Add(Task.Run(async () => await _api.GetInvoice(invoiceNumber, cancellationToken).ConfigureAwait(false)));
+            }
 
-            return invoices.OrderBy(_ => _.InvoiceNumber);
+            var groupedTasks = Task.WhenAll(getInvoiceTasks);
+
+            try
+            {
+                var invoices = await groupedTasks.ConfigureAwait(false);
+                return invoices.OrderBy(_ => _.InvoiceNumber);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "Failed to get invoices, returning empty result");
+                return Array.Empty<Invoice>();
+            }
+        }
+
+        private static string GetInvoiceNumber(string? reference)
+        {
+            if (reference is null || reference.Length == 0) return string.Empty;
+
+            var lastSlashIndex = reference.LastIndexOf('/');
+            if (lastSlashIndex != -1 && lastSlashIndex < reference.Length - 1)
+            {
+                string invoiceNumber = reference.Substring(lastSlashIndex + 1);
+                return invoiceNumber;
+            }
+
+            return string.Empty;
         }
     }
-
 }
