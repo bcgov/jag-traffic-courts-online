@@ -317,9 +317,12 @@ export class ViolationTicketService {
       }
       // handwritten tickets are additionally checked in the analyze ticket API but cheked again here for <=30 days
       // e-tickets can be <=30 days and camera tickets <=45
-      if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
-        || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
-        this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
+      // TODO:  temporarily turned off checking dates for e-tickets for testing needs to be turned bacxk on by replacing if conditions
+      // if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
+      // || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
+      if ((dateDiff <= 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET)
+        || this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.CAMERA_TICKET) {
+          this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
       } else {
