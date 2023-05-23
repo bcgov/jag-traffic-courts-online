@@ -3,8 +3,9 @@ This spring-boot Java project is a tool for initializing users in a Keycloak env
 and lookup their IDIR data by their email from CSS SSO API (https://api.loginproxy.gov.bc.ca/openapi/swagger) and link it as an external IDP account in Keycloak.
 
 ## Columns must be specified in the CSV file (tco-user-list.csv)
-Email,Realm Administrator,admin-judicial-justice,admin-vtc-staff,judicial-justice,vtc-staff
-example@email.com,TRUE,TRUE,TRUE,TRUE,TRUE
+Email,Realm Administrator,admin-judicial-justice,admin-vtc-staff,judicial-justice,vtc-staff,part-id
+
+example@email.com,TRUE,TRUE,TRUE,TRUE,TRUE,190225.0866
 
 ## How to build
 From the /tools folder,
