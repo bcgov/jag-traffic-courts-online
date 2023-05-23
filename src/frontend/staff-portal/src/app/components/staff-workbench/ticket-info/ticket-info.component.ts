@@ -407,7 +407,6 @@ export class TicketInfoComponent implements OnInit {
     // no need to pass back byte array with image
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
-    console.log("update violation ticket", this.lastUpdatedDispute, tempDispute);
 
     this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
