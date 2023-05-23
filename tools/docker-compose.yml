@@ -40,6 +40,7 @@ services:
   keycloak-user-init:
     container_name: keycloak-init
     environment:
+      IDIR_API_CLIENT_ENV: ${IDIR_API_CLIENT_ENV:-DEV}
       IDIR_API_CLIENT_ID: ${IDIR_API_CLIENT_ID:-id}
       IDIR_API_CLIENT_SECRET: ${IDIR_API_CLIENT_SECRET:-secret}
       IDIR_API_DEBUG: ${IDIR_API_DEBUG:-false}

@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.bc.gov.open.jag.tco.keycloakuserinitializer.config.IdirApiClientConfigProperties;
 import ca.bc.gov.open.jag.tco.keycloakuserinitializer.config.KeycloakConfig;
 import ca.bc.gov.open.jag.tco.keycloakuserinitializer.idir.api.UsersApi;
-import ca.bc.gov.open.jag.tco.keycloakuserinitializer.idir.api.model.Environment;
 import ca.bc.gov.open.jag.tco.keycloakuserinitializer.idir.api.model.EnvironmentIdirUsersGet200Response;
 import ca.bc.gov.open.jag.tco.keycloakuserinitializer.idir.api.model.EnvironmentIdirUsersGet200ResponseDataInner;
 import ca.bc.gov.open.jag.tco.keycloakuserinitializer.idir.api.model.EnvironmentIdirUsersGet200ResponseDataInnerAttributes;
@@ -43,6 +43,9 @@ public class KeycloakService {
 	@Autowired
 	private TcoUserDataLoader userLoader;
 	
+	@Autowired
+	private IdirApiClientConfigProperties idirProperties;
+	
 	public KeycloakService (Keycloak keycloak, UsersApi usersApi) {
 		this.keycloak = keycloak;
 		this.usersApi = usersApi;
@@ -62,7 +65,7 @@ public class KeycloakService {
     }
 	
 	public EnvironmentIdirUsersGet200ResponseDataInner getIdirUser(String userName) {
-		EnvironmentIdirUsersGet200Response response = usersApi.environmentIdirUsersGet(Environment.DEV, null, null, userName, null);
+		EnvironmentIdirUsersGet200Response response = usersApi.environmentIdirUsersGet(idirProperties.getIdirApiClientEnv(), null, null, userName, null);
 		if (response.getData() != null) {
 			List<EnvironmentIdirUsersGet200ResponseDataInner> data = response.getData();
 			if (data != null && !data.isEmpty()) {
@@ -72,6 +75,7 @@ public class KeycloakService {
 				return data.get(0);
 			}
 		}
+		logger.warn("User is not found in IDIR for the given userName {} ", userName);
         return null;
 	}
 	
@@ -124,7 +128,7 @@ public class KeycloakService {
                     newUser.setFederatedIdentities(getFederationLink(idirUser.getUsername()));
                     newUser.setEnabled(true);
                     newUser.setGroups(groups);
-                    newUser.setAttributes(getAttributes(idirUser));
+                    newUser.setAttributes(getAttributes(idirUser, tcoUser));
                     Response response = getInstance().create(newUser);
                     if (Response.Status.CREATED.equals(response.getStatusInfo())) {
 						createdUsers.add(tcoUser.getEmail());
@@ -169,11 +173,12 @@ public class KeycloakService {
         return Collections.singletonList(idirLink);
     }
 	
-	private Map<String, List<String>> getAttributes(EnvironmentIdirUsersGet200ResponseDataInner idirUser) {
+	private Map<String, List<String>> getAttributes(EnvironmentIdirUsersGet200ResponseDataInner idirUser, TcoUser tcoUser) {
 		
         Map<String, List<String>> attributes = new HashMap<>();
         List<String> givenNameValue = new ArrayList<>();
         List<String> familyNameValue = new ArrayList<>();
+        List<String> partIdValue = new ArrayList<>();
         
         EnvironmentIdirUsersGet200ResponseDataInnerAttributes idirAttributes = idirUser.getAttributes();
         attributes.put("display_name", idirAttributes.getDisplayName());
@@ -184,6 +189,11 @@ public class KeycloakService {
         attributes.put("given_name", givenNameValue);
         familyNameValue.add(idirUser.getLastName());
         attributes.put("family_name", familyNameValue);
+        
+        if(!StringUtils.isBlank(tcoUser.getPartId())) {
+        	partIdValue.add(tcoUser.getPartId());
+            attributes.put("partid", partIdValue);
+        }
         
         return attributes;
     }

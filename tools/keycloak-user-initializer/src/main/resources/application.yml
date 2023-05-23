@@ -10,6 +10,8 @@ logging:
 idir:
   api:
     client:
+      # IDIR environment to be connected. One of the following environment should be set: DEV, TEST, PROD
+      environmnet: ${IDIR_API_CLIENT_ENV:DEV}
       # OAuth client id for calling IDIR API
       id: ${IDIR_API_CLIENT_ID:id}
       # OAuth client secret for calling IDIR API

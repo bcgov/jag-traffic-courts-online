@@ -34,5 +34,8 @@ public class TcoUser {
 	
 	@CsvBindByPosition(position = 5)
 	private Boolean vtcStaff;
+	
+	@CsvBindByPosition(position = 6)
+	private String partId;
 
 }
