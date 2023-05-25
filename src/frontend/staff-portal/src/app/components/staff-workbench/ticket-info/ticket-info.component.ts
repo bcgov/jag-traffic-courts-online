@@ -392,14 +392,12 @@ export class TicketInfoComponent implements OnInit {
     // Counts 1,2,3
     putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
-      // if form has violation ticket, stuff it in putDispute
+      // stuff 3 violation ticket counts in putDispute
       let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
-      if (fullDescription && fullDescription !== " ") {
-        let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
-        violationTicketCount.countNo = i;
-        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
-        putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
-      }
+      let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
+      violationTicketCount.countNo = i;
+      violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
+      putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
     }
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
