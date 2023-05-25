@@ -11,7 +11,8 @@ public enum DisputeStatus {
 	VALIDATED("VALD"),
 	PROCESSING("PROC"),
 	REJECTED("REJ"),
-	CANCELLED("CANC");
+	CANCELLED("CANC"),
+	CONCLUDED("CNLD");
 
 	private String shortName;
 
