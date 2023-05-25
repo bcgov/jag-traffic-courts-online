@@ -386,23 +386,26 @@ export class TicketInfoComponent implements OnInit {
       "T" +
       this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
       + ":" +
-      this.form.get('violationTicket').get('violationTime').value.substring(2, 4);
-
+      this.form.get('violationTicket').get('violationTime').value.substring(2, 4) + "Z";
+    putDispute.issuedTs = this.form.get('violationTicket').get('violationDate').value +
+      "T" +
+      this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
+      + ":" +
+      this.form.get('violationTicket').get('violationTime').value.substring(2, 4) + ":00Z";;
 
     // Counts 1,2,3
     putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
-      // if form has violation ticket, stuff it in putDispute
+      // stuff 3 violation ticket counts in putDispute
       let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
-      if (fullDescription && fullDescription !== " ") {
-        let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
-        violationTicketCount.countNo = i;
-        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
-        putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
-      }
+      let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
+      violationTicketCount.countNo = i;
+      violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
+      putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
     }
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
+    this.lastUpdatedDispute = putDispute;
 
     // no need to pass back byte array with image
     let tempDispute = putDispute;
@@ -445,6 +448,7 @@ export class TicketInfoComponent implements OnInit {
     putDispute.courtAgenId = courtFound?.id;
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
+    this.lastUpdatedDispute = putDispute;
 
     // no need to pass back byte array with image
     let tempDispute = putDispute;
@@ -756,12 +760,15 @@ export class TicketInfoComponent implements OnInit {
         let provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.driversLicenceIssuedCountryId && x.provSeqNo === this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo).shift();
         if (provFound) this.form.get('driversLicenceProvinceProvId').setValue(provFound.provId);
 
-        // set violation date and time
-        let violationDate = response.issuedTs?.split("T");
+        // set violation date and time using violation ticket issuedTs as source of truth
+        if (!this.initialDisputeValues.violationTicket.issuedTs) this.initialDisputeValues.violationTicket.issuedTs = this.initialDisputeValues.issuedTs;
+        let violationDate = this.initialDisputeValues.violationTicket.issuedTs?.split("T");
         if (violationDate && violationDate.length > 1) {
-          this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
+          this.form.get('violationTicket').get('issuedTs').setValue(this.initialDisputeValues.violationTicket.issuedTs);
           this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
           this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
+          this.initialDisputeValues.issuedTs = this.initialDisputeValues.violationTicket.issuedTs;
+          this.lastUpdatedDispute.issuedTs = this.initialDisputeValues.violationTicket.issuedTs;
         }
 
         // ticket image
