@@ -761,6 +761,7 @@ export class TicketInfoComponent implements OnInit {
         if (provFound) this.form.get('driversLicenceProvinceProvId').setValue(provFound.provId);
 
         // set violation date and time using violation ticket issuedTs as source of truth
+        if (!this.initialDisputeValues.violationTicket.issuedTs) this.initialDisputeValues.violationTicket.issuedTs = this.initialDisputeValues.issuedTs;
         let violationDate = this.initialDisputeValues.violationTicket.issuedTs?.split("T");
         if (violationDate && violationDate.length > 1) {
           this.form.get('violationTicket').get('issuedTs').setValue(this.initialDisputeValues.violationTicket.issuedTs);
