@@ -27,7 +27,7 @@ public class ObjectMetadata
 
     public Guid? UpdatedBy { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     [JsonPropertyName("metadata")]
     public IList<MetadataItem> Metadata { get; set; }
