@@ -107,7 +107,7 @@
       </app-alert>
     </div>
     <ng-container *ngFor="let count of counts;">
-      <mat-card class="mat-elevation-z8" *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.N || requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y">
+      <mat-card class="mat-elevation-z8" *ngIf="requestCourtAppearanceFormControl.value">
         <ng-template matStepLabel>Count {{ count.ticket_count.count_no }}: Review</ng-template>
         <app-page>
           <app-page-header>
@@ -155,7 +155,7 @@
                   <label class="w-100">
                     Please provide additional selections below:
                   </label>
-                  <mat-radio-group formControlName="plea_cd" *ngIf="count?.dispute_count?.plea_cd != Plea.G || mode !== DisputeFormMode.UPDATE">
+                  <mat-radio-group formControlName="plea_cd" *ngIf="count?.dispute_count?.plea_cd !== Plea.G || mode !== DisputeFormMode.UPDATE">
                     <mat-radio-button [value]="Plea.G" color="primary" class="w-100"
                       (change)="count?.form.controls.__skip.setValue(false)">
                       I agree I committed this offence and would like to request a fine reduction and/or time to pay on
