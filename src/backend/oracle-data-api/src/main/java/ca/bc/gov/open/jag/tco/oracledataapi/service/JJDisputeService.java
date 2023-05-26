@@ -292,6 +292,11 @@ public class JJDisputeService {
 		CustomUserDetails user = (CustomUserDetails) ((PreAuthenticatedToken) principal).getPrincipal();
 		String staffPartId = user.getPartId(); // staffPartId comes from the person currently logged in, the Principal (aka. CustomUserDetails).
 
+		if (courtAppearance != null && StringUtils.isBlank(staffPartId)) {
+			logger.error("Updating a court appearance requires a staff part id. staffPartId is null.");
+			throw new NotAllowedException("Updating a court appearance requires a staff part id.");
+		}
+
 		jjDisputeRepository.setStatus(jjDisputeToUpdate.getId(), jjDisputeStatus, principal.getName(), courtAppearanceId, seizedYn , adjudicatorPartId, aattCd, dattCd, staffPartId);
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
