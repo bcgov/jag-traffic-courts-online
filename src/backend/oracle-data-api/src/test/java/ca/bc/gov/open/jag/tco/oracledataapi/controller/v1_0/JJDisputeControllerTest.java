@@ -131,7 +131,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		// Create a single JJ Dispute with a specified remark
 		JJDispute jjDispute = RandomUtil.createJJDispute();
 		String ticketNumber = jjDispute.getTicketNumber();
-		setPrincipal("testUser");
+		setPrincipal("testUser", true);
 		jjDispute.setCourthouseLocation("Vancouver");
 		jjDisputeRepository.saveAndFlush(jjDispute);
 
@@ -290,7 +290,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
 		assertEquals(JJDisputeStatus.CONCLUDED, jjDispute.getStatus());
 	}
-	
+
 
 	@Test
 	public void testSetJJDisputeStatusToCancelled() {

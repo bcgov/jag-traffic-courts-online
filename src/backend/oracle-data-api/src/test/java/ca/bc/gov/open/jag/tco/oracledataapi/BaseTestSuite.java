@@ -72,7 +72,7 @@ public class BaseTestSuite {
 		disputeRepository.deleteAll();
 		jjDisputeRepository.deleteAll();
 
-		setPrincipal("System");
+		setPrincipal("System", true);
 	}
 
 	/** Prepends the base restTemplate url to the path. */
@@ -80,19 +80,19 @@ public class BaseTestSuite {
 		return UriComponentsBuilder.fromUriString("/api/v1.0" + url);
 	}
 
-    /**
-     * Performs a GET request against the given uriBuilder
-     * @param uriBuilder a the builder used to build a URI
-     */
-    protected ResultActions get(UriComponentsBuilder uriBuilder) throws Exception {
-        assertNotNull(uriBuilder);
-        return get(uriBuilder.build().encode().toUri());
-    }
+	/**
+	 * Performs a GET request against the given uriBuilder
+	 * @param uriBuilder a the builder used to build a URI
+	 */
+	protected ResultActions get(UriComponentsBuilder uriBuilder) throws Exception {
+		assertNotNull(uriBuilder);
+		return get(uriBuilder.build().encode().toUri());
+	}
 
-    /**
-     * Performs a GET request against the given uri
-     * @param uri
-     */
+	/**
+	 * Performs a GET request against the given uri
+	 * @param uri
+	 */
 	protected ResultActions get(URI uri) throws Exception {
 		MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(uri);
 		return mvc.perform(requestBuilder);
@@ -124,22 +124,22 @@ public class BaseTestSuite {
 	}
 
 	/** Sets the currently logged in user */
-	protected void setPrincipal(String username) {
+	protected void setPrincipal(String username, boolean setPartId) {
 		List<GrantedAuthority> authority = new ArrayList<>();
-        authority.add(new SimpleGrantedAuthority("User"));
+		authority.add(new SimpleGrantedAuthority("User"));
 
-		CustomUserDetails user = new CustomUserDetails(username == null ? "System" : username, username == null ? "Password" : username, "System", "System", authority);
+		CustomUserDetails user = new CustomUserDetails(username == null ? "System" : username, username == null ? "Password" : username, "System", setPartId ? "System" : null, authority);
 		Authentication authentication = new PreAuthenticatedToken(user);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
 	/** Serializes the given object to a json string. */
 	protected String asJsonString(final Object obj) {
-	    try {
-	        return new ObjectMapper().writeValueAsString(obj);
-	    } catch (Exception e) {
-	        throw new RuntimeException(e);
-	    }
+		try {
+			return new ObjectMapper().writeValueAsString(obj);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	protected <T> List<Diff<?>> getDifferences(T lhs, T rhs, String... ignoredFields) {
