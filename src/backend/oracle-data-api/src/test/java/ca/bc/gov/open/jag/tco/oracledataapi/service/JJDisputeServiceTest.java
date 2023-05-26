@@ -2,6 +2,9 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
@@ -158,7 +162,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
 		});
 	}
-	
+
 	@ParameterizedTest
 	@EnumSource(value = JJDisputeStatus.class,names = { "DATA_UPDATE", "NEW", "REQUIRE_COURT_HEARING", "IN_PROGRESS", "REQUIRE_MORE_INFO", "CONFIRMED", "ACCEPTED",  "REVIEW", "CONCLUDED", "CANCELLED" })
 	void testSetStatusToCONCLUDED_200(JJDisputeStatus jjDisputeStatus) {
@@ -174,9 +178,35 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.CANCELLED);
 		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
 	}
+
+	@ParameterizedTest
+	@EnumSource(value = JJDisputeStatus.class, names = { "ACCEPTED" })
+	void testSetStatusToACCEPTEDwithNoStaffPartId_405(JJDisputeStatus jjDisputeStatus) {
+		JJDisputeCourtAppearanceRoP courtAppearance =  new JJDisputeCourtAppearanceRoP();
+		JJDispute jjDisputeToUpdate = saveDisputeWithCourtAppearance(jjDisputeStatus, courtAppearance);
+		// Do not provide a staff part ID for the update
+		this.setPrincipal("System", false);
+		assertThrows(NotAllowedException.class, () -> {
+			jjDisputeService.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, this.getPrincipal(), null, "170225.0877");
+		});
+	}
+
 	private JJDispute saveDispute(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDispute = RandomUtil.createJJDispute();
 		jjDispute.setStatus(jjDisputeStatus);
+
+		return jjDisputeRepository.saveAndFlush(jjDispute);
+	}
+
+	private JJDispute saveDisputeWithCourtAppearance(JJDisputeStatus jjDisputeStatus, JJDisputeCourtAppearanceRoP courtAppearance) {
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		jjDispute.setStatus(jjDisputeStatus);
+
+		List<JJDisputeCourtAppearanceRoP> courtAppearanceList = new ArrayList<JJDisputeCourtAppearanceRoP>();
+		courtAppearance.setId(5L);
+		courtAppearance.setJjDispute(jjDispute);
+		courtAppearanceList.add(courtAppearance);
+		jjDispute.setJjDisputeCourtAppearanceRoPs(courtAppearanceList);
 
 		return jjDisputeRepository.saveAndFlush(jjDispute);
 	}
