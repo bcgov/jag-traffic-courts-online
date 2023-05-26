@@ -124,7 +124,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = saveDispute(dispute);
 
 		// Login
-		setPrincipal("TestUser1");
+		setPrincipal("TestUser1", true);
 
 		// Retrieve it from the controller's endpoint
 		dispute = getDispute(disputeId, true);
@@ -133,7 +133,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(dispute.getUserAssignedTo(), "TestUser1");
 
 		// Login with a different user
-		setPrincipal("TestUser2");
+		setPrincipal("TestUser2", true);
 
 		// Attempt to set the status to REJECTED - should fail with a 409
 		rejectDispute(disputeId, "Just because")
@@ -593,18 +593,18 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(disputeUpdateRequest2.getDisputeUpdateRequestId(), results.get(0).getDisputeUpdateRequestId());
 		assertEquals(disputeUpdateRequest2.getStatus(), results.get(0).getStatus());
 		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
-		
+
 		// Get all update requests with null params
 		results.add(disputeUpdateRequest1);
 		results.add(disputeUpdateRequest3);
 		results.add(disputeUpdateRequest4);
 		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(null, null)).thenReturn(results);
 		controllerResponse = disputeController.getDisputeUpdateRequests(null, null);
-	    resultList = controllerResponse.getBody();
+		resultList = controllerResponse.getBody();
 		assertNotNull(resultList);
 		assertEquals(resultList.size(),4);
-				
-    	// Get all update requests with pending status
+
+		// Get all update requests with pending status
 		results.clear();
 		results.add(disputeUpdateRequest1);
 		results.add(disputeUpdateRequest3);
@@ -614,17 +614,17 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertNotNull(resultList);
 		assertEquals(resultList.size(),2);
 		assertEquals(resultList.get(0).getStatus(), DisputeUpdateRequestStatus.PENDING);
-				
-    	// Get all update requests for given dispute id
+
+		// Get all update requests for given dispute id
 		results.clear();
 		results.add(disputeUpdateRequest1);
 		results.add(disputeUpdateRequest2);
 		Mockito.when(service.findDisputeUpdateRequestByDisputeIdAndStatus(dispute1.getDisputeId(), null)).thenReturn(results);
 		controllerResponse = disputeController.getDisputeUpdateRequests(dispute1.getDisputeId(), null);
-	    resultList = controllerResponse.getBody();
-	    assertNotNull(resultList);
+		resultList = controllerResponse.getBody();
+		assertNotNull(resultList);
 		assertEquals(resultList.size(),2);
-		assertEquals(resultList.get(0).getDisputeId(), dispute1.getDisputeId());	
+		assertEquals(resultList.get(0).getDisputeId(), dispute1.getDisputeId());
 	}
 
 	@Test
@@ -646,7 +646,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(DisputeUpdateRequestStatus.ACCEPTED, result.getStatus());
 		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
 	}
-	
+
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
 	private Long saveDispute(Dispute dispute) {
 		return postForObject(fromUriString("/dispute"), dispute, Long.class);
