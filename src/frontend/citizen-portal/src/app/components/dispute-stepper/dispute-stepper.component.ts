@@ -125,6 +125,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       var dispute_count = this.disputeCounts.filter(i => i.count_no === ticketCount.count_no).shift();
       return {
         ticket_count: ticketCount,
+        dispute_count: dispute_count,
         form: this.noticeOfDisputeService.getCountForm(ticketCount, dispute_count, this.mode !== DisputeFormMode.CREATE)
       };
     });
@@ -206,6 +207,10 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   private setAdditional() {
     this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
     this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
+    if (this.mode === DisputeFormMode.UPDATE) {
+      this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.noticeOfDispute);
+      if (this.additionalForm.controls.witness_no?.value > 0) this.additionalForm.controls.__witness_present.setValue(true);
+    }
 
     if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_reduction.length > 0) {
       this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required]);

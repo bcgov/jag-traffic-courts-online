@@ -116,7 +116,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                         bool updateAnyCount = false;
                         foreach (Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount disputeCount in dispute.DisputeCounts)
                         {
-                            UpdateDisputeCountRequest? patchCount = patch?.PatchDisputeCounts?.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
+                            UpdateDisputeCountRequest? patchCount = patch?.DisputeCounts?.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
                             if (patchCount != null)
                             {
                                 if (disputeCount.RequestReduction != patchCount.RequestReduction || disputeCount.RequestTimeToPay != patchCount.RequestTimeToPay
@@ -287,7 +287,7 @@ public class UpdateRequest
 
     public string? TimeToPayReason { get; set; }
 
-    public System.Collections.Generic.ICollection<UpdateDisputeCountRequest>? PatchDisputeCounts { get; set; }
+    public System.Collections.Generic.ICollection<UpdateDisputeCountRequest>? DisputeCounts { get; set; }
 
     public ICollection<UploadDocumentRequest>? UploadedDocuments { get; set; } = null!;
 
