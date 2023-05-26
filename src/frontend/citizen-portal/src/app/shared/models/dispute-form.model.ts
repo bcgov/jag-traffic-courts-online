@@ -65,7 +65,6 @@ export interface DisputeCountFormGroup extends FormGroup {
 }
 export interface Count {
   ticket_count?: ViolationTicketCount;
-  dispute_count?: DisputeCount;
   form?: DisputeCountFormGroup;
 }
 

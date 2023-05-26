@@ -112,6 +112,7 @@ export class NoticeOfDisputeService {
       noticeOfDispute[key] && form.controls[key]?.patchValue(noticeOfDispute[key]);
     });
     noticeOfDispute.drivers_licence_number && form.controls.drivers_licence_number?.setValue(noticeOfDispute.drivers_licence_number.toString());
+    if (form.controls.witness_no?.value > 0) form.controls.__witness_present.setValue(true);
     return form;
   }
 
