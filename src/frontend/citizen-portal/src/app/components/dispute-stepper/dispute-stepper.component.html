@@ -24,7 +24,7 @@
   <mat-step [completed]="isCountFormsValid()">
     <ng-template matStepLabel>Counts: Review</ng-template>
     <h2><strong>Court Appearance?</strong></h2>
-    <div class="row">
+    <div class="row" [hidden]="mode === DisputeFormMode.UPDATE && requestCourtAppearanceFormControl.value === RequestCourtAppearance.N">
       <div class="col">
         <app-alert type="info" icon="info">
           <ng-container class="alert-content" #alertContent>
@@ -36,7 +36,7 @@
         </app-alert>
       </div>
     </div>
-    <mat-radio-group [formControl]="requestCourtAppearanceFormControl"
+    <mat-radio-group [formControl]="requestCourtAppearanceFormControl" [hidden]="mode === DisputeFormMode.UPDATE && requestCourtAppearanceFormControl.value === RequestCourtAppearance.N"
       (change)="onChangeRequestCourtAppearance($event.value)">
       <div>
         <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
@@ -106,9 +106,8 @@
         </ng-container>
       </app-alert>
     </div>
-
     <ng-container *ngFor="let count of counts;">
-      <mat-card class="mat-elevation-z8" *ngIf="requestCourtAppearanceFormControl.value">
+      <mat-card class="mat-elevation-z8" *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.N || requestCourtAppearanceFormControl.value === RequestCourtAppearance.Y">
         <ng-template matStepLabel>Count {{ count.ticket_count.count_no }}: Review</ng-template>
         <app-page>
           <app-page-header>
@@ -156,7 +155,7 @@
                   <label class="w-100">
                     Please provide additional selections below:
                   </label>
-                  <mat-radio-group formControlName="plea_cd">
+                  <mat-radio-group formControlName="plea_cd" *ngIf="count?.dispute_count?.plea_cd != Plea.G || mode !== DisputeFormMode.UPDATE">
                     <mat-radio-button [value]="Plea.G" color="primary" class="w-100"
                       (change)="count?.form.controls.__skip.setValue(false)">
                       I agree I committed this offence and would like to request a fine reduction and/or time to pay on
@@ -167,11 +166,20 @@
                       (change)="count?.form.controls.__skip.setValue(false)">
                       I do not agree I committed this offence and would like to dispute this count</mat-radio-button>
                   </mat-radio-group>
+                  <div *ngIf="count?.dispute_count?.plea_cd === Plea.G && mode === DisputeFormMode.UPDATE">
+                    <app-alert type="warning" icon="info">
+                      <ng-container #alertContent class="alert-content">
+                        <span class="text-dark">
+                          <strong>You have agreed that you committed this offence and would like to request a fine reduction and/or time to pay on this count.</strong>
+                        </span>
+                      </ng-container>
+                    </app-alert>
+                  </div>
                 </div>
               </div>
 
-              <hr *ngIf="count?.form.value.__skip === false" />
-              <div class="row">
+              <hr *ngIf="count?.form.value.__skip === false && mode !== DisputeFormMode.UPDATE" />
+              <div class="row" *ngIf="mode !== DisputeFormMode.UPDATE">
                 <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4"
                   (change)="onSkipChecked(count?.form, $event.value)">
                   Skip this count, no action required.

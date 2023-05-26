@@ -125,9 +125,11 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       var dispute_count = this.disputeCounts.filter(i => i.count_no === ticketCount.count_no).shift();
       return {
         ticket_count: ticketCount,
+        dispute_count: dispute_count,
         form: this.noticeOfDisputeService.getCountForm(ticketCount, dispute_count, this.mode !== DisputeFormMode.CREATE)
       };
     });
+    console.log(this.counts);
     this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
   }
 
