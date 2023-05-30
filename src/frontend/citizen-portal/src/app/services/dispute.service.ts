@@ -177,7 +177,7 @@ export enum StatusStepType {
   SCHEDULED = "Hearing Scheduled",
   CONFIRMED = "Decision Made",
   CANCELLED = "Cancelled",
-  CONCLUDED = "Paid"
+  CONCLUDED = "Concluded"
 }
 
 export interface FileMetadata extends FileMetadataBase {

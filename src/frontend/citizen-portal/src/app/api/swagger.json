@@ -1312,7 +1312,8 @@
           "VALIDATED",
           "PROCESSING",
           "REJECTED",
-          "CANCELLED"
+          "CANCELLED",
+          "CONCLUDED"
         ],
         "type": "string"
       },
