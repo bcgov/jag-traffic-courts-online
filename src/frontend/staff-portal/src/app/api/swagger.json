@@ -4518,7 +4518,8 @@
           "VALIDATED",
           "PROCESSING",
           "REJECTED",
-          "CANCELLED"
+          "CANCELLED",
+          "CONCLUDED"
         ],
         "type": "string"
       },
@@ -4553,7 +4554,8 @@
           "VALIDATED",
           "PROCESSING",
           "REJECTED",
-          "CANCELLED"
+          "CANCELLED",
+          "CONCLUDED"
         ],
         "type": "string"
       },
@@ -4830,7 +4832,8 @@
           "VALIDATED",
           "PROCESSING",
           "REJECTED",
-          "CANCELLED"
+          "CANCELLED",
+          "CONCLUDED"
         ],
         "type": "string"
       },
