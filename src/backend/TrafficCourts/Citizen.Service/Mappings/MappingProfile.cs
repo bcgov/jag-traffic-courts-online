@@ -39,7 +39,8 @@ public class NoticeOfDisputeToMessageContractMappingProfile : Profile
             .ForMember(dest => dest.DriversLicenceIssuedProvinceSeqNo, opt => opt.MapFrom(src => src.DriversLicenceProvinceSeqNo))
             .ForMember(dest => dest.DriversLicenceProvince, opt => opt.MapFrom(src => src.DriversLicenceProvince))
             .ForMember(dest => dest.RequestCourtAppearance, opt => opt.MapFrom(src => src.RequestCourtAppearanceYn))
-            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts));
+            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts))
+            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd));
         CreateMap<Models.Disputes.DisputeCount, Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount>();
     }
 }

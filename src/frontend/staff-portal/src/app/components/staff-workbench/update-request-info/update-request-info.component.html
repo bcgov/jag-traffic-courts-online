@@ -1,6 +1,6 @@
 <div class="info-component" [ngStyle]="{'height.px': infoHeight}">
   <a (click)="onBack()" style="color: #48afe5">
-    <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
+    <mat-icon inline="true">arrow_back</mat-icon> Back to Inbox
   </a>
   <app-ticket-status [dispute]="initialDisputeValues" *ngIf="initialDisputeValues"></app-ticket-status>
   <div *ngIf="conflict === true">
@@ -88,7 +88,7 @@
         Submit
       </button>
       <button class="large" mat-flat-button type="button" color="primary" (click)="onBack()">
-        Cancel
+        Return to Inbox
       </button>
     </div>
     <div style="float: right; width: 100%;" *ngIf="initialDisputeValues.emailAddressVerified !== true && initialDisputeValues.emailAddress">
