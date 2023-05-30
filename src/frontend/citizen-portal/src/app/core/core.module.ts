@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
-import { ConfigService } from '@config/config.service';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { ErrorHandlerInterceptor } from './interceptors/error-handler.interceptor';

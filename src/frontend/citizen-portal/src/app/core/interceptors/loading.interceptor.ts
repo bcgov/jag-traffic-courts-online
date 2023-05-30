@@ -7,7 +7,10 @@ import { LoadingStore } from '@core/store';
 @Injectable({ providedIn: "root" })
 export class LoadingInterceptor implements HttpInterceptor {
   // TODO: add urls here to suppress the loading overlay, such as autocomplete
-  private slientLoadingUrls: string[] = [];
+  // TODO: move urls to a file
+  private slientLoadingUrls: string[] = [
+    "/api/tickets/analyse"
+  ];
 
   constructor(
     private store: Store

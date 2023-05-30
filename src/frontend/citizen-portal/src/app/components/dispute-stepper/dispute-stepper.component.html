@@ -24,7 +24,8 @@
   <mat-step [completed]="isCountFormsValid()">
     <ng-template matStepLabel>Counts: Review</ng-template>
     <h2><strong>Court Appearance?</strong></h2>
-    <div class="row" [hidden]="mode === DisputeFormMode.UPDATE && requestCourtAppearanceFormControl.value === RequestCourtAppearance.N">
+    <div class="row"
+      [hidden]="mode === DisputeFormMode.UPDATE && requestCourtAppearanceFormControl.value === RequestCourtAppearance.N">
       <div class="col">
         <app-alert type="info" icon="info">
           <ng-container class="alert-content" #alertContent>
@@ -36,7 +37,8 @@
         </app-alert>
       </div>
     </div>
-    <mat-radio-group [formControl]="requestCourtAppearanceFormControl" [hidden]="mode === DisputeFormMode.UPDATE && requestCourtAppearanceFormControl.value === RequestCourtAppearance.N"
+    <mat-radio-group [formControl]="requestCourtAppearanceFormControl"
+      [hidden]="mode === DisputeFormMode.UPDATE && requestCourtAppearanceFormControl.value === RequestCourtAppearance.N"
       (change)="onChangeRequestCourtAppearance($event.value)">
       <div>
         <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
@@ -155,7 +157,8 @@
                   <label class="w-100">
                     Please provide additional selections below:
                   </label>
-                  <mat-radio-group formControlName="plea_cd" *ngIf="count?.dispute_count?.plea_cd !== Plea.G || mode !== DisputeFormMode.UPDATE">
+                  <mat-radio-group formControlName="plea_cd"
+                    *ngIf="count?.dispute_count?.plea_cd !== Plea.G || mode !== DisputeFormMode.UPDATE">
                     <mat-radio-button [value]="Plea.G" color="primary" class="w-100"
                       (change)="count?.form.controls.__skip.setValue(false)">
                       I agree I committed this offence and would like to request a fine reduction and/or time to pay on
@@ -170,7 +173,8 @@
                     <app-alert type="warning" icon="info">
                       <ng-container #alertContent class="alert-content">
                         <span class="text-dark">
-                          <strong>You have agreed that you committed this offence and would like to request a fine reduction and/or time to pay on this count.</strong>
+                          <strong>You have agreed that you committed this offence and would like to request a fine
+                            reduction and/or time to pay on this count.</strong>
                         </span>
                       </ng-container>
                     </app-alert>
@@ -472,7 +476,7 @@
                 (click)="onUploadClicked()">
                 Upload Documents
               </button>
-              <input type="file" #fileInput id="fileInput" style="display:none" accept="image/*,.pdf"
+              <input type="file" #fileInput id="fileInput" style="display:none" accept="image/jpeg,.pdf,.doc,.docx"
                 (change)="onUploadFile($event.target.files)">
             </div>
           </div>

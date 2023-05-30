@@ -17,11 +17,12 @@ import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count, DisputeCountFormGroup } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
-import { Observable } from "rxjs";
+import { Observable, firstValueFrom } from "rxjs";
 import { DisputeStore } from "app/store";
-import { Store, select } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 import { DisputeService, FileMetadata } from "app/services/dispute.service";
 import { AppConfigService } from "app/services/app-config.service";
+import { FileUtilsService } from "@shared/services/file-utils.service";
 
 @Component({
   selector: "app-dispute-stepper",
@@ -100,6 +101,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     private store: Store,
     private lookups: LookupsService,
     private appConfigService: AppConfigService,
+    private fileUtilsService: FileUtilsService,
   ) {
     // config or static
     this.defaultLanguage = this.translateService.getDefaultLang();
@@ -167,7 +169,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onStepSave(): void {
+  async onStepSave() {
     let isValid = this.formUtilsService.checkValidity(this.form);
 
     if (this.stepper.selectedIndex === this.countStepIndex) {
@@ -192,8 +194,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.legalRepresentationForm.reset();
     }
 
-    var fileData = [];
-    this.fileData$?.subscribe(i => { fileData = i; })
+    var fileData = await firstValueFrom(this.fileData$);
     this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
       ...this.form.value,
       ...this.additionalForm?.value,
@@ -373,18 +374,38 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   async onUploadFile(files: FileList) {
     if (files.length <= 0) return;
+    let file = files[0];
 
-    const blobToBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
 
-    var pendingFileStream = await blobToBase64(files[0]) as string;
-    this.store.dispatch(DisputeStore.Actions.AddDocument({ file: files[0], fileType: this.fileTypeToUpload, pendingFileStream }));
+    let fileData = await firstValueFrom(this.fileData$)
+    if (fileData.length >= 3) {
+      this.onUploadFileError("Maximum 4 uploads per dispute.");
+    }
+
+    let err = this.checkFileSize(file.size);
+    if (err.length > 0) this.onUploadFileError(err);
+
+    let pendingFileStream = await firstValueFrom(this.fileUtilsService.readFileAsDataURL(file)) as string;
+    this.store.dispatch(DisputeStore.Actions.AddDocument({ file: file, fileType: this.fileTypeToUpload, pendingFileStream }));
     this.fileInput.nativeElement.value = null;
     this.fileTypeToUpload = this.adjournmentFileType.key;
+  }
+
+  private onUploadFileError(err: string): void {
+    const data: DialogOptions = {
+      titleKey: "Warning",
+      actionType: "warn",
+      messageKey: "File upload error. " + err,
+      actionTextKey: "Close",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data });
+  }
+
+  private checkFileSize(fileSize: number): string {
+    if (fileSize <= 0) return "File size is 0MB.";
+    else if (fileSize >= (10 * 1024 * 1024)) return "File size is over 50MB."
+    else return "";
   }
 
   submitDispute() {
