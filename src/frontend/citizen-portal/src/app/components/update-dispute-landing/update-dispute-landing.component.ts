@@ -35,8 +35,6 @@ export class UpdateDisputeLandingComponent implements OnInit {
           if (state.result) {
             this.state = state;
             let dispute = state.result;
-            console.log(dispute && !this.nonEditableStatus.includes(dispute.dispute_status) && (!dispute.jjdispute_status || dispute.jjdispute_status === JJDisputeStatus.Unknown
-              || (!this.nonEditableStatus.includes(dispute.jjdispute_status) && dispute.hearing_type === JJDisputeHearingType.CourtAppearance)));
             if (dispute && !this.nonEditableStatus.includes(dispute.dispute_status) && (!dispute.jjdispute_status || dispute.jjdispute_status === JJDisputeStatus.Unknown
               || (!this.nonEditableStatus.includes(dispute.jjdispute_status) && dispute.hearing_type === JJDisputeHearingType.CourtAppearance))) {
               this.isEditable.next(true);
