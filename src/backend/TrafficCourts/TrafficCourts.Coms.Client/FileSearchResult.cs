@@ -16,7 +16,7 @@ public class FileSearchResult : TimestampUserData
         Guid createdBy, 
         DateTimeOffset createdAt, 
         Guid updatedBy, 
-        DateTimeOffset updatedAt,
+        DateTimeOffset? updatedAt,
         IReadOnlyDictionary<string, string>? metadata,
         IReadOnlyDictionary<string, string>? tags)
     {

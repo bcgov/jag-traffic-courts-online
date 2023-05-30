@@ -12,7 +12,6 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 
-
 @Component({
   selector: 'app-find-ticket',
   templateUrl: './find-ticket.component.html',
@@ -78,6 +77,7 @@ export class FindTicketComponent implements OnInit {
   viewWaitForOcr(): void {
     this.dialogRef = this.dialog.open(WaitForOcrDialogComponent, {
       width: '600px',
+      disableClose: true
     });
   }
 
@@ -88,14 +88,14 @@ export class FindTicketComponent implements OnInit {
   }
 
   onViewTicketUploadManual(): void {
-      const data: DialogOptions = {
-        titleKey: "Upload Ticket",
-        actionType: "primary",
-        messageKey: `If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing. `,
-        actionTextKey: "Close",
-        cancelHide: true
-      };
-      this.dialog.open(ConfirmDialogComponent, { data });
+    const data: DialogOptions = {
+      titleKey: "Upload Ticket",
+      actionType: "primary",
+      messageKey: `If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing. `,
+      actionTextKey: "Close",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data });
   }
 
   onViewImageRequirements(): void {

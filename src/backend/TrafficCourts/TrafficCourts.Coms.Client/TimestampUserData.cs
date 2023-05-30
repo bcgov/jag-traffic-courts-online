@@ -20,5 +20,5 @@ public abstract class TimestampUserData
     /// <summary>
     /// Time when this record was last updated
     /// </summary>
-    public DateTimeOffset UpdatedAt { get; set; } = default!;
+    public DateTimeOffset? UpdatedAt { get; set; } = default!;
 }

@@ -14,8 +14,6 @@ import { Store } from '@ngrx/store';
 export class FindDisputeComponent implements OnInit {
   form: FormGroup;
 
-  notFound = false;
-
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
@@ -34,7 +32,6 @@ export class FindDisputeComponent implements OnInit {
   onSearch(): void {
     this.logger.log('FindDisputeComponent::onSearch');
 
-    this.notFound = false;
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 

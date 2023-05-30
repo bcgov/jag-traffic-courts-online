@@ -6,16 +6,6 @@
     </ng-container>
   </app-page-header>
 
-  <div class="row d-sm-block d-md-none" *ngIf="notFound">
-    <div class="col">
-      <app-alert type="danger" icon="error">
-        <ng-container #alertContent class="alert-content">
-          <strong>Dispute not found.</strong>
-        </ng-container>
-      </app-alert>
-    </div>
-  </div>
-
   <div class="flex flex-last">
     <div class="flex-2-col info">
       <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
@@ -55,5 +45,4 @@
       </form>
     </div>
   </div>
-
 </app-page>

@@ -30,11 +30,11 @@
         </div>
         <div class="row mb-2">
           <div class="lg-2 col-lg-4">
-            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? 'S' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer s' : 'Other s') }}urname</small>
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? '' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer surname' : 'Other surname') }}</small>
             <div class="text">{{ noticeOfDispute.contact_surname }}</div>
           </div>
           <div class="col-lg-4">
-            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? 'G' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer g' : 'Other g') }}iven names</small>
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? '' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer given names' : 'Other given names') }}</small>
             <div class="text">{{ noticeOfDispute.contact_given_names }}</div>
           </div>
         </div>

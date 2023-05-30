@@ -46,7 +46,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.contactSurnameNm", source = "contactSurnameNm")
 	@Mapping(target = "dispute.appearanceDtm", source = "appearanceDtm")
 	@Mapping(target = "dispute.appearanceLessThan14Days", source = "appearanceLessThan14DaysYn")
-	@Mapping(target = "dispute.requestCourtAppearanceYn", constant = "Y") // TODO: source = "requestCourtAppearanceYn")
+	@Mapping(target = "dispute.requestCourtAppearanceYn", source = "requestCourtAppearanceYn") 
 	@Mapping(target = "dispute.disputantClientId", source = "disputantClientId")
 	@Mapping(target = "dispute.disputantSurnameNm", source = "disputantSurname")
 	@Mapping(target = "dispute.disputantGiven1Nm", source = "disputantGivenName1")

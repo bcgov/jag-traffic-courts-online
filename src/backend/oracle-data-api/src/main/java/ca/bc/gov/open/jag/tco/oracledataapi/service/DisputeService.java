@@ -69,7 +69,7 @@ public class DisputeService {
 		} else {
 			allDisputes = disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
 		}
-			
+
 		// Convert Disputes to DisputeListItem objects
 		List<DisputeListItem> disputeListItems = allDisputes.stream()
 				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
@@ -261,6 +261,11 @@ public class DisputeService {
 			// If we got here, then this means the Dispute record is in an invalid state.
 			logger.error("Attempting to set the status of a Dispute record to NEW after it was created - bad object state.");
 			throw new NotAllowedException("Changing the status of a Dispute record to %s is not permitted.", DisputeStatus.NEW);
+		case CONCLUDED:
+			// This should never happen since setting the status to CONCLUDED should only happen from the Justin side.
+			// If we got here, then this means the Dispute record is in an invalid state.
+			logger.error("Attempting to set the status of a Dispute record to CONCLUDED - bad object state.");
+			throw new NotAllowedException("Changing the status of a Dispute record to %s is not permitted.", DisputeStatus.CONCLUDED);
 		default:
 			// This should never happen, but if so, then it means a new DisputeStatus was added and these business rules were not updated accordingly.
 			logger.error("A Dispute record has an unknown status {} - bad object state.", StructuredArguments.value("disputeStatus", dispute.getStatus().toString()));

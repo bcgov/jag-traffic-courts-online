@@ -181,7 +181,6 @@ export class DisputeService implements IDisputeService {
   public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
 
     dispute.disputantBirthdate = "2001-01-01"; // TODO: remove this after disputant birthdate gone from schema
-    dispute.issuedTs = this.datePipe.transform(dispute?.issuedTs, "yyyy-MM-ddTHH:mm:ss");
     dispute = this.splitDisputantGivenNames(dispute);
     dispute = this.splitContactGivenNames(dispute);
     dispute = this.splitLawyerNames(dispute);

@@ -82,6 +82,8 @@ export class ViolationTicketService implements IViolationTicketService {
   }
 
   public setViolationTicketFromJSON(ocrViolationTicket: OcrViolationTicket, violationTicket: ViolationTicket): ViolationTicket {
+    // when violation ticket record is initially created it has three counts
+    // so there must always be three violation ticket count records sent through update or update will fail
     if (ocrViolationTicket) {
       if (!violationTicket.ticketNumber) violationTicket.ticketNumber = ocrViolationTicket.fields["ticket_number"].value;
       if (!violationTicket.disputantSurname) violationTicket.disputantSurname = ocrViolationTicket.fields["disputant_surname"].value;
@@ -144,6 +146,17 @@ export class ViolationTicketService implements IViolationTicketService {
           } as ViolationTicketCount;
           violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
         }
+      } else {
+        let violationTicketCount = {
+          countNo: 2,
+            description: null,
+            actOrRegulationNameCode: null,
+            section: null,
+            ticketedAmount: 0,
+            isAct: this.IsAct.N,
+            isRegulation: this.IsRegulation.N
+        }
+        violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
       }
 
       // // set up ticket count 3
@@ -168,6 +181,17 @@ export class ViolationTicketService implements IViolationTicketService {
           } as ViolationTicketCount;
           violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
         }
+      } else {
+        let violationTicketCount = {
+          countNo: 3,
+            description: null,
+            actOrRegulationNameCode: null,
+            section: null,
+            ticketedAmount: 0,
+            isAct: this.IsAct.N,
+            isRegulation: this.IsRegulation.N
+        }
+        violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
       }
     }
 
