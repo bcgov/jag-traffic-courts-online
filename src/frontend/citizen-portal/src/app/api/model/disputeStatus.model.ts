@@ -11,7 +11,7 @@
  */
 
 
-export type DisputeStatus = 'UNKNOWN' | 'NEW' | 'VALIDATED' | 'PROCESSING' | 'REJECTED' | 'CANCELLED';
+export type DisputeStatus = 'UNKNOWN' | 'NEW' | 'VALIDATED' | 'PROCESSING' | 'REJECTED' | 'CANCELLED' | 'CONCLUDED';
 
 export const DisputeStatus = {
     Unknown: 'UNKNOWN' as DisputeStatus,
@@ -19,6 +19,7 @@ export const DisputeStatus = {
     Validated: 'VALIDATED' as DisputeStatus,
     Processing: 'PROCESSING' as DisputeStatus,
     Rejected: 'REJECTED' as DisputeStatus,
-    Cancelled: 'CANCELLED' as DisputeStatus
+    Cancelled: 'CANCELLED' as DisputeStatus,
+    Concluded: 'CONCLUDED' as DisputeStatus
 };
 
