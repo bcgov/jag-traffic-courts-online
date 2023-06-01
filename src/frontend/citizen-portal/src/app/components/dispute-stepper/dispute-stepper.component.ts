@@ -194,7 +194,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.legalRepresentationForm.reset();
     }
 
-    var fileData = await firstValueFrom(this.fileData$);
+    var fileData = [] as FileMetadata[];
+    if (this.mode === DisputeFormMode.UPDATE) fileData = await firstValueFrom(this.fileData$);
     this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
       ...this.form.value,
       ...this.additionalForm?.value,
@@ -239,7 +240,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         allCountsValid = allCountsValid && (valid || countForm.value.__skip);
       }
     });
-    return allCountsValid && !this.isAllCountsSkipped;
+    return allCountsValid && (this.mode === this.DisputeFormMode.UPDATE || !this.isAllCountsSkipped);
   }
 
   isAdditionalFormValid(): boolean {
