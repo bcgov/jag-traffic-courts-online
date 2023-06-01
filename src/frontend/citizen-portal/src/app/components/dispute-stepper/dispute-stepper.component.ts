@@ -194,7 +194,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.legalRepresentationForm.reset();
     }
 
-    var fileData = await firstValueFrom(this.fileData$);
+    let fileData = [];
+    this.fileData$?.subscribe(i => { fileData = i; })
     this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
       ...this.form.value,
       ...this.additionalForm?.value,
