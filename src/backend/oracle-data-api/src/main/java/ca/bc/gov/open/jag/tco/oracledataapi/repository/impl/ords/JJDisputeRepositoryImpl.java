@@ -40,6 +40,10 @@ import net.logstash.logback.argument.StructuredArguments;
 public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	private static Logger logger = LoggerFactory.getLogger(JJDisputeRepositoryImpl.class);
+	/** 
+	 * ORDS POST or DELETE requests must include a body. Use an empty body for those requests. 
+	 */
+	public static final Object EmptyBody = new Object();
 
 	// Delegate, OpenAPI generated client
 	private final JjDisputeApi jjDisputeApi;
@@ -53,17 +57,17 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public void assignJJDisputeJj(String ticketNumber, String username) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeJjPost(username, ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeJjPost(EmptyBody, username, ticketNumber));
 	}
 
 	@Override
 	public void assignJJDisputeVtc(String ticketNumber, String username) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeVtcPost(username, ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeVtcPost(EmptyBody, username, ticketNumber));
 	}
 
 	@Override
 	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1UnassignDisputeVtcPost(DateUtil.formatAsDateTimeUTC(assignedBeforeTs), ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1UnassignDisputeVtcPost(EmptyBody, DateUtil.formatAsDateTimeUTC(assignedBeforeTs), ticketNumber));
 	}
 
 	@Override
@@ -141,6 +145,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 				disputeId,
 				disputeStatus.getShortName(),
 				userId,
+				EmptyBody,
 				courtAppearanceId,
 				Objects.toString(seizedYn, null),
 				adjudicatorPartId,
@@ -151,7 +156,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public void deleteByIdOrTicketNumber(Long id, String ticketNumber) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1DeleteDisputeDelete(id, ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.v1DeleteDisputeDelete(EmptyBody, id, ticketNumber));
 	}
 
 	private JJDispute map(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute jjDispute) {

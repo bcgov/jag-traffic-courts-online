@@ -39,6 +39,11 @@ import net.logstash.logback.argument.StructuredArguments;
 public class DisputeRepositoryImpl implements DisputeRepository {
 
 	private static Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
+	
+	/** 
+	 * ORDS POST or DELETE requests must include a body. Use an empty body for those requests. 
+	 */	
+	public static final Object EmptyBody = new Object();
 
 	// Delegate, OpenAPI generated client
 	private final ViolationTicketApi violationTicketApi;
@@ -122,7 +127,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		}
 
 		// Propagate any ApiException to caller
-		ResponseResult result = violationTicketApi.v1DeleteViolationTicketDelete(disputeId);
+		ResponseResult result = violationTicketApi.v1DeleteViolationTicketDelete(disputeId, EmptyBody);
 
 		if (result == null) {
 			throw new InternalServerErrorException("Invalid ResponseResult object");
@@ -210,7 +215,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public void assignDisputeToUser(Long disputeId, String userName) {
-		assertNoExceptions(() -> violationTicketApi.v1AssignViolationTicketPost(disputeId, userName));
+		assertNoExceptions(() -> violationTicketApi.v1AssignViolationTicketPost(disputeId, userName, EmptyBody));
 	}
 
 	@Override
@@ -221,12 +226,12 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		logger.debug("Unassigning Disputes older than {}", StructuredArguments.value("date", dateStr));
 
-		assertNoExceptions(() -> violationTicketApi.v1UnassignViolationTicketPost(dateStr));
+		assertNoExceptions(() -> violationTicketApi.v1UnassignViolationTicketPost(EmptyBody, dateStr));
 	}
 
 	@Override
 	public void setStatus(Long disputeId, DisputeStatus disputeStatus, String rejectedReason) {
-		assertNoExceptions(() -> violationTicketApi.v1ViolationTicketStatusPost(disputeId, disputeStatus.toShortName(), rejectedReason));
+		assertNoExceptions(() -> violationTicketApi.v1ViolationTicketStatusPost(EmptyBody, disputeId, disputeStatus.toShortName(), rejectedReason));
 	}
 
 	@Override
