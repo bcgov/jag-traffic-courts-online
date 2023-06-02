@@ -210,6 +210,13 @@ paths:
           schema:
             type: integer
             format: int64
+      requestBody:
+        description: Empty body required by ORDS for DELETE request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -238,6 +245,13 @@ paths:
           schema:
             type: string
             maxLength: 30
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -258,6 +272,13 @@ paths:
           schema:
             type: string
             maxLength: 19
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -290,6 +311,13 @@ paths:
           schema:
             type: string
             maxLength: 500
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -455,6 +483,13 @@ paths:
           schema:
             type: integer
             format: int64
+      requestBody:
+        description: Empty body required by ORDS for DELETE request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -550,6 +585,9 @@ components:
       type: http
       scheme: basic
   schemas:
+    EmptyObject:
+      type: object
+      description: an empty object
     AgenciesListResult:
       type: object
       properties:
