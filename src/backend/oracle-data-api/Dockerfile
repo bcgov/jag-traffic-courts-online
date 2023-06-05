@@ -26,7 +26,8 @@ RUN mvn -B clean package \
 ### Stage where Docker is running a java process to run a service built in previous stage ###
 #############################################################################################
 FROM $RUNTIME_IMAGE:11
-ARG PROMETHEUS_AGENT_VERSION=0.17.2
+ARG PROMETHEUS_AGENT_VERSION=0.18.0
+ARG OPENTELEMETRY_AGENT_VERSION=1.26.0
 
 # Optional Git Version arguments
 ARG GIT_COMMIT_DATE=not-set
@@ -60,11 +61,14 @@ lowercaseOutputLabelNames: false \n\
 RUN chgrp 0 /app/jmx_prometheus_javaagent.jar         && chmod a+rw,o-rw /app/jmx_prometheus_javaagent.jar
 RUN chgrp 0 /app/jmx_prometheus_javaagent_config.yaml && chmod a+rw,o-rw /app/jmx_prometheus_javaagent_config.yaml
 
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OPENTELEMETRY_AGENT_VERSION}/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
+RUN chgrp 0 /app/opentelemetry-javaagent.jar          && chmod a+rw,o-rw opentelemetry-javaagent.jar
+
 ENV TZ=America/Vancouver
 
 COPY --from=build ./target/oracle-data-api.jar .
 COPY --from=build ./entrypoint.sh .
 RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
 # use CMD "shell form" so we can expand env vars
-CMD ./entrypoint.sh java -javaagent:/app/jmx_prometheus_javaagent.jar=9090:/app/jmx_prometheus_javaagent_config.yaml $JAVA_OPTS -jar /app/oracle-data-api.jar
+CMD ./entrypoint.sh java -javaagent:/app/jmx_prometheus_javaagent.jar=9090:/app/jmx_prometheus_javaagent_config.yaml -javaagent:/app/opentelemetry-javaagent.jar $JAVA_OPTS -jar /app/oracle-data-api.jar
 #############################################################################################

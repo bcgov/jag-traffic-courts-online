@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeUpdateRequestMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.DisputeUpdateRequestApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.UpdateRequestListResponse;
@@ -28,10 +29,6 @@ import net.logstash.logback.argument.StructuredArguments;
 public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestRepository{
 
 	private static Logger logger = LoggerFactory.getLogger(DisputeUpdateRequestRepositoryImpl.class);
-	/** 
-	 * ORDS POST or DELETE requests must include a body. Use an empty body for those requests. 
-	 */
-	public static final Object EmptyBody = new Object();
 
 	// Delegate, OpenAPI generated client
 	private final DisputeUpdateRequestApi disputeUpdateRequestApi;
@@ -129,7 +126,7 @@ public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestR
 		}
 
 		try {
-			UpdateRequestResponseResult result = assertNoExceptions(() -> disputeUpdateRequestApi.v1DeleteDisputeUpdateRequestDelete(EmptyBody, id, null));
+			UpdateRequestResponseResult result = assertNoExceptions(() -> disputeUpdateRequestApi.v1DeleteDisputeUpdateRequestDelete(EmptyObject.instance, id, null));
 			logger.debug("Successfully deleted the dispute update request through ORDS with id {}", StructuredArguments.value("disputeUpdateRequestId", id));
 
 		} catch (ApiException e) {

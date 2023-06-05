@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.JJDisputeMapper;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
@@ -40,10 +41,6 @@ import net.logstash.logback.argument.StructuredArguments;
 public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	private static Logger logger = LoggerFactory.getLogger(JJDisputeRepositoryImpl.class);
-	/** 
-	 * ORDS POST or DELETE requests must include a body. Use an empty body for those requests. 
-	 */
-	public static final Object EmptyBody = new Object();
 
 	// Delegate, OpenAPI generated client
 	private final JjDisputeApi jjDisputeApi;
@@ -57,22 +54,22 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public void assignJJDisputeJj(String ticketNumber, String username) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeJjPost(EmptyBody, username, ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.assignDisputeJjPost(EmptyObject.instance, username, ticketNumber));
 	}
 
 	@Override
 	public void assignJJDisputeVtc(String ticketNumber, String username) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1AssignDisputeVtcPost(EmptyBody, username, ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.assignDisputeVtcPost(EmptyObject.instance, username, ticketNumber));
 	}
 
 	@Override
 	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1UnassignDisputeVtcPost(EmptyBody, DateUtil.formatAsDateTimeUTC(assignedBeforeTs), ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.unassignDisputeVtcPost(EmptyObject.instance, DateUtil.formatAsDateTimeUTC(assignedBeforeTs), ticketNumber));
 	}
 
 	@Override
 	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssignedTo) {
-		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null, jjAssignedTo);
+		JJDisputeListResponse response = jjDisputeApi.jjDisputeListGet(null, null, null, jjAssignedTo);
 		if (response == null)
 			return new ArrayList<JJDispute>();
 
@@ -89,7 +86,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public List<JJDispute> findAll() {
-		JJDisputeListResponse response = jjDisputeApi.v1JjDisputeListGet(null, null, null, null);
+		JJDisputeListResponse response = jjDisputeApi.jjDisputeListGet(null, null, null, null);
 		if (response == null)
 			return new ArrayList<JJDispute>();
 
@@ -101,7 +98,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public List<JJDispute> findByTicketNumber(String ticketNumber) {
-		JJDispute jjDispute = map(jjDisputeApi.v1JjDisputeGet(ticketNumber));
+		JJDispute jjDispute = map(jjDisputeApi.jjDisputeGet(ticketNumber));
 		// For some reason ORDS returns a valid object but with null fields if no object is found.
 		if (jjDispute != null && !StringUtils.isBlank(jjDispute.getTicketNumber())) {
 			return Arrays.asList(jjDispute);
@@ -114,7 +111,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 		try {
 			DisputeResponseResult responseResult = assertNoExceptions(() -> {
 				ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute convert = jjDisputeMapper.convert(jjDispute);
-				return jjDisputeApi.v1UpdateDisputePut(convert);
+				return jjDisputeApi.updateDisputePut(convert);
 			});
 			if (responseResult.getDisputeId() != null) {
 				logger.debug("Successfully updated the jjDispute through ORDS with dispute id {}", StructuredArguments.value("disputeId", responseResult.getDisputeId()));
@@ -141,11 +138,11 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public void setStatus(Long disputeId, JJDisputeStatus disputeStatus, String userId, Long courtAppearanceId, YesNo seizedYn, String adjudicatorPartId, JJDisputeCourtAppearanceAPP aattCd, JJDisputeCourtAppearanceDATT dattCd, String staffPartId) {
-		assertNoExceptions(() -> jjDisputeApi.v1DisputeStatusPost(
+		assertNoExceptions(() -> jjDisputeApi.disputeStatusPost(
 				disputeId,
 				disputeStatus.getShortName(),
 				userId,
-				EmptyBody,
+				EmptyObject.instance,
 				courtAppearanceId,
 				Objects.toString(seizedYn, null),
 				adjudicatorPartId,
@@ -156,7 +153,7 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 
 	@Override
 	public void deleteByIdOrTicketNumber(Long id, String ticketNumber) {
-		assertNoExceptionsGeneric(() -> jjDisputeApi.v1DeleteDisputeDelete(EmptyBody, id, ticketNumber));
+		assertNoExceptionsGeneric(() -> jjDisputeApi.disputeDelete(EmptyObject.instance, id, ticketNumber));
 	}
 
 	private JJDispute map(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute jjDispute) {

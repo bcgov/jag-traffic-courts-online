@@ -26,6 +26,7 @@ paths:
         - Health
   /v1/jjDispute:
     get:
+      operationId: jjDisputeGet
       parameters:
         - name: ticketNumber
           in: query
@@ -44,6 +45,7 @@ paths:
         - JJDispute
   /v1/updateDispute:
     put:
+      operationId: updateDisputePut
       requestBody:
         description: body
         content:
@@ -64,6 +66,7 @@ paths:
         - JJDispute
   /v1/assignDisputeJj:
     post:
+      operationId: assignDisputeJjPost
       parameters:
         - name: userId
           in: query
@@ -93,6 +96,7 @@ paths:
         - JJDispute
   /v1/ticketImageDataGet:
     post:
+      operationId: ticketImageDataGetPost
       requestBody:
         description: body
         content:
@@ -113,6 +117,7 @@ paths:
         - JJDispute
   /v1/assignDisputeVtc:
     post:
+      operationId: assignDisputeVtcPost
       parameters:
         - name: userId
           in: query
@@ -142,6 +147,7 @@ paths:
         - JJDispute
   /v1/unassignDisputeVtc:
     post:
+      operationId: unassignDisputeVtcPost
       parameters:
         - name: assignedBeforeTs
           in: query
@@ -171,6 +177,7 @@ paths:
         - JJDispute
   /v1/jjDisputeList:
     get:
+      operationId: jjDisputeListGet
       parameters:
         - name: justinRccId
           in: query
@@ -201,6 +208,7 @@ paths:
         - JJDispute
   /v1/disputeStatus:
     post:
+      operationId: disputeStatusPost
       parameters:
         - name: disputeId
           in: query
@@ -279,6 +287,7 @@ paths:
         - JJDispute
   /v1/processDisputeRemark:
     post:
+      operationId: processDisputeRemarkPost
       requestBody:
         description: body
         content:
@@ -299,6 +308,7 @@ paths:
         - JJDispute
   /v1/deleteDispute:
     delete:
+      operationId: disputeDelete
       parameters:
         - name: disputeId
           in: query
