@@ -31,6 +31,10 @@ resources:
     cpu: 100m
     memory: 256Mi
 
+## @param route.allowedIPs List of space separated IP addresses that can connect to this route
+route:
+  allowedIPs: ""
+
 ## Autoscaling configuration
 ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 ## @param autoscaling.enabled Enable Horizontal POD autoscaling
