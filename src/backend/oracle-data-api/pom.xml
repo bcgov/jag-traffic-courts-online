@@ -18,7 +18,6 @@
 		<java.version>11</java.version>
 		<log4j2.version>2.17.1</log4j2.version>
 		<release.train.version>2021.0.4</release.train.version>
-		<spring-cloud-sleuth-otel.version>1.1.0</spring-cloud-sleuth-otel.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<org.projectlombok.version>1.18.28</org.projectlombok.version>
 		<occam-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.occam</occam-package>
@@ -33,13 +32,6 @@
 				<version>${release.train.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-sleuth-otel-dependencies</artifactId>
-				<version>${spring-cloud-sleuth-otel.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -136,14 +128,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-sleuth-otel-autoconfigure</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.opentelemetry</groupId>
-			<artifactId>opentelemetry-exporter-jaeger</artifactId>
 		</dependency>
 
 		<!-- Mapstruct dependencies -->
