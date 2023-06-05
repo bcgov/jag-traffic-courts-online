@@ -48,7 +48,7 @@ citizen-web:
           "dispute":true
         }
       }
-  authConfig: |  
+  authConfig: |
     {
       "authority": "https://idtest.gov.bc.ca/login",
       "clientId": "ca.bc.gov.ag.tco.dev",
@@ -59,7 +59,7 @@ citizen-web:
       "renewTimeBeforeTokenExpiresInSeconds": 30,
       "unauthorizedRoute": "/"
     }
-  oidcConfig: |  
+  oidcConfig: |
     {
     	"request_parameter_supported": false,
     	"introspection_endpoint": "https://idtest.gov.bc.ca/oauth2/introspect",
@@ -221,6 +221,9 @@ staff-web:
   image:
     tag: "1.62.2"
     pullPolicy: Always
+  route:
+    # https://dev.jag.gov.bc.ca
+    allowedIPs: "142.34.45.134"
   keycloakConfig: |
     {
       "config": {

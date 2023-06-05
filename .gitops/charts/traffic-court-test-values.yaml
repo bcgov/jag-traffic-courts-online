@@ -31,7 +31,9 @@ citizen-web:
   image:
     tag: "1.62.2"
     pullPolicy: Always
-
+  route:
+    # https://test.justice.gov.bc.ca 
+    allowedIPs: "142.34.44.68 142.34.44.69"
   appConfig: |
     {
         "production": false,
@@ -46,7 +48,7 @@ citizen-web:
           "dispute":true
         }
       }
-  authConfig: |  
+  authConfig: |
     {
       "authority": "https://idtest.gov.bc.ca/login",
       "clientId": "ca.bc.gov.ag.tco.test",
@@ -57,7 +59,7 @@ citizen-web:
       "renewTimeBeforeTokenExpiresInSeconds": 30,
       "unauthorizedRoute": "/"
     }
-  oidcConfig: |  
+  oidcConfig: |
     {
     	"request_parameter_supported": false,
     	"introspection_endpoint": "https://idtest.gov.bc.ca/oauth2/introspect",
@@ -219,6 +221,9 @@ staff-web:
   image:
     tag: "1.62.2"
     pullPolicy: Always
+  route:
+    # https://test.jag.gov.bc.ca
+    allowedIPs: "142.34.91.133 142.34.91.132"
   keycloakConfig: |
     {
       "config": {
