@@ -85,7 +85,7 @@ export class UpdateRequestInfoComponent implements OnInit {
         };
         this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
           .subscribe((action: any) => {
-            this.getDispute();
+            this.onBack();
           });
       },
       error: (err) => {

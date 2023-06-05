@@ -102,6 +102,7 @@ export class DisputeStatusDialogComponent {
   }
   private checkConcluded(): boolean {
     if ([JJDisputeStatus.Concluded].indexOf(this.dispute?.jjdispute_status) > -1) return true;
+    else if ([DisputeStatus.Concluded].indexOf(this.dispute?.dispute_status) > -1) return true;
     else return false;
   }
 }

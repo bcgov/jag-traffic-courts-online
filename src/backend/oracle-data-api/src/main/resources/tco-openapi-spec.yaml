@@ -73,6 +73,13 @@ paths:
           in: query
           schema:
             type: string
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -115,6 +122,13 @@ paths:
           in: query
           schema:
             type: string
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -137,6 +151,13 @@ paths:
           in: query
           schema:
             type: string
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -238,6 +259,13 @@ paths:
           schema:
             type: string
             maxLength: 30
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -282,6 +310,13 @@ paths:
           in: query
           schema:
             type: string
+      requestBody:
+        description: Empty body required by ORDS for DELETE request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -299,6 +334,9 @@ components:
       type: http
       scheme: basic
   schemas:
+    EmptyObject:
+      type: object
+      description: an empty object
     AuditBase:
       type: object
       properties:
