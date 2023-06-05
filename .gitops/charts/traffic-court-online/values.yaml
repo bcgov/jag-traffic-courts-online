@@ -64,9 +64,10 @@ oracle-data-api:
     "ORDS_API_RETRY_DELAY_SEC": "5"
     "ORDS_API_TIMEOUT_MS": "2000"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14250"
+    "OTEL_SERVICE_NAME": "oracle-data-api"
+    "OTEL_TRACES_EXPORTER": "jaeger"
     "REDIS_HOST": "redis-master"
     "REDIS_PORT": "6379"
-    "SPRING_SLEUTH_ENABLED": "true"
     "UNASSIGN_DISPUTES_CRON": "0 0/5 * * * *"
     "UNASSIGN_DISPUTES_ENABLED": "true"
 

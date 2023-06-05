@@ -8,15 +8,6 @@ spring:
   jmx:
     enabled: true
 
-  sleuth:
-    enabled: ${SPRING_SLEUTH_ENABLED:false}
-    otel:   
-      config:
-        trace-id-ratio-based: 1.0
-      exporter:
-        jaeger:
-          endpoint: ${OTEL_EXPORTER_JAEGER_ENDPOINT:http://localhost:14250}
-
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
