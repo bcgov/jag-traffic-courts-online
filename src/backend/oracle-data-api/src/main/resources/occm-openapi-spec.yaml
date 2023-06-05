@@ -131,6 +131,7 @@ paths:
         - Lookup Values
   /v1/violationTicket:
     get:
+      operationId: violationTicketGet
       parameters:
         - name: violationTicketId
           in: query
@@ -157,6 +158,7 @@ paths:
         - Violation Ticket
   /v1/violationTicketList:
     get:
+      operationId: violationTicketListGet
       parameters:
         - name: fromDate
           in: query
@@ -202,6 +204,7 @@ paths:
         - Violation Ticket
   /v1/deleteViolationTicket:
     delete:
+      operationId: violationTicketDelete
       parameters:
         - name: disputeId
           in: query
@@ -230,6 +233,7 @@ paths:
         - Violation Ticket
   /v1/assignViolationTicket:
     post:
+      operationId: assignViolationTicketPost
       parameters:
         - name: disputeId
           in: query
@@ -265,6 +269,7 @@ paths:
         - Violation Ticket
   /v1/unassignViolationTicket:
     post:
+      operationId: unassignViolationTicketPost
       parameters:
         - name: assignedBeforeTs
           in: query
@@ -292,6 +297,7 @@ paths:
         - Violation Ticket
   /v1/violationTicketStatus:
     post:
+      operationId: violationTicketStatusPost
       parameters:
         - name: disputeId
           in: query
@@ -331,6 +337,7 @@ paths:
         - Violation Ticket
   /v1/processViolationTicket:
     post:
+      operationId: processViolationTicketPost
       requestBody:
         description: body
         content:

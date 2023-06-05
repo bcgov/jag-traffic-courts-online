@@ -37,7 +37,7 @@ public class TicketImageDataRepositoryImpl implements TicketImageDataRepository 
 		docKey.setReportTypes(reportType);
 		parms.addDocumentKeysItem(docKey); // expects an array of document keys
 
-		TicketImageDataGetResponseResult response = jjDisputeApi.v1TicketImageDataGetPost(parms);
+		TicketImageDataGetResponseResult response = jjDisputeApi.ticketImageDataGetPost(parms);
 		if (response == null || response.getDocuments().isEmpty())
 			return new TicketImageDataJustinDocument();
 		

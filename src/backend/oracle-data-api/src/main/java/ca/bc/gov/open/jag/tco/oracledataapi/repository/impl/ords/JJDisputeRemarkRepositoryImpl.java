@@ -32,7 +32,7 @@ public class JJDisputeRemarkRepositoryImpl implements JJDisputeRemarkRepository 
 
 	@Override
 	public JJDisputeRemark saveAndFlush(JJDisputeRemark jjDisputeRemark) {
-		assertNoExceptions(() -> jjDisputeApi.v1ProcessDisputeRemarkPost(jjDisputeMapper.convert(jjDisputeRemark)));
+		assertNoExceptions(() -> jjDisputeApi.processDisputeRemarkPost(jjDisputeMapper.convert(jjDisputeRemark)));
 		return null; // There is no TCO ORDS endpoint that will fetch a JJDisputeRemark by id so we can't return the newly saved record.
 	}
 
