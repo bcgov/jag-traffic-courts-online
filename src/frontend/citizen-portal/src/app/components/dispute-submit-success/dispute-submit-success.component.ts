@@ -43,7 +43,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.mode === this.DisputeFormMode.CREATE) {
+    if (this.mode === DisputeFormMode.CREATE) {
       this.noticeOfDispute = this.noticeOfDisputeService.noticeOfDispute;
       if (!this.noticeOfDispute) {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.FIND)]);
