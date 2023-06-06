@@ -476,7 +476,7 @@
                 (click)="onUploadClicked()">
                 Upload Documents
               </button>
-              <input type="file" #fileInput id="fileInput" style="display:none" accept="image/jpeg,.pdf,.doc,.docx"
+              <input type="file" #fileInput id="fileInput" style="display:none" accept="{{ acceptFileTypes.join(',') }}"
                 (change)="onUploadFile($event.target.files)">
             </div>
           </div>

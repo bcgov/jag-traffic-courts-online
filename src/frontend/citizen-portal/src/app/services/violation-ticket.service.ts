@@ -129,7 +129,7 @@ export class ViolationTicketService {
       return;
     }
     // Check if file too small (0) or too large (over 10MB)
-    var fileSizeError = this.checkSize(ticketFile?.size);
+    var fileSizeError = this.fileUtilsService.checkFileSize(ticketFile?.size);
     if (fileSizeError !== "") {
       this.logger.error("ViolationTicketService::analyseTicket error has occurred: ", fileSizeError);
       this.openErrorScenarioOneDialog();
@@ -248,7 +248,11 @@ export class ViolationTicketService {
     }
     result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
     result.counts.forEach(count => {
-      count.ticketed_amount = +count.ticketed_amount;
+      if (count.ticketed_amount === null) {
+        isOcrIssueDetected = true;
+      } else {
+        count.ticketed_amount = +count.ticketed_amount;
+      }
     })
 
     // set ticket_id to imageFilename returned from Ocr
@@ -322,7 +326,7 @@ export class ViolationTicketService {
       // || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
       if ((dateDiff <= 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET)
         || this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.CAMERA_TICKET) {
-          this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
+        this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
       } else {
@@ -414,11 +418,5 @@ export class ViolationTicketService {
     var diffYear = (new Date().getTime() - new Date(givenDate).getTime()) / 1000;
     diffYear /= (60 * 60 * 24);
     return Math.round(diffYear);
-  }
-
-  private checkSize(fileSize: number): string {
-    if (fileSize <= 0) return "File size is 0MB.";
-    else if (fileSize >= (10 * 1024 * 1024)) return "File size is over 10MB."
-    else return "";
   }
 }
