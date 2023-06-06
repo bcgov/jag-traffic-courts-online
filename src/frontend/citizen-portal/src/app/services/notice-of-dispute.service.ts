@@ -194,7 +194,7 @@ export class NoticeOfDisputeService {
                 });
               }
               else {
-                this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUBMIT_SUCCESS)], {
+                this.router.navigate([AppRoutes.SUBMIT_SUCCESS], {
                   queryParams: {
                     ticketNumber: input.ticket_number,
                     time: this.datePipe.transform(input.issued_date, "HH:mm", "UTC"),
