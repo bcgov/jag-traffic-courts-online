@@ -114,8 +114,8 @@ export class DisputeEffects {
 
   update$ = createEffect(() => this.actions$.pipe(
     ofType(Actions.Update),
-    withLatestFrom(this.store.select(DisputeStore.Selectors.Result)),
-    mergeMap(([action, searchResult]) => {
+    withLatestFrom(this.store.select(DisputeStore.Selectors.Result), this.store.select(DisputeStore.Selectors.Params)),
+    mergeMap(([action, searchResult, params]) => {
       return this.disputeService.updateDispute(searchResult.token, action.payload)
         .pipe(
           map(result => {
@@ -131,6 +131,13 @@ export class DisputeEffects {
               this.router.navigate([AppRoutes.ticketPath(AppRoutes.UPDATE_DISPUTE_LANDING)], {
                 queryParams: {
                   mode: DisputeFormMode.UPDATEDISPUTANT
+                },
+              });
+              this.router.navigate([AppRoutes.SUBMIT_SUCCESS], {
+                queryParams: {
+                  ticketNumber: params?.ticketNumber,
+                  time: params?.time,
+                  mode: DisputeFormMode.UPDATE
                 },
               });
             }

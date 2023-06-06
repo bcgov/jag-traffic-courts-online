@@ -4,7 +4,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { AppRoutes } from "app/app.routes";
 import { NoticeOfDisputeService, NoticeOfDispute, CountsActions } from "app/services/notice-of-dispute.service";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from "app/api";
+import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn, ViolationTicketCount } from "app/api";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 
 @Component({
@@ -24,6 +24,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
   ticketTypes = TicketTypes;
   ticketType: string;
   countsActions: CountsActions;
+  ticketCounts: ViolationTicketCount[] = [];
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   DisputeFormMode = DisputeFormMode;
@@ -36,18 +37,19 @@ export class DisputeSubmitSuccessComponent implements OnInit {
   ) {
     let params = this.route.snapshot.queryParams;
     this.mode = +params?.mode;
-    if (this.mode !== this.DisputeFormMode.CREATE && this.mode !== this.DisputeFormMode.UPDATE && this.mode !== this.DisputeFormMode.UPDATEDISPUTANT) {
+    if (!this.mode) {
       this.router.navigate([""]);
     }
   }
 
   ngOnInit(): void {
-    if (this.mode === DisputeFormMode.CREATE) {
+    if (this.mode === this.DisputeFormMode.CREATE) {
       this.noticeOfDispute = this.noticeOfDisputeService.noticeOfDispute;
       if (!this.noticeOfDispute) {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.FIND)]);
         return;
       }
+      this.ticketCounts = this.noticeOfDispute.violation_ticket ? this.noticeOfDispute.violation_ticket.counts : this.noticeOfDispute.counts;
       this.ticketType = this.violationTicketService.ticketType;
       this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
     }

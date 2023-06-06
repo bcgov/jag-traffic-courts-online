@@ -1,4 +1,4 @@
-<app-page *ngIf="noticeOfDispute">
+<app-page>
   <app-page-header>
     <ng-container header>Traffic ticket dispute request confirmation</ng-container>
   </app-page-header>
@@ -47,7 +47,7 @@
     <hr class="d-print-none" />
   </div>
 
-  <ng-container *ngIf="isCreate">
+  <ng-container *ngIf="isCreate && noticeOfDispute">
     <strong class="d-print-none">Request details</strong>
 
     <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute" [ticketCounts]="noticeOfDispute.counts"></app-dispute-ticket-summary>
