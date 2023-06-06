@@ -49,7 +49,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.FIND)]);
         return;
       }
-      this.ticketCounts = this.noticeOfDispute.violation_ticket ? this.noticeOfDispute.violation_ticket.counts : this.noticeOfDispute.counts;
+      this.ticketCounts = this.noticeOfDispute.counts;
       this.ticketType = this.violationTicketService.ticketType;
       this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
     }
