@@ -513,10 +513,10 @@ public class DisputesController : ControllerBase
             var status = searchResponse.DisputeStatus ?? "missing";
             return BadRequest($"Dispute has a status of {status}. Expecting one of NEW, VALIDATED, or PROCESSING.");
         }
-        else if (searchResponse.JJDisputeStatus is not null)
+        else if (searchResponse.JJDisputeStatus is not null && searchResponse.HearingType == "WRITTEN_REASONS")
         {
-            _logger.LogDebug("JJDispute status is not valid, returning bad request");
-            return BadRequest($"JJDispute has status of {searchResponse.JJDisputeStatus}. Must be blank.");
+            _logger.LogDebug("JJDispute status is not null for a written reasons hearing, returning bad request");
+            return BadRequest($"JJDispute has status of {searchResponse.JJDisputeStatus}. Must be blank for a written reasons dispute.");
         }
 
         _logger.LogDebug("Dispute status is ok, returning null");

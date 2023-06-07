@@ -30,17 +30,16 @@ export class UpdateDisputeLandingComponent implements OnInit {
   ngOnInit(): void {
     this.disputeService.checkStoredDispute().subscribe(found => {
       if (found) {
-        // subscrible to all changes
+        // subscribe to all changes
         this.store.pipe(select(DisputeStore.Selectors.State)).subscribe(state => {
           if (state.result) {
             this.state = state;
             let dispute = state.result;
-            if (dispute && !this.nonEditableStatus.includes(dispute.dispute_status) && (!dispute.jjdispute_status || dispute.jjdispute_status === JJDisputeStatus.Unknown
-              || (!this.nonEditableStatus.includes(dispute.jjdispute_status) && dispute.hearing_type === JJDisputeHearingType.CourtAppearance))) {
-              this.isEditable.next(true);
-            } else {
-              this.isEditable.next(false);
-            }
+            if (!dispute) this.isEditable.next(false); // no dispute found
+            else if (this.nonEditableStatus.includes(dispute.dispute_status)) this.isEditable.next(false); // OCCAM dispute done
+            else if (this.nonEditableStatus.includes(dispute.jjdispute_status)) this.isEditable.next(false); // JJ Dispute over
+            else if (dispute.hearing_type === JJDisputeHearingType.WrittenReasons && dispute.jjdispute_status) this.isEditable.next(false); // written reasons and has a jj workbench status
+            else this.isEditable.next(true); // otherwise allow editing
           }
         })
       }
