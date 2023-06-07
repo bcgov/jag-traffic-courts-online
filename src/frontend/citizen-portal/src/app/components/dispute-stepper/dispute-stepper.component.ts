@@ -85,6 +85,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   fileTypeToUpload: string = this.adjournmentFileType.key;
   acceptFileTypes = [
     "image/jpeg",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/pdf",
     ".pdf",
     ".doc",
     ".docx"
@@ -384,8 +386,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     let file = files[0];
 
     let fileData = await firstValueFrom(this.fileData$)
-    if (fileData.length >= 3) {
-      this.onUploadFileError("Maximum 4 uploads per dispute.");
+    if (fileData.length >= 4) {
+      this.onUploadFileError("Maximum 4 file uploads per dispute.");
       return;
     }
 

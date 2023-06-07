@@ -95,6 +95,11 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     } else if (form.controls.drivers_licence_province) { // have control but no value
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
+
+    if (!form.value.email_address && (this.mode === this.DisputeFormMode.UPDATE || this.mode === this.DisputeFormMode.UPDATEDISPUTANT)) {
+      this.form.controls.email_address.disable();
+      this.optOut = true;
+    }
   }
 
   ngAfterViewInit(): void {
