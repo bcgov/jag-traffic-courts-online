@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { AppRoutes } from "app/app.routes";
-import { NoticeOfDisputeService, NoticeOfDispute, CountsActions } from "app/services/notice-of-dispute.service";
+import { NoticeOfDisputeService, CountsActions } from "app/services/notice-of-dispute.service";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from "app/api";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
@@ -20,12 +20,13 @@ export class DisputeSubmitSuccessComponent implements OnInit {
   readonly whatToExpectURL: string =
     "https://www.provincialcourt.bc.ca/downloads/Traffic/Traffic%20Court%20Guide.pdf";
 
-  noticeOfDispute: NoticeOfDispute;
+  noticeOfDispute: any;
   ticketTypes = TicketTypes;
   ticketType: string;
   countsActions: CountsActions;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
+  DisputeFormMode = DisputeFormMode;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,7 +35,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     private violationTicketService: ViolationTicketService,
   ) {
     let params = this.route.snapshot.queryParams;
-    this.mode = params?.mode;
+    this.mode = +params?.mode;
     if (!this.mode) {
       this.router.navigate([""]);
     }
