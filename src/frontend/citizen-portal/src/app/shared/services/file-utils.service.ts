@@ -20,4 +20,15 @@ export class FileUtilsService {
       return reader.readAsDataURL(blob);
     });
   }
+
+  public checkFileSize(fileSize: number, maxFileSizeInMB: number = 10): string {
+    if (fileSize <= 0) return "File size is 0MB.";
+    else if (fileSize >= (maxFileSizeInMB * 1024 * 1024)) return "File size is over " + maxFileSizeInMB + "MB."
+    else return "";
+  }
+
+  public checkFileType(file: File, acceptFileTypes: string[]): string {
+    if (!acceptFileTypes.includes(file.type)) return "File type doesn't match.";
+    else return "";
+  }
 }

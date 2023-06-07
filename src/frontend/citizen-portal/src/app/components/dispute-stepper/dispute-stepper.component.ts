@@ -83,6 +83,12 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     { key: "Other", value: "Other" },
   ]
   fileTypeToUpload: string = this.adjournmentFileType.key;
+  acceptFileTypes = [
+    "image/jpeg",
+    ".pdf",
+    ".doc",
+    ".docx"
+  ]
 
   // Consume from the service
   languages: Language[] = [];
@@ -377,14 +383,23 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (files.length <= 0) return;
     let file = files[0];
 
-
     let fileData = await firstValueFrom(this.fileData$)
     if (fileData.length >= 3) {
       this.onUploadFileError("Maximum 4 uploads per dispute.");
+      return;
     }
 
-    let err = this.checkFileSize(file.size);
-    if (err.length > 0) this.onUploadFileError(err);
+    let err = this.fileUtilsService.checkFileSize(file.size, 50);
+    if (err.length > 0) {
+      this.onUploadFileError(err);
+      return;
+    }
+
+    err = this.fileUtilsService.checkFileType(file, this.acceptFileTypes);
+    if (err.length > 0) {
+      this.onUploadFileError(err);
+      return;
+    }
 
     let pendingFileStream = await firstValueFrom(this.fileUtilsService.readFileAsDataURL(file)) as string;
     this.store.dispatch(DisputeStore.Actions.AddDocument({ file: file, fileType: this.fileTypeToUpload, pendingFileStream }));
@@ -401,12 +416,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       cancelHide: true
     };
     this.dialog.open(ConfirmDialogComponent, { data });
-  }
-
-  private checkFileSize(fileSize: number): string {
-    if (fileSize <= 0) return "File size is 0MB.";
-    else if (fileSize >= (10 * 1024 * 1024)) return "File size is over 50MB."
-    else return "";
   }
 
   submitDispute() {
