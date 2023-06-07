@@ -28,7 +28,7 @@ export class FileUtilsService {
   }
 
   public checkFileType(file: File, acceptFileTypes: string[]): string {
-    if (!acceptFileTypes.includes(file.type)) return "File type doesn't match.";
+    if (!acceptFileTypes.includes(file.type)) return "File type must be one of JPEG, DOC/DOCX, PDF.";
     else return "";
   }
 }
