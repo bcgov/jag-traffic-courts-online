@@ -129,11 +129,11 @@ export class DisputeService {
     return this.dialog.open(DisputeNotFoundDialogComponent, { width: '600px' });
   }
 
-  openDisputantNotMatchDialog() {
+  openDisputantNotMatchDialog(err: string) {
     const data: DialogOptions = {
       titleKey: "Warning",
       actionType: "warn",
-      messageKey: `You could not be authenticated as the contact noted on this dispute`,
+      messageKey: `You could not be authenticated as the contact noted on this dispute. ` + err,
       actionTextKey: "Close",
       cancelHide: true
     };
