@@ -98,6 +98,7 @@ metadata:
     openshift.io/host.generated: 'true'
     # replace with developer's ip address list, see TCVP-1682
     # haproxy.router.openshift.io/ip_whitelist: 127.0.0.1 
+    haproxy.router.openshift.io/disable_cookies: "true"
 spec:
   to:
     kind: Service

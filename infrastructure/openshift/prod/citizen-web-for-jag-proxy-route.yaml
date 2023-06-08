@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/version: 1.16.0
   annotations:
     haproxy.router.openshift.io/ip_whitelist: 142.34.133.71 99.79.165.63
+    haproxy.router.openshift.io/disable_cookies: "true"
 spec:
   host: citizen-web-0198bb-prod.apps.silver.devops.gov.bc.ca
   to:
