@@ -1,0 +1,29 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: rabbitmq
+  namespace: 0198bb-tools
+  labels:
+    usage: runtime-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: '3.11.9-debian-11-r2'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/rabbitmq:3.11.9-debian-11-r2'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: '3.12.0-debian-11-r0'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/rabbitmq:3.12.0-debian-11-r0'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source

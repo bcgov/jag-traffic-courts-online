@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: form-recognizer-layout
+  labels:
+    usage: runtime-image
+spec:
+  lookupPolicy:
+    local: false
