@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserRepresentation as UserRepresentationBase } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
 import { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
 import { BehaviorSubject, from, Observable, map, catchError, forkJoin } from 'rxjs';
@@ -31,7 +31,23 @@ export class AuthService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-  ) { }
+  ) {
+    this.keycloak.keycloakEvents$.subscribe({
+      next(event) {
+        if (event.type == KeycloakEventType.OnTokenExpired) {
+          keycloak.updateToken(1).then(refreshed => {
+            if (refreshed) {
+              alert('Token was successfully refreshed');
+            } else {
+              alert('Token is still valid');
+            }
+          }).catch(() => {
+            alert('Failed to refresh the token, or the session has expired');
+          });
+        }
+      }
+    });
+  }
 
   checkAuth(): Observable<boolean> {
     return from(this.keycloak.isLoggedIn())

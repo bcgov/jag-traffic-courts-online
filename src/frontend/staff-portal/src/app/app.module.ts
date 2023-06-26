@@ -67,6 +67,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
   return async () => {
     const response = await fetch('./assets/config/keycloak.config.json');
     const config = await response.json();
+    config.initOptions.silentCheckSsoRedirectUri = window.location.origin + config.initOptions.silentCheckSsoRedirectUri;
     await keycloak.init(config);
   }
 }
