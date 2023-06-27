@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserRepresentation as UserRepresentationBase } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
 import { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
 import { BehaviorSubject, from, Observable, map, catchError, forkJoin } from 'rxjs';
@@ -31,7 +31,24 @@ export class AuthService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-  ) { }
+  ) {
+    this.keycloak.keycloakEvents$.subscribe({
+      next(event) {
+        if (event.type == KeycloakEventType.OnTokenExpired) {
+          keycloak.updateToken(1).then(refreshed => {
+            if (refreshed) {
+              this.logger.info('AuthService::RefreshToken', 'Token refreshed');
+            }
+            else {
+              this.logger.info('AuthService::RefreshToken', 'Token refresh failed.');
+            }
+          }).catch(() => {
+            this.logger.info('AuthService::RefreshToken', 'Failed to refresh the token, or the session has expired');
+          });
+        }
+      }
+    });
+  }
 
   checkAuth(): Observable<boolean> {
     return from(this.keycloak.isLoggedIn())
@@ -158,7 +175,7 @@ export class AuthService {
     return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
       .pipe(
         map((response: UserRepresentation[]) => {
-          this.logger.info('KeycloakService::getUsersInGroup', response)
+          this.logger.info('AuthService::getUsersInGroup', response)
           response.forEach((user: UserRepresentation) => {
             user.idir = this.getIDIR(user);
             user.fullName = this.getFullName(user);
@@ -170,7 +187,7 @@ export class AuthService {
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.keycloak_error);
           this.logger.error(
-            'KeycloakService::getUsersInGroup Error has occured ',
+            'AuthService::getUsersInGroup Error has occured ',
             error
           );
           throw error;

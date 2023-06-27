@@ -7,7 +7,6 @@ import { AppConfigService } from 'app/services/app-config.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { LookupsService } from 'app/services/lookups.service';
 import { AppState, JJDisputeStore } from 'app/store';
-import { KeycloakService } from 'keycloak-angular';
 import { filter, forkJoin } from 'rxjs';
 
 @Component({
@@ -44,7 +43,6 @@ export class HeaderComponent implements OnInit {
     private lookupsService: LookupsService,
     private logger: LoggerService,
     private store: Store<AppState>,
-    private keycloak: KeycloakService,
   ) {
     this.toggle = new EventEmitter<void>();
 
@@ -121,6 +119,6 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.keycloak.logout();
+    this.authService.logout();
   }
 }
