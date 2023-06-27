@@ -14,14 +14,6 @@ public class SearchDisputeResponse
     /// <summary>
     /// The notice of dispute identifer.
     /// </summary>
-<<<<<<< HEAD
-    public Guid? NoticeOfDisputeGuid { get; set; }
-    public string? DisputeStatus { get; set; }
-    public string? JJDisputeStatus { get; set; }
-    public string? HearingType { get; set; }
-    public bool IsError { get; set; }
-}
-=======
     public Guid? NoticeOfDisputeGuid { get; set; }
     public string? DisputeStatus { get; set; }
     public string? JJDisputeStatus { get; set; }
@@ -57,4 +49,3 @@ public class SearchDisputeResponse
         IsNotFound = false
     };
 }
->>>>>>> origin/main
