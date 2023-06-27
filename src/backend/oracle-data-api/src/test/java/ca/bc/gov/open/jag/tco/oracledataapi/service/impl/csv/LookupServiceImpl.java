@@ -61,9 +61,6 @@ public class LookupServiceImpl extends BaseLookupService {
 		}
 		return languages;
 	}
-<<<<<<< HEAD:src/backend/oracle-data-api/src/main/java/ca/bc/gov/open/jag/tco/oracledataapi/service/impl/csv/LookupServiceImpl.java
-
-=======
 	
 	@Override
 	public List<Agency> getAgencies() throws ApiException {
@@ -105,5 +102,4 @@ public class LookupServiceImpl extends BaseLookupService {
 		}
 		return provinces;
 	}
->>>>>>> origin/main:src/backend/oracle-data-api/src/test/java/ca/bc/gov/open/jag/tco/oracledataapi/service/impl/csv/LookupServiceImpl.java
 }
