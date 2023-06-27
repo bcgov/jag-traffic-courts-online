@@ -37,12 +37,13 @@ export class AuthService {
         if (event.type == KeycloakEventType.OnTokenExpired) {
           keycloak.updateToken(1).then(refreshed => {
             if (refreshed) {
-              alert('Token was successfully refreshed');
-            } else {
-              alert('Token is still valid');
+              this.logger.info('AuthService::RefreshToken', 'Token refreshed');
+            }
+            else {
+              this.logger.info('AuthService::RefreshToken', 'Token refresh failed.');
             }
           }).catch(() => {
-            alert('Failed to refresh the token, or the session has expired');
+            this.logger.info('AuthService::RefreshToken', 'Failed to refresh the token, or the session has expired');
           });
         }
       }
@@ -174,7 +175,7 @@ export class AuthService {
     return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
       .pipe(
         map((response: UserRepresentation[]) => {
-          this.logger.info('KeycloakService::getUsersInGroup', response)
+          this.logger.info('AuthService::getUsersInGroup', response)
           response.forEach((user: UserRepresentation) => {
             user.idir = this.getIDIR(user);
             user.fullName = this.getFullName(user);
@@ -186,7 +187,7 @@ export class AuthService {
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.keycloak_error);
           this.logger.error(
-            'KeycloakService::getUsersInGroup Error has occured ',
+            'AuthService::getUsersInGroup Error has occured ',
             error
           );
           throw error;
