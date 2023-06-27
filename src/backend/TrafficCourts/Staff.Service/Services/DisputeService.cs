@@ -1,12 +1,15 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Features.FilePersistence;
+using System.Collections.ObjectModel;
+using System.Security.Claims;
+using System.Text.Json;
+using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
-using System.Text.Json;
-using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Staff.Service.Models;
-using System.Collections.ObjectModel;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -20,42 +23,32 @@ public class DisputeService : IDisputeService
     private readonly IRejectedDisputeEmailTemplate _rejectedDisputeEmailTemplate;
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
-    private readonly IFilePersistenceService _filePersistenceService;
+    private readonly IObjectManagementService _objectManagementService;
+    private readonly IProvinceLookupService _provinceLookupService;
+
 
     public DisputeService(
         IOracleDataApiClient oracleDataApi,
         IBus bus,
-        IFilePersistenceService filePersistenceService,
-        ILogger<DisputeService> logger,
+        IObjectManagementService objectManagementService,
         ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
-        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate)
+        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
+        ILogger<DisputeService> logger,
+        IProvinceLookupService provinceLookupService)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
-        _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
+        _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
+        _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(cancelledDisputeEmailTemplate));
+        _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(rejectedDisputeEmailTemplate));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate;
-        _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate;
+        _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(_provinceLookupService));
     }
 
-    public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
     {
-        ICollection<Dispute> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
-
-        foreach(Dispute dispute in disputes)
-        {
-            // When reviewing the list of tickets, the JSON is needed to compute SystemDetectedOCRIssues
-            OcrViolationTicket? ocrViolationTicket = null;
-            if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
-            {
-                // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
-                ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
-                dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
-            }
-        }
-
+        ICollection<DisputeListItem> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
         return disputes;
-
     }
 
     public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
@@ -63,156 +56,207 @@ public class DisputeService : IDisputeService
         return await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
     }
 
-    public async Task<Dispute> GetDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
     {
-        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, isAssign, cancellationToken);
 
-        OcrViolationTicket? ocrViolationTicket = null;
-        if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
-        {
-            // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
-            ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
-            dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
-        }
+        dispute.ViolationTicket.OcrViolationTicket = await GetOcrResultsAsync(dispute, cancellationToken);
 
         // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
         // If so, retrieve the image from object storage and return it as well.
-        if (ocrViolationTicket != null)
-        {
-            dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(ocrViolationTicket.ImageFilename, cancellationToken);
-        }
+        dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
 
         return dispute;
     }
 
-    /// <summary>
-    /// Extracts the path to the image located in the object store from the JSON string, or null if not filename could be found.
-    /// </summary>
-    /// <param name="json"></param>
-    /// <returns></returns>
-    public string? GetViolationTicketImageFilename(string json)
+    private async Task<OcrViolationTicket?> GetOcrResultsAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        if (json is not null)
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
+        if (file is null)
         {
-            try
-            {
-                JsonElement element = JsonSerializer.Deserialize<JsonElement>(json);
-                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("ImageFilename", out JsonElement imageFilename))
-                {
-                    return imageFilename.GetString();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Should never reach here, but if so then it means the ocr json data is invalid or not parseable by .NET
-                // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
-                _logger.LogError(ex, "Could not extract object store file reference from json data");
-            }
+            return null;
         }
-        return null;
+
+        // deserialize
+        var result = JsonSerializer.Deserialize<OcrViolationTicket>(file.Data);
+        return result;
     }
 
     /// <summary>
     /// Retrieves a image from the object store with the given imageFilename.
     /// </summary>
-    /// <param name="imageFilename"></param>
+    /// <param name="dispute"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(string? imageFilename, CancellationToken cancellationToken)
+    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(imageFilename))
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
+        if (file is null)
         {
             return null;
         }
 
-        using (_logger.BeginScope(new Dictionary<string, object> { ["FileName"] = imageFilename }))
-        {
-            try
-            {
-                MemoryStream stream = await _filePersistenceService.GetFileAsync(imageFilename, cancellationToken);
-                FileMimeType? mimeType = stream.GetMimeType();
-                if (mimeType is null)
-                {
-                    _logger.LogWarning("Could not determine mime type for file");
-                    return null;
-                }
+        MemoryStream stream = new MemoryStream(); // todo: use memory stream manager
+        file.Data.CopyTo(stream);
 
-                return new ViolationTicketImage(stream.ToArray(), mimeType.MimeType);
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, "Could not retrieve image from object storage");
-                throw;
-            }
-        }
+        return new ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
     }
+
+
+    private async Task<Coms.Client.File?> GetFileAsync(Dispute dispute, string documentType, CancellationToken cancellationToken)
+    {
+        if (dispute?.NoticeOfDisputeGuid is null)
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. There is no NoticeOfDisputeGuid", documentType);
+            return null;
+        }
+
+        if (!Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. The NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}' is not valid", documentType, dispute.NoticeOfDisputeGuid);
+            return null;
+        }
+
+        InternalFileProperties properties = new InternalFileProperties
+        {
+            NoticeOfDisputeId = noticeOfDisputeId,
+            DocumentType = documentType
+        };
+
+        var metadata = properties.ToMetadata();
+        var tags = properties.ToTags();
+
+        FileSearchParameters parameters = new FileSearchParameters(null, metadata, tags);
+
+        IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(parameters, cancellationToken);
+
+        if (searchResults.Count == 0)
+        {
+            _logger.LogInformation("Cannot get dispute {DocumentType}. No files found with NoticeOfDisputeGuid value '{NoticeOfDisputeGuid}'", documentType, dispute.NoticeOfDisputeGuid);
+            return null;
+        }
+
+        FileSearchResult searchResult = searchResults[0];
+        if (searchResults.Count > 1)
+        {
+            // more than one? that is a problem
+            _logger.LogInformation("Found {Count} {DocumentType} for {NoticeOfDisputeId}, expected only one. Returning the last created item",
+                searchResults.Count, documentType, noticeOfDisputeId);
+
+            searchResult = searchResults.OrderByDescending(_ => _.CreatedAt).First();
+        }
+
+        // get the document
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(searchResult.Id, cancellationToken);
+        return file;
+    }
+
 
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
         return await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
 
-    public async Task ValidateDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task ValidateDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute status setting to validated");
 
         Dispute dispute = await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Handwritten ticket OCR details validated by staff.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.SVAL,  // Handwritten ticket OCR details validated by staff
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task CancelDisputeAsync(long disputeId, string cancelledReason, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute cancelled");
 
-        Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancelledReason, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute cancelled by staff.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.SCAN, // Dispute canceled by staff
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        // Publish submit event (consumer(s) will generate email, etc)
-        DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
-        await _bus.PublishWithLog(_logger, cancelledEvent, cancellationToken);
+        // Publish file history of cancellation email
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCA;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
-        var emailMessage = _cancelledDisputeEmailTemplate.Create(dispute);
-        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
+        // Publish cancel event (consumer(s) will generate email, etc)
+        DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
+        await _bus. PublishWithLog(_logger, cancelledEvent, cancellationToken);
     }
 
-    public async Task RejectDisputeAsync(long disputeId, string rejectedReason, CancellationToken cancellationToken)
+    public async Task RejectDisputeAsync(long disputeId, string rejectedReason, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute rejected");
 
         Dispute dispute = await _oracleDataApi.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
 
         // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute rejected by staff.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.SREJ, // Dispute rejected by staff
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
         await _bus.PublishWithLog(_logger, rejectedEvent, cancellationToken);
-
-        var emailMessage = _rejectedDisputeEmailTemplate.Create(dispute);
-        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
-    public async Task SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task SubmitDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         _logger.LogDebug("Dispute submitted for approval processing");
 
-        // Save and status to PROCESSING
-        Dispute dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
+        // Check for other disputes in processing status with same ticket number
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
+        string? issuedTime = dispute.IssuedTs is not null ? dispute.IssuedTs.Value.ToString("HH:mm") : "";
+        ICollection<DisputeResult> disputeResults = await _oracleDataApi.FindDisputeStatusesAsync(dispute.TicketNumber, null, null, cancellationToken);
+        disputeResults = disputeResults.Where(x => x.DisputeStatus == DisputeResultDisputeStatus.PROCESSING).ToList();
+        if (disputeResults.Count>0)
+        {
+            throw new BadHttpRequestException("Another dispute with the same ticket number is currently being processed.");
+        }
+ 
+        // Status to PROCESSING
+        dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
 
-        // Publish file history
-        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute submitted to ARC by staff.");
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+        // set AddressProvince to 2 character abbreviation code if prov seq no & ctry id present
+        if (dispute.AddressProvinceSeqNo != null)
+        {
+            var provFound = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(dispute.AddressProvinceSeqNo.ToString(), dispute.AddressCountryId.ToString());
+            if (provFound != null) { dispute.AddressProvince = provFound.ProvAbbreviationCd; }
+        }
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
         await _bus.PublishWithLog(_logger, approvedEvent, cancellationToken);
+
+        // Publish file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
+            dispute.NoticeOfDisputeGuid,
+            FileHistoryAuditLogEntryType.SPRC, // Dispute submitted to ARC by staff
+            GetUserName(user));
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        // publish file history of email sent
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.EMCF;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
     public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
@@ -224,12 +268,18 @@ public class DisputeService : IDisputeService
     {
         _logger.LogDebug("Email verification sent");
 
-        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
 
-        // Publish submit event (consumer(s) will generate email, etc)
-        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.NoticeOfDisputeGuid));
-        await _bus.PublishWithLog(_logger, emailVerificationSentEvent, cancellationToken);
+        // Publish a message to resend email verification email (the event will be picked up by the saga to generate email, etc)
 
+        var message = new RequestEmailVerification { 
+            NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
+            DisputeId = dispute.DisputeId,
+            TicketNumber = dispute.TicketNumber,
+            EmailAddress = dispute.EmailAddress,
+            IsUpdateEmailVerification = true
+        };
+        await _bus.PublishWithLog(_logger, message, cancellationToken);
         return "Email verification sent";
     }
 
@@ -237,16 +287,17 @@ public class DisputeService : IDisputeService
     /// Accepts a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    public async Task AcceptDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // TCVP-1975 - consumers of this message are expected to:
-        // - call oracle-data-api to patch the Dispute with the DisputantUpdateRequest changes.
+        // - call oracle-data-api to patch the Dispute with the DisputeUpdateRequest changes.
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was accepted
         // - populate file/email history records
-        DisputantUpdateRequestAccepted message = new(updateStatusId);
+        DisputeUpdateRequestAccepted message = new(updateStatusId, GetUserName(user));
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 
@@ -254,15 +305,16 @@ public class DisputeService : IDisputeService
     /// Rejects a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
+    public async Task RejectDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         // TCVP-1974 - consumers of this message are expected to:
         // - call oracle-data-api to update request status in OCCAM.
         // - send confirmation email indicating request was rejected
         // - populate file/email history records
-        DisputantUpdateRequestRejected message = new(updateStatusId);
+        DisputeUpdateRequestRejected message = new(updateStatusId, GetUserName(user));
         await _bus.PublishWithLog(_logger, message, cancellationToken);
     }
 
@@ -274,16 +326,16 @@ public class DisputeService : IDisputeService
     public async Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
     {
         ICollection<DisputeWithUpdates> disputesWithUpdates = new Collection<DisputeWithUpdates>();
-        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputantUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
+        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputeUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
 
-        foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest disputantUpdateRequest in pendingDisputeUpdateRequests)
+        foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest disputeUpdateRequest in pendingDisputeUpdateRequests)
         {
             DisputeWithUpdates? disputeWithUpdates = new DisputeWithUpdates();
-            if (disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId) is null)
+            if (disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputeUpdateRequest.DisputeId) is null)
             {
                 try
                 {
-                    Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputantUpdateRequest.DisputeId, cancellationToken);
+                    Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeUpdateRequest.DisputeId, false, cancellationToken);
 
                     // Fill in record to return
                     disputeWithUpdates.DisputeId = dispute.DisputeId;
@@ -328,15 +380,15 @@ public class DisputeService : IDisputeService
                 }
             } else
             {
-                disputeWithUpdates = disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputantUpdateRequest.DisputeId);
+                disputeWithUpdates = disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputeUpdateRequest.DisputeId);
             }
             // check whether this udpate request is for an adjournment document
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             disputeWithUpdates.AdjournmentDocument = false;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-            if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
+            if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
             {
-                DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputantUpdateRequest.UpdateJson);
+                DocumentUpdateJSON? documentUpdateJSON = JsonSerializer.Deserialize<DocumentUpdateJSON>(disputeUpdateRequest.UpdateJson);
                 if (documentUpdateJSON is not null && documentUpdateJSON.DocumentType == "Application for Adjournment") 
                 {
                     disputeWithUpdates.AdjournmentDocument = true;
@@ -345,9 +397,9 @@ public class DisputeService : IDisputeService
 
             // check whether this update request is for a change of plea
             disputeWithUpdates.ChangeOfPlea = false;
-            if (disputantUpdateRequest.UpdateType == DisputantUpdateRequestUpdateType.COUNT)
+            if (disputeUpdateRequest.UpdateType == DisputeUpdateRequestUpdateType.COUNT)
             {
-                CountUpdateJSON? countUpdateJSON = JsonSerializer.Deserialize<CountUpdateJSON>(disputantUpdateRequest.UpdateJson);
+                CountUpdateJSON? countUpdateJSON = JsonSerializer.Deserialize<CountUpdateJSON>(disputeUpdateRequest.UpdateJson);
                 if (countUpdateJSON is not null && countUpdateJSON.pleaCode is not null)
                 {
                     disputeWithUpdates.ChangeOfPlea = true;
@@ -365,8 +417,10 @@ public class DisputeService : IDisputeService
     /// <param name="disputeId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetDisputantUpdateRequestsAsync(disputeId, null, cancellationToken);
+        return await _oracleDataApi.GetDisputeUpdateRequestsAsync(disputeId, null, cancellationToken);
     }
+
+    private string GetUserName(ClaimsPrincipal user) => user.Identity?.Name ?? string.Empty;
 }

@@ -44,8 +44,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(0, allDisputes.size());
 
 		// Create a couple of JJDisputes
-		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());
-		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute());
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(RandomUtil.createJJDispute());
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(RandomUtil.createJJDispute());
 
 		// Assert request returns one record
 		JJDispute jjDispute = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
@@ -67,8 +67,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute2.setJjAssignedTo("Tony Stark");
 
 		// Create a JJDisputes with different assignedTo
-		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
-		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(jjDispute2);
 
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
@@ -104,8 +104,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute2.setTicketNumber("AX00000000");
 
 		// Create a JJDisputes with different assignedTo
-		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
-		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(jjDispute2);
 		List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
@@ -131,9 +131,9 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		// Create a single JJ Dispute with a specified remark
 		JJDispute jjDispute = RandomUtil.createJJDispute();
 		String ticketNumber = jjDispute.getTicketNumber();
-		setPrincipal("testUser");
+		setPrincipal("testUser", true);
 		jjDispute.setCourthouseLocation("Vancouver");
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint to do assignment
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, true, getPrincipal()).getBody();
@@ -161,8 +161,8 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute2.setJjAssignedTo("Tony Stark");
 
 		// Create a couple of JJDisputes (one unassigned and one assigned to a JJ)
-		JJDispute dispute1 = jjDisputeRepository.save(jjDispute1);
-		JJDispute dispute2 = jjDisputeRepository.save(jjDispute2);
+		JJDispute dispute1 = jjDisputeRepository.saveAndFlush(jjDispute1);
+		JJDispute dispute2 = jjDisputeRepository.saveAndFlush(jjDispute2);
 
 		// Get the ids of the jj disputes and call the AssignJJ endpoint to assign all jj disputes to a new JJ
 		List<String> ticketNumbers = new ArrayList<>();
@@ -198,7 +198,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
 		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
@@ -206,10 +206,9 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
 
 		// Set the status to REVIEW
-		jjDisputeController.reviewJJDispute(ticketNumber, "Test Remark", false, principal);
+		jjDispute = jjDisputeController.reviewJJDispute(ticketNumber, "Test Remark", false, principal).getBody();
 
 		// Assert status and remark are set.
-		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
 		assertEquals(JJDisputeStatus.REVIEW, jjDispute.getStatus());
 		assertEquals("Test Remark", jjDispute.getRemarks().get(0).getNote());
 		assertEquals("testUser", jjDispute.getRemarks().get(0).getUserFullName());
@@ -227,7 +226,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
 		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
@@ -235,7 +234,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
 
 		// Set the status to ACCEPTED
-		jjDisputeController.acceptJJDispute(ticketNumber, false, principal);
+		jjDisputeController.acceptJJDispute(ticketNumber, false, principal, null);
 
 		// Assert status is set correctly.
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
@@ -252,7 +251,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		authority.add(new SimpleGrantedAuthority("User"));
 		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
 		Principal principal = new PreAuthenticatedToken(user);
-		jjDisputeRepository.save(jjDispute);
+		jjDisputeRepository.saveAndFlush(jjDispute);
 
 		// Retrieve it from the controller's endpoint
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
@@ -267,4 +266,54 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
 	}
 
+	@Test
+	public void testSetJJDisputeStatusToConcluded() {
+		// Create a single JJ Dispute with status NEW
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		// Add the required authority role
+		List<GrantedAuthority> authority = new ArrayList<>();
+		authority.add(new SimpleGrantedAuthority("User"));
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
+		Principal principal = new PreAuthenticatedToken(user);
+		jjDisputeRepository.saveAndFlush(jjDispute);
+
+		// Retrieve it from the controller's endpoint
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
+		assertEquals(JJDisputeStatus.NEW, jjDispute.getStatus());
+
+		// Set the status to CONCLUDED
+		jjDisputeController.concludeJJDispute(ticketNumber, false, principal);
+
+		// Assert status is set correctly.
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(JJDisputeStatus.CONCLUDED, jjDispute.getStatus());
+	}
+
+
+	@Test
+	public void testSetJJDisputeStatusToCancelled() {
+		// Create a single JJ Dispute with status NEW
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		// Add the required authority role
+		List<GrantedAuthority> authority = new ArrayList<>();
+		authority.add(new SimpleGrantedAuthority("User"));
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
+		Principal principal = new PreAuthenticatedToken(user);
+		jjDisputeRepository.saveAndFlush(jjDispute);
+
+		// Retrieve it from the controller's endpoint
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
+		assertEquals(JJDisputeStatus.NEW, jjDispute.getStatus());
+
+		// Set the status to CANCELLED
+		jjDisputeController.cancelJJDispute(ticketNumber, false, principal);
+
+		// Assert status is set correctly.
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(JJDisputeStatus.CANCELLED, jjDispute.getStatus());
+	}
 }

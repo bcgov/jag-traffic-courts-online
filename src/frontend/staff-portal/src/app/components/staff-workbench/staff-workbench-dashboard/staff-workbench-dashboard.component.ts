@@ -38,7 +38,7 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
 
   }
 
-  public async ngOnInit() {
+  ngOnInit() {
     this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
   }
 

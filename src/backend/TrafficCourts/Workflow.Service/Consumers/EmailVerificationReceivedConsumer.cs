@@ -5,7 +5,7 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
 using ApiException = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ApiException;
-using DisputantUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputantUpdateRequest;
+using DisputeUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 
@@ -44,38 +44,11 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
 
             await _oracleDataApiService.VerifyDisputeEmailAsync(dispute.DisputeId, context.CancellationToken);
 
-            // File History 
-            SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
-            fileHistoryRecord.TicketNumber = dispute.TicketNumber;
-            fileHistoryRecord.Description = !message.IsUpdateEmailVerification ? "Email verification complete" : "Email update verification complete";
-            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
-
-            if (!message.IsUpdateEmailVerification)
-            {
-                // File History 
-                fileHistoryRecord.Description = "Dispute submitted for staff review";
-                await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
-            }
-
-            // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
-            EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
-
-            // Send email with email update successful content if this event is a result of email update process
-            if (message.IsUpdateEmailVerification)
-            {
-                emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
-            }
-            await context.PublishWithLog(_logger, new SendDispuantEmail
-            {
-                Message = emailMessage,
-                TicketNumber = dispute.TicketNumber,
-                NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
-            }, context.CancellationToken);
-
             // TCVP-2009
             // Send acknowledgement email if there are pending update requests
-            ICollection<DisputantUpdateRequest> disputantUpdateRequests = await _oracleDataApiService.GetDisputantUpdateRequestsAsync(dispute.DisputeId, Status.PENDING, context.CancellationToken);
-            if (disputantUpdateRequests.Count > 0)
+            // Moved this up in the order of operations to avoid multiple sending of emails if this fails 
+            ICollection<DisputeUpdateRequest> disputeUpdateRequests = await _oracleDataApiService.GetDisputeUpdateRequestsAsync(dispute.DisputeId, Status.PENDING, context.CancellationToken);
+            if (disputeUpdateRequests.Count > 0)
             {
                 UpdateRequestReceived updateRequestReceived = new()
                 {
@@ -83,6 +56,42 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
                 };
                 await context.PublishWithLog(_logger, updateRequestReceived, context.CancellationToken);
             }
+
+            // File History 
+            SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
+            fileHistoryRecord.DisputeId = dispute.DisputeId;
+            fileHistoryRecord.AuditLogEntryType = !message.IsUpdateEmailVerification ? 
+                FileHistoryAuditLogEntryType.EMVF : // Email verification complete
+                FileHistoryAuditLogEntryType.CUEV; // Email re-verification complete
+            fileHistoryRecord.ActionByApplicationUser = "Disputant";
+            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+
+            if (!message.IsUpdateEmailVerification)
+            {
+                // File History 
+                fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SUB; // Dispute submitted for staff review
+                await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
+            }
+
+            // since the dispute is re-retrieved in this consumer, the email address may have been blanked out in the meantime
+            // if it was dont send another email :)
+            if (!string.IsNullOrEmpty(dispute.EmailAddress)) {
+                // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
+                EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
+
+                // Send email with email update successful content if this event is a result of email update process
+                if (message.IsUpdateEmailVerification)
+                {
+                    emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
+                }
+                await context.PublishWithLog(_logger, new SendDisputantEmail
+                {
+                    Message = emailMessage,
+                    TicketNumber = dispute.TicketNumber,
+                    NoticeOfDisputeGuid = message.NoticeOfDisputeGuid
+                }, context.CancellationToken);
+            }
+
         }
         catch (ApiException ex)
         {

@@ -45,7 +45,7 @@ public partial class File : IDisposable
     /// <param name="contentType">The optional content type of the file</param>
     /// <param name="metadata">The optional metadata properties</param>
     /// <param name="tags">The optional tag properties</param>
-    public File(Stream data, string? fileName, string? contentType, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
+    public File(Stream data, string? fileName, string? contentType, IReadOnlyDictionary<string, string>? metadata, IReadOnlyDictionary<string, string>? tags)
         : this(null, data, fileName, contentType, metadata, tags)
     {
     }
@@ -59,7 +59,7 @@ public partial class File : IDisposable
     /// <param name="contentType">The optional content type of the file</param>
     /// <param name="metadata">The optional metadata properties</param>
     /// <param name="tags">The optional tag properties</param>
-    public File(Guid? id, Stream data, string? fileName, string? contentType, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
+    public File(Guid? id, Stream data, string? fileName, string? contentType, IReadOnlyDictionary<string, string>? metadata, IReadOnlyDictionary<string, string>? tags)
     {
         Id = id;
         Data = data;
@@ -87,8 +87,8 @@ public partial class File : IDisposable
 
     public string? ContentType { get; private set; }
 
-    public Dictionary<string, string> Metadata { get; private set; }
-    public Dictionary<string, string> Tags { get; private set; }
+    public IReadOnlyDictionary<string, string> Metadata { get; private set; }
+    public IReadOnlyDictionary<string, string> Tags { get; private set; }
 
     public void Dispose()
     {

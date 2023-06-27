@@ -2,12 +2,12 @@
 ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
 ARG RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet
 
-FROM $RUNTIME_IMAGE:6.0 AS base
+FROM $RUNTIME_IMAGE:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM $BUILD_IMAGE:6.0 AS build
+FROM $BUILD_IMAGE:7.0 AS build
 WORKDIR /src
 COPY ["Workflow.Service/TrafficCourts.Workflow.Service.csproj", "Workflow.Service/"]
 COPY ["Common/TrafficCourts.Common.csproj", "Common/"]

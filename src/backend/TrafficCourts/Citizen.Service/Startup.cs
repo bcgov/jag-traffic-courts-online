@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NodaTime;
@@ -14,7 +14,6 @@ using TrafficCourts.Citizen.Service.Services.Impl;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
-using TrafficCourts.Common.Features.FilePersistence;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
 
@@ -41,7 +40,9 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        }, meters: "MassTransit");
+        }, meters: new string[] { "MassTransit", "ComsClient", "CitizenService" });
+
+        builder.Services.AddHttpContextAccessor();
 
         // Redis
         builder.AddRedis();
@@ -49,8 +50,6 @@ public static class Startup
         // configure application 
         builder.Services.UseConfigurationValidation();
         builder.UseTicketSearch(logger);
-
-        builder.Services.AddFilePersistence(builder.Configuration);
 
         // Form Recognizer
         builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
@@ -74,6 +73,8 @@ public static class Startup
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
+        builder.Services.AddAgencyLookup();
+        builder.Services.AddProvinceLookup();
         builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
         builder.Services.AddTransient<ICitizenDocumentService, CitizenDocumentService>();
 
@@ -84,7 +85,7 @@ public static class Startup
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // add MediatR handlers in this program
-        builder.Services.AddMediatR(assembly);
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
         // use lowercase routes
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);

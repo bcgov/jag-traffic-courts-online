@@ -6,6 +6,8 @@ info:
 servers:
   - description: local
     url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca/occamords/occam/'
+security:
+  - basicAuth: []
 paths:
   /v1/ping:
     get:
@@ -18,6 +20,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PingResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Health
   /v1/languages:
@@ -31,6 +35,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LanguageListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Lookup Values
   /v1/agencies:
@@ -44,6 +50,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AgenciesListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Lookup Values
   /v1/countries:
@@ -57,6 +65,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CountriesListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Lookup Values
   /v1/provinces:
@@ -70,6 +80,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProvincesListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Lookup Values
   /v1/cities:
@@ -98,6 +110,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CitiesListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Lookup Values
   /v1/statutes:
@@ -111,10 +125,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StatutesListResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Lookup Values
   /v1/violationTicket:
     get:
+      operationId: violationTicketGet
       parameters:
         - name: violationTicketId
           in: query
@@ -135,10 +152,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ViolationTicket'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
   /v1/violationTicketList:
     get:
+      operationId: violationTicketListGet
       parameters:
         - name: fromDate
           in: query
@@ -178,10 +198,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ViolationTicketListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
   /v1/deleteViolationTicket:
     delete:
+      operationId: violationTicketDelete
       parameters:
         - name: disputeId
           in: query
@@ -190,6 +213,13 @@ paths:
           schema:
             type: integer
             format: int64
+      requestBody:
+        description: Empty body required by ORDS for DELETE request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -197,10 +227,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
   /v1/assignViolationTicket:
     post:
+      operationId: assignViolationTicketPost
       parameters:
         - name: disputeId
           in: query
@@ -216,6 +249,13 @@ paths:
           schema:
             type: string
             maxLength: 30
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -223,10 +263,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
   /v1/unassignViolationTicket:
     post:
+      operationId: unassignViolationTicketPost
       parameters:
         - name: assignedBeforeTs
           in: query
@@ -234,6 +277,13 @@ paths:
           schema:
             type: string
             maxLength: 19
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -241,10 +291,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
   /v1/violationTicketStatus:
     post:
+      operationId: violationTicketStatusPost
       parameters:
         - name: disputeId
           in: query
@@ -264,6 +317,13 @@ paths:
           schema:
             type: string
             maxLength: 500
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
       responses:
         '200':
           description: Ok
@@ -271,10 +331,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
   /v1/processViolationTicket:
     post:
+      operationId: processViolationTicketPost
       requestBody:
         description: body
         content:
@@ -289,6 +352,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
   /v1/updateViolationTicket:
@@ -307,10 +372,229 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Violation Ticket
+  /v1/processDisputeUpdateRequest:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateRequestResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Dispute Update Request
+  /v1/disputeUpdateRequest:
+    get:
+      parameters:
+        - name: disputeUpdateRequestId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisputeUpdateRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Dispute Update Request
+  /v1/disputeUpdateRequestList:
+    get:
+      parameters:
+        - name: disputeUpdateStatTypeCd
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 4
+        - name: disputeUpdateReqTypeCd
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 4
+        - name: disputeId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: noticeOfDisputeGuid
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 36
+            minLength: 36
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateRequestListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Dispute Update Request
+  /v1/updateDisputeUpdateRequest:
+    put:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateRequestResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Dispute Update Request
+  /v1/deleteDisputeUpdateRequest:
+    delete:
+      parameters:
+        - name: disputeUpdateRequestId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: disputeId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Empty body required by ORDS for DELETE request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateRequestResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Dispute Update Request
+  /v1/processAuditLogEntry:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditLogEntry'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntryResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Audit Log Entry
+  /v1/auditLogEntryList:
+    get:
+      parameters:
+        - name: ticketNumber
+          in: query
+          description: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntryListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Audit Log Entry
+  /v1/processOutgoingEmail:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutgoingEmail'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingEmailResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Outgoing Email
+  /v1/outgoingEmailList:
+    get:
+      parameters:
+        - name: ticketNumber
+          in: query
+          description: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutgoingEmailListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Outgoing Email
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
+    EmptyObject:
+      type: object
+      description: an empty object
     AgenciesListResult:
       type: object
       properties:
@@ -438,6 +722,27 @@ components:
         exception:
           type: string
           format: nullable
+    UpdateRequestResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        disputeUpdateRequestId:
+          type: string
+          format: nullable
+        disputeId:
+          type: string
+          format: nullable
+        exception:
+          type: string
+          format: nullable
+    UpdateRequestListResponse:
+      type: object
+      properties:
+        disputeUpdateRequests:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisputeUpdateRequest'
     ViolationTicketListResponse:
       type: object
       properties:
@@ -445,6 +750,42 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ViolationTicket'
+    AuditLogEntryResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        auditLogEntryId:
+          type: string
+          format: nullable
+        exception:
+          type: string
+          format: nullable
+    AuditLogEntryListResponse:
+      type: object
+      properties:
+        auditLogEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogEntry'
+    OutgoingEmailResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        outgoingEmailId:
+          type: string
+          format: nullable
+        exception:
+          type: string
+          format: nullable
+    OutgoingEmailListResponse:
+      type: object
+      properties:
+        outgoingEmails:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutgoingEmail'
     AuditBase:
       type: object
       properties:
@@ -546,6 +887,8 @@ components:
           format: nullable
         disputantSurnameNm:
           type: string
+        requestCourtAppearanceYn:
+          type: string
         disputeId:
           type: string
         disputeStatusTypeCd:
@@ -575,7 +918,7 @@ components:
         issuedDt:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm\")"
         jjAssignedTo:
           type: string
           format: nullable
@@ -654,8 +997,6 @@ components:
         representedByLawyerYn:
           type: string
           format: nullable
-        requestCourtAppearanceYn:
-          type: string
         submittedDt:
           type: string
           format: date-time
@@ -677,6 +1018,7 @@ components:
         workPhoneNumberTxt:
           type: string
           format: nullable
+          
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     DisputeCount:
@@ -800,7 +1142,7 @@ components:
         issuedDt:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm\")"
         issuedOnRoadOrHighwayTxt:
           type: string
           format: nullable
@@ -849,3 +1191,84 @@ components:
           type: string
       allOf:
         - $ref: '#/components/schemas/AuditBase'
+    DisputeUpdateRequest:
+      type: object
+      properties:
+        disputeUpdateRequestId:
+          type: string
+        disputeId:
+          type: string
+        disputeUpdateStatTypeCd:
+          type: string
+        disputeUpdateReqTypeCd:
+          type: string
+        requestJsonTxt:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    AuditLogEntry:
+      type: object
+      properties:
+        auditLogEntryId:
+          type: string
+        disputeId:
+          type: string
+        auditLogEntryTypeCd:
+          type: string
+        auditLogEntryTypeDsc:
+          type: string
+        actionByApplicationUser:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    OutgoingEmail:
+      type: object
+      properties:
+        outgoingEmailId:
+          type: string
+        disputeId:
+          type: string
+        emailSentDtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        emailSubjectTxt:
+          type: string
+        fromEmailAddress:
+          type: string
+        toEmailAddress:
+          type: string
+        ccEmailAddress:
+          type: string
+          format: nullable
+        bccEmailAddress:
+          type: string
+          format: nullable
+        successfullySentYn:
+          type: string
+        htmlContent:
+          type: string
+          format: nullable
+        plainTextContent:
+          type: string
+          format: nullable
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    # Schema for error response body
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

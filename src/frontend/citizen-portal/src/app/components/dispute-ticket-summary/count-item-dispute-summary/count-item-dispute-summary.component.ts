@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeCountRequestReduction, DisputeCountRequestTimeToPay } from 'app/api';
+import { DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, ViolationTicketCount, NoticeOfDispute } from 'app/api';
+import { DisputeCount } from 'app/services/notice-of-dispute.service';
 
 @Component({
   selector: 'app-count-item-dispute-summary',
@@ -7,9 +8,11 @@ import { DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeCountR
   styleUrls: ['./count-item-dispute-summary.component.scss'],
 })
 export class CountItemDisputeSummaryComponent implements OnInit {
-  @Input() count: any;
+  @Input() ticketCount: ViolationTicketCount;
+  @Input() disputeCount: DisputeCount;
+  @Input() noticeOfDispute: NoticeOfDispute;
   Plea = DisputeCountPleaCode;
-  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   RequestReduction = DisputeCountRequestReduction;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
 

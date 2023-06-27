@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.HealthApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.JjDisputeApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.handler.ApiClient;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.handler.auth.HttpBasicAuth;
 
 @Configuration
 @EnableConfigurationProperties(OrdsConfigProperties.class)
@@ -19,10 +20,17 @@ public class OrdsTcoApiClientConfiguration {
 		ApiClient apiClient = new ApiClient();
 		// Setting this to null will make it use the baseUrl instead
 		apiClient.setServerIndex(null);
-		apiClient.setBasePath(ordsConfigProperties.getOrdsRestApiTcoUrl());
+		apiClient.setBasePath(ordsConfigProperties.getOrdsApiTcoUrl());
+
+		if(ordsConfigProperties.isOrdsApiAuthEnabled()) {
+			// Set basic auth header with credentials
+			HttpBasicAuth authentication = (HttpBasicAuth) apiClient.getAuthentication("basicAuth");
+			authentication.setUsername(ordsConfigProperties.getOrdsApiTcoUsername());
+			authentication.setPassword(ordsConfigProperties.getOrdsApiTcoPassword());
+		}
 
 		// Set to true to see actual request/response messages sent/received from ORDs.
-		apiClient.setDebugging(ordsConfigProperties.isOrdsRestApiDebug());
+		apiClient.setDebugging(ordsConfigProperties.isOrdsApiDebug());
 
 		return apiClient;
 	}

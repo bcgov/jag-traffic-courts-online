@@ -35,7 +35,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
     [HttpGet("disputes")]
-    [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<DisputeListItem>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -46,7 +46,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            ICollection<Dispute> disputes = await _disputeService.GetAllDisputesAsync(excludeStatus, cancellationToken);
+            ICollection<DisputeListItem> disputes = await _disputeService.GetAllDisputesAsync(excludeStatus, cancellationToken);
             return Ok(disputes);
         }
         catch (Exception e)
@@ -84,7 +84,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            Dispute dispute = await _disputeService.GetDisputeAsync(disputeId, cancellationToken);
+            Dispute dispute = await _disputeService.GetDisputeAsync(disputeId, true, cancellationToken);
             return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -176,7 +176,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// Updates the status of a particular Dispute record to REJECTED.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
-    /// <param name="rejectedReason">The reason or note (max 256 characters) the Dispute was cancelled.</param>
+    /// <param name="rejectedReason">The reason or note (max 256 characters) the Dispute was rejected.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -208,7 +208,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            await _disputeService.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
+            await _disputeService.RejectDisputeAsync(disputeId, rejectedReason, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -265,7 +265,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            await _disputeService.ValidateDisputeAsync(disputeId, cancellationToken);
+            await _disputeService.ValidateDisputeAsync(disputeId, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -296,6 +296,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// Updates the status of a particular Dispute record to CANCELLED.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
+    /// <param name="cancelledReason">The reason or note (max 256 characters) the Dispute was cancelled.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -316,13 +317,17 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Cancel)]
-    public async Task<IActionResult> CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> CancelDisputeAsync(long disputeId,
+        [FromForm]
+        [Required]
+        [StringLength(256, ErrorMessage = "Cancelled reason cannot exceed 256 characters.")] string cancelledReason,
+        CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "CANCELLED");
 
         try
         {
-            await _disputeService.CancelDisputeAsync(disputeId, cancellationToken);
+            await _disputeService.CancelDisputeAsync(disputeId, cancelledReason, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -432,7 +437,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            await _disputeService.SubmitDisputeAsync(disputeId, cancellationToken);
+            await _disputeService.SubmitDisputeAsync(disputeId, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -460,9 +465,9 @@ public class DisputeController : StaffControllerBase<DisputeController>
     }
 
     /// <summary>
-    /// Approves a DisputantUpdateRequest record, setting it's status to ACCEPTED.
+    /// Approves a DisputeUpdateRequest record, setting it's status to ACCEPTED.
     /// </summary>
-    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to accept.</param>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputeUpdateRequest record to accept.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut("updateRequest/{updateStatusId}/accept")]
@@ -471,14 +476,14 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
-        await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
-        return Ok();
+        await _disputeService.AcceptDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
+        return Ok(updateStatusId);
     }
 
     /// <summary>
-    /// Rejects a DisputantUpdateRequest record, setting it's status to REJECTED.
+    /// Rejects a DisputeUpdateRequest record, setting it's status to REJECTED.
     /// </summary>
-    /// <param name="updateStatusId">Unique identifier for a specific DisputantUpdateRequest record to reject.</param>
+    /// <param name="updateStatusId">Unique identifier for a specific DisputeUpdateRequest record to reject.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut("updateRequest/{updateStatusId}/reject")]
@@ -487,8 +492,8 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken)
     {
-        await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, cancellationToken);
-        return Ok();
+        await _disputeService.RejectDisputeUpdateRequestAsync(updateStatusId, User, cancellationToken);
+        return Ok(updateStatusId);
     }
 
     /// <summary>
@@ -534,7 +539,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute update request records</returns>
     [HttpGet("{disputeId}/disputeUpdateRequests")]
-    [ProducesResponseType(typeof(IList<DisputantUpdateRequest>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<DisputeUpdateRequest>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -545,7 +550,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
 
         try
         {
-            ICollection<DisputantUpdateRequest> disputeUpdateRequests = await _disputeService.GetDisputeUpdateRequestsAsync(disputeId, cancellationToken);
+            ICollection<DisputeUpdateRequest> disputeUpdateRequests = await _disputeService.GetDisputeUpdateRequestsAsync(disputeId, cancellationToken);
             return Ok(disputeUpdateRequests);
         }
         catch (Exception e)

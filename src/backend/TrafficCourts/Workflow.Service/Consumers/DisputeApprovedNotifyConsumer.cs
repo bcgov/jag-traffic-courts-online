@@ -41,10 +41,16 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     To = context.Message.Email!,
                     Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketFileNumber),
                     TextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
-                    HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
                 };
 
-                await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
+                var sendDisputantEmail = new SendDisputantEmail()
+                {
+                    Message = emailMessage,
+                    TicketNumber = context.Message.TicketFileNumber,
+                    NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid
+                };
+
+                await context.PublishWithLog(_logger, sendDisputantEmail, context.CancellationToken);
             }
             else
             {

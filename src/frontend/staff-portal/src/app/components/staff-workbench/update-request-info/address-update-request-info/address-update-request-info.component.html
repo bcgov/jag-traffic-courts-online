@@ -78,6 +78,24 @@
     <span class="section-grid-cell" *ngIf="updateRequested.PostalCode">
       <p class="section-grid-text">{{ updateRequested.PostalCode }}</p>
     </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+      <p class="section-grid-header">Driver's Licence Number</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+      <p class="section-grid-text" >{{ disputeInfo.driversLicenceNumber }}</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+      <p class="section-grid-text">{{ updateRequested.DriversLicenceNumber }}</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+      <p class="section-grid-header">Driver's Licence Province/State</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+      <p class="section-grid-text" >{{ oldDLProvince }}</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+      <p class="section-grid-text">{{ newDLProvince }}</p>
+    </span>
     <br />
   </div>
   <div style="display: grid; grid-template-columns: auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status !== 'PENDING'">
@@ -129,7 +147,18 @@
     <span class="section-grid-cell" *ngIf="updateRequested.PostalCode">
       <p class="section-grid-text">{{ updateRequested.PostalCode }}</p>
     </span>
-
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+      <p class="section-grid-header">Driver's Licence Number</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceNumber">
+      <p class="section-grid-text">{{ updateRequested.DriversLicenceNumber }}</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+      <p class="section-grid-header">Driver's Licence Province/State</p>
+    </span>
+    <span class="section-grid-cell" *ngIf="updateRequested.DriversLicenceIssuedProvSeqNo|| updateRequested.DriversLicenceProvince">
+      <p class="section-grid-text">{{ newDLProvince }}</p>
+    </span>
     <br />
   </div>
   <div>

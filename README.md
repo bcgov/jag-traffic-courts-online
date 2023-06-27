@@ -246,18 +246,6 @@ Develop the `citizen-portal`. Run the associated API, `citizen-api`.  This start
 docker-compose -f docker-compose.yml up -d citizen-api
 ```
 
-Run `citizen-api` and have the backend logs go to [local Seq](http://localhost:8001),
-
-```
-docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml up -d citizen-api
-```
-
-To stop when running Seq,
-
-```
-docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml down
-```
-
 Run `citizen-api` and have the backend logs go to [local Splunk](http://localhost:8000)
 
 Note, this is currently getting an error: "Error response from daemon: network ... not found"
@@ -364,3 +352,46 @@ docker-compose -f docker-compose.yml -f .docker/docker-compose-ocr.yml up -d
 
 Use 2.1 as the FORMRECOGNIZER__APIVERSION to target Form Recognizer running locally in Docker (or in OpenShift).
 Use 2022-06-30-preview to target Form Recognizer running in Azure cloud (which runs the latest api version, not 2.1).
+
+The API key and Billing URL are found in the Azure Portal. Either Key 1 or Key 2 can be used for the API key.
+
+![ Form Recognizer](docs/form-recognizer-api-key-and-billing-url.png)
+
+See [Form Recognizer Containers (2.1)](https://learn.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/containers/form-recognizer-container-install-run?view=form-recog-2.1.0&preserve-view=true&tabs=read) and [Form Recognizer Containers (3.0)](https://learn.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/containers/form-recognizer-container-install-run?view=form-recog-3.0.0&tabs=read) for information.
+
+## Debugging
+
+A Developer can debug the application by attaching debugging instances to the processes running inside the docker containers.
+
+### Oracle Data API
+
+To debug a running java application inside a docker container:
+1. Ensure the codebase is the same in Eclipse as what is running in the Docker container.
+2. For security reasons, java applications do not run in debug mode by default. To launch the oracle-data-api in debug mode (a mode that can accept debugging sessions), set the necessary -X flags 
+   on the container's entrypoint. This can be accomplish by simply having the JAVA_OPTS environment variable set in the .env file when lauching docker-compose. (The .env file is a file for custom env 
+   variables and should be next to the project's docker-compose.yaml file).
+   
+   `JAVA_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=0.0.0.0:8000,server=y,suspend=n -Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG`
+
+   The JAVA_OPTS environment variable is passed to the oracle-data-api Dockerfile when launching the container. The above configuration will enable the jvm to listen on port 8000 for debugging sessions. 
+   If suspend=y, the application will pause before launching for any attaching debug instances so a developer can debug the application's startup process.
+   If suspend=n, the application will launch as normal and one can attach a debugging instance later.
+3. Create a Remote Java Application launch task in Eclipse.
+   Run -> Debug Configurations -> add Remote Java Application
+   Project: oracle-data-api
+   Connection Type: Standard (Socket Attach)
+   Connection Properties:
+     Host: localhost
+     Port: 8000
+4. Done. The application should suspend at any breakpoints in the project.
+
+### .NET projects (staff-api, citizen-api, workflow-service, etc)
+
+To debug a running .NET application inside a docker container:
+1. Ensure the codebase is the same in Visual Studio as what is running in the Docker container.
+2. Navigate to Debug -> Attach to Process ...
+3. Connection type: Docker (Linux Container)
+                    Connection target: staff-api
+   Click Attach
+4. Done. The application should suspend at any breakpoints in the project.
+   

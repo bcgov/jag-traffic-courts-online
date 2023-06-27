@@ -18,9 +18,8 @@
 		<java.version>11</java.version>
 		<log4j2.version>2.17.1</log4j2.version>
 		<release.train.version>2021.0.4</release.train.version>
-		<spring-cloud-sleuth-otel.version>1.1.0</spring-cloud-sleuth-otel.version>
-		<org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
-		<org.projectlombok.version>1.18.24</org.projectlombok.version>
+		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+		<org.projectlombok.version>1.18.28</org.projectlombok.version>
 		<occam-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.occam</occam-package>
 		<tco-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.tco</tco-package>
 	</properties>
@@ -33,13 +32,6 @@
 				<version>${release.train.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-sleuth-otel-dependencies</artifactId>
-				<version>${spring-cloud-sleuth-otel.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -97,11 +89,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 
 		<!-- Lombok code generator -->
 		<dependency>
@@ -116,12 +103,18 @@
 			<artifactId>splunk-library-javalogging</artifactId>
 			<version>1.11.7</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>net.logstash.logback</groupId>
+		    <artifactId>logstash-logback-encoder</artifactId>
+		    <version>7.3</version>
+		</dependency>
 
 		<!-- Swagger UI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.14</version>
+			<version>1.7.0</version>
 		</dependency>
 
 		<!-- CSV reader - TODO: remove once data is read from Oracle instead -->
@@ -131,25 +124,10 @@
 			<version>5.7.1</version>
 		</dependency>
 
-		<!-- Test dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- Open Telemetry dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-sleuth-otel-autoconfigure</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.opentelemetry</groupId>
-			<artifactId>opentelemetry-exporter-jaeger</artifactId>
 		</dependency>
 
 		<!-- Mapstruct dependencies -->
@@ -162,13 +140,13 @@
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>0.2.4</version>
+			<version>0.2.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-annotations</artifactId>
-			<version>1.6.9</version>
+			<version>1.6.11</version>
 		</dependency>
 
 		<dependency>
@@ -215,6 +193,18 @@
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
 		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -237,7 +227,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.8</version>
+				<version>0.8.10</version>
 
 				<executions>
 					<execution>
@@ -290,7 +280,7 @@
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>6.2.1</version>
+				<version>6.6.0</version>
 				<executions>
 					<execution>
 						<id>ords-occam-api</id>

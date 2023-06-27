@@ -12,6 +12,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
+import { DisputeContactTypeCd, DisputeStatus } from 'app/api';
 
 @Component({
   selector: 'app-contact-info',
@@ -28,7 +29,6 @@ export class ContactInfoComponent implements OnInit {
   public bc: ProvinceCodeValue;
   public canada: CountryCodeValue;
   public usa: CountryCodeValue;
-  public busy: Subscription;
   public initialDisputeValues: Dispute;
   public todayDate: Date = new Date();
   public lastUpdatedDispute: Dispute;
@@ -37,6 +37,8 @@ export class ContactInfoComponent implements OnInit {
   public violationTime: string = "";
   public conflict: boolean = false;
   public form: FormGroup;
+  public ContactType = DisputeContactTypeCd;
+  public DispStatus = DisputeStatus;
   public collapseObj: any = {
     contactInformation: true
   }
@@ -64,24 +66,27 @@ export class ContactInfoComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-      emailAddress: [null, [Validators.email]],
-      disputantSurname: [null, [Validators.required]],
-      disputantGivenNames: [null, [Validators.required]],
-      disputantBirthdate: [null, [Validators.required]],
+      emailAddress: [null, [Validators.email, Validators.maxLength(100)]],
+      contactTypeCd: [null, [Validators.required]],
+      contactSurnameNm: [null, [Validators.maxLength(30)]],
+      contactGivenNames: [null, [Validators.maxLength(92)]],
+      contactLawFirmNm: [null, [Validators.maxLength(200)]],
+      disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
+      disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
       address: [null, [Validators.required, Validators.maxLength(300)]],
-      addressCity: [null, [Validators.required]],
+      addressCity: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
       addressCountryId: [null, [Validators.required]],
       rejectedReason: [null, Validators.maxLength(256)], // Optional
-      postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]],
+      postalCode: [null, [Validators.required]],
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       driversLicenceProvinceProvId: [null],
-      driversLicenceCountryId: [null],
-      driversLicenceProvinceSeqNo: [null],
+      driversLicenceIssuedCountryId: [null],
+      driversLicenceIssuedProvinceSeqNo: [null],
     });
     this.getDispute();
   }
@@ -97,13 +102,13 @@ export class ContactInfoComponent implements OnInit {
       this.form.get('addressProvinceProvId').setValue(null);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
-      this.form.get('driversLicenceProvinceSeqNo').setValidators(null);
+      this.form.get('driversLicenceIssuedProvinceSeqNo').setValidators(null);
 
       if (ctryId === this.canada.ctryId || ctryId === this.usa.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('driversLicenceIssuedProvinceSeqNo').addValidators([Validators.required]);
       } else this.form.get('addressProvince').addValidators([Validators.required]);
 
       if (ctryId == this.canada.ctryId) {
@@ -120,7 +125,7 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceProvId").updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
-      this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
+      this.form.get("driversLicenceIssuedProvinceSeqNo").updateValueAndValidity();
     }, 5);
   }
 
@@ -129,8 +134,8 @@ export class ContactInfoComponent implements OnInit {
       let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
       if (!provFound) return;
       this.form.get("driversLicenceProvince").setValue(provFound.provNm);
-      this.form.get("driversLicenceCountryId").setValue(provFound.ctryId);
-      this.form.get("driversLicenceProvinceSeqNo").setValue(provFound.provSeqNo);
+      this.form.get("driversLicenceIssuedCountryId").setValue(provFound.ctryId);
+      this.form.get("driversLicenceIssuedProvinceSeqNo").setValue(provFound.provSeqNo);
       if (provFound.provAbbreviationCd === this.bc.provAbbreviationCd) {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
         this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
@@ -153,6 +158,31 @@ export class ContactInfoComponent implements OnInit {
     }, 0)
   }
 
+  onSelectContactType(newContactType: any) {
+    this.form.get('contactGivenNames').setValue(null);
+    this.form.get('contactSurnameNm').setValue(null);
+    this.form.get('contactLawFirmNm').removeValidators(Validators.required);
+    this.form.get('contactSurnameNm').removeValidators(Validators.required);
+    this.form.get('contactGivenNames').removeValidators(Validators.required);
+    this.form.get('contactLawFirmNm').setValue(null);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make all contact info required
+      this.form.get('contactLawFirmNm').addValidators([Validators.required]);
+      this.form.get('contactSurnameNm').addValidators([Validators.required]);
+      this.form.get('contactGivenNames').addValidators([Validators.required]);
+    } else if (newContactType == this.ContactType.Individual) {
+      // leave contact info null and not required
+    } else {
+      // only contact names required
+      this.form.get('contactSurnameNm').addValidators([Validators.required]);
+      this.form.get('contactGivenNames').addValidators([Validators.required]);
+    }
+    this.form.get('contactLawFirmNm').updateValueAndValidity();
+    this.form.get('contactSurnameNm').updateValueAndValidity();
+    this.form.get('contactGivenNames').updateValueAndValidity();
+    this.form.updateValueAndValidity();
+  }
+
   public onSubmit(): void {
     this.putDispute({ ...this.lastUpdatedDispute, ...this.form.value });
   }
@@ -167,14 +197,13 @@ export class ContactInfoComponent implements OnInit {
       cancelTextKey: "Go back",
       icon: "error_outline",
     };
-    this.lastUpdatedDispute.status = 'PROCESSING';
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
           // submit dispute and return to TRM home
-          this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe({
+          this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe({
             next: response => {
-              this.lastUpdatedDispute.status = 'PROCESSING';
+              this.lastUpdatedDispute.status = this.DispStatus.Processing;
               this.onBack();
             },
             error: err => { },
@@ -220,9 +249,9 @@ export class ContactInfoComponent implements OnInit {
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, reject dispute and return to TRM home
-          this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
+          this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
-              this.lastUpdatedDispute.status = 'REJECTED';
+              this.lastUpdatedDispute.status = this.DispStatus.Rejected;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
               this.onBack();
             },
@@ -250,18 +279,12 @@ export class ContactInfoComponent implements OnInit {
           this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
-          // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute).subscribe({
+          // cancel dispute and return to TRM home since this will be filtered out
+          this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.reason).subscribe({
             next: response => {
-              this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId).subscribe({
-                next: response => {
-                  this.lastUpdatedDispute.status = 'CANCELLED';
-                  this.lastUpdatedDispute.rejectedReason = action.output.reason;
-                  this.onBack();
-                },
-                error: err => { },
-                complete: () => { }
-              });
+              this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
+              this.lastUpdatedDispute.rejectedReason = action.output.reason;
+              this.onBack();
             },
             error: err => { },
             complete: () => { }
@@ -285,7 +308,7 @@ export class ContactInfoComponent implements OnInit {
   putDispute(dispute: Dispute): void {
     this.logger.log('ContactInfoComponent::putDispute', dispute);
 
-    this.busy = this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: Dispute) => {
+    this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: Dispute) => {
       this.logger.info(
         'ContactInfoComponent::putDispute response',
         response
@@ -301,7 +324,7 @@ export class ContactInfoComponent implements OnInit {
   getDispute(): void {
     this.logger.log('ContactInfoComponent::getDispute');
 
-    this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
+    this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
       this.retrieving = false;
       this.logger.info(
         'ContactInfoComponent::getDispute response',
@@ -320,8 +343,6 @@ export class ContactInfoComponent implements OnInit {
 
       // set provId for drivers Licence and address this field is only good client side as angular dropdown needs a single value key to behave well, doesnt like two part key of ctryid & seqno
       this.form.patchValue(this.initialDisputeValues);
-      this.form.get('driversLicenceCountryId').setValue(this.initialDisputeValues.driversLicenceIssuedCountryId);
-      this.form.get('driversLicenceProvinceSeqNo').setValue(this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
       let provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.driversLicenceIssuedCountryId && x.provSeqNo === this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo).shift();
       if (provFound) {
         this.form.get('driversLicenceProvinceProvId').setValue(provFound.provId);
@@ -332,13 +353,13 @@ export class ContactInfoComponent implements OnInit {
       this.form.get('addressProvince').setValidators([Validators.maxLength(30)]);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
-      this.form.get("driversLicenceProvinceSeqNo").setValidators(null);
+      this.form.get("driversLicenceIssuedProvinceSeqNo").setValidators(null);
 
       if (this.form.get('addressCountryId').value === this.canada.ctryId || this.form.get('addressCountryId').value === this.usa.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('driversLicenceIssuedProvinceSeqNo').addValidators([Validators.required]);
       }
 
       if (this.form.get('addressCountryId').value == this.canada.ctryId) {
@@ -350,7 +371,7 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceProvId").updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
-      this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
+      this.form.get("driversLicenceIssuedProvinceSeqNo").updateValueAndValidity();
     });
   }
 

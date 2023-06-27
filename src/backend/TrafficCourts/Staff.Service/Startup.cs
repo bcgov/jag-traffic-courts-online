@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
 using TrafficCourts.Messaging;
@@ -29,7 +28,7 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        }, meters: "MassTransit");
+        }, meters: new string[] { "MassTransit", "ComsClient" });
 
         builder.AddRedis();
 
@@ -38,6 +37,7 @@ public static class Startup
         builder.Services.AddOracleDataApiClient(builder.Configuration)
             .AddHttpMessageHandler<UserIdentityProviderHandler>();
 
+        builder.Services.AddRecyclableMemoryStreams();
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // Render enums as strings rather than ints
@@ -51,8 +51,6 @@ public static class Startup
         builder.Services.AddAuthentication(builder.Configuration);
 
         builder.Services.AddAuthorization(builder.Configuration);
-
-        builder.Services.AddFilePersistence(builder.Configuration);
 
         builder.Services.AddKeycloakAdminApiClient(builder.Configuration);
         builder.Services.AddTransient<IKeycloakService, KeycloakService>();
@@ -69,11 +67,13 @@ public static class Startup
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
+        builder.Services.AddAgencyLookup();
+        builder.Services.AddProvinceLookup();
 
         // Add COMS (Object Management Service) Client
         builder.Services.AddObjectManagementService("COMS");
 
-        builder.Services.AddMediatR(assembly);
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
         AddSwagger(builder, assembly, logger);
     }

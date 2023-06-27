@@ -26,18 +26,18 @@ public abstract class ObjectManagementBase
     /// <returns></returns>
     protected Stream GetRandomStream() => new MemoryStream(Guid.NewGuid().ToByteArray());
 
-    protected Dictionary<string, string> CreateTags(int count = 0)
+    protected IReadOnlyDictionary<string, string> CreateTags(int count = 0)
     {
-        Dictionary<string, string> items = Factory.CreateTags();
-        CreateItems(items, count);
-        return items;
+        Dictionary<string, string> items = new Dictionary<string, string>();
+        return Factory.CreateTags(items);
     }
 
-    protected Dictionary<string, string> CreateMetadata(int count = 0)
+    protected IReadOnlyDictionary<string, string> CreateMetadata(int count = 0)
     {
-        Dictionary<string, string> items = Metadata.Create();
+
+        Dictionary<string, string> items = new Dictionary<string, string>();
         CreateItems(items, count);
-        return items;
+        return Metadata.Create(items);
     }
 
     private void CreateItems(Dictionary<string, string> items, int count)

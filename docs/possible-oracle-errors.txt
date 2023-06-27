@@ -1,0 +1,45 @@
+
+
+Errors Executing ORDS services
+--------------------------------------------------------------------------------
+
+These errors are ones we could get when making an ORDS call. 
+
+Reference: https://docs.oracle.com/en/database/oracle/oracle-database/19/errmg/ORA-00910.html
+
+* ORA-04068: package is invalid
+* ORA-06508: PL/SQL: could not find program unit being called. This error occurs when you try to call a package function that does not exist.
+
+* ORA-06502: PL/SQL: numeric or value error. This error occurs when you try to assign a value to a variable that is too large for the datatype of the variable.
+
+* ORA-00001: unique constraint violated. This error occurs when you attempt to insert a record that would violate a unique constraint on a table.
+* ORA-00904: "TOP": invalid identifier (dynamic sql?)
+* ORA-00932: inconsistent datatypes: expected NUMBER got DATE
+* ORA-00936: missing expression (dynamic sql?)
+* ORA-00942: table or view does not exist
+* ORA-01400: cannot insert NULL into [column name]
+* ORA-01401: inserted value too large for column error
+* ORA-01422: exact fetch returns more than requested number of rows
+* ORA-01722: invalid number. A TO_NUMBER or implicit conversion failed
+* ORA-01841: invalid date
+* ORA-01858: a non-numeric character was found where a numeric was expected, ie convert TO_DATE('2010-AB-CD')
+* ORA-02289: sequence does not exist
+
+* ORA-02290: check constraint violated. This error occurs when you attempt to insert a record that violates a check constraint on a table.
+* ORA-02291: integrity constraint violated - parent key not found. This error occurs when you attempt to insert a record into a child table, but the referenced record does not exist in the parent table.
+* ORA-02292: integrity constraint (string.string) violated - child record found
+
+* ORA-06550: PL/SQL compilation error (the anon PL/SQL block could have an error)
+* ORA-01039: insufficient privileges on underlying objects of the view
+* ORA-01037: maximum cursor memory exceeded
+
+System DBA Level issues
+--------------------------------------------------------------------------------
+* ORA-01014: ORACLE shutdown in progress
+* ORA-01033: ORACLE initialization or shutdown in progress
+* ORA-01034: ORACLE not available
+* ORA-01653: table space full
+* ORA-01017: invalid username/password; logon denied - password changed?
+* ORA-00018: maximum number of sessions exceeded
+* ORA-00028: your session has been killed
+* ORA-00051: timeout occurred while waiting for a resource

@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { DisputeDisputantDetectedOcrIssues, ViolationTicket } from 'app/api';
+import { DisputeDisputantDetectedOcrIssues, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -20,10 +16,10 @@ export class ScanTicketComponent implements OnInit {
   ticketFilename: string;
   form: FormGroup;
   DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  violationTicketCounts: ViolationTicketCount[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
     private router: Router,
     private violationTicketService: ViolationTicketService,
   ) {
@@ -38,6 +34,12 @@ export class ScanTicketComponent implements OnInit {
       return;
     }
 
+    // get count summary info
+    this.ticket.counts.forEach(count => {
+      this.violationTicketCounts.push(count);
+    });
+    this.violationTicketCounts = this.violationTicketCounts.sort((a,b)=> a.count_no - b.count_no);
+
     this.ticketImageSrc = inputTicketData.ticketImage;
     this.ticketFilename = inputTicketData.filename;
     this.ticketImageFile = inputTicketData.ticketFile.type
@@ -45,23 +47,12 @@ export class ScanTicketComponent implements OnInit {
     this.form.disable();
     this.form.controls.disputant_detected_ocr_issues.enable();
     this.form.controls.disputant_ocr_issues.enable();
+    this.form.controls.disputant_ocr_issues.addValidators([Validators.maxLength(500)]);
+    this.form.controls.disputant_ocr_issues.updateValueAndValidity();
   }
 
   onSubmit(): void {
-    const data: DialogOptions = {
-      titleKey: 'Are you sure all ticket information is correct?',
-      messageKey: `Please ensure that all entered fields match the paper ticket copy exactly.
-        If you are not sure, please go back and update any fields as needed before submitting ticket information.`,
-      actionTextKey: 'Yes I am sure, create online ticket',
-      cancelTextKey: 'Go back and edit',
-    };
-
-    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
-      .subscribe((response: boolean) => {
-        if (response) {
-          this.violationTicketService.updateOcrIssue(this.form.value.disputant_detected_ocr_issues, this.form.value.disputant_ocr_issues);
-          this.violationTicketService.goToInitiateResolution();
-        }
-      });
+    this.violationTicketService.updateOcrIssue(this.form.value.disputant_detected_ocr_issues, this.form.value.disputant_ocr_issues);
+    this.violationTicketService.goToInitiateResolution();
   }
 }

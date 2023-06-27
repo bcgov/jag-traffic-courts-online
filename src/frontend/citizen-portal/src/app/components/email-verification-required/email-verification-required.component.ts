@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
 import { TicketTypes } from '@shared/enums/ticket-type.enum';
-import { DisputeRepresentedByLawyer } from 'app/api';
-import { NoticeOfDisputeService, NoticeOfDispute } from 'app/services/notice-of-dispute.service';
+import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from 'app/api';
+import { NoticeOfDisputeService, NoticeOfDispute, CountsActions } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -18,8 +18,10 @@ export class EmailVerificationRequiredComponent implements OnInit {
   email: string;
   ticketType: string;
   ticketTypes = TicketTypes;
-  countsActions: any;
+  countsActions: CountsActions;
+  disputeFormMode = DisputeFormMode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
 
   dispute: NoticeOfDispute;
 
@@ -31,7 +33,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
     let params = this.route.snapshot.queryParams;
     this.email = params?.email;
     this.token = params?.token;
-    this.mode = params?.mode;
+    this.mode = parseInt(params?.mode);
   }
 
   ngOnInit() {
@@ -43,7 +45,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
   }
 
   get isCreate(): boolean {
-    return this.mode === DisputeFormMode.CREATE
+    return this.mode === DisputeFormMode.CREATE;
   }
 
   resendEmail() {

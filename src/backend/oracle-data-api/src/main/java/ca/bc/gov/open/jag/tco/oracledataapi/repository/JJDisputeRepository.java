@@ -2,18 +2,38 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 
 public interface JJDisputeRepository {
 
+	/**
+	 * Assigns a particular JJDispute (by ticketNumber) to the supplied username (sets jjAssignedTo).
+	 * @param ticketNumber
+	 * @param username
+	 */
+	public void assignJJDisputeJj(String ticketNumber, String username);
+
+	/**
+	 * Assigns a particular JJDispute (by ticketNumber) to the supplied username (sets vtcAssignedTo/vtcAssignedTs).
+	 * @param ticketNumber
+	 * @param username
+	 */
+	public void assignJJDisputeVtc(String ticketNumber, String username);
+
+	/**
+	 * Unassigned JJDisputes older than the supplied datestamp (or just the one JJDispute if ticketNumber is supplied), (clears vtcAssignedTo/vtcAssignedTs).
+	 * @param ticketNumber
+	 * @param assignedBeforeTs
+	 */
+	public void unassignJJDisputeVtc(String ticketNumber, Date assignedBeforeTs);
+
 	/** Fetch all records which have the specified jjAssigned. */
 	public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned);
-
-	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
-	public Iterable<JJDispute> findByVtcAssignedTsBefore(Date olderThan);
 
 	/**
 	 * Deletes all entities managed by the repository.
@@ -27,26 +47,8 @@ public interface JJDisputeRepository {
 	 */
 	public Iterable<JJDispute> findAll();
 
-	/**
-	 * Retrieves an entity by its id.
-	 *
-	 * @param id must not be {@literal null}.
-	 * @return the entity with the given id or {@literal Optional#empty()} if none found.
-	 * @throws IllegalArgumentException if {@literal id} is {@literal null}.
-	 */
-	public Optional<JJDispute> findById(Long id);
-
 	/** Fetch all records that match by JJDispute.ticketNumber (should only ever be one). */
 	public List<JJDispute> findByTicketNumber(String ticketNumber);
-
-	/**
-	 * Saves a given entity. Use the returned instance for further operations as the save operation might have changed the entity instance completely.
-	 *
-	 * @param entity must not be {@literal null}.
-	 * @return the saved entity; will never be {@literal null}.
-	 * @throws IllegalArgumentException in case the given {@literal entity} is {@literal null}.
-	 */
-	public JJDispute save(JJDispute entity);
 
 	/**
 	 * Saves an entity and flushes changes instantly.
@@ -59,10 +61,25 @@ public interface JJDisputeRepository {
 	/**
 	 * Sets the status field on the given JJDispute.
 	 *
-	 * @param ticketNumber
-	 * @param jjDisputeStatus
-	 * @param userName
+	 * @param disputeId
+	 * @param disputeStatus
+	 * @param userId
+	 * @param courtAppearanceId
+	 * @param seizedYn
+	 * @param adjudicatorPartId
+	 * @param aattCd
+	 * @param dattCd
+	 * @param staffPartId
 	 */
-	public void setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, String userName);
+	public void setStatus(Long disputeId, JJDisputeStatus disputeStatus, String userId, Long courtAppearanceId, YesNo seizedYn,
+			String adjudicatorPartId, JJDisputeCourtAppearanceAPP aattCd, JJDisputeCourtAppearanceDATT dattCd, String staffPartId);
+
+	/**
+	 * Deletes a JJ Dispute and all associated records for the given jjDisputeId or ticketNumber
+	 *
+	 * @param id
+	 * @param ticketNumber
+	 */
+	public void deleteByIdOrTicketNumber(Long id, String ticketNumber);
 
 }

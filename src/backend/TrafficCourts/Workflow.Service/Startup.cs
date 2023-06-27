@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Messaging;
@@ -26,7 +26,7 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
-        }, meters: "MassTransit");
+        }, meters: new string[] { "MassTransit", "ComsClient", "WorkflowService" });
 
         builder.Services.AddControllers();
 

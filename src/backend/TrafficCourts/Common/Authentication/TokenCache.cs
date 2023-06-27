@@ -45,7 +45,7 @@ public abstract class TokenCache<TKey, TToken> : ITokenCache<TKey, TToken>
         string cacheKey = GetHash(GetCacheKey(key));
         _logger.LogTrace("Getting token using {CacheKey}", cacheKey);
 
-        if (_memoryCache.TryGetValue(cacheKey, out TToken token))
+        if (_memoryCache.TryGetValue(cacheKey, out TToken? token))
         {
             _logger.LogTrace("Cached token found");
             return token;

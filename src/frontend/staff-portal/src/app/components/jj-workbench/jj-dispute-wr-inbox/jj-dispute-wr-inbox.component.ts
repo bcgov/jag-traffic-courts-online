@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
-import { filter, map, Observable, Subscription } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 import { AppState } from 'app/store';
@@ -17,7 +17,6 @@ import { select, Store } from '@ngrx/store';
 export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
-  busy: Subscription;
 
   jjIDIR: string;
   tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
@@ -61,7 +60,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
 
   ngAfterViewInit() {

@@ -24,22 +24,12 @@ keycloakConfigCli:
 ## PostgreSQL chart configuration
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
 postgresql:
-  primary:
-    
-    containerSecurityContext:
-      enabled: false
-    podSecurityContext:
-      enabled: false
-    
-    persistence:
-      size: 500Mi
+  enabled: false # we are going to use a shared postgresql instance
 
-  ## volumePermissions: Change the owner and group of the persistent volume(s) mountpoint(s) to 'runAsUser:fsGroup' on each node
-  volumePermissions:
-    enabled: false
-
-  ## @section Metrics Parameters
-  metrics:
-    enabled: true
-    containerSecurityContext:
-      enabled: false
+externalDatabase:
+  host: "postgres"
+  port: 5432
+  user: keycloak
+  database: keycloak
+  existingSecret: "keycloak-postgres"
+  existingSecretPasswordKey: "password"

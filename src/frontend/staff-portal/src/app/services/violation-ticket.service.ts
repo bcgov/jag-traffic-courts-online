@@ -82,6 +82,8 @@ export class ViolationTicketService implements IViolationTicketService {
   }
 
   public setViolationTicketFromJSON(ocrViolationTicket: OcrViolationTicket, violationTicket: ViolationTicket): ViolationTicket {
+    // when violation ticket record is initially created it has three counts
+    // so there must always be three violation ticket count records sent through update or update will fail
     if (ocrViolationTicket) {
       if (!violationTicket.ticketNumber) violationTicket.ticketNumber = ocrViolationTicket.fields["ticket_number"].value;
       if (!violationTicket.disputantSurname) violationTicket.disputantSurname = ocrViolationTicket.fields["disputant_surname"].value;
@@ -105,7 +107,7 @@ export class ViolationTicketService implements IViolationTicketService {
           if (!foundViolationTicketCount1[0].description) foundViolationTicketCount1[0].description = ocrViolationTicket.fields["counts.count_no_1.description"].value;
           if (!foundViolationTicketCount1[0].actOrRegulationNameCode) foundViolationTicketCount1[0].actOrRegulationNameCode = ocrViolationTicket.fields["counts.count_no_1.act_or_regulation_name_code"].value;
           if (!foundViolationTicketCount1[0].section) foundViolationTicketCount1[0].section = ocrViolationTicket.fields["counts.count_no_1.section"].value;
-          if (!foundViolationTicketCount1[0].ticketedAmount) foundViolationTicketCount1[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value?.substring(1);
+          if (!foundViolationTicketCount1[0].ticketedAmount) foundViolationTicketCount1[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value;
           if (!foundViolationTicketCount1[0].isAct) foundViolationTicketCount1[0].isAct = ocrViolationTicket.fields["counts.count_no_1.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N;
           if (!foundViolationTicketCount1[0].isRegulation) foundViolationTicketCount1[0].isRegulation = ocrViolationTicket.fields["counts.count_no_1.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
@@ -114,7 +116,7 @@ export class ViolationTicketService implements IViolationTicketService {
             description: ocrViolationTicket.fields["counts.count_no_1.description"].value,
             actOrRegulationNameCode: ocrViolationTicket.fields["counts.count_no_1.act_or_regulation_name_code"].value,
             section: ocrViolationTicket.fields["counts.count_no_1.section"].value,
-            ticketedAmount: ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value?.substring(1) : undefined,
+            ticketedAmount: ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value : undefined,
             isAct: ocrViolationTicket.fields["counts.count_no_1.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N,
             isRegulation: ocrViolationTicket.fields["counts.count_no_1.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N
           } as ViolationTicketCount;
@@ -129,7 +131,7 @@ export class ViolationTicketService implements IViolationTicketService {
           if (!foundViolationTicketCount2[0].description) foundViolationTicketCount2[0].description = ocrViolationTicket.fields["counts.count_no_2.description"].value;
           if (!foundViolationTicketCount2[0].actOrRegulationNameCode) foundViolationTicketCount2[0].actOrRegulationNameCode = ocrViolationTicket.fields["counts.count_no_2.act_or_regulation_name_code"].value;
           if (!foundViolationTicketCount2[0].section) foundViolationTicketCount2[0].section = ocrViolationTicket.fields["counts.count_no_2.section"].value;
-          if (!foundViolationTicketCount2[0].ticketedAmount) foundViolationTicketCount2[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value?.substring(1);
+          if (!foundViolationTicketCount2[0].ticketedAmount) foundViolationTicketCount2[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value;
           if (!foundViolationTicketCount2[0].isAct) foundViolationTicketCount2[0].isAct = ocrViolationTicket.fields["counts.count_no_2.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N;
           if (!foundViolationTicketCount2[0].isRegulation) foundViolationTicketCount2[0].isRegulation = ocrViolationTicket.fields["counts.count_no_2.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
@@ -138,12 +140,23 @@ export class ViolationTicketService implements IViolationTicketService {
             description: ocrViolationTicket.fields["counts.count_no_2.description"].value,
             actOrRegulationNameCode: ocrViolationTicket.fields["counts.count_no_2.act_or_regulation_name_code"].value,
             section: ocrViolationTicket.fields["counts.count_no_2.section"].value,
-            ticketedAmount: ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value?.substring(1) : undefined,
+            ticketedAmount: ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value : undefined,
             isAct: ocrViolationTicket.fields["counts.count_no_2.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N,
             isRegulation: ocrViolationTicket.fields["counts.count_no_2.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N
           } as ViolationTicketCount;
           violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
         }
+      } else {
+        let violationTicketCount = {
+          countNo: 2,
+            description: null,
+            actOrRegulationNameCode: null,
+            section: null,
+            ticketedAmount: 0,
+            isAct: this.IsAct.N,
+            isRegulation: this.IsRegulation.N
+        }
+        violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
       }
 
       // // set up ticket count 3
@@ -153,7 +166,7 @@ export class ViolationTicketService implements IViolationTicketService {
           if (!foundViolationTicketCount3[0].description) foundViolationTicketCount3[0].description = ocrViolationTicket.fields["counts.count_no_3.description"].value;
           if (!foundViolationTicketCount3[0].actOrRegulationNameCode) foundViolationTicketCount3[0].actOrRegulationNameCode = ocrViolationTicket.fields["counts.count_no_3.act_or_regulation_name_code"].value;
           if (!foundViolationTicketCount3[0].section) foundViolationTicketCount3[0].section = ocrViolationTicket.fields["counts.count_no_3.section"].value;
-          if (!foundViolationTicketCount3[0].ticketedAmount) foundViolationTicketCount3[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value?.substring(1);
+          if (!foundViolationTicketCount3[0].ticketedAmount) foundViolationTicketCount3[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value;
           if (!foundViolationTicketCount3[0].isAct) foundViolationTicketCount3[0].isAct = ocrViolationTicket.fields["counts.count_no_3.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N;
           if (!foundViolationTicketCount3[0].isRegulation) foundViolationTicketCount3[0].isRegulation = ocrViolationTicket.fields["counts.count_no_3.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
@@ -162,12 +175,23 @@ export class ViolationTicketService implements IViolationTicketService {
             description: ocrViolationTicket.fields["counts.count_no_3.description"].value,
             actOrRegulationNameCode: ocrViolationTicket.fields["counts.count_no_3.act_or_regulation_name_code"].value,
             section: ocrViolationTicket.fields["counts.count_no_3.section"].value,
-            ticketedAmount: ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value?.substring(1) : undefined,
+            ticketedAmount: ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value : undefined,
             isAct: ocrViolationTicket.fields["counts.count_no_3.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N,
             isRegulation: ocrViolationTicket.fields["counts.count_no_3.is_regulation"].value == "selected" ? this.IsAct.Y : this.IsAct.N
           } as ViolationTicketCount;
           violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
         }
+      } else {
+        let violationTicketCount = {
+          countNo: 3,
+            description: null,
+            actOrRegulationNameCode: null,
+            section: null,
+            ticketedAmount: 0,
+            isAct: this.IsAct.N,
+            isRegulation: this.IsRegulation.N
+        }
+        violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
       }
     }
 

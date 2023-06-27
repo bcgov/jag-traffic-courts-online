@@ -1,0 +1,104 @@
+<mat-card>
+  <span>
+    <span><b>Counts ({{ disputantUpdateRequest.status }})</b></span>
+    <span style="float:right">
+      {{ disputantUpdateRequest.createdTs | date: "MMMM dd, yyyy" }}
+    </span>
+  </span><br /><br />
+   <div *ngFor="let disputeCount of updateRequested.DisputeCounts">
+    <div style="display: grid; grid-template-columns: auto auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status === 'PENDING'">
+      <span class="section-grid-cell">
+        <p class="section-grid-header">&nbsp;</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Current</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Requested Update</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Count No</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text" >{{ disputeCount.CountNo }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text">{{ disputeCount.CountNo }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Plea Code</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text" >{{ disputeCount.OldPleaCode }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text">{{ disputeCount.PleaCode }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Request Time To Pay</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text" >{{ disputeCount.OldRequestTimeToPay }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text">{{ disputeCount.RequestTimeToPay }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Request Reduction</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text" >{{ disputeCount.OldRequestReduction }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text">{{ disputeCount.RequestReduction }}</p>
+      </span>
+    </div>
+    <br />
+  </div>
+  <div *ngFor="let disputeCount of updateRequested.DisputeCounts">
+    <div style="display: grid; grid-template-columns: auto auto" *ngIf="requestReadable === true && disputantUpdateRequest.status !== 'PENDING'">
+      <span class="section-grid-cell">
+        <p class="section-grid-header">&nbsp;</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Requested Update</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Count No</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text" >{{ disputeCount.CountNo }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Plea Code</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text">{{ disputeCount.PleaCode }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Request Time To Pay</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text">{{ disputeCount.RequestTimeToPay }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Request Reduction</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-text">{{ disputeCount.RequestReduction }}</p>
+      </span>
+    </div>
+    <br />
+  </div>
+  <div>
+    <span style="float:right" *ngIf="disputantUpdateRequest.status === 'PENDING'">
+      <mat-button-toggle-group [(ngModel)]="disputantUpdateRequest.newStatus" aria-label="Decision" (change)="statusChange($event)">
+        <mat-button-toggle value="ACCEPTED" *ngIf="requestReadable === true">Accept</mat-button-toggle>
+        <mat-button-toggle value="REJECTED">Reject</mat-button-toggle>
+        <mat-button-toggle value="PENDING">Pending</mat-button-toggle>
+      </mat-button-toggle-group>
+    </span>
+  </div>
+  <div *ngIf="requestReadable === false">Update Request Unreadable {{ disputantUpdateRequest.updateJson }}</div>
+  <br /><br />
+</mat-card>

@@ -13,7 +13,7 @@ spec:
           volumes:
             - name: forms-recognizer-shared
               persistentVolumeClaim:
-                claimName: forms-recognizer-shared
+                {{ include "form-recognizer.fullname" . }}-shared
           containers:
             - name: azure-cognitive-service-cleanup-requests
               image: alpine:3.14

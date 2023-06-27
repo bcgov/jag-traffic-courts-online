@@ -10,9 +10,19 @@ const params = createSelector(
   state,
   (state: DisputeStore.State) => state.params
 );
+const noticeOfDispute = createSelector(
+  state,
+  (state: DisputeStore.State) => state.noticeOfDispute
+);
+const fileData = createSelector(
+  state,
+  (state: DisputeStore.State) => state.fileData
+);
 
 export const DisputeSelectors = {
   State: state,
   Result: result,
-  Params: params
+  Params: params,
+  NoticeOfDispute: noticeOfDispute,
+  FileData: fileData
 }

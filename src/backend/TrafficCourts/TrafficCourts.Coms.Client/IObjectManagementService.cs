@@ -48,11 +48,11 @@ public interface IObjectManagementService
     /// Gets the specified file from the object management service. 
     /// </summary>
     /// <param name="id">The system generated file identifier to get.</param>
-    /// <param name="includeTags"></param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>The specified file.</returns>
+    /// <exception cref="FileNotFoundException">The file with the specified file is not found.</exception>
     /// <exception cref="ObjectManagementServiceException"></exception>
-    Task<File> GetFileAsync(Guid id, bool includeTags, CancellationToken cancellationToken);
+    Task<File> GetFileAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Searches for files in the the object management service. 
@@ -70,13 +70,20 @@ public interface IObjectManagementService
     Task<IList<FileSearchResult>> FileSearchAsync(FileSearchParameters parameters, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Replaces the metadata on the specified file.
+    /// Sets the tags on the given file. Existing tags will be replaced.
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="meta"></param>
+    /// <param name="tags"></param>
     /// <param name="cancellationToken"></param>
-    /// <exception cref="ArgumentException"><paramref name="id"/> is <see cref="Guid.Empty"/>.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="meta"/> is null.</exception>
     /// <returns></returns>
-    Task ReplaceMetadataAsync(Guid id, IReadOnlyDictionary<string, string> meta, CancellationToken cancellationToken);
+    Task SetTagsAsync(Guid id, IReadOnlyDictionary<string, string> tags, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Adds the tags to the given file. Existing tags will be retained.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="tags"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task AddTagsAsync(Guid id, IReadOnlyDictionary<string, string> tags, CancellationToken cancellationToken);
 }

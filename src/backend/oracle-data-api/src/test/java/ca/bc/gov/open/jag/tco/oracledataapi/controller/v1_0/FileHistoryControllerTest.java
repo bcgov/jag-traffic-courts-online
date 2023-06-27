@@ -1,45 +1,40 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import ca.bc.gov.open.jag.tco.oracledataapi.repository.FileHistoryRepository;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
+import ca.bc.gov.open.jag.tco.oracledataapi.service.FileHistoryService;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 class FileHistoryControllerTest extends BaseTestSuite {
 
-	@Autowired
-	@Qualifier("FileHistoryControllerV1_0")
+	@InjectMocks
 	private FileHistoryController fileHistoryController;
-	
-	@Autowired
-	private FileHistoryRepository fileHistoryRepository;
+
+	@Mock
+	private FileHistoryService service;
 
 	@Test
-	public void testSaveFileHistory() {
-		// Assert db is empty and clean
-		List<FileHistory> allFileHistory = fileHistoryRepository.findAll(); 
-		assertEquals(0, allFileHistory.size());
-
+	public void testSaveFileHistory_200() {
 		// Create a single FileHistory record
 		FileHistory fileHistory = RandomUtil.createFileHistory();
-		Long fileHistoryId = fileHistoryController.insertFileHistory(fileHistory.getTicketNumber(), fileHistory).getBody();
+		// Mock underlying saveDisputeUpdateRequest service
+		Mockito.when(service.insertFileHistory(fileHistory)).thenReturn(fileHistory.getFileHistoryId());
 
-		// Assert db contains the single created record
-		allFileHistory = fileHistoryRepository.findAll(); 
-		assertEquals(1, allFileHistory.size());
-		assertEquals(fileHistoryId, allFileHistory.get(0).getFileHistoryId());
-		assertEquals(fileHistory.getDescription(), allFileHistory.get(0).getDescription());
-
-		// Delete record
-		fileHistoryRepository.deleteById(fileHistoryId);
-	
-		// Assert db is empty again
-		allFileHistory = fileHistoryRepository.findAll();
-		assertEquals(0, allFileHistory.size());
+		// issue a POST request, expect 200
+		ResponseEntity<Long> controllerResponse = fileHistoryController.insertFileHistory(fileHistory);
+		Mockito.verify(service).insertFileHistory(fileHistory);
+		Long resultId = controllerResponse.getBody();
+		assertNotNull(resultId);
+		assertEquals(controllerResponse.getStatusCode().value(), HttpStatus.OK.value());
 	}
 }

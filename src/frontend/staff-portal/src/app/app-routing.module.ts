@@ -6,6 +6,7 @@ import { UnauthorizedComponent } from '@components/error/unauthorized/unauthoriz
 import { AuthorizationGuard } from '@core/guards/auth-guard';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench/jj-workbench-dashboard/jj-workbench-dashboard.component';
 import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench/staff-workbench-dashboard/staff-workbench-dashboard.component';
+import { UserGroup } from '@shared/enums/user-group.enum';
 
 let routes: Routes = [
   {
@@ -20,7 +21,7 @@ let routes: Routes = [
     component: StaffWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
     data: {
-      expectedRole: "vtc-staff",
+      expectedRole: UserGroup.VTC_STAFF,
       title: "Staff Workbench"
     }
   },
@@ -29,7 +30,7 @@ let routes: Routes = [
     component: JjWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
     data: {
-      expectedRole: "judicial-justice",
+      expectedRole: UserGroup.JUDICIAL_JUSTICE,
       title: "JJ Workbench"
     }
   },

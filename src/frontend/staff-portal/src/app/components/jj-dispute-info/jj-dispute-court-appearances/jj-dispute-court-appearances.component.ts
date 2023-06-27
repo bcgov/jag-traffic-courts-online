@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeCourtAppearanceRoP as JJDisputeCourtAppearanceRoPBase } from 'app/api';
+import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
-import { UserRepresentation } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-jj-dispute-court-appearances',
@@ -15,15 +15,15 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   @ViewChild(MatSort) sort = new MatSort();
 
   dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>();
+  tempData: JJDisputeCourtAppearanceRoP[] = [];
   displayedColumns: string[] = [
-    "appearanceDate",
-    "appearanceTime",
+    "appearanceTs",
     "room",
     "reason",
-    "app",
+    "appCd",
     "noAppTs",
     "clerkRecord",
-    "defenseCounsel",
+    "defenceCounsel",
     "dattCd",
     "crown",
     "jjSeized",
@@ -32,9 +32,11 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   jjList: UserRepresentation[];
 
 
-  constructor(private jjDisputeService: JJDisputeService
+  constructor(
+    private authService: AuthService,
+    private jjDisputeService: JJDisputeService
   ) {
-    this.jjDisputeService.jjList$.subscribe(result => {
+    this.authService.jjList$.subscribe(result => {
       this.jjList = result;
     });
   }
@@ -46,19 +48,18 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.data = this.data?.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
+    this.data.forEach(courtAppearance => { this.tempData.push(courtAppearance) }); // make a copy
+    this.tempData = this.tempData?.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
       return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
     });
-    this.data.shift(); // exclude most recent
-    this.data?.forEach(appearance => {
-      appearance.appearanceDate = new Date(appearance.appearanceTs);
-      appearance.appearanceTime = new Date(appearance.appearanceTs);
+    this.tempData.shift(); // exclude most recent
+    this.tempData?.forEach(appearance => {
+      appearance._formattedAppearanceTs = this.jjDisputeService.toDateFormat(appearance.appearanceTs);
     })
-    this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.data);
+    this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.tempData);
   }
 }
 
 export interface JJDisputeCourtAppearanceRoP extends JJDisputeCourtAppearanceRoPBase {
-  appearanceDate: Date,
-  appearanceTime: Date
+  _formattedAppearanceTs: String,
 }

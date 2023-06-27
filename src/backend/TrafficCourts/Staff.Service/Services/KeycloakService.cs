@@ -10,7 +10,7 @@ public class KeycloakService : IKeycloakService
     private readonly KeycloakOptions _options;
     private readonly ILogger<KeycloakService> _logger;
     private const string _attributeIdirId = "idir_username";
-    private const string _attributePartId = "part_id";
+    private const string _attributePartId = "partid";
 
     public KeycloakService(IKeycloakAdminApiClient keycloakAdminApiClient, KeycloakOptions options, ILogger<KeycloakService> logger)
     {

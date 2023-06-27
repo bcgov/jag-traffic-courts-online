@@ -2,8 +2,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { ConfigService } from '@config/config.service';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
-import { DisputantUpdateRequestUpdateType, DisputantUpdateRequestStatus2 } from 'app/api';
+import { DisputeUpdateRequestUpdateType, DisputeUpdateRequestStatus2 } from 'app/api';
 import { DisputantUpdateRequest } from '../../../services/dispute.service';
+import { Observable, forkJoin, map } from 'rxjs';
+import { ToastService } from '@core/services/toast.service';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-update-request-info',
@@ -11,54 +16,82 @@ import { DisputantUpdateRequest } from '../../../services/dispute.service';
   styleUrls: ['./update-request-info.component.scss', '../../../app.component.scss']
 })
 export class UpdateRequestInfoComponent implements OnInit {
-  @Input() public disputeInfo: Dispute;
-  @Output() public backInbox: EventEmitter<any> = new EventEmitter();
-  public initialDisputeValues: Dispute;
-  public retrieving: boolean = true;
-  public violationDate: string = "";
-  public infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
-  public violationTime: string = "";
-  public conflict: boolean = false;
-  public collapseObj: any = {
+  @Input() disputeInfo: Dispute;
+  @Output() backInbox: EventEmitter<any> = new EventEmitter();
+  initialDisputeValues: Dispute;
+  retrieving: boolean = true;
+  violationDate: string = "";
+  infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
+  violationTime: string = "";
+  conflict: boolean = false;
+  collapseObj: any = {
     contactInformation: true
   }
-  public disputeUpdateRequests: DisputantUpdateRequest[] = [];
-  public RequestUpdateType = DisputantUpdateRequestUpdateType;
-  public RequestUpdateStatus = DisputantUpdateRequestStatus2;
+  disputeUpdateRequests: DisputantUpdateRequest[] = [];
+  RequestUpdateType = DisputeUpdateRequestUpdateType;
+  RequestUpdateStatus = DisputeUpdateRequestStatus2;
 
   constructor(
-    public config: ConfigService,
+    private config: ConfigService,
     private disputeService: DisputeService,
+    private dialog: MatDialog,
+    private toastService: ToastService,
     private logger: LoggerService,
   ) {
-
   }
 
-  public ngOnInit() {
+  ngOnInit() {
     this.getDispute();
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     // process accepts and rejects
+    let observables: Observable<any>[] = [];
     this.disputeUpdateRequests.forEach(disputeUpdateRequest => {
-      if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Accepted) {
-        this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
-          next: response => {
-            disputeUpdateRequest.status = this.RequestUpdateStatus.Accepted;
-          },
-          error: err => { },
-          complete: () => { }
-        });
-      } else if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending && disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Rejected) {
-        this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputantUpdateRequestId).subscribe({
-          next: response => {
-            disputeUpdateRequest.status = this.RequestUpdateStatus.Rejected;
-          },
-          error: err => { },
-          complete: () => { }
-        });      }
+      if (disputeUpdateRequest.status === this.RequestUpdateStatus.Pending) {
+        if (disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Accepted) {
+          observables.push(this.disputeService.acceptDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).pipe(
+            map(response => {
+              let updateRequest = this.disputeUpdateRequests.filter(i => i.disputeUpdateRequestId === response).shift();
+              if (updateRequest) {
+                updateRequest.status = this.RequestUpdateStatus.Accepted;
+              }
+              return response;
+            })
+          ));
+        } else if (disputeUpdateRequest.newStatus === this.RequestUpdateStatus.Rejected) {
+          observables.push(this.disputeService.rejectDisputeUpdateRequest(disputeUpdateRequest.disputeUpdateRequestId).pipe(
+            map(response => {
+              let updateRequest = this.disputeUpdateRequests.filter(i => i.disputeUpdateRequestId === response).shift();
+              if (updateRequest) {
+                updateRequest.status = this.RequestUpdateStatus.Rejected;
+              }
+              return response;
+            })
+          ));
+        }
+      }
     })
-    this.getDispute();
+    forkJoin(observables).subscribe({
+      next: (response) => {
+        const data: DialogOptions = {
+          titleKey: "Disputant Update Requests",
+          icon: "ok",
+          actionType: "green",
+          messageKey:
+          "Your acceptances & rejections have been queued.  Allow a few minutes for them to take effect.",
+          actionTextKey: "Ok",
+          cancelHide: true
+        };
+        this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+          .subscribe((action: any) => {
+            this.onBack();
+          });
+      },
+      error: (err) => {
+        this.toastService.openErrorToast("There are one or more error(s) when saving. Please review the change(s) and try again.");
+      }
+    });
   }
 
   // get dispute
@@ -66,10 +99,7 @@ export class UpdateRequestInfoComponent implements OnInit {
     this.logger.log('UpdateRequestInfoComponent::getDispute');
 
     this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: Dispute) => {
-      this.logger.info(
-        'UpdateRequestInfoComponent::getDispute response',
-        response
-      );
+      this.logger.info('UpdateRequestInfoComponent::getDispute response', response);
 
       this.initialDisputeValues = response;
 
@@ -97,15 +127,14 @@ export class UpdateRequestInfoComponent implements OnInit {
       this.disputeUpdateRequests = response;
 
       // sort oldest to newest
-      this.disputeUpdateRequests = this.disputeUpdateRequests.sort((a,b) => {if (b.createdTs < a.createdTs) return -1});
-
+      this.disputeUpdateRequests = this.disputeUpdateRequests.sort((a, b) => { if (b.createdTs < a.createdTs) return -1 });
     });
   }
 
   // respond to status changes from child component
   onDisputantUpdateRequestStatusChange(disputantUpdateRequest: DisputantUpdateRequest) {
     this.disputeUpdateRequests.forEach(disputeUpdateRequest => {
-      if (disputeUpdateRequest.disputantUpdateRequestId === disputantUpdateRequest.disputantUpdateRequestId) disputeUpdateRequest.status = disputantUpdateRequest.status;
+      if (disputeUpdateRequest.disputeUpdateRequestId === disputantUpdateRequest.disputeUpdateRequestId) disputeUpdateRequest.status = disputantUpdateRequest.status;
     });
   }
 
@@ -120,7 +149,7 @@ export class UpdateRequestInfoComponent implements OnInit {
       let prov = this.config.provincesAndStates.filter(x => x.provId === this.initialDisputeValues.addressProvinceCountryId && x.provSeqNo === this.initialDisputeValues.addressProvinceSeqNo);
       if (prov.length > 0) addresString += ` ${prov[0].provAbbreviationCd}`;
     } else if (this.initialDisputeValues.addressProvince) {
-      addresString  += ` ${this.initialDisputeValues.addressProvince}`;
+      addresString += ` ${this.initialDisputeValues.addressProvince}`;
     }
 
     if (this.initialDisputeValues.addressCountryId) {
@@ -133,7 +162,7 @@ export class UpdateRequestInfoComponent implements OnInit {
     return addresString;
   }
 
-  public onBack() {
+  onBack() {
     this.backInbox.emit();
   }
 }

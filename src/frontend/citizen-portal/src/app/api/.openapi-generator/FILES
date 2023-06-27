@@ -3,8 +3,10 @@ README.md
 api.module.ts
 api/api.ts
 api/disputes.service.ts
+api/document.service.ts
 api/lookup.service.ts
 api/tickets.service.ts
+api/user.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -12,6 +14,7 @@ index.ts
 model/boundingBox.model.ts
 model/disputantContactInformation.model.ts
 model/dispute.model.ts
+model/disputeContactTypeCd.model.ts
 model/disputeCount.model.ts
 model/disputeCountPleaCode.model.ts
 model/disputeCountRequestCourtAppearance.model.ts
@@ -20,8 +23,11 @@ model/disputeCountRequestTimeToPay.model.ts
 model/disputeDisputantDetectedOcrIssues.model.ts
 model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
+model/disputeRequestCourtAppearanceYn.model.ts
 model/disputeStatus.model.ts
+model/disputeSystemDetectedOcrIssues.model.ts
 model/field.model.ts
+model/fileMetadata.model.ts
 model/jJDisputeHearingType.model.ts
 model/jJDisputeStatus.model.ts
 model/language.model.ts

@@ -29,10 +29,10 @@ public class EmailHistoryControllerTest
         // Arrange
         EmailHistory emailHistory1 = new();
         emailHistory1.EmailHistoryId = 1;
-        emailHistory1.TicketNumber = "TestTicket01";
+        emailHistory1.OccamDisputeId = 3L;
         EmailHistory emailHistory2 = new();
         emailHistory2.EmailHistoryId =2;
-        emailHistory2.TicketNumber = "TestTicket01";
+        emailHistory2.OccamDisputeId = 4L;
         List<EmailHistory> fileHistories = new() { emailHistory1, emailHistory2 };
         var EmailHistoryService = new Mock<IEmailHistoryService>();
         EmailHistoryService

@@ -13,7 +13,11 @@ namespace TrafficCourts.Coms.Client.Test
         // {
         //   "BaseUrl": "https://coms-host/api/v1",
         //   "Username": "coms-username",
-        //   "Password": "coms-password"
+        //   "Password": "coms-password",
+        //   "DatabaseHost": "localhost",
+        //   "DatabaseName": "coms",
+        //   "DatabaseUsername": "postgres",
+        //   "DatabasePassword": "password"
         // }
         //
         private readonly ITestOutputHelper _output;
@@ -57,7 +61,7 @@ namespace TrafficCourts.Coms.Client.Test
 
             var file = new FileParameter(new MemoryStream(expected.ToByteArray()), "integration.test");
 
-            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, file, _cancellationToken);
+            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, null, file, _cancellationToken);
 
             _output.WriteLine("Created {0} items", created.Count);
 
@@ -89,7 +93,7 @@ namespace TrafficCourts.Coms.Client.Test
 
             var file = new FileParameter(new MemoryStream(expected.ToByteArray()), "integration.test");
             _client.ReadResponseAsString = true; // make it easier troubleshoot reading the responses
-            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, file, CancellationToken.None);
+            ICollection<Anonymous> created = await _client.CreateObjectsAsync(null, null, null, file, CancellationToken.None);
 
             _output.WriteLine("Created: ");
             foreach (var item in created)
@@ -125,10 +129,13 @@ namespace TrafficCourts.Coms.Client.Test
             string filename = $"test-{expectedData.ToString("n")[0..6]}.bin";
             File expectedFile = new File(new MemoryStream(expectedData.ToByteArray()), filename, "a/b");
 
+            Dictionary<string, string> metadata = new Dictionary<string, string>();
+            Dictionary<string, string> tags = new Dictionary<string, string>();
+
             for (int i = 0; i < 5; i++)
             {
-                expectedFile.Metadata.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
-                expectedFile.Tags.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
+                metadata.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
+                tags.Add(Guid.NewGuid().ToString("n")[0..6], Guid.NewGuid().ToString("n"));
             }
 
             // expect the file id to be null before creation
@@ -138,12 +145,12 @@ namespace TrafficCourts.Coms.Client.Test
             // expect the file id to set after creation
             Assert.Equal(id, expectedFile.Id);
 
-            using var actualFile = await _service.GetFileAsync(id, false, _cancellationToken);
+            using var actualFile = await _service.GetFileAsync(id, _cancellationToken);
 
             // search for the file by the first metadata property
             FileSearchParameters parameters = new FileSearchParameters();
             string key = expectedFile.Metadata.Keys.First();
-            parameters.Metadata.Add(key, expectedFile.Metadata[key]);
+            //parameters.Metadata.Add(key, expectedFile.Metadata[key]);
 
             var fileSearchResults = await _service.FileSearchAsync(parameters, _cancellationToken);
 

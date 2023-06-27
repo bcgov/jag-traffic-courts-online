@@ -13,7 +13,7 @@ public class FileSearchAsync : ObjectManagementServiceTest
 
         // setup return value
         SetupSearchObjectsReturn(new List<DBObject>());
-        SetupGetObjectMetadataAsync(Array.Empty<ObjectMetadata>());
+        SetupGetObjectMetadataAsync(Array.Empty<Anonymous2>());
 
         ObjectManagementService sut = GetService();
 
@@ -26,8 +26,11 @@ public class FileSearchAsync : ObjectManagementServiceTest
             _.SearchObjectsAsync(
                 It.Is<IReadOnlyDictionary<string, string>?>((actual) => actual == parameters.Metadata),
                 It.Is<IList<Guid>?>((actual) => actual == parameters.Ids),
+                It.Is<Guid?>((actual) => actual == parameters.BucketId),
                 It.Is<string?>((actual) => actual == parameters.Path),
                 It.Is<bool?>((actual) => actual == parameters.Active),
+                It.Is<bool?>((actual) => actual == parameters.DeleteMarker),
+                It.Is<bool?>((actual) => actual == parameters.Latest),
                 It.Is<bool?>((actual) => actual == parameters.Public),
                 It.Is<string?>((actual) => actual == parameters.MimeType),
                 It.Is<string?>((actual) => actual == parameters.Name),
@@ -46,7 +49,8 @@ public class FileSearchAsync : ObjectManagementServiceTest
 
         // setup return value
         SetupSearchObjectsReturn(new List<DBObject> { new DBObject { Id = expected } });
-        SetupGetObjectMetadataAsync(new ObjectMetadata[] { new ObjectMetadata { Id = expected } });
+        SetupGetObjectMetadataAsync(new Anonymous2[] { new Anonymous2 { ObjectId = expected } });
+        SetupGetObjectTagsAsync(new Anonymous3[] { new Anonymous3 { ObjectId = expected } });
 
         ObjectManagementService sut = GetService();
 
@@ -57,8 +61,11 @@ public class FileSearchAsync : ObjectManagementServiceTest
         _mockClient.Verify(_ => _.SearchObjectsAsync(
                 It.Is<IReadOnlyDictionary<string, string>?>((actual) => actual == parameters.Metadata),
                 It.Is<IList<Guid>?>((actual) => actual == parameters.Ids),
+                It.Is<Guid?>((actual) => actual == parameters.BucketId),
                 It.Is<string?>((actual) => actual == parameters.Path),
                 It.Is<bool?>((actual) => actual == parameters.Active),
+                It.Is<bool?>((actual) => actual == parameters.DeleteMarker),
+                It.Is<bool?>((actual) => actual == parameters.Latest),
                 It.Is<bool?>((actual) => actual == parameters.Public),
                 It.Is<string?>((actual) => actual == parameters.MimeType),
                 It.Is<string?>((actual) => actual == parameters.Name),
@@ -67,9 +74,10 @@ public class FileSearchAsync : ObjectManagementServiceTest
             ));
 
         // should have read the object to get the expected found object
-        _mockClient.Verify(_ => _.GetObjectMetadataAsync(
-            It.Is<IList<Guid>>((actual) => actual.Count == 1 && actual[0] == expected),
-            It.Is<CancellationToken>((actual) => actual == cts.Token)
+        _mockClient.Verify(_ => _.FetchMetadataAsync(
+            It.Is<IList<Guid>>((ids) => ids.Count == 1 && ids[0] == expected),
+            It.Is<IReadOnlyDictionary<string, string>>(meta => meta == null),
+            It.Is<CancellationToken>((cancellationToken) => cancellationToken == cts.Token)
         ));
     }
 
@@ -78,7 +86,10 @@ public class FileSearchAsync : ObjectManagementServiceTest
         _mockClient.Setup(_ => _.SearchObjectsAsync(
             It.IsAny<IReadOnlyDictionary<string, string>?>(),
             It.IsAny<IList<Guid>?>(),
+            It.IsAny<Guid?>(),
             It.IsAny<string?>(),
+            It.IsAny<bool?>(),
+            It.IsAny<bool?>(),
             It.IsAny<bool?>(),
             It.IsAny<bool?>(),
             It.IsAny<string?>(),
@@ -87,6 +98,4 @@ public class FileSearchAsync : ObjectManagementServiceTest
             It.IsAny<CancellationToken>()))
         .ReturnsAsync(() => values);
     }
-
-
 }

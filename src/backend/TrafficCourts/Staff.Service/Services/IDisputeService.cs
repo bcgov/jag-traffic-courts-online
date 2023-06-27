@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using System.Security.Claims;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Models;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -10,7 +11,7 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A collection of Dispute objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
+    Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
 
     /// <summary>Saves new dispute in the oracle database.</summary>
     /// <param name="dispute"></param>
@@ -21,10 +22,11 @@ public interface IDisputeService
 
     /// <summary>Returns a specific dispute from the database.</summary>
     /// <param name="id">Unique identifier of a Dispute record.</param>
+    /// <param name="isAssign">Whether or not to assign a staff member</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>OK</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> GetDisputeAsync(long id, CancellationToken cancellationToken);
+    Task<Dispute> GetDisputeAsync(long id, bool isAssign, CancellationToken cancellationToken);
 
     /// <summary>Updates the properties of a particular Dispute record based on the given values.</summary>
     /// <param name="id">Unique identifier of a Dispute record to modify.</param>
@@ -36,32 +38,37 @@ public interface IDisputeService
 
     /// <summary>Updates the status of a particular Dispute record to VALIDATED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to validate.</param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task ValidateDisputeAsync(long id, CancellationToken cancellationToken);
+    Task ValidateDisputeAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to CANCELLED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
+    /// <param name="cancelledReason">The reason or note (max 256 characters) for the cancellation.</param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task CancelDisputeAsync(long id, CancellationToken cancellationToken);
+    Task CancelDisputeAsync(long id, string cancelledReason, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to REJECTED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
+    /// <param name="user"></param>
     /// <param name="rejectedReason">The reason or note (max 256 characters) for the rejection.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task RejectDisputeAsync(long id, string rejectedReason, CancellationToken cancellationToken);
+    Task RejectDisputeAsync(long id, string rejectedReason, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>Submits a Dispute, setting it's status to PROCESSING.</summary>
     /// <param name="id">Unique identifier of a Dispute record to submit.</param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task SubmitDisputeAsync(long id, CancellationToken cancellationToken);
+    Task SubmitDisputeAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>An endpoint to delete a specific dispute in the database.</summary>
     /// <param name="id">Unique identifier of a Dispute record to delete.</param>
@@ -81,17 +88,19 @@ public interface IDisputeService
     /// Accepts a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task AcceptDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+    Task AcceptDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Rejects a citizen's requested changes to their Disputant Contact information.
     /// </summary>
     /// <param name="updateStatusId"></param>
+    /// <param name="user"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task RejectDisputeUpdateRequestAsync(long updateStatusId, CancellationToken cancellationToken);
+    Task RejectDisputeUpdateRequestAsync(long updateStatusId, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all the existing disputes from the database with pending update requests.
@@ -106,7 +115,7 @@ public interface IDisputeService
     /// </summary>
     /// <param name="disputeId">Dispute Id</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-    /// <returns>A collection of DisputantUpdateRequest objects</returns>
+    /// <returns>A collection of DisputeUpdateRequest objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<DisputantUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken);
+    Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken);
 }

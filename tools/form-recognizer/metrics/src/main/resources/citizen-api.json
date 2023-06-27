@@ -1,0 +1,2089 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Traffic Court Online Citizen Api",
+    "description": "An API for creating violation ticket disputes",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/disputes/create": {
+      "post": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "An endpoint for creating and saving dispute ticket data",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoticeOfDispute"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoticeOfDispute"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NoticeOfDispute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/api/disputes/email/{guidHash}/resend": {
+      "put": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "An endpoint for resending an email to a Disputant.",
+        "parameters": [
+          {
+            "name": "guidHash",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/disputes/email/verify": {
+      "put": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "Verifies email address based on token sent to a Disputant.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "The email verification token.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/disputes/search": {
+      "get": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "Search for a Dispute.",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "query",
+            "description": "The violation ticket number. Must start with two upper case letters and end with eight digits.",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Z]{2}[0-9]{8}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "description": "The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.",
+            "required": true,
+            "schema": {
+              "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The dispute was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDisputeResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDisputeResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDisputeResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The dispute was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters."
+          }
+        }
+      }
+    },
+    "/api/disputes/{guidHash}": {
+      "get": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "Get a Dispute with authentication.",
+        "parameters": [
+          {
+            "name": "guidHash",
+            "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Dispute was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The dispute was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a internal server error."
+          },
+          "400": {
+            "description": "The uuid doesn't appear to be a valid UUID."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "Submits an update request for a Dispute with authentication.",
+        "parameters": [
+          {
+            "name": "guidHash",
+            "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The requested fields to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispute"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispute"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated."
+          },
+          "400": {
+            "description": "The uuid doesn't appear to be a valid UUID.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a internal server error."
+          },
+          "404": {
+            "description": "The dispute was not found."
+          }
+        }
+      }
+    },
+    "/api/dispute/{guidHash}/contact": {
+      "put": {
+        "tags": [
+          "Disputes"
+        ],
+        "summary": "Submits an update request for a Disputant's contact information.",
+        "parameters": [
+          {
+            "name": "guidHash",
+            "in": "path",
+            "description": "A hash of the noticeOfDisputeGuid.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The requested fields to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputantContactInformation"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputantContactInformation"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputantContactInformation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated."
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/document/get": {
+      "get": {
+        "tags": [
+          "Document"
+        ],
+        "summary": "Downloads a document for the given unique file ID if the virus scan staus is clean.",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "description": "Unique identifier for a specific document.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document is successfully downloaded."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The file was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the file to be downloaded successfully."
+          }
+        }
+      }
+    },
+    "/api/lookup/statutes": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of Violation Ticket Statutes filtered by given section text (if provided).",
+        "parameters": [
+          {
+            "name": "section",
+            "in": "query",
+            "description": "Motor vehicle Section text to query by, ie \"13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Statute"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lookup/languages": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of Languages.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Language"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tickets/search": {
+      "get": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Searches for a violation ticket that exists on file.",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "query",
+            "description": "The violation ticket number. Must start with two upper case letters and end with eight digits.",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Z]{2}[0-9]{8}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "description": "The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.",
+            "required": true,
+            "schema": {
+              "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The violation ticket was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViolationTicket"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViolationTicket"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViolationTicket"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The violation ticket was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters."
+          }
+        }
+      }
+    },
+    "/api/tickets/analyse": {
+      "post": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.",
+        "parameters": [
+          {
+            "name": "validate",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The file appears to be a valid Violation Ticket. JSON data is extracted.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OcrViolationTicket"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OcrViolationTicket"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OcrViolationTicket"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The uploaded file is too large or the Violation Ticket does not appear to be valid. Either \r\n            the ticket title could not be found, the ticket number is invalid, the violation date is invalid or more than \r\n            30 days ago, or MVA is not selected or not the only ACT selected.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BoundingBox": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DisputantContactInformation": {
+        "type": "object",
+        "properties": {
+          "email_address": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The disputant's email address.",
+            "nullable": true
+          },
+          "disputant_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The first given name or corporate name continued.",
+            "nullable": true
+          },
+          "disputant_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The second given name",
+            "nullable": true
+          },
+          "disputant_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The third given name",
+            "nullable": true
+          },
+          "disputant_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "contact_law_firm_name": {
+            "type": "string",
+            "description": "Contact Law Firm Name",
+            "nullable": true
+          },
+          "contact_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 1",
+            "nullable": true
+          },
+          "contact_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 2",
+            "nullable": true
+          },
+          "contact_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 3",
+            "nullable": true
+          },
+          "contact_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Surname",
+            "nullable": true
+          },
+          "contact_type": {
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
+          },
+          "address_line1": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line2": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line3": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address city of the disputant.",
+            "nullable": true
+          },
+          "address_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address province of the disputant.",
+            "nullable": true
+          },
+          "address_province_country_id": {
+            "type": "integer",
+            "description": "The mailing address province's country code of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_province_seq_no": {
+            "type": "integer",
+            "description": "The mailing address province's sequence number of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_country_id": {
+            "type": "integer",
+            "description": "The mailing address country id of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "postal_code": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "The mailing address postal code or zip code of the disputant.",
+            "nullable": true
+          },
+          "home_phone_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The disputant's home phone number.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A subset of a Disputant's contact information that can be requested to update via a PUT /api/dispute/{guidhash}/contact endpoint."
+      },
+      "Dispute": {
+        "type": "object",
+        "properties": {
+          "email_address": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The disputant's email address.",
+            "nullable": true
+          },
+          "disputant_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The first given name or corporate name continued.",
+            "nullable": true
+          },
+          "disputant_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The second given name",
+            "nullable": true
+          },
+          "disputant_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The third given name",
+            "nullable": true
+          },
+          "disputant_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "contact_law_firm_name": {
+            "type": "string",
+            "description": "Contact Law Firm Name",
+            "nullable": true
+          },
+          "contact_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 1",
+            "nullable": true
+          },
+          "contact_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 2",
+            "nullable": true
+          },
+          "contact_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 3",
+            "nullable": true
+          },
+          "contact_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Surname",
+            "nullable": true
+          },
+          "contact_type": {
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
+          },
+          "address_line1": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line2": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line3": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address city of the disputant.",
+            "nullable": true
+          },
+          "address_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address province of the disputant.",
+            "nullable": true
+          },
+          "address_province_country_id": {
+            "type": "integer",
+            "description": "The mailing address province's country code of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_province_seq_no": {
+            "type": "integer",
+            "description": "The mailing address province's sequence number of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_country_id": {
+            "type": "integer",
+            "description": "The mailing address country id of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "postal_code": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "The mailing address postal code or zip code of the disputant.",
+            "nullable": true
+          },
+          "home_phone_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The disputant's home phone number.",
+            "nullable": true
+          },
+          "ticket_number": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "The violation ticket number.",
+            "nullable": true
+          },
+          "issued_date": {
+            "type": "string",
+            "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
+            "format": "date-time"
+          },
+          "disputant_birthdate": {
+            "type": "string",
+            "description": "The disputant's birthdate.",
+            "format": "date"
+          },
+          "drivers_licence_number": {
+            "type": "string",
+            "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
+            "nullable": true
+          },
+          "drivers_licence_province": {
+            "type": "string",
+            "description": "The province or state the drivers licence was issued by.",
+            "nullable": true
+          },
+          "drivers_licence_province_seq_no": {
+            "type": "integer",
+            "description": "The province sequence number of the drivers licence was issued by.",
+            "format": "int32",
+            "nullable": true
+          },
+          "drivers_licence_country_id": {
+            "type": "integer",
+            "description": "The country code of the drivers licence was issued by.",
+            "format": "int32",
+            "nullable": true
+          },
+          "work_phone_number": {
+            "type": "string",
+            "description": "The disputant's work phone number.",
+            "nullable": true
+          },
+          "represented_by_lawyer": {
+            "$ref": "#/components/schemas/DisputeRepresentedByLawyer"
+          },
+          "law_firm_name": {
+            "type": "string",
+            "description": "Name of the law firm that will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_surname": {
+            "type": "string",
+            "description": "Surname of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name1": {
+            "type": "string",
+            "description": "Given Name 1 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name2": {
+            "type": "string",
+            "description": "Given Name 2 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name3": {
+            "type": "string",
+            "description": "Given Name 3 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_email": {
+            "type": "string",
+            "description": "Email address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_address": {
+            "type": "string",
+            "description": "Address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_phone_number": {
+            "type": "string",
+            "description": "Address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "request_court_appearance": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
+          },
+          "interpreter_language_cd": {
+            "type": "string",
+            "description": "The disputant requires spoken language interpreter. The language name is indicated in this field.",
+            "nullable": true
+          },
+          "interpreter_required": {
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
+          },
+          "witness_no": {
+            "type": "integer",
+            "description": "The number of witnesses that the disputant intends to call.",
+            "format": "int32"
+          },
+          "fine_reduction_reason": {
+            "type": "string",
+            "description": "The reason that disputant declares for requesting a fine reduction.",
+            "nullable": true
+          },
+          "time_to_pay_reason": {
+            "type": "string",
+            "description": "The reason that disputant declares for requesting more time to pay the amount on the violation ticket.",
+            "nullable": true
+          },
+          "dispute_counts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DisputeCount"
+            },
+            "description": "Dispute Counts",
+            "nullable": true
+          },
+          "file_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMetadata"
+            },
+            "description": "List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a violation ticket notice of dispute."
+      },
+      "DisputeContactTypeCd": {
+        "enum": [
+          "UNKNOWN",
+          "INDIVIDUAL",
+          "LAWYER",
+          "OTHER"
+        ],
+        "type": "string"
+      },
+      "DisputeCount": {
+        "type": "object",
+        "properties": {
+          "plea_cd": {
+            "$ref": "#/components/schemas/DisputeCountPleaCode"
+          },
+          "count_no": {
+            "type": "integer",
+            "description": "The count number. Must be unique within an individual dispute.",
+            "format": "int32"
+          },
+          "request_time_to_pay": {
+            "$ref": "#/components/schemas/DisputeCountRequestTimeToPay"
+          },
+          "request_reduction": {
+            "$ref": "#/components/schemas/DisputeCountRequestReduction"
+          },
+          "request_court_appearance": {
+            "$ref": "#/components/schemas/DisputeCountRequestCourtAppearance"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DisputeCountPleaCode": {
+        "enum": [
+          "UNKNOWN",
+          "G",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestCourtAppearance": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestReduction": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestTimeToPay": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeDisputantDetectedOcrIssues": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeInterpreterRequired": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeRepresentedByLawyer": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeRequestCourtAppearanceYn": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeStatus": {
+        "enum": [
+          "UNKNOWN",
+          "NEW",
+          "VALIDATED",
+          "PROCESSING",
+          "REJECTED",
+          "CANCELLED"
+        ],
+        "type": "string"
+      },
+      "Field": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "fieldConfidence": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoundingBox"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileMetadata": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "noticeOfDisputeGuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "virusScanStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputeId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "pendingFileStream": {
+            "type": "string",
+            "nullable": true
+          },
+          "deleteRequested": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JJDisputeHearingType": {
+        "enum": [
+          "UNKNOWN",
+          "COURT_APPEARANCE",
+          "WRITTEN_REASONS"
+        ],
+        "type": "string"
+      },
+      "JJDisputeStatus": {
+        "enum": [
+          "UNKNOWN",
+          "NEW",
+          "IN_PROGRESS",
+          "DATA_UPDATE",
+          "CONFIRMED",
+          "REQUIRE_COURT_HEARING",
+          "REQUIRE_MORE_INFO",
+          "ACCEPTED",
+          "REVIEW",
+          "HEARING_SCHEDULED"
+        ],
+        "type": "string"
+      },
+      "Language": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NoticeOfDispute": {
+        "type": "object",
+        "properties": {
+          "email_address": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The disputant's email address.",
+            "nullable": true
+          },
+          "disputant_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The first given name or corporate name continued.",
+            "nullable": true
+          },
+          "disputant_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The second given name",
+            "nullable": true
+          },
+          "disputant_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The third given name",
+            "nullable": true
+          },
+          "disputant_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "contact_law_firm_name": {
+            "type": "string",
+            "description": "Contact Law Firm Name",
+            "nullable": true
+          },
+          "contact_given_name1": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 1",
+            "nullable": true
+          },
+          "contact_given_name2": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 2",
+            "nullable": true
+          },
+          "contact_given_name3": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Given Name 3",
+            "nullable": true
+          },
+          "contact_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Contact Surname",
+            "nullable": true
+          },
+          "contact_type": {
+            "$ref": "#/components/schemas/DisputeContactTypeCd"
+          },
+          "address_line1": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line2": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line3": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address city of the disputant.",
+            "nullable": true
+          },
+          "address_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The mailing address province of the disputant.",
+            "nullable": true
+          },
+          "address_province_country_id": {
+            "type": "integer",
+            "description": "The mailing address province's country code of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_province_seq_no": {
+            "type": "integer",
+            "description": "The mailing address province's sequence number of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address_country_id": {
+            "type": "integer",
+            "description": "The mailing address country id of the disputant.",
+            "format": "int32",
+            "nullable": true
+          },
+          "postal_code": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "The mailing address postal code or zip code of the disputant.",
+            "nullable": true
+          },
+          "home_phone_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The disputant's home phone number.",
+            "nullable": true
+          },
+          "ticket_number": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "The violation ticket number.",
+            "nullable": true
+          },
+          "issued_date": {
+            "type": "string",
+            "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
+            "format": "date-time"
+          },
+          "disputant_birthdate": {
+            "type": "string",
+            "description": "The disputant's birthdate.",
+            "format": "date"
+          },
+          "drivers_licence_number": {
+            "type": "string",
+            "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
+            "nullable": true
+          },
+          "drivers_licence_province": {
+            "type": "string",
+            "description": "The province or state the drivers licence was issued by.",
+            "nullable": true
+          },
+          "drivers_licence_province_seq_no": {
+            "type": "integer",
+            "description": "The province sequence number of the drivers licence was issued by.",
+            "format": "int32",
+            "nullable": true
+          },
+          "drivers_licence_country_id": {
+            "type": "integer",
+            "description": "The country code of the drivers licence was issued by.",
+            "format": "int32",
+            "nullable": true
+          },
+          "work_phone_number": {
+            "type": "string",
+            "description": "The disputant's work phone number.",
+            "nullable": true
+          },
+          "represented_by_lawyer": {
+            "$ref": "#/components/schemas/DisputeRepresentedByLawyer"
+          },
+          "law_firm_name": {
+            "type": "string",
+            "description": "Name of the law firm that will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_surname": {
+            "type": "string",
+            "description": "Surname of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name1": {
+            "type": "string",
+            "description": "Given Name 1 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name2": {
+            "type": "string",
+            "description": "Given Name 2 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name3": {
+            "type": "string",
+            "description": "Given Name 3 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_email": {
+            "type": "string",
+            "description": "Email address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_address": {
+            "type": "string",
+            "description": "Address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_phone_number": {
+            "type": "string",
+            "description": "Address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "request_court_appearance": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
+          },
+          "interpreter_language_cd": {
+            "type": "string",
+            "description": "The disputant requires spoken language interpreter. The language name is indicated in this field.",
+            "nullable": true
+          },
+          "interpreter_required": {
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
+          },
+          "witness_no": {
+            "type": "integer",
+            "description": "The number of witnesses that the disputant intends to call.",
+            "format": "int32"
+          },
+          "fine_reduction_reason": {
+            "type": "string",
+            "description": "The reason that disputant declares for requesting a fine reduction.",
+            "nullable": true
+          },
+          "time_to_pay_reason": {
+            "type": "string",
+            "description": "The reason that disputant declares for requesting more time to pay the amount on the violation ticket.",
+            "nullable": true
+          },
+          "dispute_counts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DisputeCount"
+            },
+            "description": "Dispute Counts",
+            "nullable": true
+          },
+          "file_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMetadata"
+            },
+            "description": "List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute",
+            "nullable": true
+          },
+          "disputant_detected_ocr_issues": {
+            "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
+          },
+          "disputant_ocr_issues": {
+            "type": "string",
+            "description": "The description of the issue with OCR ticket if the citizen has detected any.",
+            "nullable": true
+          },
+          "ticket_id": {
+            "type": "string",
+            "description": "The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.",
+            "nullable": true
+          },
+          "detachment_location": {
+            "type": "string",
+            "description": "Detachment Location",
+            "nullable": true
+          },
+          "violation_ticket": {
+            "$ref": "#/components/schemas/ViolationTicket"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a violation ticket notice of dispute."
+      },
+      "OcrViolationTicket": {
+        "type": "object",
+        "properties": {
+          "imageFilename": {
+            "type": "string",
+            "nullable": true
+          },
+          "globalConfidence": {
+            "type": "number",
+            "format": "float"
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Field"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Point": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "SearchDisputeResult": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "nullable": true
+          },
+          "dispute_status": {
+            "$ref": "#/components/schemas/DisputeStatus"
+          },
+          "jjdispute_status": {
+            "$ref": "#/components/schemas/JJDisputeStatus"
+          },
+          "hearing_type": {
+            "$ref": "#/components/schemas/JJDisputeHearingType"
+          },
+          "is_error": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Statute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "actCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "subsectionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "paragraphText": {
+            "type": "string",
+            "nullable": true
+          },
+          "subparagraphText": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "shortDescriptionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "descriptionText": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ViolationTicket": {
+        "required": [
+          "counts"
+        ],
+        "type": "object",
+        "properties": {
+          "ticket_number": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "The violation ticket number.",
+            "nullable": true
+          },
+          "disputant_organization_name": {
+            "maxLength": 150,
+            "type": "string",
+            "description": "Disputant Organization Name",
+            "nullable": true
+          },
+          "disputant_surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "disputant_given_names": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The given names or corporate name continued.",
+            "nullable": true
+          },
+          "is_young_person": {
+            "$ref": "#/components/schemas/ViolationTicketIsYoungPerson"
+          },
+          "drivers_licence_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
+            "nullable": true
+          },
+          "disputant_client_number": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Disputant client number",
+            "nullable": true
+          },
+          "drivers_licence_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The province or state the drivers licence was issued by.",
+            "nullable": true
+          },
+          "drivers_licence_issued_year": {
+            "maximum": 2100,
+            "minimum": 1900,
+            "type": "integer",
+            "description": "The year the drivers licence was produced.",
+            "format": "int32",
+            "nullable": true
+          },
+          "drivers_licence_expiry_year": {
+            "maximum": 2100,
+            "minimum": 1900,
+            "type": "integer",
+            "description": "The year the drivers licence expires.",
+            "format": "int32",
+            "nullable": true
+          },
+          "address": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The address of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "address_city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The city of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "address_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The province or state of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "address_postal_code": {
+            "maxLength": 6,
+            "type": "string",
+            "description": "The postal code or zip code.",
+            "nullable": true
+          },
+          "address_country": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The country text",
+            "nullable": true
+          },
+          "officer_pin": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Office Pin Text",
+            "nullable": true
+          },
+          "detachment_location": {
+            "maxLength": 150,
+            "type": "string",
+            "description": "Detachment Location",
+            "nullable": true
+          },
+          "is_change_of_address": {
+            "$ref": "#/components/schemas/ViolationTicketIsChangeOfAddress"
+          },
+          "is_driver": {
+            "$ref": "#/components/schemas/ViolationTicketIsDriver"
+          },
+          "is_owner": {
+            "$ref": "#/components/schemas/ViolationTicketIsOwner"
+          },
+          "issued_date": {
+            "type": "string",
+            "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "issued_on_road_or_highway": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "Issued on Road or Highway",
+            "nullable": true
+          },
+          "issued_at_or_near_city": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "Issued at or near city.",
+            "nullable": true
+          },
+          "counts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ViolationTicketCount"
+            },
+            "description": "Represents the counts identified. Must have at least one and at most three counts."
+          },
+          "court_location": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The designated provincial court hearing location. For example, Richmond, BC.",
+            "nullable": true
+          },
+          "ticket_id": {
+            "type": "string",
+            "description": "A unique generated ID set by the system that is used as Redis key for retrieving the ViolationTicket from Redis cache.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the data contained on a BC violation ticket"
+      },
+      "ViolationTicketCount": {
+        "type": "object",
+        "properties": {
+          "count_no": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The count number. Must be unique within an individual violation ticket.",
+            "format": "int32"
+          },
+          "description": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The description of the offence.",
+            "nullable": true
+          },
+          "act_or_regulation_name_code": {
+            "maxLength": 3,
+            "type": "string",
+            "description": "The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc",
+            "nullable": true
+          },
+          "section": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "subsection": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "paragraph": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "subparagraph": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "ticketed_amount": {
+            "maximum": 999999,
+            "minimum": 1,
+            "type": "number",
+            "description": "The ticketed amount.",
+            "format": "double",
+            "nullable": true
+          },
+          "is_act": {
+            "$ref": "#/components/schemas/ViolationTicketCountIsAct"
+          },
+          "is_regulation": {
+            "$ref": "#/components/schemas/ViolationTicketCountIsRegulation"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a violation ticket count."
+      },
+      "ViolationTicketCountIsAct": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketCountIsRegulation": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsChangeOfAddress": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsDriver": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsOwner": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsYoungPerson": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

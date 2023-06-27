@@ -149,6 +149,11 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String noticeOfDisputeGuid;
 
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo noticeOfHearingYn;
+
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String occamDisputantGiven1Nm;
@@ -165,9 +170,8 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String occamDisputantSurnameNm;
 
-	@Column(length = 15)
-	@Schema(nullable = true)
-	private String occamDisputeId;
+	@Schema(nullable = false)
+	private Long occamDisputeId;
 
 	@Column(length = 15)
 	@Schema(nullable = true)
@@ -208,6 +212,11 @@ public class JJDispute extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	private String enforcementOfficer;
+
+	@Column(nullable = true)
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo electronicTicketYn;
 
 	/**
 	 * The police detachment location.
@@ -274,28 +283,37 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String timeToPayReason;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactLawFirmName;
 
-	@Column
+	@Column(nullable = true)
+	@Schema(nullable = true)
 	private String contactGivenName1;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactGivenName2;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactGivenName3;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private String contactSurname;
 
-	@Column
+	@Column(nullable = true)
 	@Schema(nullable = true)
 	private ContactType contactType;
+
+	/**
+	 * Does the want to appear in court?
+	 */
+	@Column(nullable = false)
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private YesNo appearInCourt;
 
 	@Column
 	@Schema(nullable = true)
@@ -369,17 +387,22 @@ public class JJDispute extends Auditable<String> {
 	@OneToMany(targetEntity = JJDisputeRemark.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "jjDispute")
 	public List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
 
-	public void addRemarks(List<JJDisputeRemark> remarks) {
-		for (JJDisputeRemark remark : remarks) {
-			remark.setJjDispute(this);
-		}
-		this.remarks.addAll(remarks);
-	}
-
 	@JsonManagedReference(value = "jj_dispute_count_reference")
 	@OneToMany(targetEntity = JJDisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
 	public List<JJDisputedCount> jjDisputedCounts = new ArrayList<JJDisputedCount>();
+
+	@JsonManagedReference(value = "jj_dispute_court_appearance_rop_reference")
+	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@JoinColumn(name = "jjdispute_id")
+	public List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
+
+	/**
+	 * Simple constructor to create a blank JJDispute with the id.
+	 */
+	public JJDispute(Long jjDisputeId) {
+		this.id = jjDisputeId;
+	}
 
 	public void addJJDisputedCounts(List<JJDisputedCount> disputedCounts) {
 		for (JJDisputedCount disputedCount : disputedCounts) {
@@ -388,10 +411,12 @@ public class JJDispute extends Auditable<String> {
 		this.jjDisputedCounts.addAll(disputedCounts);
 	}
 
-	@JsonManagedReference(value = "jj_dispute_court_appearance_rop_reference")
-	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@JoinColumn(name = "jjdispute_id")
-	public List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
+	public void addRemarks(List<JJDisputeRemark> remarks) {
+		for (JJDisputeRemark remark : remarks) {
+			remark.setJjDispute(this);
+		}
+		this.remarks.addAll(remarks);
+	}
 
 	public void addJJDisputeCourtAppearances(List<JJDisputeCourtAppearanceRoP> disputeCourtAppearanceRoPs) {
 		for (JJDisputeCourtAppearanceRoP disputeCourtAppearanceRoP : disputeCourtAppearanceRoPs) {

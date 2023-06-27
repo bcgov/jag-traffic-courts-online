@@ -1,0 +1,36 @@
+api:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+layout:
+  resources:
+    limits:
+      cpu: 4
+      memory: 3Gi
+    requests:
+      cpu: 100m
+      memory: 2Gi
+
+proxy:
+  resources:
+   limits:
+     cpu: 100m
+     memory: 256Mi
+   requests:
+     cpu: 50m
+     memory: 64Mi
+
+supervised:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

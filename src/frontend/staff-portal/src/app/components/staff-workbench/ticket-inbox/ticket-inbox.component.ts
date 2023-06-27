@@ -2,9 +2,8 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } fro
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field, DisputeSystemDetectedOcrIssues, DisputeListItem } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
-import { Subscription } from 'rxjs';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
 @Component({
@@ -17,7 +16,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource();
   tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
-  busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',
     '__DateSubmitted',
@@ -26,15 +24,16 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     'disputantGivenNames',
     'status',
     '__FilingDate',
-    '__CourtHearing',
+    'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
-    '__SystemDetectedOcrIssues',
+    'systemDetectedOcrIssues',
     'userAssignedTo',
   ];
   disputes: Dispute[] = [];
   public userProfile: KeycloakProfile = {};
-  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  public RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   public DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  public SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -44,7 +43,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     private logger: LoggerService,
     private authService: AuthService,
   ) {
-    this.disputeService.refreshDisputes.subscribe(x => {this.getAllDisputes();})
+    this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputes(); })
   }
 
   public async ngOnInit() {
@@ -63,7 +62,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*80)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 80)
   }
 
   getAllDisputes(): void {
@@ -81,7 +80,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
-    this.busy = this.disputeService.getDisputes().subscribe((response) => {
+    this.disputeService.getDisputes().subscribe((response) => {
       this.logger.info(
         'TicketInboxComponent::getAllDisputes response',
         response
@@ -98,24 +97,16 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
             emailAddressVerified: d.emailAddressVerified,
             emailAddress: d.emailAddress,
-            __SystemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.violationTicket.ocrViolationTicket),
-            __CourtHearing: false,
+            systemDetectedOcrIssues: d.systemDetectedOcrIssues,
             __DateSubmitted: new Date(d.submittedTs),
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
             __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
             additionalProperties: d.additionalProperties,
             status: d.status,
             __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
-            userAssignedTs: d.userAssignedTs
+            userAssignedTs: d.userAssignedTs,
+            requestCourtAppearanceYn: d.requestCourtAppearanceYn
           }
-
-          // set court hearing to true if its true for any one of the three possible counts
-          // otherwise false
-          if (d.disputeCounts) d.disputeCounts.forEach(c => {
-            if (c.requestCourtAppearance === this.RequestCourtAppearance.Y) {
-              newDispute.__CourtHearing = true;
-            }
-          });
 
           this.disputes = this.disputes.concat(newDispute);
         }
@@ -134,69 +125,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // data returns Notice of Dispute
-  // which has a property ViolationTicket
-  // which has a property ocrViolationTicket
-  // which is the JSON string for the Azure OCR'd version of a paper ticket
-  // __SystemDetectedOcrIssues should be set to true if any OCR'd field has less than 80% confidence
-  // so this routine will exit with true at the first field of the fields collection that has an OCR error
-  getSystemDetectedOcrIssues(ocrViolationTicket?: OcrViolationTicket): boolean {
-    try {
-      let fields = ocrViolationTicket?.fields;
-      if (fields && fields !== undefined) {
-
-        if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return true; }
-        if (this.getOcrViolationErrors(fields.ticket_number)) { return true; }
-        if (this.getOcrViolationErrors(fields.disputant_surname)) { return true; }
-        if (this.getOcrViolationErrors(fields.disputant_given_names)) { return true; }
-        if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return true; }
-        if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return true; }
-        if (this.getOcrViolationErrors(fields.violation_time)) { return true; }
-        if (this.getOcrViolationErrors(fields.violation_date)) { return true; }
-
-        // seems like a goofy way to process these but this is how the JSON parse returns it
-        // count 1
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_1.ticketed_amount"])) { return true; }
-
-        // count 2
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_2.ticketed_amount"])) { return true; }
-
-        // count 3
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.description"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.act_or_regulation_name_code"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_act"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_regulation"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.section"])) { return true; }
-        if (this.getOcrViolationErrors(fields["counts.count_no_3.ticketed_amount"])) { return true; }
-
-        if (this.getOcrViolationErrors(fields.court_location)) { return true; }
-        if (this.getOcrViolationErrors(fields.detachment_location)) { return true; }
-        return false;
-      }
-      else return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // return number of validation errors
-  getOcrViolationErrors(field?: Field): boolean {
-    if (field == undefined || field == null) return false;
-    if (field?.fieldConfidence != null && field.fieldConfidence < 0.8) {
-      return true;
-    } else return false;
-  }
-
   countNewTickets(): number {
     if (this.dataSource.data?.filter((x: Dispute) => x.status == DisputeStatus.New))
       return this.dataSource.data?.filter((x: Dispute) => x.status == DisputeStatus.New).length;
@@ -210,7 +138,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   // called on keyup in filter field
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue?.trim().toLowerCase();
     this.tableHeight = this.calcTableHeight(425);
   }
 

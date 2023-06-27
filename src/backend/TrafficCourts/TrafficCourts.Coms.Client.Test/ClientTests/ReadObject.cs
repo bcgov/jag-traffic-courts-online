@@ -23,7 +23,7 @@ public class ReadObject : ObjectManagementBase
             {
                 { "download", download.ToString().ToLower() }, // not totally correct, but values are lower case
                 { "expiresIn", expiresIn.ToString() },
-                { "versionId", versionId },
+                { "s3VersionId", versionId },
             })
             .Respond(HttpStatusCode.OK, "application/octet-stream", new MemoryStream(Guid.Empty.ToByteArray()));
 

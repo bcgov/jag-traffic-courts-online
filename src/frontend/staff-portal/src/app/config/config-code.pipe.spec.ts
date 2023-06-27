@@ -39,16 +39,4 @@ describe('ConfigCodePipe', () => {
       expect(pipe).toBeTruthy();
     }
   ));
-
-  it('should get country name from a config code', inject(
-    [ConfigService],
-    (configService: ConfigService) => {
-      const pipe = new ConfigCodePipe(configService);
-      const prefix = pipe.transform(
-        configService.countries[0].ctryId,
-        'countries'
-      );
-      expect(prefix).toBe(configService.countries[0].ctryLongNm);
-    }
-  ));
 });

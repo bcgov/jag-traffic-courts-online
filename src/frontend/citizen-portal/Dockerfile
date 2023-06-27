@@ -4,9 +4,6 @@ ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/nginx-120
 # Build image
 FROM $BUILD_IMAGE:14.18 as build-deps
 
-ARG API_BASE_PATH=http://citizen-api/api/
-ENV API_BASE_PATH=${API_BASE_PATH}
-
 # set working directory
 ENV NODE_ROOT /usr/src/app
 
@@ -21,11 +18,6 @@ RUN yarn install
 COPY . .
 
 RUN NODE_OPTIONS=--max_old_space_size=4096 yarn run build-prod
-
-# replace the API_BASE_PATH env var in nginx.conf
-RUN apt-get update; \
-    apt-get install -y gettext-base
-RUN envsubst '${API_BASE_PATH}' < /usr/src/app/nginx-api-proxy-pass.conf.template > /usr/src/app/nginx-api-proxy-pass.conf
 
 # Runtime image
 FROM $RUNTIME_IMAGE

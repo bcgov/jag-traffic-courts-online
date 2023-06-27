@@ -1,8 +1,11 @@
+@import "palette";
+@import "bootstrap/bootstrap-imports";
+
 .option {
   outline: #fcba19 solid 1px !important;
   width: 100%;
-  padding: 8px 16px;
-  margin-bottom: 1.2rem;
+  height: 100%;
+  padding: 1rem;
   cursor: pointer;
 
   &:hover .option-content {
@@ -12,4 +15,11 @@
   h2 {
     margin-bottom: 0.5rem;
   }
+}
+
+.large {
+  height: 46px;
+  font-size: 1.125em;
+  font-weight: bold;
+  width: 100%;
 }

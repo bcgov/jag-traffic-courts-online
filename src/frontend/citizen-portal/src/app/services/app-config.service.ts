@@ -13,6 +13,8 @@ export interface IAppConfig {
   icbcVisitUsLink: string;
   provincialCourtOfBCVisitUsLink: string;
   courthouseServicesOfBCVisitUsLink: string;
+  bcServicesCardInfoLink: string;
+  adjournmentFormLink: string;
   features: {
     [name: string]: boolean;
   };
@@ -31,6 +33,8 @@ export class AppConfig implements IAppConfig {
   icbcVisitUsLink: string;
   provincialCourtOfBCVisitUsLink: string;
   courthouseServicesOfBCVisitUsLink: string;
+  bcServicesCardInfoLink: string;
+  adjournmentFormLink: string;
   features: {
     dispute: boolean;
   };
@@ -59,6 +63,11 @@ export class AppConfigService {
     'https://www.provincialcourt.bc.ca/types-of-cases/traffic-and-bylaw-matters' as const;
   private CTH_SERV_VISIT_US_DEFAULT =
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments' as const;
+
+  private BC_SERVICES_CARD_APP_INFO_DEFAULT =
+    'https://www2.gov.bc.ca/gov/content/governments/government-id/bcservicescardapp/download-app' as const;
+  private ADJOURMENT_FORM_DEFAULT =
+    'https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr818.pdf' as const;
 
   constructor(
   ) {
@@ -121,6 +130,16 @@ export class AppConfigService {
   get courthouseServicesOfBCVisitUsLink(): string {
     const link = this.appConfig?.courthouseServicesOfBCVisitUsLink;
     return link ? link : this.CTH_SERV_VISIT_US_DEFAULT;
+  }
+
+  get bcServicesCardInfoLink(): string {
+    const link = this.appConfig?.bcServicesCardInfoLink;
+    return link ? link : this.BC_SERVICES_CARD_APP_INFO_DEFAULT;
+  }
+
+  get adjournmentFormLink(): string {
+    const link = this.appConfig?.adjournmentFormLink;
+    return link ? link : this.ADJOURMENT_FORM_DEFAULT;
   }
 
   get featureFlagDispute(): boolean {

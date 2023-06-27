@@ -1,10 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.LookupValuesApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.LanguageListResult;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Statute;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.StatutesListResult;
 
 public class LookupServiceTest extends BaseTestSuite {
 
@@ -28,25 +20,6 @@ public class LookupServiceTest extends BaseTestSuite {
 
 	@Test
 	public void testGetStatutes() throws ApiException {
-		if ("ords".equals(lookupRepositorySrc)) {
-			List<Statute> statutes = new ArrayList<>();
-			Statute statute = new Statute();
-			statute.setStatId("20153");
-			statute.setActCd("MVA");
-			statute.setStatSectionTxt("10");
-			statute.setStatSubSectionTxt("1");
-			statute.setStatParagraphTxt(null);
-			statute.setStatSubParagraphTxt(null);
-			statute.setStatCode("MVA 10(1) ");
-			statute.setStatShortDescriptionTxt("Special licence for tractors, etc.");
-			statute.setStatDescriptionTxt(null);
-			statutes.add(statute);
-
-			StatutesListResult statutesListResult = new StatutesListResult();
-			statutesListResult.setStatuteCodeValues(statutes);
-			when(this.lookupValuesApi.statutesList()).thenReturn(statutesListResult);
-		}
-
 		var result = service.getStatutes();
 
 		assertThat(result).isNotNull();
@@ -56,18 +29,6 @@ public class LookupServiceTest extends BaseTestSuite {
 
 	@Test
 	public void testGetLanguages() throws ApiException {
-		if ("ords".equals(lookupRepositorySrc)) {
-			List<Language> languages = new ArrayList<>();
-			Language language = new Language();
-			language.setCdlnLanguageCd("ALB");
-			language.setCdlnLanguageDsc("Albanian");
-			languages.add(language);
-
-			LanguageListResult languageListResult = new LanguageListResult();
-			languageListResult.setLanguageCodeValues(languages);
-			when(this.lookupValuesApi.languagesList()).thenReturn(languageListResult);
-		}
-
 		var result = service.getLanguages();
 
 		assertThat(result).isNotNull();
@@ -76,4 +37,23 @@ public class LookupServiceTest extends BaseTestSuite {
 		assertThat("Albanian".equals(result.get(0).getDescription()));
 	}
 
+	@Test
+	public void testGetAgencies() throws ApiException {
+		var result = service.getAgencies();
+
+		assertThat(result).isNotNull();
+		assertThat(result.size() > 0);
+		assertThat("18861.0045".equals(result.get(0).getId()));
+		assertThat("Kelowna Adult Forensic Psychiatric Services".equals(result.get(0).getName()));
+	}
+	
+	@Test
+	public void testGetProvinces() throws ApiException {
+		var result = service.getProvinces();
+		
+		assertThat(result).isNotNull();
+		assertThat(result.size() > 0);
+		assertThat("1".equals(result.get(0).getCtryId()));
+		assertThat("1".equals(result.get(0).getProvSeqNo()));
+	}
 }

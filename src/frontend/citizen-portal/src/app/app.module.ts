@@ -1,4 +1,5 @@
 import { HttpClient, HttpClientModule, } from '@angular/common/http';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -46,6 +47,8 @@ import { UpdateDisputeLandingComponent } from '@components/update-dispute-landin
 import { DisputantFormComponent } from '@components/disputant-form/disputant-form.component';
 import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
 import { AuthModule } from './auth/auth.module';
+import { CreateNoticeOfDisputeComponent } from '@components/create-notice-of-dispute/create-notice-of-dispute.component';
+import { UpdateDisputeComponent } from '@components/update-dispute/update-dispute.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -75,9 +78,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     UpdateDisputeLandingComponent,
     DisputantFormComponent,
     UpdateDisputeContactComponent,
+    CreateNoticeOfDisputeComponent,
+    UpdateDisputeComponent,
   ],
   imports: [
     CommonModule,
+    MatTooltipModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -133,11 +139,11 @@ export class AppModule {
   ) {
     // Get from main.ts, no need to fetch again
     this.appConfigService.setAppConfig(this.appConfig);
-    this.translateService.addLangs(['en', 'fr']);
+    this.translateService.addLangs(this.availableLanguages);
 
     const currentLanguage = window.navigator.language.substring(0, 2);
 
-    let defaultLanguage = 'en';
+    let defaultLanguage = this.availableLanguages[0];
     if (this.availableLanguages.includes(currentLanguage)) {
       defaultLanguage = currentLanguage;
     }

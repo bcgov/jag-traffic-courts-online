@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { JJDisputeStatus } from 'app/api';
-import { AuthStore } from 'app/auth/store';
+import { JJDisputeHearingType, JJDisputeStatus, DisputeStatus } from 'app/api';
+import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { DisputeStore } from 'app/store';
 import { BehaviorSubject } from 'rxjs';
@@ -16,28 +15,31 @@ import { BehaviorSubject } from 'rxjs';
 
 export class UpdateDisputeLandingComponent implements OnInit {
   private state: DisputeStore.State;
+  private nonEditableStatus = [JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded, DisputeStatus.Concluded, DisputeStatus.Cancelled, DisputeStatus.Rejected];
   public isEditable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public bcServicesCardInfoLink: string;
 
   constructor(
+    private appConfigService: AppConfigService,
     private disputeService: DisputeService,
     private store: Store,
-    private oidcSecurityService: OidcSecurityService
   ) {
+    this.bcServicesCardInfoLink = this.appConfigService.bcServicesCardInfoLink;
   }
 
   ngOnInit(): void {
     this.disputeService.checkStoredDispute().subscribe(found => {
       if (found) {
-        // subscrible to all changes
+        // subscribe to all changes
         this.store.pipe(select(DisputeStore.Selectors.State)).subscribe(state => {
           if (state.result) {
             this.state = state;
             let dispute = state.result;
-            if (dispute && !dispute.jjdispute_status || dispute?.jjdispute_status === JJDisputeStatus.Unknown) {
-              this.isEditable.next(true);
-            } else {
-              this.isEditable.next(false);
-            }
+            if (!dispute) this.isEditable.next(false); // no dispute found
+            else if (this.nonEditableStatus.includes(dispute.dispute_status)) this.isEditable.next(false); // OCCAM dispute done
+            else if (this.nonEditableStatus.includes(dispute.jjdispute_status)) this.isEditable.next(false); // JJ Dispute over
+            else if (dispute.hearing_type === JJDisputeHearingType.WrittenReasons && dispute.jjdispute_status) this.isEditable.next(false); // written reasons and has a jj workbench status
+            else this.isEditable.next(true); // otherwise allow editing
           }
         })
       }
@@ -48,8 +50,8 @@ export class UpdateDisputeLandingComponent implements OnInit {
     this.disputeService.showDisputeStatus(this.state);
   }
 
-  goToUpdateDisputeAuth(): void {
-    this.store.dispatch(AuthStore.Actions.Authorize());
+  goToUpdateDispute(): void {
+    this.disputeService.goToUpdateDispute(this.state.params);
   }
 
   goToUpdateDisputeContact(): void {

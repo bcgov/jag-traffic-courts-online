@@ -19,7 +19,7 @@ export class ResolutionHeaderComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private datePipe: DatePipe,
+    private datePipe: DatePipe
   ) {
   }
 
@@ -28,8 +28,8 @@ export class ResolutionHeaderComponent implements OnInit {
     this.params = this.route.snapshot.queryParams as QueryParamsForSearch;
     if (this.ticket) {
       this.ticketNumber = this.ticket.ticket_number;
-      this.time = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
-      this.date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-dd");
+      this.time = this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC");
+      this.date = this.datePipe.transform(this.ticket.issued_date, "yyyy-MM-dd", "UTC");
     } else if (this.params) {
       this.ticketNumber = this.params?.ticketNumber;
       this.time = this.params?.time;

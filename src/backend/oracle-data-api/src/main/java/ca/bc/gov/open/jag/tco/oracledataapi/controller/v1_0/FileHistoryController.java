@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.FileHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import net.logstash.logback.argument.StructuredArguments;
 
 @RestController(value = "FileHistoryControllerV1_0")
 @RequestMapping("/api/v1.0")
@@ -41,15 +41,15 @@ public class FileHistoryController {
 			@PathVariable
 			@Parameter(description = "Ticket number to retrieve related file history.")
 			String ticketNumber) {
-		logger.debug("getFileHistoryForTicket called");
+		logger.debug("getFileHistoryForTicket called for ticketNumber: {} ", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return fileHistoryService.getFileHistoryByTicketNumber(ticketNumber);
 	}
-		
+
 	/**
 	 * POST endpoint that inserts a file history record for given ticketnumber.
 	 *
-	 * @param id (ticket number) of the saved {@link JJDispute} to update
+	 * @requestBody fileHistory
 	 * @return inserted {@link FileHistory}
 	 */
 	@Operation(summary = "Inserts a file history record for the given ticket number.")
@@ -58,11 +58,10 @@ public class FileHistoryController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "An invalid file history record provided. Insert failed.")
 	})
-	@PostMapping("/fileHistory/{ticketNumber}")
+	@PostMapping("/fileHistory")
 	public ResponseEntity<Long> insertFileHistory(
-			@PathVariable("ticketNumber") String ticketNumber, 
 			@RequestBody FileHistory fileHistory) {
-		logger.debug("POST /fileHistory/{ticketNumber} called");
-		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(ticketNumber, fileHistory), HttpStatus.OK);
+		logger.debug("POST /fileHistory called for saving fileHistory: {}", StructuredArguments.fields(fileHistory));
+		return new ResponseEntity<Long>(fileHistoryService.insertFileHistory(fileHistory), HttpStatus.OK);
 	}
 }

@@ -139,11 +139,11 @@ public class Field
     /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
     public bool? IsCheckboxSelected()
     {
-        if (Value?.Equals("selected", StringComparison.OrdinalIgnoreCase) ?? false)
+        if (Value?.Equals(":selected:", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return true;
         }
-        if (Value?.Equals("unselected", StringComparison.OrdinalIgnoreCase) ?? false)
+        if (Value?.Equals(":unselected:", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return false;
         }
@@ -159,7 +159,7 @@ public class Field
             {
                 Regex rg = new(_dateRegex);
                 Match match = rg.Match(Value);
-                if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
+                if (match.Groups.Count >= 4) // 3 + index 0 (the Value itself)
                 {
                     int year = int.Parse(match.Groups[1].Value);
                     if (year < 100)
@@ -173,12 +173,19 @@ public class Field
                 else
                 {
                     // pattern didn't match.  Try extracting all digits. If there are 8, convert to a date.
-                    string newValue = Regex.Replace(Value, @"\D", "");
-                    if (newValue.Length == 8)
+                    string newValue = Regex.Replace(Value, @"\D", ""); // replace all non digits with null
+                    if (newValue.Length >= 8 && newValue.Length <=9)
                     {
                         int year = int.Parse(newValue[..4]);
                         int month = int.Parse(newValue.Substring(4, 2));
                         int day = int.Parse(newValue.Substring(6, 2));
+                        return new DateTime(year, month, day);
+                    // if there are 10 could have misread field separators as ones, skip over the separator characters them
+                    } else if (newValue.Length == 10)
+                    {
+                        int year = int.Parse(newValue[..4]);
+                        int month = int.Parse(newValue.Substring(5, 2));
+                        int day = int.Parse(newValue.Substring(7, 2));
                         return new DateTime(year, month, day);
                     }
                 }

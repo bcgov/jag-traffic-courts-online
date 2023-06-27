@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy, Input, Output, EventEmitter, ElementRef } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialog } from "@angular/material/dialog";
@@ -12,13 +12,17 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { cloneDeep } from "lodash";
-import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language } from "app/api";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, DisputeInterpreterRequired } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
-import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
+import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count, DisputeCountFormGroup } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
-import { Observable } from "rxjs";
+import { Observable, firstValueFrom } from "rxjs";
+import { DisputeStore } from "app/store";
+import { Store } from "@ngrx/store";
+import { DisputeService, FileMetadata } from "app/services/dispute.service";
+import { AppConfigService } from "app/services/app-config.service";
+import { FileUtilsService } from "@shared/services/file-utils.service";
 
 @Component({
   selector: "app-dispute-stepper",
@@ -27,64 +31,89 @@ import { Observable } from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DisputeStepperComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatStepper) private stepper: MatStepper;
+  @Input() ticket: ViolationTicket | NoticeOfDispute;
+  @Input() ticketCounts: ViolationTicketCount[] = [];
+  @Input() disputeCounts: DisputeCount[] = [];
+  @Input() fileData$: Observable<FileMetadata[]>;
+  @Input() ticketType: string;
+  @Input() mode: DisputeFormMode;
+  @Output() saveDispute: EventEmitter<NoticeOfDispute> = new EventEmitter();
 
-  mode: DisputeFormMode = DisputeFormMode.CREATE;
+  @ViewChild(MatStepper) private stepper: MatStepper;
+  @ViewChild("fileInput") private fileInput: ElementRef;
+
+  private state: DisputeStore.State;
   previousButtonIcon = "keyboard_arrow_left";
+  previousButtonKey = "stepper.backReview";
   defaultLanguage: string;
-  ticketTypes = TicketTypes;
+  adjournmentFormLink: string;
+  DisputeFormMode = DisputeFormMode;
+  TicketTypes = TicketTypes;
   Plea = DisputeCountPleaCode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
-  RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   RequestTimeToPay = DisputeCountRequestTimeToPay;
   RequestReduction = DisputeCountRequestReduction;
+  InterpreterRequired = DisputeInterpreterRequired;
 
   form: NoticeOfDisputeFormGroup;
-  countForms: FormArray;
-  additionalForm: FormGroup;
-  legalRepresentationForm: FormGroup;
-  ticket: ViolationTicket;
-  ticket$: Observable<ViolationTicket>;
+  requestCourtAppearanceFormControl: FormControl<DisputeRequestCourtAppearanceYn> = new FormControl(null, [Validators.required]);
+  counts: Count[];
+  additionalForm: NoticeOfDisputeFormGroup;
+  legalRepresentationForm: NoticeOfDisputeFormGroup;
   noticeOfDispute: NoticeOfDispute;
-  ticketType: string;
   matcher = new FormErrorStateMatcher();
 
-  // Count
-  countIndexes: number[];
+  // TODO: use ViewChild to detect instead of hardcode
+  countStepIndex: number = 1;
 
   // Additional
-  countsActions: any;
+  countsActions: CountsActions;
   customWitnessOption = false;
   minWitnesses = 1;
   maxWitnesses = 99;
-  additionalIndex: number;
 
   // Summary
   declared = false;
 
+  // Upload
+  adjournmentFileType = { key: "Adjournment", value: "Application for Adjournment" };
+  fileTypes = [
+    this.adjournmentFileType,
+    { key: "Other", value: "Other" },
+  ]
+  fileTypeToUpload: string = this.adjournmentFileType.key;
+  acceptFileTypes = [
+    "image/jpeg",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/pdf",
+    ".pdf",
+    ".doc",
+    ".docx"
+  ]
+
   // Consume from the service
   languages: Language[] = [];
-  private ticketFormFields = this.noticeOfDisputeService.ticketFormFields;
-  private countFormFields = this.noticeOfDisputeService.countFormFields;
   private countFormDefaultValue = this.noticeOfDisputeService.countFormDefaultValue;
-  private additionFormFields = this.noticeOfDisputeService.additionFormFields;
-  private additionFormValidators = this.noticeOfDisputeService.additionFormValidators;
-  private legalRepresentationFields = this.noticeOfDisputeService.legalRepresentationFields;
 
   constructor(
-    private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private violationTicketService: ViolationTicketService,
     private noticeOfDisputeService: NoticeOfDisputeService,
+    private disputeService: DisputeService,
     private utilsService: UtilsService,
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
     private config: ConfigService,
-    private lookups: LookupsService
+    private store: Store,
+    private lookups: LookupsService,
+    private appConfigService: AppConfigService,
+    private fileUtilsService: FileUtilsService,
   ) {
     // config or static
     this.defaultLanguage = this.translateService.getDefaultLang();
+    this.adjournmentFormLink = this.appConfigService.adjournmentFormLink;
 
     this.lookups.languages$.subscribe(languages => {
       this.languages = languages;
@@ -92,38 +121,25 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.ticket = this.violationTicketService.ticket;
-    if (!this.ticket) {
-      this.violationTicketService.goToFind();
-      return;
-    }
-    this.ticket$ = this.violationTicketService.ticket$;
-    this.ticketType = this.violationTicketService.ticketType;
-
-    // build inner object array before the form
-    let countArray = [];
-    this.ticket.counts.forEach(count => {
-      countArray.push(this.formBuilder.group({ ...count, ...this.countFormFields }));
-    })
-    this.countForms = this.formBuilder.array(countArray);
-
     // build form
-    this.form = this.formBuilder.group({
-      ...this.ticketFormFields,
-    });
-    this.form.reset();
-    
-    // take info from ticket, convert dl number to string
-    Object.keys(this.ticket).forEach(key => {
-      this.ticket[key] && this.form.get(key)?.patchValue(this.ticket[key]);
-    });
-    this.ticket.drivers_licence_number && this.form.controls.drivers_licence_number.setValue(this.ticket.drivers_licence_number.toString());
-    
-    this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
+    this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
+    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance); // to be removed
+    if (this.mode !== DisputeFormMode.CREATE) {
+      this.previousButtonKey = "cancel";
+      this.store.select(DisputeStore.Selectors.State).subscribe(state => {
+        this.state = state;
+      })
+    }
 
-    this.countIndexes = this.ticket.counts.map(i => i.count_no);
-    let lastCountInx = this.countIndexes[this.countIndexes.length - 1]
-    this.additionalIndex = lastCountInx + 1;
+    this.counts = this.ticketCounts.map(ticketCount => {
+      var dispute_count = this.disputeCounts.filter(i => i.count_no === ticketCount.count_no).shift();
+      return {
+        ticket_count: ticketCount,
+        dispute_count: dispute_count,
+        form: this.noticeOfDisputeService.getCountForm(ticketCount, dispute_count, this.mode !== DisputeFormMode.CREATE)
+      };
+    });
+    this.legalRepresentationForm = this.noticeOfDisputeService.getLegalRepresentationForm(this.ticket);
   }
 
   ngAfterViewInit(): void {
@@ -149,41 +165,32 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private getCountFormInitValue(count) {
+  private getCountFormInitValue(count): DisputeCount {
     return { ...this.countFormDefaultValue, ...count };
   }
 
-  private getCountsActions() {
-    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
-  }
-
-  onAttendHearingChange(countForm: FormGroup, event): void {
-    countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event.value, __skip: false });
-  }
-
   onStepCancel(): void {
-    this.violationTicketService.goToInitiateResolution();
+    if (this.mode !== DisputeFormMode.CREATE) {
+      this.disputeService.goToUpdateDisputeLanding(this.state.params);
+    } else {
+      this.violationTicketService.goToInitiateResolution();
+    }
   }
 
-  onStepSave(): void {
-    let isAdditional = this.stepper.selectedIndex === this.additionalIndex;
+  async onStepSave() {
     let isValid = this.formUtilsService.checkValidity(this.form);
 
-    if (this.countIndexes?.indexOf(this.stepper.selectedIndex) > -1) {
-      let countInx = this.stepper.selectedIndex - 1;
-      let countForm = this.countForms.controls[countInx];
-      if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
-        countForm.patchValue({ plea_cd: this.Plea.G });
-      }
-      if (countForm.value.__skip) {
-        countForm.patchValue({ ...this.getCountFormInitValue(this.ticket.counts[countInx]), __skip: true });
-      }
-      if (countForm.value.__apply_to_remaining_counts && countInx + 1 < this.countForms.length) {
-        let value = this.countForms.controls[countInx].value;
-        for (let i = countInx; i < this.countForms.length; i++) {
-          this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __apply_to_remaining_counts: false })
+    if (this.stepper.selectedIndex === this.countStepIndex) {
+      this.counts.forEach(count => {
+        let countForm = count.form;
+        if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
+          countForm.controls.plea_cd.patchValue(this.Plea.G);
         }
-      }
+        if (countForm.value.__skip) {
+          // TODO: move to onSkipChange
+          countForm.patchValue({ ...this.getCountFormInitValue(count.ticket_count), __skip: true, plea_cd: this.Plea.G });
+        }
+      });
       this.setAdditional();
     } else if (!isValid) {
       this.utilsService.scrollToErrorSection();
@@ -191,57 +198,99 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (isAdditional) {
-      this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
-        ...this.form.value,
-        ...this.additionalForm.value,
-        ...this.legalRepresentationForm.value,
-        address_country_id: this.form.get("address_country_id").value, // disabled field is not available in this.form.value
-        dispute_counts: this.countForms.value
-      });
-    } else {
-      this.noticeOfDispute = null;
+    if (this.additionalForm?.value.represented_by_lawyer === this.RepresentedByLawyer.N) {
+      this.legalRepresentationForm.reset();
     }
-  }
 
-  private setAdditional() {
-    this.getCountsActions();
-    let fields = cloneDeep(this.additionFormFields);
-    if (this.countsActions.request_reduction.length > 0 && fields.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
-      fields.fine_reduction_reason[1].push(Validators.required);
-    }
-    if (this.countsActions.request_time_to_pay.length > 0 && fields.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
-      fields.time_to_pay_reason[1].push(Validators.required);
-    }
-    this.additionalForm = this.formBuilder.group({
-      ...fields,
-    }, {
-      validators: [...this.additionFormValidators]
+    let fileData: FileMetadata[] = [];
+    this.fileData$?.subscribe(i => { fileData = i; })
+    this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
+      ...this.form.value,
+      ...this.additionalForm?.value,
+      ...this.legalRepresentationForm?.value,
+      request_court_appearance: this.requestCourtAppearanceFormControl.value,
+      dispute_counts: this.counts.map(i => i.form.value),
+      file_data: fileData
     });
   }
 
-  isValid(countInx?): boolean {
-    let countForm = this.countForms?.controls[countInx]
-    if (countForm) {
-      let valid = countForm.valid || countForm.value.__skip;
-      if (countForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
-        valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
-      } else if (countForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
-        valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
-      }
-      return valid && !this.isAllCountsSkipped;
+  private setAdditional() {
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.counts.map(i => i.form.value));
+    this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.ticket);
+    if (this.mode === DisputeFormMode.UPDATE) {
+      this.additionalForm = this.noticeOfDisputeService.getAdditionalForm(this.noticeOfDispute);
+      if (this.additionalForm.controls.witness_no?.value > 0) this.additionalForm.controls.__witness_present.setValue(true);
     }
-    return this.form.valid;
+
+    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_reduction.length > 0) {
+      this.additionalForm.controls.fine_reduction_reason.addValidators([Validators.required]);
+    } else this.additionalForm.controls.fine_reduction_reason.removeValidators([Validators.required]);
+    if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_time_to_pay.length > 0) {
+      this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
+    } else this.additionalForm.controls.time_to_pay_reason.removeValidators([Validators.required]);
+  }
+
+  isCountFormsValid(): boolean {
+    if (this.stepper?.selectedIndex < this.countStepIndex) {
+      return false;
+    }
+
+    let allCountsValid: boolean = this.requestCourtAppearanceFormControl.valid;
+    this.counts.forEach(count => {
+      let countForm = count.form;
+      if (countForm) {
+        let valid = countForm.valid;
+        if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.Y) {
+          valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
+        } else if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N) {
+          valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
+        }
+        allCountsValid = allCountsValid && (valid || countForm.value.__skip);
+      }
+    });
+    return allCountsValid && (this.mode === this.DisputeFormMode.UPDATE || !this.isAllCountsSkipped);
+  }
+
+  isAdditionalFormValid(): boolean {
+    var result = this.stepper?.selectedIndex > this.countStepIndex;
+    if (this.additionalForm?.value.represented_by_lawyer === this.RepresentedByLawyer.Y && !this.legalRepresentationForm?.valid) {
+      result = false;
+    }
+    return result && this.additionalForm?.valid;
+  }
+
+  onChangeRequestCourtAppearance(value: DisputeRequestCourtAppearanceYn) {
+    this.noticeOfDispute.request_court_appearance = value;
+    this.counts.forEach(count => {
+      count.form.controls.plea_cd.setValue(null);
+      count.form.controls.request_reduction.setValue(this.RequestReduction.N);
+      count.form.controls.request_time_to_pay.setValue(this.RequestTimeToPay.N);
+      count.form.controls.__skip.setValue(false);
+    })
   }
 
   onChangeRepresentedByLawyer(event: MatCheckboxChange) {
-    this.additionalForm.markAsUntouched();
+    let value = event.checked ? this.RepresentedByLawyer.Y : this.RepresentedByLawyer.N;
+    this.additionalForm.controls.represented_by_lawyer.setValue(value);
+  }
+
+  onChangeInterpreterRequired(event: MatCheckboxChange) {
+    let value = event.checked ? this.InterpreterRequired.Y : this.InterpreterRequired.N;
+    this.additionalForm.controls.interpreter_required.setValue(value);
+    if (value === this.InterpreterRequired.Y) {
+      this.additionalForm.controls.interpreter_language_cd.setValidators([Validators.required]);
+    } else {
+      this.additionalForm.controls.interpreter_language_cd.setValue(null);
+      this.additionalForm.controls.interpreter_language_cd.clearValidators();
+      this.additionalForm.controls.interpreter_language_cd.updateValueAndValidity();
+    }
   }
 
   onChangeWitnessPresent(event: MatCheckboxChange) {
     if (event.checked) {
       this.additionalForm.controls.witness_no.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
+      this.additionalForm.controls.witness_no.setValue(null);
       this.additionalForm.controls.witness_no.clearValidators();
       this.additionalForm.controls.witness_no.updateValueAndValidity();
     }
@@ -262,15 +311,18 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   private get isAllCountsSkipped() {
-    if (this.countForms.value.filter(i => i.__skip).length === this.countForms.length) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return this.counts?.filter(i => i.form?.value.__skip).length === this.counts.length;
   }
 
-  onSkipChecked() {
+  onSkipChecked(form: DisputeCountFormGroup, value: boolean) {
+    if (value) {
+      form.controls?.plea_cd.setValue(this.Plea.G);
+    } else {
+      form.controls?.plea_cd.setValue(null);
+    }
+    form.controls?.request_reduction.setValue(this.RequestReduction.N);
+    form.controls?.request_time_to_pay.setValue(this.RequestTimeToPay.N);
+
     if (this.isAllCountsSkipped) {
       const data: DialogOptions = {
         titleKey: "Warning",
@@ -283,11 +335,92 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * @description
-   * Submit the dispute
-   */
-  public submitDispute(): void {
-    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
+  onRemoveFile(file: FileMetadata) {
+    const data: DialogOptions = {
+      titleKey: "Remove File?",
+      messageKey: "Are you sure you want to delete file " + file.fileName + "?",
+      actionTextKey: "Delete",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "delete"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.store.dispatch(DisputeStore.Actions.RemoveDocument({ file }));
+        }
+      });
+  }
+
+  onGetFile(file: FileMetadata) {
+    if (file.pendingFileStream) {
+      var url = URL.createObjectURL(file.__penfingFile);
+      window.open(url);
+    } else {
+      this.store.dispatch(DisputeStore.Actions.GetDocument({ fileId: file.fileId }));
+    }
+  }
+
+  onUploadClicked() {
+    if (this.fileTypeToUpload === this.adjournmentFileType.key && (<NoticeOfDispute>this.ticket).appearance_less_than_14_days) {
+      const data: DialogOptions = {
+        titleKey: "Court hearing scheduled for less than 14 days",
+        messageKey: "You are requesting an adjournment within 14 days of your court date. To help ensure that your request for an adjournment is processed on time, please contact the Violation Ticket Centre at 1-877-661-8026. If your adjournment is not able to be processed, you may be deemed guilty and your dispute closed. Would you like to proceed?",
+        actionTextKey: "Yes",
+        actionType: "primary",
+        cancelTextKey: "No",
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+        .subscribe((action: any) => {
+          if (action) {
+            this.fileInput.nativeElement.click();
+          }
+        });
+    } else {
+      this.fileInput.nativeElement.click();
+    }
+  }
+
+  async onUploadFile(files: FileList) {
+    if (files.length <= 0) return;
+    let file = files[0];
+
+    let fileData = await firstValueFrom(this.fileData$)
+    if (fileData.length >= 4) {
+      this.onUploadFileError("Maximum 4 file uploads per dispute.");
+      return;
+    }
+
+    let err = this.fileUtilsService.checkFileSize(file.size, 50);
+    if (err.length > 0) {
+      this.onUploadFileError(err);
+      return;
+    }
+
+    err = this.fileUtilsService.checkFileType(file, this.acceptFileTypes);
+    if (err.length > 0) {
+      this.onUploadFileError(err);
+      return;
+    }
+
+    let pendingFileStream = await firstValueFrom(this.fileUtilsService.readFileAsDataURL(file)) as string;
+    this.store.dispatch(DisputeStore.Actions.AddDocument({ file: file, fileType: this.fileTypeToUpload, pendingFileStream }));
+    this.fileInput.nativeElement.value = null;
+    this.fileTypeToUpload = this.adjournmentFileType.key;
+  }
+
+  private onUploadFileError(err: string): void {
+    const data: DialogOptions = {
+      titleKey: "Warning",
+      actionType: "warn",
+      messageKey: "File upload error. " + err,
+      actionTextKey: "Close",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data });
+  }
+
+  submitDispute() {
+    this.saveDispute.emit(this.noticeOfDispute);
   }
 }

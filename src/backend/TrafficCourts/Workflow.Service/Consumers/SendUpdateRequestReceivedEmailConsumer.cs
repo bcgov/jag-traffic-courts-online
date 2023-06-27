@@ -16,9 +16,9 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
 {
     private readonly ILogger<SendUpdateRequestReceivedEmailConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IDisputantUpdateRequestReceivedTemplate _updateRequestReceivedTemplate;
+    private readonly IDisputeUpdateRequestReceivedTemplate _updateRequestReceivedTemplate;
 
-    public SendUpdateRequestReceivedEmailConsumer(ILogger<SendUpdateRequestReceivedEmailConsumer> logger, IOracleDataApiService oracleDataApiService, IDisputantUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
+    public SendUpdateRequestReceivedEmailConsumer(ILogger<SendUpdateRequestReceivedEmailConsumer> logger, IOracleDataApiService oracleDataApiService, IDisputeUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
@@ -42,19 +42,20 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
             // File History 
             SaveFileHistoryRecord fileHistoryRecord = new()
             {
-                TicketNumber = dispute.TicketNumber,
-                Description = "Email sent to notify Disputant regarding their update request(s) received"
+                DisputeId = dispute.DisputeId,
+                AuditLogEntryType = FileHistoryAuditLogEntryType.ESUR,
+                ActionByApplicationUser = dispute.UserAssignedTo
             };
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // File History 
-            fileHistoryRecord.Description = "Update request(s) submitted for staff review";
+            fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.URSR;
             await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // Send email to disputant to confirm disputant's update request(s) are received and will be reviewed
             EmailMessage emailMessage = _updateRequestReceivedTemplate.Create(dispute);
 
-            await context.PublishWithLog(_logger, new SendDispuantEmail
+            await context.PublishWithLog(_logger, new SendDisputantEmail
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,
@@ -63,7 +64,7 @@ public class SendUpdateRequestReceivedEmailConsumer : IConsumer<UpdateRequestRec
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "Failed to update the status of DisputantUpdateRequest(s) to PENDING.");
+            _logger.LogError(ex, "Failed to update the status of DisputeUpdateRequest(s) to PENDING.");
             throw;
         }
     }

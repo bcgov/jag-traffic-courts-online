@@ -19,11 +19,11 @@
 }
 .toggle-example{
   display: flex
-  
+
 }
 .tool-tip{
   color: deepskyblue;
-  transform: scale(0.70); 
+  transform: scale(0.70);
   vertical-align: middle;
   cursor: pointer;
 }
@@ -189,10 +189,4 @@ ngx-material-timepicker-toggle{
 }
 .ngx-timepicker-control__arrow{
   display: none;
-}
-.mat-tooltip{
-  font-size: 10px;
-  color: black !important;
-  background-color: white;
-  border: 2px solid orange;
 }

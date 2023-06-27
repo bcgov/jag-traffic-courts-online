@@ -21,6 +21,7 @@
         public string? Province { get; set; }
         public string? PostalCode { get; set; }
         public string? Email { get; set; }
+        public Guid NoticeOfDisputeGuid { get; set; }
         public IList<DisputedCount> DisputeCounts { get; set; } = new List<DisputedCount>();
     }
 

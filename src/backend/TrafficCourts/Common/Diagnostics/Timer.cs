@@ -1,85 +1,73 @@
-﻿using TrafficCourts.Common.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 
-namespace System.Diagnostics.Metrics;
+namespace TrafficCourts.Common.Diagnostics;
 
-/// <summary>
-/// 
-/// </summary>
-/// <typeparam name="T"></typeparam>
-/// <remarks>
-/// This class supports only the following generic parameter types: <see cref="int" /> and <see cref="double" />
-/// </remarks>
-public sealed class Timer<T> : Instrument<T> where T : struct
+public sealed class Timer : Instrument<double>
 {
-    private static KeyValuePair<string, object?>[] EmptyTags => Array.Empty<KeyValuePair<string, object?>>();
-    private readonly Histogram<T> _histogram;
+    private readonly Histogram<double> _histogram;
 
-    public Timer(Meter meter, string name, string? unit, string? description)
-        : base(meter, name, unit, description)
+    public Timer(Meter meter, string name, string unit, string description)
+    : base(meter, name, unit, description)
     {
-        _histogram = meter.CreateHistogram<T>(name, unit, description);
+        _histogram = meter.CreateHistogram<double>(name, unit, description);
     }
 
-    public TimerMark<T> Start()
+    public ITimerOperation Start(TagList tagList)
     {
-        return Start(EmptyTags);
+        return new TimerMark(this, tagList);
     }
 
-    public TimerMark<T> Start(params KeyValuePair<string, object?>[] tags)
+    internal void Record(TimeSpan elapsed, TagList tagList)
     {
-        return new TimerMark<T>(this, tags);
+        _histogram.Record(elapsed.TotalMilliseconds, tagList);
     }
 
-    public void Stop(TimerMark<T> mark)
+    public sealed class TimerMark : ITimerOperation
     {
-        Stop(mark, EmptyTags);
-    }
+        private readonly Timer _timer;
+        private readonly ValueStopwatch _valueStopwatch;
+        private readonly TagList _tagList;
 
-    public void Stop(TimerMark<T> mark, params KeyValuePair<string, object?>[] tags)
-    {
-        mark._tags = tags;
-        mark.Dispose();
-    }
-
-    internal void Record(TimeSpan elapsed, KeyValuePair<string, object?>[] tags)
-    {
-        Type type = typeof(T);
-        T value;
-
-        if (type == typeof(int))
-        {
-            int totalMilliseconds = (int)elapsed.TotalMilliseconds;
-            value = (T)(object)totalMilliseconds;
-        }
-        else if (type == typeof(double))
-        {
-            value = (T)(object)elapsed.TotalMilliseconds;
-        }
-        else
-        {
-            throw new InvalidOperationException($"{type} is unsupported type for this operation. The only supported types are int and double.");
-        }
-
-        _histogram.Record(value, tags);
-    }
-
-    public class TimerMark<T1> : IDisposable where T1 : struct
-    {
-        private readonly Timer<T1> _timer;
-        private readonly long _startingTimestamp;
-        internal KeyValuePair<string, object?>[] _tags;
-
-        public TimerMark(Timer<T1> timer, params KeyValuePair<string, object?>[] tags)
+        public TimerMark(Timer timer, TagList tags)
         {
             _timer = timer;
-            _tags = tags;
-            _startingTimestamp = ValueStopwatch.GetTimestamp();
+            _tagList = tags;
+            _valueStopwatch = ValueStopwatch.StartNew();
         }
 
         public void Dispose()
         {
-            var elapsed = ValueStopwatch.GetElapsedTime(_startingTimestamp);
-            _timer.Record(elapsed, _tags);
+            var elapsed = _valueStopwatch.GetElapsedTime();
+            _timer.Record(elapsed, _tagList);
+        }
+
+        public void Error(Exception exception)
+        {
+            ArgumentNullException.ThrowIfNull(exception);
+
+            AddTag("exception_type", exception.GetType().Name);
+        }
+
+        public void AddTag(string key, object? value)
+        {
+            ArgumentNullException.ThrowIfNull(key);
+
+            _tagList.Add(key, value);
+        }
+
+        public TagList Tags
+        {
+            get
+            {
+                var tags = new TagList();
+                foreach (var tag in _tagList)
+                {
+                    tags.Add(tag);
+                }
+                return tags;
+            }
         }
     }
 }

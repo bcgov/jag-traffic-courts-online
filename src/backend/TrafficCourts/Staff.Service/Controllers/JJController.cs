@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Net;
+using System.Text;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -13,17 +15,17 @@ namespace TrafficCourts.Staff.Service.Controllers;
 
 public class JJController : StaffControllerBase<JJController>
 {
-    private readonly IJJDisputeService _JJDisputeService;
+    private readonly IJJDisputeService _jjDisputeService;
 
     /// <summary>
     /// Default Constructor
     /// </summary>
-    /// <param name="JJDisputeService"></param>
+    /// <param name="jjDisputeService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public JJController(IJJDisputeService JJDisputeService, ILogger<JJController> logger) : base(logger)
+    public JJController(IJJDisputeService jjDisputeService, ILogger<JJController> logger) : base(logger)
     {
-        _JJDisputeService = JJDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
+        _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
     }
 
     /// <summary>
@@ -48,7 +50,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            ICollection<JJDispute> JJDisputes = await _JJDisputeService.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
+            ICollection<JJDispute> JJDisputes = await _jjDisputeService.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
             return Ok(JJDisputes);
         }
         catch (Exception e)
@@ -61,7 +63,8 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Returns a single JJ Dispute with the given identifier from the Oracle Data API.
     /// </summary>
-    /// <param name="JJDisputeId">Unique identifier for a specific JJ dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ dispute record.</param>
+    /// <param name="ticketNumber">Ticket number for a specific JJ dispute record.</param>
     /// <param name="assignVTC">boolean to indicate need to assign VTC.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A single JJ dispute record</returns>
@@ -71,7 +74,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="409">The JJDispute has already been assigned to a user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
-    [HttpGet("{JJDisputeId}")]
+    [HttpGet("{jjDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -80,13 +83,13 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputeAsync(string JJDisputeId, bool assignVTC, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving JJ Dispute from oracle-data-api");
+        _logger.LogDebug("Retrieving JJ Dispute {JJDisputeId} from oracle-data-api", jjDisputeId);
 
         try
         {
-            JJDispute JJDispute = await _JJDisputeService.GetJJDisputeAsync(JJDisputeId, assignVTC, cancellationToken);
+            JJDispute JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
             return Ok(JJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -142,9 +145,67 @@ public class JJController : StaffControllerBase<JJController>
     }
 
     /// <summary>
+    /// Returns a single Justin Document for a given ticket number and docment type.
+    /// </summary>
+    /// <param name="ticketNumber">Ticket number for a specific JJ dispute record.</param>
+    /// <param name="documentType">indicates document type.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A single Ticket Image Data record</returns>
+    /// <response code="200">The document was found.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+    [HttpGet("ticketimage/{ticketNumber}/{documentType}")]
+    [ProducesResponseType(typeof(TicketImageDataJustinDocument), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
+    public async Task<IActionResult> GetJustinDocument(string ticketNumber, DocumentType documentType, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving Justin Documnet {ticketNumber} from oracle-data-api", ticketNumber);
+
+        try
+        {
+            TicketImageDataJustinDocument justinDocument = await _jjDisputeService.GetJustinDocumentAsync(ticketNumber, documentType, cancellationToken);
+
+            // base 64 decoding (comes from Oracle as base 64 encoded string)
+            var decodedFileData = Convert.FromBase64String(justinDocument.FileData);
+
+            MemoryStream stream = new MemoryStream( decodedFileData );
+            stream.Position = 0;
+
+            var fileName = (justinDocument.ParticipantName ?? "Disputant") + "_" + (justinDocument.ReportType.ToString() ?? "justinDoc") + "." + justinDocument.ReportFormat ?? "pdf";
+
+            return File(stream, "application/pdf", fileName);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error retrieving Justin Document");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error retrieving Justin Document");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="jjDispute"></param>
     /// <param name="cancellationToken"></param>
@@ -165,14 +226,14 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> SubmitAdminResolutionAsync(long jjDisputeId, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
 
         try
         {
-            await _JJDisputeService.SubmitAdminResolutionAsync(ticketNumber, checkVTC, jjDispute, cancellationToken);
-            return Ok(jjDispute);
+            var updatedJJDispute = await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, cancellationToken);
+            return Ok(updatedJJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
@@ -226,7 +287,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _JJDisputeService.AssignJJDisputesToJJ(ticketNumbers, username, cancellationToken);
+            await _jjDisputeService.AssignJJDisputesToJJ(ticketNumbers, username, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -286,7 +347,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _JJDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, cancellationToken);
+            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -348,7 +409,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _JJDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, cancellationToken);
+            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -378,7 +439,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates the status of a particular JJDispute record to ACCEPTED.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -409,7 +470,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            await _JJDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+            await _jjDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -429,6 +490,10 @@ public class JJController : StaffControllerBase<JJController>
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
+        catch (PartIdNotFoundException e)
+        {
+            return new HttpError(StatusCodes.Status400BadRequest, e.Message);
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
@@ -437,15 +502,131 @@ public class JJController : StaffControllerBase<JJController>
     }
 
     /// <summary>
+    /// Updates the status of a particular JJDispute record to CONCLUDED.
+    /// </summary>
+    /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The JJDispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jjdispute:accept permission.</response>
+    /// <response code="404">JJDispute record not found. Update failed.</response>
+    /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}/conclude")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
+    public async Task<IActionResult> ConcludeJJDisputeAsync(
+        string ticketNumber,
+        bool checkVTC,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJDispute status to CONCLUDED");
+
+        try
+        {
+            await _jjDisputeService.ConcludeJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
+            return Ok();
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (PartIdNotFoundException e)
+        {
+            return new HttpError(StatusCodes.Status400BadRequest, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+    /// <summary>
+    /// Updates the status of a particular JJDispute record to CANCELLED.
+    /// </summary>
+    /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The JJDispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jjdispute:accept permission.</response>
+    /// <response code="404">JJDispute record not found. Update failed.</response>
+    /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}/cancel")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Accept)]
+    public async Task<IActionResult> CancelJJDisputeAsync(
+        string ticketNumber,
+        bool checkVTC,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJDispute status to CANCELLED");
+
+        try
+        {
+            await _jjDisputeService.CancelJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
+            return Ok();
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (PartIdNotFoundException e)
+        {
+            return new HttpError(StatusCodes.Status400BadRequest, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+    /// <summary>
     /// Updates court appearance record as well as the status of a particular JJDispute record to REQUIRE_COURT_HEARING, hearing type to COURT_APPEARANCE.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-    /// <response code="403">Forbidden, requires jjdispute:update_court_appearance permission.</response>
+    /// <response code="403">Forbidden, requires jjdispute:update permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
     /// <response code="405">A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
@@ -458,9 +639,8 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateCourtAppearance)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(
-        string ticketNumber, CancellationToken cancellationToken)
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
+    public async Task<IActionResult> UpdateCourtAppearanceAndRequireCourtHearingJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");
 
@@ -468,7 +648,7 @@ public class JJController : StaffControllerBase<JJController>
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
 
-            await _JJDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, null, cancellationToken);
+            await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, null, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -498,13 +678,13 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates court appearance record as well as the status of a particular JJDispute record to CONFIRMED.
     /// </summary>
-    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The court appearance and JJDispute status are updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
-    /// <response code="403">Forbidden, requires jjdispute:update_court_appearance permission.</response>
+    /// <response code="403">Forbidden, requires jjdispute:update permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
     /// <response code="405">A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
@@ -517,9 +697,8 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateCourtAppearance)]
-    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(
-        string ticketNumber, CancellationToken cancellationToken)
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
+    public async Task<IActionResult> UpdateCourtAppearanceAndConfirmJJDisputeAsync(string ticketNumber, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating court appearance and the JJDispute status to REQUIRE_COURT_HEARING");
 
@@ -527,7 +706,7 @@ public class JJController : StaffControllerBase<JJController>
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
 
-            await _JJDisputeService.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
+            await _jjDisputeService.ConfirmJJDisputeAsync(ticketNumber, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)

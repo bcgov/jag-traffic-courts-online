@@ -26,7 +26,6 @@ public abstract class MailTemplateCollectionEmailTemplate : IEmailTemplate<Dispu
             To = dispute.EmailAddress,
             Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber),
             TextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber),
-            HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber),
         };
 
         return emailMessage;

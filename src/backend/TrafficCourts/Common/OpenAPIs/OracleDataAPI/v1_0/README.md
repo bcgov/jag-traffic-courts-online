@@ -5,6 +5,6 @@ To edit the oracle-data-api.nswag,  install the the NSwagStudio tool. https://gi
 
 ```
 	<Target Name="NSwag" BeforeTargets="BeforeBuild">
-		<Exec Command="$(NSwagExe_Net60) run OpenAPIs\OracleDataAPI\v1_0\oracle-data-api.nswag" />
+		<Exec Command="$(NSwagExe_Net70) run OpenAPIs\OracleDataAPI\v1_0\oracle-data-api.nswag" />
 	</Target>
 ```

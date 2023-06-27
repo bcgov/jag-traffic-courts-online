@@ -1,4 +1,4 @@
-<app-page *ngIf="noticeOfDispute">
+<app-page>
   <app-page-header>
     <ng-container header>Traffic ticket dispute request confirmation</ng-container>
   </app-page-header>
@@ -27,7 +27,7 @@
   <hr class="d-print-none">
   <div class="d-print-none">
     <strong>Next Steps</strong><br>
-    <p *ngIf="isCreate" class="text-dark">
+    <p *ngIf="isCreate && noticeOfDispute.email_address" class="text-dark">
       A member of the court registry will review your request and you will receive an email to the address you supplied
       which will inform you if the ticket request has been approved or rejected, and what to expect next.
       <br>
@@ -36,20 +36,24 @@
       <br>
       {{ noticeOfDispute.email_address }}
     </p>
+    <p *ngIf="isCreate && !noticeOfDispute.email_address" class="text-dark">
+      A member of the court registry will review your request and inform you if the ticket request has been approved or rejected, and what to expect next.
+      <br>
+    </p>
     <p *ngIf="!isCreate" class="text-dark">
       A member of the court registry will review your request and you will receive an email to the address you supplied
-      which will inform you if the dsipute update request has been approved or rejected, and what to expect next.
+      which will inform you if the dispute update request has been approved or rejected, and what to expect next.
     </p>
     <hr class="d-print-none" />
   </div>
 
-  <ng-container *ngIf="isCreate">
+  <ng-container *ngIf="isCreate && noticeOfDispute">
     <strong class="d-print-none">Request details</strong>
 
-    <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
+    <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute" [ticketCounts]="noticeOfDispute.counts"></app-dispute-ticket-summary>
 
     <section class="mb-2 mt-4 d-print-none">
-      <div class="row" *ngIf="countsActions.request_court_appearance?.length > 0">
+      <div class="row" *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.Y">
         <div class="col">
           <app-alert type="warning" icon="info">
             <ng-container #alertContent class="alert-content">
@@ -64,7 +68,7 @@
         </div>
       </div>
       <div class="row"
-        *ngIf="countsActions.request_court_appearance?.length > 0 && ticketType === ticketTypes.CAMERA_TICKET">
+        *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
         <div class="col">
           <app-alert type="warning" icon="info">
             <ng-container #alertContent class="alert-content">
@@ -115,7 +119,7 @@
           </app-alert>
         </div>
       </div>
-      <div class="row" *ngIf="countsActions.request_court_appearance?.length !== noticeOfDispute.dispute_counts.length">
+      <div class="row" *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.N">
         <div class="col">
           <app-alert type="warning" icon="info">
             <ng-container #alertContent class="alert-content">

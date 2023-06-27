@@ -19,22 +19,37 @@ import lombok.Setter;
 @Setter
 public class OrdsConfigProperties {
 
-	@Value("${ords.rest-api.occam.url}")
-	private String ordsRestApiOccamUrl;
+	@Value("${ords.api.occam.url}")
+	private String ordsApiOccamUrl;
 
-	@Value("${ords.rest-api.tco.url}")
-	private String ordsRestApiTcoUrl;
+	@Value("${ords.api.tco.url}")
+	private String ordsApiTcoUrl;
 
-	@Value("${ords.rest-api.timeout}")
-	private int ordsRestApiTimeout;
+	@Value("${ords.api.auth.enabled}")
+	private boolean ordsApiAuthEnabled;
 
-	@Value("${ords.rest-api.retry.count}")
-	private long ordsRestApiRetryCount;
+	@Value("${ords.api.occam.username}")
+	private String ordsApiOccamUsername;
 
-	@Value("${ords.rest-api.retry.delay}")
-	private long ordsRestApiRetryDelay;
+	@Value("${ords.api.occam.password}")
+	private String ordsApiOccamPassword;
 
-	@Value("${ords.rest-api.debug}")
-	private boolean ordsRestApiDebug;
+	@Value("${ords.api.tco.username}")
+	private String ordsApiTcoUsername;
+
+	@Value("${ords.api.tco.password}")
+	private String ordsApiTcoPassword;
+
+	@Value("${ords.api.timeout}")
+	private int ordsApiTimeout;
+
+	@Value("${ords.api.retry.count}")
+	private long ordsApiRetryCount;
+
+	@Value("${ords.api.retry.delay}")
+	private long ordsApiRetryDelay;
+
+	@Value("${ords.api.debug}")
+	private boolean ordsApiDebug;
 
 }

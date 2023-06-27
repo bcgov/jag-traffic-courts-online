@@ -18,7 +18,7 @@ spec:
       volumes:
         - name: forms-recognizer-shared
           persistentVolumeClaim:
-            claimName: forms-recognizer-shared
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
         - name: forms-recognizer-logs
           persistentVolumeClaim:
             claimName: forms-recognizer-logs

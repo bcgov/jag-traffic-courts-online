@@ -6,20 +6,21 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using TrafficCourts.Citizen.Service.Features.CurrentUserInfo;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common;
-using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.Features.EmailVerificationToken;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
 using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Disputes.DisputantContactInformation;
-using DisputantUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputantUpdateRequest;
 using Dispute = TrafficCourts.Citizen.Service.Models.Disputes.Dispute;
+using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -32,7 +33,6 @@ public class DisputesController : ControllerBase
     private readonly ILogger<DisputesController> _logger;
     private readonly IHashids _hashids;
     private readonly IDisputeEmailVerificationTokenEncoder _tokenEncoder;
-    private readonly IOAuthUserService _oAuthUserService;
     private readonly IMapper _mapper;
     private readonly ICitizenDocumentService _documentService;
 
@@ -44,18 +44,16 @@ public class DisputesController : ControllerBase
     /// <param name="logger"></param>
     /// <param name="hashids"></param>
     /// <param name="tokenEncoder"></param>
-    /// <param name="oAuthUserService"></param>
     /// <param name="mapper"></param>
-    /// <param name="comsService"></param>
+    /// <param name="documentService"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
-    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IOAuthUserService oAuthUserService, IMapper mapper, ICitizenDocumentService documentService)
+    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids, IDisputeEmailVerificationTokenEncoder tokenEncoder, IMapper mapper, ICitizenDocumentService documentService)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _hashids = hashids ?? throw new ArgumentNullException(nameof(hashids));
         _tokenEncoder = tokenEncoder ?? throw new ArgumentNullException(nameof(tokenEncoder));
-        _oAuthUserService = oAuthUserService ?? throw new ArgumentNullException(nameof(oAuthUserService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
     }
@@ -76,12 +74,19 @@ public class DisputesController : ControllerBase
     public async Task<IActionResult> CreateAsync([FromBody] Models.Disputes.NoticeOfDispute dispute, CancellationToken cancellationToken)
     {
         Create.Request request = new Create.Request(dispute);
+
+        // Part of the 'send' here is to add the scanned in image of a ticket(if there is one) to COMS and remove from REDIS cache
+        // In the call to the COMS service to CreateObjectsAsync, when reading the response as a List of TrafficCourts.Coms.Client.Anonymous
+        // which extends TrafficCourts.Coms.Client.DBObject, it attempts to deserialize the JSON response and fails since
+        // BucketId returns as null from the coms service but deserialization is trying to stuff it into System.Guid datatype that does not allow null
+        // To fix, update BucketId datatype from System.Guid to System.Guid? to make it optional in DBObject in Models.g.cs of Traffic.Coms.Client
+        // Seems to be explicitly a fault of the code generator that generates Models.g.cs and perhaps not the openapi spec from COMS team
         Create.Response response = await _mediator.Send(request, cancellationToken);
 
         if (response.Exception is not null)
         {
             _logger.LogInformation(response.Exception, "Failed to create Notice of Dispute");
-            return StatusCode(StatusCodes.Status500InternalServerError, response.Exception);
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         return Ok(response);
@@ -166,13 +171,29 @@ public class DisputesController : ControllerBase
 
             return result;
         }
-        catch (RequestTimeoutException ex)
+        catch (RequestTimeoutException exception)
         {
-            _logger.LogError(ex, "Request Timed out");
-            throw;
+            _logger.LogError(exception, "Request timeout verifying email, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error verifying email, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
+    /// <summary>
+    /// Search for a Dispute.
+    /// </summary>
+    /// <param name="ticketNumber">The violation ticket number. Must start with two upper case letters and end with eight digits.</param>
+    /// <param name="time">The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The dispute was found.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
     [HttpGet("/api/disputes/search")]
     [ProducesResponseType(typeof(SearchDisputeResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -186,19 +207,33 @@ public class DisputesController : ControllerBase
             [RegularExpression(Search.Request.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
             CancellationToken cancellationToken)
     {
-
         try
         {
             var message = new SearchDisputeRequest { TicketNumber = ticketNumber, IssuedTime = time };
             var response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(message, cancellationToken);
-            IActionResult result;
 
-            if (response.Message.NoticeOfDisputeGuid is not null)
+            var searchResponse = response.Message;
+            if (searchResponse.IsNotFound)
             {
-                var token = _hashids.EncodeHex(response.Message.NoticeOfDisputeGuid.Value.ToString("n"));
-                _ = Enum.TryParse(response.Message.DisputeStatus, out DisputeStatus disputeStatus);
-                _ = Enum.TryParse(response.Message.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
-                _ = Enum.TryParse(response.Message.HearingType, out JJDisputeHearingType hearingType);
+                _logger.LogDebug("Dispute not found, returning not found");
+                return NotFound();
+            }
+
+            if (searchResponse.IsError)
+            {
+                // TODO: check if logging allows us to correlate this log message with the problem in the message consumer.
+                _logger.LogError("Search returned an error, returning internal server error");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            // dispute is found and not an error, process the response data
+            if (searchResponse.NoticeOfDisputeGuid is not null)
+            {
+                var token = _hashids.EncodeHex(searchResponse.NoticeOfDisputeGuid.Value.ToString("n"));
+                // TODO: we are not detecting if any of these enumeration values could not be parsed
+                _ = Enum.TryParse(searchResponse.DisputeStatus, out DisputeStatus disputeStatus);
+                _ = Enum.TryParse(searchResponse.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
+                _ = Enum.TryParse(searchResponse.HearingType, out JJDisputeHearingType hearingType);
 
                 SearchDisputeResult searchResult = new()
                 {
@@ -208,34 +243,35 @@ public class DisputesController : ControllerBase
                     HearingType = hearingType
                 };
 
-                result = Ok(searchResult);
-            }
-            else if (response.Message.IsError)
-            {
-                _logger.LogError("Unknown search dispute error");
-                result = StatusCode(StatusCodes.Status500InternalServerError);
-            }
-            else
-            {
-                _logger.LogDebug("Dispute not found");
-                result = NotFound("Dispute not found");
+                return Ok(searchResult);
             }
 
-            return result;
+            // TODO: should we return internal server error or not found? This is invalid situation if the data is correct.
+            _logger.LogError("No NoticeOfDisputeGuid on search response, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
-        catch (RequestTimeoutException ex)
+        catch (RequestTimeoutException exception)
         {
-            _logger.LogError(ex, "Request Timed out");
-            throw;
+            _logger.LogError(exception, "Request timeout, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error searching for dispute, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
-
+    /// <summary>
+    /// Get a Dispute with authentication.
+    /// </summary>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute was found.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a internal server error.</response>
     [Authorize]
     [HttpGet("/api/disputes/{guidHash}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
@@ -245,121 +281,73 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            if (String.IsNullOrEmpty(token))
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
             {
-                throw new UnauthorizedAccessException("Invalid access_token");
+                return BadRequest("Invalid User");
             }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
+                // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
 
+            // can throw
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (!String.IsNullOrEmpty(check))
+            if (check is not null)
             {
-                return BadRequest(check);
+                return check;
             }
 
-            var user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
-            var message = new GetDisputeRequest();
-            message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
-            var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
-            if (response is null || response.Message is null || String.IsNullOrEmpty(response.Message.TicketNumber))
+            GetDisputeRequest message = new()
             {
+                NoticeOfDisputeGuid = noticeOfDisputeGuid
+            };
+
+            // can throw
+            var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
+            if (string.IsNullOrEmpty(response?.Message?.TicketNumber))
+            {
+                _logger.LogInformation("Cound not get dispute or the ticket number is missing, returning not found");
                 return NotFound("Dispute not found");
             }
 
-            var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
-            if (response.Message.DisputantSurname != user?.Surename
-                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user))
             {
-                return BadRequest("Disputant not match");
+                _logger.LogDebug("User and dispute names do not match, returning bad request");
+                return BadRequest("Contact names do not match.");
             }
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
+
+            DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid };
+
+            // can throw
+            result.FileData = await _documentService.FindFilesAsync(properties, cancellationToken);
+
             return Ok(result);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error getting dispute, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
     /// <summary>
-    /// Downloads a document for the given unique file ID if the virus scan staus is clean.
+    /// Submits an update request for a Dispute with authentication.
     /// </summary>
-    /// <param name="fileId">Unique identifier for a specific document.</param>
+    /// <param name="guidHash">A hash of the noticeOfDisputeGuid.</param>
+    /// <param name="dispute">The requested fields to update.</param>
     /// <param name="cancellationToken"></param>
-    /// <response code="200">The document is successfully downloaded.</response>
-    /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
-    /// <response code="403">Forbidden, requires jjdispute:read permission.</response>
-    /// <response code="500">There was a server error that prevented the file to be downloaded successfully.</response>
-    /// <returns>The document</returns>
-    [Authorize]
-    [HttpGet("/api/disputes/downloadDocument")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DownloadDocumentAsync(Guid fileId, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            if (String.IsNullOrEmpty(token))
-            {
-                throw new UnauthorizedAccessException("Invalid access_token");
-            }
-
-            Coms.Client.File file = await _documentService.GetFileAsync(fileId, cancellationToken);
-
-            var stream = file.Data;
-            // Reset position to the beginning of the stream
-            stream.Position = 0;
-
-            return File(stream, file.ContentType ?? "application/octet-stream", file.FileName ?? "download");
-        }
-        catch (UnauthorizedAccessException e)
-        {
-            _logger.LogError(e, "User is unauthorized. Invalid Access Token");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Unauthorized;
-            problemDetails.Title = e.Source + ": Exception Authorizing User";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            problemDetails.Extensions.Add("errors", e.Message);
-
-            return new ObjectResult(problemDetails);
-        }
-        catch (Coms.Client.ObjectManagementServiceException e)
-        {
-            _logger.LogError(e, "Could not download the document because of ObjectManagementServiceException");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.InternalServerError;
-            problemDetails.Title = e.Source + ": Error getting file from COMS";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error retrieving the document");
-            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
-        }
-    }
-
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
+    /// <response code="404">The dispute was not found.</response>
+    /// <response code="500">There was a internal server error.</response>
     [Authorize]
     [HttpPut("/api/disputes/{guidHash}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -369,50 +357,78 @@ public class DisputesController : ControllerBase
     {
         try
         {
-            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
-            if (String.IsNullOrEmpty(token))
+            var userInfoResponse = await _mediator.Send(GetCurrentUserInfoRequest.Default, cancellationToken);
+            UserInfo? user = userInfoResponse.UserInfo;
+            if (user == null)
             {
-                throw new UnauthorizedAccessException("Invalid access_token");
+                return BadRequest("Invalid User");
             }
 
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
+                // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
 
+            // can throw
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (!String.IsNullOrEmpty(check))
+            if (check is not null)
             {
-                return BadRequest(check);
+                return check;
             }
 
-            var user = await _oAuthUserService.GetUserInfoAsync<UserInfo>(token, cancellationToken);
-            var message = new GetDisputeRequest();
-            message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
+            GetDisputeRequest message = new GetDisputeRequest
+            {
+                NoticeOfDisputeGuid = noticeOfDisputeGuid
+            };
+
+            // can throw
             var response = await _bus.Request<GetDisputeRequest, SubmitNoticeOfDispute>(message, cancellationToken);
             if (response is null || response.Message is null || String.IsNullOrEmpty(response.Message.TicketNumber))
             {
                 return NotFound("Dispute not found");
             }
 
-            var givenNames = response.Message.DisputantGivenName1 + " " + response.Message.DisputantGivenName2 + " " + response.Message.DisputantGivenName3;
-            if (response.Message.DisputantSurname != user?.Surename
-                || !(response.Message.DisputantGivenName1 == user?.GivenName || givenNames.TrimEnd() == user?.GivenNames))
-            {
-                return BadRequest("Disputant not match");
-            }
+            // Compare Contact Names to BC Services Card
+            if (!CompareNames(response.Message, user)) return BadRequest("Contact names do not match.");
 
             // Submit request to Workflow Service for processing.
-            DisputantUpdateRequest request = _mapper.Map<DisputantUpdateRequest>(dispute);
+            DisputeUpdateRequest request = _mapper.Map<DisputeUpdateRequest>(dispute);
             request.NoticeOfDisputeGuid = noticeOfDisputeGuid;
+
+            if (dispute.FileData is not null)
+            {
+                var uploadPendingFiles = dispute.FileData.Where(i => !String.IsNullOrEmpty(i.PendingFileStream));
+                request.UploadedDocuments = new List<UploadDocumentRequest>();
+                foreach (FileMetadata fileMetadata in uploadPendingFiles)
+                {
+                    DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };
+
+                    // can throw
+                    Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream, fileMetadata.FileName, properties, cancellationToken);
+
+                    UploadDocumentRequest uploadDocumentRequest = new() { DocumentId= id, DocumentType = fileMetadata.DocumentType };
+
+                    request.UploadedDocuments?.Add(uploadDocumentRequest);
+                }
+
+                var deletePendingFiles = dispute.FileData.Where(i => i.DeleteRequested == true && i.FileId is not null);
+                foreach (FileMetadata fileMetadata in deletePendingFiles)
+                {
+                    // can throw
+                    await _documentService.DeleteFileAsync(fileMetadata.FileId.Value, cancellationToken);
+                }
+            }
+
+            // can throw
             await _bus.PublishWithLog(_logger, request, cancellationToken);
 
             return Ok();
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error updating dispute, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
@@ -434,50 +450,130 @@ public class DisputesController : ControllerBase
         {
             if (!_hashids.TryDecodeGuid(guidHash, out Guid noticeOfDisputeGuid))
             {
+                // TODO: add instrumentation to monitor invalid values being posted
                 return BadRequest("Invalid guidHash");
             }
 
             var check = await CheckDisputeStatus(noticeOfDisputeGuid, cancellationToken);
-            if (!String.IsNullOrEmpty(check))
+            if (check is not null)
             {
-                return BadRequest(check);
+                return check;
             }
 
             // Submit request to Workflow Service for processing.
-            DisputantUpdateRequest message = _mapper.Map<DisputantUpdateRequest>(_mapper.Map<DisputantUpdateContactRequest>(disputantContactInformation));
+            DisputeUpdateRequest message = _mapper.Map<DisputeUpdateRequest>(_mapper.Map<DisputeUpdateContactRequest>(disputantContactInformation));
             message.NoticeOfDisputeGuid = noticeOfDisputeGuid;
             await _bus.PublishWithLog(_logger, message, cancellationToken);
 
             return Ok();
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            _logger.LogError(ex, "Unknown Error");
-            throw;
+            _logger.LogError(exception, "Error updating dispute contact information, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
-    private async Task<string> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
+    /// <summary>
+    /// Searches for the dispute by <paramref name="noticeOfDisputeGuid"/>.
+    /// </summary>
+    /// <param name="noticeOfDisputeGuid"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    private async Task<IActionResult?> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
-        // Verify Dispute exists and whose status is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
-        string[] validStatuses = { DisputeStatus.NEW.ToString(), DisputeStatus.VALIDATED.ToString(), DisputeStatus.PROCESSING.ToString() };
+        // Verify Dispute exists and whose value is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
         SearchDisputeRequest searchRequest = new() { NoticeOfDisputeGuid = noticeOfDisputeGuid };
         Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
-        if (response.Message?.NoticeOfDisputeGuid is null)
+
+        var searchResponse = response.Message;
+
+        if (searchResponse.IsNotFound)
         {
-            return "Dispute not found";
+            _logger.LogDebug("Search returned not found, returning not found");
+            return NotFound();
         }
-        else if (response.Message?.DisputeStatus is not null && !validStatuses.Contains(response.Message.DisputeStatus))
+
+        if (searchResponse.NoticeOfDisputeGuid is null)
         {
-            return $"Dispute has a status of {response.Message.DisputeStatus}. Expecting one of NEW, VALIDATED, or PROCESSING.";
+            _logger.LogDebug("Search returned null NoticeOfDisputeGuid, returning not found");
+            return NotFound();
         }
-        else if (response.Message?.JJDisputeStatus is not null)
+
+        if (searchResponse.IsError)
         {
-            return $"JJDispute has status of {response.Message?.JJDisputeStatus}. Must be blank.";
+            _logger.LogDebug("Search returned error, returning internal server error");
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        if (!IsValidDisputeStatus(searchResponse.DisputeStatus))
+        {
+            _logger.LogDebug("Dispute status is not valid, returning bad request");
+
+            var status = searchResponse.DisputeStatus ?? "missing";
+            return BadRequest($"Dispute has a status of {status}. Expecting one of NEW, VALIDATED, or PROCESSING.");
+        }
+        else if (searchResponse.JJDisputeStatus is not null && searchResponse.HearingType == "WRITTEN_REASONS")
+        {
+            _logger.LogDebug("JJDispute status is not null for a written reasons hearing, returning bad request");
+            return BadRequest($"JJDispute has status of {searchResponse.JJDisputeStatus}. Must be blank for a written reasons dispute.");
+        }
+
+        _logger.LogDebug("Dispute status is ok, returning null");
+        return null;
+    }
+
+    private static bool IsValidDisputeStatus(string? value)
+    {
+        if (value is null) return false;
+
+        return IsDisputeStatus(value, DisputeStatus.NEW)
+            || IsDisputeStatus(value, DisputeStatus.VALIDATED)
+            || IsDisputeStatus(value, DisputeStatus.PROCESSING);
+    }
+
+
+    private static bool IsDisputeStatus(string value, DisputeStatus status)
+    {
+        return status.ToString() == value;
+    }
+
+    private bool CompareNames(SubmitNoticeOfDispute message, UserInfo? user)
+    {
+#if DEBUG 
+#warning Contact Name Comparisons with BC Services Cards have been disabled 
+       return true;
+#endif
+        bool result = true;
+
+        // if contact type is individual then match with disputant name otherwise match with contact names
+        if (message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
+        {
+            var givenNames = message.DisputantGivenName1
+                + (message.DisputantGivenName2 != null ? (" " + message.DisputantGivenName2) : "")
+                + (message.DisputantGivenName3 != null ? (" " + message.DisputantGivenName3) : "");
+            if (!message.DisputantSurname.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+                || !(message.DisputantGivenName1.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = false;
+            }
+        }
+        else if (message.ContactTypeCd == DisputeContactTypeCd.LAWYER || message.ContactTypeCd == DisputeContactTypeCd.OTHER)
+        {
+            var givenNames = message.ContactGiven1Nm
+                + (message.ContactGiven2Nm != null ? (" " + message.ContactGiven2Nm) : "")
+                + (message.ContactGiven3Nm != null ? (" " + message.ContactGiven3Nm) : "");
+            if (!message.ContactSurnameNm.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
+                || !(message.ContactGiven1Nm.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = false;
+            }
         }
         else
         {
-            return "";
+            result = false;
         }
+
+        return result;
     }
 }

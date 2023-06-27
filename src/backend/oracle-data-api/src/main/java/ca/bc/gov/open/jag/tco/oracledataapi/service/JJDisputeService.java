@@ -1,16 +1,17 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -21,12 +22,22 @@ import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.TicketImageDataRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
+import net.logstash.logback.argument.StructuredArguments;
 
 @Service
 public class JJDisputeService {
@@ -34,10 +45,13 @@ public class JJDisputeService {
 	private Logger logger = LoggerFactory.getLogger(DisputeService.class);
 
 	@Autowired
-	JJDisputeRepository jjDisputeRepository;
+	private JJDisputeRepository jjDisputeRepository;
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	@Autowired
+	private TicketImageDataRepository ticketImageDataRepository;
+
+	@Autowired
+	private JJDisputeRemarkRepository jjDisputeRemarkRepository;
 
 	/**
 	 * Retrieves a {@link JJDispute} record by ticketNumber, delegating to CrudRepository
@@ -79,12 +93,9 @@ public class JJDisputeService {
 		JJDispute jjDispute = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
+			jjDisputeRepository.assignJJDisputeVtc(ticketNumber, principal.getName());
 
-			jjDispute.setVtcAssignedTo(principal.getName());
-			jjDispute.setVtcAssignedTs(new Date());
-			jjDisputeRepository.save(jjDispute);
-
-			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
+			logger.debug("JJDispute with ticket Number {} has been assigned to {}", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("userName", principal.getName()));
 
 			return true;
 		}
@@ -97,19 +108,10 @@ public class JJDisputeService {
 	 * @return number of records modified.
 	 */
 	public void unassignJJDisputes() {
-		int count = 0;
-
 		// Find all Disputes with an assignedTs older than 1 hour ago.
 		Date hourAgo = DateUtils.addHours(new Date(), -1);
-		logger.debug("Unassigning all jj-disputes older than {}", hourAgo.toInstant());
-		for (JJDispute jjdispute : jjDisputeRepository.findByVtcAssignedTsBefore(hourAgo)) {
-			jjdispute.setVtcAssignedTo(null);
-			jjdispute.setVtcAssignedTs(null);
-			jjDisputeRepository.save(jjdispute);
-			count++;
-		}
-
-		logger.debug("Unassigned {} record(s)", count);
+		logger.debug("Unassigning all jj-disputes older than {}", StructuredArguments.value("date", hourAgo.toInstant()));
+		jjDisputeRepository.unassignJJDisputeVtc(null, hourAgo);
 	}
 
 	/**
@@ -125,7 +127,7 @@ public class JJDisputeService {
 
 		// Update the status of the JJ Dispute if the status is not the same as current one
 		if (jjDispute.getStatus() != null &&  jjDisputeToUpdate.getStatus() != jjDispute.getStatus()) {
-			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null);
+			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null, null);
 		}
 
 		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "id", "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
@@ -150,24 +152,16 @@ public class JJDisputeService {
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
 
-			// Remove all existing remarks that are associated to this jj dispute
-			jjDisputeToUpdate.getRemarks().clear();
-
-			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
+			// Add the authenticated user's full name to the remark for new remarks
 			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
-				if(StringUtils.isBlank(remark.getUserFullName()))
+				if(remark.getId() == null || remark.getId() == 0) {
 					remark.setUserFullName(principal.getName());
+					jjDisputeRemarkRepository.saveAndFlush(remark);
+				}
 			}
-
-			// Add updated remarks
-			jjDisputeToUpdate.addRemarks(jjDispute.getRemarks());
 		}
 
-		JJDispute updatedJJDispute = jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
-		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistence
-		entityManager.refresh(updatedJJDispute);
-
-		return updatedJJDispute;
+		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
 
 	/**
@@ -187,21 +181,15 @@ public class JJDisputeService {
 			JJDispute jjDispute = findByTicketNumberUnique(ticketNumber).orElseThrow();
 
 			if (jjDispute == null) {
-				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber + " - element not found.");
+				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: {} - element not found.", StructuredArguments.value("ticketNumber", ticketNumber));
 				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + ticketNumber);
 			}
 
+			jjDisputeRepository.assignJJDisputeJj(ticketNumber, username);
 			if (!StringUtils.isBlank(username)) {
-
-				jjDispute.setJjAssignedTo(username);
-				jjDisputeRepository.save(jjDispute);
-
-				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", ticketNumber, username);
+				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("userName", username));
 			} else {
-				jjDispute.setJjAssignedTo(null);
-				jjDisputeRepository.save(jjDispute);
-
-				logger.debug("Unassigned JJDispute with ticket number {} ", ticketNumber);
+				logger.debug("Unassigned JJDispute with ticket number {} ", StructuredArguments.value("ticketNumber", ticketNumber));
 			}
 		}
 	}
@@ -215,7 +203,8 @@ public class JJDisputeService {
 	 * @param remark note by the staff if the status is REVIEW.
 	 * @return the saved JJDispute
 	 */
-	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark) {
+	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark,
+			String adjudicatorPartId) {
 		if (jjDisputeStatus == null) {
 			logger.error("Attempting to set JJDispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set JJDispute status to null");
@@ -236,6 +225,7 @@ public class JJDisputeService {
 		// - current status must be NEW, IN_PROGRESS, REVIEW, CONFIRMED, HEARING_SCHEDULED to change to CONFIRMED
 		// - current status must be NEW, REVIEW, IN_PROGRESS, or same to change to REQUIRE_COURT_HEARING, DATA_UPDATE, REQUIRE_MORE_INFO
 		// - current status must be CONFIRMED to change to ACCEPTED
+		// - current status can be anything to change to CANCELLED or CONCLUDED
 		switch (jjDisputeStatus) {
 		case HEARING_SCHEDULED:
 			if (!List.of(JJDisputeStatus.REQUIRE_COURT_HEARING, JJDisputeStatus.HEARING_SCHEDULED).contains(jjDisputeToUpdate.getStatus())) {
@@ -282,21 +272,64 @@ public class JJDisputeService {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
+		case CANCELLED:
+			break;
+		case CONCLUDED:
+			break;
 		default:
 			// This should never happen, but if so, then it means a new JJDisputeStatus was added and these business rules were not updated accordingly.
-			logger.error("A JJ Dispute record has an unknown status '{}' - bad object state.", jjDisputeToUpdate.getStatus());
+			logger.error("A JJ Dispute record has an unknown status {} - bad object state.", StructuredArguments.value("disputeStatus", jjDisputeToUpdate.getStatus().toString()));
 			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
 		}
 
-		jjDisputeRepository.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, principal.getName());
+		// Calculate duplicate data for denormalization
+		JJDisputeCourtAppearanceRoP courtAppearance = findCourtAppearanceByJJDispute(jjDisputeToUpdate, adjudicatorPartId, jjDisputeStatus);
+		Long courtAppearanceId = courtAppearance != null && courtAppearance.getId() != null ? courtAppearance.getId() : null;
+		YesNo seizedYn = courtAppearance != null ? courtAppearance.getJjSeized() : null;
+		JJDisputeCourtAppearanceAPP aattCd = courtAppearance != null ? courtAppearance.getAppCd() : null;
+		JJDisputeCourtAppearanceDATT dattCd = courtAppearance != null ? courtAppearance.getDattCd() : null;
+
+		CustomUserDetails user = (CustomUserDetails) ((PreAuthenticatedToken) principal).getPrincipal();
+		String staffPartId = user.getPartId(); // staffPartId comes from the person currently logged in, the Principal (aka. CustomUserDetails).
+
+		if (courtAppearance != null && StringUtils.isBlank(staffPartId)) {
+			logger.error("Updating a court appearance requires a staff part id. staffPartId is null.");
+			throw new NotAllowedException("Updating a court appearance requires a staff part id.");
+		}
+
+		jjDisputeRepository.setStatus(jjDisputeToUpdate.getId(), jjDisputeStatus, principal.getName(), courtAppearanceId, seizedYn , adjudicatorPartId, aattCd, dattCd, staffPartId);
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
 		if(!StringUtils.isBlank(remark)) {
-
-			return addRemark(ticketNumber, remark, principal);
+			addRemark(jjDisputeToUpdate.getId(), remark, principal);
 		}
 
 		return findByTicketNumberUnique(ticketNumber).orElseThrow();
+	}
+
+	/**
+	 * Helper method to find a JJDisputeCourtAppearanceRoP for the given JJDispute (but only if there is a partId)
+	 * @param jjDispute
+	 * @param courtAppearanceId
+	 * @param partId
+	 * @return
+	 */
+	private JJDisputeCourtAppearanceRoP findCourtAppearanceByJJDispute(JJDispute jjDispute, String partId, JJDisputeStatus jjDisputeStatus) {
+		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) &&
+				partId != null && JJDisputeStatus.ACCEPTED.equals(jjDisputeStatus)) {
+
+			// TCVP-1968: Return the latest record iff the status is ACCEPTED
+			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
+					.sorted(new Comparator<JJDisputeCourtAppearanceRoP>() {
+						@Override
+						public int compare(JJDisputeCourtAppearanceRoP o1, JJDisputeCourtAppearanceRoP o2) {
+							return ObjectUtils.compare(o1.getAppearanceTs(), o2.getAppearanceTs());
+						}
+					})
+					.findFirst()
+					.orElse(null);
+		}
+		return null;
 	}
 
 	/**
@@ -310,12 +343,35 @@ public class JJDisputeService {
 
 		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(id).orElseThrow();
 
-		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark);
+		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark, null);
 		jjDisputeToUpdate.setHearingType(JJDisputeHearingType.COURT_APPEARANCE);
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
 
+	/**
+	 * Gets a Ticket Image by ticketNumber. Callers can optionally throw {@link NoSuchElementException} if not found.
+	 * @param ticketNumber
+	 * @param documentType
+	 * @return
+	 */
+	public TicketImageDataJustinDocument getTicketImageByTicketNumber(String ticketNumber, TicketImageDataDocumentType documentType) {
+
+		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
+		if (jjDisputes.isEmpty()) {
+			logger.error("Cant find JJDispute by ticketNumber {}.", StructuredArguments.value("ticketNumber", ticketNumber));
+			return null;
+		}
+
+		// Get justin document by rcc id and document type. There should be one and only one.
+		TicketImageDataJustinDocument ticketImage = ticketImageDataRepository.getTicketImageByRccId(jjDisputes.get(0).getJustinRccId(), documentType.getShortName());
+		if (ticketImage == null) {
+			logger.error("Cant find Ticket Image by ticketNumber {} and type {}.", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("documentType", documentType));
+			return null;
+		}
+
+		return ticketImage;
+	}
 
 	/**
 	 * Creates a new remark with the user name and surname who added the remark and adds it to the given {@link JJDispute}
@@ -325,25 +381,13 @@ public class JJDisputeService {
 	 * @param principal
 	 * @return the saved JJDispute
 	 */
-	private JJDispute addRemark(String ticketNumber, String remark, Principal principal) {
-
-		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
-
+	private void addRemark(Long jjDisputeId, String remark, Principal principal) {
 		JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
+		jjDisputeRemark.setJjDispute(new JJDispute(jjDisputeId));
 		jjDisputeRemark.setNote(remark);
 		jjDisputeRemark.setRemarksMadeTs(new Date());
-
-		PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
-		CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();
-		jjDisputeRemark.setUserFullName(user.getFullName());
-
-		jjDisputeRemark.setJjDispute(jjDisputeToUpdate);
-
-		List<JJDisputeRemark> remarks = jjDisputeToUpdate.getRemarks();
-		remarks.add(jjDisputeRemark);
-		jjDisputeToUpdate.setRemarks(remarks);
-
-		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
+		jjDisputeRemark.setUserFullName(principal.getName());
+		jjDisputeRemarkRepository.saveAndFlush(jjDisputeRemark);
 	}
 
 	/**
@@ -355,16 +399,25 @@ public class JJDisputeService {
 		// Find a JJDispute by ticketNumber. There should be one and only one record - this field "should" be unique.
 		List<JJDispute> jjDisputes = jjDisputeRepository.findByTicketNumber(ticketNumber);
 		if (jjDisputes.isEmpty()) {
-			logger.error("Cant find JJDispute by ticketNumber {}.", ticketNumber);
+			logger.error("Cant find JJDispute by ticketNumber {}.", StructuredArguments.value("ticketNumber", ticketNumber));
 			return Optional.empty();
 		}
 
 		if (jjDisputes.size() > 1) {
-			logger.error("Found more than one JJDispute for the given ticketNumber - should be unique. Using first one found.");
+			logger.error("Found more than one JJDispute for the given ticketNumber {} - should be unique. Using first one found.", StructuredArguments.value("ticketNumber", ticketNumber));
 		}
 
 		JJDispute jjDispute = jjDisputes.get(0);
 		return Optional.of(jjDispute);
 	}
 
+	/**
+	 * Deletes a specific {@link Dispute} by using the jjDisputeId or TicketNumber
+	 *
+	 * @param id of the JJDispute to be deleted
+	 * @param ticketNumber of the JJDispute to be deleted
+	 */
+	public void delete(Long id, String ticketNumber) {
+		jjDisputeRepository.deleteByIdOrTicketNumber(id, ticketNumber);
+	}
 }

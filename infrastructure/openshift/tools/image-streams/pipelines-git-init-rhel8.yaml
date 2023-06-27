@@ -13,11 +13,15 @@ spec:
       from:
         kind: DockerImage
         name: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8:v1.6.1-4'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: 'v1.8.1-52'
       from:
         kind: DockerImage
         name: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8:v1.8.1-52'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source

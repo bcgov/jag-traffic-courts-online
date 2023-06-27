@@ -2,12 +2,12 @@
 ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
 ARG RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet
 
-FROM $RUNTIME_IMAGE:6.0 AS base
+FROM $RUNTIME_IMAGE:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM $BUILD_IMAGE:6.0 AS build
+FROM $BUILD_IMAGE:7.0 AS build
 WORKDIR /src
 COPY ["Staff.Service/TrafficCourts.Staff.Service.csproj", "Staff.Service/"]
 RUN dotnet restore "Staff.Service/TrafficCourts.Staff.Service.csproj"

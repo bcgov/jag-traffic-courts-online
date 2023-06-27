@@ -10,6 +10,8 @@
     "api:clean": "npx del-cli \"src/app/api/**\" \"!src/app/api/templates\"",
     "api:download": "npx download -o src/app/api http://localhost:5005/swagger/v1/swagger.json",
     "api:generate": "npx openapi-generator-cli generate -i src/app/api/swagger.json -g typescript-angular -t src/app/api/templates --additional-properties=modelFileSuffix=.model -o src/app/api",
+    "api:regenerate": "yarn run api:clean && yarn run api:download && yarn run api:generate",
+    "api:r": "yarn run api:regenerate",
     "test": "ng test --browsers=ChromeHeadless --watch=false",
     "lint": "ng lint",
     "audit": "yarn-audit-fix --dry-run",

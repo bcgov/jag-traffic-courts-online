@@ -1,0 +1,18 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>Start dispute ticket</ng-container>
+    <ng-container subHeader>
+      Enter your contact information, then <strong>choose the
+        action you would like to take for each ticket count.</strong>
+    </ng-container>
+  </app-page-header>
+
+  <section class="mb-2">
+    <app-resolution-header [ticket]="ticket"></app-resolution-header>
+  </section>
+
+  <app-dispute-stepper *ngIf="ticket" [ticket]="ticket" [ticketCounts]="ticket.counts" [ticketType]="ticketType"
+    [mode]="mode" (saveDispute)="submitDispute($event)"></app-dispute-stepper>
+
+  <app-resolution-footer></app-resolution-footer>
+</app-page>

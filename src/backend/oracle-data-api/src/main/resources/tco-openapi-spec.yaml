@@ -6,6 +6,8 @@ info:
 servers:
   - description: local
     url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca/tcoords/tco/'
+security:
+  - basicAuth: []
 paths:
   /v1/ping:
     get:
@@ -18,10 +20,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PingResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - Health
   /v1/jjDispute:
     get:
+      operationId: jjDisputeGet
       parameters:
         - name: ticketNumber
           in: query
@@ -34,10 +39,314 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JJDispute'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/updateDispute:
+    put:
+      operationId: updateDisputePut
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JJDispute'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisputeResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/assignDisputeJj:
+    post:
+      operationId: assignDisputeJjPost
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/ticketImageDataGet:
+    post:
+      operationId: ticketImageDataGetPost
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ticketImageDataGetParms'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ticketImageDataGetResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/assignDisputeVtc:
+    post:
+      operationId: assignDisputeVtcPost
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/unassignDisputeVtc:
+    post:
+      operationId: unassignDisputeVtcPost
+      parameters:
+        - name: assignedBeforeTs
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/jjDisputeList:
+    get:
+      operationId: jjDisputeListGet
+      parameters:
+        - name: justinRccId
+          in: query
+          schema:
+            type: string
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+        - name: violationTicketId
+          in: query
+          schema:
+            type: string
+        - name: jjAssignedTo
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JJDisputeListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/disputeStatus:
+    post:
+      operationId: disputeStatusPost
+      parameters:
+        - name: disputeId
+          in: query
+          required: true
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: courtAppearanceId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: statusCd
+          in: query
+          required: true
+          description: ''
+          schema:
+            type: string
+            maxLength: 4
+        - name: seizedYn
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 1
+        - name: adjudicatorPartId
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 20
+        - name: aattCd
+          in: query
+          description: 'Disputant presence code'
+          schema:
+            type: string
+            maxLength: 3
+        - name: dattCd
+          in: query
+          description: 'Defence counsel presence code'
+          schema:
+            type: string
+            maxLength: 1
+        - name: staffPartId
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 20
+        - name: userId
+          in: query
+          required: true
+          description: 'This is actually userName, not a user ID.'
+          schema:
+            type: string
+            maxLength: 30
+      requestBody:
+        description: Empty body required by ORDS for POST request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisputeResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/processDisputeRemark:
+    post:
+      operationId: processDisputeRemarkPost
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JJDisputeRemark'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemarkResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - JJDispute
+  /v1/deleteDispute:
+    delete:
+      operationId: disputeDelete
+      parameters:
+        - name: disputeId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: ticketNumber
+          in: query
+          schema:
+            type: string
+      requestBody:
+        description: Empty body required by ORDS for DELETE request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyObject'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - JJDispute
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
+    EmptyObject:
+      type: object
+      description: an empty object
     AuditBase:
       type: object
       properties:
@@ -96,6 +405,8 @@ components:
           format: nullable
         contactTypeCd:
           type: string
+        requestCourtAppearanceYn:
+          type: string 
         courtAgenId:
           type: string
         courtAppearances:
@@ -108,6 +419,7 @@ components:
         disputantBirthDt:
           type: string
           format: date  
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd\")"
         disputantDrvLicNumberTxt:
           type: string
           format: nullable
@@ -141,6 +453,9 @@ components:
         drvLicIssuedProvSeqNo:
           type: string
           format: nullable
+        electronicTicketYn:
+          type: string
+          format: nullable
         emailAddressTxt:
           type: string
           format: nullable
@@ -152,12 +467,14 @@ components:
           format: nullable
         jjDecisionDt:
           type: string
-          format: date
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         justinRccId:
           type: string
         icbcReceivedDt:
           type: string
           format: date  
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd\")"
         interpreterLanguageCd:
           type: string
           format: nullable
@@ -182,6 +499,9 @@ components:
           format: nullable
         noticeOfDisputeGuid:
           type: string
+        noticeOfHearingYn:
+          type: string
+          format: nullable
         occamDisputantGiven1Nm:
           type: string
           format: nullable
@@ -203,7 +523,8 @@ components:
           format: nullable
         submittedDt:
           type: string
-          format: date  
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         ticketNumberTxt:
           type: string
         timeToPayReasonTxt:
@@ -212,18 +533,26 @@ components:
         violationDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd\")"
         vtcAssignedTo:
           type: string
           format: nullable
         vtcAssignedDtm:
           type: string
           format: date-time
-          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm'Z'\")"
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
         witnessNo:
           type: string
           format: nullable
       allOf:
         - $ref: '#/components/schemas/AuditBase'
+    JJDisputeListResponse:
+      type: object
+      properties:
+        jjDisputes:
+          type: array
+          items:
+            $ref: '#/components/schemas/JJDispute'
     JJDisputeCount:
       type: object
       properties:
@@ -242,7 +571,7 @@ components:
         accUpdUserId:
           type: string
         adjustedAmt:
-          type: double
+          type: string
         appearanceChargeCountId:
           type: string
         commentsTxt:
@@ -268,6 +597,7 @@ components:
         fineDueDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
         includesSurchargeYn:
           type: string
         jailDurationTxt:
@@ -295,6 +625,7 @@ components:
         revisedDueDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd\")"
         statuteId:
           type: string
         stayOfProceedingsByTxt:
@@ -304,12 +635,13 @@ components:
         suspSntcProbationDurtnTxt:
           type: string
         ticketedAmt:
-          type: double
+          type: string
         totalFineAmt:
-          type: double
+          type: string
         violationDt:
           type: string
           format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
         withdrawnYn:
           type: string
       allOf:
@@ -343,6 +675,10 @@ components:
           type: string
           format: date-time
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        durationHours:
+          type: Integer
+        durationMinutes:
+          type: Integer
         judgeOrJjNameTxt:
           type: string
         recordingClerkNameTxt:
@@ -376,3 +712,101 @@ components:
         currentTimestamp:
           type: string
           format: date-time
+    ResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        exception:
+          type: string
+          format: nullable
+    ticketImageDataGetParms:
+      type: object
+      properties:
+        document_keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ticketImageDataDocumentKey'
+    ticketImageDataDocumentKey:
+      type: object
+      properties:
+        rcc_id:
+          type: string
+          format: nullable
+        report_types:
+          type: string
+          format: nullable
+    ticketImageDataGetResponseResult:
+      type: object
+      properties:
+        create_date:
+          type: string
+          format: nullable
+        version:
+          type: string
+          format: nullable
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/ticketImageDataJustinDocument'
+    ticketImageDataJustinDocument:
+      type: object
+      properties:
+        report_type:
+          type: string
+          format: nullable
+        report_format:
+          type: string
+          format: nullable
+        part_id:
+          type: string
+          format: nullable
+        participant_name:
+          type: string
+          format: nullable
+        index:
+          type: string
+          format: nullable
+        data:
+          type: string
+          format: nullable
+    DisputeResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        disputeId:
+          type: string
+          format: nullable
+        exception:
+          type: string
+          format: nullable
+    RemarkResponseResult:
+      type: object
+      properties:
+        status:
+          type: string
+        disputeRemarkId:
+          type: string
+          format: nullable
+        exception:
+          type: string
+          format: nullable
+    # Schema for error response body
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

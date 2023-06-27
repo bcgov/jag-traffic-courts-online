@@ -1,10 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DisputeCount, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, DisputeRepresentedByLawyer, Language } from 'app/api';
+import { DisputeCount, DisputeCountPleaCode, DisputeRequestCourtAppearanceYn, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, DisputeRepresentedByLawyer, Language } from 'app/api';
 import { Dispute } from 'app/services/dispute.service';
 import { LookupsService } from 'app/services/lookups.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-request',
@@ -18,21 +17,16 @@ export class TicketRequestComponent implements OnInit {
     contactInformation: true
   }
   public form: FormGroup;
-  public busy: Subscription;
   public countFormFields = {
     pleaCode: [null],
     count: [null],
     requestTimeToPay: [null],
     requestReduction: [null],
-    requestCourtAppearance: [null, [Validators.required]],
-    notrequestCourtAppearance: [null, [Validators.required]],
-    courtGuilty: [null, [Validators.required]],
-    courtNotGuilty: [null, [Validators.required]],
-    noCourtGuilty: [null, [Validators.required]],
-    noCourtNotGuilty: [null, [Validators.required]]
+    Guilty: [null, [Validators.required]],
+    NotGuilty: [null, [Validators.required]],
   }
   public RepresentedByLawyer = DisputeRepresentedByLawyer;
-  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  public RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   public PleaCode = DisputeCountPleaCode;
   public RequestTimeToPay = DisputeCountRequestTimeToPay;
   public RequestReduction = DisputeCountRequestReduction;
@@ -42,13 +36,11 @@ export class TicketRequestComponent implements OnInit {
     private violationTicketService: ViolationTicketService,
     public lookups: LookupsService
   ) {
+
     this.form = this.formBuilder.group({
       timeToPayReason: null,
       fineReductionReason: null,
       disputeCounts: this.formBuilder.array([])
-    });
-    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
-      this.lookups.languages$.next(response);
     });
   }
 
@@ -59,11 +51,11 @@ export class TicketRequestComponent implements OnInit {
 
     let requestType = "";
     if (disputeCount) {
-      if (disputeCount.pleaCode === this.PleaCode.G && disputeCount.requestCourtAppearance === this.RequestCourtAppearance.N) {
+      if (disputeCount.pleaCode === this.PleaCode.G && this.disputeInfo.requestCourtAppearanceYn === this.RequestCourtAppearance.N) {
         requestType = disputeCount.requestTimeToPay === this.RequestTimeToPay.Y ? "Time to pay" : "";
         requestType = requestType.concat(disputeCount.requestTimeToPay === this.RequestTimeToPay.Y && disputeCount.requestReduction === this.RequestReduction.Y ? " + " : "");
         requestType = requestType.concat(disputeCount.requestReduction === this.RequestReduction.Y ? "Fine reduction" : "");
-      } else if (disputeCount.pleaCode === this.PleaCode.G && disputeCount.requestCourtAppearance === this.RequestCourtAppearance.Y) {
+      } else if (disputeCount.pleaCode === this.PleaCode.G && this.disputeInfo.requestCourtAppearanceYn === this.RequestCourtAppearance.Y) {
         requestType = 'Time to pay and/or fine reduction';
       } else if (disputeCount.pleaCode === this.PleaCode.N) {
         requestType = "Dispute offence";
@@ -79,8 +71,6 @@ export class TicketRequestComponent implements OnInit {
       section: violationTicketCount ? this.violationTicketService.getLegalParagraphing(violationTicketCount) : undefined,
       description: violationTicketCount?.description,
       ticketedAmount: violationTicketCount?.ticketedAmount,
-      requestCourtAppearance: disputeCount?.requestCourtAppearance,
-      notrequestCourtAppearance: !(disputeCount?.requestCourtAppearance)
     });
 
     if (violationTicketCount?.description) this.disputeCounts.push(disputeCountForm);
@@ -115,11 +105,8 @@ export class TicketRequestComponent implements OnInit {
         countsActions[field] = [];
       }
     });
-    countsActions.notRequestCourtAppearance = counts.filter(i => i.requestCourtAppearance === this.RequestCourtAppearance.N).map(i => "Count " + i.countNo).join(", ");
-    countsActions.courtGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G && i.requestCourtAppearance === this.RequestCourtAppearance.Y));
-    countsActions.courtNotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N && i.requestCourtAppearance === this.RequestCourtAppearance.Y));
-    countsActions.noCourtGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G && i.requestCourtAppearance === this.RequestCourtAppearance.N));
-    countsActions.noCourtNotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N && i.requestCourtAppearance == this.RequestCourtAppearance.N));
+    countsActions.Guilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G));
+    countsActions.NotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N));
     return countsActions;
   }
 }

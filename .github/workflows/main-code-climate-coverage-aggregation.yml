@@ -157,7 +157,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.201
+          dotnet-version: 7.0.102
       - name: Generate .NET Code Coverage - CitizenAPI
         run: dotnet test ${{github.workspace}}/src/backend/TrafficCourts /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 

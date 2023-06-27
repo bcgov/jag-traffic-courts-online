@@ -1,7 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputantUpdateRequest as DisputantUpdateRequestBase, DisputantUpdateRequestStatus2 } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2, DisputeListItem } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
@@ -34,31 +34,31 @@ export class DisputeService implements IDisputeService {
     this._disputes = new BehaviorSubject<Dispute[]>(null);
   }
 
-    /**
-     * Get the disputes with pending update requests
-     *
-     * @param none
-     */
-    public getDisputesWithPendingUpdates(): Observable<DisputeWithUpdates[]> {
-      return this.disputeApiService.apiDisputeDisputeswithupdaterequestsGet()
-        .pipe(
-          map((response: DisputeWithUpdates[]) => {
-            this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
-            response.forEach(x => {
-              x.disputantGivenNames = `${x.disputantGivenName1}${x.disputantGivenName2 ? ' ' + x.disputantGivenName2 : ''}${x.disputantGivenName3 ? ' ' + x.disputantGivenName3 : ''}`;
-            });
-            return response;
-          }),
-          catchError((error: any) => {
-            this.toastService.openErrorToast(this.configService.dispute_error);
-            this.logger.error(
-              'DisputeService::getDisputesWithPendingUpdates error has occurred: ',
-              error
-            );
-            throw error;
-          })
-        );
-    }
+  /**
+   * Get the disputes with pending update requests
+   *
+   * @param none
+   */
+  public getDisputesWithPendingUpdates(): Observable<DisputeWithUpdates[]> {
+    return this.disputeApiService.apiDisputeDisputeswithupdaterequestsGet()
+      .pipe(
+        map((response: DisputeWithUpdates[]) => {
+          this.logger.info('DisputeService::getDisputesWithPendingUpdates', response);
+          response.forEach(x => {
+            x.disputantGivenNames = `${x.disputantGivenName1}${x.disputantGivenName2 ? ' ' + x.disputantGivenName2 : ''}${x.disputantGivenName3 ? ' ' + x.disputantGivenName3 : ''}`;
+          });
+          return response;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::getDisputesWithPendingUpdates error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
   /**
      * Get the dispute update requests for a particular dispute
@@ -99,7 +99,8 @@ export class DisputeService implements IDisputeService {
           this.logger.info('DisputeService::getDisputes', response);
           this._disputes.next(response);
           response.forEach(dispute => {
-            dispute = this.joinGivenNames(dispute);
+            dispute = this.joinDisputantGivenNames(dispute);
+            dispute = this.joinContactGivenNames(dispute);
             dispute = this.joinLawyerNames(dispute);
             dispute = this.joinAddressLines(dispute);
           });
@@ -145,7 +146,8 @@ export class DisputeService implements IDisputeService {
         map((response: Dispute) => {
           this.logger.info('DisputeService::getDispute', response)
           if (response) {
-            response = this.joinGivenNames(response);
+            response = this.joinDisputantGivenNames(response);
+            response = this.joinContactGivenNames(response);
             response = this.joinLawyerNames(response);
             response = this.joinAddressLines(response);
           }
@@ -178,9 +180,9 @@ export class DisputeService implements IDisputeService {
      */
   public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
 
-    dispute.disputantBirthdate = this.datePipe.transform(dispute?.disputantBirthdate, "yyyy-MM-dd");
-    dispute.issuedTs = this.datePipe.transform(dispute?.issuedTs, "yyyy-MM-ddTHH:mm:ss");
-    dispute = this.splitGivenNames(dispute);
+    dispute.disputantBirthdate = "2001-01-01"; // TODO: remove this after disputant birthdate gone from schema
+    dispute = this.splitDisputantGivenNames(dispute);
+    dispute = this.splitContactGivenNames(dispute);
     dispute = this.splitLawyerNames(dispute);
     dispute = this.splitAddressLines(dispute);
     //  dispute.violationTicket =
@@ -208,9 +210,9 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public cancelDispute(disputeId: number): Observable<Dispute> {
+  public cancelDispute(disputeId: number, cancelledReason: string): Observable<Dispute> {
 
-    return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId)
+    return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId, cancelledReason)
       .pipe(
         map((response: any) => {
           this.logger.info('DisputeService::cancelDispute', response)
@@ -294,9 +296,11 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = this.configService.dispute_error;
+          error?.error?.errors.forEach(error => {
+            errorMsg += " " + error;
+          });
           this.toastService.openErrorToast(errorMsg);
-          this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'DisputeService::submitDispute error has occurred: ',
             error
@@ -306,64 +310,64 @@ export class DisputeService implements IDisputeService {
       );
   }
 
- /**
- * Accept the dispute update request
- *
- * @param disputeId
- */
-    public acceptDisputeUpdateRequest(updateStatusId: number): Observable<any> {
+  /**
+  * Accept the dispute update request
+  *
+  * @param disputeId
+  */
+  public acceptDisputeUpdateRequest(updateStatusId: number): Observable<number> {
 
-      return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdAcceptPut(updateStatusId)
-        .pipe(
-          map((response: any) => {
-            this.logger.info('DisputeService::acceptDisputeUpdateRequest', response)
-            return response ? response : null
-          }),
-          catchError((error: any) => {
-            var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
-            this.toastService.openErrorToast(errorMsg);
-            this.toastService.openErrorToast(this.configService.dispute_error);
-            this.logger.error(
-              'DisputeService::acceptDisputeUpdateRequest error has occurred: ',
-              error
-            );
-            throw error;
-          })
-        );
-    }
+    return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdAcceptPut(updateStatusId)
+      .pipe(
+        map((response: number) => {
+          this.logger.info('DisputeService::acceptDisputeUpdateRequest', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::acceptDisputeUpdateRequest error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
-     /**
- * Accept the dispute update request
- *
- * @param disputeId
- */
-     public rejectDisputeUpdateRequest(updateStatusId: number): Observable<any> {
+  /**
+* Accept the dispute update request
+*
+* @param disputeId
+*/
+  public rejectDisputeUpdateRequest(updateStatusId: number): Observable<any> {
 
-      return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdRejectPut(updateStatusId)
-        .pipe(
-          map((response: any) => {
-            this.logger.info('DisputeService::rejectDisputeUpdateRequest', response)
-            return response ? response : null
-          }),
-          catchError((error: any) => {
-            var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
-            this.toastService.openErrorToast(errorMsg);
-            this.toastService.openErrorToast(this.configService.dispute_error);
-            this.logger.error(
-              'DisputeService::rejectDisputeUpdateRequest error has occurred: ',
-              error
-            );
-            throw error;
-          })
-        );
-    }
+    return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdRejectPut(updateStatusId)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('DisputeService::rejectDisputeUpdateRequest', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::rejectDisputeUpdateRequest error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
 
- /**
- * Put to Resend Email Verification
- *
- * @param emailVerificationToken
- */
+  /**
+  * Put to Resend Email Verification
+  *
+  * @param emailVerificationToken
+  */
   public resendEmailVerification(disputeId: number): Observable<string> {
     return this.disputeApiService.apiDisputeDisputeIdResendemailverifyPut(disputeId)
       .pipe(
@@ -384,7 +388,7 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public splitGivenNames(Dispute: Dispute):Dispute {
+  public splitDisputantGivenNames(Dispute: Dispute): Dispute {
     let dispute = Dispute;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -398,12 +402,37 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public joinGivenNames(Dispute: Dispute): Dispute {
+  public splitContactGivenNames(Dispute: Dispute): Dispute {
+    let dispute = Dispute;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (Dispute.contactGivenNames) {
+      let givenNames = Dispute.contactGivenNames.split(" ");
+      if (givenNames.length > 0) dispute.contactGiven1Nm = givenNames[0];
+      if (givenNames.length > 1) dispute.contactGiven2Nm = givenNames[1];
+      if (givenNames.length > 2) dispute.contactGiven3Nm = givenNames[2];
+    }
+
+    return dispute;
+  }
+
+
+  public joinDisputantGivenNames(Dispute: Dispute): Dispute {
     let dispute = Dispute;
 
     dispute.disputantGivenNames = Dispute.disputantGivenName1;
     if (Dispute.disputantGivenName2) dispute.disputantGivenNames = Dispute.disputantGivenNames + " " + Dispute.disputantGivenName2;
     if (Dispute.disputantGivenName3) dispute.disputantGivenNames = Dispute.disputantGivenNames + " " + Dispute.disputantGivenName3;
+
+    return dispute;
+  }
+
+  public joinContactGivenNames(Dispute: Dispute): Dispute {
+    let dispute = Dispute;
+
+    dispute.contactGivenNames = Dispute.contactGiven1Nm;
+    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven1Nm;
+    if (Dispute.contactGiven2Nm) dispute.contactGivenNames = Dispute.contactGivenNames + " " + Dispute.contactGiven3Nm;
 
     return dispute;
   }
@@ -440,9 +469,9 @@ export class DisputeService implements IDisputeService {
     // split up where commas occur and stuff in address lines 1,2,3
     if (Dispute.address) {
       let addressLines = Dispute.address.split(",");
-      if (addressLines.length > 0) dispute.addressLine1 = addressLines[0].length > 100 ? addressLines[0].substring(0,100) : addressLines[0];
-      if (addressLines.length > 1) dispute.addressLine2 = addressLines[1].length > 100 ? addressLines[1].substring(0,100) : addressLines[1];
-      if (addressLines.length > 2) dispute.addressLine3 = addressLines[2].length > 100 ? addressLines[2].substring(0,100) : addressLines[2];
+      if (addressLines.length > 0) dispute.addressLine1 = addressLines[0].length > 100 ? addressLines[0].substring(0, 100) : addressLines[0];
+      if (addressLines.length > 1) dispute.addressLine2 = addressLines[1].length > 100 ? addressLines[1].substring(0, 100) : addressLines[1];
+      if (addressLines.length > 2) dispute.addressLine3 = addressLines[2].length > 100 ? addressLines[2].substring(0, 100) : addressLines[2];
     }
 
     return dispute;
@@ -461,14 +490,24 @@ export class DisputeService implements IDisputeService {
 
 export interface Dispute extends DisputeBase {
   disputantGivenNames?: string;
+  contactGivenNames?: string;
   lawyerFullName?: string;
   address?: string;
   __DateSubmitted?: Date,
   __RedGreenAlert?: string,
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
-  __CourtHearing: boolean, // if at least one count requests court hearing
   __UserAssignedTs?: Date,
-  __SystemDetectedOcrIssues?: boolean // if at least one OCR's field has a confidence level below 80% threshold
+}
+
+export interface Dispute extends DisputeListItem {
+  disputantGivenNames?: string;
+  contactGivenNames?: string;
+  lawyerFullName?: string;
+  address?: string;
+  __DateSubmitted?: Date,
+  __RedGreenAlert?: string,
+  __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
+  __UserAssignedTs?: Date,
 }
 
 export interface DisputeWithUpdates extends DisputeWithUpdatesBase {
@@ -476,5 +515,5 @@ export interface DisputeWithUpdates extends DisputeWithUpdatesBase {
 }
 
 export interface DisputantUpdateRequest extends DisputantUpdateRequestBase {
-  newStatus: DisputantUpdateRequestStatus2;
+  newStatus: DisputeUpdateRequestStatus2;
 }

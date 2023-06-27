@@ -13,17 +13,31 @@ spec:
       from:
         kind: DockerImage
         name: 'registry.access.redhat.com/ubi8/nginx-120:latest'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: '1-92'
+      from:
+        kind: DockerImage
+        name: 'registry.access.redhat.com/ubi8/nginx-120:1-92'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '1-74'
       from:
         kind: DockerImage
         name: 'registry.access.redhat.com/ubi8/nginx-120:1-74'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source
     - name: '1-54'
       from:
         kind: DockerImage
         name: 'registry.access.redhat.com/ubi8/nginx-120:1-54'
+      importPolicy:
+        scheduled: true
       referencePolicy:
         type: Source

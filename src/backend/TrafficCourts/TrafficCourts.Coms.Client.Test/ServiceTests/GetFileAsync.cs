@@ -21,25 +21,31 @@ public class GetFileAsync : ObjectManagementServiceTest
             new MetadataItem { Key = "type", Value = "picture" }
         };
 
+        var metadata = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("type", "picture")
+        };
+
         var stream = GetRandomStream();
         SetupReadObjectReturn(new FileResponse(200, headers, stream, null, null));
-        SetupGetObjectMetadataAsync(new[] { new ObjectMetadata { Id = id, Metadata = metadataItems } });
+        SetupGetObjectMetadataAsync(new Anonymous2[] { new Anonymous2 { ObjectId = id, Metadata = new List<DBMetadataKeyValue> { new DBMetadataKeyValue { Key = "type", Value = "picture" } } } });
+        SetupGetObjectTagsAsync(new Anonymous3[] { new Anonymous3 { ObjectId = id } });
 
         CancellationTokenSource cts = new CancellationTokenSource();
 
         ObjectManagementService sut = GetService();
 
         // act
-        File actualFile = await sut.GetFileAsync(id, false, cts.Token);
+        File actualFile = await sut.GetFileAsync(id, cts.Token);
 
         // assert
         // should have read the object to get the expected found object
         _mockClient.Verify(_ => _.ReadObjectAsync(
-             It.Is<Guid>((actual) => actual == id),
-             It.Is<DownloadMode?>((actual) => actual == DownloadMode.Proxy),
-             It.Is<int?>((actual) => actual == null),
-             It.Is<string?>((actual) => actual == null),
-            It.Is<CancellationToken>((actual) => actual == cts.Token)
+            It.Is<Guid>((objId) => objId == id),
+            It.Is<DownloadMode?>((download) => download == DownloadMode.Proxy),
+            It.Is<int?>((expiresIn) => expiresIn == null),
+            It.Is<string?>((versionId) => versionId == null),
+            It.Is<CancellationToken>((cancellationToken) => cancellationToken == cts.Token)
         ));
 
         Assert.NotNull(actualFile);

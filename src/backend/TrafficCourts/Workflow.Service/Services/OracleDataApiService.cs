@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using System;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Workflow.Service.Services;
 
@@ -22,150 +23,261 @@ public class OracleDataApiService : IOracleDataApiService
         // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
         if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
         {
-            dispute.ViolationTicket = new();
-            dispute.ViolationTicket.TicketNumber = dispute.TicketNumber;
-            // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
-            List<ViolationTicketCount> violationTicketCounts = new();
-            for (int i = 1; i <= 3; i++)
-            {
-                ViolationTicketCount violationTicketCount = new();
-                violationTicketCount.CountNo = i;
-                violationTicketCounts.Add(violationTicketCount);
-            }
-            dispute.ViolationTicket.ViolationTicketCounts = violationTicketCounts;
+            dispute.ViolationTicket = CreateViolationTicketFromDispute(dispute);
 
             // TODO: initialize ViolationTicket with data from OCR 
         }
 
-        return await _client.SaveDisputeAsync(dispute, cancellationToken);
-    }
-    public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
-    {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.SaveDisputeAsync));
+
         try
         {
-            return await _client.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory, cancellationToken);
+            var response = await _client.SaveDisputeAsync(dispute, cancellationToken).ConfigureAwait(false);
+            return response;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.InsertFileHistoryAsync));
+
+        try
+        {
+            var response = await _client.InsertFileHistoryAsync(fileHistory, cancellationToken).ConfigureAwait(false);
+            return response;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
     public async Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory, CancellationToken cancellationToken)
     {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.InsertEmailHistoryAsync));
+
         try
         {
-            return await _client.InsertEmailHistoryAsync(emailHistory.TicketNumber, emailHistory, cancellationToken);
+            var response = await _client.InsertEmailHistoryAsync(emailHistory, cancellationToken).ConfigureAwait(false);
+            return response;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
 
-    public async Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid NoticeOfDisputeGuid, CancellationToken cancellationToken)
+    public async Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
-        var id = NoticeOfDisputeGuid.ToString(NoticeOfDisputeGuidFormat);
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetDisputeByNoticeOfDisputeGuidAsync));
+
+        string id = noticeOfDisputeGuid.ToString(NoticeOfDisputeGuidFormat);
         try
         {
-            return await _client.GetDisputeByNoticeOfDisputeGuidAsync(id, cancellationToken);
+            var response = await _client.GetDisputeByNoticeOfDisputeGuidAsync(id, cancellationToken).ConfigureAwait(false);
+            return response;
         }
         catch (ApiException e) when (e.StatusCode == 404)
         {
+            // 404 is ok, do not end in exception
             return null;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
+            throw;
         }
     }
 
     public async Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken)
     {
-        await _client.VerifyDisputeEmailAsync(disputeId, cancellationToken);
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.VerifyDisputeEmailAsync));
+
+        try
+        {
+            await _client.VerifyDisputeEmailAsync(disputeId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
+            throw;
+        }
     }
 
     public async Task<Dispute> ResetDisputeEmailAsync(long disputeId, string emailAddress, CancellationToken cancellationToken)
     {
-        return await _client.ResetDisputeEmailAsync(disputeId, emailAddress, cancellationToken);
-    }
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.ResetDisputeEmailAsync));
 
-    public async Task<ICollection<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, CancellationToken cancellationToken)
-    {
         try
         {
-            return await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, cancellationToken);
+            var response = await _client.ResetDisputeEmailAsync(disputeId, emailAddress, cancellationToken).ConfigureAwait(false);
+            return response;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
 
-    public async Task<Dispute> GetDisputeByIdAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
+        // need to search by ticket number and issue time, or noticeOfDisputeGuid
+
+        if (ticketNumber is null && issuedTime is null && noticeOfDisputeGuid is null)
+        {
+            // no values passed for searching
+            return Array.Empty<DisputeResult>();
+        }
+
+        var noticeOfDisputeId = noticeOfDisputeGuid?.ToString(NoticeOfDisputeGuidFormat);
+
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.FindDisputeStatusesAsync));
+
         try
         {
-            return await _client.GetDisputeAsync(disputeId, cancellationToken);
+            var response = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeId, cancellationToken).ConfigureAwait(false);
+            return new List<DisputeResult>(response);
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
 
-    public async Task<long> SaveDisputantUpdateRequestAsync(string guid, DisputantUpdateRequest disputantUpdateRequest, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeByIdAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
     {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetDisputeAsync));
+
         try
         {
-            return await _client.SaveDisputantUpdateRequestAsync(guid, disputantUpdateRequest, cancellationToken);
+            var response = await _client.GetDisputeAsync(disputeId, isAssign, cancellationToken).ConfigureAwait(false);
+            return response;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
+            throw;
+        }
+    }
+
+    public async Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest disputeUpdateRequest, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.SaveDisputeUpdateRequestAsync));
+
+        try
+        {
+            var response = await _client.SaveDisputeUpdateRequestAsync(guid, disputeUpdateRequest, cancellationToken).ConfigureAwait(false);
+            return response;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
 
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.UpdateDisputeAsync));
+
         try
         {
-            return await _client.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
+            var response = await _client.UpdateDisputeAsync(disputeId, dispute, cancellationToken).ConfigureAwait(false);
+            return response;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
+            throw;
+        }
+
+    }
+
+    public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetJJDisputesAsync));
+
+        try
+        {
+            var response = await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, cancellationToken).ConfigureAwait(false);
+            return response;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
 
-    public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, System.Threading.CancellationToken cancellationToken)
+    public async Task<JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
     {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetJJDisputeAsync));
+
         try
         {
-            return await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, cancellationToken);
+            var response = await _client.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken).ConfigureAwait(false);
+            return response;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
+            throw;
+        }
+
+    }
+
+    public async Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long disputeUpdateRequestId, DisputeUpdateRequestStatus disputeUpdateRequestStatus, CancellationToken cancellationToken)
+    {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.UpdateDisputeUpdateRequestStatusAsync));
+
+        try
+        {
+            var response = await _client.UpdateDisputeUpdateRequestStatusAsync(disputeUpdateRequestId, disputeUpdateRequestStatus, cancellationToken).ConfigureAwait(false);
+            return response;
+        }
+        catch (Exception exception)
+        {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
 
-    public async Task<DisputantUpdateRequest> UpdateDisputantUpdateRequestStatusAsync(long disputantUpdateRequestId, DisputantUpdateRequestStatus disputantUpdateRequestStatus, CancellationToken cancellationToken)
+    public async Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, Status? disputeUpdateRequestStatus, CancellationToken cancellationToken)
     {
+        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetDisputeUpdateRequestsAsync));
+
         try
         {
-            return await _client.UpdateDisputantUpdateRequestStatusAsync(disputantUpdateRequestId, disputantUpdateRequestStatus, cancellationToken);
+            var response = await _client.GetDisputeUpdateRequestsAsync(disputeId, disputeUpdateRequestStatus, cancellationToken).ConfigureAwait(false);
+            return response;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            Instrumentation.OracleDataApi.EndOperation(operation, exception);
             throw;
         }
     }
 
-    public async Task<ICollection<DisputantUpdateRequest>> GetDisputantUpdateRequestsAsync(long disputeId, Status? disputantUpdateRequestStatus, CancellationToken cancellationToken)
+    private static ViolationTicket CreateViolationTicketFromDispute(Dispute dispute)
     {
-        try
+        ViolationTicket violationTicket = new();
+        violationTicket.TicketNumber = dispute.TicketNumber;
+        // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
+        List<ViolationTicketCount> violationTicketCounts = new();
+        for (int i = 1; i <= 3; i++)
         {
-            return await _client.GetDisputantUpdateRequestsAsync(disputeId, disputantUpdateRequestStatus);
+            violationTicketCounts.Add(new ViolationTicketCount { CountNo = i });
         }
-        catch (Exception)
-        {
-            throw;
-        }
+        violationTicket.ViolationTicketCounts = violationTicketCounts;
+
+        return violationTicket;
     }
 }

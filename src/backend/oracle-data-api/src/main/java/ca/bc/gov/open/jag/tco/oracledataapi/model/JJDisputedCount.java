@@ -103,22 +103,22 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * The original fine amount from reconciled ticket data.
 	 */
-	@Column
+	@Column(precision = 8, scale = 2)
 	@Schema(nullable = true)
 	private Float ticketedFineAmount;
 
 	/**
 	 * The amount that JJ may enter to overwrite the ticketed fine amount.
 	 */
-	@Column
+	@Column(precision = 8, scale = 2, nullable = true)
 	@Schema(nullable = true)
-	private Float LesserOrGreaterAmount;
+	private Float lesserOrGreaterAmount;
 
 	/**
 	 * JJ's decision whether to include surcharge in the calculated fine or not. Surcharge is always 15% of the original fine amount.
 	 */
-	@Column(nullable = false)
-	@Schema(nullable = false)
+	@Column(nullable = true)
+	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private YesNo includesSurcharge;
 
@@ -133,7 +133,7 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * The final fine amount to be paid by the disputant.
 	 */
-	@Column
+	@Column(precision = 8, scale = 2)
 	@Schema(nullable = true)
 	private Float totalFineAmount;
 

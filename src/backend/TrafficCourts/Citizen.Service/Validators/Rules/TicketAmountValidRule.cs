@@ -20,13 +20,7 @@ public class TicketAmountValidRule : ValidationRule
             {
                 AddValidationError(String.Format(ValidationMessages.CurrencyInvalid, Field.Value));
             }
-            else
-            {
-                // Format the Field Value as recognized by the validator
-                Field.Value =  String.Format("{0:C}", currency);
-            }
-        }
-
+        } 
         return Task.CompletedTask;
     }
 }

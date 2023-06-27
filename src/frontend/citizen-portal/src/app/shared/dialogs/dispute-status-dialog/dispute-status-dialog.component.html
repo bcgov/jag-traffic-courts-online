@@ -9,7 +9,7 @@
 <mat-dialog-content>
   <mat-stepper class="status-stepper" labelPosition="bottom" [linear]="true" [disableRipple]="true"
     [selectedIndex]="selectedStep">
-    <mat-step *ngFor="let step of steps;" [completed]="step.isCompleted" [editable]="false">
+    <mat-step *ngFor="let step of steps;" [completed]="step.isCompleted" editable="false">
       <ng-template matStepLabel>{{ step.type }}</ng-template>
     </mat-step>
   </mat-stepper>

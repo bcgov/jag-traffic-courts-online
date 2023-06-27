@@ -39,7 +39,7 @@ namespace TrafficCourts.Citizen.Service
 
             builder.Services.ConfigureValidatableSetting<RsiServiceOptions>(builder.Configuration.GetSection(Section));
 
-            builder.Services.AddHttpClient<AuthenticationClient>((serviceProvider, client) =>
+            builder.Services.AddHttpClient<OpenIdAuthenticationClient>((serviceProvider, client) =>
             {
                 var options = serviceProvider.GetRequiredService<RsiServiceOptions>();
                 var uri = options.AuthenticationUrl;
@@ -50,23 +50,27 @@ namespace TrafficCourts.Citizen.Service
 
             builder.Services
                 .AddRefitClient<IRoadSafetyTicketSearchApi>()
-                .ConfigureHttpClient((serviceProvider, client) => {
+                .ConfigureHttpClient((serviceProvider, client) =>
+                {
                     var options = serviceProvider.GetRequiredService<RsiServiceOptions>();
-                    var uri = options.ResourceUrl;
-                    client.BaseAddress = new Uri($"{uri.Scheme}://{uri.Host}:{uri.Port}");
+                    client.BaseAddress = options.ResourceUrl;
                 })
-                .AddHttpMessageHandler<AuthenticationHandler>();
+                .AddHttpMessageHandler<AuthenticationHandler>()
+                .AddHttpMessageHandler<LoggingHandler>(); ;
 
             builder.Services.AddOptions();
             builder.Services.AddMemoryCache();
             builder.Services.AddTransient<ITokenCache, TokenCache>();
 
             builder.Services.AddTransient<AuthenticationHandler>();
-            builder.Services.AddTransient<IAuthenticationClient, AuthenticationClient>();
+            builder.Services.AddTransient<LoggingHandler>();
+
+            // seems the OpenId endpoint does not work and we need to get access token via basic auth now
+            ////builder.Services.AddTransient<IAuthenticationClient, OpenIdAuthenticationClient>();
+            builder.Services.AddTransient<IAuthenticationClient, BasicAuthAuthenticationClient>();
 
             builder.Services.AddTransient<ITicketInvoiceSearchService, RoadSafetyTicketSearchService>();
             builder.Services.AddHostedService<AccessTokenUpdateWorker>();
-
         }
 
         public static void UseMockTickets(WebApplicationBuilder builder, Serilog.ILogger logger)

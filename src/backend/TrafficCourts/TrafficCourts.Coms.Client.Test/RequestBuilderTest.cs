@@ -54,8 +54,8 @@ namespace TrafficCourts.Coms.Client.Test
             // generate the number of items
             List<Guid> ids = Enumerable.Range(0, count).Select(_ => Guid.NewGuid()).ToList();
 
-            // should be objId=X,Y,Z&
-            var expected = "objId=" + ids.Aggregate("", (current, next) => current.Length == 0 ? next.ToString("d") : current + "," + next.ToString("d")) + "&";
+            // should be objectId=X,Y,Z&
+            var expected = "objectId=" + ids.Aggregate("", (current, next) => current.Length == 0 ? next.ToString("d") : current + "," + next.ToString("d")) + "&";
 
             StringBuilder buffer = new StringBuilder();
             RequestBuilder.AppendQueryObjectId(buffer, ids);

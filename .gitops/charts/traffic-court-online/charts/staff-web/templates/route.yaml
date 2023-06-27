@@ -1,0 +1,22 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: staff-web-for-jag-proxy
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "staff-web.labels" . | nindent 4 }}
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: {{ .Values.route.allowedIPs }}
+    haproxy.router.openshift.io/disable_cookies: "true"
+spec:
+  host: staff-web-for-jag-proxy-{{ .Values.global.namespace }}.apps.silver.devops.gov.bc.ca
+  to:
+    kind: Service
+    name: {{ include "staff-web.fullname" . }}
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

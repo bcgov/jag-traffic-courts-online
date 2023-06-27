@@ -69,11 +69,9 @@
       "province": "Province",
       "postal_code": "Code Postal",
       "home_phone_number": "Numéro de Téléphone Résidentiel",
-      "work_phone_number": "Numéro de Téléphone Professionnel",
       "driver_licence_number": "Numéro de Permis de Conduire",
       "driver_licence_province": "Province ou État du Permis de Conduire",
-      "email_address": "Adresse E-Mail",
-      "birthdate": "Date de Naissance"
+      "email_address": "Adresse E-Mail"
     },
     "count": {
       "heading": "Examen des Infractions et Mesures à Prendre",
@@ -172,10 +170,12 @@
     "dispute_create_error": "Le litige n'a pas pu être créé",
     "statute_error": "Les statuts n’ont pas pu être chargés",
     "language_error": "Les langs n’ont pas pu être chargés",
+    "agency_error": "Les agences n’ont pas pu être chargées",
     "dispute_error": "Les litiges n’ont pas pu être rejugés / sauvegardés."
   },
   "error": {
     "required": "Obligatoire",
-    "email_address": "Doit être une adresse e-mail valide"
+    "email_address": "Doit être une adresse e-mail valide",
+    "max_length": "La longueur maximale est "
   }
 }

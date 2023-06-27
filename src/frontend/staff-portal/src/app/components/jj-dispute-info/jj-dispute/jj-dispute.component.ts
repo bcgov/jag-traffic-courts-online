@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
-import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized } from 'app/api/model/models';
+import { Observable, Subscription, map } from 'rxjs';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, Language, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -12,6 +12,8 @@ import { LookupsService } from 'app/services/lookups.service';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
+import { DocumentService } from 'app/api/api/document.service';
+import { HistoryRecordService } from 'app/services/history-records.service';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -29,32 +31,45 @@ export class JJDisputeComponent implements OnInit {
   public printFileHistory: boolean = true;
   public printFileRemarks: boolean = true;
 
-  busy: Subscription;
   courtAppearanceForm: FormGroup;
   infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
   infoWidth: number = window.innerWidth;
   lastUpdatedJJDispute: JJDispute;
   jjIDIR: string;
+  formattedCourtAppearanceTs: string = "";
   jjName: string;
-  todayDate: Date = new Date();
   retrieving: boolean = true;
   violationDate: string = "";
   violationTime: string = "";
   timeToPayCountsHeading: string = "";
   fineReductionCountsHeading: string = "";
   remarks: string = "";
+  noAppTsFormattedDate: string = "";
+  icbcReceivedDateFormattedDate: string = "";
+  submittedDateFormattedDate: string = "";
   jjList: UserRepresentation[];
   selectedJJ: string;
+  fileTypeToUpload: string = "Certified Extract";
+  filesToUpload: any[] = [];
   dLProvince: string;
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
+  Finding = JJDisputedCountRoPFinding;
   RequestReduction = JJDisputedCountRequestReduction;
   HearingType = JJDisputeHearingType;
-  RoPApp = JJDisputeCourtAppearanceRoPApp;
+  RoPApp = JJDisputeCourtAppearanceRoPAppCd;
   RoPCrown = JJDisputeCourtAppearanceRoPCrown;
   RoPDatt = JJDisputeCourtAppearanceRoPDattCd;
   RoPSeized = JJDisputeCourtAppearanceRoPJjSeized;
+  ElectronicTicket = JJDisputeElectronicTicketYn;
+  NoticeOfHearing = JJDisputeNoticeOfHearingYn;
+  ReportType = TicketImageDataJustinDocumentReportType;
+  DocumentType = DocumentType;
   DisputeStatus = JJDisputeStatus;
+  ContactType = JJDisputeContactType;
   requireCourtHearingReason: string = "";
+  jjDecisionDateFormattedDate: string;
+  concludeStatusOnly: boolean = false;
+  cancelStatusOnly: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -65,13 +80,11 @@ export class JJDisputeComponent implements OnInit {
     private logger: LoggerService,
     private lookups: LookupsService,
     public config: ConfigService,
+    private documentService: DocumentService,
+    private historyRecordService: HistoryRecordService
   ) {
-    this.jjDisputeService.jjList$.subscribe(result => {
+    this.authService.jjList$.subscribe(result => {
       this.jjList = result;
-    });
-
-    this.busy = this.lookups.getLanguages().subscribe((response: Language[]) => {
-      this.lookups.languages$.next(response);
     });
   }
 
@@ -80,17 +93,71 @@ export class JJDisputeComponent implements OnInit {
     element?.scrollIntoView(true);
   }
 
+  onRemove(fileId: string, fileName: string) {
+    const data: DialogOptions = {
+      titleKey: "Remove File?",
+      messageKey: "Are you sure you want to delete file " + fileName + "?",
+      actionTextKey: "Delete",
+      actionType: "warn",
+      cancelTextKey: "Cancel",
+      icon: "delete"
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          this.lastUpdatedJJDispute.fileData = this.lastUpdatedJJDispute.fileData.filter(x => x.fileId !== fileId);
+          this.documentService.apiDocumentDelete(fileId).subscribe(any => {
+            // dont need to update the JJ Dispute after the document is removed, line 88 is just to update UX
+            this.refreshFileHistory();
+          });
+        }
+      });
+  }
+
+  onGetFile(fileId: string) {
+    this.jjDisputeService.getFileBlob(fileId).subscribe(result => {
+      // TODO: remove the custom function here and replace with generated api call once staff API method
+      // has proper response type documented in swagger json
+      if (result != null) {
+        var url = URL.createObjectURL(result);
+        window.open(url);
+      } else alert("File contents not found");
+    });
+  }
+
+  onGetJustinDocument(documentType: DocumentType) {
+    this.jjDisputeService.getJustinDocument(this.lastUpdatedJJDispute.ticketNumber, documentType).subscribe(result => {
+      var url = URL.createObjectURL(result);
+      window.open(url);
+    });
+  }
+
+  onUpload(files: FileList) {
+    if (files.length <= 0) return;
+
+    // upload to coms
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0])
+      .subscribe(fileId => {
+
+        // add to display of files in DCF
+        let item: FileMetadata = { fileId: fileId, fileName: files[0].name, virusScanStatus: "waiting for virus scan..." };
+        this.lastUpdatedJJDispute.fileData.push(item);
+        this.refreshFileHistory();
+      });
+  }
+
   ngOnInit() {
     this.getJJDispute();
 
     this.courtAppearanceForm = this.formBuilder.group({
       appearanceTs: [null],
       room: [null],
+      createdBy: [null],
       reason: [null],
-      app: [null],
+      appCd: [null],
       noAppTs: [null],
       clerkRecord: [null],
-      defenseCounsel: [null],
+      defenceCounsel: [null],
       crown: [null],
       jjSeized: [null],
       adjudicator: [null],
@@ -119,11 +186,12 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
-            this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-            this.lastUpdatedJJDispute.status = this.DisputeStatus.Confirmed;
-            this.putJJDispute();
-            this.onBackClicked();
+          this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + ".000+00:00"; // record date of decision
+          this.jjDecisionDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDecisionDate).substring(0,10);
+          this.putJJDispute().subscribe(response => {
+            this.jjDisputeService.apiJjTicketNumberConfirmPut(this.lastUpdatedJJDispute.ticketNumber).subscribe(response => {
+              this.onBackClicked();
+            });
           });
         }
       });
@@ -147,34 +215,42 @@ export class JJDisputeComponent implements OnInit {
           this.requireCourtHearingReason = action.output.reason; // update on form for appearances
 
           // update the reason entered, reject dispute and return to TRM home
-          this.busy = this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.requireCourtHearingReason).subscribe({
-            next: response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.RequireCourtHearing;
-              this.onBackClicked();
-            },
-            error: err => { },
-            complete: () => { }
+          this.putJJDispute().subscribe(response => {
+            this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
+              next: response => {
+                this.onBackClicked();
+              },
+              error: err => { },
+              complete: () => { }
+            });
           });
         }
       });
   }
 
-  updateAppearanceTs() {
-    this.courtAppearanceForm.controls.appearanceTs.setValue(new Date());
-  }
-
   updateNoAPPTs() {
-    this.courtAppearanceForm.controls.noAppTs.setValue(new Date());
+    this.courtAppearanceForm.controls.noAppTs.setValue( this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + "Z");
+    this.noAppTsFormattedDate = this.datePipe.transform(new Date(), "MM/dd/yyyy HH:mm");
   }
 
   onSave(): void {
     // Update status to in progress unless status is set to review in which case do not change
     if (this.lastUpdatedJJDispute.status !== this.DisputeStatus.Review) {
       this.lastUpdatedJJDispute.status = this.DisputeStatus.InProgress;
-      this.putJJDispute();
-    } else {
-      this.putJJDispute();
     }
+    this.putJJDispute().subscribe(response => {
+      if (this.remarks) {
+        this.remarks = "";
+      }
+      const data: DialogOptions = {
+        titleKey: "Saved",
+        messageKey: "Dispute saved",
+        actionTextKey: "Ok",
+        actionType: "primary",
+        icon: "done"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
+    });
   }
 
   public onAccept(): void {
@@ -190,7 +266,6 @@ export class JJDisputeComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket").subscribe(response => {
-            this.lastUpdatedJJDispute.status = this.DisputeStatus.Accepted;
             this.onBackClicked();
           });
         }
@@ -211,11 +286,9 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmReasonDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action?.output?.response) {
-          this.remarks = action.output.response;
-          this.jjDisputeService.apiJjTicketNumberReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
+          this.remarks = action.output.reason;
+          this.jjDisputeService.apiJjDisputeIdReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
-              this.lastUpdatedJJDispute.status = this.DisputeStatus.Review;
-              this.jjDisputeService.refreshDisputes.emit();
               this.onBackClicked();
             })
           })
@@ -223,27 +296,37 @@ export class JJDisputeComponent implements OnInit {
       });
   }
 
-  private putJJDispute(): void {
+  private putJJDispute(): Observable<any> {
     // update court appearance data
     if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = this.courtAppearanceForm.value;
+
+      // update fields in latest court appearance
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appCd = this.courtAppearanceForm.value.appCd;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs = this.courtAppearanceForm.value.noAppTs;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].clerkRecord = this.courtAppearanceForm.value.clerkRecord;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].defenceCounsel = this.courtAppearanceForm.value.defenceCounsel;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].dattCd = this.courtAppearanceForm.value.dattCd;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].crown = this.courtAppearanceForm.value.crown;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = this.courtAppearanceForm.value.jjSeized;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].adjudicator = this.courtAppearanceForm.value.adjudicator;
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].comments = this.courtAppearanceForm.value.comments;
     }
-    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe(response => {
-      this.lastUpdatedJJDispute = response;
-      this.logger.info(
-        'JJDisputeComponent::putJJDispute response',
-        response
-      );
-      this.jjDisputeService.refreshDisputes.emit();
-      this.onBackClicked();
-    });
+    return this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).pipe(
+      map(
+        response => {
+          this.lastUpdatedJJDispute = response;
+          this.logger.info(
+            'JJDisputeComponent::putJJDispute response',
+            response
+          );
+        }));
   }
 
   // get dispute by id
   getJJDispute(): void {
     this.logger.log('JJDisputeComponent::getJJDispute');
 
-    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
+    this.jjDisputeService.getJJDispute(this.jjDisputeInfo.id, this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
       this.retrieving = false;
       this.logger.info(
         'JJDisputeComponent::getJJDispute response',
@@ -253,9 +336,14 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute = response;
 
       // set violation date and time
-      let violationDate = this.lastUpdatedJJDispute.violationDate.split("T");
+      let violationDate = this.lastUpdatedJJDispute.issuedTs.split("T");
       this.violationDate = violationDate[0];
       this.violationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
+
+      // format other date strings
+      this.icbcReceivedDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.icbcReceivedDate)?.substring(0,10);
+      this.submittedDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.submittedTs)?.substring(0,10);
+      this.jjDecisionDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDecisionDate)?.substring(0,10);
 
       // set up headings for written reasons
       this.lastUpdatedJJDispute.jjDisputedCounts.forEach(disputedCount => {
@@ -277,13 +365,27 @@ export class JJDisputeComponent implements OnInit {
           return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
         });
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
+        this.noAppTsFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs);
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
+        this.courtAppearanceForm.controls.appearanceTs.setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
+        this.formattedCourtAppearanceTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
         if (!this.isViewOnly) {
-          this.courtAppearanceForm.get('adjudicator').setValue(this.jjIDIR);
-          this.courtAppearanceForm.get('adjudicatorName').setValue(this.jjName);
+          this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
+          this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);
+          this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
+          if (this.lastUpdatedJJDispute.jjAssignedTo != this.jjIDIR) {
+            this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
+            this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
+          }
         }
+        this.determineIfConcludeOrCancel();
       }
     });
+  }
+
+  refreshFileHistory() {
+    // reset ticket number to trigger file history refresh
+    this.historyRecordService.refreshFileHistory.emit(this.lastUpdatedJJDispute.ticketNumber);
   }
 
   getJJDisputedCount(count: number) {
@@ -297,6 +399,60 @@ export class JJDisputeComponent implements OnInit {
         jjDisputedCount = updatedJJDisputedCount;
       }
     });
+    this.determineIfConcludeOrCancel();
+  }
+
+  determineIfConcludeOrCancel() {
+    this.concludeStatusOnly = false;
+    this.cancelStatusOnly = false;
+    let cancelledCount = 0;
+    let countCount = 0;
+    let paidPriorToAppearancCount = 0;
+    this.lastUpdatedJJDispute.jjDisputedCounts.forEach(jjDisputedCount => {
+      countCount++;
+      if (jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.Cancelled) cancelledCount++;
+      if (jjDisputedCount.jjDisputedCountRoP.finding === this.Finding.PaidPriorToAppearance) paidPriorToAppearancCount++;
+    });
+    if (cancelledCount === countCount && countCount > 0) this.cancelStatusOnly = true;
+    else if (cancelledCount + paidPriorToAppearancCount >= countCount && countCount > 0) this.concludeStatusOnly = true;
+  }
+
+  onCancelled() {
+    const data: DialogOptions = {
+      titleKey: "Cancel Dispute",
+      messageKey: "All counts have been recorded as cancelled.  The dispute will be recorded as cancelled.",
+      actionTextKey: "Ok",
+      actionType: "green",
+      icon: "info",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        this.putJJDispute().subscribe(response => {
+          this.jjDisputeService.apiJjTicketNumberCancelPut(this.lastUpdatedJJDispute.ticketNumber, false).subscribe(response => {
+            this.onBackClicked();
+          });
+        });
+      });
+  }
+
+  onConcluded() {
+    const data: DialogOptions = {
+      titleKey: "Conclude Dispute",
+      messageKey: "All counts have been recorded as cancelled or paid prior to appearance.  The dispute will be recorded as concluded.",
+      actionTextKey: "Ok",
+      actionType: "green",
+      icon: "info",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        this.putJJDispute().subscribe(response => {
+          this.jjDisputeService.apiJjTicketNumberConcludePut(this.lastUpdatedJJDispute.ticketNumber, false).subscribe(response => {
+            this.onBackClicked();
+          });
+        });
+      });
   }
 
   getLanguageDesc(code: string): string {
@@ -304,6 +460,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onBackClicked() {
+    this.jjDisputeService.refreshDisputes.emit();
     this.onBack.emit();
   }
 }

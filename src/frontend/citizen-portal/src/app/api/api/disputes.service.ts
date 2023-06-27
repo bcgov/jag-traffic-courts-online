@@ -391,7 +391,8 @@ export class DisputesService {
     }
 
     /**
-     * @param guidHash 
+     * Get a Dispute with authentication.
+     * @param guidHash A hash of the noticeOfDisputeGuid.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -456,8 +457,9 @@ export class DisputesService {
     }
 
     /**
-     * @param guidHash 
-     * @param dispute 
+     * Submits an update request for a Dispute with authentication.
+     * @param guidHash A hash of the noticeOfDisputeGuid.
+     * @param dispute The requested fields to update.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -534,8 +536,9 @@ export class DisputesService {
     }
 
     /**
-     * @param ticketNumber 
-     * @param time 
+     * Search for a Dispute.
+     * @param ticketNumber The violation ticket number. Must start with two upper case letters and end with eight digits.
+     * @param time The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */

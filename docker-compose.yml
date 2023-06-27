@@ -16,6 +16,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       ASPNETCORE_URLS: http://*:8080
+      COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
+      COMS__USERNAME: ${COMS__USERNAME:-username}
+      COMS__PASSWORD: ${COMS__PASSWORD:-password}
       FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-}
       FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-}
       FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-}
@@ -28,19 +31,10 @@ services:
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
       REDIS__CONNECTIONSTRING: ${REDIS__CONNECTIONSTRING:-redis:6379,password=password}
       TICKETSEARCH__SEARCHTYPE: ${TICKETSEARCH__SEARCHTYPE:-Mock}
-      TICKETSTORAGE: ${TICKETSTORAGE:-ObjectStore}
       JWT__AUTHORITY: ${JWT__AUTHORITY:-https://idtest.gov.bc.ca/login}     
       JWT__AUDIENCE: ${JWT__AUDIENCE:-ca.bc.gov.ag.tco.dev}
       OAuth__USERINFOENDPOINT: ${OAuth__USERINFOENDPOINT:-https://idtest.gov.bc.ca/oauth2/userinfo}
-      OBJECTSTORAGE__ENDPOINT: ${OBJECTSTORAGE__ENDPOINT:-minio:9000}
-      OBJECTSTORAGE__ACCESSKEY: ${OBJECTSTORAGE__ACCESSKEY:-username}
-      OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
-      OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__ENDPOINT:-traffic-ticket-dev}
-      OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
       HASHIDS__SALT: ${HASHIDS__SALT:-00000000000000000000000000000000}
-      COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
-      COMS__USERNAME: ${COMS__USERNAME:-username}
-      COMS__PASSWORD: ${COMS__PASSWORD:-password}
       SERILOG__USING__0: Serilog.Sinks.Console
       SERILOG__WRITETO__0__ARGS__OUTPUTTEMPLATE: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
@@ -48,7 +42,13 @@ services:
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [rabbitmq, redis, minio-init, coms]
+    depends_on:
+      coms:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
@@ -81,12 +81,6 @@ services:
       OAUTH__CLIENTID: ${OAUTH__CLIENTID:-staff-api}
       OAUTH__CLIENTSECRET: ${OAUTH__CLIENTSECRET:-}      
       REDIS__CONNECTIONSTRING: ${REDIS__CONNECTIONSTRING:-redis:6379,password=password}
-      TICKETSTORAGE__TYPE: ${TICKETSTORAGE__TYPE:-ObjectStore}
-      OBJECTSTORAGE__ENDPOINT: ${OBJECTSTORAGE__ENDPOINT:-minio:9000}
-      OBJECTSTORAGE__ACCESSKEY: ${OBJECTSTORAGE__ACCESSKEY:-username}
-      OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
-      OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__BUCKETNAME:-traffic-ticket-dev}
-      OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
       SERILOG__USING__0: Serilog.Sinks.Console
       SERILOG__WRITETO__0__ARGS__OUTPUTTEMPLATE: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
@@ -95,7 +89,10 @@ services:
       - "5005:8080"
     restart: always
     depends_on:
-      - oracle-data-api    
+      oracle-data-api:
+        condition: service_healthy
+      coms:
+        condition: service_healthy
         
   # ###########################################################################################
   # ARC Dispute API                                                                         ###
@@ -116,11 +113,12 @@ services:
     ports:
       - "5300:8080"
     restart: always
-    depends_on: [sftp]
+    depends_on:
+      - sftp
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
-      
+
   sftp:
     container_name: sftp
     image: "emberstack/sftp"
@@ -147,6 +145,8 @@ services:
       RETRYCONFIGURATION__RETRYINTERVAL: ${RETRYCONFIGURATION__RETRYINTERVAL:-2}
       RETRYCONFIGURATION__CONCURRENCYLIMIT: ${RETRYCONFIGURATION__CONCURRENCYLIMIT:-2}
       ORACLEDATAAPI__BASEURL: ${ORACLEDATAAPI__BASEURL:-http://oracle-data-api:8080/}
+      ARCAPICONFIGURATION__HOST: ${ARCAPICONFIGURATION__HOST:-http://arc-dispute-api/}
+      ARCAPICONFIGURATION__PORT: ${ARCAPICONFIGURATION__PORT:-8080}
       VIRUSSCAN__BASEURL: ${VIRUSSCAN__BASEURL:-http://virus-scan-service:8080/}
       COMS__BASEURL: ${COMS__BASEURL:-http://coms:3000}
       COMS__USERNAME: ${COMS__USERNAME:-username}
@@ -165,7 +165,15 @@ services:
     ports:
       - "5020:8080"
     restart: always
-    depends_on: [rabbitmq]
+    depends_on:
+      coms:
+        condition: service_healthy
+      oracle-data-api:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   #############################################################################################
   ###                           Oracle Data API                                             ###
@@ -184,20 +192,33 @@ services:
       CODETABLE_REFRESH_CRON: ${CODETABLE_REFRESH_CRON:-0 0/15 * * * *}
       UNASSIGN_DISPUTES_ENABLED: ${UNASSIGN_DISPUTES_ENABLED:-true}
       H2_DATASOURCE: ${H2_DATASOURCE:-jdbc:h2:mem:testdb}
+      ORDS_API_AUTH_ENABLED: ${ORDS_API_AUTH_ENABLED:-false}
+      ORDS_API_DEBUG: ${ORDS_API_DEBUG:-false}
       ORDS_API_OCCAM_URL: ${ORDS_API_OCCAM_URL:-}
+      ORDS_API_OCCAM_USERNAME: ${ORDS_API_OCCAM_USERNAME:-username}
+      ORDS_API_OCCAM_PASSWORD: ${ORDS_API_OCCAM_PASSWORD:-password}
       ORDS_API_TCO_URL: ${ORDS_API_TCO_URL:-}
+      ORDS_API_TCO_USERNAME: ${ORDS_API_TCO_USERNAME:-username}
+      ORDS_API_TCO_PASSWORD: ${ORDS_API_TCO_PASSWORD:-password}
       ORDS_API_TIMEOUT_MS: ${ORDS_API_TIMEOUT_MS:-2000}
       ORDS_API_RETRY_COUNT: ${ORDS_API_RETRY_COUNT:-3}
       ORDS_API_RETRY_DELAY_SEC: ${ORDS_API_RETRY_DELAY_SEC:-5}
       SPRING_SLEUTH_ENABLED: ${SPRING_SLEUTH_ENABLED:-false}
       JAVA_OPTS: ${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     ports:
       - "5010:8080"
+      - "8000:8000"
     volumes:
       - data-oracle:/data
-
 
   # ---------------------------------------------------------------------------------------------
   # Virus Scanner
@@ -214,8 +235,10 @@ services:
       #LOGGING__LOGLEVEL__DEFAULT: Debug
     ports:
       - "5030:8080"
-    depends_on: [clamav]
-    
+    depends_on:
+      clamav:
+        condition: service_healthy
+
   #############################################################################################
   ###                                 TrafficCourt FRONTEND                                 ###
   #############################################################################################
@@ -223,8 +246,6 @@ services:
     container_name: citizen-portal
     build:
       context: ./src/frontend/citizen-portal
-      args:
-        - API_BASE_PATH=${CITIZEN_API_BASE_PATH:-http://citizen-api:8080/api/}
     restart: always
     ports:
       - "8080:8080"
@@ -232,7 +253,8 @@ services:
     ## time we change the nginx.conf, start a shell in the container and run 'service nginx reload' or '/etc/init.d/nginx reload'
     #volumes:
     #  - ./src/frontend/citizen-portal/nginx.conf:/opt/app-root/etc/nginx.default.d/default.conf
-    depends_on: [citizen-api]
+    depends_on:
+      - citizen-api
 
   #############################################################################################
   ###                                 TrafficCourt Staff FRONTEND                           ###
@@ -241,12 +263,11 @@ services:
     container_name: staff-portal
     build:
       context: ./src/frontend/staff-portal
-      args:
-        - API_BASE_PATH=${STAFF_API_BASE_PATH:-http://staff-api:8080/api/}
     restart: always
     ports:
       - "8081:8080"
-    depends_on: [staff-api]
+    depends_on:
+      - staff-api
     
   #############################################################################################
   ###                           RABBITMQ                                                    ###
@@ -261,13 +282,17 @@ services:
     volumes:
       - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
     restart: always
-
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   #############################################################################################
   ### Common Object Management Service                                                      ###
   #############################################################################################
   coms:
-    image: bcgovimages/common-object-management-service:latest
+    image: bcgovimages/common-object-management-service:0.4.0
     container_name: coms
     ports:
       - 3000:3000
@@ -284,20 +309,29 @@ services:
       DB_HOST: "coms-db"
       DB_USERNAME: "postgres"
       DB_PASSWORD: "password"
-    depends_on: [coms-db, coms-init, minio-init]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      coms-db-migratation:
+        condition: service_completed_successfully
+      minio-initialize:
+        condition: service_completed_successfully
 
-  coms-init:
+  coms-db-migratation:
     image: bcgovimages/common-object-management-service:latest
-    container_name: coms-init
+    container_name: coms-db-migratation
     environment:
       DB_ENABLED: "true"
       DB_HOST: "coms-db"
       DB_USERNAME: "postgres"
       DB_PASSWORD: "password"
-    depends_on: [coms-db]
     command: ["npm", "run", "migrate"]
-    volumes:
-      - ./.docker/wait-for-postgres.sh:/opt/app-root/src/app/wait-for-postgres.sh
+    depends_on:
+      coms-db:
+        condition: service_healthy
 
   #############################################################################################
   ### Common Object Management Service - database                                           ###
@@ -310,37 +344,47 @@ services:
     environment:
       POSTGRES_PASSWORD: "password"
       POSTGRES_DB: "coms"
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   #############################################################################################
   ###                           Minio                                                       ###
   ###                                                                                       ###
   ### MINIO_SITE_REGION - not sure if this is required, but matching what is in the client  ###
+  ### lists a specific version as later versions no longer support fs see JIRA 2272         ###
   #############################################################################################
   minio:
     container_name: minio
-    image: minio/minio
+    image: minio/minio:RELEASE.2022-10-24T18-35-07Z
     ports:
       - 9000:9000
       - 9001:9001
-    volumes:
-      - type: bind
-        source: ./tools/minio
-        target: /data
+    #volumes:
+    #  - data-minio:/data
     environment:
       MINIO_ROOT_USER: "username"
       MINIO_ROOT_PASSWORD: "password"
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  minio-init:
-    container_name: minio-init
+  minio-initialize:
     image: minio/mc
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set dockerminio http://minio:9000 username password;
       /usr/bin/mc mb dockerminio/traffic-ticket-dev;
-      /usr/bin/mc policy set public dockerminio/traffic-ticket-dev;
       exit 0;
       "
 
@@ -349,14 +393,20 @@ services:
   #############################################################################################
   clamav:
     container_name: clamav
-    image: 'clamav/clamav:latest_base'
+    image: clamav/clamav:1.0
     environment:
       CLAMAV_NO_MILTERD: "true" # no sendmail filter
     ports:
       - 3310:3310
     volumes:
       - data-clamav:/var/lib/clamav
-      
+    healthcheck:      
+      # clamdcheck.sh is in /usr/local/bin, in the bcgov image, it is in /opt/app-root
+      test: ["CMD-SHELL", "/usr/local/bin/clamdcheck.sh"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   #############################################################################################
   ###                                 REDIS server and UI                                   ###
   #############################################################################################
@@ -367,6 +417,13 @@ services:
       - REDIS_PASSWORD=password
     ports:
       - 6379:6379
+    volumes:
+      - data-redis:/data
+    healthcheck:      
+      test: ["CMD-SHELL", "redis-cli -a password ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis-ui:
     container_name: redis-ui
@@ -378,7 +435,8 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=password
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     ports:
       - 8082:8081
       
@@ -396,7 +454,9 @@ services:
       - "5025:5025"
 
 volumes:
+  data-clamav:
+  data-minio:
+  data-oracle:
+  data-postgres:
   data-rabbit:
   data-redis:
-  data-oracle:
-  data-clamav:

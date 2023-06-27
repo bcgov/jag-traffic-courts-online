@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Disputes;
@@ -15,6 +16,12 @@ public class NoticeOfDispute : Dispute
     /// </summary>
     [JsonPropertyName("disputant_detected_ocr_issues")]
     public DisputeDisputantDetectedOcrIssues? DisputantDetectedOcrIssues { get; set; } = DisputeDisputantDetectedOcrIssues.N;
+
+    /// <summary>
+    /// Identifier for whether the system has detected any issues with the OCR ticket result or not.
+    /// </summary>
+    [JsonPropertyName("system_detected_ocr_issues")]
+    public DisputeSystemDetectedOcrIssues SystemDetectedOcrIssues { get; set;}
 
     /// <summary>
     /// The description of the issue with OCR ticket if the citizen has detected any.
@@ -33,4 +40,16 @@ public class NoticeOfDispute : Dispute
     /// </summary>
     [JsonPropertyName("detachment_location")]
     public string? DetachmentLocation { get; set; } = null!;
+
+    /// <summary>
+    /// Is court appearance less than 14 days
+    /// </summary>
+    [JsonPropertyName("appearance_less_than_14_days")]
+    public bool? AppearanceLessThan14Days { get; set; } = false;
+
+    /// <summary>
+    /// Violation Ticket
+    /// </summary>
+    [JsonPropertyName("violation_ticket")]
+    public Models.Tickets.ViolationTicket? ViolationTicket { get; set; } = null!;
 }

@@ -11,7 +11,7 @@
  */
 
 
-export type ExcludeStatus = 'UNKNOWN' | 'NEW' | 'VALIDATED' | 'PROCESSING' | 'REJECTED' | 'CANCELLED';
+export type ExcludeStatus = 'UNKNOWN' | 'NEW' | 'VALIDATED' | 'PROCESSING' | 'REJECTED' | 'CANCELLED' | 'CONCLUDED';
 
 export const ExcludeStatus = {
     Unknown: 'UNKNOWN' as ExcludeStatus,
@@ -19,6 +19,7 @@ export const ExcludeStatus = {
     Validated: 'VALIDATED' as ExcludeStatus,
     Processing: 'PROCESSING' as ExcludeStatus,
     Rejected: 'REJECTED' as ExcludeStatus,
-    Cancelled: 'CANCELLED' as ExcludeStatus
+    Cancelled: 'CANCELLED' as ExcludeStatus,
+    Concluded: 'CONCLUDED' as ExcludeStatus
 };
 

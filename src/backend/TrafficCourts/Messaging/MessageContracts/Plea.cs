@@ -11,12 +11,12 @@
         Unknown,
 
         /// <summary>
-        /// If the dispuant is pleads guilty, plea will always be Guilty. The dispuant has choice to attend court or not.
+        /// If the disputant is pleads guilty, plea will always be Guilty. The disputant has choice to attend court or not.
         /// </summary>
         G,
 
         /// <summary>
-        /// If the dispuant is pleads not guilty, the dispuant will have to attend court.
+        /// If the disputant is pleads not guilty, the disputant will have to attend court.
         /// </summary>
         N
     }

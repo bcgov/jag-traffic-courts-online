@@ -6,11 +6,13 @@ import java.util.List;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,11 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import net.logstash.logback.argument.StructuredArguments;
 
 @RestController(value = "JJDisputeControllerV1_0")
 @RequestMapping("/api/v1.0/jj")
@@ -50,7 +55,7 @@ public class JJDisputeController {
 			@PathVariable("ticketNumber") String ticketNumber,
 			@PathVariable("assignVTC") boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("GET /dispute/{}/{} called", ticketNumber, checkVTCAssigned);
+		logger.debug("GET /dispute/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("checkVTCAssigned", checkVTCAssigned));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -101,7 +106,7 @@ public class JJDisputeController {
 			boolean checkVTCAssigned,
 			Principal principal,
 			@RequestBody JJDispute jjDispute) {
-		logger.debug("PUT /dispute/{} called", ticketNumber);
+		logger.debug("PUT /dispute/{} called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -156,13 +161,68 @@ public class JJDisputeController {
 			@RequestBody @Size(max = 256) String remark,
 			boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/review called", ticketNumber);
+		logger.debug("PUT /dispute/{}/review called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark, null), HttpStatus.OK);
+	}
+
+	/**
+	 * PUT endpoint that updates the JJDispute, setting the status to CONCLUDED.
+	 *
+	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
+	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
+	 * @param principal, the logged-in user
+	 * @return {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJDispute record to CONCLUDED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{ticketNumber}/conclude")
+	public ResponseEntity<JJDispute> concludeJJDispute(@PathVariable String ticketNumber,
+			boolean checkVTCAssigned,
+			Principal principal) {
+		logger.debug("PUT /dispute/{}/conclude called", StructuredArguments.value("ticketNumber", ticketNumber));
+
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONCLUDED, principal, null, null), HttpStatus.OK);
+	}
+	/**
+	 * PUT endpoint that updates the JJDispute, setting the status to CANCELLED.
+	 *
+	 * @param ticketNumber, unique key of the saved {@link JJDispute} to update
+	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
+	 * @param principal, the logged-in user
+	 * @return {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJDispute record to CANCELLED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{ticketNumber}/cancel")
+	public ResponseEntity<JJDispute> cancelJJDispute(@PathVariable String ticketNumber,
+			boolean checkVTCAssigned,
+			Principal principal) {
+		logger.debug("PUT /dispute/{}/cancel called", StructuredArguments.value("ticketNumber", ticketNumber));
+
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CANCELLED, principal, null, null), HttpStatus.OK);
 	}
 
 	/**
@@ -186,7 +246,7 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> requireCourtHearingJJDispute(@PathVariable String ticketNumber,
 			@RequestParam (required = false) @Size(max = 256) String remark,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/requirecourthearing called", ticketNumber);
+		logger.debug("PUT /dispute/{}/requirecourthearing called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.requireCourtHearing(ticketNumber, principal, remark), HttpStatus.OK);
 	}
@@ -208,14 +268,18 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@PutMapping("/dispute/{ticketNumber}/accept")
-	public ResponseEntity<JJDispute> acceptJJDispute(@PathVariable String ticketNumber, boolean checkVTCAssigned, Principal principal) {
-		logger.debug("PUT /dispute/{}/accept called", ticketNumber);
+	public ResponseEntity<JJDispute> acceptJJDispute(@PathVariable String ticketNumber,
+			boolean checkVTCAssigned,
+			Principal principal,
+			@RequestParam(required = false) @Parameter(description = "Adjudicator's participant ID") String partId) {
+
+		logger.debug("PUT /dispute/{}/accept called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId), HttpStatus.OK);
 	}
 
 	/**
@@ -236,8 +300,54 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/confirm")
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
-		logger.debug("PUT /dispute/{}/confirm called", ticketNumber);
+		logger.debug("PUT /dispute/{}/confirm called", StructuredArguments.value("ticketNumber", ticketNumber));
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null), HttpStatus.OK);
+	}
+
+	/**
+	 * GET endpoint that retrieves a justin document
+	 * @param disputeId the primary key of the jj dispute to retrieve
+	 * @param documentType of justin document to retrieve
+	 * @param principal logged in user to assign
+	 * @return a single justin document
+	 */
+	@GetMapping("/dispute/ticketImage/{ticketNumber}/{documentType}")
+	public ResponseEntity<TicketImageDataJustinDocument> getTicketImageData(
+			@PathVariable("ticketNumber") String ticketNumber,
+			@PathVariable("documentType") TicketImageDataDocumentType documentType,
+			Principal principal) {
+		logger.debug("GET /dispute/ticketImage/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("documentType", documentType));
+
+		return new ResponseEntity<TicketImageDataJustinDocument>(jjDisputeService.getTicketImageByTicketNumber(ticketNumber, documentType), HttpStatus.OK);
+	}
+
+	/**
+	 * DELETE endpoint that deletes a specified {@link JJDispute} as well as its associated data
+	 *
+	 * @param id of the {@link JJDispute} to be deleted
+	 * @param ticketNumber of the {@link JJDispute} to be deleted
+	 */
+	@Operation(summary = "Deletes a particular JJDispute record.", operationId = "DeleteJJDispute")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. JJ Dispute record deleted."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Delete failed.")
+	})
+	@DeleteMapping("/dispute")
+	public void deleteDispute(
+			@RequestParam(required = false)
+			@Parameter(description = "If specified, will delete the record of the specified jj dispute by this ID. JJ Dispute ID will take precedence if both ID and ticket number supplied")
+			Long jjDisputeId,
+			@RequestParam(required = false)
+			@Pattern(regexp = "[A-Z]{2}\\d{8}")
+			@Parameter(description = "If specified, will delete the record of the specified jj dispute by this TicketNumber. (Format is XX00000000)", example = "AX12345678")
+			String ticketNumber) {
+		logger.debug("DELETE /dispute called with jjDisputeId: {}, and ticketNumber: {}", StructuredArguments.value("jjDisputeId", jjDisputeId), StructuredArguments.value("ticketNumber", ticketNumber));
+		if (jjDisputeId == null && StringUtils.isBlank(ticketNumber)) {
+			throw new IllegalArgumentException("Either ticketNumber or jjDisputeId must be specified.");
+		}
+
+		jjDisputeService.delete(jjDisputeId, ticketNumber);
 	}
 }

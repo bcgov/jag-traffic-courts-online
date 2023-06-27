@@ -1,5 +1,8 @@
 ﻿using MassTransit;
+using TrafficCourts.Citizen.Service.Models;
+using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.Models;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 
@@ -29,7 +32,7 @@ public class CitizenDocumentService : ICitizenDocumentService
 
     public async Task DeleteFileAsync(Guid fileId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Deleting the file through COMS");
+        _logger.LogDebug("Deleting the file {FileId} through COMS", fileId);
 
         // find the file so we can get the ticket number and notice of dispute id
         FileSearchParameters searchParameters = new(fileId);
@@ -41,58 +44,55 @@ public class CitizenDocumentService : ICitizenDocumentService
             return; // file not found
         }
 
+        // TODO: check approval status before delete
+
         FileSearchResult file = searchResults[0];
 
-        file.Metadata.TryGetValue("notice-of-dispute-id", out string? noticeOfDisputeId);
-        if (string.IsNullOrEmpty(noticeOfDisputeId))
+        DocumentProperties properties = new DocumentProperties(file.Metadata, file.Tags);
+
+        if (properties.NoticeOfDisputeId is null)
         {
             _logger.LogDebug("notice-of-dispute-id value from metadata is empty. Cannot delete the file since it was not uploaded by a disputant");
             return;
         }
 
-        file.Metadata.TryGetValue("ticket-number", out string? ticketNumber);
-        if (string.IsNullOrEmpty(ticketNumber))
-        {
-            ticketNumber = "unknown";
-            _logger.LogDebug("ticket-number value from metadata is empty");
-        }
-
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
         // Save file delete event to file history
-        SaveFileHistoryRecord fileHistoryRecord = new();
-        fileHistoryRecord.TicketNumber = ticketNumber;
-        fileHistoryRecord.Description = $"File: {file.FileName} was deleted by the Disputant.";
+        SaveFileHistoryRecord fileHistoryRecord = new()
+        {
+            NoticeOfDisputeId = properties.NoticeOfDisputeId.Value.ToString("d"), // dashes
+            ActionByApplicationUser = "Disputant",
+            AuditLogEntryType = FileHistoryAuditLogEntryType.FDLD
+        };
+
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
     public async Task<Coms.Client.File> GetFileAsync(Guid fileId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Getting the file through COMS");
+        _logger.LogDebug("Getting the file {FileId} through COMS", fileId);
 
-        Coms.Client.File comsFile = await _objectManagementService.GetFileAsync(fileId, false, cancellationToken);
+        Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        Dictionary<string, string> metadata = comsFile.Metadata;
+        var properties = new DocumentProperties(file.Metadata, file.Tags);
 
-        if (!metadata.ContainsKey("virus-scan-status"))
+        if (!properties.VirusScanIsClean)
         {
-            _logger.LogError("Could not download the document because metadata does not contain the key: virus-scan-status");
-            throw new ObjectManagementServiceException("File could not be downloaded due to the missing metadata key: virus-scan-status");
-        }
-
-        metadata.TryGetValue("virus-scan-status", out string? scanStatus);
-        if (!string.IsNullOrEmpty(scanStatus) && scanStatus != "clean")
-        {
-            _logger.LogDebug("Trying to download unscanned or virus detected file");
+            string scanStatus = properties.VirusScanStatus;
+            _logger.LogDebug("Trying to download unscanned or virus detected file {FileId}", fileId);
             throw new ObjectManagementServiceException($"File could not be downloaded due to virus scan status. Virus scan status of the file is {scanStatus}");
         }
 
-        return comsFile;
+        return file;
     }
 
-    public async Task<List<FileMetadata>> GetFilesBySearchAsync(IDictionary<string, string>? metadata, IDictionary<string, string>? tags, CancellationToken cancellationToken)
+    public async Task<List<FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
+
+        var metadata = properties.ToMetadata();
+        var tags = properties.ToTags();
 
         FileSearchParameters searchParameters = new(null, metadata, tags);
 
@@ -102,10 +102,16 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         foreach (var result in searchResult)
         {
+            properties = new DocumentProperties(result.Metadata, result.Tags);
+
             FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
-                FileName = result.FileName
+                FileName = result.FileName,
+                DocumentType = properties.DocumentType,
+                NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
+                VirusScanStatus = properties.VirusScanStatus,
+                DocumentStatus = properties.StaffReviewStatus,
             };
 
             fileData.Add(fileMetadata);
@@ -114,35 +120,43 @@ public class CitizenDocumentService : ICitizenDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, Dictionary<string, string> metadata, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(string base64FileString, string fileName, DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
-        metadata.Add("staff-review-status", "pending");
+        properties.DocumentSource = DocumentSource.Citizen;
+        properties.StaffReviewStatus = "pending";
 
-        using Coms.Client.File comsFile = new(GetStreamForFile(file), file.FileName, file.ContentType, metadata, null);
+        var metadata = properties.ToMetadata();
+        var tags = properties.ToTags();
+
+        // JavaScript - URL.createObjectURL will include the file type in the base64 string and separate it with a comma
+        string[] fileStringSplit = base64FileString.Split(",");
+        byte[] bytes = Convert.FromBase64String(fileStringSplit.Last());
+        MemoryStream stream = new MemoryStream(bytes);
+        string contentType = GetStringBetween(base64FileString, "data:", ";base64");
+        using Coms.Client.File comsFile = new(stream, fileName, contentType, metadata, tags);
 
         Guid id = await _objectManagementService.CreateFileAsync(comsFile, cancellationToken);
 
         // Publish a message to virus scan the newly uploaded file
-        DocumentUploaded virusScan = new()
-        {
-            Id = id
-        };
-        await _bus.PublishWithLog(_logger, virusScan, cancellationToken);
+        await _bus.PublishWithLog(_logger, new DocumentUploaded { Id = id }, cancellationToken);
 
-        metadata.TryGetValue("ticket-number", out string? ticketNumber);
-        if (string.IsNullOrEmpty(ticketNumber))
+        if (properties.NoticeOfDisputeId is null)
         {
-            ticketNumber = "unknown";
-            _logger.LogDebug("ticket-number value from metadata is empty");
+            _logger.LogDebug("notice-of-dispute-id value from metadata is empty. Could not save document upload event to File History");
+        } 
+        else
+        {
+            // Save file upload event to file history
+            SaveFileHistoryRecord fileHistoryRecord = new()
+            {
+                NoticeOfDisputeId = properties.NoticeOfDisputeId.Value.ToString("d"),
+                ActionByApplicationUser = "Disputant",
+                AuditLogEntryType = FileHistoryAuditLogEntryType.FUPD
+            };
+            await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
-
-        // Save file upload event to file history
-        SaveFileHistoryRecord fileHistoryRecord = new();
-        fileHistoryRecord.TicketNumber = ticketNumber;
-        fileHistoryRecord.Description = $"File: {file.FileName} was uploaded by the Disputant.";
-        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return id;
     }
@@ -158,5 +172,18 @@ public class CitizenDocumentService : ICitizenDocumentService
         memoryStream.Position = 0;
 
         return memoryStream;
+    }
+
+    private string GetStringBetween(string input, string startString, string endString)
+    {
+        int startIndex = input.IndexOf(startString) + startString.Length;
+        int endIndex = input.IndexOf(endString, startIndex);
+
+        if (startIndex < 0 || endIndex < 0 || endIndex < startIndex)
+        {
+            return string.Empty;
+        }
+
+        return input.Substring(startIndex, endIndex - startIndex);
     }
 }

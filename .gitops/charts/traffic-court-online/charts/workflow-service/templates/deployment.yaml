@@ -18,7 +18,7 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: "9090"
         vault.hashicorp.com/agent-inject: 'true'
-        vault.hashicorp.com/agent-inject-token: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
         vault.hashicorp.com/auth-path: auth/k8s-silver
         vault.hashicorp.com/namespace: platform-services
         vault.hashicorp.com/role: {{ .Values.global.vault.role }}  # licenseplate-nonprod or licenseplate-prod are your options
@@ -53,6 +53,16 @@ spec:
             value: "8080"
           - name: ASPNETCORE_URLS
             value: http://*:8080;http://*:9090
+          - name: COMS__USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.coms.service.secretName }}
+                key: username
+          - name: COMS__PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.coms.service.secretName }}
+                key: password
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}

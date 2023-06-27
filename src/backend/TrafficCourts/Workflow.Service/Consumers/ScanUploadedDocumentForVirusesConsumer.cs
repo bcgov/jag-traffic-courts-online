@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using System.Diagnostics;
 using System.Reflection.Metadata;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
@@ -42,13 +43,14 @@ namespace TrafficCourts.Workflow.Service.Consumers
             VirusScanResult scanResult = await ScanFileForVirusesAsync(file, cancellationToken);
 
             // check if we should update the meta data
-            if (!UpdateMetadata(scanResult, file))
+            var newProperties = GetUpdatedDocumentProperties(scanResult, file);
+            if (newProperties is null)
             {
-                return;
+                return; // nothing changed
             }
 
             // Update document's metadata
-            await SaveFileMetadataAsync(documentId, file.Metadata, cancellationToken);
+            await SaveFilePropertiesAsync(documentId, newProperties, cancellationToken);
         }
 
         private async Task<Coms.Client.File> GetFileAsync(Guid id, CancellationToken cancellationToken)
@@ -88,45 +90,47 @@ namespace TrafficCourts.Workflow.Service.Consumers
             }
         }
 
-        private bool UpdateMetadata(VirusScanResult scanResult, Coms.Client.File file)
+        /// <summary>
+        /// Gets the updated document properties or null of nothing was changed.
+        /// </summary>
+        /// <param name="scanResult"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private DocumentProperties? GetUpdatedDocumentProperties(VirusScanResult scanResult, Coms.Client.File file)
         {
+            var properties = new DocumentProperties(file.Metadata, file.Tags);
+
             if (scanResult.Status == VirusScanStatus.NotInfected)
             {
                 _logger.LogDebug("No viruses detected as a result of the scan");
-                // Add a "clean" metadata tag to the document if no viruses detected
-                file.Metadata["virus-scan-status"] = "clean";
-                // In case the document re-scanned and it used to be infected then remove virus-name
-                file.Metadata.Remove("virus-name");
-                return true;
+                properties.SetVirusScanNotInfected();
+                return properties;
             }
             else if (scanResult.Status == VirusScanStatus.Infected)
             {
                 string virusName = scanResult.VirusName;
                 _logger.LogDebug("The document with id {documentId} is infected with virus {virusName}", file.Id, virusName);
                 // Virus detected so add "infected" as virus-scan-status metadata as well as the virus name to the document
-                file.Metadata["virus-scan-status"] = "infected";
-                file.Metadata["virus-name"] = virusName;
-                return true;
+                properties.SetVirusScanInfected(virusName);
+                return properties;
             }
             else if (scanResult.Status == VirusScanStatus.Error)
             {
                 _logger.LogDebug("Could not determine the virus status of the document");
-                string status = scanResult.Status.ToString();
-                file.Metadata["virus-scan-status"] = "error";
-                file.Metadata.Remove("virus-name");
-                return true;
+                properties.SetVirusScanError();
+                return properties;
             }
 
             // unknown status
             _logger.LogWarning("Unknown virus scan status {Status}, file metadata will not be updated.", scanResult.Status);
-            return false; // did not update metadata
+            return null; // did not update metadata
         }
 
-        private async Task SaveFileMetadataAsync(Guid id, IReadOnlyDictionary<string, string> meta, CancellationToken cancellationToken)
+        private async Task SaveFilePropertiesAsync(Guid id, DocumentProperties properties, CancellationToken cancellationToken)
         {
             try
             {
-                await _documentService.SetFileMetadataAsync(id, meta, cancellationToken);
+                await _documentService.SaveDocumentPropertiesAsync(id, properties, cancellationToken);
             }
             catch (ObjectManagementServiceException exception)
             {

@@ -22,6 +22,7 @@ export class JJFileHistoryComponent implements OnInit {
 
   displayedColumns: string[] = [
     "createdTs",
+    "actionByApplicationUser",
     "recordType",
     "eventDescription",
   ]
@@ -30,6 +31,11 @@ export class JJFileHistoryComponent implements OnInit {
     private logger: LoggerService,
     private historyRecordService: HistoryRecordService
   ) {
+    this.historyRecordService.refreshFileHistory.subscribe(ticketNumber => {
+      this.ticketNumber = ticketNumber;
+      this.dataSource = new MatTableDataSource<HistoryRecord>();
+      this.getAllFileHistory();
+    });
   }
 
   ngOnInit(): void {
@@ -59,6 +65,7 @@ export class JJFileHistoryComponent implements OnInit {
       this.dataSource.data.push({
         createdTs: new Date(fileHistoryRecord.createdTs),
         recordType: "Event",
+        actionByApplicationUser: fileHistoryRecord.actionByApplicationUser,
         eventDescription: fileHistoryRecord.description
        })
     });
@@ -68,6 +75,7 @@ export class JJFileHistoryComponent implements OnInit {
       this.dataSource.data.push({
         createdTs: new Date(emailHistoryRecord.createdTs),
         recordType: emailHistoryRecord.successfullySent == EmailHistorySuccessfullySent.Y ? "Email Sent" : "Email Not Sent",
+        actionByApplicationUser: emailHistoryRecord.toEmailAddress,
         eventDescription: emailHistoryRecord.subject
       })
     })
@@ -82,5 +90,6 @@ export class JJFileHistoryComponent implements OnInit {
 export interface HistoryRecord {
   createdTs?: Date;
   recordType: string;
+  actionByApplicationUser: string;
   eventDescription?: string;
 }

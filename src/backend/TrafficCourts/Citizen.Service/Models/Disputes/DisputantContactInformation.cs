@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Disputes;
 
@@ -42,6 +43,46 @@ public class DisputantContactInformation
     [JsonPropertyName("disputant_surname")]
     [MaxLength(30)]
     public string? DisputantSurname { get; set; } = null!;
+
+    /// <summary>
+    /// Contact Law Firm Name
+    /// </summary>
+    [JsonPropertyName("contact_law_firm_name")]
+    public string? ContactLawFirmNm { get; set; }
+
+    /// <summary>
+    /// Contact Given Name 1
+    /// </summary>
+    [JsonPropertyName("contact_given_name1")]
+    [MaxLength(30)]
+    public string? ContactGiven1Nm { get; set; }
+
+    /// <summary>
+    /// Contact Given Name 2
+    /// </summary>
+    [JsonPropertyName("contact_given_name2")]
+    [MaxLength(30)]
+    public string? ContactGiven2Nm { get; set; }
+
+    /// <summary>
+    /// Contact Given Name 3
+    /// </summary>
+    [JsonPropertyName("contact_given_name3")]
+    [MaxLength(30)]
+    public string? ContactGiven3Nm { get; set; }
+
+    /// <summary>
+    /// Contact Surname
+    /// </summary>
+    [JsonPropertyName("contact_surname")]
+    [MaxLength(30)]
+    public string? ContactSurnameNm { get; set; }
+
+    /// <summary>
+    /// Contact Type
+    /// </summary>
+    [JsonPropertyName("contact_type")]
+    public DisputeContactTypeCd? ContactTypeCd { get; set; }
 
     /// <summary>
     /// The mailing address of the disputant.

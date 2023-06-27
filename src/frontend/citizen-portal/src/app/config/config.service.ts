@@ -16,6 +16,7 @@ export class ConfigService {
   private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeCreateError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private languageError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private userError: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   private _countries: CountryCodeValue[] = [];
   private _provincesAndStates: ProvinceCodeValue[] = [];
@@ -93,6 +94,14 @@ export class ConfigService {
 
   public get language_error(): string {
     return this.languageError.value;
+  }
+
+  public get user_error$(): BehaviorSubject<string> {
+    return this.userError;
+  }
+
+  public get user_error(): string {
+    return this.userError.value;
   }
 
   public get provincesAndStates() {

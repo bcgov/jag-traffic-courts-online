@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
 import { TcoPageComponent } from '@components/tco-page/tco-page.component';
 import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
@@ -15,6 +14,8 @@ import { TicketLandingComponent } from '@components/ticket-landing/ticket-landin
 import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { UpdateDisputeLandingComponent } from '@components/update-dispute-landing/update-dispute-landing.component';
 import { UpdateDisputeContactComponent } from '@components/update-dispute-contact/update-dispute-contact.component';
+import { CreateNoticeOfDisputeComponent } from '@components/create-notice-of-dispute/create-notice-of-dispute.component';
+import { UpdateDisputeComponent } from '@components/update-dispute/update-dispute.component';
 
 const routes: Routes = [
   {
@@ -60,7 +61,7 @@ const routes: Routes = [
           },
           {
             path: AppRoutes.STEPPER,
-            component: DisputeStepperComponent,
+            component: CreateNoticeOfDisputeComponent,
           },
         ],
       },
@@ -74,12 +75,16 @@ const routes: Routes = [
             component: FindDisputeComponent,
           },
           {
-            path: AppRoutes.UPDATE_DISPUTE,
+            path: AppRoutes.UPDATE_DISPUTE_LANDING,
             component: UpdateDisputeLandingComponent,
           },
           {
             path: AppRoutes.UPDATE_DISPUTE_CONTACT,
             component: UpdateDisputeContactComponent,
+          },
+          {
+            path: AppRoutes.UPDATE_DISPUTE,
+            component: UpdateDisputeComponent,
           },
           {
             path: '',

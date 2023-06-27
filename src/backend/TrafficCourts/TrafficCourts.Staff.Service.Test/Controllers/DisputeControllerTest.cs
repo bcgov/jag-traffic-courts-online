@@ -17,6 +17,7 @@ using TrafficCourts.Staff.Service.Services;
 using TrafficCourts.Staff.Service.Models;
 using Xunit;
 using TrafficCourts.Common.Errors;
+using System.Security.Claims;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
@@ -29,11 +30,11 @@ public class DisputeControllerTest
         // Mock the IDisputeService to return a couple Disputes, confirm controller returns them.
 
         // Arrange
-        Dispute dispute1 = new();
+        DisputeListItem dispute1 = new();
         dispute1.DisputeId = 1;
-        Dispute dispute2 = new();
+        DisputeListItem dispute2 = new();
         dispute2.DisputeId =2;
-        List<Dispute> disputes = new() { dispute1, dispute2 };
+        List<DisputeListItem> disputes = new() { dispute1, dispute2 };
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetAllDisputesAsync(null, It.IsAny<CancellationToken>()))
@@ -47,7 +48,7 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        var actual = okResult.Value as List<Dispute>;
+        var actual = okResult.Value as List<DisputeListItem>;
         Assert.NotNull(actual);
         Assert.Equal(2, actual!.Count);
         Assert.Equal(dispute1, actual[0]);
@@ -65,7 +66,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new (disputeService.Object, mockLogger.Object);
@@ -89,7 +90,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -113,7 +114,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -210,7 +211,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -232,7 +233,7 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.AcceptDisputeUpdateRequestAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.AcceptDisputeUpdateRequestAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -280,14 +281,14 @@ public class DisputeControllerTest
     [Fact]
     public async void TestGetDisputeUpdateRequestsAsync200Result()
     {
-        // Mock the IDisputeService to return a DisputantUpdateRequests, confirm controller returns them.
+        // Mock the IDisputeService to return a DisputeUpdateRequests, confirm controller returns them.
 
         // Arrange
-        DisputantUpdateRequest updateRequest1 = new();
-        updateRequest1.DisputantUpdateRequestId = 1;
-        DisputantUpdateRequest updateRequest2 = new();
-        updateRequest2.DisputantUpdateRequestId = 2;
-        List<DisputantUpdateRequest> updateRequests = new() { updateRequest1, updateRequest2 };
+        DisputeUpdateRequest updateRequest1 = new();
+        updateRequest1.DisputeUpdateRequestId = 1;
+        DisputeUpdateRequest updateRequest2 = new();
+        updateRequest2.DisputeUpdateRequestId = 2;
+        List<DisputeUpdateRequest> updateRequests = new() { updateRequest1, updateRequest2 };
 
         var disputeService = new Mock<IDisputeService>();
         disputeService
@@ -302,7 +303,7 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        var actual = okResult.Value as List<DisputantUpdateRequest>;
+        var actual = okResult.Value as List<DisputeUpdateRequest>;
         Assert.NotNull(actual);
         Assert.Equal(2, actual!.Count);
         Assert.Equal(updateRequest1, actual[0]);

@@ -11,7 +11,7 @@
     <app-resolution-header></app-resolution-header>
   </section>
 
-  <app-disputant-form [form]="form" [mode]="mode"></app-disputant-form>
+  <app-disputant-form *ngIf="form" [form]="form" [mode]="mode"></app-disputant-form>
 
   <div fxLayout="row" class="my-4 d-print-none">
     <button fxFlex="25" mat-stroked-button color="primary" class="large" (click)="back()">
@@ -19,7 +19,7 @@
     </button>
     <div fxFlex></div>
     <button fxFlex="35" mat-flat-button color="primary" class="large" (click)="updateContact()"
-      [disabled]="!this.form?.valid">
+      [disabled]="!form?.valid">
       <strong>Update contact Information</strong>
     </button>
   </div>

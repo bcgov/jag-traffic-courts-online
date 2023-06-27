@@ -29,6 +29,9 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 	@Autowired
 	private JJDisputeMapper jjDisputeMapper;
 
+	@Autowired
+	private TicketImageDataMapper ticketImageDataMapper;
+
 	@Test
 	public void testJJDispute() throws Exception {
 		String addressLine1 = "123 Main St";
@@ -57,6 +60,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		JJDisputeStatus disputeStatus = JJDisputeStatus.NEW;
 		String drvLicIssuedCtryId = "2";
 		String drvLicIssuedProvSeqNo = "1";
+		YesNo electronicTicketYn = YesNo.Y;
 		String emailAddress = "someone@somewhere.com";
 		String fineReductionReasonTxt = "just because";
 		String jjAssignedTo = "jjAssignedTo";
@@ -71,6 +75,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String lawyerGiven3Nm = "LawyerGiven3";
 		String lawyerSurnameNm = "LawyerSurname";
 		String noticeOfDisputeGuid = "noticeOfDisputeGuid";
+		YesNo noticeOfHearingYn = YesNo.Y;
 		String occamDisputantGiven1Nm = "name1";
 		String occamDisputantGiven2Nm = "name2";
 		String occamDisputantGiven3Nm = "name3";
@@ -89,6 +94,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String createdBy = "1";
 		Date modifiedTs =  RandomUtil.randomDate();
 		String modifiedBy = "2";
+		YesNo requestCourtAppearanceYn = YesNo.Y;
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
 		source.setAddressLine1Txt(addressLine1);
@@ -117,6 +123,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setDisputeStatusTypeCd(disputeStatus.getShortName());
 		source.setDrvLicIssuedCtryId(drvLicIssuedCtryId);
 		source.setDrvLicIssuedProvSeqNo(drvLicIssuedProvSeqNo);
+		source.setElectronicTicketYn(electronicTicketYn.toString());
 		source.setEmailAddressTxt(emailAddress);
 		source.setFineReductionReasonTxt(fineReductionReasonTxt);
 		source.setJjAssignedTo(jjAssignedTo);
@@ -131,6 +138,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setLawyerGiven3Nm(lawyerGiven3Nm);
 		source.setLawyerSurnameNm(lawyerSurnameNm);
 		source.setNoticeOfDisputeGuid(noticeOfDisputeGuid);
+		source.setNoticeOfHearingYn(noticeOfHearingYn.toString());
 		source.setOccamDisputantGiven1Nm(occamDisputantGiven1Nm);
 		source.setOccamDisputantGiven2Nm(occamDisputantGiven2Nm);
 		source.setOccamDisputantGiven3Nm(occamDisputantGiven3Nm);
@@ -138,6 +146,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setOccamDisputeId(occamDisputeId);
 		source.setOccamViolationTicketUpldId(occamViolationTicketUpldId);
 		source.setOffenceLocationTxt(offenceLocationTxt);
+		source.setRequestCourtAppearanceYn(requestCourtAppearanceYn.toString());
 		source.setSubmittedDt(submittedDt);
 		source.setTicketNumberTxt(ticketNumber);
 		source.setTimeToPayReasonTxt(timeToPayReason);
@@ -172,6 +181,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(disputeStatus, target.getStatus());
 		assertEquals(drvLicIssuedCtryId, target.getDrvLicIssuedCtryId());
 		assertEquals(drvLicIssuedProvSeqNo, target.getDrvLicIssuedProvSeqNo());
+		assertEquals(electronicTicketYn, target.getElectronicTicketYn());
 		assertEquals(emailAddress, target.getEmailAddress());
 		assertEquals(fineReductionReasonTxt, target.getFineReductionReason());
 		assertEquals(jjAssignedTo, target.getJjAssignedTo());
@@ -186,13 +196,15 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(lawyerGiven3Nm, target.getLawyerGivenName3());
 		assertEquals(lawyerSurnameNm, target.getLawyerSurname());
 		assertEquals(noticeOfDisputeGuid, target.getNoticeOfDisputeGuid());
+		assertEquals(noticeOfHearingYn, target.getNoticeOfHearingYn());
 		assertEquals(occamDisputantGiven1Nm, target.getOccamDisputantGiven1Nm());
 		assertEquals(occamDisputantGiven2Nm, target.getOccamDisputantGiven2Nm());
 		assertEquals(occamDisputantGiven3Nm, target.getOccamDisputantGiven3Nm());
 		assertEquals(occamDisputantSurnameNm, target.getOccamDisputantSurnameNm());
-		assertEquals(occamDisputeId, target.getOccamDisputeId());
+		assertEquals(Long.valueOf(occamDisputeId), target.getOccamDisputeId());
 		assertEquals(occamViolationTicketUpldId, target.getOccamViolationTicketUpldId());
 		assertEquals(offenceLocationTxt, target.getOffenceLocation());
+		assertEquals(requestCourtAppearanceYn, target.getAppearInCourt());
 		assertEquals(submittedDt, target.getSubmittedTs());
 		assertEquals(ticketNumber, target.getTicketNumber());
 		assertEquals(timeToPayReason, target.getTimeToPayReason());
@@ -209,13 +221,13 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String countNo = "5";
 		String statuteId = "77";
 		Plea pleaCd = Plea.G;
-		Double ticketedAmt = Double.valueOf("345.67");
+		String ticketedAmt = "345.67";
 		Date fineDueDt =  RandomUtil.randomDate();
 		Date violationDt =  RandomUtil.randomDate();
-		Double adjustedAmt = Double.valueOf("10.53");
+		String adjustedAmt = "10.53";
 		YesNo includesSurchargeYn = YesNo.Y;
 		Date revisedDueDt =  RandomUtil.randomDate();
-		Double totalFineAmt = Double.valueOf("123.45");
+		String totalFineAmt = "123.45";
 		String comments = "comments and more comments";
 		YesNo requestTimeToPayYn = YesNo.Y;
 		YesNo requestReductionYn = YesNo.Y;
@@ -271,6 +283,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		disputeCount.setUpdDtm(countModifedTs);
 		disputeCount.setUpdUserId(countModifiedBy);
 		disputeCount.setAppearanceChargeCountId(appearanceChargeCountId.toString());
+		disputeCount.setCourtAppearanceId(courtAppearanceId.toString());
 		disputeCount.setFindingResultCd(findingResultCd.getShortName());
 		disputeCount.setLesserChargeDescTxt(lesserChargeDescTxt);
 		disputeCount.setSuspSntcProbationDurtnTxt(suspSntcProbationDurtnTxt);
@@ -337,7 +350,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(accEntUserId, jjDisputedCount.getJjDisputedCountRoP().getCreatedBy());
 		assertEquals(accUpdDtm, jjDisputedCount.getJjDisputedCountRoP().getModifiedTs());
 		assertEquals(accUpdUserId, jjDisputedCount.getJjDisputedCountRoP().getModifiedBy());
-
 	}
 
 	@Test
@@ -378,6 +390,34 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 	}
 
 	@Test
+	public void testTicketImageData() throws Exception {
+
+		String reportType = "NOTICE_OF_DISPUTE";
+		String index = RandomUtil.randomAlphabetic(5);
+		String partId = RandomUtil.randomAlphanumeric(10);
+		String participantName = RandomUtil.randomGivenName() + " " + RandomUtil.randomSurname();
+		String reportFormat = RandomUtil.randomAlphabetic(5);
+		String data = RandomUtil.randomAlphanumeric(1000);
+
+		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument justinDocument = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.TicketImageDataJustinDocument();
+		justinDocument.setReportType(reportType);
+		justinDocument.setIndex(index);
+		justinDocument.setPartId(partId);
+		justinDocument.setParticipantName(participantName);
+		justinDocument.setReportFormat(reportFormat);
+		justinDocument.setData(data);
+
+		ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument doc = ticketImageDataMapper.convert(justinDocument);
+
+		assertEquals(reportType, doc.getReportType().getShortName());
+		assertEquals(index, doc.getIndex());
+		assertEquals(partId, doc.getPartId());
+		assertEquals(participantName, doc.getParticipantName());
+		assertEquals(reportFormat, doc.getReportFormat());
+		assertEquals(data, doc.getFileData());
+	}
+
+	@Test
 	public void testJJDisputeCourtAppearanceRoP() throws Exception {
 		String courtAppearanceId = "21";
 		String courtroomNumberTxt = "001";
@@ -396,6 +436,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String courtAppearanceCreatedBy = "5";
 		Date courtAppearanceModifedTs =  RandomUtil.randomDate();
 		String courtAppearanceModifiedBy = "6";
+		Integer durationHours = 1;
+		Integer durationMinutes = 15;
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
 
@@ -411,6 +453,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		courtAppearance.setDefenceCounselPresenceCd(defenceCounselPresenceCd.toString());
 		courtAppearance.setDisputantNotPresentDtm(disputantNotPresentDtm);
 		courtAppearance.setDisputantPresenceCd(disputantPresenceCd.toString());
+		courtAppearance.setDurationHours(durationHours);
+		courtAppearance.setDurationMinutes(durationMinutes);
 		courtAppearance.setEntDtm(courtAppearanceTs);
 		courtAppearance.setEntUserId(courtAppearanceCreatedBy);
 		courtAppearance.setJudgeOrJjNameTxt(judgeOrJjNameTxt);
@@ -422,6 +466,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 
 		JJDispute target = jjDisputeMapper.convert(source);
 		JJDisputeCourtAppearanceRoP courtAppearanceRoP = target.getJjDisputeCourtAppearanceRoPs().get(0);
+		// Expected duration value is set to 75 minutes because initial duration values expected to be mapped above are set to 1 hour and 15 minutes
+		short duration = (short)75;
 
 		assertEquals(Long.valueOf(courtAppearanceId), courtAppearanceRoP.getId());
 		assertEquals(courtroomNumberTxt, courtAppearanceRoP.getRoom());
@@ -436,6 +482,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(judgeOrJjNameTxt, courtAppearanceRoP.getAdjudicator());
 		assertEquals(defenceCounselPresenceCd, courtAppearanceRoP.getDattCd());
 		assertEquals(commentsTxt, courtAppearanceRoP.getComments());
+		assertEquals(duration, courtAppearanceRoP.getDuration());
 		assertEquals(courtAppearanceTs, courtAppearanceRoP.getCreatedTs());
 		assertEquals(courtAppearanceCreatedBy, courtAppearanceRoP.getCreatedBy());
 		assertEquals(courtAppearanceModifedTs, courtAppearanceRoP.getModifiedTs());

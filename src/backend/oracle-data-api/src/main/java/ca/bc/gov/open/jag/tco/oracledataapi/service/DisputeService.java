@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -22,20 +21,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequest;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputantUpdateRequestStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequest;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
-import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputantUpdateRequestRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeUpdateRequestRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
-import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
+import net.logstash.logback.argument.StructuredArguments;
 
 @Service
 public class DisputeService {
@@ -49,10 +50,7 @@ public class DisputeService {
 	private JJDisputeRepository jjDisputeRepository;
 
 	@Autowired
-	private DisputantUpdateRequestRepository disputantUpdateRequestRepository;
-
-	@PersistenceContext
-	private EntityManager entityManager;
+	private DisputeUpdateRequestRepository disputeUpdateRequestRepository;
 
 	/**
 	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
@@ -60,16 +58,23 @@ public class DisputeService {
 	 *
 	 * @return
 	 */
-	public List<Dispute> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
+	public List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
+		List<Dispute> allDisputes = null;
 		if (olderThan == null && excludeStatus == null) {
-			return disputeRepository.findAll();
+			allDisputes =  disputeRepository.findAll();
 		} else if (olderThan == null) {
-			return disputeRepository.findByStatusNot(excludeStatus);
+			allDisputes =  disputeRepository.findByStatusNot(excludeStatus);
 		} else if (excludeStatus == null) {
-			return disputeRepository.findByCreatedTsBefore(olderThan);
+			allDisputes = disputeRepository.findByCreatedTsBefore(olderThan);
 		} else {
-			return disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
+			allDisputes = disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
 		}
+
+		// Convert Disputes to DisputeListItem objects
+		List<DisputeListItem> disputeListItems = allDisputes.stream()
+				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
+				.collect(Collectors.toList());
+		return disputeListItems;
 	}
 
 	/**
@@ -106,7 +111,9 @@ public class DisputeService {
 			// It is an error if the duplicate field TicketNumber has different values.
 			if (ObjectUtils.compare(dispute.getTicketNumber(), dispute.getViolationTicket().getTicketNumber()) != 0) {
 				String msg = String.format("TicketNumber of the Dispute (%s) and ViolationTicket (%s) are different!", dispute.getTicketNumber(), dispute.getViolationTicket().getTicketNumber());
-				logger.error(msg);
+				logger.error("TicketNumber of the Dispute {} and ViolationTicket {} are different!",
+						StructuredArguments.value("disputeTicketNumber", dispute.getTicketNumber()),
+						StructuredArguments.value("violationTicketNumber", dispute.getViolationTicket().getTicketNumber()));
 				throw new ConstraintViolationException(msg, null);
 			}
 		}
@@ -143,9 +150,12 @@ public class DisputeService {
 				for (int i = 0; i < dispute.getDisputeCounts().size(); i++) {
 					BeanUtils.copyProperties(dispute.getDisputeCounts().get(i), disputeCountsToUpdate.get(i), "createdBy", "createdTs", "disputeCountId");
 				}
-				logger.warn("Unexpected number of disputeCounts: " + dispute.getDisputeCounts().size() +
-						" received from the request whereas updatable number of disputeCounts from database is: " + disputeCountsToUpdate.size() +
-						". This should not happen with current dispute update use case unless something has been changed");
+			} else {
+				logger.warn("Unexpected number of disputeCounts: {}" +
+						" received from the request whereas updatable number of disputeCounts from database is: {}" +
+						". This should not happen with current dispute update use case unless something has been changed",
+						StructuredArguments.value("disputeCounts", dispute.getDisputeCounts().size()),
+						StructuredArguments.value("disputeCountsFromDatabase", dispute.getDisputeCounts().size()));
 				// TODO - determine what to do if the disputeCount list sizes don't match
 			}
 		}
@@ -159,11 +169,14 @@ public class DisputeService {
 					for (int i = 0; i < violationTicketCountSize; i++) {
 						BeanUtils.copyProperties(dispute.getViolationTicket().getViolationTicketCounts().get(i), violationTicketCountsToUpdate.get(i), "createdBy", "createdTs", "violationTicketCountId");
 					}
+				} else {
+					logger.warn("Unexpected number of violationTicketCounts: " +
+							" received from the request whereas updatable number of violationTicketCounts from database is: " +
+							". This should not happen with current dispute update use case unless something has been changed",
+							StructuredArguments.value("violationTicketCounts", violationTicketCountSize),
+							StructuredArguments.value("violationTicketCountsFromDatabase", violationTicketCountsToUpdate.size()));
+					// TODO - determine what to do if the violationTicketCount list sizes don't match
 				}
-				logger.warn("Unexpected number of violationTicketCounts: " + violationTicketCountSize +
-						" received from the request whereas updatable number of violationTicketCounts from database is: " + violationTicketCountsToUpdate.size() +
-						". This should not happen with current dispute update use case unless something has been changed");
-				// TODO - determine what to do if the violationTicketCount list sizes don't match
 			}
 		}
 
@@ -212,7 +225,7 @@ public class DisputeService {
 	 */
 	public Dispute setStatus(Long id, DisputeStatus disputeStatus, String rejectedReason) {
 		if (disputeStatus == null) {
-			logger.error("Attempting to set Dispute status to null - bad method call.");
+			logger.error("Attempting to set Dispute status to null for disputeId: {} - bad method call.", StructuredArguments.value("disputeId", id));
 			throw new NotAllowedException("Cannot set Dispute status to null");
 		}
 
@@ -248,13 +261,18 @@ public class DisputeService {
 			// If we got here, then this means the Dispute record is in an invalid state.
 			logger.error("Attempting to set the status of a Dispute record to NEW after it was created - bad object state.");
 			throw new NotAllowedException("Changing the status of a Dispute record to %s is not permitted.", DisputeStatus.NEW);
+		case CONCLUDED:
+			// This should never happen since setting the status to CONCLUDED should only happen from the Justin side.
+			// If we got here, then this means the Dispute record is in an invalid state.
+			logger.error("Attempting to set the status of a Dispute record to CONCLUDED - bad object state.");
+			throw new NotAllowedException("Changing the status of a Dispute record to %s is not permitted.", DisputeStatus.CONCLUDED);
 		default:
 			// This should never happen, but if so, then it means a new DisputeStatus was added and these business rules were not updated accordingly.
-			logger.error("A Dispute record has an unknown status '{}' - bad object state.", dispute.getStatus());
+			logger.error("A Dispute record has an unknown status {} - bad object state.", StructuredArguments.value("disputeStatus", dispute.getStatus().toString()));
 			throw new NotAllowedException("Unknown status of a Dispute record: %s", dispute.getStatus());
 		}
 
-		disputeRepository.setStatus(id, disputeStatus, DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
+		disputeRepository.setStatus(id, disputeStatus, DisputeStatus.REJECTED.equals(disputeStatus) || DisputeStatus.CANCELLED.equals(disputeStatus) ? rejectedReason : null);
 		disputeRepository.flushAndClear();
 		return disputeRepository.findById(id).orElseThrow();
 	}
@@ -279,7 +297,7 @@ public class DisputeService {
 			disputeRepository.assignDisputeToUser(id, principal.getName());
 			disputeRepository.flushAndClear();
 
-			logger.debug("Dispute with id {} has been assigned to {}", id, principal.getName());
+			logger.debug("Dispute with id {} has been assigned to {}", StructuredArguments.value("disputeId", id), StructuredArguments.value("userName", principal.getName()));
 
 			return true;
 		}
@@ -333,12 +351,11 @@ public class DisputeService {
 	public Dispute getDisputeByNoticeOfDisputeGuid(String noticeOfDisputeGuid) {
 		List<Dispute> findByNoticeOfDisputeGuid = disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid);
 		if (CollectionUtils.isEmpty(findByNoticeOfDisputeGuid)) {
-			String msg = String.format("Dispute could not be found with noticeOfDisputeGuid: %s", noticeOfDisputeGuid);
-			logger.error(msg);
+			logger.error("Dispute could not be found with noticeOfDisputeGuid: {}", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
 			return null;
 		}
 		if (findByNoticeOfDisputeGuid.size() > 1) {
-			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeGuid: " + noticeOfDisputeGuid);
+			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeGuid: {}", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
 		}
 		return findByNoticeOfDisputeGuid.get(0);
 	}
@@ -359,8 +376,12 @@ public class DisputeService {
 			}
 		}
 		// otherwise, find by ticketNumber and time
-		else {
+		else if (issuedTime != null) {
 			disputeResults.addAll(disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime));
+		}
+
+		else {
+			disputeResults.addAll(disputeRepository.findByTicketNumber(ticketNumber));
 		}
 
 		if (CollectionUtils.isNotEmpty(disputeResults)) {
@@ -368,7 +389,7 @@ public class DisputeService {
 			List<JJDispute> jjDisputeResults = jjDisputeRepository.findByTicketNumber(ticketNumber);
 			if (CollectionUtils.isNotEmpty(jjDisputeResults)) {
 				if (jjDisputeResults.size() > 1) {
-					logger.error("More than one JJDispute found for TicketNumber '{}'", ticketNumber, DateUtil.formatAsHourMinuteUTC(issuedTime));
+					logger.error("More than one JJDispute found for TicketNumber {}", StructuredArguments.value("ticketNumber", ticketNumber));
 				}
 				JJDispute jjDispute = jjDisputeResults.get(0);
 				for (DisputeResult disputeResult : disputeResults) {
@@ -385,39 +406,48 @@ public class DisputeService {
 	 * Persists an update request for a Disputant's contact information
 	 * @param noticeOfDisputeGuid guid of the Dispute to associate with.
 	 * @param updateRequest the updateRequest to persist
-	 * @return the newly saved DisputantUpdateRequest record, never null.
+	 * @return the newly saved DisputeUpdateRequest record, never null.
 	 * @throws NoSuchElementException if the Dispute referenced by noticeOfDisputeGuid was not found.
 	 */
-	public DisputantUpdateRequest saveDisputantUpdateRequest(String noticeOfDisputeGuid, DisputantUpdateRequest updateRequest) {
+	public DisputeUpdateRequest saveDisputeUpdateRequest(String noticeOfDisputeGuid, DisputeUpdateRequest updateRequest) {
 		Dispute dispute = getDisputeByNoticeOfDisputeGuid(noticeOfDisputeGuid);
 		if (dispute == null) {
 			throw new NoSuchElementException();
 		}
 
-		// Dispute found. Use the ID as the FK in the disputantUpdateRequest object.
+		// Dispute found. Use the ID as the FK in the disputeUpdateRequest object.
 		updateRequest.setDisputeId(dispute.getDisputeId());
 
-		return disputantUpdateRequestRepository.save(updateRequest);
+		return disputeUpdateRequestRepository.save(updateRequest);
 	}
 
 	/**
-	 * Retrieves all DisputantUpdateRequests by disputeId
+	 * Retrieves all DisputeUpdateRequests by disputeId
 	 * @param disputeId must not be null
 	 */
-	public List<DisputantUpdateRequest> findDisputantUpdateRequestByDisputeIdAndStatus(Long disputeId, DisputantUpdateRequestStatus status) {
-		return disputantUpdateRequestRepository.findByOptionalDisputeIdAndOptionalStatus(disputeId, status);
+	public List<DisputeUpdateRequest> findDisputeUpdateRequestByDisputeIdAndStatus(Long disputeId, DisputeUpdateRequestStatus status) {
+		return disputeUpdateRequestRepository.findByOptionalDisputeIdAndOptionalStatus(disputeId, status);
 	}
 
 	/**
-	 * Updates the status of the given DisputantUpdateStatus record
+	 * Updates the status of the given DisputeUpdateStatus record
 	 * @param updateRequestId
 	 * @param status
-	 * @return the newly saved DisputantUpdateRequest record, never null.
+	 * @return the newly saved DisputeUpdateRequest record, never null.
 	 */
-	public DisputantUpdateRequest updateDisputantUpdateRequest(Long updateRequestId, DisputantUpdateRequestStatus status) {
-		DisputantUpdateRequest disputantUpdateRequest = disputantUpdateRequestRepository.findById(updateRequestId).orElseThrow();
-		disputantUpdateRequest.setStatus(status);
-		return disputantUpdateRequestRepository.save(disputantUpdateRequest);
+	public DisputeUpdateRequest updateDisputeUpdateRequest(Long updateRequestId, DisputeUpdateRequestStatus status) {
+		DisputeUpdateRequest disputeUpdateRequest = disputeUpdateRequestRepository.findById(updateRequestId).orElseThrow();
+		disputeUpdateRequest.setStatus(status);
+		return disputeUpdateRequestRepository.update(disputeUpdateRequest);
+	}
+
+	/**
+	 * Deletes a specific {@link DisputeUpdateRequest}
+	 *
+	 * @param id of the DisputeUpdateRequest to be deleted
+	 */
+	public void deleteDisputeUpdateRequest(Long id) {
+		disputeUpdateRequestRepository.deleteById(id);
 	}
 
 }

@@ -11,7 +11,22 @@ logging:
 spring:
   sql:
     init:
-      mode: never
+      mode: always
+  datasource:
+    driverClassName: org.h2.Driver
+    password: ''
+    url: ${H2_DATASOURCE:jdbc:h2:mem:testdb}
+    username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
 
 repository:
   # Defines the source of the lookup respository. Options are [csv, ords].
@@ -25,7 +40,10 @@ repository:
   
 # ORDS CLIENT properties
 ords:
-  rest-api:
+  api:
+    auth:
+      # If true, will enable basic authentication using the credentials below for all API calls
+      enabled: ${ORDS_API_AUTH_ENABLED:false}
     # If true, will enable debugging for all API calls to see request/response objects 
     debug: ${ORDS_API_DEBUG:false}
     timeout: 2000
@@ -36,5 +54,13 @@ ords:
       delay: 5
     occam:
       url: ${ORDS_API_OCCAM_URL:localhost}
+      # Basic auth username for calling ORDS OCCAM
+      username: ${ORDS_API_OCCAM_USERNAME:username}
+      # Basic auth password for calling ORDS OCCAM
+      password: ${ORDS_API_OCCAM_PASSWORD:password}
     tco:
       url: ${ORDS_API_TCO_URL:localhost}
+      # Basic auth username for calling ORDS TCO
+      username: ${ORDS_API_TCO_USERNAME:username}
+      # Basic auth password for calling ORDS TCO
+      password: ${ORDS_API_TCO_PASSWORD:password}

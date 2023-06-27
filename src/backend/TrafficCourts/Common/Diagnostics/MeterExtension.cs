@@ -1,4 +1,6 @@
-﻿namespace System.Diagnostics.Metrics;
+﻿using Timer = TrafficCourts.Common.Diagnostics.Timer;
+
+namespace System.Diagnostics.Metrics;
 
 /// <summary>
 /// Provides extension method for creating a timer based on a meter.
@@ -16,11 +18,15 @@ public static class MeterExtension
     /// <param name="name"></param>
     /// <param name="description"></param>
     /// <returns></returns>
-    /// <remarks>
-    /// Timer supports only the following generic parameter types: <see cref="int" /> and <see cref="double" />
-    /// </remarks>
-    static public Timer<T> CreateTimer<T>(this Meter meter, string name, string? description = null) where T : struct
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="meter"/>, <paramref name="name"/> or <paramref name="description"/> is null.
+    /// </exception>
+    static public Timer CreateTimer(this Meter meter, string name, string description)
     {
-        return new Timer<T>(meter, name, "ms", description);
+        ArgumentNullException.ThrowIfNull(meter);
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(description);
+
+        return new Timer(meter, name, "ms", description);
     }
 }

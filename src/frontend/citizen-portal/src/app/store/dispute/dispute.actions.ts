@@ -1,8 +1,9 @@
 import { createAction, props } from "@ngrx/store";
+import { NoticeOfDispute } from "@shared/models/dispute-form.model";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
-import { DisputantContactInformation } from "app/api";
+import { DisputantContactInformation, SearchDisputeResult } from "app/api";
+import { FileMetadata } from "app/services/dispute.service";
 import { ActionTypes } from ".";
-import { DisputeStore } from "..";
 
 export const Search = createAction(
   ActionTypes.SEARCH,
@@ -11,7 +12,7 @@ export const Search = createAction(
 
 export const SearchSuccess = createAction(
   ActionTypes.SEARCH_SUCCESS,
-  props<{ payload?: DisputeStore.State }>()
+  props<{ result?: SearchDisputeResult }>()
 );
 
 export const SearchFailed = createAction(
@@ -20,7 +21,7 @@ export const SearchFailed = createAction(
 
 export const UpdateContact = createAction(
   ActionTypes.UPDATE_CONTACT,
-  props<{ guid: string, payload: DisputantContactInformation }>()
+  props<{ payload: DisputantContactInformation }>()
 );
 
 export const UpdateContactSuccess = createAction(
@@ -29,4 +30,53 @@ export const UpdateContactSuccess = createAction(
 
 export const UpdateContactFailed = createAction(
   ActionTypes.UPDATE_CONTACT_FAILED
+);
+
+export const Get = createAction(
+  ActionTypes.GET
+);
+
+export const GetSuccess = createAction(
+  ActionTypes.GET_SUCCESS,
+  props<{ noticeOfDispute?: NoticeOfDispute }>()
+);
+
+export const GetFailed = createAction(
+  ActionTypes.GET_FAILED
+);
+
+export const Update = createAction(
+  ActionTypes.UPDATE,
+  props<{ payload: NoticeOfDispute }>()
+);
+
+export const UpdateSuccess = createAction(
+  ActionTypes.UPDATE_SUCCESS,
+);
+
+export const UpdateFailed = createAction(
+  ActionTypes.UPDATE_FAILED
+);
+
+export const GetDocument = createAction(
+  ActionTypes.GET_DOCUMENT,
+  props<{ fileId: string }>()
+);
+
+export const GetDocumentSuccess = createAction(
+  ActionTypes.GET_DOCUMENT_SUCCESS,
+);
+
+export const GetDocumentFailed = createAction(
+  ActionTypes.GET_DOCUMENT_FAILED
+);
+
+export const AddDocument = createAction(
+  ActionTypes.ADD_DOCUMENT,
+  props<{ file: File, fileType: string, pendingFileStream: string }>()
+);
+
+export const RemoveDocument = createAction(
+  ActionTypes.REMOVE_DOCUMENT,
+  props<{ file: FileMetadata }>()
 );

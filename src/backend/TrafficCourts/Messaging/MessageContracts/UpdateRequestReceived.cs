@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TrafficCourts.Messaging.MessageContracts;
 
 /// <summary>
-/// Message to indicate a DisputantUpdateRequest was received
+/// Message to indicate a DisputeUpdateRequest was received
 /// </summary>
 public class UpdateRequestReceived
 {

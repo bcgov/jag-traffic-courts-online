@@ -1,6 +1,11 @@
 @import "palette";
 @import "variables";
 
+
+small {
+  color: theme-palette(grey, dark);
+}
+
 h3 {
   color: theme-palette(blue);
   font-size: 18px;

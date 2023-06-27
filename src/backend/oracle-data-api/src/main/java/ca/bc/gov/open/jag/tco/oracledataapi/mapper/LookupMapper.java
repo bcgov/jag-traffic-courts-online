@@ -32,4 +32,18 @@ public interface LookupMapper {
 	@Mapping(source = "cdlnLanguageDsc", target = "description")
 	ca.bc.gov.open.jag.tco.oracledataapi.model.Language convertLanguage(ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language language);
 	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Language> convertLanguages(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language> languages);
+	
+	/** Map from ORDS Agency to OracleDataAPI Agency */
+	@Mapping(source = "agenId", target = "id")
+	@Mapping(source = "agenAgencyNm", target = "name")
+	@Mapping(source = "cdatAgencyTypeCd", target = "typeCode")
+	ca.bc.gov.open.jag.tco.oracledataapi.model.Agency convertAgency(ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Agency agency);
+	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Agency> convertAgencies(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Agency> cthList);
+	
+	/** Map from ORDS Province to OracleDAtaAPI Province */
+	@Mapping(source = "ctryId", target = "ctryId")
+	@Mapping(source = "provSeqNo", target = "provSeqNo")
+	@Mapping(source = "provNm", target = "provNm")
+	@Mapping(source = "provAbbreviationCd", target = "provAbbreviationCd")
+	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Province> convertProvinces(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Province> provinces);
 }

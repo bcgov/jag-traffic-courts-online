@@ -24,7 +24,7 @@ import lombok.Setter;
 //mark class as an Entity
 /**
  * @author 237563
- * 
+ *
  * Represents JJ Written Reasons for each count
  *
  */
@@ -38,7 +38,7 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
-    private Long id;
+	private Long id;
 
 	/**
 	 * The court appearance timestamp.
@@ -53,52 +53,52 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-    private String room;
-	
+	private String room;
+
 	/**
 	 * Expected Duration in minutes
 	 */
 	@Column
 	@Schema(nullable = true)
 	private short duration;
-	
+
 	/**
-     * Reason
-     */
-    @Column
-    @Schema(nullable = true)
-    private String reason;
-    
-    /**
+	 * Reason
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String reason;
+
+	/**
 	 * APP -- whether or not disputant appeared (agent = A, not present = N, present = P).
 	 */
 	@Column
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private JJDisputeCourtAppearanceAPP appCd;
-	
+
 	/**
-     * No app -- timestamp when it was decided disputant did not appear
-     */
-    @Column
-    @Schema(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date noAppTs;
-    
-    /**
+	 * No app -- timestamp when it was decided disputant did not appear
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date noAppTs;
+
+	/**
 	 * Clerk Rec
 	 */
 	@Column
 	@Schema(nullable = true)
-    private String clerkRecord;
-	
+	private String clerkRecord;
+
 	/**
 	 * Defense Counsel
 	 */
 	@Column
 	@Schema(nullable = true)
-    private String defenceCounsel;
-	
+	private String defenceCounsel;
+
 	/**
 	 * Defense Counsel Attendance
 	 */
@@ -106,7 +106,7 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private JJDisputeCourtAppearanceDATT dattCd;
-	
+
 	/**
 	 * Crown present (P) or not present (N)
 	 */
@@ -114,24 +114,24 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private JJDisputeCourtAppearanceCrown crown;
-	
+
 	/**
 	 * JJ Seized
 	 */
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Schema(nullable = true)
-    private YesNo jjSeized;
-	
+	private YesNo jjSeized;
+
 	/**
 	 * Adjudicator
 	 */
 	@Column
 	@Schema(nullable = true)
 	private String adjudicator;
-	
+
 	/**
-	 * JJ's comments about court appearance 
+	 * JJ's comments about court appearance
 	 */
 	@Size(max = 500)
 	@Column(length = 500)

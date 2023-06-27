@@ -36,14 +36,14 @@ public class PreAuthenticatedTokenFilter implements Filter {
 		String username = httpRequest.getHeader("x-username");
 		String fullName = httpRequest.getHeader("x-fullName");
 		String partId = httpRequest.getHeader("x-partId");
-		
+
 		// Add the required authority role
 		List<GrantedAuthority> authority = new ArrayList<>();
-        authority.add(new SimpleGrantedAuthority("User"));
+		authority.add(new SimpleGrantedAuthority("User"));
 
 		// If the username is null, default to "System"
 		// If the fullName is null, default to "System"
-		CustomUserDetails user = new CustomUserDetails(username == null ? "System" : username, username == null ? "Password" : username, fullName == null ? "System" : fullName, partId == null ? "System" : partId, authority);
+		CustomUserDetails user = new CustomUserDetails(username == null ? "System" : username, username == null ? "Password" : username, fullName == null ? "System" : fullName, partId, authority);
 		Authentication authentication = new PreAuthenticatedToken(user);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 

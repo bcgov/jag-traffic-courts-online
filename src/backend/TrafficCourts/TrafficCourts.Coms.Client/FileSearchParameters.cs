@@ -12,7 +12,7 @@ public class FileSearchParameters
     {
     }
 
-    public FileSearchParameters(IEnumerable<Guid>? ids, IDictionary<string, string>? metadata, IDictionary<string, string>? tags)
+    public FileSearchParameters(IEnumerable<Guid>? ids, IReadOnlyDictionary<string, string>? metadata, IReadOnlyDictionary<string, string>? tags)
     {
         Ids = ids is not null
             ? new List<Guid>(ids)
@@ -30,17 +30,20 @@ public class FileSearchParameters
     /// <summary>
     /// Metadata for the object
     /// </summary>
-    public Dictionary<string, string> Metadata { get; private set; }
+    public IReadOnlyDictionary<string, string> Metadata { get; private set; }
 
     /// <summary>
     /// Tags for the object
     /// </summary>
-    public Dictionary<string, string> Tags { get; private set; }
+    public IReadOnlyDictionary<string, string> Tags { get; private set; }
 
     /// <summary>
     /// The `name` source for the object Typically a descriptive title or original filename
     /// </summary>
     public string? Name { get; set; }
+
+    public Guid? BucketId { get; set; }
+
     /// <summary>
     /// The canonical S3 path string of the object
     /// </summary>
@@ -57,4 +60,8 @@ public class FileSearchParameters
     /// Boolean on active status
     /// </summary>
     public bool? Active { get; set; }
+
+    public bool? DeleteMarker { get; set; }
+
+    public bool? Latest { get; set; }
 }

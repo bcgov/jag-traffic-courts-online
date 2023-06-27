@@ -5,9 +5,8 @@ import { UtilsService } from "@core/services/utils.service";
 import { ConfigService } from "@config/config.service";
 import { Address } from "@shared/models/address.model";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
-import { Language } from "app/api";
-import { NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
-import { DisputantContactInformationFormGroup } from "app/services/dispute.service";
+import { DisputeContactTypeCd, Language } from "app/api";
+import { DisputantContactInformationFormGroup, NoticeOfDisputeFormGroup } from "app/services/notice-of-dispute.service";
 import { DisputeFormMode } from "@shared/enums/dispute-form-mode";
 import { FormControlValidators } from "@core/validators/form-control.validators";
 
@@ -32,9 +31,9 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   optOut: boolean = false;
 
   // Form related
-  todayDate: Date = new Date();
   showManualButton: boolean = true;
   showAddressFields: boolean = true; // temporary preset for testing
+  ContactType = DisputeContactTypeCd;
 
   // Consume from the service
   languages: Language[] = [];
@@ -59,28 +58,31 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     this.states = this.provincesAndStates.filter(x => x.ctryId === this.usa.ctryId); // USA only
 
     this.countryFormControl.valueChanges.subscribe(country => {
-      this.onCountryChange(country)
+      this.onCountryChange(country, true);
     })
 
     this.provinceFormControl.valueChanges.subscribe(province => {
-      this.onProvinceChange(province)
+      this.onProvinceChange(province);
     })
 
     this.driversLicenceProvinceFormControl.valueChanges.subscribe(province => {
-      this.onDLProvinceChange(province)
+      this.onDLProvinceChange(province);
     })
   }
 
   ngOnInit(): void {
-    if (!this.form.value.address_country_id) {
+    let country = this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift();
+    if (!this.form.value.address_country_id && !country) {
       this.countryFormControl.setValue(this.canada);
     } else {
-      this.countryFormControl.setValue(this.countries.filter(i => i.ctryId === this.form.value.address_country_id).shift());
+      this.countryFormControl.setValue(country);
     }
+
+    let province = this.provincesAndStates.filter(i => i.provAbbreviationCd === this.form.value.address_province).shift();
     if (!this.form.value.address_province) {
       this.provinceFormControl.setValue(this.bc);
     } else {
-      this.provinceFormControl.setValue(this.provincesAndStates.filter(i => i.provAbbreviationCd === this.form.value.address_province).shift());
+      this.provinceFormControl.setValue(province);
     }
 
     let form = this.form as NoticeOfDisputeFormGroup;
@@ -93,6 +95,11 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     } else if (form.controls.drivers_licence_province) { // have control but no value
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
+
+    if (!form.value.email_address && (this.mode === this.DisputeFormMode.UPDATE || this.mode === this.DisputeFormMode.UPDATEDISPUTANT)) {
+      this.form.controls.email_address.disable();
+      this.optOut = true;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -101,11 +108,14 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     }, 0)
   }
 
-  onCountryChange(country: CountryCodeValue) {
+  onCountryChange(country: CountryCodeValue, isInit?: boolean) {
     setTimeout(() => {
       this.form.controls.address_country_id.setValue(country.ctryId);
 
       this.form.controls.postal_code.setValidators([Validators.maxLength(6)]);
+      if (!isInit) {
+        this.form.controls.postal_code.setValue(null);
+      }
       this.form.controls.address_province.setValidators([Validators.maxLength(30)]);
       this.form.controls.address_province.setValue(null);
       this.form.controls.address_province_seq_no.setValidators(null);
@@ -120,7 +130,10 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
 
         if (this.isCA) { // pick BC by default if Canada selected
           this.form.controls.address_province.setValue(this.bc.provNm);
-          this.form.controls.address_province_seq_no.setValue(this.bc.provSeqNo)
+          this.form.controls.address_province_seq_no.setValue(this.bc.provSeqNo);
+          this.form.controls.postal_code.addValidators([Validators.minLength(6), Validators.maxLength(6)]);
+        } else {
+          this.form.controls.postal_code.addValidators([Validators.minLength(5), Validators.maxLength(5)]);
         }
       }
 
@@ -130,7 +143,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.form.controls.address_province_seq_no.updateValueAndValidity();
       this.form.controls.home_phone_number.updateValueAndValidity();
 
-      if (this.mode !== DisputeFormMode.UPDATEDISPUTANT) { // Disputant form do not have drivers license information
+      if (this.mode !== DisputeFormMode.UPDATEDISPUTANT) { // Disputant form do not have drivers licence information
         let form = this.form as NoticeOfDisputeFormGroup;
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
         form.controls.drivers_licence_province.setValidators([Validators.maxLength(30)]);
@@ -157,7 +170,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onDLProvinceChange(province: ProvinceCodeValue) {
     setTimeout(() => {
       let form = this.form as NoticeOfDisputeFormGroup;
-      form.controls.drivers_licence_province.setValue(province.provNm);
+      form.controls.drivers_licence_province.setValue(province.provAbbreviationCd);
       form.controls.drivers_licence_country_id.setValue(province.ctryId);
       form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
 
@@ -189,6 +202,31 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
 
   get isUSA() {
     return this.countryFormControl.value?.ctryId === this.usa.ctryId;
+  }
+
+  onSelectContactType(newContactType: any) {
+    this.form.get('contact_given_names').setValue(null);
+    this.form.get('contact_surname').setValue(null);
+    this.form.get('contact_law_firm_name').clearValidators();
+    this.form.get('contact_surname').clearValidators();
+    this.form.get('contact_given_names').clearValidators();
+    this.form.get('contact_law_firm_name').setValue(null);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make all contact info required
+      this.form.get('contact_law_firm_name').addValidators([Validators.required]);
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
+    } else if (newContactType == this.ContactType.Individual) {
+      // leave contact info null and not required
+    } else {
+      // only contact names required
+      this.form.get('contact_surname').addValidators([Validators.required]);
+      this.form.get('contact_given_names').addValidators([Validators.required]);
+    }
+    this.form.get('contact_law_firm_name').updateValueAndValidity();
+    this.form.get('contact_surname').updateValueAndValidity();
+    this.form.get('contact_given_names').updateValueAndValidity();
+    this.form.updateValueAndValidity();
   }
 
   onOptOut() {

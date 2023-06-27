@@ -1,27 +1,29 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Observable, BehaviorSubject, forkJoin, Subscription } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, JJDisputeCourtAppearanceRoP } from 'app/api';
-import { AuthService, UserRepresentation } from './auth.service';
+import { DatePipe } from '@angular/common';
+import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType } from 'app/api';
+import { AuthService } from './auth.service';
 import { cloneDeep } from "lodash";
 import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
+import { LookupsService } from './lookups.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JJDisputeService {
-  private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
-  private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
+  public datepipe: DatePipe = new DatePipe('en-US');
 
-  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
+  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted, JJDisputeStatus.Concluded, JJDisputeStatus.Cancelled];
   public jjDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
-  public jjDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
+  public jjDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded];
   public jjDisputeStatusDisplay: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.InProgress, JJDisputeStatus.Review, JJDisputeStatus.RequireMoreInfo];
 
   constructor(
@@ -29,35 +31,11 @@ export class JJDisputeService {
     private logger: LoggerService,
     private configService: ConfigService,
     private jjApiService: JJService,
+    private http: HttpClient,
     private authService: AuthService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private lookupsService: LookupsService,
   ) {
-    let observables = {
-      jjList: this.authService.getUsersInGroup("judicial-justice"),
-      vtcList: this.authService.getUsersInGroup("vtc-staff"),
-    };
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        forkJoin(observables).subscribe({
-          next: results => {
-            this._jjList.next(results.jjList
-              .map(u => {
-                u.jjDisplayName = u.fullName ? "JJ " + u.fullName : "";
-                return u;
-              })
-              .sort((a, b) => {
-                if (a.fullName < b.fullName) { return -1; }
-                else { return 1 }
-              }));
-            this._vtcList.next(results.vtcList);
-            this.store.dispatch(JJDisputeStore.Actions.Get());
-          },
-          error: err => {
-            this.logger.error("JJDisputeService: Load jjList and vtcList failed")
-          }
-        });
-      }
-    });
   }
 
   /**
@@ -89,12 +67,12 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-  public putJJDispute(ticketNumber: string, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
+  public putJJDispute(ticketNumber: string, disputeId: number, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
     let input = cloneDeep(jjDispute);
     if (remarks) {
       this.addRemarks(input, remarks);
     }
-    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, checkVTC, input)
+    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, disputeId, checkVTC, input)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::putJJDispute', response)
@@ -119,7 +97,7 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-   public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
+  public apiJjRequireCourtHearingPut(ticketNumber: string, disputeId: number, remarks?: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
       .pipe(
         map((response: any) => {
@@ -140,7 +118,7 @@ export class JJDisputeService {
       );
   }
 
-  public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC: boolean, remarks?: string): Observable<any> {
+  public apiJjDisputeIdReviewPut(ticketNumber: string, checkVTC: boolean, remarks?: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberReviewPut(ticketNumber, checkVTC, remarks)
       .pipe(
         map((response: any) => {
@@ -202,7 +180,61 @@ export class JJDisputeService {
         })
       );
   }
+  public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC: boolean): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberConcludePut(ticketNumber, checkVTC)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberConcludePut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberConcludePut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
+  public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC: boolean): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberCancelPut(ticketNumber, checkVTC)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberCancelPut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberCancelPut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  // oracle To Date Format converts 2023-04-05T16:00:00+00:00 to MM/DD/YYYY HH:MM where using military 24hr
+  // OR 2023-04-05 to 04/05/2023
+  public toDateFormat(oracleDate: string): string {
+    if (!oracleDate || oracleDate.length < 10) return oracleDate;
+
+    let formattedDate = oracleDate.substring(5,7) + "/" + oracleDate.substring(8,10) + "/" + oracleDate.substring(0,4);
+    if (oracleDate.length == 11) {
+      return formattedDate;
+    } else if (oracleDate.length >= 16 ) {
+      formattedDate = formattedDate + " " + oracleDate.substring(11,16);
+      return formattedDate;
+    } else return formattedDate;
+  }
 
   public apiJjTicketNumberConfirmPut(ticketNumber: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber)
@@ -224,29 +256,14 @@ export class JJDisputeService {
         })
       );
   }
-  public get jjList$(): Observable<UserRepresentation[]> {
-    return this._jjList.asObservable();
-  }
-
-  public get jjList(): UserRepresentation[] {
-    return this._jjList.value;
-  }
-
-  public get vtcList$(): Observable<UserRepresentation[]> {
-    return this._vtcList.asObservable();
-  }
-
-  public get vtcList(): UserRepresentation[] {
-    return this._vtcList.value;
-  }
 
   /**
    * Get the dispute from RSI by Id.
    *
    * @param disputeId
    */
-  public getJJDispute(disputeId: string, assignVTC: boolean): Observable<JJDispute> {
-    return this.jjApiService.apiJjJJDisputeIdGet(disputeId, assignVTC)
+  public getJJDispute(disputeId: number, ticketNumber: string, assignVTC: boolean): Observable<JJDispute> {
+    return this.jjApiService.apiJjJjDisputeIdGet(disputeId, ticketNumber, assignVTC)
       .pipe(
         map((response: JJDispute) => {
           this.logger.info('jj-DisputeService::getJJDispute', response)
@@ -276,23 +293,81 @@ export class JJDisputeService {
     return jJDispute;
   }
 
+  public getFileBlob(fileId: string) {
+    return this.http
+      .get(`/api/document?fileId=${fileId}`, {
+        observe: 'response',
+        responseType: 'blob',
+        context: new HttpContext(),
+        withCredentials: true,
+        headers: new HttpHeaders(
+          {
+            'Authorization': 'Bearer ' + this.authService.token,
+            'Accept': '*/*',
+            'Access-Control-Allow-Origin': ''
+          }),
+      }).pipe(
+        map((result: HttpResponse<Blob>) => {
+          return result.body;
+        }));
+  }
+
+  public getJustinDocument(ticketNumber: string, documentType: DocumentType) {
+    return this.http.get(`api/jj/ticketimage/${ticketNumber}/${documentType.toString()}`, {
+      observe: 'response',
+      responseType: 'blob',
+      context: new HttpContext(),
+      withCredentials: true,
+      headers: new HttpHeaders(
+        {
+          'Authorization': 'Bearer ' + this.authService.token,
+          'Accept': '*/*',
+          'Access-Control-Allow-Origin': ''
+        }),
+    }).pipe(
+      map((result: HttpResponse<Blob>) => {
+        return result.body;
+      }));
+  }
+
   private toDisplay(jjDispute: JJDispute): JJDispute {
-    jjDispute.contactName = jjDispute.contactSurname + ", " + (jjDispute.contactGivenName1 + jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
+    jjDispute.contactName = jjDispute.contactSurname + (jjDispute.contactGivenName1 || jjDispute.contactGivenName2 || jjDispute.contactGivenName3 ? "," : "") + (jjDispute.contactGivenName1 ? " " + jjDispute.contactGivenName1 : "") + (jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
     jjDispute.contactGivenNames = jjDispute.contactGivenName1 + (jjDispute.contactGivenName2 ? " " + jjDispute.contactGivenName2 : "") + (jjDispute.contactGivenName3 ? " " + jjDispute.contactGivenName3 : "");
-    jjDispute.occamDisputantName = jjDispute.occamDisputantSurnameNm + ", " + (jjDispute.occamDisputantGiven1Nm + jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
+    jjDispute.occamDisputantName = jjDispute.occamDisputantSurnameNm + (jjDispute.occamDisputantGiven1Nm || jjDispute.occamDisputantGiven2Nm || jjDispute.occamDisputantGiven3Nm ? "," : "") + (jjDispute.occamDisputantGiven1Nm ? " " + jjDispute.occamDisputantGiven1Nm : "") + (jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
     jjDispute.occamDisputantGivenNames = jjDispute.occamDisputantGiven1Nm + (jjDispute.occamDisputantGiven2Nm ? " " + jjDispute.occamDisputantGiven2Nm : "") + (jjDispute.occamDisputantGiven3Nm ? " " + jjDispute.occamDisputantGiven3Nm : "");
     jjDispute.isEditable = this.jjDisputeStatusEditable.indexOf(jjDispute.status) > -1;
     jjDispute.isCompleted = this.jjDisputeStatusComplete.indexOf(jjDispute.status) > -1;
     jjDispute.bulkAssign = false;
-    jjDispute.jjAssignedToName = this.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
-    jjDispute.vtcAssignedToName = this.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo?.toUpperCase())[0]?.fullName;
+    jjDispute.jjAssignedToName = this.authService.jjList?.filter(y => y.idir === jjDispute.jjAssignedTo?.toUpperCase())[0]?.fullName;
+    if (jjDispute.jjAssignedTo?.trim() && !jjDispute.jjAssignedToName) jjDispute.jjAssignedToName = jjDispute.jjAssignedTo;
+    jjDispute.vtcAssignedToName = this.authService.vtcList?.filter(y => y.idir === jjDispute.vtcAssignedTo?.toUpperCase())[0]?.fullName;
+    if (jjDispute.vtcAssignedTo?.trim() && !jjDispute.vtcAssignedToName) jjDispute.vtcAssignedToName = jjDispute.vtcAssignedTo;
     jjDispute.address = jjDispute.addressLine1
-    + (jjDispute.addressLine2 ? ", " + jjDispute.addressLine2 : "")
-    + (jjDispute.addressLine3 ? ", " + jjDispute.addressLine3 : "")
-    + (jjDispute.addressCity ? ", " + jjDispute.addressCity: "")
-    + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
-    + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
-    + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
+      + (jjDispute.addressLine2 ? ", " + jjDispute.addressLine2 : "")
+      + (jjDispute.addressLine3 ? ", " + jjDispute.addressLine3 : "")
+      + (jjDispute.addressCity ? ", " + jjDispute.addressCity : "")
+      + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
+      + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
+      + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
+    jjDispute.jjDecisionDateFormattedDate = this.toDateFormat(jjDispute.jjDecisionDate)?.substring(0,10);
+
+    // lookup courthouse location
+    if (jjDispute.courtAgenId && !jjDispute.courthouseLocation) {
+      let courtFound = this.lookupsService.courthouseAgencies?.filter(x => x.id === jjDispute.courtAgenId);
+      if (courtFound?.length > 0) jjDispute.courthouseLocation = courtFound[0].name;
+      else jjDispute.courthouseLocation = jjDispute.courtAgenId;
+    }
+
+    jjDispute.jjDisputedCounts?.forEach(jjDisputedCount => {
+      if (jjDisputedCount.description?.length === 5 && Number.isInteger(Number.parseInt(jjDisputedCount.description))) {
+        let statute = this.lookupsService.statutes.filter(i => i.id === jjDisputedCount.description).shift();
+        if (statute) {
+          jjDisputedCount.description = [statute.actCode, statute.code, statute.shortDescriptionText].join(" ");
+        } else {
+          jjDisputedCount.description = jjDisputedCount.description + " - statute could not be found";
+        }
+      }
+    });
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
       let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
@@ -319,4 +394,5 @@ export interface JJDispute extends JJDisputeBase {
   occamDisputantName?: string;
   occamDisputantGivenNames?: string;
   address?: string;
+  jjDecisionDateFormattedDate?: string;
 }

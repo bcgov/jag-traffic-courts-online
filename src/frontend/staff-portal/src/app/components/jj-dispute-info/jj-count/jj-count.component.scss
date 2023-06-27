@@ -7,6 +7,31 @@ h3 {
 
 ::ng-deep .mat-radio-label-content {
   font-size: small !important;
+
+  .select-box-only {
+    margin-top: 1em;
+    margin-bottom: 0 !important;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+
+      .mat-form-field-flex {
+        padding-top: 0 !important;
+      }
+
+      .mat-select-trigger .mat-select-arrow-wrapper {
+        transform: none !important;
+      }
+    }
+
+    .mat-form-field-underline {
+      bottom: 0;
+    }
+
+    .mat-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
 }
 
 .text {
@@ -152,17 +177,31 @@ p {
   }
 
   input.mat-input-element {
-    background-color: #ebebeb;
     font-size: smaller;
     width: 80%;
     align-self: center;
   }
 
+  input.mat-input-element:disabled {
+    background-color: #f1f1f1 !important;
+  }
+
+  input.mat-input-element:enabled {
+    background-color: #fffee6 !important;
+  }
+
   textarea.mat-input-element {
-    background: #fffee6;
     width: 80%;
     font-size: small;
     resize: none;
+  }
+
+  textarea.mat-input-element:disabled {
+    background-color: #f1f1f1 !important;
+  }
+
+  textarea.mat-input-element:enabled{
+    background-color: #fffee6 !important;
   }
 
   .mat-input-element:disabled {

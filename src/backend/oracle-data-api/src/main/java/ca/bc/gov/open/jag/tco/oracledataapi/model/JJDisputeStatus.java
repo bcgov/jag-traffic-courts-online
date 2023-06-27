@@ -15,6 +15,8 @@ public enum JJDisputeStatus implements ShortNamedEnum {
 	REQUIRE_MORE_INFO("REQM"),
 	ACCEPTED("ACCP"),
 	REVIEW("REV"),
+	CONCLUDED("CNLD"),
+	CANCELLED("CANC"),
 	HEARING_SCHEDULED("HEAR");
 
 	private String shortName;

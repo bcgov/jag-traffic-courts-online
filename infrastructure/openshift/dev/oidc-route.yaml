@@ -13,6 +13,7 @@ metadata:
     openshift.io/host.generated: 'true'
     # restrict connections to the load balancer
     #haproxy.router.openshift.io/ip_whitelist: 142.34.45.132 142.36.41.0/24
+    haproxy.router.openshift.io/disable_cookies: "true"
 spec:
   to:
     kind: Service

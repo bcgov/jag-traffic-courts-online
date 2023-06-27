@@ -19,4 +19,13 @@ public class DateUtil {
 		return DateFormatUtils.formatUTC(date, TIME_FORMAT);
 	}
 
+	/**
+	 * Returns the date in the format "yyyy-MM-dd'T'HH:mm:ss'Z'"
+	 * @param date
+	 * @return
+	 */
+	public static String formatAsDateTimeUTC(Date date) {
+		return DateFormatUtils.formatUTC(date, DATE_TIME_FORMAT);
+	}
+
 }

@@ -31,36 +31,51 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
             string? ticketNumber = context.Message.TicketNumber;
             string? issuedTime = context.Message.IssuedTime;
-            string? noticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid?.ToString();
-            ICollection<DisputeResult> searchResult;
+            Guid? noticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid;
+
             try
             {
-                searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken);
-                if (searchResult is null || searchResult.Count == 0)
+                IList<DisputeResult> searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken)
+                    .ConfigureAwait(false);
+
+                if (searchResult.Count == 0)
                 {
-                    throw new NullReferenceException("Dispute not found");
+                    _logger.LogDebug("No results found, returning not found");
+                    await context.RespondAsync(SearchDisputeResponse.NotFound);
+                    return;
                 }
-                DisputeResult result = searchResult.OrderByDescending(d => d.DisputeId).First();
-                if (!String.IsNullOrEmpty(result.NoticeOfDisputeGuid))
+
+                DisputeResult result = searchResult.Count == 1
+                    ? searchResult[0]
+                    : searchResult.OrderByDescending(d => d.DisputeId).First();
+
+                if (string.IsNullOrEmpty(result.NoticeOfDisputeGuid))
                 {
-                    _ = Guid.TryParse(result.NoticeOfDisputeGuid, out Guid guid);
-                    await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse()
-                    {
-                        NoticeOfDisputeGuid = guid,
-                        DisputeStatus = result?.DisputeStatus.ToString(),
-                        JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
-                        HearingType = result?.JjDisputeHearingType?.ToString()
-                    });
+                    _logger.LogDebug("Last created dispute does not have a NoticeOfDisputeId, returning not found");
+                    await context.RespondAsync(SearchDisputeResponse.NotFound);
+                    return;
                 }
-                else
+
+                if (!Guid.TryParse(result.NoticeOfDisputeGuid, out Guid guid))
                 {
-                    throw new NullReferenceException("Dispute not found");
+                    // TODO: Add result.NoticeOfDisputeGuid value to log properties 
+                    _logger.LogDebug("Last created dispute does not have a valid NoticeOfDisputeId value, returning not found");
+                    await context.RespondAsync(SearchDisputeResponse.NotFound);
+                    return;
                 }
+
+                await context.RespondAsync(new SearchDisputeResponse()
+                {
+                    NoticeOfDisputeGuid = guid,
+                    DisputeStatus = result?.DisputeStatus.ToString(),
+                    JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
+                    HearingType = result?.JjDisputeHearingType?.ToString()
+                });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to process message");
-                await context.RespondAsync<SearchDisputeResponse>(new SearchDisputeResponse { IsError = true });
+                await context.RespondAsync(SearchDisputeResponse.Error);
             }
         }
     }

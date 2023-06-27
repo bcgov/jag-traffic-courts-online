@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FileHistoryAuditLogEntryType } from './fileHistoryAuditLogEntryType.model';
 
 
 export interface FileHistory { 
@@ -17,8 +18,10 @@ export interface FileHistory {
     modifiedBy?: string | null;
     modifiedTs?: string | null;
     fileHistoryId?: number;
-    ticketNumber?: string | null;
+    disputeId?: number;
+    auditLogEntryType: FileHistoryAuditLogEntryType;
     description?: string | null;
+    actionByApplicationUser?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

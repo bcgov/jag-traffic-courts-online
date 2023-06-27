@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
+import { JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
-import { Subscription } from 'rxjs';
-import { CourthouseConfig } from '@config/config.model';
+import { Observable, filter } from 'rxjs';
 import { JJDisputeStatus } from 'app/api';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { AuthService } from 'app/services/auth.service';
+import { LookupsService } from 'app/services/lookups.service';
+import { AppState } from 'app/store/app.state';
+import { Store, select } from '@ngrx/store';
 
 @Component({
   selector: 'app-dispute-decision-inbox',
@@ -20,15 +21,14 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
 
-  busy: Subscription;
-  courtLocations: CourthouseConfig[];
   IDIR: string = "";
   currentTeam: string = "All";
+  data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "ticketNumber",
-    "jjDecisionDate",
+    "jjDecisionDateFormattedDate",
     "jjAssignedTo",
     "violationDate",
     "fullName",
@@ -38,19 +38,16 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   constructor(
     private logger: LoggerService,
-    private jjDisputeService: JJDisputeService,
     private authService: AuthService,
-    private mockConfigService: MockConfigService,
+    private lookupsService: LookupsService,
+    private store: Store<AppState>
   ) {
-    if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations;
-    }
-    this.jjDisputeService.refreshDisputes.subscribe(x => { this.getAll(); })
+    this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
   }
 
   filterByTeam(team: string) {
-    let teamCourthouses = this.courtLocations.filter(x => (x.jjTeam === team || team === "All"));
-    this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
+    let teamCourthouses = this.lookupsService.courthouseTeams.filter(x => (x.__team === team || team === "All"));
+    this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation || y.id === x.courthouseLocation).length > 0);
     this.tableHeight = this.calcTableHeight(325);
   }
 
@@ -58,9 +55,13 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         this.IDIR = userProfile.idir;
+        this.data$.subscribe(jjDisputes => {
+          this.data = jjDisputes
+            .map(jjDispute => { return { ...jjDispute } });
+          this.getAll();
+        })
       }
     });
-    this.getAll();
   }
 
   ngAfterViewInit() {
@@ -68,7 +69,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   }
 
   calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60)
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
 
   backWorkbench(element) {
@@ -78,16 +79,14 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   getAll(): void {
     this.logger.log('JJDisputeDecisionInboxComponent::getAllDisputes');
 
-    this.jjDisputeService.getJJDisputes().subscribe((response) => {
-      // filter jj disputes only show those in CONFIRMED status or REQUIRE_COURT_HEARING
-      this.data = response.filter(x => x.status == JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.RequireCourtHearing);
-      this.dataSource.data = this.data;
+    // filter jj disputes only show those in CONFIRMED status or REQUIRE_COURT_HEARING
+    this.data = this.data.filter(x => x.status == JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.RequireCourtHearing);
+    this.dataSource.data = this.data;
 
-      // initially sort by decision date within status
-      this.dataSource.data = this.dataSource.data.sort((a, b) => {
-        if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
-      });
-      this.tableHeight = this.calcTableHeight(325);
+    // initially sort by decision date within status
+    this.dataSource.data = this.dataSource.data.sort((a, b) => {
+      if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
     });
+    this.tableHeight = this.calcTableHeight(325);
   }
 }

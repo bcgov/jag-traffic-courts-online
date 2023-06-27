@@ -1,20 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { Dispute, DisputeService } from '../../../services/dispute.service';
-import { Subscription } from 'rxjs';
-import { CountryCodeValue, CourthouseConfig, ProvinceCodeValue } from '@config/config.model';
+import { CountryCodeValue, ProvinceCodeValue } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
+import { DisputeContactTypeCd, ViolationTicket, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation, DisputeStatus } from 'app/api';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { TicketImageDialogComponent } from '@shared/dialogs/ticket-image-dialog/ticket-image-dialog.component';
 import { ViolationTicketService, OCRMessageToDisplay } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -34,7 +33,6 @@ export class TicketInfoComponent implements OnInit {
   public conflict: boolean = false;
   public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';
-  public busy: Subscription;
   public lastUpdatedDispute: Dispute;
   public form: FormGroup;
   public flagsForm: FormGroup;
@@ -46,12 +44,13 @@ export class TicketInfoComponent implements OnInit {
   public usa: CountryCodeValue;
   public states: ProvinceCodeValue[];
   public initialDisputeValues: Dispute;
-  public courtLocations: CourthouseConfig[];
   public imageToShow: any;
   public errorThreshold: number = 0.800;
   public courtLocationFlag: OCRMessageToDisplay;
   public IsAct = ViolationTicketCountIsAct;
   public IsRegulation = ViolationTicketCountIsRegulation;
+  public ContactType = DisputeContactTypeCd;
+  public DispStatus = DisputeStatus;
 
   /**
    * @description
@@ -74,7 +73,6 @@ export class TicketInfoComponent implements OnInit {
     public violationTicketService: ViolationTicketService,
     private disputeService: DisputeService,
     public config: ConfigService,
-    public mockConfigService: MockConfigService,
     public lookupsService: LookupsService,
   ) {
     const today = new Date();
@@ -88,13 +86,6 @@ export class TicketInfoComponent implements OnInit {
       this.provinces = this.config.provincesAndStates.filter(x => x.ctryId === this.canada.ctryId && x.provAbbreviationCd !== this.bc.provAbbreviationCd);
       this.states = this.config.provincesAndStates.filter(x => x.ctryId === this.usa.ctryId);
     }
-    if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations.sort((a, b) => { if (a.name < b.name) return 1; });
-    }
-
-    this.busy = this.lookupsService.getStatutes().subscribe((response: Statute[]) => {
-      this.lookupsService.statutes$.next(response);
-    });
   }
 
   public ngOnInit() {
@@ -105,18 +96,21 @@ export class TicketInfoComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-      emailAddress: [null, [Validators.email]],
-      disputantSurname: [null, [Validators.required]],
-      disputantGivenNames: [null, [Validators.required]],
+      emailAddress: [null, [Validators.email, Validators.maxLength(100)]],
+      disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
+      disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
+      contactTypeCd: [null, [Validators.required]],
+      contactSurnameNm: [null, [Validators.maxLength(30)]],
+      contactGivenNames: [null, [Validators.maxLength(92)]],
+      contactLawFirmNm: [null, [Validators.maxLength(200)]],
       addressCountryId: [null, [Validators.required]],
-      disputantBirthdate: [null, [Validators.required]], // Optional
       address: [null, [Validators.required, Validators.maxLength(300)]],
-      addressCity: [null, [Validators.required]],
+      addressCity: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
-      postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]], // space needs to be added back to the middle for display
+      postalCode: [null, [Validators.required]], // space needs to be added back to the middle for display
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       driversLicenceProvinceProvId: [null],
@@ -125,9 +119,9 @@ export class TicketInfoComponent implements OnInit {
       rejectedReason: [null, Validators.maxLength(256)],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
-        courtLocation: [null, [Validators.required]],
-        disputantSurname: [null, Validators.required],
-        disputantGivenNames: [null, Validators.required],
+        courtLocation: [null, [Validators.required, Validators.maxLength(50)]],
+        disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
+        disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
         disputantDriversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
         driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
         driversLicenceCountry: [null],
@@ -168,6 +162,31 @@ export class TicketInfoComponent implements OnInit {
     });
     // retreive fresh copy from db
     this.getDispute();
+  }
+
+  onSelectContactType(newContactType: any) {
+    this.form.get('contactGivenNames').setValue(null);
+    this.form.get('contactSurnameNm').setValue(null);
+    this.form.get('contactLawFirmNm').removeValidators(Validators.required);
+    this.form.get('contactSurnameNm').removeValidators(Validators.required);
+    this.form.get('contactGivenNames').removeValidators(Validators.required);
+    this.form.get('contactLawFirmNm').setValue(null);
+    if (newContactType == this.ContactType.Lawyer) {
+      // make all contact info required
+      this.form.get('contactLawFirmNm').addValidators(Validators.required);
+      this.form.get('contactSurnameNm').addValidators(Validators.required);
+      this.form.get('contactGivenNames').addValidators(Validators.required);
+    } else if (newContactType == this.ContactType.Individual) {
+      // leave contact info null and not required
+    } else {
+      // only contact names required
+      this.form.get('contactSurnameNm').addValidators(Validators.required);
+      this.form.get('contactGivenNames').addValidators(Validators.required);
+    }
+    this.form.get('contactLawFirmNm').updateValueAndValidity();
+    this.form.get('contactSurnameNm').updateValueAndValidity();
+    this.form.get('contactGivenNames').updateValueAndValidity();
+    this.form.updateValueAndValidity();
   }
 
   public onCountryChange(ctryId: number) {
@@ -236,20 +255,36 @@ export class TicketInfoComponent implements OnInit {
 
   public resendEmailVerification() {
     this.disputeService.resendEmailVerification(this.lastUpdatedDispute.disputeId)
-    .subscribe(email => {
-      const data: DialogOptions = {
-        titleKey: "Email Verification Resent",
-        icon: "email",
-        actionType: "green",
-        messageKey:
-          "The email verification has been resent to the contact email address provided.\n\n" + this.lastUpdatedDispute.emailAddress,
-        actionTextKey: "Ok",
-        cancelHide: true
-      };
-      this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
-        .subscribe((action: any) => {
-        });
-    })
+      .subscribe(email => {
+        const data: DialogOptions = {
+          titleKey: "Email Verification Resent",
+          icon: "email",
+          actionType: "green",
+          messageKey:
+            "The email verification has been resent to the contact email address provided.\n\n" + this.lastUpdatedDispute.emailAddress,
+          actionTextKey: "Ok",
+          cancelHide: true
+        };
+        this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+          .subscribe((action: any) => {
+          });
+      })
+  }
+
+
+  public onExpandTicketImage() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { imageToShow: this.imageToShow }
+    dialogConfig.hasBackdrop = false;
+    dialogConfig.position = {
+      top: '200px',
+      left: '0px'
+    }
+    this.dialog.open(TicketImageDialogComponent, dialogConfig).afterClosed()
+      .subscribe((action: any) => {
+      });
   }
 
   public onBack() {
@@ -258,13 +293,13 @@ export class TicketInfoComponent implements OnInit {
 
   // violation ticket borders only for new status
   public applyOverErrThreshold(fieldName: string): boolean {
-    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.status != this.DispStatus.New) return false;
     if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence <= 0.80) return false;
     return true;
   }
 
   public applyUnderErrThreshold(fieldName: string): boolean {
-    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.status != this.DispStatus.New) return false;
     if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence > 0.80) return false;
     return true;
   }
@@ -345,35 +380,38 @@ export class TicketInfoComponent implements OnInit {
     putDispute.violationTicket.driversLicenceCountry = this.form.get('violationTicket').get('driversLicenceCountry').value;
     putDispute.violationTicket.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
 
-    // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddThh:mm
+    // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddTHH:mm
     putDispute.violationTicket.issuedTs =
       this.form.get('violationTicket').get('violationDate').value +
       "T" +
       this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
       + ":" +
-      this.form.get('violationTicket').get('violationTime').value.substring(2, 4);
-
+      this.form.get('violationTicket').get('violationTime').value.substring(2, 4) + "Z";
+    putDispute.issuedTs = this.form.get('violationTicket').get('violationDate').value +
+      "T" +
+      this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
+      + ":" +
+      this.form.get('violationTicket').get('violationTime').value.substring(2, 4) + ":00Z";;
 
     // Counts 1,2,3
     putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
-      // if form has violation ticket, stuff it in putDispute
+      // stuff 3 violation ticket counts in putDispute
       let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
-      if (fullDescription && fullDescription !== " ") {
-        let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
-        violationTicketCount.countNo = i;
-        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
-        putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
-      }
+      let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
+      violationTicketCount.countNo = i;
+      violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
+      putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
     }
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
+    this.lastUpdatedDispute = putDispute;
 
     // no need to pass back byte array with image
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
+    this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -396,7 +434,6 @@ export class TicketInfoComponent implements OnInit {
     putDispute.driversLicenceIssuedProvinceSeqNo = this.form.get('driversLicenceProvinceSeqNo').value;
     putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
     putDispute.emailAddress = this.form.get('emailAddress').value;
-    putDispute.disputantBirthdate = this.form.get('disputantBirthdate').value;
     putDispute.address = this.form.get('address').value;
     putDispute.addressCity = this.form.get('addressCity').value;
     putDispute.addressProvince = this.form.get('addressProvince').value;
@@ -406,13 +443,18 @@ export class TicketInfoComponent implements OnInit {
     putDispute.postalCode = this.form.get('postalCode').value;
     putDispute.rejectedReason = this.form.get('rejectedReason').value;
 
+    // set dispute courtagenid from violation ticket courthouse location
+    let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === putDispute.violationTicket.courtLocation).shift();
+    putDispute.courtAgenId = courtFound?.id;
+
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
+    this.lastUpdatedDispute = putDispute;
 
     // no need to pass back byte array with image
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
+    this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -428,7 +470,6 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('driversLicenceProvinceProvId').markAsUntouched();
       this.form.get('homePhoneNumber').markAsUntouched();
       this.form.get('emailAddress').markAsUntouched();
-      this.form.get('disputantBirthdate').markAsUntouched();
       this.form.get('address').markAsUntouched();
       this.form.get('addressCity').markAsUntouched();
       this.form.get('addressProvince').markAsUntouched();
@@ -467,7 +508,6 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('disputantSurname').invalid) return false;
     if (this.form.get('disputantGivenNames').invalid) return false;
     if (this.form.get('addressCountryId').invalid) return false;
-    if (this.form.get('disputantBirthdate').invalid) return false;
     if (this.form.get('address').invalid) return false;
     if (this.form.get('addressCity').invalid) return false;
     if (this.form.get('addressProvince').invalid) return false;
@@ -488,7 +528,6 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('disputantSurname').touched) return true;
     if (this.form.get('disputantGivenNames').touched) return true;
     if (this.form.get('addressCountryId').touched) return true;
-    if (this.form.get('disputantBirthdate').touched) return true;
     if (this.form.get('address').touched) return true;
     if (this.form.get('addressCity').touched) return true;
     if (this.form.get('addressProvince').touched) return true;
@@ -530,7 +569,7 @@ export class TicketInfoComponent implements OnInit {
     let tempDispute = dispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputeService.putDispute(dispute.disputeId, tempDispute).subscribe((response: Dispute) => {
+    this.disputeService.putDispute(dispute.disputeId, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -551,9 +590,9 @@ export class TicketInfoComponent implements OnInit {
 
   // send to api, on return update status
   validate(): void {
-    this.busy = this.disputeService.validateDispute(this.lastUpdatedDispute.disputeId).subscribe({
+    this.disputeService.validateDispute(this.lastUpdatedDispute.disputeId).subscribe({
       next: response => {
-        this.lastUpdatedDispute.status = "VALIDATED";
+        this.lastUpdatedDispute.status = this.DispStatus.Validated;
         this.form.controls.violationTicket.disable();
       },
       error: err => { },
@@ -572,16 +611,15 @@ export class TicketInfoComponent implements OnInit {
       cancelTextKey: "Go back",
       icon: "error_outline",
     };
-    this.lastUpdatedDispute.status = 'PROCESSING';
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
 
           // submit dispute and return to TRM home
-          this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe(
+          this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe(
             {
               next: response => {
-                this.lastUpdatedDispute.status ='PROCESSING';
+                this.lastUpdatedDispute.status = this.DispStatus.Processing;
                 this.onBack();
               },
               error: err => { },
@@ -611,10 +649,10 @@ export class TicketInfoComponent implements OnInit {
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, reject dispute and return to TRM home
-          this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
+          this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
               this.onBack();
-              this.lastUpdatedDispute.status = 'REJECTED';
+              this.lastUpdatedDispute.status = this.DispStatus.Rejected;
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
             },
             error: err => { },
@@ -647,17 +685,11 @@ export class TicketInfoComponent implements OnInit {
           delete tempDispute.violationTicket.violationTicketImage;
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe({
+          this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId, action.output.response).subscribe({
             next: response => {
-              this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId).subscribe({
-                next: response => {
-                  this.lastUpdatedDispute.status = 'CANCELLED';
-                  this.lastUpdatedDispute.rejectedReason = action.output.reason;
-                  this.onBack();
-                },
-                error: err => { },
-                complete: () => { }
-              });
+              this.lastUpdatedDispute.status = this.DispStatus.Cancelled;
+              this.lastUpdatedDispute.rejectedReason = action.output.reason;
+              this.onBack();
             },
             error: err => { },
             complete: () => { }
@@ -666,8 +698,8 @@ export class TicketInfoComponent implements OnInit {
       });
   }
 
-   // count description changed in form
-   onChangeCount(countNo: number, fullDescription: string) {
+  // count description changed in form
+  onChangeCount(countNo: number, fullDescription: string) {
     let countForm = this.form.get('violationTicket').get('violationTicketCount' + countNo.toString());
     let parts = fullDescription.split(" "); // act/code fullsection description
 
@@ -702,7 +734,7 @@ export class TicketInfoComponent implements OnInit {
     this.initialDisputeValues = null;
     this.lastUpdatedDispute = null;
 
-    this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId)
+    this.disputeService.getDispute(this.disputeInfo.disputeId)
       .subscribe((response: Dispute) => {
         this.retrieving = false;
         this.logger.info(
@@ -714,6 +746,11 @@ export class TicketInfoComponent implements OnInit {
         if (response.violationTicket.disputantSurname) {
           this.initialDisputeValues = response;
         } else this.initialDisputeValues = this.setFieldsFromJSON(response);
+
+        // set court agency id if possible
+        let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
+        if (courtFound?.length > 0) this.initialDisputeValues.courtAgenId = courtFound[0].id;
+
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);
         this.form.get('driversLicenceProvinceSeqNo').setValue(this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo);
@@ -723,12 +760,15 @@ export class TicketInfoComponent implements OnInit {
         let provFound = this.config.provincesAndStates.filter(x => x.ctryId === this.initialDisputeValues.driversLicenceIssuedCountryId && x.provSeqNo === this.initialDisputeValues.driversLicenceIssuedProvinceSeqNo).shift();
         if (provFound) this.form.get('driversLicenceProvinceProvId').setValue(provFound.provId);
 
-        // set violation date and time
-        let violationDate = response.issuedTs?.split("T");
+        // set violation date and time using violation ticket issuedTs as source of truth
+        if (!this.initialDisputeValues.violationTicket.issuedTs) this.initialDisputeValues.violationTicket.issuedTs = this.initialDisputeValues.issuedTs;
+        let violationDate = this.initialDisputeValues.violationTicket.issuedTs?.split("T");
         if (violationDate && violationDate.length > 1) {
-          this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
+          this.form.get('violationTicket').get('issuedTs').setValue(this.initialDisputeValues.violationTicket.issuedTs);
           this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
           this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
+          this.initialDisputeValues.issuedTs = this.initialDisputeValues.violationTicket.issuedTs;
+          this.lastUpdatedDispute.issuedTs = this.initialDisputeValues.violationTicket.issuedTs;
         }
 
         // ticket image
@@ -748,7 +788,7 @@ export class TicketInfoComponent implements OnInit {
           let fullDesc = this.getCountLegalParagraphing(violationTicketCount.countNo, this.initialDisputeValues.violationTicket);
           countForm
             .get('fullDescription')
-           .setValue(fullDesc);
+            .setValue(fullDesc);
           countForm.get('actOrRegulationNameCode').setValue(violationTicketCount.actOrRegulationNameCode);
           countForm.get('description').setValue(violationTicketCount.description);
 
@@ -798,7 +838,7 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('driversLicenceProvince').updateValueAndValidity();
         this.form.get("driversLicenceProvinceSeqNo").updateValueAndValidity();
 
-        if (this.lastUpdatedDispute.status !== "NEW") {
+        if (this.lastUpdatedDispute.status !== this.DispStatus.New) {
           this.form.controls.violationTicket.disable();
         }
         this.form.get('violationTicket').updateValueAndValidity();

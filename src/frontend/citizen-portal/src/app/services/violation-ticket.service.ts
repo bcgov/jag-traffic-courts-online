@@ -1,21 +1,23 @@
 import { DatePipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LoggerService } from "@core/services/logger.service";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ImageTicketNotFoundDialogComponent } from "@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component";
 import { TicketNotFoundDialogComponent } from "@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component";
+import { WaitForOcrDialogComponent } from "@shared/dialogs/wait-for-ocr-dialog/wait-for-ocr-dialog.component";
 import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { QueryParamsForSearch } from "@shared/models/query-params-for-search.model";
 import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
 import { FileUtilsService } from "@shared/services/file-utils.service";
-import { DisputeDisputantDetectedOcrIssues, Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
+import { DisputeDisputantDetectedOcrIssues, DisputeSystemDetectedOcrIssues, Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { NgProgressRef } from "ngx-progressbar";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map, catchError } from "rxjs/operators";
+import { NoticeOfDisputeKeys } from "./notice-of-dispute.service";
 
 @Injectable({
   providedIn: "root",
@@ -25,21 +27,29 @@ export class ViolationTicketService {
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private _ticketType: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-  public ocrTicketDateKey = "violation_date";
-  public ocrTicketTimeKey = "violation_time";
-  public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
-  public ocrIssueDescKey = "disputant_ocr_issues";
-  public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  ocrTicketDateKey = "violation_date"; // scan-ticket page only
+  ocrTicketTimeKey = "violation_time"; // scan-ticket page only
+  driversLicenceNumberKey: NoticeOfDisputeKeys = "drivers_licence_number";
+  ocrIssueDetectedKey: NoticeOfDisputeKeys = "disputant_detected_ocr_issues";
+  ocrIssueDescKey: NoticeOfDisputeKeys = "disputant_ocr_issues";
+  systemDetectOcrIssueKey: NoticeOfDisputeKeys = "system_detected_ocr_issues";
+  systemKeysToCheck = ["violationTicketTitle", "ticket_number", "disputant_surname", "disputant_given_names", "drivers_licence_province", "drivers_licence_number", "violation_time",
+    "violation_date", "counts.count_no_1.description", "counts.count_no_1.act_or_regulation_name_code", "counts.count_no_1.is_act", "counts.count_no_1.is_regulation", "counts.count_no_1.section",
+    "counts.count_no_1.ticketed_amount", "counts.count_no_2.description", "counts.count_no_2.act_or_regulation_name_code", "counts.count_no_2.is_act", "counts.count_no_2.is_regulation",
+    "counts.count_no_2.section", "counts.count_no_2.ticketed_amount", "counts.count_no_3.description", "counts.count_no_3.act_or_regulation_name_code", "counts.count_no_3.is_act",
+    "counts.count_no_3.is_regulation", "counts.count_no_3.section", "counts.count_no_3.ticketed_amount", "court_location", "detachment_location"];
+  DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
   private queryParams: any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private datePipe: DatePipe,
     private dialog: MatDialog,
     private logger: LoggerService,
     private ticketService: TicketsService,
     private fileUtilsService: FileUtilsService,
-    private datePipe: DatePipe,
     private ticketTypePipe: TicketTypePipe,
   ) {
     // auto update ticket type
@@ -51,35 +61,31 @@ export class ViolationTicketService {
     });
   }
 
-  public get ticket$(): Observable<ViolationTicket> {
+  get ticket$(): Observable<ViolationTicket> {
     return this._ticket.asObservable();
   }
 
-  public get ticket(): ViolationTicket {
+  get ticket(): ViolationTicket {
     return this._ticket.value;
-  }
-
-  private get ocrTicket$(): Observable<OcrViolationTicket> { // not public for current stage
-    return this._ocrTicket.asObservable();
   }
 
   private get ocrTicket(): OcrViolationTicket { // not public for current stage
     return this._ocrTicket.value;
   }
 
-  public get inputTicketData$(): Observable<any> {
+  get inputTicketData$(): Observable<any> {
     return this._inputTicketData.asObservable();
   }
 
-  public get inputTicketData() {
+  get inputTicketData() {
     return this._inputTicketData.value;
   }
 
-  public get ticketType() {
+  get ticketType() {
     return this._ticketType.value;
   }
 
-  public searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
+  searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
     this.reset();
     this.logger.info("ViolationTicketService:: Search for ticket");
     if (!params) {
@@ -89,16 +95,17 @@ export class ViolationTicketService {
       .pipe(
         map((response: ViolationTicket) => {
           if (response) {
+            response.issued_date = this.datePipe.transform(response.issued_date, "yyyy-MM-ddTHH:mm:ss'Z'"); // e-tickets need this
             this._ticket.next(response);
             if (this.validateTicket(params)) {
               this.goToInitiateResolution(params);
             } else {
-              this.logger.error("ViolationTicketService::searchTicket ticket info not matched");
+              this.logger.error("ViolationTicketService::searchTicket error has occurred:", "Ticket info not matched");
               this.onError();
             }
           }
           else {
-            this.logger.error("ViolationTicketService::searchTicket ticket not found");
+            this.logger.error("ViolationTicketService::searchTicket error has occurred:", "searchTicket ticket not found");
             this.onError();
           }
           return response;
@@ -111,12 +118,22 @@ export class ViolationTicketService {
       );
   }
 
-  public analyseTicket(ticketFile: File, progressRef: NgProgressRef): void {
+  analyseTicket(ticketFile: File, progressRef: NgProgressRef, dialogRef: MatDialogRef<WaitForOcrDialogComponent>): void {
     this.reset();
     this.logger.info("file target", ticketFile);
-    if (!this.checkSize(ticketFile?.size)) {
-      this.logger.info("You must select a file");
+    // catch if no ticketFile passed in
+    if (!ticketFile) {
+      this.logger.error("ViolationTicketService::analyseTicket error has occurred: ", "No file selected.");
       this.openErrorScenarioOneDialog();
+      dialogRef.close();
+      return;
+    }
+    // Check if file too small (0) or too large (over 10MB)
+    var fileSizeError = this.fileUtilsService.checkFileSize(ticketFile?.size);
+    if (fileSizeError !== "") {
+      this.logger.error("ViolationTicketService::analyseTicket error has occurred: ", fileSizeError);
+      this.openErrorScenarioOneDialog();
+      dialogRef.close();
       return;
     }
     progressRef.start();
@@ -138,24 +155,30 @@ export class ViolationTicketService {
                 this.router.navigate([AppRoutes.ticketPath(AppRoutes.SCAN)]);
               }
               catch {
-                this.onError();
+                this.logger.error("ViolationTicketService::analyseTicket error has occurred:", "Cannot interpret image.");
+                this.openErrorScenarioOneDialog();
               }
             }
             else {
+              this.logger.error("ViolationTicketService::analyseTicket error has occurred:", "no result from API analyse");
               this.onError();
             }
+            progressRef.complete();
+            dialogRef.close();
           },
           error: err => {
+            this.logger.error("ViolationTicketService::analyseTicket error has occurred:", err);
             this.onError(err);
+            dialogRef.close();
           }
         })
     })
   }
 
-  public validateTicket(params?: QueryParamsForSearch): boolean {
+  validateTicket(params?: QueryParamsForSearch): boolean {
     var result = false;
     if (this.ticket && this.ticket.issued_date) {
-      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
+      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC");
       if (this.ticket.ticket_number === params.ticketNumber && storedTicketTime === params.time) {
         result = true;
       }
@@ -167,35 +190,33 @@ export class ViolationTicketService {
     let result = <ViolationTicket>{};
     let isDateFound = false;
     let isTimeFound = false;
+    let isOcrIssueDetected = false;
 
-    // Direct convertion
-    let keys = Object.keys(source.fields).filter(i => i.toLowerCase().indexOf(".") === -1);
+    let keys = Object.keys(source.fields);
     keys.forEach(key => {
-      let value = this.getValue(key, <Field>source.fields[key]);
-      result[key] = value;
+      let value = "";
+      // Direct conversion
+      if (key.indexOf(".") === -1) {
+        value = this.getValue(key, <Field>source.fields[key]);
+        result[key] = value;
 
-      if (value && key === this.ocrTicketDateKey) {
-        isDateFound = true;
-      }
-      if (value && key === this.ocrTicketTimeKey) {
-        isTimeFound = true;
-      }
-    })
-
-    // Dynamic convertion for object array
-    let arrayKeys = Object.keys(source.fields).filter(i => i.toLowerCase().indexOf(".") > 0 && i.split(".").length === 3);
-    if (arrayKeys.length > 0) {
-      arrayKeys.forEach(arrayKey => {
-        let value = this.getValue(arrayKey, <Field>source.fields[arrayKey]);
-        let keySplit = arrayKey.split(".");
+        if (value && key === this.ocrTicketDateKey) {
+          isDateFound = true;
+        }
+        if (value && key === this.ocrTicketTimeKey) {
+          isTimeFound = true;
+        }
+      } else if (key.indexOf(".") > 0 && key.split(".").length === 3) {
+        value = this.getValue(key, <Field>source.fields[key]);
+        let keySplit = key.split(".");
 
         let idpos = keySplit[1].lastIndexOf("_");
         let id = keySplit[1].substring(idpos + 1);
-        let idKey = keySplit[1].substring(0, idpos) ? keySplit[1].substring(0, idpos) : "id";
+        let idKey = keySplit[1].substring(0, idpos) ? keySplit[1].substring(0, idpos) : "";
 
         let arrKey = keySplit[0];
         let index = +id - 1;
-        let key = keySplit[2];
+        let childkey = keySplit[2];
 
         if (index >= 0) {
           if (!result[arrKey]) {
@@ -205,27 +226,43 @@ export class ViolationTicketService {
             result[arrKey][index] = {};
             result[arrKey][index][idKey] = +id;
           }
-          result[arrKey][index][key] = value;
+          result[arrKey][index][childkey] = value;
         }
-      })
-    }
+      }
+
+      // check for conf level < 0.8 for selected fields
+      if (this.systemKeysToCheck.indexOf(key) >= 0 && !isOcrIssueDetected && source?.fields[key]?.fieldConfidence < 0.8) {
+        isOcrIssueDetected = true;
+      }
+    })
 
     // special handling
+    if (result.drivers_licence_number) {
+      result.drivers_licence_number = (<Field>source.fields[this.driversLicenceNumberKey]).value;
+    }
     if (isDateFound || isTimeFound) {
-      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "YYYY-MM-ddTHH:mm:ss");
+      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "yyyy-MM-ddTHH:mm:ss'Z'");
     }
     if (isDateFound) {
-      result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
+      result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, yyyy", "UTC");
     }
     result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
+    result.counts.forEach(count => {
+      if (count.ticketed_amount === null) {
+        isOcrIssueDetected = true;
+      } else {
+        count.ticketed_amount = +count.ticketed_amount;
+      }
+    })
 
     // set ticket_id to imageFilename returned from Ocr
     result.ticket_id = source.imageFilename;
 
-    // add extra fields for notcie of dispute
+    // add extra fields for notice of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
-
+    result[this.systemDetectOcrIssueKey] = isOcrIssueDetected ? this.SystemDetectedOcrIssues.Y : this.SystemDetectedOcrIssues.N;
+    this.logger.info("ViolationTicketService: result of converting to violation ticket", result);
     return result;
   }
 
@@ -257,7 +294,7 @@ export class ViolationTicketService {
     return result;
   }
 
-  public getTicketType(ticket): string {
+  getTicketType(ticket): string {
     let result: string;
     if (ticket && ticket.ticket_number) {
       result = this.ticketTypePipe.transform(ticket.ticket_number);
@@ -265,7 +302,7 @@ export class ViolationTicketService {
     return result;
   }
 
-  public updateOcrIssue(issueDetected, issuseDesc): void {
+  updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
     ticket[this.ocrIssueDetectedKey] = (issueDetected === this.DetectedOcrIssues.Y) ? issueDetected : this.DetectedOcrIssues.N;
     ticket[this.ocrIssueDescKey] = issuseDesc;
@@ -276,18 +313,27 @@ export class ViolationTicketService {
     if (this.ticket) {
       let params = paramsInput ?? {
         ticketNumber: this.ticket.ticket_number,
-        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
+        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm", "UTC")
       };
       let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
       if (this.ticketType === TicketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
-        dateDiff = this.dateDiff(this.ocrTicket.fields["service_date"].value);
+        dateDiff = this.dateDiff(this.ocrTicket?.fields["service_date"].value);
       }
-      if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
-        || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
+      // handwritten tickets are additionally checked in the analyze ticket API but cheked again here for <=30 days
+      // e-tickets can be <=30 days and camera tickets <=45
+      // TODO:  temporarily turned off checking dates for e-tickets for testing needs to be turned bacxk on by replacing if conditions
+      // if ((dateDiff <= 30 && (this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.HANDWRITTEN_TICKET))
+      // || (dateDiff <= 45 && this.ticketType === TicketTypes.CAMERA_TICKET)) {
+      if ((dateDiff <= 30 && this.ticketType === TicketTypes.HANDWRITTEN_TICKET)
+        || this.ticketType === TicketTypes.ELECTRONIC_TICKET || this.ticketType === TicketTypes.CAMERA_TICKET) {
         this.router.navigate([AppRoutes.ticketPath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
       } else {
+        let errMsg = "Issued " + dateDiff.toString() + "days ago on ";
+        if (this.ticketType == TicketTypes.HANDWRITTEN_TICKET) errMsg += this.ocrTicket?.fields["service_date"].value.toString();
+        else errMsg += this.ticket.issued_date.toString();
+        this.logger.error("ViolationTicketService::goToInitiateResolution ticket too old has occurred", dateDiff);
         this.openInValidTicketDateDialog();
       }
     } else {
@@ -313,17 +359,24 @@ export class ViolationTicketService {
       if (err.error?.errors?.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
         || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
         || this.isErrorMatch(err, "low confidence", false)) {
+        var errorMessages = "";
+        if (err.error?.errors) {
+          err.error.errors.forEach(error => { errorMessages += ". \n" + error });
+        }
+        this.logger.error("ViolationTicketService:onError critical validation error has occurred", errorMessages);
         this.openErrorScenarioOneDialog();
-      }
-      else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {
+      } else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
+        this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
         this.openErrorScenarioTwoDialog();
-      }
-      else if (this.isErrorMatch(err, "MVA must be selected under the \"Did commit the offence(s) indicated\" section.")) {
-        this.openErrorScenarioThreeDialog();
       }
       else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
         this.openErrorScenarioFourDialog();
       } else { // fall back option
+        var errorMessages = "";
+        if (err.error?.errors) {
+          err.error.errors.forEach(error => { errorMessages += ". \n" + error });
+        }
+        this.logger.error("ViolationTicketService:onError validation error has occurred", errorMessages);
         this.openErrorScenarioOneDialog();
       }
     }
@@ -353,10 +406,6 @@ export class ViolationTicketService {
     return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
   }
 
-  private openErrorScenarioThreeDialog() {
-    return this.openImageTicketNotFoundDialog("Invalid ticket type", "error3");
-  }
-
   private openErrorScenarioFourDialog() {
     return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error2");
   }
@@ -369,9 +418,5 @@ export class ViolationTicketService {
     var diffYear = (new Date().getTime() - new Date(givenDate).getTime()) / 1000;
     diffYear /= (60 * 60 * 24);
     return Math.round(diffYear);
-  }
-
-  private checkSize(fileSize: number) {
-    return fileSize > 0 && fileSize <= (10 * 1024 * 1024); // less or equal to 10MB
   }
 }

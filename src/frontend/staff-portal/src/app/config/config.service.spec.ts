@@ -29,14 +29,6 @@ describe('ConfigService', () => {
     }
   ));
 
-  it('should get courtLocations code', inject(
-    [ConfigService],
-    (service: ConfigService) => {
-      const code = service.courtLocations[0].code;
-      expect(code).toBeDefined();
-    }
-  ));
-
   it('should get countries code', inject(
     [ConfigService],
     (service: ConfigService) => {

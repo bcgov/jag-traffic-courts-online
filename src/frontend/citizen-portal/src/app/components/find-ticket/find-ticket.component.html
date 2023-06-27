@@ -27,8 +27,14 @@
       </button>
     </div>
     <div class="row mb-4">
+      <span>It can take around a minute to upload and scan your ticket image
+      </span>
+    </div>
+    <div class="row mb-4">
       <span>I can't upload an image of my ticket
-        <mat-icon class="tool-tip">info</mat-icon>
+        <a class="view-link" (click)="onViewTicketUploadManual()" [matTooltip]="toolTipData">
+          <mat-icon class="tool-tip">info</mat-icon>
+        </a>
       </span>
     </div>
     <div class="row">
@@ -116,9 +122,15 @@
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
             Upload ticket image
           </button>
+          <div class="row mb-4">
+            <span>It can take around a minute to upload and scan your ticket image
+            </span>
+          </div>
           <div class="row my-4">
             <span>I can't upload an image of my ticket
-              <mat-icon class="tool-tip" mdTooltipPosition='above' matTooltip='{{toolTipData}}'>info</mat-icon>
+              <a class="view-link" (click)="onViewTicketUploadManual()" [matTooltip]="toolTipData">
+                <mat-icon class="tool-tip">info</mat-icon>
+              </a>
             </span>
           </div>
           <input hidden (change)="onFileChange($event)" #fileInput type="file" id="file" />

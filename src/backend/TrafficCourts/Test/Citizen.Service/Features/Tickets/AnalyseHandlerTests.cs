@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using Xunit;
 
@@ -33,15 +32,10 @@ public class AnalyseHandlerTests
 
         // setup the mock IFilePersistenceService
         string expectedFilename = Guid.NewGuid().ToString("n") + ".jpg";
-        var filePersistenceServiceMock = new Mock<IFilePersistenceService>(MockBehavior.Strict);
-        filePersistenceServiceMock
-            .Setup(_ => _.SaveFileAsync(It.IsAny<MemoryStream>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult(expectedFilename));
 
         var handler = new AnalyseHandler.Handler(
             mockService.Object, 
             mockValidator.Object, 
-            filePersistenceServiceMock.Object,
             new SimpleMemoryStreamManager(),
             mockRedisCacheService.Object,
             mockLogger.Object);

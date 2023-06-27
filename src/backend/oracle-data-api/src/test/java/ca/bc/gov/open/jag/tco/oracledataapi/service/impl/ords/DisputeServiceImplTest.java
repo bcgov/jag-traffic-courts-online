@@ -20,9 +20,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
@@ -51,7 +53,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("1");
 
-		Mockito.when(violationTicketApi.v1AssignViolationTicketPost(disputeId, userName)).thenReturn(response);
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
 			repository.assignDisputeToUser(disputeId, userName);
@@ -63,7 +65,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Long disputeId = Long.valueOf(1);
 		String userName = "testUser";
 
-		Mockito.when(violationTicketApi.v1AssignViolationTicketPost(disputeId, userName)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenThrow(ApiException.class);
 
 		assertThrows(ApiException.class, () -> {
 			repository.assignDisputeToUser(disputeId, userName);
@@ -77,7 +79,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("0"); // 0 status (meaning failure)
 
-		Mockito.when(violationTicketApi.v1AssignViolationTicketPost(disputeId, userName)).thenReturn(response);
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.assignDisputeToUser(disputeId, userName);
@@ -89,7 +91,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Long disputeId = Long.valueOf(1);
 		String userName = "testUser";
 
-		Mockito.when(violationTicketApi.v1AssignViolationTicketPost(disputeId, userName)).thenReturn(null);
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(null);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.assignDisputeToUser(disputeId, userName);
@@ -104,7 +106,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		response.setStatus("0"); // 0 status (meaning failure)
 		response.setException("some failure cause");
 
-		Mockito.when(violationTicketApi.v1AssignViolationTicketPost(disputeId, userName)).thenReturn(response);
+		Mockito.when(violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.assignDisputeToUser(disputeId, userName);
@@ -117,7 +119,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("1");
 
-		Mockito.when(violationTicketApi.v1DeleteViolationTicketDelete(disputeId)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
 			repository.deleteById(disputeId);
@@ -140,7 +142,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		response.setStatus("0");
 		response.setException("ORA-01403: no data found");
 
-		Mockito.when(violationTicketApi.v1DeleteViolationTicketDelete(disputeId)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
 
 		assertThrows(NoSuchElementException.class, () -> {
 			repository.deleteById(disputeId);
@@ -151,7 +153,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	public void testDeleteExpect500_ApiException() throws Exception {
 		Long disputeId = Long.valueOf(1);
 
-		Mockito.when(violationTicketApi.v1DeleteViolationTicketDelete(disputeId)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenThrow(ApiException.class);
 
 		assertThrows(ApiException.class, () -> {
 			repository.deleteById(disputeId);
@@ -164,7 +166,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("0"); // 0 status (meaning failure) and no message
 
-		Mockito.when(violationTicketApi.v1DeleteViolationTicketDelete(disputeId)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.deleteById(disputeId);
@@ -175,7 +177,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	public void testDeleteExpect500_nullReponse() throws ApiException {
 		Long disputeId = Long.valueOf(1);
 
-		Mockito.when(violationTicketApi.v1DeleteViolationTicketDelete(disputeId)).thenReturn(null);
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(null);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.deleteById(disputeId);
@@ -189,7 +191,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		response.setStatus("0"); // 0 status (meaning failure) and no message
 		response.setException("some failure cause");
 
-		Mockito.when(violationTicketApi.v1DeleteViolationTicketDelete(disputeId)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketDelete(disputeId, EmptyObject.instance)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.deleteById(disputeId);
@@ -204,7 +206,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("1");
 
-		Mockito.when(violationTicketApi.v1ViolationTicketStatusPost(disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
 			repository.setStatus(disputeId, disputeStatus, rejectedReason);
@@ -217,7 +219,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		DisputeStatus disputeStatus = DisputeStatus.NEW;
 		String rejectedReason = "just because";
 
-		Mockito.when(violationTicketApi.v1ViolationTicketStatusPost(disputeId, disputeStatus.toShortName(), rejectedReason)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenThrow(ApiException.class);
 
 		assertThrows(ApiException.class, () -> {
 			repository.setStatus(disputeId, disputeStatus, rejectedReason);
@@ -232,7 +234,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("0"); // 0 status (meaning failure) and no message
 
-		Mockito.when(violationTicketApi.v1ViolationTicketStatusPost(disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.setStatus(disputeId, disputeStatus, rejectedReason);
@@ -245,7 +247,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		DisputeStatus disputeStatus = DisputeStatus.NEW;
 		String rejectedReason = "just because";
 
-		Mockito.when(violationTicketApi.v1ViolationTicketStatusPost(disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(null);
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(null);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.setStatus(disputeId, disputeStatus, rejectedReason);
@@ -261,7 +263,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		response.setStatus("0"); // 0 status (meaning failure)
 		response.setException("some failure cause");
 
-		Mockito.when(violationTicketApi.v1ViolationTicketStatusPost(disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.setStatus(disputeId, disputeStatus, rejectedReason);
@@ -275,7 +277,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("1");
 
-		Mockito.when(violationTicketApi.v1UnassignViolationTicketPost(assignedBeforeTs)).thenReturn(response);
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
 			repository.unassignDisputes(now);
@@ -287,7 +289,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Date now = new Date();
 		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
 
-		Mockito.when(violationTicketApi.v1UnassignViolationTicketPost(assignedBeforeTs)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenThrow(ApiException.class);
 
 		assertThrows(ApiException.class, () -> {
 			repository.unassignDisputes(now);
@@ -301,7 +303,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ResponseResult response = new ResponseResult();
 		response.setStatus("0"); // 0 status (meaning failure) and no message
 
-		Mockito.when(violationTicketApi.v1UnassignViolationTicketPost(assignedBeforeTs)).thenReturn(response);
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.unassignDisputes(now);
@@ -313,7 +315,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Date now = new Date();
 		String assignedBeforeTs = dateToString(now, DateUtil.DATE_TIME_FORMAT);
 
-		Mockito.when(violationTicketApi.v1UnassignViolationTicketPost(assignedBeforeTs)).thenReturn(null);
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(null);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.unassignDisputes(now);
@@ -328,7 +330,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		response.setStatus("0"); // 0 status (meaning failure)
 		response.setException("some failure cause");
 
-		Mockito.when(violationTicketApi.v1UnassignViolationTicketPost(assignedBeforeTs)).thenReturn(response);
+		Mockito.when(violationTicketApi.unassignViolationTicketPost(EmptyObject.instance, assignedBeforeTs)).thenReturn(response);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.unassignDisputes(now);
@@ -359,7 +361,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		ViolationTicketListResponse emptyResponse = new ViolationTicketListResponse();
 		emptyResponse.setViolationTickets(new ArrayList<ViolationTicket>());
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(null, null, ticketNumber, null, issuedDateStr)).thenReturn(validResponse);
+		Mockito.when(violationTicketApi.violationTicketListGet(null, null, ticketNumber, null, issuedDateStr)).thenReturn(validResponse);
 
 		List<DisputeResult> disputeResults = repository.findByTicketNumberAndTime(ticketNumber, issuedDate);
 		assertEquals(1, disputeResults.size());
@@ -375,7 +377,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 
 	@Test
 	public void testFindByTicketNumberAndTime500() throws Exception {
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(any(), any(), any(), any(), any())).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.violationTicketListGet(any(), any(), any(), any(), any())).thenThrow(ApiException.class);
 
 		assertThrows(ApiException.class, () -> {
 			repository.findByTicketNumberAndTime("AX00000000", new Date());
@@ -392,7 +394,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenReturn(response);
+		Mockito.when(violationTicketApi.violationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
 			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
@@ -409,7 +411,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.violationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenThrow(ApiException.class);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
@@ -425,6 +427,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
 
@@ -440,6 +443,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenThrow(ApiException.class);
 
@@ -457,6 +461,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
 
@@ -471,6 +476,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(null);
 
@@ -489,6 +495,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Dispute disputeToUpdate = new Dispute();
 		disputeToUpdate.setDisputeId(disputeId);
 		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+		disputeToUpdate.setContactTypeCd(ContactType.INDIVIDUAL);
 
 		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
 

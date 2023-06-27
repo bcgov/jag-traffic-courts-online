@@ -21,11 +21,11 @@ public class SearchObjectsAsync : ObjectManagementBase
         mockHttp
             .Expect(HttpMethod.Get, OperationUrl)
             .WithHeaders(acceptJson: true, meta)
-            .Respond(HttpStatusCode.Created, "application/json", JsonSerializer.Serialize(expected));
+            .Respond(HttpStatusCode.OK, "application/json", JsonSerializer.Serialize(expected));
 
         ObjectManagementClient sut = GetClient(mockHttp);
 
-        await sut.SearchObjectsAsync(meta, objIds, path, active, @public, mimeType, name, tags, CancellationToken.None);
+        await sut.SearchObjectsAsync(meta, objIds, null, path, active, false, false, @public, mimeType, name, tags, CancellationToken.None);
         mockHttp.VerifyNoOutstandingExpectation();
     }
 

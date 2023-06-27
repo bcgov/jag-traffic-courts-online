@@ -9,6 +9,8 @@ public enum JJDisputedCountFinding implements ShortNamedEnum {
 	UNKNOWN("UKN"),
 	GUILTY("GU"),
 	NOT_GUILTY("NG"),
+	CANCELLED("CA"),
+	PAID_PRIOR_TO_APPEARANCE("PP"),
 	GUILTY_LESSER("GL");
 
 	private String shortName;

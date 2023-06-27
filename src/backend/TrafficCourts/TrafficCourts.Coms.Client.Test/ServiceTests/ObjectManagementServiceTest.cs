@@ -50,13 +50,25 @@ public abstract class ObjectManagementServiceTest
             .ReturnsAsync(() => response);
     }
 
-    protected void SetupGetObjectMetadataAsync(IList<ObjectMetadata> response)
+    protected void SetupGetObjectMetadataAsync(IList<Anonymous2> response)
     {
-        _mockClient.Setup(_ => _.GetObjectMetadataAsync(
+        _mockClient.Setup(_ => _.FetchMetadataAsync(
                 It.IsAny<IList<Guid>>(),
+                It.IsAny<IReadOnlyDictionary<string, string>>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => response);
     }
+
+    protected void SetupGetObjectTagsAsync(IList<Anonymous3> response)
+    {
+        _mockClient.Setup(_ => _.FetchTagsAsync(
+                It.IsAny<IList<Guid>>(),
+                It.IsAny<IReadOnlyDictionary<string, string>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => response);
+    }
+
+    /// 
 
 
     protected static bool Equal(IReadOnlyDictionary<string, string> expected, IReadOnlyDictionary<string, string> actual)

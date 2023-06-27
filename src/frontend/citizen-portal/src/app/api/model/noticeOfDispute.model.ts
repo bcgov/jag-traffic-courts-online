@@ -9,10 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
+import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
+import { FileMetadata } from './fileMetadata.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
+import { ViolationTicket } from './violationTicket.model';
 import { DisputeCount } from './disputeCount.model';
+import { DisputeRequestCourtAppearanceYn } from './disputeRequestCourtAppearanceYn.model';
 
 
 /**
@@ -39,6 +44,27 @@ export interface NoticeOfDispute {
      * The surname or corporate name.
      */
     disputant_surname?: string | null;
+    /**
+     * Contact Law Firm Name
+     */
+    contact_law_firm_name?: string | null;
+    /**
+     * Contact Given Name 1
+     */
+    contact_given_name1?: string | null;
+    /**
+     * Contact Given Name 2
+     */
+    contact_given_name2?: string | null;
+    /**
+     * Contact Given Name 3
+     */
+    contact_given_name3?: string | null;
+    /**
+     * Contact Surname
+     */
+    contact_surname?: string | null;
+    contact_type?: DisputeContactTypeCd;
     /**
      * The mailing address of the disputant.
      */
@@ -144,11 +170,12 @@ export interface NoticeOfDispute {
      * Address of the lawyer who will represent the disputant at the hearing.
      */
     lawyer_phone_number?: string | null;
+    request_court_appearance?: DisputeRequestCourtAppearanceYn;
     /**
      * The disputant requires spoken language interpreter. The language name is indicated in this field.
      */
     interpreter_language_cd?: string | null;
-    interprer_required?: DisputeInterpreterRequired;
+    interpreter_required?: DisputeInterpreterRequired;
     /**
      * The number of witnesses that the disputant intends to call.
      */
@@ -165,7 +192,12 @@ export interface NoticeOfDispute {
      * Dispute Counts
      */
     dispute_counts?: Array<DisputeCount> | null;
+    /**
+     * List of file metadata that contain ID and Filename of all the uploaded documents related to this particular JJDispute
+     */
+    file_data?: Array<FileMetadata> | null;
     disputant_detected_ocr_issues?: DisputeDisputantDetectedOcrIssues;
+    system_detected_ocr_issues?: DisputeSystemDetectedOcrIssues;
     /**
      * The description of the issue with OCR ticket if the citizen has detected any.
      */
@@ -178,5 +210,10 @@ export interface NoticeOfDispute {
      * Detachment Location
      */
     detachment_location?: string | null;
+    /**
+     * Is court appearance less than 14 days
+     */
+    appearance_less_than_14_days?: boolean | null;
+    violation_ticket?: ViolationTicket;
 }
 

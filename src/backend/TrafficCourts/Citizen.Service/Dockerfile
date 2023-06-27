@@ -2,13 +2,12 @@
 ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk
 ARG RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet
 
-FROM $RUNTIME_IMAGE:6.0 AS base
+FROM $RUNTIME_IMAGE:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM $BUILD_IMAGE:6.0 AS build
-#FROM registry.access.redhat.com/ubi8/dotnet-60:6.0 AS build
+FROM $BUILD_IMAGE:7.0 AS build
 WORKDIR /src
 COPY ["Citizen.Service/TrafficCourts.Citizen.Service.csproj", "Citizen.Service/"]
 COPY ["Common/TrafficCourts.Common.csproj", "Common/"]
@@ -40,5 +39,5 @@ ENV GIT_SHA=$GIT_SHA
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
+RUN chgrp 0 entrypoint.sh && chmod a+rx,o-rx entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh", "dotnet", "TrafficCourts.Citizen.Service.dll"]

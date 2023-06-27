@@ -2,7 +2,7 @@
   <div class="col-lg-2">
     <div style="display: flex">
       <span class="h2">
-        <strong>Count {{ count.count_no }}</strong>
+        <strong>Count {{ ticketCount.count_no }}</strong>
       </span>
     </div>
   </div>
@@ -10,27 +10,22 @@
   <div class="col-lg-7">
     <small class="d-block">For this count I would like to</small>
     <strong>
-      <div *ngIf="count.__skip">
+      <div *ngIf="disputeCount?.__skip || (disputeCount?.plea_cd === Plea.G && disputeCount?.request_reduction === RequestReduction.N && disputeCount?.request_time_to_pay === RequestTimeToPay.N && noticeOfDispute.request_court_appearance === RequestCourtAppearance.N)">
         No action at this time
       </div>
-      <div *ngIf="count.request_court_appearance === RequestCourtAppearance.Y && count.plea_cd === Plea.G">
-        Request a fine reduction and/or more time to pay
+      <div *ngIf="disputeCount?.request_reduction === RequestReduction.Y && disputeCount?.plea_cd === Plea.G && noticeOfDispute.request_court_appearance === RequestCourtAppearance.N">
+        Request a fine reduction with written reasons
       </div>
-      <div *ngIf="count.request_reduction === RequestReduction.Y">
-        Request a fine reduction
+      <div *ngIf="disputeCount?.request_time_to_pay === RequestTimeToPay.Y && disputeCount?.plea_cd === Plea.G && noticeOfDispute.request_court_appearance === RequestCourtAppearance.N">
+        Request more time to pay with written reasons
       </div>
-      <div *ngIf="count.request_time_to_pay === RequestTimeToPay.Y">
-        Request more time to pay
-      </div>
-      <div *ngIf="count.plea_cd === Plea.N">
+      <div *ngIf="disputeCount?.plea_cd === Plea.N">
         Dispute the charge
       </div>
+      <div *ngIf="disputeCount?.plea_cd === Plea.G && noticeOfDispute.request_court_appearance === RequestCourtAppearance.Y">
+        Request a fine reduction and/or time to pay on this count in court
+      </div>
     </strong>
-  </div>
-  <div class="col-lg-3">
-    <small class="d-block">I will appear in court</small>
-    <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.Y"> Yes </strong>
-    <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.N || count.__skip"> No </strong>
   </div>
 </div>
 
@@ -41,10 +36,10 @@
 <div class="row mb-2">
   <div class="offset-lg-2 col-lg-7">
     <small class="d-block">Description of offence</small>
-    <div class="text">{{ count.description | titlecase }}</div>
+    <div class="text">{{ ticketCount.description | titlecase }}</div>
   </div>
   <div class="col-lg-3">
     <small class="d-block">Offence amount</small>
-    <div class="text">{{ count.ticketed_amount | currency }}</div>
+    <div class="text">{{ ticketCount.ticketed_amount | currency }}</div>
   </div>
 </div>
