@@ -35,7 +35,8 @@ export class AuthService {
     this.keycloak.keycloakEvents$.subscribe({
       next(event) {
         if (event.type == KeycloakEventType.OnTokenExpired) {
-          keycloak.updateToken(1).then(refreshed => {
+          // In minutes
+          keycloak.updateToken(30).then(refreshed => {
             if (refreshed) {
               this.logger.info('AuthService::RefreshToken', 'Token refreshed');
             }
