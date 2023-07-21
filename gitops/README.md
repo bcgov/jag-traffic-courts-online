@@ -1,26 +1,34 @@
 
+# Folder Structure Overview
+
+```
+gitops
+├── charts
+│   ├── form-recognizer                          Form Recognizer chart
+│   ├── jaeger-aio                               Jaeger All In One chart
+│   ├── traffic-court-online                     Traffic Court Online application charts
+│   └── virus-scan                               Virus scan chart - depends on clamav
+├── common-object-management-service             COMS file management service
+├── example                                      Example chart values
+├── openshift                                    OpenShift manifests for the tools namespace
+└── vault                                        Hashicorp Vault secret examples without values
+```
+
 # Assumptions
 - You have access to an OpenShift namespace to deploy to
 - You have access to Vault to manage secrets - https://vault.developer.gov.bc.ca/
-- You have access to the Common Hosted Single Sign-on SSO Requests system
-- You have access to Sysdig - https://app.sysdigcloud.com/
-- You have access to an Azure Subscription authorized to run Azure Form Recognizer on premise
+- You have access to the Common Hosted Single Sign-on SSO Requests system for Keycloak deployment and setup.
+- You have access to Sysdig - https://app.sysdigcloud.com/ for verifying metric collection
+- You have access to Splunk - https://splunk.jag.gov.bc.ca/ for verifying logging configuration
+- You have access to an Azure Subscription authorized to run Azure Forms Recognizer on premise for Forms Recognizer deployment and setup.
 
 # Prerequisites
-- OpenShift Container Platform CLI, see [Installing the OpenShift CLI](https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html#installing-openshift-cli)
-
-- A local configured copy of kubectl
-
-## Helm
-### Install Helm
-
-Helm is a tool for managing Kubernetes charts. Charts are packages of pre-configured Kubernetes resources.
-
-To install Helm, refer to the [Helm install guide](https://github.com/helm/helm#install) and ensure that the `helm` binary is in the `PATH` of your shell.
+- OpenShift Container Platform CLI (oc), see [Installing the OpenShift CLI](https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html#installing-openshift-cli)
+- Helm, to install Helm, refer to the [Helm install guide](https://github.com/helm/helm#install) and ensure that the `helm` binary is in the `PATH` of your shell.
+- A local configured copy of kubectl (required?)
+- PowerShell (optional)
 
 # Setup
-
-This project has standardized on using Helm charts for deployment. 
 
 ## Setup Image Pull Secret
 
@@ -47,18 +55,18 @@ the image stream and tag exists. During deployment be sure to specific they corr
 Regardless of the OpenShift you deploy to, the image registry for the internal image stream will always be  `registry.openshift-image-registry.svc:5000`.
 
 1. Create image streams
-1. Create a role binding allowing any service account from the dev, test or prod namespaces to pull images.
-
-[0198bb:image-pullers](/infrastructure/openshift\tools/role-bindings/0198bb-image-pullers.yaml) role binding.
-
-```
-oc apply -n 0198bb-tools -f ./infrastructure/openshift/tools/image-streams/
-oc apply -n 0198bb-tools -f ./infrastructure/openshift/tools/role-bindings/0198bb-image-pullers.yaml
-```
+    ```
+    oc apply -n 0198bb-tools -f ./infrastructure/openshift/tools/image-streams/
+    ```
+1. Create the [0198bb:image-pullers](/infrastructure/openshift\tools/role-bindings/0198bb-image-pullers.yaml) role binding 
+   allowing any service account from the dev, test or prod namespaces to pull images.
+    ```
+    oc apply -n 0198bb-tools -f ./infrastructure/openshift/tools/role-bindings/0198bb-image-pullers.yaml
+    ```
 
 ## Get uid-range and supplemental-groups
 
-Get the uid-range and supplemental-groups for your namespace, `oc get ns your-namespace -o yaml`. 
+Get the uid-range and supplemental-groups for your namespace, `oc get ns 0198bb-dev -o yaml`. 
 These values will be different for each namespace. The uid-range and supplemental-groups are 
 normally fall into the same range in namespace. The `uid-range` value is used for `runAsUser`.
 The `supplemental-groups` value is used for `fsGroup` if required.
@@ -87,12 +95,12 @@ https://hub.docker.com/r/bitnamicharts/redis-cluster
 1. Pull helm chart, `helm pull oci://registry-1.docker.io/bitnamicharts/redis-cluster`
 1. Create a values file `redis-cluster-values.yaml` using the correct values for `runAsUser` and `fsGroup` from above.  See the default [values.yaml](https://github.com/bitnami/charts/blob/main/bitnami/redis-cluster/values.yaml) for reference.
 1. Install the helm chart. Note in the command below, we override the name so the services otherwise the service would have name `deployment-redis-cluster`.
+    ```
+    oc project 0198bb-dev
+    helm install redis redis-cluster-8.6.2.tgz --values redis-cluster-values.yaml --set nameOverride=redis
+    ```
 
-```
-helm install redis redis-cluster-8.6.2.tgz --values redis-cluster-values.yaml --set nameOverride=redis
-```
-
-You can the connect to redis.namespace.svc.cluster.local on port 6379. The password will be generated into secret `redis` in the `redis-password` key.
+You can the connect to redis.0198bb-dev.svc.cluster.local on port 6379. The password will be generated into secret with the same name as the Helm release, `redis` in this example. See the `redis-password` key for the password.
 
 ## RabbitMQ
 
@@ -101,27 +109,27 @@ In `dev` and `test` environments, a single RabbitMQ node can be used. In `produc
 1. Ensure the service account named used, defaults to `rabbitmq`, has permissions to pull images from the tools namespace
 1. Pull helm chart, `helm pull oci://registry-1.docker.io/bitnamicharts/rabbitmq`
 1. Create a values file `rabbitmq-values.yaml` using the correct values for `runAsUser` and `fsGroup` from above.  See the default [values.yaml](https://github.com/bitnami/charts/blob/main/bitnami/rabbitmq/values.yaml) for reference.
-1. Install the helm chart.
+1. Install the helm chart,
+    ```
+    oc project 0198bb-dev
+    helm install rabbitmq rabbitmq-12.0.2.tgz --values rabbitmq-values.yaml
+    ```
 
-```
-helm install rabbitmq rabbitmq-12.0.2.tgz --values rabbitmq-values.yaml
-```
-
-RabbitMQ can be connected to at rabbitmq.namespace.svc.cluster.local on port 5672 (amqp). The password will be generated into secret `rabbitmq` in the `rabbitmq-password` key. The username is `user`.
+RabbitMQ can be connected to at rabbitmq.namespace.svc.cluster.local on port 5672 (amqp). The password will be generated into secret with the same name as the Helm release, `rabbitmq` in this example. See the `rabbitmq-password` key for the password. The username is `user`.
 
 ## Postgres
 
 In `dev` and `test` environments, a single Postgres server can be used. In `production`, a Postgres [patroni](https://github.com/zalando/patroni) cluster must be used for high availability.
+A Postgres server is required for Keycloak, COMS and ??.
 
 1. Deploy 
 
-
 ## Common Object Management Service (COMS)
 
-TODO: create a proper Helm chart to deploy the deployment
+TODO: Create a proper Helm chart to deploy the deployment. 
 
-COMS does not have a helm chart we can use. The one in the source project wants to deployed postgres at the same time. We have manifests at
-`infrastructure\openshift\common-object-management-service` that can be applied.
+COMS does not have a helm chart we can use. The one in the [common-object-management-service](https://github.com/bcgov/common-object-management-service) 
+project wants to deploy postgres at the same time. We have manifests at `infrastructure\openshift\common-object-management-service` that can be applied.
 
 ## ClamAV
 
@@ -144,6 +152,11 @@ The ClamAV image is build from source using the [bvgov/clamav](https://github.co
 1. Deploy ClamAV
 
  TODO:
+
+### Notes
+* The build config always tags the image as latest. Ideally, the source repository would have tags
+  that we could pull from and use as the build image.
+* The Docker image will pull the latest 
 
 ## Virus Scan API
 
@@ -223,4 +236,33 @@ helm install keycloak keycloak-15.1.3.tgz --values keycloak-values.yaml
 
 ## Azure Form Recognizer on premise
 
+Azure Form Recognizer requries RabbitMQ. The default values assume the RabbitMQ credentials are
+store in a secret named `rabbitmq`. The `api` project is the key service that may need to be 
+scaled to more than one instance in production.
+
+```
+cd charts
+helm install ocr form-recognizer 
+```
+
 ## Traffic Court Online
+
+Traffic Court Online is the main application charts. All the secrets are stored in Vault. See the
+values file for each environment,
+
+* traffic-court-dev-values.yaml
+* traffic-court-test-values.yaml
+* traffic-court-prod-values.yaml (*to be created when deploying to prod*)
+
+There a convience script to automatically apply the helm chart that switches to the correct namespace
+and runs an install/upgrade.
+
+ ```
+ .\deploy.ps1 dev
+ ```
+
+or run manually,
+
+```
+helm install traffic-court-online traffic-court-online --values traffic-court-dev-values.yaml
+```

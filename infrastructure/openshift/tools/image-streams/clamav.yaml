@@ -1,9 +1,0 @@
-kind: ImageStream
-apiVersion: image.openshift.io/v1
-metadata:
-  name: clamav
-  labels:
-    usage: build-pipeline-image
-spec:
-  lookupPolicy:
-    local: false
