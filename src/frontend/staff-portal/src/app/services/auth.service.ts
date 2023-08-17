@@ -18,6 +18,7 @@ export class AuthService {
   private _userProfile: BehaviorSubject<KeycloakProfile> = new BehaviorSubject<KeycloakProfile>(null);
   private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
   private _vtcList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
+  private _accessTokenTimespan: BehaviorSubject<number> = new BehaviorSubject<number>(300); // default
 
   private site: string = "staff-api";
   private roles = [
@@ -35,7 +36,7 @@ export class AuthService {
     this.keycloak.keycloakEvents$.subscribe({
       next(event) {
         if (event.type == KeycloakEventType.OnTokenExpired) {
-          keycloak.updateToken(1).then(refreshed => {
+          keycloak.updateToken(this.accessTokenTimespan).then(refreshed => {
             if (refreshed) {
               this.logger.info('AuthService::RefreshToken', 'Token refreshed');
             }
@@ -77,6 +78,10 @@ export class AuthService {
 
   get isLoggedIn(): boolean {
     return this._isLoggedIn.value;
+  }
+
+  get accessTokenTimespan(): number {
+    return this._accessTokenTimespan.value;
   }
 
   loadUserProfile(): Observable<KeycloakProfile> {
