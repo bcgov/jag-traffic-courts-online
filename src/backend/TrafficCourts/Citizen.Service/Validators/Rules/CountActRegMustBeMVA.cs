@@ -17,7 +17,7 @@ public class CountActRegMustBeMVA : ValidationRule
     public override Task RunAsync()
     {
         string? countAct = this.Field.Value;
-        if (countAct is not null &&
+        if (countAct is not null && 
             (!"MVA".Equals(countAct.Replace("\\s+", "").ToUpper())) && (!"MVR".Equals(countAct.Replace("\\s+", "").ToUpper())))
         {
             AddValidationError(String.Format(ValidationMessages.MVAMustBeCountValue, countAct, _countNum));
