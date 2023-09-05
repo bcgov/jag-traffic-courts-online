@@ -19,7 +19,7 @@ spec:
           value: 'Production'
         - name: ASPNETCORE_URLS
           value: 'http://*:8080'
-      dockerfilePath: src/backend/bc-gov-virus-scan/BCGov.VirusScan.Api/Dockerfile
+      dockerfilePath: BCGov.VirusScan.Api/Dockerfile
   postCommit: {}
   source:
     type: Git
