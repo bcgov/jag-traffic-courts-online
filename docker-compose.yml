@@ -450,7 +450,7 @@ services:
       - "SERVER-PORT=8080"
       - "SMTP_PORT=5025"
     ports:
-      - "5080:8080"
+      - "5125:8080"
       - "5025:5025"
 
 volumes:

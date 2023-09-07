@@ -298,23 +298,22 @@ Whenever possible, the forwarded ports for infrastructure services should match 
 | Service | Host Port | Container Port | Notes |
 | ------- | ---------:| --------------:|------ |
 | coms | 3000 | 3000 | |
-| coms-db | 5432 | 5432 |
-| form-recognizer | 5200 | 5200 |
-| jaeger | 14250 | 14250 | 14250 | 
+| coms-db | 5432 | 5432 | Postgres | 
+| form-recognizer | 5200 | 5200 | |
+| jaeger | 14250 | 14250 | accept model.proto directly from clients | 
 | jaeger | 14268 | 14268 | accept jaeger.thrift directly from clients | 
 | jaeger | 16686 | 16686 | Jaeger UI |
-| minio <sup>1</sup> | 9100 | 9000 | API Server |
+| minio <sup>1</sup> | 9100 | 9000 | API Server (coms) |
 | minio | 9101 | 9001 | Web Console |
-| rabbitmq | 5672 | 5672 | AMQP 0-9-1 and AMQP 1.0 clients | 
+| rabbitmq | 5672 | 5672 | AMQP 0-9-1 and AMQP 1.0 clients (masstransit clients) | 
 | rabbitmq | 15672 | 15672 | HTTP API clients, management UI and rabbitmqadmin |
-| redis | 6379 | 6379 |
+| redis | 6379 | 6379 | cache clients | 
 | redis-ui | 8082 | 8082 | redis-commander
 | sftp | 22000 | 22 | Port 22 is protected and requires admin, avoid low port numbers
-| smtp-server | 5080 | 8080 |
 | splunk | 8000 | 8000 | Web Console | 
 | splunk | 8088 | 8088 | HTTP Event Collector | 
 | virus-scan-service | 5040 | 8080 |
-| smtp-server | 5080 | 8080 | Web Application
+| smtp-server | 5125 | 8080 | Web Application
 | smtp-server | 5025 | 5025 | SMTP Server
 
 
