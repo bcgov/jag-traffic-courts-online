@@ -269,25 +269,56 @@ docker-compose down
 
 ## Application Services
 
+**User Interfaces Ports**: 8*xxx*
 
-| Service | URL      | Notes |
-| ------------------------------- | -------------------------------------------- | ----- |
-| citizen-portal | http://localhost:8080/ | |
-| citizen-api | http://localhost:5000/swagger/index.html | |
-| staff-portal | http://localhost:8081/ | |
-| staff-api |  | |
-| oracle-data-api | http://localhost:5010/ | |
+**APIs Ports**: 5*xxx*
 
-## infrastructure Services
-| Service | URL      | Notes |
-| ------------------------------- | -------------------------------------------- | ----- |
-| rabbitmq | localhost:5672, localhost:15672 | |
-| minio | http://localhost:9001/login | |
-| redis | localhost:6379 | |
-| redis-commander | http://localhost:8082 | |
-| splunk | http://localhost:8000 | |
-| jaeger | http://localhost:16686 | |
-| form-recognizer | http://localhost:5200 | |
+**Host Port**: This is the port the developer can access from their computer. The developer will use **localhost**:**port**, ie http://localhost:8080/
+
+**Container Port**: This is the port that is available **inside** the Docker network. The connection will use **service-name**:**port**, for example, http://citizen-api:8080
+
+| Service | Host Port | Container Port | Notes |
+| ------- | ---------:| --------------:|------ |
+| arc-dispute-api | 5030 | 8080 |
+| citizen-api | 5080 | 8080 | 
+| citizen-portal | 8080 | 8080 | 
+| oracle-data-api | 5010 | 8080 | 
+| staff-api | 5090 | 8080 | 
+| staff-portal | 8090 | 8080 | 
+| workflow-service | 5020 | 8080 |
+
+## Infrastructure Services
+
+**Host Port**: This is the port the developer can access from their computer. The developer will use **localhost**:**port**, ie http://localhost:3000/
+
+**Container Port**: This is the port that is available **inside** the Docker network. The connection will use **service-name**:**port**, for example, http://coms:3000
+
+Whenever possible, the forwarded ports for infrastructure services should match their standard container exposed ports. 
+
+| Service | Host Port | Container Port | Notes |
+| ------- | ---------:| --------------:|------ |
+| coms | 3000 | 3000 | |
+| coms-db | 5432 | 5432 | Postgres | 
+| form-recognizer | 5200 | 5200 | |
+| jaeger | 14250 | 14250 | accept model.proto directly from clients | 
+| jaeger | 14268 | 14268 | accept jaeger.thrift directly from clients | 
+| jaeger | 16686 | 16686 | Jaeger UI |
+| minio <sup>1</sup> | 9100 | 9000 | API Server (coms) |
+| minio | 9101 | 9001 | Web Console |
+| rabbitmq | 5672 | 5672 | AMQP 0-9-1 and AMQP 1.0 clients (masstransit clients) | 
+| rabbitmq | 15672 | 15672 | HTTP API clients, management UI and rabbitmqadmin |
+| redis | 6379 | 6379 | cache clients | 
+| redis-ui | 8082 | 8082 | redis-commander
+| sftp | 22000 | 22 | Port 22 is protected and requires admin, avoid low port numbers
+| splunk | 8000 | 8000 | Web Console | 
+| splunk | 8088 | 8088 | HTTP Event Collector | 
+| virus-scan-service | 5040 | 8080 |
+| smtp-server | 5125 | 8080 | Web Application
+| smtp-server | 5025 | 5025 | SMTP Server
+
+
+
+<sup>1</sup> ZSATunnel uses port 9000. Minio host ports are 100 more than the container ports
 
 ### Logging
 
