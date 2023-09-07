@@ -40,7 +40,7 @@ services:
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
       SERILOG__WRITETO__0__NAME: Console
     ports:
-      - "5000:8080"
+      - "5080:8080"
     restart: always
     depends_on:
       coms:
@@ -86,7 +86,7 @@ services:
       SERILOG__WRITETO__0__ARGS__THEME: Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console
       SERILOG__WRITETO__0__NAME: Console
     ports:
-      - "5005:8080"
+      - "5090:8080"
     restart: always
     depends_on:
       oracle-data-api:
@@ -111,7 +111,7 @@ services:
       SFTP__PASSWORD: ${SFTP__PASSWORD:-demo}
       SFTP__SSHPRIVATEKEYPATH: ${SFTP__SSHPRIVATEKEYPATH-}
     ports:
-      - "5300:8080"
+      - "5030:8080"
     restart: always
     depends_on:
       - sftp
@@ -123,7 +123,7 @@ services:
     container_name: sftp
     image: "emberstack/sftp"
     ports:
-      - "22:22"
+      - "22000:22"
     volumes:
       - ./.docker/sftp.json:/app/config/sample/sftp.json:ro
       - ./sftp-in:/home/demo/sftp
@@ -234,7 +234,7 @@ services:
       CLAMAV__SERVER: ${CLAMAV__SERVER:-clamav}
       #LOGGING__LOGLEVEL__DEFAULT: Debug
     ports:
-      - "5030:8080"
+      - "5040:8080"
     depends_on:
       clamav:
         condition: service_healthy
@@ -265,7 +265,7 @@ services:
       context: ./src/frontend/staff-portal
     restart: always
     ports:
-      - "8081:8080"
+      - "8090:8080"
     depends_on:
       - staff-api
     
@@ -362,8 +362,8 @@ services:
     container_name: minio
     image: minio/minio:RELEASE.2022-10-24T18-35-07Z
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 9100:9000
+      - 9101:9001
     #volumes:
     #  - data-minio:/data
     environment:
@@ -438,7 +438,7 @@ services:
       redis:
         condition: service_healthy
     ports:
-      - 8082:8081
+      - 8081:8081
       
   #############################################################################################
   ###                                 Fake Email server                                     ###
@@ -447,10 +447,10 @@ services:
     container_name: smtp-server
     image: gessnerfl/fake-smtp-server
     environment:
-      - "SERVER-PORT=5080"
+      - "SERVER-PORT=8080"
       - "SMTP_PORT=5025"
     ports:
-      - "5080:5080"
+      - "5080:8080"
       - "5025:5025"
 
 volumes:
