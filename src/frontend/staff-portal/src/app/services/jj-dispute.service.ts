@@ -23,7 +23,7 @@ export class JJDisputeService {
 
   public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted, JJDisputeStatus.Concluded, JJDisputeStatus.Cancelled];
   public jjDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
-  public jjDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded];
+  public jjDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded];
   public jjDisputeStatusDisplay: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.InProgress, JJDisputeStatus.Review, JJDisputeStatus.RequireMoreInfo];
 
   constructor(
