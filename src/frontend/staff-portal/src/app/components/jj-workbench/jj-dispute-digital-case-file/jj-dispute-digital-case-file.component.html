@@ -74,6 +74,9 @@
         <span *ngIf="element.status==='REVIEW'"><button mat-rounded-button
             style="color:white; background-color:#f63f3f; width:150px; border-radius: 10px;"
             disabled="true">Review</button></span>
+        <span *ngIf="element.status==='REQUIRE_COURT_HEARING'"><button mat-rounded-button
+          style="color:white; background-color:#fcba19; width:150px; border-radius: 10px;"
+          disabled="true">Require Court Hearing</button></span>
         <span *ngIf="element.isCompleted"><button mat-rounded-button
             style="color:white; background-color:#c5c5c5; width:150px; border-radius: 10px;"
             disabled="true">Complete</button></span>
