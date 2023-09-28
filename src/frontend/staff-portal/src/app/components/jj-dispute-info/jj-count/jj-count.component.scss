@@ -178,7 +178,7 @@ p {
 
   input.mat-input-element {
     font-size: smaller;
-    width: 80%;
+    width: 90%;
     align-self: center;
   }
 
@@ -214,4 +214,17 @@ p {
       padding-left: 0.75rem;
     }
   }
+}
+
+::ng-deep .mat-tooltip {
+  /* your own custom styles here */ 
+  /* e.g. */
+  color: black !important;
+  background-color: white !important;
+  font-size: 13px !important;
+  border-radius: 0px !important;
+  border: 1px solid gray !important;
+  padding: 2px !important;
+  max-width: 600px !important;
+  line-height: 2em;
 }
