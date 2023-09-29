@@ -227,8 +227,8 @@
       <mat-select #matSelectFindings [matTooltip]="matSelectFindings.triggerValue" formControlName="finding" (selectionChange)="onFindingChange($event.value)" class="section-grid-text"  *ngIf="!isViewOnly && jjDisputedCount" style="margin-left:20px !important; width:85%; background:#fffee6">
         <mat-option [value]="Finding.Guilty" matTooltip="Guilty as charged">Guilty as charged</mat-option>
         <mat-option [value]="Finding.NotGuilty" matTooltip="Not guilty">Not guilty</mat-option>
-        <mat-option [value]="Finding.GuiltyLesser" matTooltip="Not guilty as charged but guilty of lesser / included offence section">
-          Not guilty as charged but guilty of lesser / included offence section
+        <mat-option [value]="Finding.GuiltyLesser" matTooltip="Not guilty as charged but guilty of lesser / included / other offence">
+          Not guilty as charged but guilty of lesser / included / other offence
         </mat-option>
         <mat-option [value]="Finding.PaidPriorToAppearance" matTooltip="Paid Prior to Appearance">Paid Prior to Appearance</mat-option>
         <mat-option [value]="Finding.Cancelled" matTooltip="Cancelled">Cancelled</mat-option>
@@ -238,8 +238,8 @@
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty" class="section-grid-text">Not guilty</span>
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled" class="section-grid-text">Cancelled</span>
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance" class="section-grid-text">Paid Prior to Appearance</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser" class="section-grid-text">Not guilty as charged but guilty of lesser / included
-          offence section</span>
+        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser" class="section-grid-text">Not guilty as charged but guilty of lesser / included 
+           other offence</span>
       </div>
       <div *ngIf="!jjDisputedCount"><span class="section-grid-header">&nbsp;<br/></span></div>
       <div style="width:100%; margin-left: 20px">
@@ -268,8 +268,8 @@
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty" class="section-grid-text">Not guilty</span>
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.Cancelled" class="section-grid-text">Cancelled</span>
         <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.PaidPriorToAppearance" class="section-grid-text">Paid Prior to Appearance</span>
-        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser" class="section-grid-text">Not guilty as charged but guilty of lesser / included
-          offence section</span>
+        <span *ngIf="form?.get('jjDisputedCountRoP').get('finding').value === Finding.GuiltyLesser" class="section-grid-text">Not guilty as charged but guilty of lesser / included 
+          other offence</span>
       </div>
       <div *ngIf="!jjDisputedCount"><span class="section-grid-header">&nbsp;<br/></span></div>
       <div *ngIf="form?.get('jjDisputedCountRoP').get('lesserDescription').value">
