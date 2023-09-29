@@ -280,7 +280,7 @@ export class JJCountComponent implements OnInit {
   // return a filtered list of statutes
   filterStatutes(val: string): Statute[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
-    return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
+    return this.lookupsService.statutes.filter(option => option.__statuteString.toLowerCase().indexOf(val.toLowerCase()) >= 0);
   }
 
   onChangelesserOrGreaterAmount() {
