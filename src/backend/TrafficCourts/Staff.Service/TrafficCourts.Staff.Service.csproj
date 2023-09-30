@@ -52,8 +52,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
-    <ProjectReference Include="..\TrafficCourts.Cdogs.Client.Test\TrafficCourts.Cdogs.Client.Test.csproj" />
     <ProjectReference Include="..\TrafficCourts.Coms.Client\TrafficCourts.Coms.Client.csproj" />
+    <ProjectReference Include="..\TrafficCourts.Cdogs.Client\TrafficCourts.Cdogs.Client.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

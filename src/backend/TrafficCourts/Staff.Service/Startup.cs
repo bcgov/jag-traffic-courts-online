@@ -1,9 +1,9 @@
 using MassTransit;
-using MediatR;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
@@ -72,6 +72,9 @@ public static class Startup
 
         // Add COMS (Object Management Service) Client
         builder.Services.AddObjectManagementService("COMS");
+
+        // Add CDOGS (Common Document Generation Service) Client
+        builder.Services.AddDocumentGenerationService(builder.Configuration, "CDOGS");
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
