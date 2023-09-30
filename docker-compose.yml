@@ -321,7 +321,7 @@ services:
         condition: service_completed_successfully
 
   coms-db-migratation:
-    image: bcgovimages/common-object-management-service:latest
+    image: bcgovimages/common-object-management-service:0.4.0
     container_name: coms-db-migratation
     environment:
       DB_ENABLED: "true"
