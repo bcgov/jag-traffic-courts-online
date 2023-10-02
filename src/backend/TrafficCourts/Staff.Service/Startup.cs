@@ -74,7 +74,7 @@ public static class Startup
         builder.Services.AddObjectManagementService("COMS");
 
         // Add CDOGS (Common Document Generation Service) Client
-        builder.Services.AddDocumentGenerationService(builder.Configuration, "CDOGS");
+        builder.Services.AddDocumentGenerationService("CDOGS");
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 

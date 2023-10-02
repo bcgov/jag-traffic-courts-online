@@ -53,9 +53,16 @@ public class DocumentGenerationController : StaffControllerBase<DocumentGenerati
                 ConvertTo convertTo = ConvertTo.Pdf;
                 TemplateType templateType = TemplateType.Word;
                 string reportName = "test";
-                dynamic dynamicData = !string.IsNullOrWhiteSpace(data) ? JsonSerializer.Deserialize<dynamic>(data) : null;
-                RenderedReport result = await _documentGenerationService.UploadTemplateAndRenderReportAsync<dynamic>(templateStream, templateType, convertTo, reportName, dynamicData, cancellationToken);
-                return Ok(result);
+                var dynamicData = new
+                {
+                    name = "text"
+                };
+                RenderedReport file = await _documentGenerationService.UploadTemplateAndRenderReportAsync<dynamic>(templateStream, templateType, convertTo, reportName, dynamicData, cancellationToken);
+                var stream = file.Content;
+                // Reset position to the beginning of the stream
+                stream.Position = 0;
+
+                return File(stream, file.ContentType ?? "application/octet-stream", file.ReportName ?? "download");
             }
         }
         catch (Exception e)

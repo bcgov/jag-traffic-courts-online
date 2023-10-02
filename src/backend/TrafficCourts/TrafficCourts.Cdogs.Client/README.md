@@ -23,7 +23,7 @@ Use the `Request Access` link on the [Common Service Showcase](https://bcgov.git
 
 ```c#
 // pass the configuration object and the section the config is contained in
-services.AddDocumentGenerationService(builder.Configuration, "Cdogs");
+services.AddDocumentGenerationService("Cdogs");
 ```
 
 ##
