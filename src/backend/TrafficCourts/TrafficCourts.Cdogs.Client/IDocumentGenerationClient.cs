@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Nodes;
-
-namespace TrafficCourts.Cdogs.Client
+﻿namespace TrafficCourts.Cdogs.Client
 {
     public partial interface IDocumentGenerationClient
     {
@@ -16,6 +14,8 @@ namespace TrafficCourts.Cdogs.Client
         /// <exception cref="DocumentGenerationApiException">A server side error occurred.</exception>
         Task<FileResponse> UploadTemplateAndRenderReportAsync<T>(TemplateRenderObject<T> body, CancellationToken cancellationToken);
 
-        Task<FileResponse> UploadTemplateAndRenderReportAsync(JsonNode data, Options options, Template template, CancellationToken cancellationToken);
+        Task<FileResponse> UploadTemplateAndRenderReportAsync(string requestContent, CancellationToken cancellationToken);
+
+        Newtonsoft.Json.JsonSerializerSettings GetJsonSerializerSettings();
     }
 }

@@ -27,8 +27,16 @@ public class DocumentGenerationService : IDocumentGenerationService
         ArgumentNullException.ThrowIfNull(reportName);
         ArgumentNullException.ThrowIfNull(data);
 
+        TemplateRenderObject renderObject = new TemplateRenderObject
+        {
+            Options = CreateOptions(convertTo, reportName),
+            Template = CreateTemplate(templateType, template)
+        };
+        var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(renderObject, _client.GetJsonSerializerSettings());
+        json_ = json_.Remove(json_.Length - 1, 1) + ", \"data\":" + data.ToJsonString() + "}";
+
         FileResponse response = await _client
-            .UploadTemplateAndRenderReportAsync(data, CreateOptions(convertTo, reportName), CreateTemplate(templateType, template), cancellationToken)
+            .UploadTemplateAndRenderReportAsync(json_, cancellationToken)
             .ConfigureAwait(false);
 
         var report = await GetRenderedReportAsync(response);
