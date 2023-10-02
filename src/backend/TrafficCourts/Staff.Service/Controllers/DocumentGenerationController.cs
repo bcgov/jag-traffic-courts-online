@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
@@ -35,7 +36,7 @@ public class DocumentGenerationController : StaffControllerBase<DocumentGenerati
     /// <returns>A generated document</returns>
     [AllowAnonymous]
     [HttpPost("Generate")]
-    [ProducesResponseType(typeof(RenderedReport), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -53,11 +54,8 @@ public class DocumentGenerationController : StaffControllerBase<DocumentGenerati
                 ConvertTo convertTo = ConvertTo.Pdf;
                 TemplateType templateType = TemplateType.Word;
                 string reportName = "test";
-                var dynamicData = new
-                {
-                    name = "text"
-                };
-                RenderedReport file = await _documentGenerationService.UploadTemplateAndRenderReportAsync<dynamic>(templateStream, templateType, convertTo, reportName, dynamicData, cancellationToken);
+                JsonNode dynamicData = JsonSerializer.Deserialize<JsonNode>(data);
+                RenderedReport file = await _documentGenerationService.UploadTemplateAndRenderReportAsync(templateStream, templateType, convertTo, reportName, dynamicData, cancellationToken);
                 var stream = file.Content;
                 // Reset position to the beginning of the stream
                 stream.Position = 0;

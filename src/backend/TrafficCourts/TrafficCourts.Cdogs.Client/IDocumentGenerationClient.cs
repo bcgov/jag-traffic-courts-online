@@ -1,4 +1,6 @@
-﻿namespace TrafficCourts.Cdogs.Client
+﻿using System.Text.Json.Nodes;
+
+namespace TrafficCourts.Cdogs.Client
 {
     public partial interface IDocumentGenerationClient
     {
@@ -13,5 +15,7 @@
         /// <returns>Returns the supplied document with variables merged in</returns>
         /// <exception cref="DocumentGenerationApiException">A server side error occurred.</exception>
         Task<FileResponse> UploadTemplateAndRenderReportAsync<T>(TemplateRenderObject<T> body, CancellationToken cancellationToken);
+
+        Task<FileResponse> UploadTemplateAndRenderReportAsync(JsonNode data, Options options, Template template, CancellationToken cancellationToken);
     }
 }

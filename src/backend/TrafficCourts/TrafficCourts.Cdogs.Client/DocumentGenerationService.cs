@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace TrafficCourts.Cdogs.Client;
 
@@ -12,6 +13,26 @@ public class DocumentGenerationService : IDocumentGenerationService
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    public async Task<RenderedReport> UploadTemplateAndRenderReportAsync(
+        Stream template,
+        TemplateType templateType,
+        ConvertTo convertTo,
+        string reportName,
+        JsonNode data,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(template);
+        ArgumentNullException.ThrowIfNull(reportName);
+        ArgumentNullException.ThrowIfNull(data);
+
+        FileResponse response = await _client
+            .UploadTemplateAndRenderReportAsync(data, CreateOptions(convertTo, reportName), CreateTemplate(templateType, template), cancellationToken)
+            .ConfigureAwait(false);
+
+        var report = await GetRenderedReportAsync(response);
+        return report;
     }
 
     public async Task<RenderedReport> UploadTemplateAndRenderReportAsync<T>(
