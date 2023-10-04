@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { DisputeService } from './api/dispute.service';
 import { DocumentService } from './api/document.service';
+import { DocumentGenerationService } from './api/documentGeneration.service';
 import { EmailHistoryService } from './api/emailHistory.service';
 import { FileHistoryService } from './api/fileHistory.service';
 import { JJService } from './api/jJ.service';
