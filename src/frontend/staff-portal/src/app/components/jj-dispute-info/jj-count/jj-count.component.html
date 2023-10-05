@@ -466,7 +466,7 @@
                 (keyup)="onDrivingProhibitionMVASectionKeyup()"
                 [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
               <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let statute of drivingProhibitionFilteredStatutes"
+                <mat-option *ngFor="let statute of drivingProhibitionFilteredStatutes" [matTooltip]="statute.__statuteString"
                   [value]="statute.__statuteString">
                   {{ statute.__statuteString }}</mat-option>
               </mat-autocomplete><br />
