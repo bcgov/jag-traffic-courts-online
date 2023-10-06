@@ -6,7 +6,7 @@ for IS in arc-dispute-api citizen-api citizen-web oracle-data-api staff-api staf
 
   for tag in $TAGS; do
     # do no delete current production tags, or the test tags and their alias
-    if [[ "$tag" != "v1.0.0" && "$tag" != "v1.0.1" && "$tag" != "1.66.1" && "$tag" != "93b7e94*" ]]; then
+    if [[ "$tag" != "v1.0.0" && "$tag" != "v1.0.1" && "$tag" != "1.67.0" && "$tag" != "93b7e94*" ]]; then
       echo "oc tag ${IS}:$tag -d"
     fi
   done
