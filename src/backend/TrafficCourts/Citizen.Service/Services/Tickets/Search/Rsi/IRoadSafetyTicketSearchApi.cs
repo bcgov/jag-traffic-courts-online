@@ -5,10 +5,10 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 {
     public interface IRoadSafetyTicketSearchApi
     {
-        [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/")]
+        [Get("/api/v1/ticket/")]
         Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams, CancellationToken cancellationToken);
 
-        [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/{invoiceNumber}")]
+        [Get("/api/v1/ticket/{invoiceNumber}")]
         Task<Invoice> GetInvoice(string invoiceNumber, CancellationToken cancellationToken);
     }
 }
