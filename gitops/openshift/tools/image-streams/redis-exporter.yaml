@@ -36,3 +36,12 @@ spec:
         scheduled: true
       referencePolicy:
         type: Source
+    - name: '1.54.0-debian-11-r25'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/redis-exporter:1.54.0-debian-11-r25'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
