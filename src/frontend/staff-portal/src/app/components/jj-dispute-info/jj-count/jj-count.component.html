@@ -194,10 +194,10 @@
       <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No"
         }}</span>
       <span style="padding-left: 0.5rem;"
-        *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
+        *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
         jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
       <span style="padding-left: 0.5rem;"
-        *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
+        *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
         jjDisputedCount?.lesserOrGreaterAmount | currency: 'CAD' : 'symbol' : '1.0-0' }}</span>
       <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency:'CAD':'symbol-narrow':'1.0-0'}})</i></span>
     </div>
@@ -388,10 +388,10 @@
             <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No"
               }}</span>
             <span style="padding-left: 0.5rem;"
-              *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
+              *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
               jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
             <span style="padding-left: 0.5rem;"
-              *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
+              *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{
               jjDisputedCount?.lesserOrGreaterAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
             <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency: 'CAD':'symbol-narrow':'1.0-0' }})</i></span>
           </div>
