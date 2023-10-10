@@ -16,8 +16,11 @@ import org.springframework.core.io.Resource;
 @Configuration
 public class TicketGeneratorConfig {
 
-	@Value("classpath:img/blank-traffic-ticket-aligned-cleaned.png")
-	private Resource blankImage;
+	@Value("classpath:img/blank-traffic-ticket-v1-aligned-cleaned.png")
+	private Resource blankImageV1;
+
+	@Value("classpath:img/blank-traffic-ticket-cleaned-v2.png")
+	private Resource blankImageV2;
 
 	@Value("classpath:font/Caveat-VariableFont_wght.ttf")
 	private Resource caveatVariableFont;
@@ -44,8 +47,15 @@ public class TicketGeneratorConfig {
 	private Resource vujahdayScriptFont;
 
 	@Bean
-	public BufferedImage blankTicket() throws IOException {
-		URL ticketUrl = blankImage.getURL();
+	public BufferedImage blankTicketV1() throws IOException {
+		URL ticketUrl = blankImageV1.getURL();
+		BufferedImage ticket = ImageIO.read(ticketUrl);
+		return ticket;
+	}
+
+	@Bean
+	public BufferedImage blankTicketV2() throws IOException {
+		URL ticketUrl = blankImageV2.getURL();
 		BufferedImage ticket = ImageIO.read(ticketUrl);
 		return ticket;
 	}

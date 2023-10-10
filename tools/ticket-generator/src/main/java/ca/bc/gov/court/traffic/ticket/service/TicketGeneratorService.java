@@ -15,8 +15,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.bc.gov.court.traffic.ticket.model.BaseViolationTicket;
 import ca.bc.gov.court.traffic.ticket.model.Style;
-import ca.bc.gov.court.traffic.ticket.model.ViolationTicket;
+import ca.bc.gov.court.traffic.ticket.model.ViolationTicketV1;
+import ca.bc.gov.court.traffic.ticket.model.ViolationTicketV2;
+import ca.bc.gov.court.traffic.ticket.model.ViolationTicketVersion;
 import ca.bc.gov.court.traffic.ticket.util.RandomUtil;
 import ca.bc.gov.court.traffic.ticket.util.ResourceLoader;
 
@@ -26,30 +29,62 @@ public class TicketGeneratorService {
 	private static final Logger logger = LogManager.getLogger(TicketGeneratorService.class);
 
 	@Autowired
-	private BufferedImage blankTicket;
+	private BufferedImage blankTicketV1;
+
+	@Autowired
+	private BufferedImage blankTicketV2;
 
 	@Autowired
 	private ResourceLoader resourceLoader;
 
-	public BufferedImage createTicket(Integer style, Integer numCounts) throws Exception {
-		return createTicket(null, style, numCounts);
+	public BufferedImage createTicket(ViolationTicketVersion version, Integer style, Integer numCounts) throws Exception {
+		if (ViolationTicketVersion.VT1.equals(version)) {
+			return createTicketV1(null, style, numCounts);
+		}
+		else {
+			return createTicketV2(null, style, numCounts);
+		}
 	}
 
-	public BufferedImage createTicket(ViolationTicket violationTicket, Integer style, Integer numCounts) throws Exception {
-		logger.debug("Generating random ticket");
+	public BufferedImage createTicketV1(ViolationTicketV1 violationTicket, Integer style, Integer numCounts) throws Exception {
+		logger.debug("Generating random v1 ticket");
 
 		if (violationTicket == null) {
-			violationTicket = RandomUtil.randomTicket(numCounts);
+			violationTicket = (ViolationTicketV1) RandomUtil.randomTicket(ViolationTicketVersion.VT1, numCounts);
 		}
 		int writingStyle = (style == null) ? Integer.valueOf(RandomUtil.randomInt(1, 8)) : style.intValue();
 
+		return createVT1(violationTicket, writingStyle);
+	}
+
+	public BufferedImage createTicketV2(ViolationTicketV2 violationTicket, Integer style, Integer numCounts) throws Exception {
+		logger.debug("Generating random v2 ticket");
+
+		if (violationTicket == null) {
+			violationTicket = (ViolationTicketV2) RandomUtil.randomTicket(ViolationTicketVersion.VT2, numCounts);
+		}
+		int writingStyle = (style == null) ? Integer.valueOf(RandomUtil.randomInt(1, 8)) : style.intValue();
+
+		return createVT2(violationTicket, writingStyle);
+	}
+
+	private BufferedImage createVT1(BaseViolationTicket baseViolationTicket, int writingStyle)
+			throws Exception, FontFormatException, IOException, URISyntaxException {
+		ViolationTicketV1 violationTicket = (ViolationTicketV1) baseViolationTicket;
+
 		// Copy blankTicket to new bufferedImage
-		BufferedImage ticketImage = new BufferedImage(blankTicket.getWidth(), blankTicket.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage ticketImage = new BufferedImage(blankTicketV1.getWidth(), blankTicketV1.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics g = ticketImage.getGraphics();
-		g.drawImage(blankTicket, 0, 0, null);
+		g.drawImage(blankTicketV1, 0, 0, null);
 
 		g.setColor(Color.BLACK);
-		drawViolationTicketNumber(violationTicket, g);
+		// Draw ViolationTicket Number
+		String text = violationTicket.getViolationTicketNumber();
+		Style style = resourceLoader.getStyle(99, 210);
+		FontMetrics metrics = g.getFontMetrics(style.getFont());
+		int stringWidth = metrics.stringWidth(text);
+		g.setFont(style.getFont());
+		g.drawString(text, 2660 - stringWidth, 506);
 
 		g.setColor(Color.BLUE);
 		drawField(g, writingStyle, violationTicket.getSurname(), 200, 888, 2691, 543, 584, 690);
@@ -125,13 +160,105 @@ public class TicketGeneratorService {
 		drawField(g, writingStyle, violationTicket.getDateOfServiceMM(), 2006, 2006, 2229, 4195, 4195, 4286);
 		drawField(g, writingStyle, violationTicket.getDateOfServiceDD(), 2229, 2229, 2450, 4195, 4195, 4286);
 
-		// text box used during development to determine where to place the above fields
-//		BufferedImage box = ResourceLoader.getBox();
-//		g.drawImage(box, 1505, 3224, null);
-//		g.drawImage(box, 1505, 3284, null);
-//		g.drawImage(box, 2700 - 75, 2308 - 75, null);
+		return resizeImage(ticketImage, 1398, 2547);
+	}
 
-		return resizeImage(ticketImage, blankTicket.getWidth() / 2, blankTicket.getHeight() / 2);
+	private BufferedImage createVT2(BaseViolationTicket baseViolationTicket, int writingStyle) throws Exception {
+		ViolationTicketV2 violationTicket = (ViolationTicketV2) baseViolationTicket;
+
+		// Copy blankTicket to new bufferedImage
+		BufferedImage ticketImage = resizeImage(blankTicketV2, 2796, 5102);
+		Graphics g = ticketImage.getGraphics();
+
+		g.setColor(Color.BLACK);
+		// Draw ViolationTicket Number
+		String text = violationTicket.getViolationTicketNumber();
+		Style style = resourceLoader.getStyle(99, 165);
+		FontMetrics metrics = g.getFontMetrics(style.getFont());
+		int stringWidth = metrics.stringWidth(text);
+		g.setFont(style.getFont());
+		g.drawString(text, 2610 - stringWidth, 505);
+
+		g.setColor(Color.BLUE);
+
+		drawField(g, writingStyle, violationTicket.getSurname(), 150, 840, 2648, 548, 588, 694);
+		drawField(g, writingStyle, violationTicket.getGivenName(), 150, 1190, 2175, 696, 734, 844);
+		drawField(g, writingStyle, violationTicket.getIsYoungPerson(), 2175, 2175, 2648, 734, 734, 844);
+		drawField(g, writingStyle, violationTicket.getDriversLicenceProvince(), 150, 150, 463, 886, 886, 994);
+		drawField(g, writingStyle, violationTicket.getDriversLicenceNumber(), 463, 580, 1313, 886, 886, 994);
+		drawField(g, writingStyle, violationTicket.getDriversLicenceCreated(), 1314, 1314, 1678, 886, 886, 994);
+		drawField(g, writingStyle, violationTicket.getDriversLicenceExpiry(), 1677, 1677, 2000, 886, 886, 994);
+		drawField(g, writingStyle, violationTicket.getBirthdate(), 2001, 2001, 2648, 886, 886, 994);
+		drawField(g, writingStyle, violationTicket.getAddress(), 150, 370, 1896, 995, 1035, 1143);
+		drawField(g, writingStyle, violationTicket.getIsChangeOfAddress(), 1897, 1897, 2648, 1035, 1035, 1143);
+		drawField(g, writingStyle, violationTicket.getCity(), 150, 270, 1500, 1144, 1184, 1293);
+		drawField(g, writingStyle, violationTicket.getProvince(), 1501, 1501, 1948, 1184, 1184, 1293);
+		drawField(g, writingStyle, violationTicket.getPostalCode(), 1949, 1949, 2648, 1184, 1184, 1293);
+		drawField(g, writingStyle, violationTicket.getNamedIsDriver(), 280, 280, 330, 1414, 1414, 1465);
+		drawField(g, writingStyle, violationTicket.getNamedIsCyclist(), 871, 871, 921, 1414, 1414, 1465);
+		drawField(g, writingStyle, violationTicket.getNamedIsOwner(), 1445, 1445, 1495, 1414, 1414, 1465);
+		drawField(g, writingStyle, violationTicket.getNamedIsPedestrain(), 280, 280, 330, 1480, 1480, 1530);
+		drawField(g, writingStyle, violationTicket.getNamedIsPassenger(), 871, 871, 921, 1480, 1480, 1530);
+		drawField(g, writingStyle, violationTicket.getNamedIsOther(), 1445, 1445, 1495, 1480, 1480, 1530);
+		drawField(g, writingStyle, violationTicket.getNamedIsOtherDescription(), 1680, 1680, 2648, 1460, 1460, 1520);
+		drawField(g, writingStyle, violationTicket.getViolationDateYYYY(), 510, 510, 881, 1600, 1600, 1710);
+		drawField(g, writingStyle, violationTicket.getViolationDateMM(), 882, 882, 1080, 1600, 1600, 1710);
+		drawField(g, writingStyle, violationTicket.getViolationDateDD(), 1081, 1081, 1260, 1600, 1600, 1710);
+		drawField(g, writingStyle, violationTicket.getViolationTimeHH(), 1810, 1810, 2054, 1600, 1600, 1710);
+		drawField(g, writingStyle, violationTicket.getViolationTimeMM(), 2055, 2055, 2302, 1600, 1600, 1710);
+		drawField(g, writingStyle, violationTicket.getViolationOnHighway(), 430, 430, 2648, 1720, 1720, 1830);
+		drawField(g, writingStyle, violationTicket.getViolationNearPlace(), 430, 430, 1980, 1870, 1870, 1960);
+
+		drawField(g, writingStyle, violationTicket.getOffenseIsMVA(), 148, 148, 198, 2096, 2096, 2146);
+		drawField(g, writingStyle, violationTicket.getOffenseIsMVAR(), 760, 760, 810, 2096, 2096, 2146);
+		drawField(g, writingStyle, violationTicket.getOffenseIsCCLA(), 1447, 1447, 1497, 2096, 2096, 2146);
+		drawField(g, writingStyle, violationTicket.getOffenseIsCTA(), 148, 148, 198, 2198, 2198, 2248);
+		drawField(g, writingStyle, violationTicket.getOffenseIsLCLA(), 760, 760, 810, 2198, 2198, 2248);
+		drawField(g, writingStyle, violationTicket.getOffenseIsTCSR(), 1447, 1447, 1497, 2198, 2198, 2248);
+		drawField(g, writingStyle, violationTicket.getOffenseIsWLA(), 148, 148, 198, 2300, 2300, 2350);
+		drawField(g, writingStyle, violationTicket.getOffenseIsFVPA(), 760, 760, 810, 2300, 2300, 2350);
+		drawField(g, writingStyle, violationTicket.getOffenseIsOther(), 1447, 1447, 1497, 2300, 2300, 2350);
+		drawField(g, writingStyle, violationTicket.getOffenseIsOtherDescription(), 1700, 1700, 2648, 2290, 2290, 2348);
+		drawField(g, writingStyle, violationTicket.getCount1Description(), 227, 227, 1325, 2520, 2520, 2816);
+		drawField(g, writingStyle, violationTicket.getCount1IsACT(), 1352, 1352, 1402, 2538, 2538, 2585);
+		drawField(g, writingStyle, violationTicket.getCount1IsREGS(), 1352, 1352, 1402, 2621, 2621, 2671);
+		drawField(g, writingStyle, violationTicket.getCount1Section(), 1550, 1550, 2225, 2520, 2520, 2818);
+		drawField(g, writingStyle, violationTicket.getCount1TicketAmount(), 2300, 2300, 2615, 2600, 2600, 2690);
+		drawField(g, writingStyle, violationTicket.getCount2Description(), 227, 227, 1325, 2819, 2819, 3117);
+		drawField(g, writingStyle, violationTicket.getCount2IsACT(), 1352, 1352, 1402, 2838, 2838, 2888);
+		drawField(g, writingStyle, violationTicket.getCount2IsREGS(), 1352, 1352, 1402, 2921, 2921, 2971);
+		drawField(g, writingStyle, violationTicket.getCount2Section(), 1550, 1550, 2225, 2819, 2819, 3117);
+		drawField(g, writingStyle, violationTicket.getCount2TicketAmount(), 2300, 2300, 2615, 2900, 2900, 2992);
+		drawField(g, writingStyle, violationTicket.getCount3Description(), 227, 227, 1325, 3118, 3116, 3415);
+		drawField(g, writingStyle, violationTicket.getCount3IsACT(), 1352, 1352, 1402, 3138, 3138, 3188);
+		drawField(g, writingStyle, violationTicket.getCount3IsREGS(), 1352, 1352, 1402, 3221, 3221, 3271);
+		drawField(g, writingStyle, violationTicket.getCount3Section(), 1550, 1550, 2225, 3117, 3117, 3415);
+		drawField(g, writingStyle, violationTicket.getCount3TicketAmount(), 2300, 2300, 2615, 3200, 3200, 3292);
+		drawField(g, writingStyle, false, violationTicket.getVehicleLicensePlateProvince(), 550, 550, 900, 3538, 3538, 3657);
+		drawField(g, writingStyle, false, violationTicket.getVehicleLicensePlateNumber(), 950, 950, 1388, 3538, 3538, 3657);
+		drawField(g, writingStyle, false, violationTicket.getVehicleNscPuj(), 1390, 1390, 1778, 3538, 3538, 3657);
+		drawField(g, writingStyle, false, violationTicket.getVehicleNscNumber(), 1779, 1779, 2298, 3538, 3538, 3657);
+		drawField(g, writingStyle, false, violationTicket.getIsAccident(), 2299, 2299, 2648, 3538, 3538, 3657);
+		drawField(g, writingStyle, false, violationTicket.getVehicleRegisteredOwnerName(), 150, 770, 1388, 3658, 3695, 3780);
+		drawField(g, writingStyle, false, violationTicket.getVehicleMake(), 1389, 1389, 1778, 3695, 3695, 3780);
+		drawField(g, writingStyle, false, violationTicket.getVehicleType(), 1779, 1910, 2095, 3658, 3695, 3780);
+		drawField(g, writingStyle, false, violationTicket.getVehicleYear(), 2096, 2096, 2297, 3695, 3695, 3780);
+		drawField(g, writingStyle, false, violationTicket.getVehicleColour(), 2298, 2298, 2648, 3695, 3695, 3780);
+		drawField(g, writingStyle, false, violationTicket.getNoticeOfDisputeAddress(), 150, 900, 2648, 3830, 3880, 3995);
+		drawField(g, writingStyle, false, violationTicket.getHearingLocation(), 150, 150, 1778, 4085, 4085, 4167);
+		drawField(g, writingStyle, false, violationTicket.getDateOfService(), 1779, 1779, 2648, 4080, 4080, 4167);
+		drawField(g, writingStyle, false, violationTicket.getEnforcementOfficerNumber(), 1780, 2200, 2648, 4174, 4203, 4290);
+		drawField(g, writingStyle, false, violationTicket.getWitnessingEnforcementOfficerName(), 150, 150, 1778, 4335, 4335, 4412);
+		drawField(g, writingStyle, false, violationTicket.getWitnessingEnforcementOfficerNumber(), 1779, 1779, 2648, 4330, 4330, 4412);
+		drawField(g, writingStyle, false, violationTicket.getDetachmentLocation(), 150, 1350, 2648, 4413, 4462, 4538);
+
+//		// text box used during development to determine where to place the above fields
+//		BufferedImage box = new BufferedImage(25, 25, BufferedImage.TYPE_INT_RGB);
+//		g.drawImage(box, 150, 4455, null);
+//		g.drawImage(box, 1350, 4413, null);
+//		g.drawImage(box, 2648 - 25, 4538 - 25, null);
+
+		return resizeImage(ticketImage, 1398, 2551);
 	}
 
 	BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
@@ -141,16 +268,11 @@ public class TicketGeneratorService {
 	    return outputImage;
 	}
 
-	private void drawViolationTicketNumber(ViolationTicket violationTicket, Graphics g) throws Exception {
-		String text = violationTicket.getViolationTicketNumber();
-		Style style = resourceLoader.getStyle(99, 210);
-		FontMetrics metrics = g.getFontMetrics(style.getFont());
-		int stringWidth = metrics.stringWidth(text);
-		g.setFont(style.getFont());
-		g.drawString(text, 2660 - stringWidth, 506);
+	private void drawField(Graphics g, int writingStyle, String text, int x1, int x2, int x3, int y1, int y2, int y3) throws FontFormatException, IOException, URISyntaxException {
+		drawField(g, writingStyle, true, text, x1, x2, x3, y1, y2, y3);
 	}
 
-	private void drawField(Graphics g, int writingStyle, String text, int x1, int x2, int x3, int y1, int y2, int y3) throws FontFormatException, IOException, URISyntaxException {
+	private void drawField(Graphics g, int writingStyle, boolean wordWrap, String text, int x1, int x2, int x3, int y1, int y2, int y3) throws FontFormatException, IOException, URISyntaxException {
 		if (text == null)
 			return;
 
@@ -160,7 +282,7 @@ public class TicketGeneratorService {
 		Style style = resourceLoader.getStyle(writingStyle, fontSize);
 		g.setFont(style.getFont());
 		FontMetrics metrics = g.getFontMetrics(style.getFont());
-		String[] lines = (metrics.stringWidth(text) > fieldWidth) ? splitPhrase(text) : new String[] { text };
+		String[] lines = (wordWrap && metrics.stringWidth(text) > fieldWidth) ? splitPhrase(text) : new String[] { text };
 
 		// find longest string
 		String longestText = "";
@@ -188,7 +310,7 @@ public class TicketGeneratorService {
 		}
 	}
 
-	private String[] splitPhrase(String text) {
+	protected static String[] splitPhrase(String text) {
 		if (!text.contains(" ")) { // cannot split - probably a single word.
 			return new String[] { text };
 		}
@@ -197,7 +319,13 @@ public class TicketGeneratorService {
 		    int len = text.length();
 		    String a = text.substring(0, len/2);
 		    String b = text.substring(len/2, len);
-		    String c = b.substring(0, b.indexOf(' '));
+		    int lastSpaceIndex = b.indexOf(' ');
+		    if (lastSpaceIndex == -1) {
+		    	// no space in second half of phrase, just split on the last space.
+		    	lastSpaceIndex = text.lastIndexOf(' ');
+		    	return new String[] { text.substring(0, lastSpaceIndex), text.substring(lastSpaceIndex+1, text.length()) };
+		    }
+		    String c = b.substring(0, lastSpaceIndex);
 		    String d = b.substring(b.indexOf(' ')+1, b.length());
 		    String line1 = a + c;
 		    String line2 = d;
