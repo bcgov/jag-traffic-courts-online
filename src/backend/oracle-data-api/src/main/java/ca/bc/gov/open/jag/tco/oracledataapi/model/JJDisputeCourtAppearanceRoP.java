@@ -133,9 +133,9 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
 	/**
 	 * JJ's comments about court appearance
 	 */
-	@Size(max = 500)
-	@Column(length = 500)
-	@Schema(nullable = true, maxLength = 500)
+	@Size(max = 4000)
+	@Column(length = 4000)
+	@Schema(nullable = true, maxLength = 4000)
 	private String comments;
 
 	@JsonBackReference(value="jj_dispute_court_appearance_rop_reference")

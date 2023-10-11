@@ -48,9 +48,9 @@ public class JJDisputeRemark extends Auditable<String> {
 	/**
 	 * JJ's remark notes that will be added to the dispute.
 	 */
-	@Size(max = 500)
-	@Column(length = 500)
-	@Schema(maxLength = 500)
+	@Size(max = 4000)
+	@Column(length = 4000)
+	@Schema(maxLength = 4000)
 	private String note;
 
 	@Column
