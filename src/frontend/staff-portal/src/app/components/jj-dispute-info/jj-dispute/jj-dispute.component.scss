@@ -60,6 +60,10 @@ p {
   color: #003366;
   font-weight: bold;
   padding: 0 !important;
+
+  .formatComments{
+    white-space: pre-wrap;
+  }
 }
 
 .disputre {
