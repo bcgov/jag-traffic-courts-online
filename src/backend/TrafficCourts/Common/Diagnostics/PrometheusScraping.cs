@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace TrafficCourts.Common.Diagnostics
+namespace TrafficCourts.Diagnostics
 {
+    /// <summary>
+    /// Provides common endpoint filtering. 
+    /// </summary>
+    /// <remarks>
+    /// This class should really be in the TrafficCourts.Core project, but due to references
+    /// on HttpContext, it is problematic adding the correct references.
+    /// </remarks>
     public static class PrometheusScraping
     {
         private const int DefaultLocalPort = 9090;

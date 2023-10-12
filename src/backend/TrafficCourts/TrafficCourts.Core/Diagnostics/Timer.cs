@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
-namespace TrafficCourts.Common.Diagnostics;
+namespace TrafficCourts.Diagnostics;
 
 public sealed class Timer : Instrument<double>
 {

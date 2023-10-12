@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace TrafficCourts.Common.Diagnostics;
+namespace TrafficCourts.Diagnostics;
 
 /// <summary>
 /// Timer operation. When timer operation is disposed, the elapsed time will be recorded.

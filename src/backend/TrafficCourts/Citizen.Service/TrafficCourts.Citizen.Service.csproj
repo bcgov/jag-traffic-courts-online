@@ -52,6 +52,7 @@
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
     <ProjectReference Include="..\TrafficCourts.Coms.Client\TrafficCourts.Coms.Client.csproj" />
+    <ProjectReference Include="..\TrafficCourts.Core\TrafficCourts.Core.csproj" />
   </ItemGroup>
 	
 </Project>

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
-using TrafficCourts.Common.Diagnostics;
+using TrafficCourts.Diagnostics;
 using TrafficCourts.Workflow.Service;
 
 var builder = WebApplication.CreateBuilder(args);

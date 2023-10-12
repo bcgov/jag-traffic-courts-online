@@ -1,6 +1,6 @@
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
-using TrafficCourts.Common.Diagnostics;
+using TrafficCourts.Diagnostics;
 using TrafficCourts.Staff.Service;
 
 var builder = WebApplication.CreateBuilder(args);
