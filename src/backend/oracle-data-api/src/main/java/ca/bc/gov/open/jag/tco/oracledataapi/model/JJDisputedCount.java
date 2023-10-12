@@ -148,9 +148,9 @@ public class JJDisputedCount extends Auditable<String> {
 	/**
 	 * JJ's comments that will be shared to disputant.
 	 */
-	@Size(max = 500)
-	@Column(length = 500)
-	@Schema(nullable = true, maxLength = 500)
+	@Size(max = 4000)
+	@Column(length = 4000)
+	@Schema(nullable = true, maxLength = 4000)
 	private String comments;
 
 	@JsonBackReference(value = "jj_dispute_count_reference")
