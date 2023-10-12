@@ -1,8 +1,8 @@
 ﻿using Azure;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using TrafficCourts.Common.Diagnostics;
-using Timer = TrafficCourts.Common.Diagnostics.Timer;
+using TrafficCourts.Diagnostics;
+using Timer = TrafficCourts.Diagnostics.Timer;
 
 namespace TrafficCourts.Citizen.Service;
 

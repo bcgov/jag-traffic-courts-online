@@ -1,4 +1,4 @@
-﻿using Timer = TrafficCourts.Common.Diagnostics.Timer;
+﻿using Timer = TrafficCourts.Diagnostics.Timer;
 
 namespace System.Diagnostics.Metrics;
 

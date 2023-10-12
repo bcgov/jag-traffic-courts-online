@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using TrafficCourts.Common.Diagnostics;
+using TrafficCourts.Diagnostics;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using Timer = TrafficCourts.Common.Diagnostics.Timer;
+using Timer = TrafficCourts.Diagnostics.Timer;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -62,7 +62,7 @@ public static class Instrumentation
             ArgumentNullException.ThrowIfNull(operation);
             ArgumentNullException.ThrowIfNull(exception);
 
-            // let the timer know there was an excetion
+            // let the timer know there was an exception
             operation.Error(exception);
 
             if (exception is ApiException apiException)

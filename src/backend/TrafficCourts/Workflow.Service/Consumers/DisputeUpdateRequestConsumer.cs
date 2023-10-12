@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Reflection.Metadata;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;

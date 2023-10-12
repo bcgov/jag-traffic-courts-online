@@ -1,7 +1,7 @@
 using TrafficCourts.Arc.Dispute.Service;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
-using TrafficCourts.Common.Diagnostics;
+using TrafficCourts.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 Serilog.ILogger logger = builder.GetProgramLogger();

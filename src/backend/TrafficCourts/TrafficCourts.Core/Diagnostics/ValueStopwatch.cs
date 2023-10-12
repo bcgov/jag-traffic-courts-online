@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace TrafficCourts.Common.Diagnostics;
+namespace TrafficCourts.Diagnostics;
 
 internal struct ValueStopwatch
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using TrafficCourts.Common.Diagnostics;
+using TrafficCourts.Diagnostics;
 using Xunit;
 
 namespace TrafficCourts.Common.Test.Diagnostics
