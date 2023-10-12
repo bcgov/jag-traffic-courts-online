@@ -9,142 +9,186 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ca.bc.gov.court.traffic.ticket.util.DateUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class ViolationTicket {
+public abstract class BaseViolationTicket {
 
 	@Schema(example = "AX00000000")
 	private String violationTicketNumber;
+
 	@Schema(example = "Kent")
 	private String surname;
+
 	@Schema(example = "Clark")
 	private String givenName;
-	@Schema(example = "X", description = "Specify X to indicate a checkbox, blank otherwise")
-	private String isYoungPerson;
+
 	@Schema(example = "BC")
 	private String driversLicenceProvince;
+
 	@Schema(example = "1234567")
 	private String driversLicenceNumber;
+
 	@Schema(example = "2020")
 	private String driversLicenceCreated;
+
 	@Schema(example = "2025")
 	private String driversLicenceExpiry;
+
 	@Schema(example = "2006-01-15")
 	private String birthdate;
+
 	@Schema(example = "123 Small Lane")
 	private String address;
-	@Schema(example = " ", description = "Specify X to indicate a checkbox, space otherwise")
-	private String isChangeOfAddress;
+
 	@Schema(example = "Smallville")
 	private String city;
+
 	@Schema(example = "BC")
 	private String province;
+
 	@Schema(example = "V9A1L8")
 	private String postalCode;
+
 	@Schema(example = "X", description = "Specify X to indicate a checkbox, space otherwise")
 	private String namedIsDriver;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, space otherwise")
 	private String namedIsCyclist;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, space otherwise")
 	private String namedIsOwner;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, space otherwise")
 	private String namedIsPedestrain;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, space otherwise")
 	private String namedIsPassenger;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, space otherwise")
 	private String namedIsOther;
+
 	@Schema(example = " ", description = "Named Is Other Description")
 	private String namedIsOtherDescription;
+
 	@Schema(example = "2022-02-24")
 	private String violationDate;
+
 	@Schema(example = "15:23")
 	private String violationTime;
+
 	@Schema(example = "Smallville Bypass")
 	private String violationOnHighway;
+
 	@Schema(example = "Kent Farm")
 	private String violationNearPlace;
+
 	@Schema(example = "X", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String offenseIsMVA;
-	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
-	private String offenseIsMCA;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String offenseIsCTA;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String offenseIsWLA;
-	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
-	private String offenseIsFAA;
-	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
-	private String offenseIsLCA;
-	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
-	private String offenseIsTCR;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String offenseIsOther;
+
 	@Schema(example = " ", description = "Offense Is Other Description")
 	private String offenseIsOtherDescription;
+
 	@Schema(example = "Excessive speeding")
 	private String count1Description;
-	@Schema(example = "MVA")
-	private String count1ActReg;
+
 	@Schema(example = "X", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String count1IsACT;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String count1IsREGS;
+
 	@Schema(example = "67(b)")
 	private String count1Section;
+
 	@Schema(example = "350")
 	private String count1TicketAmount;
+
 	@Schema(example = "Driving without licence")
 	private String count2Description;
+
 	@Schema(example = "MVA")
 	private String count2ActReg;
+
 	@Schema(example = "X", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String count2IsACT;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String count2IsREGS;
+
 	@Schema(example = "45(a)")
 	private String count2Section;
+
 	@Schema(example = "145")
 	private String count2TicketAmount;
+
 	@Schema(example = "Driving with burned out break lights")
 	private String count3Description;
+
 	@Schema(example = "MVA")
 	private String count3ActReg;
+
 	@Schema(example = "X", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String count3IsACT;
+
 	@Schema(example = " ", description = "Specify X to indicate a checkbox, blank otherwise")
 	private String count3IsREGS;
+
 	@Schema(example = "124(c)(i)")
 	private String count3Section;
+
 	@Schema(example = "75")
 	private String count3TicketAmount;
+
 	@Schema(example = "BC")
 	private String vehicleLicensePlateProvince;
+
 	@Schema(example = "123ABC")
 	private String vehicleLicensePlateNumber;
+
 	@Schema(example = "AABB")
 	private String vehicleNscPuj;
+
 	@Schema(example = "12345")
 	private String vehicleNscNumber;
+
 	@Schema(example = "Jonathan Kent")
 	private String vehicleRegisteredOwnerName;
+
 	@Schema(example = "John Deer")
 	private String vehicleMake;
+
 	@Schema(example = "Tracker")
 	private String vehicleType;
+
 	@Schema(example = "Green")
 	private String vehicleColour;
+
 	@Schema(example = "2011")
 	private String vehicleYear;
+
 	@Schema(example = "123 Main St.")
 	private String noticeOfDisputeAddress;
+
 	@Schema(example = "Metropolis Court")
 	private String hearingLocation;
+
 	@Schema(example = "2022-02-24")
 	private String dateOfService;
+
 	@Schema(example = "12345")
 	private String enforcementOfficerNumber;
+
 	@Schema(example = "Metropolitan Police")
 	private String detachmentLocation;
 
-	public ViolationTicket() {
+	public BaseViolationTicket() {
 	}
 
 	public String getViolationTicketNumber() {
@@ -169,14 +213,6 @@ public class ViolationTicket {
 
 	public void setGivenName(String givenName) {
 		this.givenName = givenName;
-	}
-
-	public String getIsYoungPerson() {
-		return isYoungPerson;
-	}
-
-	public void setIsYoungPerson(String isYoungPerson) {
-		this.isYoungPerson = isYoungPerson;
 	}
 
 	public String getDriversLicenceProvince() {
@@ -240,14 +276,6 @@ public class ViolationTicket {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public String getIsChangeOfAddress() {
-		return isChangeOfAddress;
-	}
-
-	public void setIsChangeOfAddress(String isChangeOfAddress) {
-		this.isChangeOfAddress = isChangeOfAddress;
 	}
 
 	public String getCity() {
@@ -401,14 +429,6 @@ public class ViolationTicket {
 		this.offenseIsMVA = offenseIsMVA;
 	}
 
-	public String getOffenseIsMCA() {
-		return offenseIsMCA;
-	}
-
-	public void setOffenseIsMCA(String offenseIsMCA) {
-		this.offenseIsMCA = offenseIsMCA;
-	}
-
 	public String getOffenseIsCTA() {
 		return offenseIsCTA;
 	}
@@ -423,30 +443,6 @@ public class ViolationTicket {
 
 	public void setOffenseIsWLA(String offenseIsWLA) {
 		this.offenseIsWLA = offenseIsWLA;
-	}
-
-	public String getOffenseIsFAA() {
-		return offenseIsFAA;
-	}
-
-	public void setOffenseIsFAA(String offenseIsFAA) {
-		this.offenseIsFAA = offenseIsFAA;
-	}
-
-	public String getOffenseIsLCA() {
-		return offenseIsLCA;
-	}
-
-	public void setOffenseIsLCA(String offenseIsLCA) {
-		this.offenseIsLCA = offenseIsLCA;
-	}
-
-	public String getOffenseIsTCR() {
-		return offenseIsTCR;
-	}
-
-	public void setOffenseIsTCR(String offenseIsTCR) {
-		this.offenseIsTCR = offenseIsTCR;
 	}
 
 	public String getOffenseIsOther() {
@@ -471,14 +467,6 @@ public class ViolationTicket {
 
 	public void setCount1Description(String count1Description) {
 		this.count1Description = count1Description;
-	}
-
-	public String getCount1ActReg() {
-		return count1ActReg;
-	}
-
-	public void setCount1ActReg(String count1ActReg) {
-		this.count1ActReg = count1ActReg;
 	}
 
 	public String getCount1IsACT() {
