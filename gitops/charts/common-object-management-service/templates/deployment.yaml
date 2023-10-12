@@ -1,0 +1,171 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common-object-management-service.fullname" . }}
+  labels:
+    {{- include "common-object-management-service.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "common-object-management-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "common-object-management-service.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.node.env }}
+
+            {{- /* Database */}}
+            {{- if .Values.database.existingSecretDatabaseKey }}
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.existingSecret }}
+                  key: {{ .Values.database.existingSecretDatabaseKey }}
+            {{- end }}
+            {{- if .Values.database.existingSecretHostKey }}
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.existingSecret }}
+                  key: {{ .Values.database.existingSecretHostKey }}
+            {{- end }}
+            {{- if .Values.database.existingSecretPortKey }}
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.existingSecret }}
+                  key: {{ .Values.database.existingSecretPortKey }}
+            {{- end }}
+            
+            {{- if .Values.database.existingSecretUserKey }}
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.existingSecret }}
+                  key: {{ .Values.database.existingSecretUserKey }}
+            {{- end }}
+            {{- if .Values.database.existingSecretPasswordKey }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.database.existingSecret }}
+                  key: {{ .Values.database.existingSecretPasswordKey }}
+            {{- end }}
+
+            {{- /* Basic Auth */}}
+            {{- if .Values.basicAuth.enabled }}
+            - name: BASICAUTH_USERNAME
+            {{- if .Values.basicAuth.existingSecretUserKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.basicAuth.existingSecret }}
+                  key: {{ .Values.basicAuth.existingSecretUserKey }}
+            {{ else }}
+              value: {{.Values.basicAuth.username }}
+            {{- end }}
+            - name: BASICAUTH_PASSWORD
+            {{- if .Values.basicAuth.existingSecretPasswordKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.basicAuth.existingSecret }}
+                  key: {{ .Values.basicAuth.existingSecretPasswordKey }}
+            {{- else }}
+              value: {{.Values.basicAuth.password }}
+            {{- end }}
+            {{- end }}
+
+            {{- /* Objectstore */}}
+            - name: OBJECTSTORAGE_ACCESSKEYID
+            {{- if .Values.objectStorage.existingSecretPasswordKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.objectStorage.existingSecret }}
+                  key: {{ .Values.objectStorage.existingSecretUserKey }}
+            {{- else }}
+              value: {{.Values.objectStorage.username }}
+            {{- end }}
+            - name: OBJECTSTORAGE_SECRETACCESSKEY
+            {{- if .Values.objectStorage.existingSecretPasswordKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.objectStorage.existingSecret }}
+                  key: {{ .Values.objectStorage.existingSecretPasswordKey }}
+            {{- else }}
+              value: {{.Values.objectStorage.password }}
+            {{- end }}
+            - name: OBJECTSTORAGE_BUCKET
+            {{- if .Values.objectStorage.existingSecretBucketKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.objectStorage.existingSecret }}
+                  key: {{ .Values.objectStorage.existingSecretBucketKey }}
+            {{- else }}
+              value: {{.Values.objectStorage.bucket }}
+            {{- end }}
+            - name: OBJECTSTORAGE_ENDPOINT
+            {{- if .Values.objectStorage.existingSecretEndpointKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.objectStorage.existingSecret }}
+                  key: {{ .Values.objectStorage.existingSecretEndpointKey }}
+            {{- else }}
+              value: {{.Values.objectStorage.endpoint }}
+            {{- end }}
+            - name: OBJECTSTORAGE_KEY
+              value: {{ .Values.objectStorage.key }}
+            - name: OBJECTSTORAGE_TEMP_EXPIRES_IN
+              value: {{ .Values.objectStorage.tempExpiresIn | quote }}
+            - name: SERVER_BODYLIMIT
+              value: {{ .Values.bodyLimit | quote }}
+            - name: SERVER_LOGLEVEL
+              value: {{ .Values.logLevel }}
+            - name: SERVER_PORT
+              value: {{ .Values.service.port | quote }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -4,6 +4,8 @@
 ## Service configuration
 ##
 service:
+  ## @param service.type Kubernetes service type
+  ##
   type: ClusterIP
 
 ## Keycloak pods' SecurityContext
@@ -27,9 +29,9 @@ postgresql:
   enabled: false # we are going to use a shared postgresql instance
 
 externalDatabase:
-  host: "postgres"
-  port: 5432
-  user: keycloak
-  database: keycloak
-  existingSecret: "keycloak-postgres"
+  existingSecret: "postgres-pguser-keycloak"
+  existingSecretHostKey: "pgbouncer-host"
+  existingSecretPortKey: "pgbouncer-port"
+  existingSecretUserKey: "user"
+  existingSecretDatabaseKey: "dbname"
   existingSecretPasswordKey: "password"
