@@ -258,6 +258,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String accEntUserId = "5";
 		Date accUpdDtm =  RandomUtil.randomDate();
 		String accUpdUserId = "6";
+		Plea latestPleaCd = Plea.N;
+		Date latestPleaUpdateDtm = RandomUtil.randomDate();
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
 
@@ -304,6 +306,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		disputeCount.setAccEntUserId(accEntUserId);
 		disputeCount.setAccUpdDtm(accUpdDtm);
 		disputeCount.setAccUpdUserId(accUpdUserId);
+		disputeCount.setLatestPleaCd(latestPleaCd.getShortName());
+		disputeCount.setLatestPleaUpdateDtm(latestPleaUpdateDtm);
 		source.setDisputeCounts(Arrays.asList(disputeCount));
 
 		JJDispute target = jjDisputeMapper.convert(source);
@@ -350,6 +354,8 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(accEntUserId, jjDisputedCount.getJjDisputedCountRoP().getCreatedBy());
 		assertEquals(accUpdDtm, jjDisputedCount.getJjDisputedCountRoP().getModifiedTs());
 		assertEquals(accUpdUserId, jjDisputedCount.getJjDisputedCountRoP().getModifiedBy());
+		assertEquals(latestPleaCd, jjDisputedCount.getLatestPlea());
+		assertEquals(latestPleaUpdateDtm, jjDisputedCount.getLatestPleaUpdateTs());
 	}
 
 	@Test
