@@ -97,7 +97,7 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-  public apiJjRequireCourtHearingPut(ticketNumber: string, disputeId: number, remarks?: string): Observable<any> {
+  public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
       .pipe(
         map((response: any) => {
@@ -227,11 +227,11 @@ export class JJDisputeService {
   public toDateFormat(oracleDate: string): string {
     if (!oracleDate || oracleDate.length < 10) return oracleDate;
 
-    let formattedDate = oracleDate.substring(5,7) + "/" + oracleDate.substring(8,10) + "/" + oracleDate.substring(0,4);
+    let formattedDate = oracleDate.substring(5, 7) + "/" + oracleDate.substring(8, 10) + "/" + oracleDate.substring(0, 4);
     if (oracleDate.length == 11) {
       return formattedDate;
-    } else if (oracleDate.length >= 16 ) {
-      formattedDate = formattedDate + " " + oracleDate.substring(11,16);
+    } else if (oracleDate.length >= 16) {
+      formattedDate = formattedDate + " " + oracleDate.substring(11, 16);
       return formattedDate;
     } else return formattedDate;
   }
@@ -349,7 +349,7 @@ export class JJDisputeService {
       + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
       + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
       + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
-    jjDispute.jjDecisionDateFormattedDate = this.toDateFormat(jjDispute.jjDecisionDate)?.substring(0,10);
+    jjDispute.formattedJJDecisionDate = this.toDateFormat(jjDispute.jjDecisionDate)?.substring(0, 10);
 
     // lookup courthouse location
     if (jjDispute.courtAgenId && !jjDispute.courthouseLocation) {
@@ -394,5 +394,22 @@ export interface JJDispute extends JJDisputeBase {
   occamDisputantName?: string;
   occamDisputantGivenNames?: string;
   address?: string;
-  jjDecisionDateFormattedDate?: string;
+  formattedViolationDate?: string;
+  formattedViolationTime?: string;
+  formattedIcbcReceivedDate?: string;
+  formattedSubmittedDate?: string;
+  formattedJJDecisionDate?: string;
+  interpreterLanguage?: string;
+  driversLicenceProvince?: string;
+
+  // Court Appearance
+  formattedClosestNoAppTs?: string;
+  formattedClosestCourtAppearanceTs?: string;
+}
+
+// For Document Generation
+export interface FormattedJJDispute extends JJDispute {
+  isHearingTicket?: boolean;
+  displayContactSurname?: string;
+  displaycontactGivenNames?: string;
 }

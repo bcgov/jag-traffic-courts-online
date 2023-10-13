@@ -14,8 +14,7 @@
         *ngIf="printOptions.fileRemarks">check</mat-icon><mat-icon
         *ngIf="!printOptions.fileRemarks">close</mat-icon>File Remarks</button>
   </mat-menu>
-  <button mat-raised-button style="float:right;"
-    onclick="document.getElementById('getTemplateFile').click()">Print</button>
+  <button mat-raised-button style="float:right;" (click)="onTestPrint()">Print</button>
   <input type="file" id="getTemplateFile" style="display:none" accept=".docx" (change)="onPrint($event.target.files)">
   &nbsp;
   <button mat-raised-button [matMenuTriggerFor]="gotoMenu" style="float:right;">Go to</button>
@@ -77,19 +76,19 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Violation Date</p>
-          <p class="section-grid-text">{{ violationDate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedViolationDate | date: "MMM dd, yyyy" }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Violation Time</p>
-          <p class="section-grid-text">{{ violationTime }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedViolationTime }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Online Submission Date</p>
-          <p class="section-grid-text">{{ formattedSubmittedDate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedSubmittedDate | date: "MMM dd, yyyy" }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Date Received from ICBC</p>
-          <p class="section-grid-text">{{ formattedIcbcReceivedDate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedIcbcReceivedDate | date: "MMM dd, yyyy" }}</p>
         </span>
         <ng-container *ngIf="type !== 'ticket'">
           <span class="section-grid-cell">
@@ -183,7 +182,7 @@
         <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
           <span class="section-grid-cell">
             <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">{{ formattedCourtAppearanceTs }}</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedClosestCourtAppearanceTs }}</p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Room</p>
@@ -326,7 +325,7 @@
         <div fxFlex></div>
         <div fxFlex>
           <h3>Date Signed</h3>
-          <div>{{ formattedJJDecisionDate | date:"MMM dd, yyyy" }}</div>
+          <div>{{ lastUpdatedJJDispute.formattedJJDecisionDate | date:"MMM dd, yyyy" }}</div>
         </div>
       </div>
     </div>

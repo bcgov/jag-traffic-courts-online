@@ -128,13 +128,13 @@ export class JJDisputeComponent implements OnInit {
 
       // set violation date and time
       let violationDate = this.lastUpdatedJJDispute.issuedTs.split("T");
-      this.violationDate = violationDate[0];
-      this.violationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
+      this.lastUpdatedJJDispute.formattedViolationDate = violationDate[0];
+      this.lastUpdatedJJDispute.formattedViolationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
 
       // format other date strings
-      this.formattedIcbcReceivedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.icbcReceivedDate)?.substring(0, 10);
-      this.formattedSubmittedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.submittedTs)?.substring(0, 10);
-      this.formattedJJDecisionDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDecisionDate)?.substring(0, 10);
+      this.lastUpdatedJJDispute.formattedIcbcReceivedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.icbcReceivedDate)?.substring(0, 10);
+      this.lastUpdatedJJDispute.formattedSubmittedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.submittedTs)?.substring(0, 10);
+      this.lastUpdatedJJDispute.formattedJJDecisionDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDecisionDate)?.substring(0, 10);
 
       // set up headings for written reasons
       this.lastUpdatedJJDispute.jjDisputedCounts.forEach(disputedCount => {
@@ -158,8 +158,8 @@ export class JJDisputeComponent implements OnInit {
           return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
         });
         if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
-        this.formattedNoAppTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs);
-        this.formattedCourtAppearanceTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
+        this.lastUpdatedJJDispute.formattedClosestNoAppTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs);
+        this.lastUpdatedJJDispute.formattedClosestCourtAppearanceTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
 
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
         if (!this.isViewOnly) {
@@ -223,7 +223,7 @@ export class JJDisputeComponent implements OnInit {
 
           // update the reason entered, reject dispute and return to TRM home
           this.putJJDispute().subscribe(response => {
-            this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute.id, this.requireCourtHearingReason).subscribe({
+            this.jjDisputeService.apiJjRequireCourtHearingPut(this.lastUpdatedJJDispute.ticketNumber, this.requireCourtHearingReason).subscribe({
               next: response => {
                 this.onBackClicked();
               },
@@ -528,7 +528,6 @@ export class JJDisputeComponent implements OnInit {
     jjDispute.isHearingTicket = jjDispute.status === JJDisputeStatus.RequireCourtHearing || (jjDispute.hearingType === JJDisputeHearingType.CourtAppearance && jjDispute.status !== JJDisputeStatus.RequireCourtHearing);
     jjDispute.displayContactSurname = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantSurnameNm : this.lastUpdatedJJDispute.contactSurname;
     jjDispute.displaycontactGivenNames = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantGivenNames : this.lastUpdatedJJDispute.contactGivenNames;
-    jjDispute.formattedCourtAppearanceTs = this.formattedCourtAppearanceTs;
 
     var data = JSON.stringify(jjDispute);
     this.documentGenerationService.apiDocumentgenerationGeneratePost(data, files[0]).subscribe(result => {
@@ -537,6 +536,16 @@ export class JJDisputeComponent implements OnInit {
         window.open(url);
       } else alert("File contents not found");
     })
+  }
+
+  onTestPrint() {
+    var jjDispute: FormattedJJDispute = { ...this.lastUpdatedJJDispute };
+    jjDispute.isHearingTicket = jjDispute.status === JJDisputeStatus.RequireCourtHearing || (jjDispute.hearingType === JJDisputeHearingType.CourtAppearance && jjDispute.status !== JJDisputeStatus.RequireCourtHearing);
+    jjDispute.displayContactSurname = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantSurnameNm : this.lastUpdatedJJDispute.contactSurname;
+    jjDispute.displaycontactGivenNames = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantGivenNames : this.lastUpdatedJJDispute.contactGivenNames;
+
+    var data = JSON.stringify(jjDispute);
+    return data;
   }
 
   onBackClicked() {

@@ -34,6 +34,7 @@ public class DocumentGenerationController : StaffControllerBase<DocumentGenerati
     /// <response code="403">Forbidden.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A generated document</returns>
+    [AllowAnonymous]
     [HttpPost("Generate")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
