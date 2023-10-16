@@ -4,7 +4,7 @@ on:
     branches: [main, develop]
     paths:
       - 'tools/form-recognizer/**'
-      - '.github/workflows/pr-azure-cognitive-service-layout.yml'
+      - '.github/workflows/ci-azure-cognitive-service-layout.yml'
 jobs:
   build-azure-custom-layout:
     runs-on: ubuntu-20.04
@@ -25,7 +25,7 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           CONTEXT: ./tools/form-recognizer
-          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/forms-recognizer-layout:latest
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/form-recognizer-layout:latest
         run: |
           docker build --tag ${IMAGE} -f ${CONTEXT}/Dockerfile.layout ${CONTEXT}
           docker push ${IMAGE}
