@@ -18,10 +18,12 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         _lookupService = lookupService;
     }
 
+    public void SanitizeViolationTicket(OcrViolationTicket violationTicket) {
+        Sanitize(violationTicket);
+    }
+
     public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket)
     {
-        Sanitize(violationTicket);
-
         ApplyGlobalRules(violationTicket);
 
         // abort validation if this is not a valid Violation Ticket.
@@ -90,6 +92,21 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             SplitSectionActRegs(sectionKey, actRegsKey);
             ReplaceMUWithMV(actRegsKey);
             GetActRegsFromDescription(descKey, actRegsKey);
+
+            // Sanitize Section. It can happen that if the section text is too close to the ticket amount, the text can have a trailing $ symbol (which is meant for the amount field)
+            if (violationTicket.Fields.ContainsKey(sectionKey)) {
+                string sectionValue = violationTicket.Fields[sectionKey].Value ?? "";
+
+                // remove all whitespace characters
+                string newValue = Regex.Replace(sectionValue, @"\s", "");
+
+                int index = newValue.IndexOf("$");
+                if (index > 0) {
+                    newValue = newValue.Substring(0, index);
+                }
+
+                violationTicket.Fields[sectionKey].Value = newValue;
+            }
         }
 
         SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description);
@@ -150,6 +167,16 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd");
         }
 
+        // Sanitize driver's licence number (sometimes contains spaces - should be digits only)
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceNumber)) {
+            string? value = violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value;
+            if (value is not null) {
+                // replace all non digits with null
+                string newValue = Regex.Replace(value, @"\D", ""); 
+                violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value = newValue;
+            }
+        }
+
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
@@ -163,9 +190,12 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         List<ValidationRule> rules = new();
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], _ticketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], _violationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
-        rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count1ActRegs], 1));
-        rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count2ActRegs], 2));
-        rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count3ActRegs], 3));
+        if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion)) {
+            // The Act/Regs is only applicable for the old VT1 images
+            rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count1ActRegs], 1));
+            rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count2ActRegs], 2));
+            rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count3ActRegs], 3));
+        }
         rules.Add(new DateOfServiceLT30Rule(violationTicket.Fields[OcrViolationTicket.DateOfService]));
 
         // Run each rule and aggregate the results
@@ -204,7 +234,11 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
         // Count 1 
         rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.Count1Description]));
-        rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.Count1ActRegs]));
+        if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion))
+        {
+            // The Act/Regs is only applicable for the old VT1 images
+            rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.Count1ActRegs]));
+        }
         rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.Count1Section]));
         rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.Count1TicketAmount]));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.Count1IsACT]));

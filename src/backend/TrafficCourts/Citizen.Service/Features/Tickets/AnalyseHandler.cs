@@ -16,6 +16,7 @@ public static class AnalyseHandler
         }
 
         public IFormFile Image { get; set; }
+        public bool Sanitize { get; set; }
         public bool Validate { get; set; }
     }
 
@@ -80,6 +81,11 @@ public static class AnalyseHandler
 
                 _logger.LogError(exception, "Exception thrown during analysis");
                 throw;
+            }
+
+            if (request.Sanitize) {
+                // Perform basic cleanup from a bad OCR scan.
+                _formRecognizerValidator.SanitizeViolationTicket(violationTicket);
             }
 
             if (request.Validate) {

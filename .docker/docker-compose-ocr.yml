@@ -9,7 +9,7 @@ services:
     environment:
       FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-2.1}
       FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-http://azure-cognitive-service-proxy:5200}
-      FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-75f5614c-eded-4413-a3d9-c67281e8402e}
+      FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-25ebebe0-af8c-470a-ab79-7ec155eec4a8}
       
   form-rec-nginx:
     build:

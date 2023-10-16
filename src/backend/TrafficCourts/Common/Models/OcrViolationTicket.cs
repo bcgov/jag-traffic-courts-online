@@ -3,12 +3,36 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+
+public enum ViolationTicketVersion {
+    /// <summary>
+    /// Violation Ticket that was originally used 2022-04
+    /// </summary>
+    VT1,
+
+    /// <summary>
+    /// Violation Ticket was was introduced in 2023-09. This new Violation Ticket form contains most of the same
+    /// fields as the VT1, though there are a few new fields and some have been removed.
+    /// </summary>
+    VT2
+}
+
 /// <summary>
 /// A model representation of the extracted OCR results.
 /// </summary>
 [ExcludeFromCodeCoverage]
 public class OcrViolationTicket
 {
+
+    /// <summary>
+    /// A Violation Ticket form that was in circulation around 2022.04
+    /// </summary>
+    public static readonly string ViolationTicketVersion1 = "Violation Ticket:Violation Ticket 2022.04";
+    
+    /// <summary>
+    /// A new Violation Ticket form that was in introduced in 2023.09
+    /// </summary>
+    public static readonly string ViolationTicketVersion2 = "Violation Ticket:Violation Ticket 2023.09";
 
     public static readonly string ViolationTicketTitle = "violationTicketTitle";
     public static readonly string ViolationTicketNumber = "ticket_number";
@@ -25,6 +49,11 @@ public class OcrViolationTicket
     public static readonly string OffenceIsFAA = "is_faa_offence";
     public static readonly string OffenceIsLCA = "is_lca_offence";
     public static readonly string OffenceIsTCR = "is_tcr_offence";
+    public static readonly string OffenceIsMVAR = "is_mvar_offence";
+    public static readonly string OffenceIsCCLA = "is_ccla_offence";
+    public static readonly string OffenceIsLCLA = "is_lcla_offence";
+    public static readonly string OffenceIsTCSR = "is_tcsr_offence";
+    public static readonly string OffenceIsFVPA = "is_fvpa_offence";
     public static readonly string OffenceIsOther = "is_other_offence";
     public static readonly string Count1Description = "counts.count_no_1.description";
     public static readonly string Count1ActRegs = "counts.count_no_1.act_or_regulation_name_code";
@@ -47,6 +76,11 @@ public class OcrViolationTicket
     public static readonly string HearingLocation = "court_location";
     public static readonly string DetachmentLocation = "detachment_location";
     public static readonly string DateOfService = "service_date";
+
+    /// <summary>
+    /// Gets of sets the version of this ViolationTicket
+    /// </summary>
+    public ViolationTicketVersion TicketVersion { get; set; }
 
     /// <summary>
     /// Gets or sets the saved image filename.

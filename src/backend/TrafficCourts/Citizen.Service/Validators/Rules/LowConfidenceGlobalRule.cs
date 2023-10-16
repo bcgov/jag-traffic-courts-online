@@ -18,13 +18,21 @@ public class LowConfidenceGlobalRule
         numOfLowConfFields += (violationTicket.Fields[DriverLicenceNumber].FieldConfidence < _minViableConfidence) ? 1 : 0;
         numOfLowConfFields += (violationTicket.Fields[DriverLicenceProvince].FieldConfidence < _minViableConfidence) ? 1 : 0;
         numOfLowConfFields += (violationTicket.Fields[Count1Description].FieldConfidence < _minViableConfidence) ? 1 : 0;
-        numOfLowConfFields += (violationTicket.Fields[Count1ActRegs].FieldConfidence < _minViableConfidence) ? 1 : 0;
+        if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion))
+        {
+            // The Act/Regs is only applicable for the old VT1 images
+            numOfLowConfFields += (violationTicket.Fields[Count1ActRegs].FieldConfidence < _minViableConfidence) ? 1 : 0;
+        }
         numOfLowConfFields += (violationTicket.Fields[Count1Section].FieldConfidence < _minViableConfidence) ? 1 : 0;
         numOfLowConfFields += (violationTicket.Fields[Count1TicketAmount].FieldConfidence < _minViableConfidence) ? 1 : 0;
         if (violationTicket.IsCount2Populated())
         {
             numOfLowConfFields += (violationTicket.Fields[Count2Description].FieldConfidence < _minViableConfidence) ? 1 : 0;
-            numOfLowConfFields += (violationTicket.Fields[Count2ActRegs].FieldConfidence < _minViableConfidence) ? 1 : 0;
+            if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion))
+            {
+                // The Act/Regs is only applicable for the old VT1 images
+                numOfLowConfFields += (violationTicket.Fields[Count2ActRegs].FieldConfidence < _minViableConfidence) ? 1 : 0;
+            }
             numOfLowConfFields += (violationTicket.Fields[Count2Section].FieldConfidence < _minViableConfidence) ? 1 : 0;
             numOfLowConfFields += (violationTicket.Fields[Count2TicketAmount].FieldConfidence < _minViableConfidence) ? 1 : 0;
             minViableThreshold += 2;
@@ -32,7 +40,11 @@ public class LowConfidenceGlobalRule
         if (violationTicket.IsCount3Populated())
         {
             numOfLowConfFields += (violationTicket.Fields[Count3Description].FieldConfidence < _minViableConfidence) ? 1 : 0;
-            numOfLowConfFields += (violationTicket.Fields[Count3ActRegs].FieldConfidence < _minViableConfidence) ? 1 : 0;
+            if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion))
+            {
+                // The Act/Regs is only applicable for the old VT1 images
+                numOfLowConfFields += (violationTicket.Fields[Count3ActRegs].FieldConfidence < _minViableConfidence) ? 1 : 0;
+            }
             numOfLowConfFields += (violationTicket.Fields[Count3Section].FieldConfidence < _minViableConfidence) ? 1 : 0;
             numOfLowConfFields += (violationTicket.Fields[Count3TicketAmount].FieldConfidence < _minViableConfidence) ? 1 : 0;
             minViableThreshold += 2;
