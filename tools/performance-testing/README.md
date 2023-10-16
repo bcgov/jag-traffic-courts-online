@@ -9,7 +9,7 @@ To run against a local or OpenShift deployed instance, version 2.1
 k6 run 
 -e TARGET_HOST="http://localhost:5200" ^
 -e API_VERSION=v2.1 ^
--e MODEL_ID=75f5614c-eded-4413-a3d9-c67281e8402e ^
+-e MODEL_ID=498dd4e9-f54c-47ef-be08-5976caf1e07f ^
 -e TICKET_IMAGE=violation-ticket-small.png ^
 test-formrecognizer.js
 ```

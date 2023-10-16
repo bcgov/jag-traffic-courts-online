@@ -8,7 +8,7 @@ export default function () {
 
     const data = {
         file: http.file(ticketFile, 'ticket.png', 'image/png'),
-        modelId: '75f5614c-eded-4413-a3d9-c67281e8402e'
+        modelId: '498dd4e9-f54c-47ef-be08-5976caf1e07f'
       };
 
     const res = http.post('http://localhost:5257/api/ocr', data);

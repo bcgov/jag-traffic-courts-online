@@ -1,0 +1,1 @@
+This folder contains a Form Reconizer model for the 2nd iteration of the Violation Ticket image for the TCO project (the paper form that will be used by enforcement offices starting around 2023-09).

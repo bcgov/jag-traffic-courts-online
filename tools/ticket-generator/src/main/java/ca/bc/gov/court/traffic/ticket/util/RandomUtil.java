@@ -496,7 +496,7 @@ public class RandomUtil {
 		}
 	}
 
-	public static BaseViolationTicket randomTicket(ViolationTicketVersion version, Integer numCounts) {
+	public static BaseViolationTicket randomTicket(ViolationTicketVersion version, Integer numCounts, boolean allFilled) {
 		if (numCounts == null)
 			numCounts = Integer.valueOf(3);
 
@@ -542,37 +542,51 @@ public class RandomUtil {
 			vt2.setIsChangeOfAddress(randomYN(0, 4));
 			vt2.setIsAccident(randomYN(0, 2));
 
-			switch (randomInt(0, 7)) {
-			case 0:
+			if (allFilled) {
 				vt2.setOffenseIsMVA("x");
-				break;
-			case 1:
 				vt2.setOffenseIsCTA("x");
-				break;
-			case 2:
 				vt2.setOffenseIsWLA("x");
-				break;
-			case 3:
 				vt2.setOffenseIsMVAR("x");
-				break;
-			case 4:
 				vt2.setOffenseIsLCLA("x");
-				break;
-			case 5:
 				vt2.setOffenseIsFVPA("x");
-				break;
-			case 6:
 				vt2.setOffenseIsCCLA("x");
-				break;
-			case 7:
 				vt2.setOffenseIsTCSR("x");
-				break;
-			case 8:
 				vt2.setOffenseIsOther("x");
-				vt2.setOffenseIsOtherDescription("Other");
-				break;
-			default:
-				break;
+				vt2.setOffenseIsOtherDescription("Other Reason");
+			}
+			else {
+				switch (randomInt(0, 7)) {
+				case 0:
+					vt2.setOffenseIsMVA("x");
+					break;
+				case 1:
+					vt2.setOffenseIsCTA("x");
+					break;
+				case 2:
+					vt2.setOffenseIsWLA("x");
+					break;
+				case 3:
+					vt2.setOffenseIsMVAR("x");
+					break;
+				case 4:
+					vt2.setOffenseIsLCLA("x");
+					break;
+				case 5:
+					vt2.setOffenseIsFVPA("x");
+					break;
+				case 6:
+					vt2.setOffenseIsCCLA("x");
+					break;
+				case 7:
+					vt2.setOffenseIsTCSR("x");
+					break;
+				case 8:
+					vt2.setOffenseIsOther("x");
+					vt2.setOffenseIsOtherDescription("Other Reason");
+					break;
+				default:
+					break;
+				}
 			}
 
 			vt2.setWitnessingEnforcementOfficerName(randomGivenName() + " " + randomSurname());
@@ -591,28 +605,39 @@ public class RandomUtil {
 		violationTicket.setCity(randomCity());
 		violationTicket.setProvince(randomProvince());
 		violationTicket.setPostalCode(randomPostalCode());
-		switch (randomInt(0, 6)) {
-		case 0:
+		if (allFilled) {
 			violationTicket.setNamedIsDriver("x");
-			break;
-		case 1:
 			violationTicket.setNamedIsCyclist("x");
-			break;
-		case 2:
 			violationTicket.setNamedIsOwner("x");
-			break;
-		case 3:
 			violationTicket.setNamedIsPedestrain("x");
-			break;
-		case 4:
 			violationTicket.setNamedIsPassenger("x");
-			break;
-		case 5:
 			violationTicket.setNamedIsOther("x");
-			violationTicket.setNamedIsOtherDescription("Other");
-			break;
-		default:
-			break;
+			violationTicket.setNamedIsOtherDescription("Other Reason");
+		}
+		else {
+			switch (randomInt(0, 6)) {
+			case 0:
+				violationTicket.setNamedIsDriver("x");
+				break;
+			case 1:
+				violationTicket.setNamedIsCyclist("x");
+				break;
+			case 2:
+				violationTicket.setNamedIsOwner("x");
+				break;
+			case 3:
+				violationTicket.setNamedIsPedestrain("x");
+				break;
+			case 4:
+				violationTicket.setNamedIsPassenger("x");
+				break;
+			case 5:
+				violationTicket.setNamedIsOther("x");
+				violationTicket.setNamedIsOtherDescription("Other Reason");
+				break;
+			default:
+				break;
+			}
 		}
 		violationTicket.setViolationDate(DateUtil.toDateString(new Date()));
 		violationTicket.setViolationTime(DateUtil.toTimeString(randomDate(DateUtil.startOfToday(), DateUtil.endOfToday())));
@@ -624,11 +649,17 @@ public class RandomUtil {
 		if (version.isVT1()) {
 			((ViolationTicketV1) violationTicket).setCount1ActReg(count1.getAct());
 		}
-		if (randomBool()) {
+		if (allFilled) {
 			violationTicket.setCount1IsACT("x");
+			violationTicket.setCount1IsREGS("x");
 		}
 		else {
-			violationTicket.setCount1IsREGS("x");
+			if (randomBool()) {
+				violationTicket.setCount1IsACT("x");
+			}
+			else {
+				violationTicket.setCount1IsREGS("x");
+			}
 		}
 		violationTicket.setCount1Section(count1.getSection());
 		violationTicket.setCount1TicketAmount((randomInt(1, 50) * 10) + "");
@@ -637,11 +668,18 @@ public class RandomUtil {
 			Statute count2 = randomStatute();
 			violationTicket.setCount2Description(count2.getDescription());
 			violationTicket.setCount2ActReg(count2.getAct());
-			if (randomBool()) {
+			if (allFilled) {
 				violationTicket.setCount2IsACT("x");
+				violationTicket.setCount2IsREGS("x");
 			}
 			else {
-				violationTicket.setCount2IsREGS("x");
+				if (randomBool()) {
+					violationTicket.setCount2IsACT("x");
+				}
+				else {
+					violationTicket.setCount2IsREGS("x");
+				}
+
 			}
 			violationTicket.setCount2Section(count2.getSection());
 			violationTicket.setCount2TicketAmount((randomInt(1, 50) * 10) + "");
@@ -651,11 +689,17 @@ public class RandomUtil {
 			Statute count3 = randomStatute();
 			violationTicket.setCount3Description(count3.getDescription());
 			violationTicket.setCount3ActReg(count3.getAct());
-			if (randomBool()) {
+			if (allFilled) {
 				violationTicket.setCount3IsACT("x");
+				violationTicket.setCount3IsREGS("x");
 			}
 			else {
-				violationTicket.setCount3IsREGS("x");
+				if (randomBool()) {
+					violationTicket.setCount3IsACT("x");
+				}
+				else {
+					violationTicket.setCount3IsREGS("x");
+				}
 			}
 			violationTicket.setCount3Section(count3.getSection());
 			violationTicket.setCount3TicketAmount((randomInt(1, 50) * 10) + "");
