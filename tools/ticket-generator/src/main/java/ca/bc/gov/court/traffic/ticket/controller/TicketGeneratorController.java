@@ -47,9 +47,13 @@ public class TicketGeneratorController {
 
 			@RequestParam(required = false)
 			@Schema(description = "The number of counts to populate, default: 3", example = "3")
-			Integer numCounts) throws Exception {
+			Integer numCounts,
 
-		BufferedImage ticketImage = ticketGenService.createTicket(version, writingStyle, numCounts);
+			@RequestParam(required = false)
+			@Schema(description = "If true, will populate all fields", example = "true")
+			Boolean allFilled) throws Exception {
+
+		BufferedImage ticketImage = ticketGenService.createTicket(version, writingStyle, numCounts, Boolean.TRUE.equals(allFilled));
 
 		// return ticket as png
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -72,7 +76,7 @@ public class TicketGeneratorController {
 			@Parameter(description = "The number of counts to populate, default: 3", example = "3")
 			Integer numCounts) throws Exception {
 
-		BufferedImage ticketImage = ticketGenService.createTicketV1(violationTicket, writingStyle, numCounts);
+		BufferedImage ticketImage = ticketGenService.createTicketV1(violationTicket, writingStyle, numCounts, false);
 
 		// return ticket as png
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -95,7 +99,7 @@ public class TicketGeneratorController {
 			@Parameter(description = "The number of counts to populate, default: 3", example = "3")
 			Integer numCounts) throws Exception {
 
-		BufferedImage ticketImage = ticketGenService.createTicketV2(violationTicket, writingStyle, numCounts);
+		BufferedImage ticketImage = ticketGenService.createTicketV2(violationTicket, writingStyle, numCounts, false);
 
 		// return ticket as png
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
