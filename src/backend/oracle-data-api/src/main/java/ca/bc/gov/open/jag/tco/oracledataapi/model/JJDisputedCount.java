@@ -46,10 +46,10 @@ public class JJDisputedCount extends Auditable<String> {
 	private Long id;
 
 	/**
-	 * Represents the disputant plea on count.
+	 * Represents the disputant's initial plea on count.
 	 */
 	@Column
-	@Schema(nullable = true)
+	@Schema(description = "Represents the disputant's initial plea on count.", nullable = false)
 	private Plea plea;
 
 	/**
@@ -152,6 +152,21 @@ public class JJDisputedCount extends Auditable<String> {
 	@Column(length = 4000)
 	@Schema(nullable = true, maxLength = 4000)
 	private String comments;
+	
+	/**
+	 * Represents the disputant's latest plea on count.
+	 */
+	@Column
+	@Schema(description = "Represents the disputant's latest plea on count.", nullable = true)
+	private Plea latestPlea;
+	
+	/**
+	 * The timestamp for when the last time disputant changed their plea.
+	 */
+	@Column
+	@Schema(description = "The timestamp for when the last time disputant changed their plea.", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date latestPleaUpdateTs;
 
 	@JsonBackReference(value = "jj_dispute_count_reference")
 	@ManyToOne(targetEntity = JJDispute.class, fetch = FetchType.LAZY)
