@@ -30,6 +30,10 @@ public class Document {
 
 	@Column
 	@Enumerated(EnumType.STRING)
+	private ImageVersion version;
+
+	@Column
+	@Enumerated(EnumType.STRING)
 	private Source source;
 
 	@Column
@@ -46,9 +50,10 @@ public class Document {
 	public Document() {
 	}
 
-	public Document(String fileName, Float confidence, Source source) {
+	public Document(String fileName, Float confidence, ImageVersion version, Source source) {
 		this.fileName = fileName;
 		this.confidence = confidence;
+		this.version = version;
 		this.source = source;
 	}
 

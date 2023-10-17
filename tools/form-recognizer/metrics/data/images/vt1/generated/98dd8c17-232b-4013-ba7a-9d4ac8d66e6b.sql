@@ -1,4 +1,4 @@
-INSERT INTO DOCUMENT (DOCUMENT_ID, FILE_NAME, SOURCE) VALUES (NEXT VALUE FOR DOCUMENT_SEQ, '.\data\images\generated\98dd8c17-232b-4013-ba7a-9d4ac8d66e6b.png', 'HUMAN');
+INSERT INTO DOCUMENT (DOCUMENT_ID, FILE_NAME, VERSION, SOURCE) VALUES (NEXT VALUE FOR DOCUMENT_SEQ, '.\data\images\vt1\generated\98dd8c17-232b-4013-ba7a-9d4ac8d66e6b.png', 'VT1', 'HUMAN');
 
 INSERT INTO FIELD (FIELD_NAME, CONTENT, DOCUMENT_ID) VALUES ('counts.count_no_1.act_or_regulation_name_code', 'MVA', CURRVAL('DOCUMENT_SEQ'));
 INSERT INTO FIELD (FIELD_NAME, CONTENT, DOCUMENT_ID) VALUES ('counts.count_no_1.description', 'Yellow flashing light at intersection', CURRVAL('DOCUMENT_SEQ'));

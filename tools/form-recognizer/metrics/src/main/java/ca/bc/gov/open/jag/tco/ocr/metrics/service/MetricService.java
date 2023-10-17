@@ -20,6 +20,7 @@ import __occam_package_.api.model.OcrViolationTicket;
 import ca.bc.gov.open.jag.tco.ocr.metrics.model.Document;
 import ca.bc.gov.open.jag.tco.ocr.metrics.model.FieldComparison;
 import ca.bc.gov.open.jag.tco.ocr.metrics.model.GlobalValidationError;
+import ca.bc.gov.open.jag.tco.ocr.metrics.model.ImageVersion;
 import ca.bc.gov.open.jag.tco.ocr.metrics.model.Source;
 import ca.bc.gov.open.jag.tco.ocr.metrics.repository.DocumentRepository;
 import ca.bc.gov.open.jag.tco.ocr.metrics.repository.QueryRepository;
@@ -84,7 +85,10 @@ public class MetricService {
 
 			OcrViolationTicket violationTicket = ticketsApi.apiTicketsAnalysePost(path.toFile(), Boolean.valueOf(!skipValidation));
 
-			Document document = new Document(filePath, violationTicket.getGlobalConfidence(), source);
+			// Use the version as detected by the OCR
+			ImageVersion imageVersion = ImageVersion.valueOf(violationTicket.getTicketVersion());
+
+			Document document = new Document(filePath, violationTicket.getGlobalConfidence(), imageVersion, source);
 			for (Entry<String, Field> entry : violationTicket.getFields().entrySet()) {
 				String fieldName = entry.getKey();
 				Field field = entry.getValue();
@@ -95,7 +99,11 @@ public class MetricService {
 			documentRepository.save(document);
 		} catch (Exception e) {
 			logger.error("Could not process " + filePath, e.getLocalizedMessage());
-			Document document = new Document(filePath, Float.valueOf("0"), source);
+
+			// Use the version as per the source file's location
+			ImageVersion v = filePath.contains("\\vt1\\") ? ImageVersion.VT1 : ImageVersion.VT2;
+
+			Document document = new Document(filePath, Float.valueOf("0"), v, source);
 			document.getGlobalValidationErrors().add(new GlobalValidationError(e.getLocalizedMessage()));
 			documentRepository.deleteByFileNameAndSource(filePath, source);
 			documentRepository.save(document);
