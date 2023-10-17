@@ -76,19 +76,19 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Violation Date</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedViolationDate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "MMM dd, yyyy HH:mm" : "UTC" }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Violation Time</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedViolationTime }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" : "UTC" }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Online Submission Date</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedSubmittedDate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "MMM dd, yyyy" : "UTC" }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Date Received from ICBC</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedIcbcReceivedDate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
         </span>
         <ng-container *ngIf="type !== 'ticket'">
           <span class="section-grid-cell">
@@ -182,7 +182,9 @@
         <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
           <span class="section-grid-cell">
             <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.formattedClosestCourtAppearanceTs }}</p>
+            <p class="section-grid-text">
+              {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Room</p>
@@ -325,7 +327,7 @@
         <div fxFlex></div>
         <div fxFlex>
           <h3>Date Signed</h3>
-          <div>{{ lastUpdatedJJDispute.formattedJJDecisionDate | date:"MMM dd, yyyy" }}</div>
+          <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
         </div>
       </div>
     </div>

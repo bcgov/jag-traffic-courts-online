@@ -63,17 +63,17 @@ export class JJFileHistoryComponent implements OnInit {
     // file history events
     this.fileHistory.forEach(fileHistoryRecord => {
       this.dataSource.data.push({
-        createdTs: new Date(fileHistoryRecord.createdTs),
+        createdTs: fileHistoryRecord.createdTs,
         recordType: "Event",
         actionByApplicationUser: fileHistoryRecord.actionByApplicationUser,
         eventDescription: fileHistoryRecord.description
-       })
+      })
     });
 
     // add email history
     this.emailHistory.forEach(emailHistoryRecord => {
       this.dataSource.data.push({
-        createdTs: new Date(emailHistoryRecord.createdTs),
+        createdTs: emailHistoryRecord.createdTs,
         recordType: emailHistoryRecord.successfullySent == EmailHistorySuccessfullySent.Y ? "Email Sent" : "Email Not Sent",
         actionByApplicationUser: emailHistoryRecord.toEmailAddress,
         eventDescription: emailHistoryRecord.subject
@@ -81,14 +81,14 @@ export class JJFileHistoryComponent implements OnInit {
     })
 
     // sort by timestamp
-    this.dataSource.data = this.dataSource.data.sort((a,b) => {
+    this.dataSource.data = this.dataSource.data.sort((a, b) => {
       return (a.createdTs > b.createdTs) ? 1 : -1;
     })
   }
 }
 
 export interface HistoryRecord {
-  createdTs?: Date;
+  createdTs?: string;
   recordType: string;
   actionByApplicationUser: string;
   eventDescription?: string;

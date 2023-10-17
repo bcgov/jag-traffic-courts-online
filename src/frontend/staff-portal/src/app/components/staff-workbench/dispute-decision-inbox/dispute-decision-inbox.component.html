@@ -30,12 +30,12 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="formattedJJDecisionDate">
+    <ng-container matColumnDef="jjDecisionDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         DECISION DATE
       </th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.formattedJJDecisionDate | date: "dd-MMM-yyyy" }}</span>
+        <span>{{ element.jjDecisionDate | date: "dd-MMM-yyyy" : "UTC" }}</span>
       </td>
     </ng-container>
 
