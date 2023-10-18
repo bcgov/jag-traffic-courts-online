@@ -18,7 +18,7 @@ citizen-api:
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2.1"
-    "FormRecognizer__ModelId": "498dd4e9-f54c-47ef-be08-5976caf1e07f"
+    "FormRecognizer__ModelId": "f6dc4072-b0b3-4e16-816d-a73ccc1a61d4"
     "Swagger__Enabled": "true"
     "TicketSearch__SearchType": "RoadSafety"
     "MassTransit__Transport": "RabbitMq"
