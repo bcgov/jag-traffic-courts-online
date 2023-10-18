@@ -48,6 +48,12 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
 
         try
         {
+            // FIXME: Sometimes Form Recognizer (FR) doesn't even bother to start an analyze request
+            //  - the request will be stored in the underlying \shared filesystem, but FR won't start processing the request for some reason.
+            //  - the request will sit on the filesystem with the status of NotStarted in an output.json file corresponding with the analyze id.
+            //  - it's unclear why this happens, but the result is that the below statement will appear to hang forever and never return, 
+            //      but in reality the request is repeatedly polled to see if the request is done and FR always returns NotStarted (there is no current timeout).
+            // The WaitForCompletionAsync() should be rewritten so that in such cases if the request hasn't started processing in 10s or so, cancel the request so it doesn't hang here forever. 
             Task<RecognizeCustomFormsOperation> recognizeOperation = client.StartRecognizeCustomFormsAsync(modelId, form, options, cancellationToken);
             Response<RecognizedFormCollection> response = await recognizeOperation.WaitForCompletionAsync(cancellationToken)
                 .ConfigureAwait(false);
@@ -71,8 +77,16 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
         if (result.Count > 0)
         {
             violationTicket.GlobalConfidence = result[0].FormTypeConfidence ?? 0f;
-
-            foreach (var fieldLabel in IFormRecognizerService.FieldLabels)
+            Dictionary<string, string> fieldLabels = new ();
+            if (OcrViolationTicket.ViolationTicketVersion1 == result[0].FormType) {
+                violationTicket.TicketVersion = ViolationTicketVersion.VT1;
+                fieldLabels = IFormRecognizerService.FieldLabels_2022_04;
+            }
+            else if (OcrViolationTicket.ViolationTicketVersion2 == result[0].FormType) {
+                violationTicket.TicketVersion = ViolationTicketVersion.VT2;
+                fieldLabels = IFormRecognizerService.FieldLabels_2023_09;
+            }
+            foreach (var fieldLabel in fieldLabels)
             {
                 Field field = new();
                 field.TagName = fieldLabel.Key;

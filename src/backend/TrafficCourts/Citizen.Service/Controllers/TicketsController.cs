@@ -65,7 +65,8 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// </summary>
         /// <param name="file">A PNG, JPEG, or PDF of a scanned Traffic Violation Ticket</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="validate">Optional. If true, will perform business validation on ocr results. Defaults to true.</param>
+        /// <param name="sanitize">If true, will perform basic cleanup on ocr results before validation. Defaults to true.</param>
+        /// <param name="validate">If true, will perform business validation on ocr results. Defaults to true.</param>
         /// <returns></returns>
         /// <response code="200">The file appears to be a valid Violation Ticket. JSON data is extracted.</response>
         /// <response code="400">The uploaded file is too large or the Violation Ticket does not appear to be valid. Either 
@@ -77,13 +78,15 @@ namespace TrafficCourts.Citizen.Service.Controllers
         [RequestSizeLimit(10485760)]
         public async Task<IActionResult> AnalyseAsync(
             [Required]
-            [PermittedFileContentType(new string[] { "image/png", "image/jpeg", "application/pdf" })] 
+            [PermittedFileContentType(new string[] { "image/png", "image/jpeg", "application/pdf", "application/octet-stream" })] 
             IFormFile file,
-            bool? validate,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            bool sanitize = true,
+            bool validate = true)
         {
             AnalyseHandler.AnalyseRequest request = new(file);
-            request.Validate = validate ?? true; // default to true
+            request.Sanitize = sanitize;
+            request.Validate = validate;
             AnalyseHandler.AnalyseResponse response;
             try
             {

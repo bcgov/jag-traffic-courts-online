@@ -83,7 +83,7 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
             violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
         }
 
-        foreach (var fieldLabel in IFormRecognizerService.FieldLabels)
+        foreach (var fieldLabel in IFormRecognizerService.FieldLabels_2022_04)
         {
             Field field = new();
             field.TagName = fieldLabel.Key;
