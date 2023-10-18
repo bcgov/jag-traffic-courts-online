@@ -41,7 +41,12 @@ public class OcrViolationTicket
     public static readonly string DriverLicenceProvince = "drivers_licence_province";
     public static readonly string DriverLicenceNumber = "drivers_licence_number";
     public static readonly string ViolationDate = "violation_date";
+    public static readonly string ViolationDateYYYY = "violation_date_yyyy";
+    public static readonly string ViolationDateMM = "violation_date_mm";
+    public static readonly string ViolationDateDD = "violation_date_dd";
     public static readonly string ViolationTime = "violation_time";
+    public static readonly string ViolationTimeHH = "violation_time_hh";
+    public static readonly string ViolationTimeMM = "violation_time_mm";
     public static readonly string OffenceIsMVA = "is_mva_offence";
     public static readonly string OffenceIsMCA = "is_mca_offence";
     public static readonly string OffenceIsCTA = "is_cta_offence";
