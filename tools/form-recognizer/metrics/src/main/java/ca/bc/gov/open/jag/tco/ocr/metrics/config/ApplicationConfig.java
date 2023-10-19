@@ -14,7 +14,7 @@ public class ApplicationConfig {
 		ApiClient apiClient = new ApiClient();
 		// Setting this to null will make it use the baseUrl instead
 		apiClient.setServerIndex(null);
-		apiClient.setBasePath("http://localhost:5000");
+		apiClient.setBasePath("http://localhost:5031");
 		return apiClient;
 	}
 
