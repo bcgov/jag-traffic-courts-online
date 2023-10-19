@@ -151,3 +151,20 @@ Add route
 `helm upgrade rabbitmq-dev .\rabbitmq-11.10.0.tgz --values .\rabbitmq-values.yaml`
 
 ## Redis
+
+## Form Recognizer
+
+Deployment of Form Recognizer is currently a manual process and requires the below steps
+1. tag `image-registry.openshift-image-registry.svc:5000/0198bb-tools/form-recognizer-layout:latest` with an appropriate version (a)
+2. spin down all 4 Form Recognizer containers
+    - ocr-form-recognizer-api
+    - ocr-form-recognizer-layout
+    - ocr-form-recognizer-proxy
+    - ocr-form-recognizer-supervised
+3. drop and recreate the ocr-form-recognizer-shared PVC (1GB, ReadWriteMany) that is referenced by the above containers. (b)
+4. deploy ocr-form-recognizer-layout container with the appropriate form-recognizer-layout tag
+5. deploy the remaining 3 containers
+
+Notes:
+(a) `form-recognizer-layout:latest` is built automatically by the `ci-azure-cognitive-service-layout.yml` github workflow whenever changes are made to the /tools/form-recognizer folder.
+(b) The OCR models are baked into the ocr-form-recognizer-layout image. When this container starts up, it'll copy the models to the /shared PVC ready for use. This layout container must startup first.
