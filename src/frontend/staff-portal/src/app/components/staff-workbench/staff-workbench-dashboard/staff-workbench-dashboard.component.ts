@@ -18,18 +18,18 @@ import { AppState } from 'app/store';
   styleUrls: ['./staff-workbench-dashboard.component.scss'],
 })
 export class StaffWorkbenchDashboardComponent implements OnInit {
-  @ViewChild("DCF") private dcfTab: MatTab;
+  @ViewChild("DCF") dcfTab: MatTab;
   busy: Subscription;
-  public tabSelected = new FormControl(0);
-  public showTicket: boolean = false;
-  public decidePopup = '';
-  public disputeInfo: Dispute;
+  tabSelected = new FormControl(0);
+  showTicket: boolean = false;
+  decidePopup = '';
+  disputeInfo: Dispute;
   data$: Observable<JJDispute[]>;
-  public jjDisputeInfo: JJDispute;
+  jjDisputeInfo: JJDispute;
 
-  @ViewChild(DisputeDecisionInboxComponent) public disputeChild: DisputeDecisionInboxComponent;
-  @ViewChild(TicketInboxComponent) public ticketChild: TicketInboxComponent;
-  @ViewChild(UpdateRequestInboxComponent) public updateRequestChild: UpdateRequestInboxComponent;
+  @ViewChild(DisputeDecisionInboxComponent) disputeChild: DisputeDecisionInboxComponent;
+  @ViewChild(TicketInboxComponent) ticketChild: TicketInboxComponent;
+  @ViewChild(UpdateRequestInboxComponent) updateRequestChild: UpdateRequestInboxComponent;
 
   constructor(
     private disputeService: DisputeService,

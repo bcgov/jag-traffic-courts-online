@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { filter, Observable, Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
@@ -14,7 +14,7 @@ import * as JJDisputeStore from "app/store/jj-dispute";
   styleUrls: ['./jj-workbench-dashboard.component.scss'],
 })
 export class JjWorkbenchDashboardComponent implements OnInit {
-  @ViewChild("DCF") private dcfTab: MatTab;
+  @ViewChild("DCF") dcfTab: MatTab;
   userProfile: KeycloakProfile = {};
   busy: Subscription;
 

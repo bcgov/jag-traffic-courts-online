@@ -99,16 +99,25 @@ export class JJCountComponent implements OnInit {
       }
       if (!this.jjDisputedCount.revisedDueDate) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.dueDate;
 
+      if (this.isViewOnly &&
+        (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
+          || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
+        this.jjDisputedCount.ticketedFineAmount = null;
+        this.jjDisputedCount.lesserOrGreaterAmount = null;
+        this.jjDisputedCount.totalFineAmount = null;
+        this.jjDisputedCount.dueDate = null;
+      }
+
       // initialize form, radio buttons
       this.form.patchValue(this.jjDisputedCount);
-      if (this.jjDisputedCount.lesserOrGreaterAmount === null) this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
+      this.jjDisputedCount.lesserOrGreaterAmount === null ?? this.form.controls.lesserOrGreaterAmount.setValue(this.jjDisputedCount.ticketedFineAmount);
       this.inclSurcharge = this.jjDisputedCount ? (this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no") : "";
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate);
 
-      if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance ) {
+      if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance) {
         // Finding
         if (this.jjDisputedCount?.jjDisputedCountRoP?.finding !== this.Finding.GuiltyLesser) {
           this.form.get('jjDisputedCountRoP')?.get('lesserDescription')?.disable();
