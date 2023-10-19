@@ -502,13 +502,28 @@
             "fieldFormat": "not-specified"
         },
         {
-            "fieldKey": "Violation Date",
-            "fieldType": "date",
+            "fieldKey": "Violation Date YYYY",
+            "fieldType": "number",
             "fieldFormat": "not-specified"
         },
         {
-            "fieldKey": "Violation Time",
-            "fieldType": "time",
+            "fieldKey": "Violation Date MM",
+            "fieldType": "number",
+            "fieldFormat": "not-specified"
+        },
+        {
+            "fieldKey": "Violation Date DD",
+            "fieldType": "number",
+            "fieldFormat": "not-specified"
+        },
+        {
+            "fieldKey": "Violation Time HH",
+            "fieldType": "number",
+            "fieldFormat": "not-specified"
+        },
+        {
+            "fieldKey": "Violation Time MM",
+            "fieldType": "number",
             "fieldFormat": "not-specified"
         },
         {
