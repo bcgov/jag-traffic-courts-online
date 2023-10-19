@@ -74,6 +74,6 @@ spec:
             - name: forms-recognizer-logs
               mountPath: /logs
           image: >-
-            image-registry.openshift-image-registry.svc:5000/0198bb-tools/forms-recognizer-layout:latest
+            image-registry.openshift-image-registry.svc:5000/0198bb-tools/form-recognizer-layout:latest
   strategy:
     type: Recreate

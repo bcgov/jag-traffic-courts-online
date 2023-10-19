@@ -1,0 +1,35 @@
+name: Citizen API - build, tag, and push to OpenShift
+
+# This workflow, triggered manually, will build the citizen-api project using the HEAD of main.
+# The build is then pushed to Openshift, tagged with the current git SHA.
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build .NET 7 application using Docker
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/backend/TrafficCourts
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-api
+        run: |
+          git_sha=$(git rev-parse --short HEAD)
+          docker build --tag ${IMAGE}:${git_sha} -f ${CONTEXT}/Citizen.Service/Dockerfile ${CONTEXT}
+          docker push ${IMAGE}:${git_sha}
