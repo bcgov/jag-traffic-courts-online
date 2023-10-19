@@ -1678,6 +1678,9 @@
       "OcrViolationTicket": {
         "type": "object",
         "properties": {
+		  "ticketVersion": {
+	 	    "type": "string"
+		  },
           "imageFilename": {
             "type": "string",
             "nullable": true

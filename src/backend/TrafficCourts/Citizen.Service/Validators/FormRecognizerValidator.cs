@@ -167,6 +167,16 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd");
         }
 
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationTime)) {
+            // remove trailing colon (:) character
+            // It can happen that the hour portion actually contains the entire HH:MM time and the time portion is blank
+            // In this scenario when the time is built up from the individual components, we end up with HH:MM:
+
+            string violationTime = violationTicket.Fields[OcrViolationTicket.ViolationTime].Value ?? "";
+            violationTime = violationTime.TrimEnd(new char[] { ':' });
+            violationTicket.Fields[OcrViolationTicket.ViolationTime].Value = violationTime;
+        }
+
         // Sanitize driver's licence number (sometimes contains spaces - should be digits only)
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceNumber)) {
             string? value = violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value;

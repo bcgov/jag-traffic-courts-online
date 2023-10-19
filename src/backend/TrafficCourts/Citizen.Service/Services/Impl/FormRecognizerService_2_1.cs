@@ -123,6 +123,47 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
 
                 violationTicket.Fields.Add(fieldLabel.Value, field);
             }
+
+            // For VT2, ViolationDate is multiple fields and need to be merged together.
+            if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion)) {
+                Field violationDateYYYY = violationTicket.Fields[OcrViolationTicket.ViolationDateYYYY];
+                Field violationDateMM = violationTicket.Fields[OcrViolationTicket.ViolationDateMM];
+                Field violationDateDD = violationTicket.Fields[OcrViolationTicket.ViolationDateDD];
+
+                Field violationDate = new();
+                violationDate.TagName = "Violation Date";
+                violationDate.JsonName = OcrViolationTicket.ViolationDate;
+                violationDate.FieldConfidence = (violationDateYYYY.FieldConfidence + violationDateMM.FieldConfidence + violationDateDD.FieldConfidence) / 3f;
+                violationDate.Type = violationDateYYYY.Type;
+                violationDate.Value = violationDateYYYY.Value + "-" + violationDateMM.Value + "-" + violationDateDD.Value;
+                violationDate.BoundingBoxes.AddRange(violationDateYYYY.BoundingBoxes);
+                violationDate.BoundingBoxes.AddRange(violationDateMM.BoundingBoxes);
+                violationDate.BoundingBoxes.AddRange(violationDateDD.BoundingBoxes);
+                violationTicket.Fields.Add(OcrViolationTicket.ViolationDate, violationDate);
+
+                violationTicket.Fields.Remove(OcrViolationTicket.ViolationDateYYYY);
+                violationTicket.Fields.Remove(OcrViolationTicket.ViolationDateMM);
+                violationTicket.Fields.Remove(OcrViolationTicket.ViolationDateDD);
+            }
+
+            // For VT2, ViolationTime is multiple fields and need to be merged together.
+            if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion)) {
+                Field violationTimeHH = violationTicket.Fields[OcrViolationTicket.ViolationTimeHH];
+                Field violationTimeMM = violationTicket.Fields[OcrViolationTicket.ViolationTimeMM];
+
+                Field violationTime = new();
+                violationTime.TagName = "Violation Time";
+                violationTime.JsonName = OcrViolationTicket.ViolationTime;
+                violationTime.FieldConfidence = (violationTimeHH.FieldConfidence + violationTimeMM.FieldConfidence) / 2f;
+                violationTime.Type = violationTimeHH.Type;
+                violationTime.Value = violationTimeHH.Value + ":" + violationTimeMM.Value;
+                violationTime.BoundingBoxes.AddRange(violationTimeHH.BoundingBoxes);
+                violationTime.BoundingBoxes.AddRange(violationTimeMM.BoundingBoxes);
+                violationTicket.Fields.Add(OcrViolationTicket.ViolationTime, violationTime);
+
+                violationTicket.Fields.Remove(OcrViolationTicket.ViolationTimeHH);
+                violationTicket.Fields.Remove(OcrViolationTicket.ViolationTimeMM);
+            }
         }
 
         return violationTicket;

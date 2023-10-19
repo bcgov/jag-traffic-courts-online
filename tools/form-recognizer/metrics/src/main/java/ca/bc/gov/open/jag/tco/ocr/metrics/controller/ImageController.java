@@ -29,9 +29,11 @@ public class ImageController {
 			@RequestParam
 			@Parameter(description = "If true, will skip validation by the citizen-api")
 			boolean skipValidation,
+
 			@RequestParam
 			@Parameter(description = "Target Source to use when persisting the scan results")
 			Source source,
+
 			@RequestParam(required = false)
 			@Parameter(description = "If specified, process only the given image")
 			String fileName) throws FileNotFoundException {
