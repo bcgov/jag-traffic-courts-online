@@ -8,12 +8,29 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.bc.gov.court.traffic.ticket.model.BaseViolationTicket;
 import ca.bc.gov.court.traffic.ticket.model.Style;
@@ -337,6 +354,108 @@ public class TicketGeneratorService {
 			// Unable to split phrase. Return original, but log error
 			logger.error("Unable to split phrase, '" + text + "'", e);
 		    return new String[] { text };
+		}
+	}
+
+	/**
+	 * Extract data from an excel file (of a known format) to a list of tickets.
+	 * The format of the excel file is:
+	 * - First column (A) are names of the fields
+	 * - Each subsequent column (from B) is a ticket
+	 * @param xlsx
+	 * @return
+	 * @throws IOException
+	 */
+	@SuppressWarnings("deprecation")
+	public List<BaseViolationTicket> extractTickets(MultipartFile xlsx) throws IOException {
+		try (InputStream inputStream = xlsx.getInputStream()) {
+			List<BaseViolationTicket> tickets = new ArrayList<>();
+
+			Workbook workbook = new XSSFWorkbook(inputStream);
+			for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+				Sheet worksheet = workbook.getSheetAt(i);
+
+				// A map of ticket values pulled from the excel document.
+				// The key is the column number and the value is a map of ticket values
+				Map<Integer, Map<String, String>> ticketsMap = new HashMap<>();
+
+				// Extract data from each cell
+				for (Row row : worksheet) {
+					String fieldName = "";
+					for (Cell cell : row) {
+						// This is deprecated, but the only way to force set the cell type to String.
+						// Even though the format of all cells in the excel file is the text, Excel still tries
+						// to auto-convert cells to NUMERIC or some other type which messes up the extraction.
+						cell.setCellType(CellType.STRING);
+
+						String cellValue = getCellValue(fieldName, cell);
+						if (cell.getColumnIndex() == 0) {
+							fieldName = cellValue;
+						}
+						else {
+							ticketsMap.putIfAbsent(cell.getColumnIndex(), new HashMap<>());
+							ticketsMap.get(cell.getColumnIndex()).put(fieldName, cellValue);
+						}
+					}
+				}
+
+				ObjectMapper mapper = new ObjectMapper()
+						.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+				ticketsMap.forEach((columnIdx, ticketMap) -> {
+					if (ViolationTicketVersion.VT1.name().equals(ticketMap.get("ticketVersion"))) {
+						ViolationTicketV1 ticket = mapper.convertValue(ticketMap, ViolationTicketV1.class);
+						tickets.add(ticket);
+					}
+					else if (ViolationTicketVersion.VT2.name().equals(ticketMap.get("ticketVersion"))) {
+						ViolationTicketV2 ticket = mapper.convertValue(ticketMap, ViolationTicketV2.class);
+						tickets.add(ticket);
+					}
+				});
+			}
+			workbook.close();
+
+			return tickets;
+		}
+	}
+
+	/**
+	 * This is proper way to get the cell value, but each cell should be of type String.
+	 * @param fieldName
+	 * @param cell
+	 * @return
+	 */
+	private String getCellValue(String fieldName, Cell cell) {
+		switch (cell.getCellType()) {
+		case STRING:
+			return cell.getStringCellValue();
+		case NUMERIC:
+			if (DateUtil.isCellDateFormatted(cell)) {
+				Date date = cell.getDateCellValue();
+				if (fieldName.contains("Time")) {
+					return ca.bc.gov.court.traffic.ticket.util.DateUtil.toTimeString(date) + "";
+				}
+				else {
+					return ca.bc.gov.court.traffic.ticket.util.DateUtil.toDateString(date) + "";
+				}
+			} else {
+				return cell.getNumericCellValue() + "";
+			}
+		case BOOLEAN:
+			return cell.getBooleanCellValue() + "";
+		case FORMULA:
+			return cell.getCellFormula() + "";
+		default:
+			return cell.toString();
+		}
+	}
+
+	public BufferedImage createTicketImage(BaseViolationTicket violationTicket) throws Exception {
+		if (violationTicket instanceof ViolationTicketV1) {
+			return createTicketV1((ViolationTicketV1) violationTicket, 5, null, false);
+		}
+		else {
+			return createTicketV2((ViolationTicketV2) violationTicket, 5, null, false);
 		}
 	}
 
