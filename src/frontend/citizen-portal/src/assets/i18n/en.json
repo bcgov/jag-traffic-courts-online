@@ -5,18 +5,18 @@
     "description2": "If you would like to simply pay for your ticket, please click on the 'Pay Now' button.",
     "step_1": {
       "heading": "Initiate Dispute",
-      "detail": "Login using your BC Services card and initiate the online resolution process."
+      "detail": "Login using your BC Services card and initiate the online dispute process."
     },
     "step_2": {
       "heading": "Violation Ticket Lookup",
       "detail": "Find your Violation Ticket and ensure that the specifics of the ticket are correct. Through our step-by-step process, you can indicate your preferences and how you would like the ticket to be disputed."
     },
     "step_3": {
-      "heading": "Violation Ticket Resolution",
-      "detail": "Submit your resolution or save the details until you are ready to proceed with the resolution process. You have 365 days to dispute your ticket from the date the ticket was issued."
+      "heading": "Violation Ticket Dispute",
+      "detail": "Submit your dispute or save the details until you are ready to proceed with the dispute process. You have 365 days to dispute your ticket from the date the ticket was issued."
     },
     "self_resolution": {
-      "heading": "Self Resolution Wizard",
+      "heading": "Self Dispute Wizard",
       "detail": "Interact with an online wizard and explore reasons behind your ticket. The online wizard will take you through multiple options demonstrated through text, videos and images.",
       "explore": "Explore My Options"
     }
