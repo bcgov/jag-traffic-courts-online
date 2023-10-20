@@ -365,7 +365,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (this.fileTypeToUpload === this.adjournmentFileType.key && (<NoticeOfDispute>this.ticket).appearance_less_than_14_days) {
       const data: DialogOptions = {
         titleKey: "Court hearing scheduled for less than 14 days",
-        messageKey: "You are requesting an adjournment within 14 days of your court date. To help ensure that your request for an adjournment is processed on time, please contact the Violation Ticket Centre at 1-877-661-8026. If your adjournment is not able to be processed, you may be deemed guilty and your dispute closed. Would you like to proceed?",
+        messageKey: "You are requesting an adjournment within 14 days of your court date. To help ensure that your request for an adjournment is processed on time, please contact the Violation Ticket Centre at Courts.TCO@gov.bc.ca. If your adjournment is not able to be processed, you may be deemed guilty and your dispute closed. Would you like to proceed?",
         actionTextKey: "Yes",
         actionType: "primary",
         cancelTextKey: "No",
