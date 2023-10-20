@@ -25,7 +25,8 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           CONTEXT: ./tools/form-recognizer
-          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/form-recognizer-layout:latest
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/form-recognizer-layout
         run: |
-          docker build --tag ${IMAGE} -f ${CONTEXT}/Dockerfile.layout ${CONTEXT}
-          docker push ${IMAGE}
+          git_sha=$(git rev-parse --short HEAD)
+          docker build --tag ${IMAGE}:${git_sha} -f ${CONTEXT}/Dockerfile.layout ${CONTEXT}
+          docker push ${IMAGE}:${git_sha}
