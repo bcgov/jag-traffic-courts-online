@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.bc.gov.court.traffic.ticket.model.BaseViolationTicket;
 import ca.bc.gov.court.traffic.ticket.model.ViolationTicketV1;
 import ca.bc.gov.court.traffic.ticket.model.ViolationTicketV2;
 import ca.bc.gov.court.traffic.ticket.model.ViolationTicketVersion;
 import ca.bc.gov.court.traffic.ticket.service.TicketGeneratorService;
+import ca.bc.gov.court.traffic.ticket.util.RandomUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,8 +36,8 @@ public class TicketGeneratorController {
 	@Autowired
 	private TicketGeneratorService ticketGenService;
 
-	@Operation(description = "Generate a version-specific random Violation Ticket.")
-	@GetMapping(value = "/generate", produces = MediaType.IMAGE_PNG_VALUE)
+	@Operation(description = "Generate a version-specific random Violation Ticket image.")
+	@GetMapping(value = "/generate/image", produces = MediaType.IMAGE_PNG_VALUE)
 	public @ResponseBody byte[] createTicket(
 			@RequestParam(required = true)
 			@Schema(description = "The Violation Ticket version to generate (2022-04 is the 1st iteration, 2023-09 the 2nd).", example = "VT2", implementation = ViolationTicketVersion.class)
@@ -49,8 +51,8 @@ public class TicketGeneratorController {
 			@Schema(description = "The number of counts to populate, default: 3", example = "3")
 			Integer numCounts,
 
-			@RequestParam(required = false)
-			@Schema(description = "If true, will populate all fields", example = "true")
+			@RequestParam(required = false, defaultValue = "false")
+			@Schema(description = "If true, will populate all fields", example = "false")
 			Boolean allFilled) throws Exception {
 
 		BufferedImage ticketImage = ticketGenService.createTicket(version, writingStyle, numCounts, Boolean.TRUE.equals(allFilled));
@@ -62,6 +64,31 @@ public class TicketGeneratorController {
 		return IOUtils.toByteArray(inputStream);
 	}
 
+	@Operation(description = "Generate the json data behind a version-specific random Violation Ticket.")
+	@GetMapping(value = "/generate/json", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody BaseViolationTicket createJson(
+			@RequestParam(required = true)
+			@Schema(description = "The Violation Ticket version to generate (2022-04 is the 1st iteration, 2023-09 the 2nd).", example = "VT2", implementation = ViolationTicketVersion.class)
+			ViolationTicketVersion version,
+
+			@RequestParam(required = false)
+			@Schema(description = "The number of counts to populate, default: 3", example = "3")
+			Integer numCounts,
+
+			@RequestParam(required = false, defaultValue = "false")
+			@Schema(description = "If true, will populate all fields", example = "false")
+			Boolean allFilled) throws Exception {
+
+		if (ViolationTicketVersion.VT1.equals(version)) {
+			BaseViolationTicket randomTicket = RandomUtil.randomTicket(ViolationTicketVersion.VT1, numCounts, allFilled);
+			return randomTicket;
+		}
+		else {
+			BaseViolationTicket randomTicket = RandomUtil.randomTicket(ViolationTicketVersion.VT2, numCounts, allFilled);
+			return randomTicket;
+		}
+	}
+
 	@Operation(description = "Generate a 2022-04 Violation Ticket with specific values.")
 	@PostMapping(value = "/generate/v1", produces = MediaType.IMAGE_PNG_VALUE)
 	public @ResponseBody byte[] createTicket(
@@ -70,13 +97,9 @@ public class TicketGeneratorController {
 
 			@RequestParam(required = false)
 			@Parameter(description = "A specific writing style, enter a value between 1 and 8", example = "5")
-			Integer writingStyle,
+			Integer writingStyle) throws Exception {
 
-			@RequestParam(required = false)
-			@Parameter(description = "The number of counts to populate, default: 3", example = "3")
-			Integer numCounts) throws Exception {
-
-		BufferedImage ticketImage = ticketGenService.createTicketV1(violationTicket, writingStyle, numCounts, false);
+		BufferedImage ticketImage = ticketGenService.createTicketV1(violationTicket, writingStyle, null, false);
 
 		// return ticket as png
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -93,13 +116,9 @@ public class TicketGeneratorController {
 
 			@RequestParam(required = false)
 			@Parameter(description = "A specific writing style, enter a value between 1 and 8", example = "5")
-			Integer writingStyle,
+			Integer writingStyle) throws Exception {
 
-			@RequestParam(required = false)
-			@Parameter(description = "The number of counts to populate, default: 3", example = "3")
-			Integer numCounts) throws Exception {
-
-		BufferedImage ticketImage = ticketGenService.createTicketV2(violationTicket, writingStyle, numCounts, false);
+		BufferedImage ticketImage = ticketGenService.createTicketV2(violationTicket, writingStyle, null, false);
 
 		// return ticket as png
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
