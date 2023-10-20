@@ -5,18 +5,18 @@
     "description2": "Si vous souhaitez simplement payer votre billet, veuillez cliquer sur le bouton 'Payez Maintenant'",
     "step_1": {
       "heading": "Lancer un Litige",
-      "detail": "Connectez-vous à l'aide de votre carte CB Services et lancez le processus de résolution en ligne."
+      "detail": "Connectez-vous à l'aide de votre carte CB Services et lancez le processus de dispute en ligne."
     },
     "step_2": {
       "heading": "Recherche de Tickets de Violation",
       "detail": "Trouvez votre ticket de violation et assurez-vous que les spécificités du ticket sont correctes. Grâce à notre processus étape par étape, vous pouvez indiquer vos préférences et comment vous souhaitez que le ticket soit contesté."
     },
     "step_3": {
-      "heading": "Résolution des Tickets de Violation",
-      "detail": "Soumettez votre résolution ou enregistrez les détails jusqu'à ce que vous soyez prêt à poursuivre le processus de résolution. Vous disposez de 365 jours pour contester votre billet à compter de la date d'émission du billet."
+      "heading": "Dispute des Tickets de Violation",
+      "detail": "Soumettez votre dispute ou enregistrez les détails jusqu'à ce que vous soyez prêt à poursuivre le processus de dispute. Vous disposez de 365 jours pour contester votre billet à compter de la date d'émission du billet."
     },
     "self_resolution": {
-      "heading": "Assistant d'Auto-Résolution",
+      "heading": "Assistant d'Auto-Dispute",
       "detail": "Interagissez avec un assistant en ligne et explorez les raisons de votre ticket. L'assistant en ligne vous guidera à travers plusieurs options illustrées à travers du texte, des vidéos et des images.",
       "explore": "Explorez Mes Options"
     }

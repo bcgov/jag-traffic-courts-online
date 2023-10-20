@@ -3,11 +3,11 @@
     <ng-container header>Traffic ticket dispute request email verification</ng-container>
   </app-page-header>
 
-  <app-alert type="warning" icon="info">
+  <app-alert type="warning" icon="info" *ngIf="verified === true && checking === false">
     <ng-container #alertContent class="alert-content">
       <div class="d-flex justify-content-between d-print-none">
         <span>
-          <h1 style="margin: 0;">Email verification confirmation</h1>
+          <h1 style="margin: 0;">Email successfully confirmed.</h1>
         </span>
       </div>
     </ng-container>
@@ -15,11 +15,6 @@
 
   <hr class="d-print-none">
   <div class="d-print-none" *ngIf="verified === true && checking === false">
-    <p class="text-dark">
-      Email address successfully confirmed.
-      <br>
-      <br>
-    </p>
     <strong>Next Steps</strong><br>
     <p class="text-dark">
       A member of the court registry will review your request and you will receive an email to the address you supplied
@@ -34,8 +29,17 @@
     <strong>Processing email confirmation...</strong><br>
   </div>
 
+  <app-alert type="warning" icon="info" *ngIf="verified === false && checking === false">
+    <ng-container #alertContent class="alert-content">
+      <div class="d-flex justify-content-between d-print-none">
+        <span>
+          <h1 style="margin: 0;">Your email address could NOT be verified.</h1>
+        </span>
+      </div>
+    </ng-container>
+  </app-alert>
+
   <div class="d-print-none" *ngIf="verified === false && checking === false">
-    <strong>Your email address could NOT be verified.</strong><br>
     A member of the court registry will review your request and you will be notified if the ticket request has been
     approved or rejected, and what to expect next.
     <br>
