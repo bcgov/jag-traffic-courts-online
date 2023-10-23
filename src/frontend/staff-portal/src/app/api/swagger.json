@@ -5414,7 +5414,7 @@
             "nullable": true
           },
           "comments": {
-            "maxLength": 500,
+            "maxLength": 4000,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -5526,7 +5526,7 @@
             "nullable": true
           },
           "note": {
-            "maxLength": 500,
+            "maxLength": 4000,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -5640,9 +5640,17 @@
             "nullable": true
           },
           "comments": {
-            "maxLength": 500,
+            "maxLength": 4000,
             "minLength": 0,
             "type": "string",
+            "nullable": true
+          },
+          "latestPlea": {
+            "$ref": "#/components/schemas/JJDisputedCountLatestPlea"
+          },
+          "latestPleaUpdateTs": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "jjDisputedCountRoP": {
@@ -5668,6 +5676,14 @@
         "enum": [
           "UNKNOWN",
           "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountLatestPlea": {
+        "enum": [
+          "UNKNOWN",
+          "G",
           "N"
         ],
         "type": "string"
@@ -5854,6 +5870,9 @@
       "OcrViolationTicket": {
         "type": "object",
         "properties": {
+          "ticketVersion": {
+            "$ref": "#/components/schemas/ViolationTicketVersion"
+          },
           "imageFilename": {
             "type": "string",
             "nullable": true
@@ -6534,6 +6553,13 @@
           "UNKNOWN",
           "Y",
           "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketVersion": {
+        "enum": [
+          "VT1",
+          "VT2"
         ],
         "type": "string"
       }
