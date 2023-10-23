@@ -5,6 +5,9 @@ metadata:
   labels:
     app.kubernetes.io/instance: azure-cognitive-service-custom-proxy
     app.kubernetes.io/name: azure-cognitive-service-custom-proxy
+  annotations:
+    haproxy.router.openshift.io/timeout: 60s
+    
 spec:
   host: forms-recognizer-0198bb-dev.apps.silver.devops.gov.bc.ca
   to:
