@@ -1,18 +1,13 @@
-﻿using AutoFixture;
-using Bogus;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Reflection;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Cdogs.Client;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 using Xunit;
 using Xunit.Abstractions;
@@ -22,7 +17,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile;
 public class PrintTest : CommonDocumentGenerationServiceTest
 {
     private readonly ITestOutputHelper _output;
- 
+
     public PrintTest(ITestOutputHelper output)
     {
         _output = output;
@@ -75,7 +70,7 @@ public class PrintTest : CommonDocumentGenerationServiceTest
         await Container.StartAsync();
 
         var template = GetTemplate("carbone_2.template.docx");
-        var data = GetData<TestCases.carbone_2.Data> ("carbone_2.data.json");
+        var data = GetData<TestCases.carbone_2.Data>("carbone_2.data.json");
 
         Assert.NotNull(template);
         Assert.NotNull(data);
@@ -208,91 +203,13 @@ public class PrintTest : CommonDocumentGenerationServiceTest
     private DigitalCaseFile CreateDigitalCaseFile()
     {
         var faker = new DigitalCaseFileFaker();
-        return faker.Generate();
+        DigitalCaseFile file = faker.Generate();
+
+        for (int i = 0; i < file.Counts.Count; i++)
+        {
+            file.Counts[i].Count = i + 1; // fix up the count numbers
+        }
+
+        return file;
     }
 }
-
-
-
-public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
-{
-    private const string Locale = "en_CA";
-
-    private static string[] AttendanceType = new[] { "", "Zoom" };
-
-    private static readonly Faker<DriversLicence> _driversLicenceFaker = new Faker<DriversLicence>(Locale)
-        .StrictMode(true)
-        .RuleFor(_ => _.Province, f => f.Address.State())
-        .RuleFor(_ => _.Number, f => f.Random.DriversLicenceNumber());
-
-    private static readonly Faker<TicketSummary>  _ticketSummaryFaker = new Faker<TicketSummary>(Locale)
-        .StrictMode(true)
-        .RuleFor(_ => _.Number, f => f.Random.TicketNumber())
-        .RuleFor(_ => _.Surname, f => f.Name.LastName())
-        .RuleFor(_ => _.GivenNames, f => f.Name.FirstName())
-        .RuleFor(_ => _.Address, f => f.Address.FullAddress())
-        .RuleFor(_ => _.IssuedDate, f => DateTime.SpecifyKind(f.Date.Past().Date, DateTimeKind.Unspecified))
-        .RuleFor(_ => _.SubmittedDate, f => DateTime.SpecifyKind(f.Date.Past().Date, DateTimeKind.Unspecified))
-        .RuleFor(_ => _.IcbcReceivedDate, f => DateTime.SpecifyKind(f.Date.Past().Date, DateTimeKind.Unspecified))
-        .RuleFor(_ => _.CourtHouse, f => f.Address.City())
-        .RuleFor(_ => _.PoliceDetachment, f => f.Name.LastName())
-        .RuleFor(_ => _.OffenceLocation, f => f.Address.StreetName() + " at " + f.Address.StreetName())
-        .RuleFor(_ => _.CourtAgenyId, f => f.Random.String2(4))
-        ;
-
-    private static readonly Faker<ContactInformation> _contactInformationFaker = new Faker<ContactInformation>(Locale)
-        .StrictMode(true)
-        .RuleFor(_ => _.Surname, f => f.Name.LastName())
-        .RuleFor(_ => _.GivenNames, f => f.Name.FirstName())
-        .RuleFor(_ => _.Address, f => f.Address.StreetAddress(true))
-        .RuleFor(_ => _.DriversLicence, f => _driversLicenceFaker.Generate())
-        .RuleFor(_ => _.Email, (f,d) => f.Internet.Email(d.GivenNames, d.Surname))
-        ;
-
-    private static readonly Faker<CourtOptions> _courtOptionsFaker = new Faker<CourtOptions>(Locale)
-        .StrictMode(true)
-        .RuleFor(_ => _.WitnessCount, f => f.Random.WitnessCount(5))
-        .RuleFor(_ => _.InterpreterLangurage, f => f.Random.InterpreterLangurage())
-        //.RuleFor(_ => _.Address, f => f.Address.FullAddress())
-        //.RuleFor(_ => _.DriversLicence, f => _driversLicenceFaker.Generate())
-        //.RuleFor(_ => _.Email, (f, d) => f.Internet.Email(d.GivenNames, d.Surname))
-        ;
-
-    public DigitalCaseFileFaker() : base(Locale)
-    {
-        RuleFor(_ => _.Ticket, f => _ticketSummaryFaker);
-        RuleFor(_ => _.ContactInformation, f => _contactInformationFaker);
-    }
-
-    
-}
-
-public static class FakerExtensions
-{
-    public static string DriversLicenceNumber(this Randomizer randomizer)
-    {
-        return randomizer.Number(1000000, 9999999).ToString("D7");
-    }
-
-    public static string TicketNumber(this Randomizer randomizer)
-    {
-        return randomizer.String2(2).ToUpper() + randomizer.Number(0, 99999999).ToString("D8");
-    }
-
-    public static int WitnessCount(this Randomizer randomizer, int max)
-    {
-        return randomizer.Number(0, max);
-    }
-
-    private static string[] Languages = new[] { "", "", "Mandarin", "Cantonese", "Tagalog", "Filipino", "German" };
-
-    public static string InterpreterLangurage(this Randomizer randomizer)
-    {
-        return Languages[randomizer.Number(0, Languages.Length - 1)];
-    }
-
-
-    //DriversLicence
-}
-
-

@@ -55,4 +55,8 @@
 	  <EmbeddedResource Include="Services\PrintDigialCaseFile\TestCases\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Services\PrintDigialCaseFile\Data\" />
+	</ItemGroup>
+
 </Project>
