@@ -13,9 +13,5 @@
         /// <returns>Returns the supplied document with variables merged in</returns>
         /// <exception cref="DocumentGenerationApiException">A server side error occurred.</exception>
         Task<FileResponse> UploadTemplateAndRenderReportAsync<T>(TemplateRenderObject<T> body, CancellationToken cancellationToken);
-
-        Task<FileResponse> UploadTemplateAndRenderReportAsync(string requestContent, CancellationToken cancellationToken);
-
-        Newtonsoft.Json.JsonSerializerSettings GetJsonSerializerSettings();
     }
 }

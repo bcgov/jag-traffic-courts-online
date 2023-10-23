@@ -9,6 +9,4 @@ public interface IDocumentGenerationService
 
     Task<RenderedReport> UploadTemplateAndRenderReportAsync<T>(Stream template, TemplateType templateType, ConvertTo convertTo, string reportName, T data, CancellationToken cancellationToken)
         where T : class;
-
-    Task<RenderedReport> UploadTemplateAndRenderReportAsync(Stream template, TemplateType templateType, ConvertTo convertTo, string reportName, JsonNode data, CancellationToken cancellationToken);
 }

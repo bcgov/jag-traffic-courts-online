@@ -8,15 +8,6 @@
             if (body == null)
                 throw new System.ArgumentNullException("body");
 
-            var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-            return await UploadTemplateAndRenderReportAsync(json_, cancellationToken);
-        }
-
-        public async Task<FileResponse> UploadTemplateAndRenderReportAsync(string requestContent, CancellationToken cancellationToken)
-        {
-            if (requestContent == null)
-                throw new System.ArgumentNullException("requestContent");
-
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/template/render");
 
@@ -26,7 +17,8 @@
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var content_ = new System.Net.Http.StringContent(requestContent);
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
@@ -113,11 +105,6 @@
                     client_.Dispose();
             }
 
-        }
-
-        public Newtonsoft.Json.JsonSerializerSettings GetJsonSerializerSettings()
-        {
-            return JsonSerializerSettings;
         }
     }
 }

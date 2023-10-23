@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Text;
-using System.Text.Json.Nodes;
 
 namespace TrafficCourts.Cdogs.Client;
 
@@ -13,34 +12,6 @@ public class DocumentGenerationService : IDocumentGenerationService
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-
-    public async Task<RenderedReport> UploadTemplateAndRenderReportAsync(
-        Stream template,
-        TemplateType templateType,
-        ConvertTo convertTo,
-        string reportName,
-        JsonNode data,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(template);
-        ArgumentNullException.ThrowIfNull(reportName);
-        ArgumentNullException.ThrowIfNull(data);
-
-        TemplateRenderObject renderObject = new TemplateRenderObject
-        {
-            Options = CreateOptions(convertTo, reportName),
-            Template = CreateTemplate(templateType, template)
-        };
-        var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(renderObject, _client.GetJsonSerializerSettings());
-        json_ = json_.Remove(json_.Length - 1, 1) + ", \"data\":" + data.ToJsonString() + "}";
-
-        FileResponse response = await _client
-            .UploadTemplateAndRenderReportAsync(json_, cancellationToken)
-            .ConfigureAwait(false);
-
-        var report = await GetRenderedReportAsync(response);
-        return report;
     }
 
     public async Task<RenderedReport> UploadTemplateAndRenderReportAsync<T>(
@@ -137,6 +108,7 @@ public class DocumentGenerationService : IDocumentGenerationService
 
         MemoryStream content = new MemoryStream();
         await response.Stream.CopyToAsync(content).ConfigureAwait(false);
+        content.Position = 0;
 
         var report = new RenderedReport(reportName, contentType, content);
         return report;
