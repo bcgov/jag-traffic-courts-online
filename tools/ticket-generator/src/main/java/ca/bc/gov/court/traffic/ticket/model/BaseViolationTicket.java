@@ -368,16 +368,25 @@ public abstract class BaseViolationTicket {
 
 	@JsonIgnore
 	public String getViolationDateYYYY() {
+		if (StringUtils.isBlank(violationDate)) {
+			return "";
+		}
 		return Objects.toString(DateUtil.getYear(DateUtil.fromDateString(violationDate)), "");
 	}
 
 	@JsonIgnore
 	public String getViolationDateMM() {
+		if (StringUtils.isBlank(violationDate)) {
+			return "";
+		}
 		return Objects.toString(DateUtil.getMonth(DateUtil.fromDateString(violationDate)), "");
 	}
 
 	@JsonIgnore
 	public String getViolationDateDD() {
+		if (StringUtils.isBlank(violationDate)) {
+			return "";
+		}
 		return Objects.toString(DateUtil.getDay(DateUtil.fromDateString(violationDate)), "");
 	}
 
