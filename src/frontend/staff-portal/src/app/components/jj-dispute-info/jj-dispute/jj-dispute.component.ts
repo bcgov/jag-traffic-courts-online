@@ -70,6 +70,7 @@ export class JJDisputeComponent implements OnInit {
   jjDecisionDateFormattedDate: string;
   concludeStatusOnly: boolean = false;
   cancelStatusOnly: boolean = false;
+  isNoAppEnabled: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -228,6 +229,19 @@ export class JJDisputeComponent implements OnInit {
       });
   }
 
+  onUpdateAPPCd() {
+    // TCVP-2461 If AppCd is P or A, disable No App field and set to blank.
+    if (JJDisputeCourtAppearanceRoPAppCd.P === this.courtAppearanceForm.value.appCd
+        || JJDisputeCourtAppearanceRoPAppCd.A === this.courtAppearanceForm.value.appCd) {
+      this.courtAppearanceForm.controls.noAppTs.setValue(null);
+      this.noAppTsFormattedDate = null;
+      this.isNoAppEnabled = false;
+    }
+    else {
+      this.isNoAppEnabled = true;
+    }
+  }
+
   updateNoAPPTs() {
     this.courtAppearanceForm.controls.noAppTs.setValue( this.datePipe.transform(new Date(), "yyyy-MM-dd") + "T" + this.datePipe.transform(new Date(), "HH:mm:ss") + "Z");
     this.noAppTsFormattedDate = this.datePipe.transform(new Date(), "MM/dd/yyyy HH:mm");
@@ -380,6 +394,9 @@ export class JJDisputeComponent implements OnInit {
         }
         this.determineIfConcludeOrCancel();
       }
+
+      // init No App field
+      this.onUpdateAPPCd();
     });
   }
 
