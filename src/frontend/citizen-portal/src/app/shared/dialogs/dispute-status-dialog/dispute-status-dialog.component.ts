@@ -55,6 +55,11 @@ export class DisputeStatusDialogComponent {
           if (step.isCompleted) this.steps.push(step);
           break;
           }
+        case StatusStepType.REJECTED: {
+          step.isCompleted = this.checkRejected();
+          if (step.isCompleted) this.steps.push(step);
+          break;
+          }
         case StatusStepType.CONCLUDED: {
           step.isCompleted = this.checkConcluded();
           if (step.isCompleted) this.steps.push(step);
@@ -68,7 +73,7 @@ export class DisputeStatusDialogComponent {
   private checkProcessingCompleted(): boolean {
     if (this.checkScheduledCompleted()) return true;
     else {
-      let statuses: DisputeStatus[] = [DisputeStatus.Processing];
+      let statuses: DisputeStatus[] = [DisputeStatus.Processing, DisputeStatus.Rejected];
       if (statuses.indexOf(this.dispute?.dispute_status) > -1) {
         return true;
       } else return false;
@@ -92,7 +97,7 @@ export class DisputeStatusDialogComponent {
   }
 
   private checkConfirmedCompleted(): boolean {
-    if (this.dispute?.jjdispute_status === JJDisputeStatus.Confirmed) return true;
+    if (this.checkRejected() || this.dispute?.jjdispute_status === JJDisputeStatus.Confirmed) return true;
     else return false;
   }
 
@@ -100,6 +105,12 @@ export class DisputeStatusDialogComponent {
     if ([DisputeStatus.Cancelled].indexOf(this.dispute?.dispute_status) > -1 || [JJDisputeStatus.Cancelled].indexOf(this.dispute?.jjdispute_status) > -1) return true;
     else return false;
   }
+  
+  private checkRejected(): boolean {
+    if ([DisputeStatus.Rejected].indexOf(this.dispute?.dispute_status) > -1) return true;
+    else return false;
+  }
+
   private checkConcluded(): boolean {
     if ([JJDisputeStatus.Concluded].indexOf(this.dispute?.jjdispute_status) > -1) return true;
     else if ([DisputeStatus.Concluded].indexOf(this.dispute?.dispute_status) > -1) return true;

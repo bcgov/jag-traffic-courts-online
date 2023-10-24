@@ -177,6 +177,7 @@ export enum StatusStepType {
   SCHEDULED = "Hearing Scheduled",
   CONFIRMED = "Decision Made",
   CANCELLED = "Cancelled",
+  REJECTED = "Rejected",
   CONCLUDED = "Concluded"
 }
 
