@@ -12,7 +12,7 @@ import { AuthService, KeycloakProfile } from 'app/services/auth.service';
   styleUrls: ['../../../app.component.scss', './ticket-inbox.component.scss'],
 })
 export class TicketInboxComponent implements OnInit, AfterViewInit {
-  @Output() public disputeInfo: EventEmitter<Dispute> = new EventEmitter();
+  @Output() disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   dataSource = new MatTableDataSource();
   tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
@@ -30,23 +30,25 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     'userAssignedTo',
   ];
   disputes: Dispute[] = [];
-  public userProfile: KeycloakProfile = {};
-  public RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
-  public DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
-  public SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
+  userProfile: KeycloakProfile = {};
+  RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
+  DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
-  public showTicket = false
+  showTicket = false;
+
+  private disputeStatusesExcluded = [DisputeStatus.Cancelled, DisputeStatus.Processing, DisputeStatus.Rejected];
 
   constructor(
-    public disputeService: DisputeService,
+    private disputeService: DisputeService,
     private logger: LoggerService,
     private authService: AuthService,
   ) {
     this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputes(); })
   }
 
-  public async ngOnInit() {
+  ngOnInit() {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         this.userProfile = userProfile;
@@ -87,7 +89,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       );
 
       response.forEach(d => {
-        if (d.status != "CANCELLED") { // do not show cancelled
+        if (!this.disputeStatusesExcluded.includes(d.status)) {
           var newDispute: Dispute = {
             ticketNumber: d.ticketNumber,
             disputantSurname: d.disputantSurname,
