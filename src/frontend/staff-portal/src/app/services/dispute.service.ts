@@ -495,7 +495,6 @@ export interface Dispute extends DisputeBase {
   address?: string;
   __DateSubmitted?: Date,
   __RedGreenAlert?: string,
-  __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   __UserAssignedTs?: Date,
 }
 
@@ -506,7 +505,6 @@ export interface Dispute extends DisputeListItem {
   address?: string;
   __DateSubmitted?: Date,
   __RedGreenAlert?: string,
-  __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   __UserAssignedTs?: Date,
 }
 
