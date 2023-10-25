@@ -22,14 +22,20 @@
       <li>Acceptable formats: JPG, PNG or PDF</li>
       <li>Maximum size: 10 MB</li>
     </ul>
+    <div>
+      If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing.
+    </div>
   </div>
   <ng-template appDialogContent></ng-template>
-  <div *ngIf="options.messageKey !== 'error4'">
+  <div *ngIf="options.messageKey === 'error2'">
     <span class="flex-grow-1"></span>
     <p>Please
       <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
         target="blank">click here</a> for more options.
     </p>
+    <div>
+      If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing.
+    </div>
   </div>
   <div *ngIf="options.messageKey === 'error4'">
     <span class="flex-grow-1"></span>
@@ -37,9 +43,25 @@
       <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
         target="blank">click here</a> for more options.
     </p>
+    <div>
+      If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing.
+    </div>
   </div>
-  <div>
-    If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing.
+  <div *ngIf="options.messageKey === 'error5'">
+    <span class="flex-grow-1"></span>
+    <p> It has been over 30 days since the violation date on your ticket. You may still be able to dispute it or request time to pay or a fine reduction if
+      the Date of Service is different from the Violation date. Click
+      <a target="_blank" href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket">here</a>
+      for more options for submitting your dispute or request.
+    </p>
+  </div>
+  <div *ngIf="options.messageKey === 'error6'">
+    <span class="flex-grow-1"></span>
+    <p>It has been over 45 days since the violation date on your ticket. You may still be able to dispute it or request time to pay or a fine reduction if
+      the Date Violation Ticket Completed is different from the Violation date.
+      Click <a target="_blank" href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket">here</a>
+      for more options for submitting your dispute or request.
+    </p>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
