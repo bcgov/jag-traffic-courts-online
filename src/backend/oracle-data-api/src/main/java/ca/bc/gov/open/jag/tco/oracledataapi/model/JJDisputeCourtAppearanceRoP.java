@@ -34,10 +34,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
+public class JJDisputeCourtAppearanceRoP {
 
-	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Justin Appearance ID", nullable = false, accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
+	private String justinAppearanceId;
+	
+	@Schema(description = "TCO Court Appearance ID", nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	@Column
 	private Long id;
 
 	/**

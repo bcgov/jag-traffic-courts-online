@@ -426,6 +426,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 	@Test
 	public void testJJDisputeCourtAppearanceRoP() throws Exception {
 		String courtAppearanceId = "21";
+		String justinAppearanceId = "59295.0734";
 		String courtroomNumberTxt = "001";
 		Date appearanceDtm = RandomUtil.randomDate();
 		String appearanceReasonTxt = "HR";
@@ -438,10 +439,6 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String judgeOrJjNameTxt = "Judge";
 		JJDisputeCourtAppearanceDATT defenceCounselPresenceCd = JJDisputeCourtAppearanceDATT.C;
 		String commentsTxt = "This is a comment";
-		Date courtAppearanceTs =  RandomUtil.randomDate();
-		String courtAppearanceCreatedBy = "5";
-		Date courtAppearanceModifedTs =  RandomUtil.randomDate();
-		String courtAppearanceModifiedBy = "6";
 		Integer durationHours = 1;
 		Integer durationMinutes = 15;
 
@@ -461,13 +458,10 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		courtAppearance.setDisputantPresenceCd(disputantPresenceCd.toString());
 		courtAppearance.setDurationHours(durationHours);
 		courtAppearance.setDurationMinutes(durationMinutes);
-		courtAppearance.setEntDtm(courtAppearanceTs);
-		courtAppearance.setEntUserId(courtAppearanceCreatedBy);
 		courtAppearance.setJudgeOrJjNameTxt(judgeOrJjNameTxt);
+		courtAppearance.setJustinAppearanceId(justinAppearanceId);
 		courtAppearance.setRecordingClerkNameTxt(recordingClerkNameTxt);
 		courtAppearance.setSeizedYn(seizedYn.name());
-		courtAppearance.setUpdDtm(courtAppearanceModifedTs);
-		courtAppearance.setUpdUserId(courtAppearanceModifiedBy);
 		source.setCourtAppearances(Arrays.asList(courtAppearance));
 
 		JJDispute target = jjDisputeMapper.convert(source);
@@ -486,13 +480,10 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(crownPresenceCd, courtAppearanceRoP.getCrown());
 		assertEquals(seizedYn, courtAppearanceRoP.getJjSeized());
 		assertEquals(judgeOrJjNameTxt, courtAppearanceRoP.getAdjudicator());
+		assertEquals(justinAppearanceId, courtAppearanceRoP.getJustinAppearanceId());
 		assertEquals(defenceCounselPresenceCd, courtAppearanceRoP.getDattCd());
 		assertEquals(commentsTxt, courtAppearanceRoP.getComments());
 		assertEquals(duration, courtAppearanceRoP.getDuration());
-		assertEquals(courtAppearanceTs, courtAppearanceRoP.getCreatedTs());
-		assertEquals(courtAppearanceCreatedBy, courtAppearanceRoP.getCreatedBy());
-		assertEquals(courtAppearanceModifedTs, courtAppearanceRoP.getModifiedTs());
-		assertEquals(courtAppearanceModifiedBy, courtAppearanceRoP.getModifiedBy());
 	}
 
 }

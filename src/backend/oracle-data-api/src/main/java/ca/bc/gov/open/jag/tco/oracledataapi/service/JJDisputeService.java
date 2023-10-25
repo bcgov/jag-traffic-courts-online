@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
@@ -143,7 +144,14 @@ public class JJDisputeService {
 			jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs().clear();
 		}
 		// Add updated court appearances
-		jjDisputeToUpdate.addJJDisputeCourtAppearances(jjDispute.getJjDisputeCourtAppearanceRoPs());
+		if (jjDispute.getJjDisputeCourtAppearanceRoPs() != null && jjDispute.getJjDisputeCourtAppearanceRoPs().size() > 0) {
+			jjDisputeToUpdate.addJJDisputeCourtAppearances(
+						jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
+							.filter(p -> p.getId() != null)
+							.collect(Collectors.toList())
+					);
+		}
+		
 
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
 
@@ -320,6 +328,7 @@ public class JJDisputeService {
 
 			// TCVP-1968: Return the latest record iff the status is ACCEPTED
 			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
+					.filter(p -> p.getId() != null)
 					.sorted(new Comparator<JJDisputeCourtAppearanceRoP>() {
 						@Override
 						public int compare(JJDisputeCourtAppearanceRoP o1, JJDisputeCourtAppearanceRoP o2) {

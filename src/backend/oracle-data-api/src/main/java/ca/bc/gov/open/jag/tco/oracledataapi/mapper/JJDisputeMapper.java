@@ -264,13 +264,10 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "disputantPresenceCd", target = "appCd")
 	@Mapping(source = "disputantNotPresentDtm", target = "noAppTs")
 	@Mapping(source = ".", target = "duration", qualifiedByName="getDurationInMinutes")
-	@Mapping(source = "entDtm", target = "createdTs")
-	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "judgeOrJjNameTxt", target = "adjudicator")
+	@Mapping(source = "justinAppearanceId", target = "justinAppearanceId")
 	@Mapping(source = "recordingClerkNameTxt", target = "clerkRecord")
 	@Mapping(source = "seizedYn", target = "jjSeized")
-	@Mapping(source = "updDtm", target = "modifiedTs")
-	@Mapping(source = "updUserId", target = "modifiedBy")
 	public abstract JJDisputeCourtAppearanceRoP convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance jjCourtAppearance);
 
 	@Mapping(source = "appearanceTs", target = "appearanceDtm")
@@ -286,13 +283,10 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "noAppTs", target = "disputantNotPresentDtm")
 	@Mapping(target = "durationHours", ignore = true) // ignore back reference mapping
 	@Mapping(target = "durationMinutes", ignore = true) // ignore back reference mapping
-	@Mapping(source = "createdTs", target = "entDtm")
-	@Mapping(source = "createdBy", target = "entUserId")
 	@Mapping(source = "adjudicator", target = "judgeOrJjNameTxt")
+	@Mapping(source = "justinAppearanceId", target = "justinAppearanceId")
 	@Mapping(source = "clerkRecord", target = "recordingClerkNameTxt")
 	@Mapping(source = "jjSeized", target = "seizedYn")
-	@Mapping(source = "modifiedTs", target = "updDtm")
-	@Mapping(source = "modifiedBy", target = "updUserId")
 	public abstract ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJCourtAppearance convert(JJDisputeCourtAppearanceRoP jjCourtAppearance);
 
 	@Named("getDurationInMinutes")

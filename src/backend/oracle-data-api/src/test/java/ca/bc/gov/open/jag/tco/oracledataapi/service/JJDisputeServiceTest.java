@@ -203,7 +203,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		jjDispute.setStatus(jjDisputeStatus);
 
 		List<JJDisputeCourtAppearanceRoP> courtAppearanceList = new ArrayList<JJDisputeCourtAppearanceRoP>();
-		courtAppearance.setId(5L);
+		courtAppearance.setJustinAppearanceId("59295.0734");
 		courtAppearance.setJjDispute(jjDispute);
 		courtAppearanceList.add(courtAppearance);
 		jjDispute.setJjDisputeCourtAppearanceRoPs(courtAppearanceList);

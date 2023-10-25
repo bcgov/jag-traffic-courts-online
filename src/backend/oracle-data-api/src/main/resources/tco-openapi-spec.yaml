@@ -687,12 +687,12 @@ components:
           type: Integer
         judgeOrJjNameTxt:
           type: string
+        justinAppearanceId:
+          type: string
         recordingClerkNameTxt:
           type: string
         seizedYn:
           type: string
-      allOf:
-        - $ref: '#/components/schemas/AuditBase'
     JJDisputeRemark:
       type: object
       properties:
