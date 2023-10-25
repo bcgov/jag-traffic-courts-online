@@ -73,15 +73,6 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="__FilingDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Filing Date
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.__FilingDate ? (element.__FilingDate | date: "yyyy/MM/dd") : "" }}</span>
-        </td>
-      </ng-container>
-
       <ng-container matColumnDef="requestCourtAppearanceYn">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="centerColumn">
           Court Hearing
