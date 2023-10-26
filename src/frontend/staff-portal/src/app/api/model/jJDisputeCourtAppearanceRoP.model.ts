@@ -16,11 +16,8 @@ import { JJDisputeCourtAppearanceRoPJjSeized } from './jJDisputeCourtAppearanceR
 
 
 export interface JJDisputeCourtAppearanceRoP { 
-    createdBy?: string | null;
-    createdTs?: string;
-    modifiedBy?: string | null;
-    modifiedTs?: string | null;
-    id?: number;
+    justinAppearanceId?: string | null;
+    id?: number | null;
     appearanceTs?: string | null;
     room?: string | null;
     duration?: number | null;

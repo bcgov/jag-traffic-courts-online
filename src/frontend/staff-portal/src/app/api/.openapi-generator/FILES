@@ -4,7 +4,6 @@ api.module.ts
 api/api.ts
 api/dispute.service.ts
 api/document.service.ts
-api/documentGeneration.service.ts
 api/emailHistory.service.ts
 api/fileHistory.service.ts
 api/jJ.service.ts

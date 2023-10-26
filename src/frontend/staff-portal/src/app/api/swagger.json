@@ -1724,95 +1724,6 @@
         }
       }
     },
-    "/api/documentgeneration/generate": {
-      "post": {
-        "tags": [
-          "DocumentGeneration"
-        ],
-        "summary": "Returns generated document",
-        "parameters": [
-          {
-            "name": "data",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "template"
-                ],
-                "type": "object",
-                "properties": {
-                  "template": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "template": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Generated Document."
-          },
-          "401": {
-            "description": "Request lacks valid authentication credentials.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "There was a server error that prevented the search from completing successfully or no data found."
-          }
-        }
-      }
-    },
     "/api/emailhistory/emailhistory": {
       "get": {
         "tags": [
@@ -3730,6 +3641,83 @@
         }
       }
     },
+    "/api/jj/{disputeId}/print": {
+      "get": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Returns generated document",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "timeZone",
+            "in": "query",
+            "description": "The IANA timze zone id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated Document."
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          }
+        }
+      }
+    },
     "/api/keycloak/{groupName}/users": {
       "get": {
         "tags": [
@@ -5434,26 +5422,14 @@
       "JJDisputeCourtAppearanceRoP": {
         "type": "object",
         "properties": {
-          "createdBy": {
+          "justinAppearanceId": {
             "type": "string",
-            "nullable": true
-          },
-          "createdTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "modifiedTs": {
-            "type": "string",
-            "format": "date-time",
             "nullable": true
           },
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "nullable": true
           },
           "appearanceTs": {
             "type": "string",

@@ -200,7 +200,8 @@
           <span class="section-grid-cell">
             <p class="section-grid-header">APP (P/N/A)</p>
             <p class="section-grid-text">
-              <mat-select *ngIf="!isViewOnly" formControlName="appCd" style="background:#fffee6" (selectionChange)="onUpdateAPPCd()">
+              <mat-select *ngIf="!isViewOnly" formControlName="appCd" style="background:#fffee6"
+                (selectionChange)="onUpdateAPPCd()">
                 <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
                 <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
                 <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
@@ -210,8 +211,9 @@
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">No APP</p>
-            <p class="section-grid-text">{{ noAppTsFormattedDate
-              }}&nbsp;<button *ngIf="!isViewOnly && isNoAppEnabled" type="button" style="background:#fffee6"
+            <p class="section-grid-text">
+              {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+              &nbsp;<button *ngIf="!isViewOnly && isNoAppEnabled" type="button" style="background:#fffee6"
                 (click)="updateNoAPPTs()">Now</button></p>
           </span>
           <span class="section-grid-cell">
@@ -268,7 +270,8 @@
           <span class="section-grid-cell" style="grid-column: span 11">
             <p class="section-grid-header">Comments:</p>
             <p class="section-grid-text">
-              <textarea *ngIf="!isViewOnly" formControlName="comments" style="width:95%; background:#fffee6" rows="8"> </textarea>
+              <textarea *ngIf="!isViewOnly" formControlName="comments" style="width:95%; background:#fffee6"
+                rows="8"> </textarea>
               <span class="formatComments" *ngIf="isViewOnly">{{ courtAppearanceForm.get('comments').value }}</span>
             </p>
           </span>
