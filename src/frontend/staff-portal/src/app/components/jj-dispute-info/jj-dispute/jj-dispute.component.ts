@@ -217,9 +217,9 @@ export class JJDisputeComponent implements OnInit {
   onUpdateAPPCd() {
     // TCVP-2461 If AppCd is P or A, disable No App field and set to blank.
     if (JJDisputeCourtAppearanceRoPAppCd.P === this.courtAppearanceForm.value.appCd
-        || JJDisputeCourtAppearanceRoPAppCd.A === this.courtAppearanceForm.value.appCd) {
+      || JJDisputeCourtAppearanceRoPAppCd.A === this.courtAppearanceForm.value.appCd) {
       this.courtAppearanceForm.controls.noAppTs.setValue(null);
-      this.noAppTsFormattedDate = null;
+      this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs = this.courtAppearanceForm.value.noAppTs;
       this.isNoAppEnabled = false;
     }
     else {
@@ -309,70 +309,6 @@ export class JJDisputeComponent implements OnInit {
             response
           );
         }));
-  }
-
-  // get dispute by id
-  getJJDispute(): void {
-    this.logger.log('JJDisputeComponent::getJJDispute');
-
-    this.jjDisputeService.getJJDispute(this.jjDisputeInfo.id, this.jjDisputeInfo.ticketNumber, this.type === "ticket").subscribe(response => {
-      this.retrieving = false;
-      this.logger.info(
-        'JJDisputeComponent::getJJDispute response',
-        response
-      );
-
-      this.lastUpdatedJJDispute = response;
-
-      // set violation date and time
-      let violationDate = this.lastUpdatedJJDispute.issuedTs.split("T");
-      this.violationDate = violationDate[0];
-      this.violationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
-
-      // format other date strings
-      this.icbcReceivedDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.icbcReceivedDate)?.substring(0,10);
-      this.submittedDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.submittedTs)?.substring(0,10);
-      this.jjDecisionDateFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDecisionDate)?.substring(0,10);
-
-      // set up headings for written reasons
-      this.lastUpdatedJJDispute.jjDisputedCounts.forEach(disputedCount => {
-        if (disputedCount.requestTimeToPay === this.RequestTimeToPay.Y) this.timeToPayCountsHeading += "Count " + disputedCount.count.toString() + ", ";
-        if (disputedCount.requestReduction === this.RequestReduction.Y) this.fineReductionCountsHeading += "Count " + disputedCount.count.toString() + ", ";
-      });
-      if (this.timeToPayCountsHeading.length > 0) {
-        this.timeToPayCountsHeading = this.timeToPayCountsHeading.substring(0, this.timeToPayCountsHeading.lastIndexOf(","));
-      }
-      if (this.fineReductionCountsHeading.length > 0) {
-        this.fineReductionCountsHeading = this.fineReductionCountsHeading.substring(0, this.fineReductionCountsHeading.lastIndexOf(","));
-      }
-
-      let dLProvinceFound = this.config.provincesAndStates.filter(x => x.ctryId == +this.lastUpdatedJJDispute.drvLicIssuedCtryId && x.provSeqNo == +this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo);
-      this.dLProvince = dLProvinceFound.length > 0 ? dLProvinceFound[0].provNm : "Unknown";
-
-      if (this.lastUpdatedJJDispute?.jjDisputeCourtAppearanceRoPs?.length > 0) {
-        this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => {
-          return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
-        });
-        if (!this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized) this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].jjSeized = 'N';
-        this.noAppTsFormattedDate = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].noAppTs);
-        this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
-        this.courtAppearanceForm.controls.appearanceTs.setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
-        this.formattedCourtAppearanceTs = this.jjDisputeService.toDateFormat(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
-        if (!this.isViewOnly) {
-          this.courtAppearanceForm.controls.adjudicator.setValue(this.jjIDIR);
-          this.courtAppearanceForm.controls.adjudicatorName.setValue(this.jjName);
-          this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
-          if (this.lastUpdatedJJDispute.jjAssignedTo != this.jjIDIR) {
-            this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
-            this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
-          }
-        }
-        this.determineIfConcludeOrCancel();
-      }
-
-      // init No App field
-      this.onUpdateAPPCd();
-    });
   }
 
   refreshFileHistory() {
