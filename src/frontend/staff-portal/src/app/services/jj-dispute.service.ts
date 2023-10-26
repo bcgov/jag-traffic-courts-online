@@ -222,20 +222,6 @@ export class JJDisputeService {
       );
   }
 
-  // // oracle To Date Format converts 2023-04-05T16:00:00+00:00 to MM/DD/YYYY HH:MM where using military 24hr
-  // // OR 2023-04-05 to 04/05/2023
-  // public toDateFormat(oracleDate: string): string {
-  //   if (!oracleDate || oracleDate.length < 10) return oracleDate;
-
-  //   let formattedDate = oracleDate.substring(5, 7) + "/" + oracleDate.substring(8, 10) + "/" + oracleDate.substring(0, 4);
-  //   if (oracleDate.length == 11) {
-  //     return formattedDate;
-  //   } else if (oracleDate.length >= 16) {
-  //     formattedDate = formattedDate + " " + oracleDate.substring(11, 16);
-  //     return formattedDate;
-  //   } else return formattedDate;
-  // }
-
   public apiJjTicketNumberConfirmPut(ticketNumber: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber)
       .pipe(
@@ -377,7 +363,7 @@ export class JJDisputeService {
   }
 
   public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
-    return this.jjApiService.apiJjDisputeIdPrintGet(disputeId, timeZone)
+    return this.jjApiService.apiJjDisputeIdPrintGet(disputeId, timeZone, "response")
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjDisputeIdPrintGet', response)
@@ -386,7 +372,6 @@ export class JJDisputeService {
         catchError((error: any) => {
           var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
-          this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'jj-DisputeService::apiJjDisputeIdPrintGet error has occurred: ',
             error

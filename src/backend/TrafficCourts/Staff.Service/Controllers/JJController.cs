@@ -754,7 +754,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <returns>A generated document</returns>
     [AllowAnonymous]
     [HttpGet("{disputeId}/print")]
-    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/pdf")]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -767,7 +767,8 @@ public class JJController : StaffControllerBase<JJController>
         {
             //RenderedReport report = await _printService.PrintDigitalCaseFileAsync(disputeId, timeZone, cancellationToken);
             RenderedReport report = GetSampleRenderedReport();
-            return File(report.Content, report.ContentType);
+            // Report will be a pdf, but by using application/octet-stream, it is easier for the browser to open in a new tab
+            return File(report.Content, "application/octet-stream", report.ReportName);
         }
         catch (Exception e)
         {
