@@ -1,14 +1,54 @@
 <div>
-  <div class="flex-container" style="width: 50%">
-    <table>
+  <div class="flex-container">
+    <table class="filterTable">
       <tr>
-        <td><span class="BC-Gov-15px-black-text" style="color:green;" ><b>{{ countNewTickets() }} NEW ticket records</b></span> </td>
-        <td colspan="2">
-          <mat-label><span class="BC-Gov-15px-blue-text" style="float:left; text-align:right;"><b>Ticket number search:&nbsp;</b></span></mat-label>
-          <div class="inputContainer">
-            <input name="searchInput" matInput type="search" (keyup)="applyFilter($event)" autocomplete="off" class="input"/>
-            <mat-icon class="inputIcon">search</mat-icon>
+        <td>
+          <mat-label><span class="BC-Gov-15px-blue-text"><b>Date Submitted:</b></span></mat-label>
+        </td>
+        <td>
+          <div class="dateLabelFrom"><mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label></div>
+          <div class="inputContainer dateField">
+            <input matInput [(ngModel)]="dataFilters['dateFrom']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter('dateFrom', $event.target.value)" (change)="onApplyFilter('dateFrom', $event.target.value)" autocomplete="off"/>
+          </div>          
+          <div class="dateLabelTo"><mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label></div>
+          <div class="inputContainer dateField">
+            <input matInput [(ngModel)]="dataFilters['dateTo']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter('dateTo', $event.target.value)" (change)="onApplyFilter('dateTo', $event.target.value)" autocomplete="off"/>
           </div>
+        </td>
+        <td>
+          <mat-label><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></mat-label>
+        </td>
+        <td>
+          <div class="inputContainer">
+            <input name="ticketNumber" matInput [(ngModel)]="dataFilters['ticketNumber']" type="search" (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input"/>
+          </div>
+        </td>
+        <td>
+          <button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-label><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></mat-label>
+        </td>
+        <td>
+          <div class="inputContainer">
+            <input name="surname" matInput [(ngModel)]="dataFilters['disputantSurname']" type="search" (keyup)="onApplyFilter('disputantSurname', $event.target.value)" autocomplete="off" class="input" />
+          </div>
+        </td>
+        <td>
+          <mat-label><span class="BC-Gov-15px-blue-text"><b>Status:</b></span></mat-label>
+        </td>
+        <td>
+          <div class="inputContainer">
+            <mat-select matNativeControl name="status" [ngModel]="dataFilters['status']" (selectionChange)="onApplyFilter('status', $event.value)">
+              <mat-option value="">-- select --</mat-option>
+              <mat-option [value]="item" *ngFor="let item of statusFilterOptions">{{item}}</mat-option>
+            </mat-select>
+          </div>
+        </td>
+        <td>
+          <span class="BC-Gov-15px-black-text" style="color:green;" ><b>{{ countNewTickets() }} NEW ticket records</b></span>
         </td>
       </tr>
     </table>
