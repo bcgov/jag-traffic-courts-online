@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.OpenApi.Models;
+using NodaTime;
 using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -75,6 +76,8 @@ public static class Startup
 
         // Add CDOGS (Common Document Generation Service) Client
         builder.Services.AddDocumentGenerationService("CDOGS");
+        builder.Services.AddTransient<IPrintDigitalCaseFileService, PrintDigitalCaseFileService>();
+        builder.Services.AddSingleton<IDateTimeZoneProvider>(DateTimeZoneProviders.Tzdb);
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 

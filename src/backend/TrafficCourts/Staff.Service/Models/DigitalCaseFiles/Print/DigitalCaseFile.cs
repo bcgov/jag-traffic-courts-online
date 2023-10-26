@@ -216,8 +216,8 @@ public class OffenseCount
     [JsonProperty("fine")]
     public decimal Fine { get; set; }
 
-    [JsonProperty("request")]
-    public string Request { get; set; }
+    //[JsonProperty("request")]
+    //public string Request { get; set; }
 
     [JsonProperty("requestFineReduction")]
     public string RequestFineReduction { get; set; }
@@ -237,18 +237,27 @@ public class FileHistoryEvent
     /// <summary>
     /// The date and time of the file history event
     /// </summary>
-    public DateTime DateTime { get; set; }
+    [JsonProperty("date")]
+    public DateTime Date { get; set; }
 
+    [JsonProperty("username")]
     public string Username { get; set; }
 
-    public string RecordType { get; set; }
+    [JsonProperty("type")]
+    public string Type { get; set; }
+
+    [JsonProperty("description")]
     public string Description { get; set; }
 }
 
 public class FileRemark
 {
-    public DateTime DateTime { get; set; }
+    [JsonProperty("date")]
+    public DateTime Date { get; set; }
+
+    [JsonProperty("username")]
     public string Username { get; set; }
 
+    [JsonProperty("note")]
     public string Note { get; set; }
 }

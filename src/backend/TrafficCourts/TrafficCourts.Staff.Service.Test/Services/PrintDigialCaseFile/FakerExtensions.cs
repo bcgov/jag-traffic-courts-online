@@ -31,9 +31,16 @@ public static class FakerExtensions
         });
     }
 
-    public static string YesOrNo(this Faker faker)
+    public static string YesOrNo(this Faker faker, bool word = false)
     {
-        return faker.PickRandom(new string[] { "Y", "N" });
+        if (word)
+        {
+            return faker.PickRandom(new string[] { "Yes", "No" });
+        }
+        else
+        {
+            return faker.PickRandom(new string[] { "Y", "N" });
+        }
     }
 
     public static string AttendanceType(this Faker faker)

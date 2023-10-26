@@ -104,14 +104,23 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         .RuleFor(_ => _.Due, f =>f.Date.Past().Date)
         .RuleFor(_ => _.Fine, f => f.FineAmount())
         .RuleFor(_ => _.Plea, f => f.PickRandom(new string[] { "Guilty", "Not Guilty" }))
-        .RuleFor(_ => _.Request, f => f.PickRandom(new string[] { "?? dont know ??", "?? what this is ??" }))
-        .RuleFor(_ => _.RequestFineReduction, f => f.YesOrNo())
-        .RuleFor(_ => _.RequestTimeToPay, f => f.YesOrNo())
+        //.RuleFor(_ => _.Request, f => f.PickRandom(new string[] { "?? dont know ??", "?? what this is ??" }))
+        .RuleFor(_ => _.RequestFineReduction, f => f.YesOrNo(word: true))
+        .RuleFor(_ => _.RequestTimeToPay, f => f.YesOrNo(word: true))
         ;
 
-    //private static readonly Faker<OffenseCount> _offenseCountFaker = new Faker<OffenseCount>(Locale)
-    //    .RuleFor(_ => _.Count)
-    //    ;
+    private static readonly Faker<FileHistoryEvent> _fileHistoryEventFaker = new Faker<FileHistoryEvent>(Locale)
+        .RuleFor(_ => _.Date, f => f.Date.Past())
+        .RuleFor(_ => _.Username, f => $"{f.Name.FirstName()[0]}{f.Name.LastName()}".ToUpper())
+        .RuleFor(_ => _.Type, f => f.Lorem.Text())
+        .RuleFor(_ => _.Description, f => f.Lorem.Text())
+        ;
+
+    private static readonly Faker<FileRemark> _fileRemarkFaker = new Faker<FileRemark>(Locale)
+        .RuleFor(_ => _.Date, f => f.Date.Past())
+        .RuleFor(_ => _.Username, f => $"{f.Name.FirstName()[0]}{f.Name.LastName()}".ToUpper())
+        .RuleFor(_ => _.Note, f => f.Lorem.Lines())
+    ;
 
     public DigitalCaseFileFaker() : base(Locale)
     {
@@ -125,12 +134,8 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         RuleFor(_ => _.IsElectronicTicket, f => f.YesOrNo());
         RuleFor(_ => _.HasNoticeOfHearing, f => f.YesOrNo());
         RuleFor(_ => _.Documents, f => _documentFaker.Generate(3));
-        //RuleFor(_ => _.History, f => f.Random.Bool());
-        //RuleFor(_ => _.FileRemarks, f => f.Random.Bool());
-
+        RuleFor(_ => _.History, f => _fileHistoryEventFaker.Generate(3).OrderByDescending(_ => _.Date).ToList());
+        RuleFor(_ => _.FileRemarks, f => _fileRemarkFaker.Generate(3).OrderByDescending(_ => _.Date).ToList());
     }
-
-
 }
-
 

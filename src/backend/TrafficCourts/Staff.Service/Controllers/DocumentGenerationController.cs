@@ -1,72 +1,34 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
 public class DocumentGenerationController : StaffControllerBase<DocumentGenerationController>
 {
-    private readonly IDocumentGenerationService _documentGenerationService;
+    private readonly IPrintDigitalCaseFileService _printService;
 
     /// <summary>
     /// Default Constructor
     /// </summary>
-    /// <param name="documentGenerationService"></param>
+    /// <param name="service"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public DocumentGenerationController(IDocumentGenerationService documentGenerationService, ILogger<DocumentGenerationController> logger) : base(logger)
+    public DocumentGenerationController(IPrintDigitalCaseFileService service, ILogger<DocumentGenerationController> logger) : base(logger)
     {
-        _documentGenerationService = documentGenerationService ?? throw new ArgumentNullException(nameof(documentGenerationService));
+        _printService = service ?? throw new ArgumentNullException(nameof(service));
     }
 
-    /// <summary>
-    /// Returns generated document
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <response code="200">Generated Document.</response>
-    /// <response code="401">Request lacks valid authentication credentials.</response>
-    /// <response code="403">Forbidden.</response>
-    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
-    /// <returns>A generated document</returns>
-    [AllowAnonymous]
-    [HttpPost("Generate")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GenerateAsync([Required] IFormFile template, [FromHeader][Required] string data, CancellationToken cancellationToken)
-    {
-        _logger.LogDebug("Document Generation started");
 
-        try
-        {
-            using (var templateStream = new MemoryStream())
-            {
-                await template.CopyToAsync(templateStream);
-                templateStream.Seek(0, SeekOrigin.Begin);
-                ConvertTo convertTo = ConvertTo.Pdf;
-                TemplateType templateType = TemplateType.Word;
-                string reportName = "test";
-                JsonNode dynamicData = JsonSerializer.Deserialize<JsonNode>(data);
-                RenderedReport file = await _documentGenerationService.UploadTemplateAndRenderReportAsync(templateStream, templateType, convertTo, reportName, dynamicData, cancellationToken);
-                var stream = file.Content;
-                // Reset position to the beginning of the stream
-                stream.Position = 0;
+ 
 
-                return File(stream, file.ContentType ?? "application/octet-stream", file.ReportName ?? "download");
-            }
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error when generating document");
-            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
-        }
-    }
 }

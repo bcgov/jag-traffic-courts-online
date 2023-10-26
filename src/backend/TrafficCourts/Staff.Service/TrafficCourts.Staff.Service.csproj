@@ -18,9 +18,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Models\DigitalCaseFiles\Print\Templates\v1\DigitalCaseFileTemplate-2.docx" />
-    <None Remove="Models\DigitalCaseFiles\Print\Templates\v1\DigitalCaseFileTemplate.docx" />
-    <None Remove="Models\DigitalCaseFiles\Print\Templates\v1\template_DigitalCaseFile_HeaderOnly.docx" />
+    <None Remove="Models\DigitalCaseFiles\Print\Templates\template_DigitalCaseFile.docx" />
+    <None Remove="Models\DigitalCaseFiles\Print\tmpFF54.pdf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +33,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.12" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="NodaTime" Version="3.1.9" />
     <PackageReference Include="NSwag.ApiDescription.Client" Version="13.20.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -70,6 +70,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Models\DigitalCaseFiles\Print\Templates\v1\template_DigitalCaseFile_HeaderOnly.docx" />
+	  <EmbeddedResource Include="Models\DigitalCaseFiles\Print\Templates\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Models\DigitalCaseFiles\Print\tmpFF54.pdf" />
 	</ItemGroup>
 </Project>
