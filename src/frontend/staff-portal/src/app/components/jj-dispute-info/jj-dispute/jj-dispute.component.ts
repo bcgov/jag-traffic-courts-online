@@ -15,7 +15,6 @@ import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
-import { DocumentGenerationService } from 'app/api';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -81,7 +80,6 @@ export class JJDisputeComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private datePipe: DatePipe,
     private authService: AuthService,
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
@@ -90,7 +88,6 @@ export class JJDisputeComponent implements OnInit {
     private config: ConfigService,
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
-    private documentGenerationService: DocumentGenerationService,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -436,31 +433,13 @@ export class JJDisputeComponent implements OnInit {
       });
   }
 
-  onPrint(files: FileList) {
-    if (files.length <= 0) return;
-
-    var jjDispute: FormattedJJDispute = { ...this.lastUpdatedJJDispute };
-    jjDispute.isHearingTicket = jjDispute.status === JJDisputeStatus.RequireCourtHearing || (jjDispute.hearingType === JJDisputeHearingType.CourtAppearance && jjDispute.status !== JJDisputeStatus.RequireCourtHearing);
-    jjDispute.displayContactSurname = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantSurnameNm : this.lastUpdatedJJDispute.contactSurname;
-    jjDispute.displaycontactGivenNames = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantGivenNames : this.lastUpdatedJJDispute.contactGivenNames;
-
-    var data = JSON.stringify(jjDispute);
-    this.documentGenerationService.apiDocumentgenerationGeneratePost(data, files[0]).subscribe(result => {
+  onPrint() {
+    this.jjDisputeService.apiJjDisputeIdPrintGet(this.lastUpdatedJJDispute.id).subscribe(result => {
       if (result != null) {
-        var url = URL.createObjectURL(result);
-        window.open(url);
+        // var url = URL.createObjectURL(result);
+        window.open(result);
       } else alert("File contents not found");
-    })
-  }
-
-  onTestPrint() {
-    var jjDispute: FormattedJJDispute = { ...this.lastUpdatedJJDispute };
-    jjDispute.isHearingTicket = jjDispute.status === JJDisputeStatus.RequireCourtHearing || (jjDispute.hearingType === JJDisputeHearingType.CourtAppearance && jjDispute.status !== JJDisputeStatus.RequireCourtHearing);
-    jjDispute.displayContactSurname = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantSurnameNm : this.lastUpdatedJJDispute.contactSurname;
-    jjDispute.displaycontactGivenNames = this.lastUpdatedJJDispute.contactType === JJDisputeContactType.Individual ? this.lastUpdatedJJDispute.occamDisputantGivenNames : this.lastUpdatedJJDispute.contactGivenNames;
-
-    var data = JSON.stringify(jjDispute);
-    return data;
+    });
   }
 
   onBackClicked() {

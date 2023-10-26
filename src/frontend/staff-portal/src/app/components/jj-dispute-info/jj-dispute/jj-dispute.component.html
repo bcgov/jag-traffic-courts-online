@@ -14,8 +14,7 @@
         *ngIf="printOptions.fileRemarks">check</mat-icon><mat-icon
         *ngIf="!printOptions.fileRemarks">close</mat-icon>File Remarks</button>
   </mat-menu>
-  <button mat-raised-button style="float:right;" (click)="onTestPrint()">Print</button>
-  <input type="file" id="getTemplateFile" style="display:none" accept=".docx" (change)="onPrint($event.target.files)">
+  <button mat-raised-button style="float:right;" (click)="onPrint()">Print</button>
   &nbsp;
   <button mat-raised-button [matMenuTriggerFor]="gotoMenu" style="float:right;">Go to</button>
   <mat-menu #gotoMenu="matMenu" yPosition="below">

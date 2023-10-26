@@ -375,6 +375,26 @@ export class JJDisputeService {
 
     return jjDispute;
   }
+
+  public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+    return this.jjApiService.apiJjDisputeIdPrintGet(disputeId, timeZone)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjDisputeIdPrintGet', response)
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjDisputeIdPrintGet error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 }
 
 export interface JJDispute extends JJDisputeBase {
