@@ -1,29 +1,74 @@
-td, th {
-    vertical-align: middle !important;
+td,
+th {
+  vertical-align: middle !important;
+}
+
+.filterTable {
+  width: auto;
+
+  td {
+    padding: 5px;
+  }
 }
 
 .inputContainer {
-    display: flex;
-    align-items: center;
-    position: relative;
-    border: solid 1px;
-    float:left;
-  }
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: solid 1px;
+  float: left;
+  width: 100%;
+}
 
-  .input[name="searchInput"] {
-    width: 100%;
-    padding-right: 40px;
+.inputContainer.dateField {
+  width: 120px;
+  input {
+    line-height: normal;
+    height: 28px;
+    padding-left: 5px;
   }
+}
 
-  .inputIcon {
-    position: absolute;
-    right: 10px;
+.dateLabelFrom {
+  float: left;
+  padding-right: 10px;
+}
+
+.dateLabelTo {
+  float: left;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+input[name="ticketNumber"],
+.mat-select[name="status"] {
+  width: 200px;
+}
+
+.centerColumn {
+  text-align: center !important;
+}
+
+.centerColumn.mat-sort-header-container {
+  justify-content: center !important;
+}
+
+.reset-filters {
+  color: white;
+  background-color: #4672c4;
+  border-radius: 10px;
+  border-width: 1px;
+  padding: 0px 15px 0px 15px;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #265dc4;
   }
+}
 
-  .centerColumn {
-    text-align: center !important;
+::ng-deep {
+  .mat-select-value {
+    padding-left: 10px;
+    padding-right: 10px;
   }
-
-  .centerColumn.mat-sort-header-container {
-    justify-content: center !important;
 }
