@@ -77,7 +77,7 @@ export class NoticeOfDisputeService {
 
   legalRepresentationConfigs: NoticeOfDisputeFormConfigs = {
     law_firm_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(200)] } },
-    lawyer_full_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(123)] } },
+    lawyer_full_name: { value: null, options: { validators: [Validators.required, Validators.maxLength(100)] } },
     lawyer_email: { value: null, options: { validators: [Validators.required, Validators.email, Validators.maxLength(100)] } },
     lawyer_phone_number: { value: null, options: { validators: [Validators.required] } },
     lawyer_address: { value: null, options: { validators: [Validators.required, Validators.maxLength(304)] } }

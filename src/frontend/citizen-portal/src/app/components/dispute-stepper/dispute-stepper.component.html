@@ -161,7 +161,8 @@
                     *ngIf="count?.dispute_count?.plea_cd !== Plea.G || mode !== DisputeFormMode.UPDATE">
                     <mat-radio-button [value]="Plea.G" color="primary" class="w-100"
                       (change)="count?.form.controls.__skip.setValue(false)">
-                      I agree I committed this offence and would like to plead guilty and request a fine reduction and/or time to pay on
+                      I agree I committed this offence and would like to plead guilty and request a fine reduction
+                      and/or time to pay on
                       this count.
                     </mat-radio-button>
                     <p> and/or</p>
@@ -173,7 +174,8 @@
                     <app-alert type="warning" icon="info">
                       <ng-container #alertContent class="alert-content">
                         <span class="text-dark">
-                          <strong>You have agreed that you committed this offence and would like to plead guilty and request a fine
+                          <strong>You have agreed that you committed this offence and would like to plead guilty and
+                            request a fine
                             reduction and/or time to pay on this count.</strong>
                         </span>
                       </ng-container>
@@ -296,7 +298,7 @@
                     <mat-error *ngIf="legalRepresentationForm.controls.lawyer_full_name.hasError('required')">{{
                       "error.required" | translate }}</mat-error>
                     <mat-error *ngIf="legalRepresentationForm.controls.lawyer_full_name.hasError('maxlength')">{{
-                      "error.max_length" | translate }}30 per name</mat-error>
+                      "error.max_length" | translate }}100</mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -308,7 +310,7 @@
                     <mat-error *ngIf="legalRepresentationForm.controls.lawyer_address.hasError('required')">{{
                       "error.required" | translate }}</mat-error>
                     <mat-error *ngIf="legalRepresentationForm.controls.lawyer_address.hasError('maxlength')">{{
-                      "error.max_length" | translate }}100 per line</mat-error>
+                      "error.max_length" | translate }}304</mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -443,7 +445,8 @@
             <app-alert type="info" icon="info">
               <ng-container class="alert-content" #alertContent>
                 <strong>Did you know? </strong><br>
-                You can make a dispute request by attending a court hearing in person, or you may plead guilty and supply
+                You can make a dispute request by attending a court hearing in person, or you may plead guilty and
+                supply
                 written reasons requesting a fine reduction and/or time to pay without having to attend a
                 court hearing.
               </ng-container>
