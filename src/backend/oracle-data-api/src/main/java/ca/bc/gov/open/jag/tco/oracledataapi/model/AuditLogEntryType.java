@@ -44,6 +44,7 @@ public enum AuditLogEntryType {
 	JCNF,
 	JDIV,
 	JPRG,
+	OCNT,
 	RECN,
 	SCAN,
 	SPRC,
