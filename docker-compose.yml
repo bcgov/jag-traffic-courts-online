@@ -447,7 +447,7 @@ services:
     container_name: smtp-server
     image: gessnerfl/fake-smtp-server
     environment:
-      - "SERVER-PORT=8080"
+      - "SERVER_PORT=8080"
       - "SMTP_PORT=5025"
     ports:
       - "5125:8080"
