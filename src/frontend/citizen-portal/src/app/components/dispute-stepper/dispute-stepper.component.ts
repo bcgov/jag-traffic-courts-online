@@ -12,7 +12,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, DisputeInterpreterRequired, DisputeContactTypeCd } from "app/api";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, DisputeInterpreterRequired } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count, DisputeCountFormGroup } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
@@ -228,8 +228,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_time_to_pay.length > 0) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
     } else this.additionalForm.controls.time_to_pay_reason.removeValidators([Validators.required]);
-
-    this.changeRepresentedByLawyer(this.form.value.contact_type === DisputeContactTypeCd.Lawyer);
   }
 
   isCountFormsValid(): boolean {
@@ -272,26 +270,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   onChangeRepresentedByLawyer(event: MatCheckboxChange) {
-    this.changeRepresentedByLawyer(event.checked);
-  }
-
-  private changeRepresentedByLawyer(checked: boolean) {
-    let value = checked ? this.RepresentedByLawyer.Y : this.RepresentedByLawyer.N;
+    let value = event.checked ? this.RepresentedByLawyer.Y : this.RepresentedByLawyer.N;
     this.additionalForm.controls.represented_by_lawyer.setValue(value);
-
-    if (checked) {
-      this.legalRepresentationForm.controls.law_firm_name.patchValue(this.form.value.contact_law_firm_name);
-
-      var contactNames = [this.form.value.contact_surname, this.form.value.contact_given_names]
-      this.legalRepresentationForm.controls.lawyer_full_name.patchValue(contactNames.join(" "));
-
-      var address = [this.form.value.address, this.form.value.address_city, this.form.value.address_province, this.form.value.postal_code]
-      this.legalRepresentationForm.controls.lawyer_address.patchValue(address.join(", "));
-      this.legalRepresentationForm.controls.lawyer_phone_number.patchValue(this.form.value.home_phone_number);
-      this.legalRepresentationForm.controls.lawyer_email.patchValue(this.form.value.email_address);
-    } else {
-      this.legalRepresentationForm.reset();
-    }
   }
 
   onChangeInterpreterRequired(event: MatCheckboxChange) {

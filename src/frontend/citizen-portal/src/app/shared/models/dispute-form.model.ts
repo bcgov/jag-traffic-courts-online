@@ -5,7 +5,6 @@ export interface DisputantContactInformation extends DisputantContactInformation
   disputant_given_names?: string;
   contact_given_names?: string;
   address?: string;
-  drivers_licence_number?: string;
 }
 export type DisputantContactInformationKeys = keyof DisputantContactInformation;
 export type DisputantContactInformationFormConfigs = {

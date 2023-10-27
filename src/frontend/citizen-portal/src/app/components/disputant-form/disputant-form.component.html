@@ -37,7 +37,7 @@
           <mat-error>{{ "error.required" | translate }}</mat-error>
         </mat-form-field>
       </div>
-      <div class="col-md-6" *ngIf="form.value.contact_type === ContactType.Lawyer">
+      <div class="col-md-6" *ngIf="form.get('contact_type').value === ContactType.Lawyer">
         <mat-form-field class="w-100">
           <mat-label>Name of law firm</mat-label>
           <input matInput formControlName="contact_law_firm_name" />
@@ -49,11 +49,11 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="form.value.contact_type !== ContactType.Individual">
+    <div class="row" *ngIf="form.get('contact_type').value !== ContactType.Individual">
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer surname</mat-label>
-          <mat-label *ngIf="form.value.contact_type === ContactType.Other">Other surname</mat-label>
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Lawyer">Lawyer surname</mat-label>
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Other">Other surname</mat-label>
           <input matInput formControlName="contact_surname" />
           <mat-error *ngIf="form.controls.contact_surname.hasError('maxlength')">{{ "error.max_length" | translate
             }}30</mat-error>
@@ -63,8 +63,8 @@
       </div>
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer given name(s)</mat-label>
-          <mat-label *ngIf="form.value.contact_type === ContactType.Other">Other given name(s)</mat-label>
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Lawyer">Lawyer given name(s)</mat-label>
+          <mat-label *ngIf="form.get('contact_type').value === ContactType.Other">Other given name(s)</mat-label>
           <input matInput formControlName="contact_given_names" />
           <mat-error *ngIf="form.controls.contact_given_names.hasError('maxlength')">{{ "error.max_length" | translate
             }}30 each name</mat-error>
@@ -161,9 +161,9 @@
             <input *ngIf="!isUSA && !isCA" matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
               formControlName="postal_code" />
 
-            <mat-error *ngIf="form.controls.postal_code.hasError('required')">{{ "error.required" | translate
+            <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate
               }}</mat-error>
-            <mat-error *ngIf="form.controls.postal_code.hasError('pattern')">Must be a valid postal/zip code
+            <mat-error *ngIf="form.get('postal_code').hasError('pattern')">Must be a valid postal/zip code
             </mat-error>
           </mat-form-field>
         </div>
@@ -176,9 +176,9 @@
         <mat-form-field class="w-100">
           <mat-label>Email address</mat-label>
           <input matInput formControlName="email_address" autocomplete="off" />
-          <mat-error *ngIf="form.controls.email_address.hasError('required')">{{"error.required" |
+          <mat-error *ngIf="form.get('email_address')?.hasError('required')">{{"error.required" |
             translate}}</mat-error>
-          <mat-error *ngIf="form.controls.email_address.hasError('email')">{{"error.email_address" |
+          <mat-error *ngIf="form.get('email_address')?.hasError('email')">{{"error.email_address" |
             translate }}</mat-error>
           <mat-error *ngIf="form.controls.email_address.hasError('maxlength')">{{ "error.max_length" | translate
             }}100</mat-error>
@@ -190,10 +190,10 @@
           <input *ngIf="isCA || isUSA" matInput formControlName="home_phone_number" mask="(000) 000-0000"
             [showMaskTyped]="true" />
           <input *ngIf="!isCA && !isUSA" matInput formControlName="home_phone_number" mask="00000000000000000000" />
-          <mat-error *ngIf="form.controls.home_phone_number?.hasError('required')">{{"error.required" |
+          <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" |
             translate}}
           </mat-error>
-          <mat-error *ngIf="form.controls.home_phone_number?.hasError('phone')">Must be a valid phone number
+          <mat-error *ngIf="form.get('home_phone_number')?.hasError('phone')">Must be a valid phone number
           </mat-error>
         </mat-form-field>
       </div>
@@ -220,10 +220,10 @@
             minlength="7" maxlength="9" />
           <input matInput formControlName="drivers_licence_number" maxlength="20"
             *ngIf="driversLicenceProvinceFormControl.value?.provId !== bc.provId" />
-          <mat-error *ngIf="form.controls.drivers_licence_number.hasError('required')">{{ "error.required" |
+          <mat-error *ngIf="form.get('drivers_licence_number').hasError('required')">{{ "error.required" |
             translate }}</mat-error>
-          <mat-error
-            *ngIf="form.controls.drivers_licence_number.errors?.minlength || form.controls.drivers_licence_number.hasError('maxlength')">
+          <mat-error *ngIf="form.get('drivers_licence_number')?.errors?.minlength ||
+                              form.get('drivers_licence_number').hasError('maxlength')">
             Must be a valid driver's licence number of seven to nine digits
           </mat-error>
         </mat-form-field>
