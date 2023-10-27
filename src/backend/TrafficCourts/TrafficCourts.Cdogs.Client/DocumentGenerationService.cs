@@ -108,6 +108,7 @@ public class DocumentGenerationService : IDocumentGenerationService
 
         MemoryStream content = new MemoryStream();
         await response.Stream.CopyToAsync(content).ConfigureAwait(false);
+        content.Position = 0;
 
         var report = new RenderedReport(reportName, contentType, content);
         return report;

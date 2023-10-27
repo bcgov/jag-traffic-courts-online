@@ -5,17 +5,33 @@
 		<Nullable>enable</Nullable>
 
 		<IsPackable>false</IsPackable>
+
+		<UserSecretsId>4bf819ae-380c-4b11-ba02-6b53c6e9ef90</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\data_carbone_2.json" />
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\digital-case-file\template-original.docx" />
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\digital-case-file\template-partial.docx" />
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\digital-case-file\template-ticket-info.docx" />
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\digital-case-file\template.docx" />
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\template_carbone_2.docx" />
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\watermark-footer-header\data.json" />
+	  <None Remove="Services\PrintDigialCaseFile\TestCases\watermark-footer-header\template.odt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoFixture" Version="4.18.0" />
+		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="coverlet.msbuild" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="FluentAssertions" Version="6.12.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
 		<PackageReference Include="Moq" Version="4.20.69" />
+		<PackageReference Include="Testcontainers" Version="3.5.0" />
 		<PackageReference Include="xunit" Version="2.5.1" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,6 +49,14 @@
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Services\PrintDigialCaseFile\TestCases\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Services\PrintDigialCaseFile\Data\" />
 	</ItemGroup>
 
 </Project>

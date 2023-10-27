@@ -1,5 +1,5 @@
 <div class="header d-print-none">
-   <mat-toolbar color="primary">
+  <mat-toolbar color="primary">
     <span>
       <a href="https://www2.gov.bc.ca/gov/content/home" class="government-of-bc-logo" target="_blank" rel="noopener">
         <img src="/assets/gov_bc_logo.jpg" alt="Government of BC Logo" />
@@ -19,7 +19,7 @@
     </button>
     <div style="line-height: 0.1" *ngIf="isLoggedIn">
       <p>{{ fullName }}</p>
-      <p><span style="font-size: small">{{ todayDate | date:"EEEE, MMMM ddd y" }}</span></p>
+      <p><span style="font-size: small">{{ todayDate | date:"EEEE, MMMM do y" }}</span></p>
     </div>
     <button mat-button *ngIf="isLoggedIn" (click)="logout()">
       <mat-icon class="auth" inline="true">logout</mat-icon>Sign out

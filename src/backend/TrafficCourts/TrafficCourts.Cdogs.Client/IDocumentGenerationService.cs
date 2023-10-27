@@ -1,4 +1,6 @@
-﻿namespace TrafficCourts.Cdogs.Client;
+﻿using System.Text.Json.Nodes;
+
+namespace TrafficCourts.Cdogs.Client;
 
 public interface IDocumentGenerationService
 {

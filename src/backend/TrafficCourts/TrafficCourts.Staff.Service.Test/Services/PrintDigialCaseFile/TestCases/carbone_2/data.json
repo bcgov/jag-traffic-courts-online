@@ -1,0 +1,8 @@
+{
+  "title": "Demonstration of Carbone 2.1.1 Features",
+  "mainBlurb": "The underlying document and templating engine employed by the Common Document Generation Service is Carbone. They have updated their library and added some nice features. Here we will demonstrate some of them for you.",
+  "showSectionTwo": 1,
+  "sectionTwoText": "You should be seeing this if showSectionTwo = 1",
+  "this-is-my-field-name": "This is my sentence. There are many like it, but this one is mine.",
+  "this_is_another_field_name": "My sentence is my best friend. It is my life. I must master it as I must master my life."
+}

@@ -11,13 +11,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static partial class Extensions
 {
-    public static IServiceCollection AddDocumentGenerationService(this IServiceCollection services,  IConfiguration configuration, string section)
+    public static IServiceCollection AddDocumentGenerationService(this IServiceCollection services, string section)
     {
         services.AddMemoryCache();
-
-        // bind the configuration
-        services.Configure<OidcConfidentialClientConfiguration>(section, configuration.GetSection(section));
-        services.Configure<DocumentGenerationClientConfiguration>(section, configuration.GetSection(section));
 
         services.AddTransient(serviceProvider =>
         {
@@ -30,8 +26,7 @@ public static partial class Extensions
             .AddHttpClient<IDocumentGenerationClient, DocumentGenerationClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
-                var options = serviceProvider.GetRequiredService<IOptionsMonitor<DocumentGenerationClientConfiguration>>();
-                var configuration = options.Get(section);
+                var configuration = GetDocumentGenerationClientConfiguration(serviceProvider, section);
 
                 httpClient.BaseAddress = configuration.Endpoint;
             })
@@ -45,8 +40,7 @@ public static partial class Extensions
     private static IOidcConfidentialClient CreateOidcConfidentialClient(IServiceProvider serviceProvider, string section)
     {
         // get the named configuration
-        var options = serviceProvider.GetRequiredService<IOptionsMonitor<OidcConfidentialClientConfiguration>>();
-        var configuration = options.Get(section);
+        var configuration = GetOidcConfidentialClientConfiguration(serviceProvider, section);
 
         var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
 
@@ -54,5 +48,25 @@ public static partial class Extensions
 
         var oidc = new OidcConfidentialClient(configuration, memoryCache, logger);
         return oidc;
+    }
+
+    private static OidcConfidentialClientConfiguration GetOidcConfidentialClientConfiguration(IServiceProvider serviceProvider, string section)
+    {
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+        OidcConfidentialClientConfiguration options = new();
+        configuration.GetSection(section).Bind(options);
+
+        return options;
+    }
+
+    private static DocumentGenerationClientConfiguration GetDocumentGenerationClientConfiguration(IServiceProvider serviceProvider, string section)
+    {
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+        DocumentGenerationClientConfiguration options = new();
+        configuration.GetSection(section).Bind(options);
+
+        return options;
     }
 }

@@ -23,7 +23,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "ticketNumber",
-    "dateSubmitted",
+    "submittedTs",
     "violationDate",
     "occamDisputantName",
     "courthouseLocation",

@@ -20,7 +20,7 @@ public class AddDocumentGenerationService
             .AddUserSecrets<AddDocumentGenerationService>()
             .Build();
 
-        Extensions.AddDocumentGenerationService(services, configuration.GetSection("Cdogs"), "Cdogs");
+        Extensions.AddDocumentGenerationService(services, "Cdogs");
 
         var serviceProvider = services.BuildServiceProvider();
 

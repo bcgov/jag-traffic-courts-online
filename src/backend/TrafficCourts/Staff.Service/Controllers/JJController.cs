@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.FileProviders;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
 using System.Text;
+using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -15,17 +17,23 @@ namespace TrafficCourts.Staff.Service.Controllers;
 
 public class JJController : StaffControllerBase<JJController>
 {
+    private readonly IPrintDigitalCaseFileService _printService;
     private readonly IJJDisputeService _jjDisputeService;
 
     /// <summary>
     /// Default Constructor
     /// </summary>
     /// <param name="jjDisputeService"></param>
+    /// <param name="printService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public JJController(IJJDisputeService jjDisputeService, ILogger<JJController> logger) : base(logger)
+    public JJController(
+        IJJDisputeService jjDisputeService,
+        IPrintDigitalCaseFileService printService,
+        ILogger<JJController> logger) : base(logger)
     {
         _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
+        _printService = printService ?? throw new ArgumentNullException(nameof(printService));
     }
 
     /// <summary>
@@ -731,6 +739,56 @@ public class JJController : StaffControllerBase<JJController>
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
+    }
+
+    /// <summary>
+    /// Returns generated document
+    /// </summary>
+    /// <param name="disputeId"></param>
+    /// <param name="timeZone">The IANA timze zone id</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">Generated Document.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+    /// <returns>A generated document</returns>
+    [AllowAnonymous]
+    [HttpGet("{disputeId}/print")]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
+    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Penerating print version of dispute {disputeId} in timezone {timeZone}", disputeId, timeZone);
+
+        try
+        {
+            //RenderedReport report = await _printService.PrintDigitalCaseFileAsync(disputeId, timeZone, cancellationToken);
+            RenderedReport report = GetSampleRenderedReport();
+            // Report will be a pdf, but by using application/octet-stream, it is easier for the browser to open in a new tab
+            return File(report.Content, "application/octet-stream", report.ReportName);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error when generating print version of dispute");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    private RenderedReport GetSampleRenderedReport()
+    {
+        IFileProvider fileProvder = new EmbeddedFileProvider(GetType().Assembly);
+        string path = $"Models.DigitalCaseFiles.Print.tmpFF54.pdf";
+        var fileInfo = fileProvder.GetFileInfo(path);
+
+        var content = new MemoryStream();
+        var stream = fileInfo.CreateReadStream();
+        stream.CopyTo(content);
+        content.Position = 0;
+
+        return new RenderedReport("DCF DK62053851.pdf", "application/pdf", content);
     }
 
 }

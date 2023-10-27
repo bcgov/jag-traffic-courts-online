@@ -18,6 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Models\DigitalCaseFiles\Print\Templates\template_DigitalCaseFile.docx" />
+    <None Remove="Models\DigitalCaseFiles\Print\tmpFF54.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
@@ -25,8 +30,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.12" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="NodaTime" Version="3.1.9" />
     <PackageReference Include="NSwag.ApiDescription.Client" Version="13.20.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -52,13 +59,21 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
-    <ProjectReference Include="..\TrafficCourts.Cdogs.Client.Test\TrafficCourts.Cdogs.Client.Test.csproj" />
     <ProjectReference Include="..\TrafficCourts.Coms.Client\TrafficCourts.Coms.Client.csproj" />
+    <ProjectReference Include="..\TrafficCourts.Cdogs.Client\TrafficCourts.Cdogs.Client.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>TrafficCourts.Staff.Service.Test</_Parameter1>
 		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Models\DigitalCaseFiles\Print\Templates\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Models\DigitalCaseFiles\Print\tmpFF54.pdf" />
 	</ItemGroup>
 </Project>

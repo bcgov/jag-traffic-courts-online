@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeCourtAppearanceRoP as JJDisputeCourtAppearanceRoPBase } from 'app/api';
+import { JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
-import { JJDisputeService } from 'app/services/jj-dispute.service';
 
 @Component({
   selector: 'app-jj-dispute-court-appearances',
@@ -31,10 +30,8 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
   ];
   jjList: UserRepresentation[];
 
-
   constructor(
     private authService: AuthService,
-    private jjDisputeService: JJDisputeService
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -53,13 +50,6 @@ export class JJDisputeCourtAppearancesComponent implements OnInit {
       return Date.parse(b.appearanceTs) - Date.parse(a.appearanceTs)
     });
     this.tempData.shift(); // exclude most recent
-    this.tempData?.forEach(appearance => {
-      appearance._formattedAppearanceTs = this.jjDisputeService.toDateFormat(appearance.appearanceTs);
-    })
     this.dataSource = new MatTableDataSource<JJDisputeCourtAppearanceRoP>(this.tempData);
   }
-}
-
-export interface JJDisputeCourtAppearanceRoP extends JJDisputeCourtAppearanceRoPBase {
-  _formattedAppearanceTs: String,
 }

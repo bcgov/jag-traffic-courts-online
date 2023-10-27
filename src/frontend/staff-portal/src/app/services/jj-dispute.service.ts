@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType } from 'app/api';
+import { JJService, JJDispute as JJDisputeBase, JJDisputeStatus, JJDisputeRemark, DocumentType, JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService } from './auth.service';
 import { cloneDeep } from "lodash";
 import { AppState } from 'app/store';
@@ -97,7 +97,7 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-  public apiJjRequireCourtHearingPut(ticketNumber: string, disputeId: number, remarks?: string): Observable<any> {
+  public apiJjRequireCourtHearingPut(ticketNumber: string, remarks?: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberRequirecourthearingPut(ticketNumber, remarks)
       .pipe(
         map((response: any) => {
@@ -222,20 +222,6 @@ export class JJDisputeService {
       );
   }
 
-  // oracle To Date Format converts 2023-04-05T16:00:00+00:00 to MM/DD/YYYY HH:MM where using military 24hr
-  // OR 2023-04-05 to 04/05/2023
-  public toDateFormat(oracleDate: string): string {
-    if (!oracleDate || oracleDate.length < 10) return oracleDate;
-
-    let formattedDate = oracleDate.substring(5,7) + "/" + oracleDate.substring(8,10) + "/" + oracleDate.substring(0,4);
-    if (oracleDate.length == 11) {
-      return formattedDate;
-    } else if (oracleDate.length >= 16 ) {
-      formattedDate = formattedDate + " " + oracleDate.substring(11,16);
-      return formattedDate;
-    } else return formattedDate;
-  }
-
   public apiJjTicketNumberConfirmPut(ticketNumber: string): Observable<any> {
     return this.jjApiService.apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber)
       .pipe(
@@ -349,7 +335,6 @@ export class JJDisputeService {
       + (jjDispute.addressProvince ? ", " + jjDispute.addressProvince : "")
       + (jjDispute.addressCountry ? ", " + jjDispute.addressCountry : "")
       + (jjDispute.addressPostalCode ? ", " + jjDispute.addressPostalCode : "")
-    jjDispute.jjDecisionDateFormattedDate = this.toDateFormat(jjDispute.jjDecisionDate)?.substring(0,10);
 
     // lookup courthouse location
     if (jjDispute.courtAgenId && !jjDispute.courthouseLocation) {
@@ -370,13 +355,30 @@ export class JJDisputeService {
     });
 
     if (jjDispute.jjDisputeCourtAppearanceRoPs?.length > 0) {
-      let mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } })[0];
-      jjDispute.room = mostRecentCourtAppearance.room;
-      jjDispute.duration = mostRecentCourtAppearance.duration;
-      jjDispute.appearanceTs = new Date(mostRecentCourtAppearance.appearanceTs);
+      jjDispute.jjDisputeCourtAppearanceRoPs = jjDispute.jjDisputeCourtAppearanceRoPs.sort((a, b) => { if (a.appearanceTs > b.appearanceTs) { return -1; } else { return 1 } });
+      jjDispute.mostRecentCourtAppearance = jjDispute.jjDisputeCourtAppearanceRoPs[0];
     }
 
     return jjDispute;
+  }
+
+  public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+    return this.jjApiService.apiJjDisputeIdPrintGet(disputeId, timeZone, "response")
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjDisputeIdPrintGet', response)
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.logger.error(
+            'jj-DisputeService::apiJjDisputeIdPrintGet error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 }
 
@@ -384,9 +386,6 @@ export interface JJDispute extends JJDisputeBase {
   vtcAssignedToName?: string;
   jjAssignedToName?: string;
   bulkAssign?: boolean;
-  appearanceTs?: Date;
-  duration?: number;
-  room?: string;
   isEditable?: boolean;
   isCompleted?: boolean;
   contactName?: string;
@@ -394,5 +393,18 @@ export interface JJDispute extends JJDisputeBase {
   occamDisputantName?: string;
   occamDisputantGivenNames?: string;
   address?: string;
-  jjDecisionDateFormattedDate?: string;
+  interpreterLanguage?: string;
+  driversLicenceProvince?: string;
+  mostRecentCourtAppearance?: JJDisputeCourtAppearanceRoP;
+}
+
+// For Document Generation
+export interface FormattedJJDispute extends JJDispute {
+  isHearingTicket?: boolean;
+  displayContactSurname?: string;
+  displaycontactGivenNames?: string;
+
+  formattedViolationDate?: string;
+  formattedViolationTime?: string;
+  formattedSubmittedDate?: string;
 }
