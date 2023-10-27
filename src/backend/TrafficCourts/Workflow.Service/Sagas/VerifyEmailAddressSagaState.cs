@@ -1,12 +1,26 @@
-﻿namespace TrafficCourts.Workflow.Service.Sagas;
+﻿using MassTransit;
+using System.ComponentModel.DataAnnotations;
 
-public class VerifyEmailAddressSagaState : BaseStateMachineState
+namespace TrafficCourts.Workflow.Service.Sagas;
+
+public class VerifyEmailAddressState : SagaStateMachineInstance
 {
-    public Guid NoticeOfDisputeGuid { get; set; }
+    [Key]
+    public Guid CorrelationId { get; set; }
+    
+    [MaxLength(64)]
+    public string CurrentState { get; set; }
 
-    public string EmailAddress { get; set; } = String.Empty;
+    [Timestamp]
+    public uint Version { get; set; }
 
-    public string TicketNumber { get; set; } = String.Empty;
+    public Guid NoticeOfDisputeGuid => CorrelationId;
+
+    [MaxLength(100)]
+    public string EmailAddress { get; set; } = string.Empty;
+
+    [MaxLength(50)]
+    public string TicketNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// The token to validate.
@@ -16,12 +30,14 @@ public class VerifyEmailAddressSagaState : BaseStateMachineState
     /// <summary>
     /// Has the email address been verfied yet?
     /// </summary>
+    /// <remarks>Maps to occam_disputes.email_verified_yn</remarks>
     public bool Verified { get; set; }
     public DateTimeOffset? VerifiedAt { get; set; }
 
     /// <summary>
     /// Have we been notified that the notice of dispute has been submitted?
     /// </summary>
+    /// <remarks>Maps to occam_disputes.dispute_id</remarks>
     public long? DisputeId { get; set; }
 
     /// <summary>

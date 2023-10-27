@@ -1,16 +1,17 @@
 using MassTransit;
-using TrafficCourts.Workflow.Service.Configuration;
-using TrafficCourts.Workflow.Service.Services;
-using TrafficCourts.Messaging;
-using TrafficCourts.Common.Configuration;
+using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
-using TrafficCourts.Common.Features.Mail.Templates;
-using NodaTime;
-using TrafficCourts.Workflow.Service.Sagas;
 using TrafficCourts.Common;
-using TrafficCourts.Workflow.Service.Services.EmailTemplates;
+using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.VirusScan;
+using TrafficCourts.Messaging;
+using TrafficCourts.Workflow.Service.Configuration;
+using TrafficCourts.Workflow.Service.Sagas;
+using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -62,6 +63,24 @@ public static class Startup
 
         builder.Services.AddEmailTemplates();
 
+        // Configure Entity Framework Context for VerifyEmailAddressStateDbContext
+        string? connectionString = builder.Configuration.GetConnectionString("Saga");
+        builder.Services.AddDbContext<VerifyEmailAddressStateDbContext>(optionsBuilder =>
+        {
+            optionsBuilder.UseNpgsql(connectionString, options =>
+            {
+                options.MigrationsAssembly(assembly.GetName().Name);
+                options.MigrationsHistoryTable($"__{nameof(VerifyEmailAddressStateDbContext)}");
+
+                // TODO: validate these, came from example https://github.com/MassTransit/Sample-Outbox/blob/master/src/Sample.Api/Program.cs
+                options.EnableRetryOnFailure(5);
+                options.MinBatchSize(1);
+            });
+        });
+
+        // add hosted service before masstransit so the db migration will run before masstransit does
+        builder.Services.AddHostedService<DatabaseMigrationHostedService<VerifyEmailAddressStateDbContext>>();
+
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger, config =>
         {
             config.AddConsumers(assembly);
@@ -70,8 +89,12 @@ public static class Startup
             var section = builder.Configuration.GetSection(RedisOptions.Section);
             section.Bind(redis);
 
-            config.AddSagaStateMachine<VerifyEmailAddressSagaStateMachine, VerifyEmailAddressSagaState, VerifyEmailAddressSagaDefinition>()
-                .RedisRepository(redis.ConnectionString);
+            config.AddSagaStateMachine<VerifyEmailAddressStateMachine, VerifyEmailAddressState, VerifyEmailAddressSagaDefinition>()
+                .EntityFrameworkRepository(r =>
+                {
+                    r.ConcurrencyMode = ConcurrencyMode.Optimistic;
+                    r.AddDbContext<DbContext, VerifyEmailAddressStateDbContext>();
+                });
 
             config.AddSagas(assembly);
         });

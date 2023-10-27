@@ -137,6 +137,7 @@ services:
       context: ./src/backend/TrafficCourts
       dockerfile: ./Workflow.Service/Dockerfile
     environment:
+      CONNECTIONSTRINGS__SAGA: ${CONNECTIONSTRINGS__SAGA:-Host=app-db;Username=postgres;Password=password;Database=appdb}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       MASSTRANSIT__TRANSPORT: ${MASSTRANSIT__TRANSPORT:-RabbitMq}
       RABBITMQ__HOST: ${RABBITMQCONFIG__HOST:-rabbitmq}
@@ -166,6 +167,8 @@ services:
       - "5020:8080"
     restart: always
     depends_on:
+      app-db:
+        condition: service_healthy
       coms:
         condition: service_healthy
       oracle-data-api:
@@ -273,17 +276,33 @@ services:
   ###                           RABBITMQ                                                    ###
   #############################################################################################
   rabbitmq:
-    image: rabbitmq:3.9.12-management
+    image: rabbitmq:3.12-management
     container_name: rabbitmq
     hostname: rabbitmq
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
     volumes:
       - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app-db:
+    image: postgres
+    container_name: app-db
+    ports:
+      - "5433:5432"  # +1 to avoid conflict with coms db
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "appdb"
+    volumes:
+      - data-postgres-appdb:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -340,7 +359,7 @@ services:
     image: postgres
     container_name: coms-db
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: "password"
       POSTGRES_DB: "coms"
@@ -458,5 +477,6 @@ volumes:
   data-minio:
   data-oracle:
   data-postgres:
+  data-postgres-appdb:
   data-rabbit:
   data-redis:
