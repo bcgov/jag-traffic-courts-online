@@ -210,10 +210,26 @@
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">No APP</p>
-            <p class="section-grid-text">
-              {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
-              &nbsp;<button *ngIf="!isViewOnly && isNoAppEnabled" type="button" style="background:#fffee6"
-                (click)="updateNoAPPTs()">Now</button></p>
+            <p class="section-grid-text" style="padding-right: 5px !important;">
+              <span *ngIf="isViewOnly || !isNoAppEnabled">
+                {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+              </span>
+              <span *ngIf="!isViewOnly && isNoAppEnabled">
+                <input matInput [matDatepicker]="datePicker" style="width: 0px;" formControlName="_noAppDate"
+                  (ngModelChange)="updateNoAppDate($event)" />
+                <button type="button" style="background:#fffee6; width: 86px;" (click)="datePicker.open()">
+                  {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY" : "UTC" }}
+                </button>
+                <mat-datepicker #datePicker></mat-datepicker>
+                <input hidden #timePicker [ngxTimepicker]="default" formControlName="_noAppTime"
+                  (ngModelChange)="updateNoAppTime($event)" />
+                &nbsp;<button type="button" style="background:#fffee6; width: 50px;" (click)="timePicker.click()">
+                  {{ courtAppearanceForm?.value.noAppTs | date: "HH:mm" : "UTC" }}
+                </button>
+                <ngx-material-timepicker #default></ngx-material-timepicker>
+                &nbsp;<button type="button" style="background:#fffee6" (click)="updateNoAppTs()">Now</button>
+              </span>
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">CLERK REC.</p>
