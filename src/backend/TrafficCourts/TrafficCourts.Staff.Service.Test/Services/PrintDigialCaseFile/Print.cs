@@ -23,7 +23,7 @@ public class PrintTest : CommonDocumentGenerationServiceTest
         _output = output;
     }
 
-    [Fact]
+    [IntegrationTestFact]
     public async Task render_digital_case_file()
     {
         // Start the container.
@@ -45,7 +45,7 @@ public class PrintTest : CommonDocumentGenerationServiceTest
         SaveReport(report, data);
     }
 
-    [Fact]
+    [IntegrationTestFact]
     public async Task render_watermark_footer_header_example()
     {
         // Start the container
@@ -63,7 +63,7 @@ public class PrintTest : CommonDocumentGenerationServiceTest
         SaveReport(report, data);
     }
 
-    [Fact]
+    [IntegrationTestFact]
     public async Task render_carbone_2_example()
     {
         // Start the container
