@@ -1,27 +1,80 @@
-td, th {
-    vertical-align: middle !important;
+td,
+th {
+  vertical-align: middle !important;
 }
 
-.inputContainer {
-    display: flex;
-    align-items: center;
-    position: relative;
+.filterTable {
+  width: auto;
+
+  td {
+    padding: 0px 5px 0px 5px;
+  }
+}
+
+.reset-filters {
+  color: white;
+  background-color: #4672c4;
+  border-radius: 10px;
+  border-width: 1px;
+  padding: 0px 15px 0px 15px;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #265dc4;
+  }
+}
+
+.table-responsive {
+  width: 100%;
+}
+
+:host ::ng-deep {
+  .mat-select-value {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
-  .input[name="searchInput"] {
+  .mat-form-field.dateField{
+    width: 145px;
+  }
+
+  .mat-form-field {
     width: 100%;
-    padding-right: 40px;
-  }
+    margin-bottom: 0px !important;
 
-  .inputIcon {
-    position: absolute;
-    right: 10px;
-  }
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
 
-  .centerColumn {
-    text-align: center !important;
-  }
+      .mat-form-field-flex {
+        margin-top: 0 !important;
+        padding-right: 5px;
 
-  .centerColumn.mat-sort-header-container {
-    justify-content: center !important;
+        .mat-form-field-infix {
+          padding: 0px 0px 7px 0px !important;
+          line-height: 0px;
+
+          input {
+            line-height: 18px !important;
+          }
+
+          .mat-select-arrow-wrapper {
+            transform: translate(5px, 0px);
+          }
+
+          .mat-select-value {
+            padding-left: 0px;
+            overflow: visible;
+          }
+        }
+      }
+    }
+  }
+}
+
+.centerColumn {
+  text-align: center !important;
+}
+
+.centerColumn.mat-sort-header-container {
+  justify-content: center !important;
 }
