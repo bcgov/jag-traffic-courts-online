@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } fro
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, DisputeWithUpdates } from 'app/services/dispute.service';
-import { Dispute } from 'app/api';
+import { Dispute, DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
@@ -15,6 +15,14 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   @Output() public disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   dataSource = new MatTableDataSource();
+  dataFilters = {
+    "dateFrom": "",
+    "dateTo": "",
+    "ticketNumber": "",
+    "disputantSurname": "",
+    "status": ""
+  };
+  statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
   displayedColumns: string[] = [
     'submittedTs',
     'ticketNumber',
@@ -27,7 +35,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'userAssignedTo'
   ];
   public userProfile: KeycloakProfile = {};
-  tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
+  tableHeight: number = window.innerHeight - 352; // less size of other fixed elements
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -37,11 +45,12 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     private logger: LoggerService,
     private authService: AuthService,
   ) {
-    this.disputeService.refreshDisputes.subscribe(x => {this.getAllDisputesWithPendingUpdates();})
+    this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputesWithPendingUpdates(); })
   }
 
-  calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1)*60);
+  // FIXME: This static table height has got to go. The query results panel should vertically extend to the footer (100%) not some arbitrary pixel height that is not resized when the window is resized.
+  calcTableHeight(heightOther: number) {
+    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60);
   }
 
   public async ngOnInit() {
@@ -71,12 +80,10 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
       // initially sort data by Date Submitted
       this.dataSource.data = this.dataSource.data.sort((a: DisputeWithUpdates, b: DisputeWithUpdates) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
 
-      // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: DisputeWithUpdates, filter) {
-        return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-      }
+      // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
+      this.dataSource.filterPredicate = this.searchFilter;
 
-      this.tableHeight = this.calcTableHeight(325);
+      this.tableHeight = this.calcTableHeight(352);
     });
   }
 
@@ -84,10 +91,58 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.tickTbSort;
   }
 
-  // called on keyup in filter field
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue?.trim().toLowerCase();
+  searchFilter = function (record: DisputeWithUpdates, filter: string) {
+    let searchTerms = JSON.parse(filter);
+    return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
+      if ("dateFrom" === field) {
+        if (!isNaN(Date.parse(value))) {
+          let submittedTs = new Date(record.submittedTs);
+          let dt = new Date(submittedTs.getFullYear(), submittedTs.getMonth(), submittedTs.getDate());
+          return dt >= new Date(value);
+        }
+        else {
+          return true;
+        }
+      }
+      else if ("dateTo" === field) {
+        if (!isNaN(Date.parse(value))) {
+          let submittedTs = new Date(record.submittedTs);
+          let dt = new Date(submittedTs.getFullYear(), submittedTs.getMonth(), submittedTs.getDate());
+          return dt <= new Date(value);
+        }
+        else {
+          return true;
+        }
+      }
+      else {
+        return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
+      }
+    });
+  };
+
+  onApplyFilter(filterName: string, value: string) {
+    const filterValue = value;
+    this.dataFilters[filterName] = filterValue;
+    this.dataSource.filter = JSON.stringify(this.dataFilters);
+    this.tableHeight = this.calcTableHeight(352);
+  }
+
+  resetSearchFilters() {
+    // Will update search filters in UI
+    this.dataFilters = {
+      "dateFrom": "",
+      "dateTo": "",
+      "ticketNumber": "",
+      "disputantSurname": "",
+      "status": ""
+    };
+
+    // Will re-execute the filter function, but will block UI rendering
+    // Put this call in a Timeout to keep UI responsive.
+    setTimeout(() => {
+      this.dataSource.filter = "{}";
+      this.tableHeight = this.calcTableHeight(352);
+    }, 100);
   }
 
   backWorkbench(element) {
