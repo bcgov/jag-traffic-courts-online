@@ -14,6 +14,7 @@ import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
+import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -47,6 +48,8 @@ export class JJDisputeComponent implements OnInit {
     room: [{ value: null, disabled: true }],
     reason: [null],
     noAppTs: [null],
+    _noAppDate: [null],
+    _noAppTime: [null],
     clerkRecord: [null],
     defenceCounsel: [null],
     crown: [null],
@@ -87,6 +90,7 @@ export class JJDisputeComponent implements OnInit {
     private config: ConfigService,
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
+    private datePipe: CustomDatePipe,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -147,6 +151,8 @@ export class JJDisputeComponent implements OnInit {
           }
         }
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
+        this.courtAppearanceForm.controls._noAppDate.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs);
+        this.courtAppearanceForm.controls._noAppTime.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs);
         this.determineIfConcludeOrCancel();
       }
     });
@@ -215,7 +221,6 @@ export class JJDisputeComponent implements OnInit {
     if (JJDisputeCourtAppearanceRoPAppCd.P === this.courtAppearanceForm.value.appCd
       || JJDisputeCourtAppearanceRoPAppCd.A === this.courtAppearanceForm.value.appCd) {
       this.courtAppearanceForm.controls.noAppTs.setValue(null);
-      this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs = this.courtAppearanceForm.value.noAppTs;
       this.isNoAppEnabled = false;
     }
     else {
@@ -223,9 +228,18 @@ export class JJDisputeComponent implements OnInit {
     }
   }
 
-  updateNoAPPTs() {
-    this.courtAppearanceForm.controls.noAppTs.setValue(new Date().toISOString());
-    this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs = this.courtAppearanceForm.value.noAppTs;
+  updateNoAppTs() {
+    this.courtAppearanceForm.controls.noAppTs.setValue(this.datePipe.transform(new Date(), "MM/dd/yyyy HH:mm:ss") + " UTC");
+  }
+
+  updateNoAppDate(value) {
+    var newTs = this.datePipe.transform(new Date(value), "MM/dd/yyyy") + " " + this.datePipe.transform(this.courtAppearanceForm.value.noAppTs, "HH:mm:ss z"); // z means UTC
+    this.courtAppearanceForm.controls.noAppTs.setValue(new Date(newTs));
+  }
+
+  updateNoAppTime(value) {
+    var newTs = this.datePipe.transform(new Date(this.courtAppearanceForm.value.noAppTs), "MM/dd/yyyy", "UTC") + " " + value + " UTC";
+    this.courtAppearanceForm.controls.noAppTs.setValue(newTs);
   }
 
   onSave(): void {
