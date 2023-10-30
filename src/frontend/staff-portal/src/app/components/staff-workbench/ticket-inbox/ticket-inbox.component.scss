@@ -7,37 +7,8 @@ th {
   width: auto;
 
   td {
-    padding: 5px;
+    padding: 0px 5px 0px 5px;
   }
-}
-
-.inputContainer {
-  display: flex;
-  align-items: center;
-  position: relative;
-  border: solid 1px;
-  float: left;
-  width: 100%;
-}
-
-.inputContainer.dateField {
-  width: 120px;
-  input {
-    line-height: normal;
-    height: 28px;
-    padding-left: 5px;
-  }
-}
-
-.dateLabelFrom {
-  float: left;
-  padding-right: 10px;
-}
-
-.dateLabelTo {
-  float: left;
-  padding-right: 10px;
-  padding-left: 10px;
 }
 
 input[name="ticketNumber"],
@@ -66,9 +37,45 @@ input[name="ticketNumber"],
   }
 }
 
-::ng-deep {
+:host ::ng-deep {
   .mat-select-value {
     padding-left: 10px;
     padding-right: 10px;
+  }
+
+  .mat-form-field.dateField{
+    width: 145px;
+  }
+
+  .mat-form-field {
+    width: 100%;
+    margin-bottom: 0px !important;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+
+      .mat-form-field-flex {
+        margin-top: 0 !important;
+        padding-right: 5px;
+
+        .mat-form-field-infix {
+          padding: 0px 0px 7px 0px !important;
+          line-height: 0px;
+
+          input {
+            line-height: 18px !important;
+          }
+
+          .mat-select-arrow-wrapper {
+            transform: translate(-15px, 0px);
+          }
+
+          .mat-select-value {
+            padding-left: 0px;
+            overflow: visible;
+          }
+        }
+      }
+    }
   }
 }

@@ -6,22 +6,22 @@
           <mat-label><span class="BC-Gov-15px-blue-text"><b>Date Submitted:</b></span></mat-label>
         </td>
         <td>
-          <div class="dateLabelFrom"><mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label></div>
-          <div class="inputContainer dateField">
+          <mat-form-field appearance="outline" class="dateField">
+            <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
             <input matInput [(ngModel)]="dataFilters['dateFrom']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter('dateFrom', $event.target.value)" (change)="onApplyFilter('dateFrom', $event.target.value)" autocomplete="off"/>
-          </div>          
-          <div class="dateLabelTo"><mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label></div>
-          <div class="inputContainer dateField">
+          </mat-form-field>          
+          <mat-form-field appearance="outline" class="dateField">
+            <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
             <input matInput [(ngModel)]="dataFilters['dateTo']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter('dateTo', $event.target.value)" (change)="onApplyFilter('dateTo', $event.target.value)" autocomplete="off"/>
-          </div>
+          </mat-form-field>
         </td>
         <td>
-          <mat-label><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></mat-label>
+          <label for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
         </td>
         <td>
-          <div class="inputContainer">
-            <input name="ticketNumber" matInput [(ngModel)]="dataFilters['ticketNumber']" type="search" (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input"/>
-          </div>
+          <mat-form-field appearance="outline">
+            <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters['ticketNumber']" type="search" (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input"/>
+          </mat-form-field>
         </td>
         <td>
           <button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
@@ -29,23 +29,23 @@
       </tr>
       <tr>
         <td>
-          <mat-label><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></mat-label>
+          <label for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
         </td>
         <td>
-          <div class="inputContainer">
-            <input name="surname" matInput [(ngModel)]="dataFilters['disputantSurname']" type="search" (keyup)="onApplyFilter('disputantSurname', $event.target.value)" autocomplete="off" class="input" />
-          </div>
+          <mat-form-field appearance="outline">
+            <input id="surname" name="surname" matInput [(ngModel)]="dataFilters['disputantSurname']" type="search" (keyup)="onApplyFilter('disputantSurname', $event.target.value)" autocomplete="off" class="input" />
+          </mat-form-field>
         </td>
         <td>
-          <mat-label><span class="BC-Gov-15px-blue-text"><b>Status:</b></span></mat-label>
+          <mat-label (click)="statusCtl.open()"><span class="BC-Gov-15px-blue-text"><b>Status:</b></span></mat-label>
         </td>
         <td>
-          <div class="inputContainer">
-            <mat-select matNativeControl name="status" [ngModel]="dataFilters['status']" (selectionChange)="onApplyFilter('status', $event.value)">
+          <mat-form-field appearance="outline">
+            <mat-select #statusCtl matNativeControl name="status" [ngModel]="dataFilters['status']" (selectionChange)="onApplyFilter('status', $event.value)">
               <mat-option value="">-- select --</mat-option>
               <mat-option [value]="item" *ngFor="let item of statusFilterOptions">{{item}}</mat-option>
             </mat-select>
-          </div>
+          </mat-form-field>
         </td>
         <td>
           <span class="BC-Gov-15px-black-text" style="color:green;" ><b>{{ countNewTickets() }} NEW ticket records</b></span>
