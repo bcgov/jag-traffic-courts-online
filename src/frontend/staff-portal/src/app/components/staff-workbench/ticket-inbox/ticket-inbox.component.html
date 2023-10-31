@@ -54,8 +54,9 @@
     </table>
   </div>
 </div>
-<div class="row" style="overflow: auto" [ngStyle]="{'height.px': tableHeight}">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort #tickTbSort="matSort">
+
+<div class="table-responsive" [ngStyle]="{'height.px': tableHeight}">
+  <table mat-table [dataSource]="dataSource" matSort #tickTbSort="matSort">
 
     <ng-container matColumnDef="__RedGreenAlert">
       <th mat-header-cell *matHeaderCellDef></th>
