@@ -25,15 +25,14 @@ input[name="ticketNumber"],
 }
 
 .reset-filters {
-  color: white;
-  background-color: #4672c4;
-  border-radius: 10px;
-  border-width: 1px;
-  padding: 0px 15px 0px 15px;
+  color: #fff;
+  background-color: #38598a;
+  border-color: #38598a;  
   font-size: 14px;
 
   &:hover {
-    background-color: #265dc4;
+    background-color: #2d476f;
+    border-color: #294266;
   }
 }
 
