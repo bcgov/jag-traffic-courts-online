@@ -125,7 +125,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
 
-      this.tableHeight = this.calcTableHeight(425);
+      this.tableHeight = this.calcTableHeight(351);
     });
   }
 
@@ -171,7 +171,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.dataSource.filter = "{}";
       // FIXME: This static table height has got to go. The panel should vertically extend to the footer (100%) not some arbitrary pixel height that is not resized when the window is resized.
-      this.tableHeight = this.calcTableHeight(400);
+      this.tableHeight = this.calcTableHeight(351);
     }, 100);
   }
 
@@ -190,7 +190,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     const filterValue = value;
     this.dataFilters[filterName] = filterValue;
     this.dataSource.filter = JSON.stringify(this.dataFilters);
-    this.tableHeight = this.calcTableHeight(425);
+    this.tableHeight = this.calcTableHeight(351);
   }
 
   backWorkbench(element) {
