@@ -35,8 +35,9 @@ spec:
           env:
             - name: NODE_ENV
               value: {{ .Values.node.env }}
-
             {{- /* Database */}}
+            - name: DB_ENABLED
+              value: "true"
             {{- if .Values.database.existingSecretDatabaseKey }}
             - name: DB_DATABASE
               valueFrom:
@@ -76,6 +77,8 @@ spec:
 
             {{- /* Basic Auth */}}
             {{- if .Values.basicAuth.enabled }}
+            - name: BASICAUTH_ENABLED
+              value: "true"
             - name: BASICAUTH_USERNAME
             {{- if .Values.basicAuth.existingSecretUserKey }}
               valueFrom:
@@ -97,6 +100,8 @@ spec:
             {{- end }}
 
             {{- /* Objectstore */}}
+            - name: OBJECTSTORAGE_ENABLED
+              value: "true"
             - name: OBJECTSTORAGE_ACCESSKEYID
             {{- if .Values.objectStorage.existingSecretPasswordKey }}
               valueFrom:
