@@ -9,11 +9,11 @@ persistentVolume:
 
 resources:
   requests:
-    cpu: 250m
+    cpu: 1m
     memory: 256Mi
   limits:
-    cpu: 250m
-    memory: 256Mi
+    cpu: 100m
+    memory: 512Mi
 
 postgresMajorVersion: 15
 
