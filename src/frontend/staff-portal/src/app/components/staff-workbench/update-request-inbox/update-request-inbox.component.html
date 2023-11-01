@@ -54,7 +54,7 @@
 </div>
 
 <div class="table-responsive" [ngStyle]="{'height.px': tableHeight}">
-  <table mat-table [dataSource]="dataSource" matSort #tickTbSort="matSort">
+  <table mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="__RedGreenAlert">
       <th mat-header-cell *matHeaderCellDef></th>
