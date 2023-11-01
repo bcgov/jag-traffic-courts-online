@@ -14,7 +14,16 @@ import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 export class TicketInboxComponent implements OnInit, AfterViewInit {
   @Output() disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
-  dataSource = new MatTableDataSource();
+  disputes: Dispute[] = [];
+  dataSource = new MatTableDataSource(this.disputes);
+  dataFilters = {
+    "dateFrom": "",
+    "dateTo": "",
+    "ticketNumber": "",
+    "disputantSurname": "",
+    "status": ""
+  };
+  statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
   tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   displayedColumns: string[] = [
     '__RedGreenAlert',
@@ -28,7 +37,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     'systemDetectedOcrIssues',
     'userAssignedTo',
   ];
-  disputes: Dispute[] = [];
   userProfile: KeycloakProfile = {};
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
   DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
@@ -76,10 +84,8 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     // initially sort data by Date Submitted
     this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
 
-    // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = function (record: Dispute, filter) {
-      return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-    }
+    // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
+    this.dataSource.filterPredicate = this.searchFilter;
 
     this.disputeService.getDisputes().subscribe((response) => {
       this.logger.info(
@@ -116,13 +122,57 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       // initially sort data by Date Submitted
       this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
 
-      // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: Dispute, filter) {
-        return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-      }
+      // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
+      this.dataSource.filterPredicate = this.searchFilter;
 
-      this.tableHeight = this.calcTableHeight(425);
+      this.tableHeight = this.calcTableHeight(351);
     });
+  }
+
+  searchFilter = function (record: Dispute, filter: string) {
+    let searchTerms = JSON.parse(filter);
+    return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
+      if ("dateFrom" === field) {
+        if (!isNaN(Date.parse(value))) {
+          let ds = new Date(record.__DateSubmitted?.getFullYear(), record.__DateSubmitted?.getMonth(), record.__DateSubmitted?.getDate());
+          return ds >= new Date(value);
+        }
+        else {
+          return true;
+        }
+      }
+      else if ("dateTo" === field) {
+        if (!isNaN(Date.parse(value))) {
+          let ds = new Date(record.__DateSubmitted?.getFullYear(), record.__DateSubmitted?.getMonth(), record.__DateSubmitted?.getDate());
+          return ds <= new Date(value);
+        }
+        else {
+          return true;
+        }
+      }
+      else {
+        return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
+      }
+    });
+  };
+
+  resetSearchFilters() {
+    // Will update search filters in UI
+    this.dataFilters = {
+      "dateFrom": "",
+      "dateTo": "",
+      "ticketNumber": "",
+      "disputantSurname": "",
+      "status": ""
+    };
+
+    // Will re-execute the filter function, but will block UI rendering
+    // Put this call in a Timeout to keep UI responsive.
+    setTimeout(() => {
+      this.dataSource.filter = "{}";
+      // FIXME: This static table height has got to go. The panel should vertically extend to the footer (100%) not some arbitrary pixel height that is not resized when the window is resized.
+      this.tableHeight = this.calcTableHeight(351);
+    }, 100);
   }
 
   countNewTickets(): number {
@@ -136,10 +186,11 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
   // called on keyup in filter field
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue?.trim().toLowerCase();
-    this.tableHeight = this.calcTableHeight(425);
+  onApplyFilter(filterName: string, value: string) {
+    const filterValue = value;
+    this.dataFilters[filterName] = filterValue;
+    this.dataSource.filter = JSON.stringify(this.dataFilters);
+    this.tableHeight = this.calcTableHeight(351);
   }
 
   backWorkbench(element) {

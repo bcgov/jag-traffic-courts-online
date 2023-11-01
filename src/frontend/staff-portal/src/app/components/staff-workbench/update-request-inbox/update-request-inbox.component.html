@@ -1,22 +1,60 @@
 <div>
-  <div class="flex-container" style="width: 40%">
-    <table>
+  <div class="flex-container">
+    <table class="filterTable">
       <tr>
-        <td><span class="BC-Gov-15px-blue-text" ><b>Ticket number search:</b></span></td>
-        <td colspan="2">
-          <div class="inputContainer">
-            <input name="searchInput" matInput type="search" (keyup)="applyFilter($event)" autocomplete="off" class="input"/>
-            <mat-icon class="inputIcon">search</mat-icon>
-          </div>
+        <td>
+          <mat-label><span class="BC-Gov-15px-blue-text"><b>Date Submitted:</b></span></mat-label>
         </td>
+        <td>
+          <mat-form-field appearance="outline" class="dateField">
+            <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
+            <input matInput [(ngModel)]="dataFilters['dateFrom']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter('dateFrom', $event.target.value)" (change)="onApplyFilter('dateFrom', $event.target.value)" autocomplete="off"/>
+          </mat-form-field>          
+          <mat-form-field appearance="outline" class="dateField">
+            <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
+            <input matInput [(ngModel)]="dataFilters['dateTo']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter('dateTo', $event.target.value)" (change)="onApplyFilter('dateTo', $event.target.value)" autocomplete="off"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <label for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
+        </td>
+        <td>
+          <mat-form-field appearance="outline">
+            <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters['ticketNumber']" type="search" (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input"/>
+          </mat-form-field>
+        </td>
+        <td>
+          <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
+        </td>
+        <td>
+          <mat-form-field appearance="outline">
+            <input id="surname" name="surname" matInput [(ngModel)]="dataFilters['disputantSurname']" type="search" (keyup)="onApplyFilter('disputantSurname', $event.target.value)" autocomplete="off" class="input" />
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-label (click)="statusCtl.open()"><span class="BC-Gov-15px-blue-text"><b>Status:</b></span></mat-label>
+        </td>
+        <td>
+          <mat-form-field appearance="outline">
+            <mat-select #statusCtl id="status" matNativeControl name="status" [ngModel]="dataFilters['status']" (selectionChange)="onApplyFilter('status', $event.value)">
+              <mat-option value="">-- select --</mat-option>
+              <mat-option [value]="item" *ngFor="let item of statusFilterOptions">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+        <td></td>
       </tr>
     </table>
   </div>
 </div>
-<br />
 
-<div class="row" style="overflow: auto" [ngStyle]="{'height.px': tableHeight}">
-  <table mat-table [dataSource]="dataSource" style="width:95%" class="mat-elevation-z8" matSort #tickTbSort="matSort">
+<div class="table-responsive" [ngStyle]="{'height.px': tableHeight}">
+  <table mat-table [dataSource]="dataSource" matSort #tickTbSort="matSort">
 
     <ng-container matColumnDef="__RedGreenAlert">
       <th mat-header-cell *matHeaderCellDef></th>
@@ -110,7 +148,7 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
   </table>
