@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-bootstrap-sql
+data:
+  bootstrap.sql: |
+    \c keycloakdb;
+    SET ROLE keycloak;
+    CREATE SCHEMA keycloak;
+    ALTER USER keycloak SET SEARCH_PATH = 'keycloak';

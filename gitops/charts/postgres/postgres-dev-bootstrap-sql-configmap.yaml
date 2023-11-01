@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bootstrap-sql
+data:
+  bootstrap.sql: |
+    \c keycloakdb;
+    GRANT ALL ON SCHEMA public to keycloak;
+    \c comsdb;
+    SET ROLE coms;
+    CREATE SCHEMA coms;
+    ALTER USER coms SET SEARCH_PATH = 'coms';
+    \c appdb;
+    SET ROLE masstransit;
+    CREATE SCHEMA masstransit;
+    ALTER USER masstransit SET SEARCH_PATH = 'masstransit';
+    SET ROLE traffic;
+    CREATE SCHEMA traffic;
+    ALTER USER traffic SET SEARCH_PATH = 'traffic';

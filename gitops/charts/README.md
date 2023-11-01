@@ -14,10 +14,18 @@ Uses deployment from https://github.com/bcgov/clamav
 
 ## Postgres
 
-Chart Source: https://github.com/pbolduc/spilo-chart
+See [postgres/README.md](postgres/README.md).
 
+### Dev 
 ```
-helm install postgres spilo-0.3.3.tgz --values spilo-postgres-test-values.yaml
+oc project 0198bb-dev
+helm upgrade --install postgres postgrescluster-5.4.2.tgz --values .\postgres-dev-values.yaml
+```
+
+### Test / Prod
+```
+helm upgrade --install postgres postgrescluster-5.4.2.tgz --values .\postgres-keycloak-values.yaml
+helm upgrade --install postgres postgrescluster-5.4.2.tgz --values .\postgres-????????-values.yaml
 ```
 
 ## Keycloak
