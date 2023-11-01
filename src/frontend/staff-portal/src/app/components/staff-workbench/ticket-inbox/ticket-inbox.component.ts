@@ -5,6 +5,7 @@ import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field, DisputeSystemDetectedOcrIssues, DisputeListItem } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
+import { DateUtil } from '@shared/utils/date-util';
 
 @Component({
   selector: 'app-ticket-inbox',
@@ -106,6 +107,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             emailAddress: d.emailAddress,
             systemDetectedOcrIssues: d.systemDetectedOcrIssues,
             __DateSubmitted: new Date(d.submittedTs),
+            submittedTs: d.submittedTs,
             __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
             additionalProperties: d.additionalProperties,
             status: d.status,
@@ -133,22 +135,10 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     let searchTerms = JSON.parse(filter);
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
       if ("dateFrom" === field) {
-        if (!isNaN(Date.parse(value))) {
-          let ds = new Date(record.__DateSubmitted?.getFullYear(), record.__DateSubmitted?.getMonth(), record.__DateSubmitted?.getDate());
-          return ds >= new Date(value);
-        }
-        else {
-          return true;
-        }
+        return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
       }
       else if ("dateTo" === field) {
-        if (!isNaN(Date.parse(value))) {
-          let ds = new Date(record.__DateSubmitted?.getFullYear(), record.__DateSubmitted?.getMonth(), record.__DateSubmitted?.getDate());
-          return ds <= new Date(value);
-        }
-        else {
-          return true;
-        }
+        return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
       else {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;

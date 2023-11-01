@@ -5,6 +5,7 @@ import { DisputeService, DisputeWithUpdates } from 'app/services/dispute.service
 import { Dispute, DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
+import { DateUtil } from '@shared/utils/date-util';
 
 @Component({
   selector: 'app-update-request-inbox',
@@ -95,24 +96,10 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     let searchTerms = JSON.parse(filter);
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
       if ("dateFrom" === field) {
-        if (!isNaN(Date.parse(value))) {
-          let submittedTs = new Date(record.submittedTs);
-          let dt = new Date(submittedTs.getFullYear(), submittedTs.getMonth(), submittedTs.getDate());
-          return dt >= new Date(value);
-        }
-        else {
-          return true;
-        }
+        return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
       }
       else if ("dateTo" === field) {
-        if (!isNaN(Date.parse(value))) {
-          let submittedTs = new Date(record.submittedTs);
-          let dt = new Date(submittedTs.getFullYear(), submittedTs.getMonth(), submittedTs.getDate());
-          return dt <= new Date(value);
-        }
-        else {
-          return true;
-        }
+        return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
       else {
         return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
