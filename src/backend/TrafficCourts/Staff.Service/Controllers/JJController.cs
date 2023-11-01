@@ -5,12 +5,14 @@ using Microsoft.Extensions.FileProviders;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
@@ -19,6 +21,7 @@ public class JJController : StaffControllerBase<JJController>
 {
     private readonly IPrintDigitalCaseFileService _printService;
     private readonly IJJDisputeService _jjDisputeService;
+    private readonly IDisputeLockService _disputeLockService;
 
     /// <summary>
     /// Default Constructor
@@ -30,10 +33,12 @@ public class JJController : StaffControllerBase<JJController>
     public JJController(
         IJJDisputeService jjDisputeService,
         IPrintDigitalCaseFileService printService,
+        IDisputeLockService disputeLockService,
         ILogger<JJController> logger) : base(logger)
     {
         _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
         _printService = printService ?? throw new ArgumentNullException(nameof(printService));
+        _disputeLockService = disputeLockService ?? throw new ArgumentNullException(nameof(DisputeLockService));
     }
 
     /// <summary>
@@ -97,7 +102,16 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            JJDispute JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
+            JJDispute JJDispute = new();
+
+            var disputeLock = _disputeLockService.GetLock(jjDisputeId, GetUserName(User));
+
+            if ((disputeLock) != null) {
+                JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
+                JJDispute.LockId = disputeLock.LockId;
+                JJDispute.LockedBy = disputeLock.Username;
+                JJDispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
+            }
             return Ok(JJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -129,6 +143,27 @@ public class JJController : StaffControllerBase<JJController>
             problemDetails.Title = e.Source + ": Error Invoking COMS";
             problemDetails.Instance = HttpContext?.Request?.Path;
             string? innerExceptionMessage = e.InnerException?.Message;
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
             if (innerExceptionMessage is not null)
             {
                 problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
@@ -789,6 +824,11 @@ public class JJController : StaffControllerBase<JJController>
         content.Position = 0;
 
         return new RenderedReport("DCF DK62053851.pdf", "application/pdf", content);
+    }
+
+    private static string GetUserName(ClaimsPrincipal user)
+    {
+        return user?.Identity?.Name ?? string.Empty;
     }
 
 }
