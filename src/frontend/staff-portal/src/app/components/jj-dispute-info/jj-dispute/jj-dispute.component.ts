@@ -14,6 +14,7 @@ import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
+import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -47,6 +48,7 @@ export class JJDisputeComponent implements OnInit {
     room: [{ value: null, disabled: true }],
     reason: [null],
     noAppTs: [null],
+    _noAppTs: [null],
     clerkRecord: [null],
     defenceCounsel: [null],
     crown: [null],
@@ -87,6 +89,7 @@ export class JJDisputeComponent implements OnInit {
     private config: ConfigService,
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
+    private datePipe: CustomDatePipe
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -211,11 +214,9 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onUpdateAPPCd() {
-    // TCVP-2461 If AppCd is P or A, disable No App field and set to blank.
     if (JJDisputeCourtAppearanceRoPAppCd.P === this.courtAppearanceForm.value.appCd
       || JJDisputeCourtAppearanceRoPAppCd.A === this.courtAppearanceForm.value.appCd) {
       this.courtAppearanceForm.controls.noAppTs.setValue(null);
-      this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs = this.courtAppearanceForm.value.noAppTs;
       this.isNoAppEnabled = false;
     }
     else {
@@ -223,9 +224,16 @@ export class JJDisputeComponent implements OnInit {
     }
   }
 
-  updateNoAPPTs() {
-    this.courtAppearanceForm.controls.noAppTs.setValue(new Date().toISOString());
-    this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs = this.courtAppearanceForm.value.noAppTs;
+  updateNoAppTs(date: Date) {
+    this.courtAppearanceForm.controls.noAppTs.setValue(this.datePipe.transform(date, "MM/dd/yyyy HH:mm:ss") + " UTC");
+  }
+
+  updateNoAppTsToNow() {
+    this.updateNoAppTs(new Date());
+  }
+
+  updateNoAppDateTime(value) {
+    this.updateNoAppTs(new Date(value));
   }
 
   onSave(): void {

@@ -210,10 +210,20 @@
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">No APP</p>
-            <p class="section-grid-text">
-              {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
-              &nbsp;<button *ngIf="!isViewOnly && isNoAppEnabled" type="button" style="background:#fffee6"
-                (click)="updateNoAPPTs()">Now</button></p>
+            <p class="section-grid-text" style="padding-right: 5px !important;">
+              <span *ngIf="isViewOnly || !isNoAppEnabled">
+                {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+              </span>
+              <span *ngIf="!isViewOnly && isNoAppEnabled">
+                <button type="button" style="background:#fffee6; width: 136px;" (click)="picker.open()">
+                  {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+                </button>
+                <input [ngxMatDatetimePicker]="picker" formControlName="_noAppTs" style="width: 0;"
+                  (ngModelChange)="updateNoAppDateTime($event)" />
+                <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+                &nbsp;<button type="button" style="background:#fffee6" (click)="updateNoAppTsToNow()">Now</button>
+              </span>
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">CLERK REC.</p>
