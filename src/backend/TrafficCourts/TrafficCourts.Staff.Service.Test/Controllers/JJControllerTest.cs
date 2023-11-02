@@ -326,7 +326,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -350,7 +350,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, false, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -374,7 +374,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber,false, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber,false, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -454,7 +454,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status409Conflict, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();
@@ -482,7 +482,7 @@ public class JJControllerTest
         var jjDisputeService = new Mock<IJJDisputeService>();
 
         jjDisputeService
-            .Setup(_ => _.GetJJDisputeAsync(1, ticketnumber, true, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetJJDisputeAsync(ticketnumber, true, It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<JJController>>();
         var printService = Mock.Of<IPrintDigitalCaseFileService>();

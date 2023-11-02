@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using TrafficCourts.Common.Models;
-using static System.Collections.Specialized.BitVector32;
 
 namespace TrafficCourts.Common.Features.Lookups;
 

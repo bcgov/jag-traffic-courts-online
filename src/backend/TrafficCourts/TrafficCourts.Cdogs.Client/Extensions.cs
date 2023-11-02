@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System.Net.Http;
-using System;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Core.Http;
 using Microsoft.Extensions.Caching.Memory;

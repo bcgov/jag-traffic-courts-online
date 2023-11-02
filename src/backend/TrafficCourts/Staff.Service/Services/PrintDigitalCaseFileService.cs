@@ -2,39 +2,48 @@
 using NodaTime;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
+using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 
 namespace TrafficCourts.Staff.Service.Services;
 
-public interface IPrintDigitalCaseFileService
-{
-    Task<RenderedReport> PrintDigitalCaseFileAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken);
-}
-
 public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 {
     private readonly IJJDisputeService _disputeService;
+    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IProvinceLookupService _provinceLookupService;
     private readonly IDateTimeZoneProvider _timeZoneProvider;
     private readonly IDocumentGenerationService _documentGeneration;
     private readonly ILogger<PrintDigitalCaseFileService> _logger;
 
     public PrintDigitalCaseFileService(
-        IJJDisputeService disputeService, 
+        IJJDisputeService disputeService,
+        IOracleDataApiClient oracleDataApi,
+        IProvinceLookupService provinceLookupService,
         IDateTimeZoneProvider timeZoneProvider, 
         IDocumentGenerationService documentGeneration,
         ILogger<PrintDigitalCaseFileService> logger)
     {
         _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
+        _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
+        _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
         _timeZoneProvider = timeZoneProvider ?? throw new ArgumentNullException(nameof(timeZoneProvider));
         _documentGeneration = documentGeneration ?? throw new ArgumentNullException(nameof(documentGeneration));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<RenderedReport> PrintDigitalCaseFileAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    /// <summary>
+    /// Renders the digital case file for a given dispute based on ticket number. This really should be using the tco_dispute.dispute_id.
+    /// </summary>
+    public async Task<RenderedReport> PrintDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(ticketNumber);
+        ArgumentNullException.ThrowIfNull(timeZoneId);
+
         // generate the digital case file model
-        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZoneId, cancellationToken);
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(ticketNumber, timeZoneId, cancellationToken);
 
         var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
 
@@ -71,7 +80,21 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return stream;
     }
 
-    private async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    private async Task<Province?> GetDriversLicenceProvinceAsync(string provinceSeqNo, string countryId)
+    {
+        Province? driversLicenceProvince = null;
+        if (provinceSeqNo is not null && countryId is not null)
+        {
+            driversLicenceProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provinceSeqNo, countryId);
+        }
+
+        return driversLicenceProvince;
+    }
+
+    /// <summary>
+    /// Fetches the <see cref="DigitalCaseFile"/> based on ticket number. This really should be using the tco_dispute.dispute_id.
+    /// </summary>
+    private async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
     {
         // JavaScript: Intl.DateTimeFormat().resolvedOptions().timeZone
         // Time Zone from the browser is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.
@@ -80,7 +103,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // get the user's time zone 
         DateTimeZone? timeZone = _timeZoneProvider[timeZoneId]; // can throw DateTimeZoneNotFoundException.
 
-        var dispute = await _disputeService.GetJJDisputeAsync(disputeId, null, false, cancellationToken);
+        var dispute = await _disputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
+        Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
+        var fileHistory = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(dispute.TicketNumber, cancellationToken);
 
         var digitalCaseFile = new DigitalCaseFile();
 
@@ -103,7 +128,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         contact.Surname = dispute.ContactSurname;
         contact.GivenNames = ConcatenateWithSpaces(dispute.ContactGivenName1, dispute.ContactGivenName2, dispute.ContactGivenName3);
         contact.Address = FormatAddress(dispute);
-        contact.DriversLicence.Province = dispute.DrvLicIssuedProvSeqNo + " ** ProvSeqNo -> code"; // this is not correct
+        contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
         contact.Email = dispute.EmailAddress;
 
@@ -145,7 +170,6 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 Description = disputedCount.Description,
                 Due = ToDateTime(disputedCount.DueDate),
                 Fine = disputedCount.TicketedFineAmount != null ? (decimal)disputedCount.TicketedFineAmount : 0m,
-                //Request = ToString(disputedCount.RequestReduction, disputedCount.RequestTimeToPay),
                 RequestFineReduction = ToString(disputedCount.RequestReduction),
                 RequestTimeToPay = ToString(disputedCount.RequestTimeToPay),
             });
@@ -170,7 +194,18 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // set file history
         var history = digitalCaseFile.History;
 
-        // TODO: get file history
+        // File History searches by ticket number and *could* return files for multiple disputes
+        // This is a bug waiting to happen, so we will be more careful
+        foreach (var h in fileHistory.Where(_ => _.DisputeId == dispute.Id))
+        {
+            history.Add(new FileHistoryEvent
+            {
+                Date = h.CreatedTs.DateTime,
+                Description = h.Description,
+                Type = h.AuditLogEntryType.ToString(),
+                Username = h.ActionByApplicationUser,
+            });
+        }
 
         // set file remarks
         var remarks = digitalCaseFile.FileRemarks;
@@ -277,7 +312,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         if (value is not null && value != JJDisputeNoticeOfHearingYn.UNKNOWN)
         {
-            return value.ToString();
+            return value.Value.ToString();
         }
 
         return string.Empty;
@@ -286,7 +321,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         if (value is not null && value != JJDisputeElectronicTicketYn.UNKNOWN)
         {
-            return value.ToString();
+            return value.Value.ToString();
         }
 
         return string.Empty;
@@ -295,7 +330,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         if (value is not null && value != JJDisputeCourtAppearanceRoPJjSeized.UNKNOWN)
         {
-            return value.ToString();
+            return value.Value.ToString();
         }
 
         return string.Empty;
@@ -305,7 +340,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         if (value is not null && value != JJDisputeCourtAppearanceRoPCrown.UNKNOWN)
         {
-            return value.ToString();
+            return value.Value.ToString();
         }
 
         return string.Empty;
@@ -314,7 +349,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         if (value is not null && value != JJDisputeCourtAppearanceRoPDattCd.UNKNOWN)
         {
-            return value.ToString();
+            return value.Value.ToString();
         }
 
         return string.Empty;
@@ -324,7 +359,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         if (value is not null && value != JJDisputeCourtAppearanceRoPAppCd.UNKNOWN)
         {
-            return value.ToString(); 
+            return value.Value.ToString(); 
         }
 
         return string.Empty;

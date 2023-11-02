@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
+using TrafficCourts.Common;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -97,8 +98,22 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            JJDispute JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
-            return Ok(JJDispute);
+            JJDispute dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
+
+            // note, this would not be required if our APIs actually search by the primary key of the table and
+            // not just an attribute that does not even have a unique constraint on it.
+            if (dispute is not null && dispute.Id != jjDisputeId)
+            {
+                using var scope = _logger.BeginScope( new {
+                    ExpectedId = jjDisputeId,
+                    ActualId = dispute.Id,
+                    TicketNumber = ticketNumber
+                });
+
+                _logger.LogWarning("GetJJDisputeAsync searches by ticket number, not jjDisputeId. The returned record does not have a matching dispute id.");
+            }
+
+            return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
@@ -742,31 +757,31 @@ public class JJController : StaffControllerBase<JJController>
     }
 
     /// <summary>
-    /// Returns generated document
+    /// Returns generated document. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    /// <param name="disputeId"></param>
+    /// <param name="ticketNumber">The ticket number to print. This really should be using the tco_dispute.dispute_id</param>
     /// <param name="timeZone">The IANA timze zone id</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Generated Document.</response>
+    /// <response code="400">The </response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A generated document</returns>
     [AllowAnonymous]
-    [HttpGet("{disputeId}/print")]
+    [HttpGet("{ticketNumber}/print")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, [Required] string timeZone, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Penerating print version of dispute {disputeId} in timezone {timeZone}", disputeId, timeZone);
+        _logger.LogDebug("Rendering print version of dispute {ticketNumber} in timezone {timeZone}. This really should be using the tco_dispute.dispute_id", ticketNumber, timeZone);
 
         try
         {
-            //RenderedReport report = await _printService.PrintDigitalCaseFileAsync(disputeId, timeZone, cancellationToken);
-            RenderedReport report = GetSampleRenderedReport();
+            RenderedReport report = await _printService.PrintDigitalCaseFileAsync(ticketNumber, timeZone, cancellationToken);
             // Report will be a pdf, but by using application/octet-stream, it is easier for the browser to open in a new tab
             return File(report.Content, "application/octet-stream", report.ReportName);
         }
@@ -776,19 +791,4 @@ public class JJController : StaffControllerBase<JJController>
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
-
-    private RenderedReport GetSampleRenderedReport()
-    {
-        IFileProvider fileProvder = new EmbeddedFileProvider(GetType().Assembly);
-        string path = $"Models.DigitalCaseFiles.Print.tmpFF54.pdf";
-        var fileInfo = fileProvder.GetFileInfo(path);
-
-        var content = new MemoryStream();
-        var stream = fileInfo.CreateReadStream();
-        stream.CopyTo(content);
-        content.Position = 0;
-
-        return new RenderedReport("DCF DK62053851.pdf", "application/pdf", content);
-    }
-
 }

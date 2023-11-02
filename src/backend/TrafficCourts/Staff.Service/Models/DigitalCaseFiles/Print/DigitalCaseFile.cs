@@ -33,10 +33,10 @@ public class DigitalCaseFile
     public List<OffenseCount> Counts { get; set; } = new List<OffenseCount>();
 
     [JsonProperty("isElectronicTicket")]
-    public string IsElectronicTicket { get; set; }
+    public string IsElectronicTicket { get; set; } = string.Empty;
 
     [JsonProperty("hasNoticeOfHearing")]
-    public string HasNoticeOfHearing { get; set; }
+    public string HasNoticeOfHearing { get; set; } = string.Empty;
 
     [JsonProperty("documents")]
     public List<Document> Documents { get; set; } = new List<Document>();
@@ -54,16 +54,16 @@ public class TicketSummary
     /// The ticket number
     /// </summary>
     [JsonProperty("number")]
-    public string Number { get; set; }
+    public string Number { get; set; } = string.Empty;
 
     [JsonProperty("surname")]
-    public string Surname { get; set; }
+    public string Surname { get; set; } = string.Empty;
 
     [JsonProperty("givenNames")]
-    public string GivenNames { get; set; }
+    public string GivenNames { get; set; } = string.Empty;
 
     [JsonProperty("address")]
-    public string Address { get; set; }
+    public string Address { get; set; } = string.Empty;
 
     [JsonProperty("issuedDate")]
     public DateTime IssuedDate { get; set; }
@@ -72,42 +72,42 @@ public class TicketSummary
     public DateTime SubmittedDate { get; set; }
 
     [JsonProperty("courtHouse")]
-    public string CourtHouse { get; set; }
+    public string CourtHouse { get; set; } = string.Empty;
 
     [JsonProperty("icbcReceivedDate")]
     public DateTime IcbcReceivedDate { get; set; }
 
     [JsonProperty("policeDetachment")]
-    public string PoliceDetachment { get; set; }
+    public string PoliceDetachment { get; set; } = string.Empty;
 
     [JsonProperty("offenceLocation")]
-    public string OffenceLocation { get; set; }
+    public string OffenceLocation { get; set; } = string.Empty;
 
     [JsonProperty("courtAgenyId")]
-    public string CourtAgenyId { get; set; }
+    public string CourtAgenyId { get; set; } = string.Empty;
 }
 
 public class ContactInformation
 {
     [JsonProperty("surname")]
-    public string Surname { get; set; }
+    public string Surname { get; set; } = string.Empty;
     [JsonProperty("givenNames")]
-    public string GivenNames { get; set; }
+    public string GivenNames { get; set; } = string.Empty;
     [JsonProperty("address")]
-    public string Address { get; set; }
+    public string Address { get; set; } = string.Empty;
     [JsonProperty("driversLicence")]
     public DriversLicence DriversLicence { get; set; } = new DriversLicence();
     [JsonProperty("email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 }
 
 public class DriversLicence
 {
     [JsonProperty("province")]
-    public string Province { get; set; }
+    public string Province { get; set; } = string.Empty;
 
     [JsonProperty("number")]
-    public string Number { get; set; }
+    public string Number { get; set; } = string.Empty;
 }
 
 
@@ -120,18 +120,18 @@ public class Appearance
     public DateTime Date { get; set; }
 
     [JsonProperty("reason")]
-    public string Reason { get; set; }
+    public string Reason { get; set; } = string.Empty;
 
     /// <summary>
     /// The appearance room
     /// </summary>
     [JsonProperty("room")]
-    public string Room { get; set; }
+    public string Room { get; set; } = string.Empty;
 
     /// <summary>
     /// </summary>
     [JsonProperty("app")]
-    public string App { get; set; }
+    public string App { get; set; } = string.Empty;
 
     /// <summary>
     /// No appearance date
@@ -143,60 +143,60 @@ public class Appearance
     /// Y or N
     /// </summary>
     [JsonProperty("clerk")]
-    public string Clerk { get; set; }
+    public string Clerk { get; set; } = string.Empty;
 
     /// <summary>
     /// </summary>
     [JsonProperty("defenseCouncil")]
-    public string DefenseCouncil { get; set; }
+    public string DefenseCouncil { get; set; } = string.Empty;
 
     [JsonProperty("defenseAtt")]
-    public string DefenseAtt { get; set; }
+    public string DefenseAtt { get; set; } = string.Empty;
 
     [JsonProperty("crown")]
-    public string Crown { get; set; }
+    public string Crown { get; set; } = string.Empty;
 
     [JsonProperty("seized")]
-    public string Seized { get; set; }
+    public string Seized { get; set; } = string.Empty;
 
     [JsonProperty("judicialJustice")]
-    public string JudicialJustice { get; set; }
+    public string JudicialJustice { get; set; } = string.Empty;
 
     [JsonProperty("comments")]
-    public string Comments { get; set; }
+    public string Comments { get; set; } = string.Empty;
 }
 
 public class CourtOptions
 {
     [JsonProperty("counsel")]
-    public LegalCounsel LegalCounsel { get; set; }
+    public LegalCounsel LegalCounsel { get; set; } = new LegalCounsel();
 
     [JsonProperty("witnessCount")]
     public int WitnessCount { get; set; }
     
     [JsonProperty("interpreter")]
-    public string InterpreterLanguage { get; set; }
+    public string InterpreterLanguage { get; set; } = string.Empty;
 
     [JsonProperty("attendanceType")]
-    public string DisputantAttendanceType { get; set; }
+    public string DisputantAttendanceType { get; set; } = string.Empty;
 }
 
 public class LegalCounsel
 {
     [JsonProperty("name")]
-    public string FullName { get; set; }
+    public string FullName { get; set; } = string.Empty;
 
     [JsonProperty("firm")]
-    public string FirmName { get; set; }
+    public string FirmName { get; set; } = string.Empty;
 }
 
 public class WrittenReasons
 {
     [JsonProperty("fineReduction")]
-    public string FineReduction { get; set; }
+    public string FineReduction { get; set; } = string.Empty;
 
     [JsonProperty("timeToPay")]
-    public string TimeToPay { get; set; }
+    public string TimeToPay { get; set; } = string.Empty;
 }
 
 public class OffenseCount
@@ -205,10 +205,10 @@ public class OffenseCount
     public int Count { get; set; }
 
     [JsonProperty("plea")]
-    public string Plea { get; set; }
+    public string Plea { get; set; } = string.Empty;
 
     [JsonProperty("description")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [JsonProperty("due")]
     public DateTime Due { get; set; }
@@ -216,20 +216,17 @@ public class OffenseCount
     [JsonProperty("fine")]
     public decimal Fine { get; set; }
 
-    //[JsonProperty("request")]
-    //public string Request { get; set; }
-
     [JsonProperty("requestFineReduction")]
-    public string RequestFineReduction { get; set; }
+    public string RequestFineReduction { get; set; } = string.Empty;
 
     [JsonProperty("requestTimeToPay")]
-    public string RequestTimeToPay { get; set; }
+    public string RequestTimeToPay { get; set; } = string.Empty;
 }
 
 public class Document
 {
     [JsonProperty("filename")]
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 }
 
 public class FileHistoryEvent
@@ -241,13 +238,13 @@ public class FileHistoryEvent
     public DateTime Date { get; set; }
 
     [JsonProperty("username")]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     [JsonProperty("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
 
     [JsonProperty("description")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 }
 
 public class FileRemark
@@ -256,8 +253,8 @@ public class FileRemark
     public DateTime Date { get; set; }
 
     [JsonProperty("username")]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     [JsonProperty("note")]
-    public string Note { get; set; }
+    public string Note { get; set; } = string.Empty;
 }
