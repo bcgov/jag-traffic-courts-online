@@ -115,7 +115,7 @@ public class OcrViolationTicket
     public bool IsCount1Populated()
     {
         return Fields[Count1Description].IsPopulated()
-            || Fields[Count1ActRegs].IsPopulated()
+            || (ViolationTicketVersion.VT1 == TicketVersion && Fields[Count1ActRegs].IsPopulated())
             || Fields[Count1Section].IsPopulated()
             || Fields[Count1TicketAmount].IsPopulated();
     }
@@ -126,7 +126,7 @@ public class OcrViolationTicket
     public bool IsCount2Populated()
     {
         return Fields[Count2Description].IsPopulated()
-            || Fields[Count2ActRegs].IsPopulated()
+            || (ViolationTicketVersion.VT1 == TicketVersion && Fields[Count2ActRegs].IsPopulated())
             || Fields[Count2Section].IsPopulated()
             || Fields[Count2TicketAmount].IsPopulated();
     }
@@ -137,7 +137,7 @@ public class OcrViolationTicket
     public bool IsCount3Populated()
     {
         return Fields[Count3Description].IsPopulated()
-            || Fields[Count3ActRegs].IsPopulated()
+            || (ViolationTicketVersion.VT1 == TicketVersion && Fields[Count3ActRegs].IsPopulated())
             || Fields[Count3Section].IsPopulated()
             || Fields[Count3TicketAmount].IsPopulated();
     }
