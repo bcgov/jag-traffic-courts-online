@@ -48,8 +48,7 @@ export class JJDisputeComponent implements OnInit {
     room: [{ value: null, disabled: true }],
     reason: [null],
     noAppTs: [null],
-    _noAppDate: [null],
-    _noAppTime: [null],
+    _noAppTs: [null],
     clerkRecord: [null],
     defenceCounsel: [null],
     crown: [null],
@@ -90,7 +89,7 @@ export class JJDisputeComponent implements OnInit {
     private config: ConfigService,
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
-    private datePipe: CustomDatePipe,
+    private datePipe: CustomDatePipe
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -151,8 +150,6 @@ export class JJDisputeComponent implements OnInit {
           }
         }
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
-        this.courtAppearanceForm.controls._noAppDate.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs);
-        this.courtAppearanceForm.controls._noAppTime.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance.noAppTs);
         this.determineIfConcludeOrCancel();
       }
     });
@@ -217,7 +214,6 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onUpdateAPPCd() {
-    // TCVP-2461 If AppCd is P or A, disable No App field and set to blank.
     if (JJDisputeCourtAppearanceRoPAppCd.P === this.courtAppearanceForm.value.appCd
       || JJDisputeCourtAppearanceRoPAppCd.A === this.courtAppearanceForm.value.appCd) {
       this.courtAppearanceForm.controls.noAppTs.setValue(null);
@@ -228,18 +224,16 @@ export class JJDisputeComponent implements OnInit {
     }
   }
 
-  updateNoAppTs() {
-    this.courtAppearanceForm.controls.noAppTs.setValue(this.datePipe.transform(new Date(), "MM/dd/yyyy HH:mm:ss") + " UTC");
+  updateNoAppTs(date: Date) {
+    this.courtAppearanceForm.controls.noAppTs.setValue(this.datePipe.transform(date, "MM/dd/yyyy HH:mm:ss") + " UTC");
   }
 
-  updateNoAppDate(value) {
-    var newTs = this.datePipe.transform(new Date(value), "MM/dd/yyyy") + " " + this.datePipe.transform(this.courtAppearanceForm.value.noAppTs, "HH:mm:ss z"); // z means UTC
-    this.courtAppearanceForm.controls.noAppTs.setValue(new Date(newTs));
+  updateNoAppTsToNow() {
+    this.updateNoAppTs(new Date());
   }
 
-  updateNoAppTime(value) {
-    var newTs = this.datePipe.transform(new Date(this.courtAppearanceForm.value.noAppTs), "MM/dd/yyyy", "UTC") + " " + value + " UTC";
-    this.courtAppearanceForm.controls.noAppTs.setValue(newTs);
+  updateNoAppDateTime(value) {
+    this.updateNoAppTs(new Date(value));
   }
 
   onSave(): void {
