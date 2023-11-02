@@ -1,0 +1,284 @@
+Table occam_audit_log_entries {
+  audit_log_entry_id number(22) [not null]
+  dispute_id number(22) [not null]
+  audit_log_entry_type_cd varchar2(4) [not null]
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  action_by_application_user varchar2(240)
+  Indexes {
+    (audit_log_entry_id) [pk]
+  }
+}
+Table occam_audit_log_entry_types {
+  audit_log_entry_type_cd varchar2(4) [not null]
+  audit_log_entry_type_dsc varchar2(500) [not null]
+  audit_log_entry_type_short_dsc varchar2(150) [not null]
+  active_use_yn varchar2(1) [not null]
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (audit_log_entry_type_cd) [pk]
+  }
+}
+Table occam_disputes {
+  dispute_id number(22) [not null]
+  court_agen_id number(22)
+  dispute_status_type_cd varchar2(4) [not null]
+  contact_type_cd varchar2(1) [not null]
+  request_court_appearance_yn varchar2(1) [not null]
+  violation_ticket_upload_id number(22) [not null]
+  issued_dt date(7)
+  submitted_dt date(7)
+  disputant_surname_nm varchar2(30)
+  disputant_given_1_nm varchar2(30)
+  disputant_given_2_nm varchar2(30)
+  disputant_given_3_nm varchar2(30)
+  disputant_birth_dt date(7)
+  disputant_organization_nm varchar2(150)
+  disputant_drv_lic_number_txt varchar2(30)
+  drv_lic_issued_prov_ctry_id number(22)
+  drv_lic_issued_prov_seq_no number(22)
+  drv_lic_issued_ctry_ctry_id number(22)
+  drv_lic_issued_other_prov_txt varchar2(30)
+  disputant_client_id varchar2(30)
+  address_line_1_txt varchar2(100) [not null]
+  address_line_2_txt varchar2(100)
+  address_line_3_txt varchar2(100)
+  address_city_ctry_id number(22)
+  address_city_seq_no number(22)
+  address_prov_ctry_id number(22)
+  address_prov_seq_no number(22)
+  address_ctry_ctry_id number(22)
+  address_other_city_txt varchar2(30)
+  address_other_prov_txt varchar2(30)
+  postal_code_txt varchar2(10)
+  home_phone_number_txt varchar2(20)
+  contact_law_firm_nm varchar2(200)
+  contact_surname_nm varchar2(30)
+  contact_given_1_nm varchar2(30)
+  contact_given_2_nm varchar2(30)
+  contact_given_3_nm varchar2(30)
+  work_phone_number_txt varchar2(20)
+  email_address_txt varchar2(100)
+  email_verified_yn varchar2(1)
+  notice_of_dispute_guid varchar2(36)
+  filing_dt date(7)
+  represented_by_lawyer_yn varchar2(1)
+  law_firm_nm varchar2(200)
+  law_firm_addr_line_1_txt varchar2(100)
+  law_firm_addr_line_2_txt varchar2(100)
+  law_firm_addr_line_3_txt varchar2(100)
+  law_firm_addr_city_ctry_id number(22)
+  law_firm_addr_city_seq_no number(22)
+  law_firm_addr_prov_ctry_id number(22)
+  law_firm_addr_prov_seq_no number(22)
+  law_firm_addr_ctry_ctry_id number(22)
+  law_firm_addr_other_city_txt varchar2(30)
+  law_firm_addr_other_prov_txt varchar2(30)
+  law_firm_addr_postal_code_txt varchar2(10)
+  lawyer_surname_nm varchar2(30)
+  lawyer_given_1_nm varchar2(30)
+  lawyer_given_2_nm varchar2(30)
+  lawyer_given_3_nm varchar2(30)
+  lawyer_phone_number_txt varchar2(20)
+  lawyer_email_address_txt varchar2(100)
+  officer_pin_txt varchar2(10)
+  detachment_location_txt varchar2(150)
+  language_cd varchar2(3)
+  interpreter_required_yn varchar2(1)
+  witness_no number(22)
+  fine_reduction_reason_txt varchar2(500)
+  time_to_pay_reason_txt varchar2(500)
+  disputant_comment_txt varchar2(4000)
+  rejected_reason_txt varchar2(500)
+  jj_assigned_to varchar2(30)
+  user_assigned_to varchar2(30)
+  user_assigned_dtm date(7)
+  disputant_detect_ocr_issues_yn varchar2(1) [not null]
+  disputant_ocr_issues_txt varchar2(500)
+  system_detect_ocr_issues_yn varchar2(1) [not null]
+  ocr_ticket_json_filename_txt varchar2(100)
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (dispute_id) [pk]
+  }
+}
+Table occam_dispute_counts {
+  dispute_count_id number(22) [not null]
+  dispute_id number(22) [not null]
+  violation_ticket_count_id number(22) [not null]
+  stat_id number(22)
+  plea_cd varchar2(3) [not null]
+  request_court_appearance_yn varchar2(1) [not null]
+  request_reduction_yn varchar2(1) [not null]
+  request_time_to_pay_yn varchar2(1) [not null]
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (dispute_count_id) [pk]
+  }
+}
+Table occam_dispute_status_types {
+  dispute_status_type_cd varchar2(4) [not null]
+  dispute_status_type_dsc varchar2(50) [not null]
+  active_yn varchar2(1) [not null]
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (dispute_status_type_cd) [pk]
+  }
+}
+Table occam_dispute_update_requests {
+  dispute_update_request_id number(22) [not null]
+  dispute_id number(22) [not null]
+  dispute_update_stat_type_cd varchar2(4) [not null]
+  dispute_update_req_type_cd varchar2(4) [not null]
+  request_json_txt varchar2(4000)
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (dispute_update_request_id) [pk]
+  }
+}
+Table occam_dispute_update_req_types {
+  dispute_update_req_type_cd varchar2(4) [not null]
+  dispute_update_req_type_dsc varchar2(80) [not null]
+  dispute_update_req_typ_shr_dsc varchar2(30) [not null]
+  active_use_yn varchar2(1) [not null]
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (dispute_update_req_type_cd) [pk]
+  }
+}
+Table occam_dispute_update_stat_typs {
+  dispute_update_stat_type_cd varchar2(4) [not null]
+  dispute_update_stat_type_dsc varchar2(80) [not null]
+  dispute_update_stat_typ_sh_dsc varchar2(30) [not null]
+  active_use_yn varchar2(1) [not null]
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (dispute_update_stat_type_cd) [pk]
+  }
+}
+Table occam_error_logs {
+  error_log_id number(22) [not null]
+  error_message_no number(22) [not null]
+  error_message_txt varchar2(2000) [not null]
+  program_nm varchar2(240)
+  program_version_txt varchar2(5)
+  error_detail_txt varchar2(4000)
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (error_log_id) [pk]
+  }
+}
+Table occam_outgoing_emails {
+  outgoing_email_id number(22) [not null]
+  dispute_id number(22) [not null]
+  email_sent_dtm date(7) [not null]
+  email_subject_txt varchar2(1000) [not null]
+  from_email_address varchar2(100) [not null]
+  to_email_address varchar2(4000) [not null]
+  cc_email_address varchar2(4000)
+  bcc_email_address varchar2(4000)
+  successfully_sent_yn varchar2(1) [not null]
+  html_content varchar2(4000)
+  plain_text_content varchar2(4000)
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (outgoing_email_id) [pk]
+  }
+}
+Table occam_violation_ticket_counts {
+  violation_ticket_count_id number(22) [not null]
+  violation_ticket_upload_id number(22)
+  count_no number(22) [not null]
+  description_txt varchar2(4000)
+  is_act_yn varchar2(1)
+  is_regulation_yn varchar2(1)
+  act_or_regulation_name_cd varchar2(5)
+  stat_section_txt varchar2(10)
+  stat_sub_section_txt varchar2(4)
+  stat_paragraph_txt varchar2(3)
+  stat_sub_paragraph_txt varchar2(5)
+  ticketed_amt number(22)
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (violation_ticket_count_id) [pk]
+  }
+}
+Table occam_violation_ticket_uploads {
+  violation_ticket_upload_id number(22) [not null]
+  ticket_number_txt varchar2(50) [not null]
+  disputant_surname_txt varchar2(100)
+  disputant_given_names_txt varchar2(200)
+  disputant_organization_nm_txt varchar2(150)
+  is_young_person_yn varchar2(1)
+  disputant_drv_lic_number_txt varchar2(30)
+  disputant_client_number_txt varchar2(30)
+  drv_lic_issued_province_txt varchar2(100)
+  drv_lic_issued_country_txt varchar2(100)
+  drv_lic_issued_year_no number(22)
+  drv_lic_expiry_year_no number(22)
+  disputant_birth_dt date(7)
+  address_txt varchar2(100)
+  address_city_txt varchar2(100)
+  address_province_txt varchar2(100)
+  address_country_txt varchar2(100)
+  address_postal_code_txt varchar2(10)
+  officer_pin_txt varchar2(10)
+  detachment_location_txt varchar2(150)
+  issued_dt date(7)
+  issued_on_road_or_highway_txt varchar2(100)
+  issued_at_or_near_city_txt varchar2(100)
+  is_change_of_address_yn varchar2(1)
+  is_driver_yn varchar2(1)
+  is_owner_yn varchar2(1)
+  court_location_txt varchar2(150)
+  ent_dtm date(7) [not null]
+  ent_user_id varchar2(30) [not null]
+  upd_dtm date(7)
+  upd_user_id varchar2(30)
+  Indexes {
+    (violation_ticket_upload_id) [pk]
+  }
+}
+Ref: occam_disputes.dispute_id < occam_dispute_counts.dispute_id
+Ref: occam_disputes.dispute_id < occam_outgoing_emails.dispute_id
+Ref: occam_disputes.dispute_id < occam_dispute_update_requests.dispute_id
+Ref: occam_disputes.dispute_id < occam_audit_log_entries.dispute_id
+Ref: occam_audit_log_entry_types.audit_log_entry_type_cd < occam_audit_log_entries.audit_log_entry_type_cd
+Ref: occam_dispute_status_types.dispute_status_type_cd < occam_disputes.dispute_status_type_cd
+Ref: occam_dispute_update_req_types.dispute_update_req_type_cd < occam_dispute_update_requests.dispute_update_req_type_cd
+Ref: occam_dispute_update_stat_typs.dispute_update_stat_type_cd < occam_dispute_update_requests.dispute_update_stat_type_cd
+Ref: occam_violation_ticket_uploads.violation_ticket_upload_id - occam_disputes.violation_ticket_upload_id
+Ref: occam_violation_ticket_uploads.violation_ticket_upload_id < occam_violation_ticket_counts.violation_ticket_upload_id
+
