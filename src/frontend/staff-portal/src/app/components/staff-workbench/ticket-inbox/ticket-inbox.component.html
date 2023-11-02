@@ -68,7 +68,7 @@
           Date Submitted
         </th>
         <td mat-cell *matCellDef="let element">
-          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.__DateSubmitted ? (element.__DateSubmitted | date: "yyyy/MM/dd") : "" }}</span>
+          <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.__DateSubmitted ? (element.__DateSubmitted | date: "yyyy-MM-dd") : "" }}</span>
         </td>
       </ng-container>
 
