@@ -145,8 +145,8 @@ public class OcrViolationTicket
 
 public class Field
 {
-    private static readonly string _dateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
-    private static readonly string _timeRegex = @"^(\d{1,2})\D*(\d{1,2})$";
+    private static readonly string _dateRegex = @"^\s*(\d{2}|\d{4})\D*(\d{1,2})\D*(\d{1,2})\s*$";
+    private static readonly string _timeRegex = @"^\s*(\d{1,2})\s*:?\s*(\d{1,2})\s*$";
     private static readonly string _currencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
 
     public Field() { }
@@ -244,6 +244,8 @@ public class Field
         {
             try
             {
+                Value = Regex.Replace(Value, @"\D", " "); // remove all non-digits
+
                 Regex rg = new(_timeRegex);
                 Match match = rg.Match(Value);
                 if (match.Groups.Count == 3 && Value.Length > 2) // 2 + index 0 (the Value itself)
