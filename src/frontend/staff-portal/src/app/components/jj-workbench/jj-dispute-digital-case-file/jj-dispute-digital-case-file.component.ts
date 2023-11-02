@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { JJDisputeHearingType } from 'app/api';
+import { JJDisputeHearingType, JJDisputeStatus } from 'app/api';
 import { Observable, Subscription } from 'rxjs';
+import { DateUtil } from '@shared/utils/date-util';
 
 @Component({
   selector: 'app-jj-dispute-digital-case-file',
   templateUrl: './jj-dispute-digital-case-file.component.html',
-  styleUrls: ['./jj-dispute-digital-case-file.component.scss']
+  styleUrls: ['../../../app.component.scss', './jj-dispute-digital-case-file.component.scss']
 })
 export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit {
   @Input() data$: Observable<JJDispute[]>;
@@ -17,10 +18,17 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   HearingType = JJDisputeHearingType;
   jjAssignedToFilter: string;
-  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
+  tableHeight: number = window.innerHeight - 350; // less size of other fixed elements
   filterText: string;
-  data = [] as JJDispute[];
+  // data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
+  dataFilters = {
+    "dateFrom": "",
+    "dateTo": "",
+    "ticketNumber": "",
+    "occamDisputantName": "",
+    "courthouseLocation": ""
+  };
   displayedColumns: string[] = [
     "ticketNumber",
     "submittedTs",
@@ -34,17 +42,20 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   constructor(
     private jjDisputeService: JJDisputeService,
   ) {
-    this.dataSource.filterPredicate = function (record, filter) {
-      return record.occamDisputantName?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1
-        || record.ticketNumber?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-    }
+    this.dataSource.filterPredicate = this.searchFilter;
   }
 
-  calcTableHeight(heightOther) {
+  calcTableHeight(heightOther: number) {
     return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    if (!this.subscription) {
+      this.subscription = this.data$.subscribe(data => {
+        this.dataSource.data = data;
+        // this.dataSource.data = this.sampleData();
+      });
+    }
   }
 
   ngAfterViewInit() {
@@ -55,32 +66,79 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     this.jjDisputeInfo.emit(element);
   }
 
-  applyFilter() {
-    if (!this.subscription) {
-      this.subscription = this.data$.subscribe(data => {
-        this.refreshData(data);
-      });
-    }
-
-    this.dataSource.filter = this.filterText;
-    this.tableHeight = this.calcTableHeight(300);
+  onApplyFilter() {
+    this.dataSource.filter = JSON.stringify(this.dataFilters);
+    this.tableHeight = this.calcTableHeight(350);
   }
 
-  refreshData(jjDisputes: JJDispute[]): void {
-    this.data = jjDisputes;
-    let arrayForSort = [... this.data];
-    // initially sort by submitted date within status
-    arrayForSort = arrayForSort.sort((a, b) => {
-      // if they have the same status
-      if (a.status === b.status) {
-        if (a.submittedTs > b.submittedTs) { return 1; } else { return -1; }
-      }
+  resetSearchFilters() {
+    // Will update search filters in UI
+    this.dataFilters = {
+      "dateFrom": "",
+      "dateTo": "",
+      "ticketNumber": "",
+      "occamDisputantName": "",
+      "courthouseLocation": ""
+    };
 
-      // compare statuses
+    // Will re-execute the filter function, but will block UI rendering
+    // Put this call in a Timeout to keep UI responsive.
+    setTimeout(() => {
+      //this.data = this.sampleData();
+      this.dataSource.filter = "{}";
+      this.tableHeight = this.calcTableHeight(350);
+    }, 100);
+  }
+    
+  searchFilter = function (record: JJDispute, filter: string) {
+    let searchTerms = JSON.parse(filter);
+    return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
+      if ("dateFrom" === field) {
+        return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
+      }
+      else if ("dateTo" === field) {
+        return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
+      }
       else {
-        if (this.jjDisputeService.jjDisputeStatusesSorted.indexOf(a.status) > this.jjDisputeService.jjDisputeStatusesSorted.indexOf(b.status)) { return 1; } else { return -1; }
+        return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
       }
     });
-    this.dataSource.data = arrayForSort;
+  };
+  
+  // for development/testing
+  sampleData() {
+    let sampleData: JJDispute[] = [
+      {
+        ticketNumber: "AK12345678",
+        submittedTs: "2023-10-07",
+        jjDecisionDate: "2023-10-31",
+        jjAssignedToName: "Sam Smith",
+        violationDate: "2023-09-15",
+        occamDisputantName: "Timmons, Tim",
+        courthouseLocation: "Vancouver Law Courts",
+        status: JJDisputeStatus.Confirmed
+      },
+      {
+        ticketNumber: "AX11112222",
+        submittedTs: "2023-09-25",
+        jjDecisionDate: "2023-10-15",
+        jjAssignedToName: "Jon Jones",
+        violationDate: "2023-09-20",
+        occamDisputantName: "Russel, Rick",
+        courthouseLocation: "North Vancouver Court",
+        status: JJDisputeStatus.Confirmed
+      },
+      {
+        ticketNumber: "AJ11223344",
+        submittedTs: "2023-10-08",
+        jjDecisionDate: "2023-10-25",
+        jjAssignedToName: "Amanda Ada",
+        violationDate: "2023-09-25",
+        occamDisputantName: "Zeldic, Zack",
+        courthouseLocation: "Port Coquitlam Court",
+        status: JJDisputeStatus.Confirmed
+      }
+    ];
+    return sampleData;
   }
 }
