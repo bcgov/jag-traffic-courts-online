@@ -54,6 +54,14 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
       this.subscription = this.data$.subscribe(data => {
         this.dataSource.data = data;
         // this.dataSource.data = this.sampleData();
+ 
+        // load dataFilters (DCF tab) in session for page reload
+        let __dataFilter = sessionStorage.getItem("dataFilters-DCF");
+        if (__dataFilter) {
+          this.dataFilters = JSON.parse(__dataFilter);
+        }
+
+        this.onApplyFilter();
       });
     }
   }
@@ -62,12 +70,16 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     this.dataSource.sort = this.sort;
   }
 
-  backWorkbench(element) {
+  backWorkbench(element: JJDispute) {
     this.jjDisputeInfo.emit(element);
   }
 
   onApplyFilter() {
     this.dataSource.filter = JSON.stringify(this.dataFilters);
+    
+    // cache dataFilters (for DCF tab) in session for page reload
+    sessionStorage.setItem("dataFilters-DCF", this.dataSource.filter);
+
     this.tableHeight = this.calcTableHeight(350);
   }
 
