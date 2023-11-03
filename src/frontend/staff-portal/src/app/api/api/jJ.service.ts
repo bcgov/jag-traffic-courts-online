@@ -11,13 +11,12 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional } from '@angular/core';
-import {
-    HttpClient, HttpHeaders, HttpParams,
-    HttpResponse, HttpEvent, HttpParameterCodec, HttpContext
-} from '@angular/common/http';
-import { CustomHttpParameterCodec } from '../encoder';
-import { Observable } from 'rxjs';
+import { Inject, Injectable, Optional }                      from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext 
+        }       from '@angular/common/http';
+import { CustomHttpParameterCodec }                          from '../encoder';
+import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
 import { DocumentType } from '../model/documentType.model';
@@ -29,13 +28,13 @@ import { ProblemDetails } from '../model/problemDetails.model';
 import { TicketImageDataJustinDocument } from '../model/ticketImageDataJustinDocument.model';
 
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
-import { Configuration } from '../configuration';
+import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
+import { Configuration }                                     from '../configuration';
 
 
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class JJService {
 
@@ -44,7 +43,7 @@ export class JJService {
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
 
-    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
         if (configuration) {
             this.configuration = configuration;
         }
@@ -87,15 +86,15 @@ export class JJService {
 
         if (typeof value === "object") {
             if (Array.isArray(value)) {
-                (value as any[]).forEach(elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
             } else if (value instanceof Date) {
                 if (key != null) {
                     httpParams = httpParams.append(key, (value as Date).toISOString().substr(0, 10));
                 } else {
-                    throw Error("key may not be null if value is Date");
+                   throw Error("key may not be null if value is Date");
                 }
             } else {
-                Object.keys(value).forEach(k => httpParams = this.addToHttpParamsRecursive(
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
                     httpParams, value[k], key != null ? `${key}.${k}` : k));
             }
         } else if (key != null) {
@@ -113,24 +112,24 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjAssignPut(ticketNumbers: Array<string>, username?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumbers === null || ticketNumbers === undefined) {
             throw new Error('Required parameter ticketNumbers was null or undefined when calling apiJjAssignPut.');
         }
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (ticketNumbers) {
             ticketNumbers.forEach((element) => {
                 localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                    <any>element, 'ticketNumbers');
+                  <any>element, 'ticketNumbers');
             })
         }
         if (username !== undefined && username !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>username, 'username');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>username, 'username');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -188,97 +187,20 @@ export class JJService {
     }
 
     /**
-     * Returns generated document
-     * @param disputeId 
-     * @param timeZone The IANA timze zone id
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
-        if (disputeId === null || disputeId === undefined) {
-            throw new Error('Required parameter disputeId was null or undefined when calling apiJjDisputeIdPrintGet.');
-        }
-        if (timeZone === null || timeZone === undefined) {
-            throw new Error('Required parameter timeZone was null or undefined when calling apiJjDisputeIdPrintGet.');
-        }
-
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
-        if (timeZone !== undefined && timeZone !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>timeZone, 'timeZone');
-        }
-
-        let localVarHeaders = this.defaultHeaders;
-
-        let localVarCredential: string | undefined;
-        // authentication (Bearer) required
-        localVarCredential = this.configuration.lookupCredential('Bearer');
-        if (localVarCredential) {
-            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
-        }
-
-        let localVarHttpHeaderAcceptSelected: string | undefined = '*/*';
-        if (localVarHttpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'text/plain',
-                'application/json',
-                'text/json'
-            ];
-            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        let localVarHttpContext: HttpContext | undefined = options && options.context;
-        if (localVarHttpContext === undefined) {
-            localVarHttpContext = new HttpContext();
-        }
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        return this.httpClient.get<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64" })}/print`,
-            {
-                context: localVarHttpContext,
-                params: localVarQueryParameters,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
      * Returns all JJ Disputes from the Oracle Data API
      * @param jjAssignedTo If specified, will retrieve the records which are assigned to the specified jj staff
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<Array<JJDispute>>;
-    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<Array<JJDispute>>>;
-    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<Array<JJDispute>>>;
-    public apiJjDisputesGet(jjAssignedTo?: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<JJDispute>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<JJDispute>>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<JJDispute>>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (jjAssignedTo !== undefined && jjAssignedTo !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>jjAssignedTo, 'jjAssignedTo');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>jjAssignedTo, 'jjAssignedTo');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -342,22 +264,22 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<JJDispute>;
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<JJDispute>>;
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<JJDispute>>;
-    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjJjDisputeIdGet(jjDisputeId: number, ticketNumber?: string, assignVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (jjDisputeId === null || jjDisputeId === undefined) {
             throw new Error('Required parameter jjDisputeId was null or undefined when calling apiJjJjDisputeIdGet.');
         }
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (ticketNumber !== undefined && ticketNumber !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>ticketNumber, 'ticketNumber');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>ticketNumber, 'ticketNumber');
         }
         if (assignVTC !== undefined && assignVTC !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>assignVTC, 'assignVTC');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>assignVTC, 'assignVTC');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -400,7 +322,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.get<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "jjDisputeId", value: jjDisputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64" })}`,
+        return this.httpClient.get<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "jjDisputeId", value: jjDisputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -420,18 +342,18 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberAcceptPut.');
         }
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (checkVTC !== undefined && checkVTC !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>checkVTC, 'checkVTC');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>checkVTC, 'checkVTC');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -474,7 +396,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/accept`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/accept`,
             null,
             {
                 context: localVarHttpContext,
@@ -495,18 +417,18 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberCancelPut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberCancelPut.');
         }
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (checkVTC !== undefined && checkVTC !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>checkVTC, 'checkVTC');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>checkVTC, 'checkVTC');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -549,7 +471,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/cancel`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/cancel`,
             null,
             {
                 context: localVarHttpContext,
@@ -570,18 +492,18 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberConcludePut.');
         }
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (checkVTC !== undefined && checkVTC !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>checkVTC, 'checkVTC');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>checkVTC, 'checkVTC');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -624,8 +546,85 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/conclude`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/conclude`,
             null,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Returns generated document. This really should be using the tco_dispute.dispute_id.
+     * @param ticketNumber The ticket number to print. This really should be using the tco_dispute.dispute_id
+     * @param timeZone The IANA timze zone id
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (ticketNumber === null || ticketNumber === undefined) {
+            throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberPrintGet.');
+        }
+        if (timeZone === null || timeZone === undefined) {
+            throw new Error('Required parameter timeZone was null or undefined when calling apiJjTicketNumberPrintGet.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (timeZone !== undefined && timeZone !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>timeZone, 'timeZone');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (Bearer) required
+        localVarCredential = this.configuration.lookupCredential('Bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = '*/*';
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json',
+                'text/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/print`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -647,22 +646,22 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<JJDispute>;
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<JJDispute>>;
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<JJDispute>>;
-    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjTicketNumberPut(ticketNumber: string, jjDisputeId?: number, checkVTC?: boolean, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberPut.');
         }
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (jjDisputeId !== undefined && jjDisputeId !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>jjDisputeId, 'jjDisputeId');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>jjDisputeId, 'jjDisputeId');
         }
         if (checkVTC !== undefined && checkVTC !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>checkVTC, 'checkVTC');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>checkVTC, 'checkVTC');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -716,7 +715,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}`,
+        return this.httpClient.put<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`,
             jJDispute,
             {
                 context: localVarHttpContext,
@@ -737,10 +736,10 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberRequirecourthearingPut(ticketNumber: string, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberRequirecourthearingPut.');
         }
@@ -786,7 +785,7 @@ export class JJService {
         if (localVarUseForm) {
             localVarFormParams = new FormData();
         } else {
-            localVarFormParams = new HttpParams({ encoder: this.encoder });
+            localVarFormParams = new HttpParams({encoder: this.encoder});
         }
 
         if (remark !== undefined) {
@@ -804,7 +803,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/requirecourthearing`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/requirecourthearing`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
@@ -825,18 +824,18 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC?: boolean, remark?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberReviewPut.');
         }
 
-        let localVarQueryParameters = new HttpParams({ encoder: this.encoder });
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (checkVTC !== undefined && checkVTC !== null) {
-            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                <any>checkVTC, 'checkVTC');
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>checkVTC, 'checkVTC');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -880,7 +879,7 @@ export class JJService {
         if (localVarUseForm) {
             localVarFormParams = new FormData();
         } else {
-            localVarFormParams = new HttpParams({ encoder: this.encoder });
+            localVarFormParams = new HttpParams({encoder: this.encoder});
         }
 
         if (remark !== undefined) {
@@ -898,7 +897,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/review`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/review`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
@@ -918,10 +917,10 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceConfirmPut(ticketNumber: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberUpdatecourtappearanceConfirmPut.');
         }
@@ -966,7 +965,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/updatecourtappearance/confirm`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/updatecourtappearance/confirm`,
             null,
             {
                 context: localVarHttpContext,
@@ -985,10 +984,10 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any>;
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<any>>;
-    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut(ticketNumber: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberUpdatecourtappearanceRequirecourthearingPut.');
         }
@@ -1033,7 +1032,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/updatecourtappearance/requirecourthearing`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/updatecourtappearance/requirecourthearing`,
             null,
             {
                 context: localVarHttpContext,
@@ -1053,10 +1052,10 @@ export class JJService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe?: 'body', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<TicketImageDataJustinDocument>;
-    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe?: 'response', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpResponse<TicketImageDataJustinDocument>>;
-    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe?: 'events', reportProgress?: boolean, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<HttpEvent<TicketImageDataJustinDocument>>;
-    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe: any = 'body', reportProgress: boolean = false, options?: { httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext }): Observable<any> {
+    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TicketImageDataJustinDocument>;
+    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TicketImageDataJustinDocument>>;
+    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TicketImageDataJustinDocument>>;
+    public apiJjTicketimageTicketNumberDocumentTypeGet(ticketNumber: string, documentType: DocumentType, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketimageTicketNumberDocumentTypeGet.');
         }
@@ -1104,7 +1103,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.get<TicketImageDataJustinDocument>(`${this.configuration.basePath}/api/jj/ticketimage/${this.configuration.encodeParam({ name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined })}/${this.configuration.encodeParam({ name: "documentType", value: documentType, in: "path", style: "simple", explode: false, dataType: "DocumentType", dataFormat: undefined })}`,
+        return this.httpClient.get<TicketImageDataJustinDocument>(`${this.configuration.basePath}/api/jj/ticketimage/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/${this.configuration.encodeParam({name: "documentType", value: documentType, in: "path", style: "simple", explode: false, dataType: "DocumentType", dataFormat: undefined})}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

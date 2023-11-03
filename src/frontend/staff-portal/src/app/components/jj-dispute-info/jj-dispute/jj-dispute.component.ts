@@ -441,7 +441,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   onPrint() {
-    this.jjDisputeService.apiJjDisputeIdPrintGet(this.lastUpdatedJJDispute.id).subscribe(result => {
+    this.jjDisputeService.apiJjTicketNumberPrintGet(this.lastUpdatedJJDispute.ticketNumber).subscribe(result => {
       if (result != null) {
         var url = URL.createObjectURL(result);
         window.open(url);

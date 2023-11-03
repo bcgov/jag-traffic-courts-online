@@ -362,18 +362,18 @@ export class JJDisputeService {
     return jjDispute;
   }
 
-  public apiJjDisputeIdPrintGet(disputeId: number, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
-    return this.jjApiService.apiJjDisputeIdPrintGet(disputeId, timeZone, "response")
+  public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberPrintGet(ticketNumber, timeZone, "response")
       .pipe(
         map((response: any) => {
-          this.logger.info('jj-DisputeService::apiJjDisputeIdPrintGet', response)
+          this.logger.info('jj-DisputeService::apiJjTicketNumberPrintGet', response)
           return response;
         }),
         catchError((error: any) => {
           var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.logger.error(
-            'jj-DisputeService::apiJjDisputeIdPrintGet error has occurred: ',
+            'jj-DisputeService::apiJjTicketNumberPrintGet error has occurred: ',
             error
           );
           throw error;
