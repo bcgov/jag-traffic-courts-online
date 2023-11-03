@@ -155,10 +155,26 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         // TCVP-1645 Use DateOfService if available, otherwise fallback to ViolationDate
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationDate))
         {
+            // Replace letters with likely digits
+            string violationDate = violationTicket.Fields[OcrViolationTicket.ViolationDate].Value ?? "";
+            violationDate = violationDate.Replace("O", "0");
+            violationDate = violationDate.Replace("o", "0");
+            violationDate = violationDate.Replace("l", "1");
+            violationDate = violationDate.Replace("f", "1");
+            violationTicket.Fields[OcrViolationTicket.ViolationDate].Value = violationDate;
+
             violationTicket.Fields[OcrViolationTicket.ViolationDate].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd");
         }
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DateOfService))
         {
+            // Replace letters with likely digits
+            string dateOfService = violationTicket.Fields[OcrViolationTicket.DateOfService].Value ?? "";
+            dateOfService = dateOfService.Replace("O", "0");
+            dateOfService = dateOfService.Replace("o", "0");
+            dateOfService = dateOfService.Replace("l", "1");
+            dateOfService = dateOfService.Replace("f", "1");
+            violationTicket.Fields[OcrViolationTicket.DateOfService].Value = dateOfService;
+
             if (violationTicket.Fields[OcrViolationTicket.DateOfService].IsPopulated()) // if date of service is present try putting it in good format
                 violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.DateOfService].GetDate()?.ToString("yyyy-MM-dd");
 
@@ -174,6 +190,10 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
             string violationTime = violationTicket.Fields[OcrViolationTicket.ViolationTime].Value ?? "";
             violationTime = violationTime.TrimEnd(new char[] { ':' });
+            violationTime = violationTime.Replace("O", "0");
+            violationTime = violationTime.Replace("o", "0");
+            violationTime = violationTime.Replace("l", "1");
+            violationTime = violationTime.Replace("f", "1");
             violationTicket.Fields[OcrViolationTicket.ViolationTime].Value = violationTime;
         }
 

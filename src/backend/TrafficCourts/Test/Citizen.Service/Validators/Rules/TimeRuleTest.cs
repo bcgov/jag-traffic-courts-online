@@ -14,6 +14,8 @@ public class TimeRuleTest
     [InlineData("1:59", true, 1, 59)]
     [InlineData("11:05", true, 11, 5)]
     [InlineData("13:05", true, 13, 5)]
+    [InlineData("o3:59", true, 3, 59)]
+    [InlineData("10:f3", true, 10, 3)]
     [InlineData(null, false, 0, 0)]
     [InlineData("", false, 0, 0)]
     [InlineData("text", false, 0, 0)]
