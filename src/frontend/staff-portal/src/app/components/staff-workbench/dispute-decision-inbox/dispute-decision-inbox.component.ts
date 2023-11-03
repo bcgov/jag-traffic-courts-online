@@ -107,7 +107,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     // Will re-execute the filter function, but will block UI rendering
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
-      //this.data = this.sampleData();
       this.dataSource.filter = "{}";
       this.tableHeight = this.calcTableHeight(352);
     }, 100);
