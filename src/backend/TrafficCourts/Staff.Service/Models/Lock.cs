@@ -23,9 +23,9 @@ public class Lock
     public string? LockId { get; set; }
 
     /// <summary>
-    /// JJ Dispute ID
+    /// The ticket number associated with the dispute.
     /// </summary>
-    public long DisputeId { get; set; }
+    public string TicketNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// Username of the person who acquired the lock.
