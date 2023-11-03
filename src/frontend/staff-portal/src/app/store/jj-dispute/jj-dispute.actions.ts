@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { JJDispute } from "app/api";
+import { JJDispute } from "app/services/jj-dispute.service";
 import { ActionTypes } from "./";
 
 export const Get = createAction(

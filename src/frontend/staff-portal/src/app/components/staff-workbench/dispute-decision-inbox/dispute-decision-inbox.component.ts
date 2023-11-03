@@ -6,7 +6,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { Observable, filter } from 'rxjs';
 import { JJDisputeStatus } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
-import { CourthouseTeam, LookupsService } from 'app/services/lookups.service';
+import { LookupsService } from 'app/services/lookups.service';
 import { AppState } from 'app/store/app.state';
 import { Store, select } from '@ngrx/store';
 import { DateUtil } from '@shared/utils/date-util';
@@ -17,6 +17,8 @@ import { DateUtil } from '@shared/utils/date-util';
   styleUrls: ['../../../app.component.scss', './dispute-decision-inbox.component.scss'],
 })
 export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
+  private courthouseTeamNames = ["A", "B", "C", "D"];
+
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
@@ -24,7 +26,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   IDIR: string = "";
   currentTeam: string = "All";
-  courthouseTeams = {"A": [], "B": [], "C": [], "D": [] };
+  courthouseTeams = {};
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
@@ -43,6 +45,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     "violationDate",
     "fullName",
     "courthouseLocation",
+    "status",
     "vtcAssignedTo"
   ];
 
@@ -53,10 +56,9 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     private store: Store<AppState>
   ) {
     this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
-    this.courthouseTeams['A'] = lookupsService.courthouseTeams.filter(x => x.__team === 'A').map(x => x.name.toLocaleLowerCase());
-    this.courthouseTeams['B'] = lookupsService.courthouseTeams.filter(x => x.__team === 'B').map(x => x.name.toLocaleLowerCase());
-    this.courthouseTeams['C'] = lookupsService.courthouseTeams.filter(x => x.__team === 'C').map(x => x.name.toLocaleLowerCase());
-    this.courthouseTeams['D'] = lookupsService.courthouseTeams.filter(x => x.__team === 'D').map(x => x.name.toLocaleLowerCase());
+    this.courthouseTeamNames.forEach(teamName => {
+      this.courthouseTeams[teamName] = this.lookupsService.courthouseTeams.filter(x => x.__team === teamName).map(x => x.name.toLocaleLowerCase());
+    })
   }
 
   public ngOnInit() {
@@ -65,7 +67,19 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
         this.IDIR = userProfile.idir;
         this.data$.subscribe(jjDisputes => {
           this.data = jjDisputes
-            .map(jjDispute => { return { ...jjDispute } });
+            .map(jjDispute => {
+              return {
+                ...jjDispute,
+                __status: jjDispute.status
+                  .replace(/^[-_]*(.)/, (_, c) => c)
+                  .replace(/[-_]+(.)/g, (_, c) => ' ' + c)
+                  .replace(
+                    /\w\S*/g,
+                    function (txt) {
+                      return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+                    })
+              };
+            });
           this.getAll();
         })
       }
@@ -78,7 +92,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = JSON.stringify(this.dataFilters);
     this.tableHeight = this.calcTableHeight(352);
   }
-  
+
   resetSearchFilters() {
     // Will update search filters in UI
     this.dataFilters = {
@@ -93,12 +107,11 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     // Will re-execute the filter function, but will block UI rendering
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
-      //this.data = this.sampleData();
       this.dataSource.filter = "{}";
       this.tableHeight = this.calcTableHeight(352);
     }, 100);
   }
-  
+
   searchFilter = function (record: JJDispute, filter: string) {
     let searchTerms = JSON.parse(filter);
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
@@ -112,8 +125,8 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
         if (value === '' || value === "All") {
           return true;
         }
-        else if (['A', 'B', 'C', 'D'].includes(value)) {
-          return this.courthouseTeams[value].includes(record['courthouseLocation'].toLocaleLowerCase());
+        else if (this.courthouseTeamNames.includes(value)) {
+          return this.courthouseTeams[value].includes(record.courthouseLocation.toLocaleLowerCase());
         }
         return false;
       }
@@ -138,8 +151,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   getAll(): void {
     this.logger.log('JJDisputeDecisionInboxComponent::getAllDisputes');
 
-    //this.data = this.sampleData();
-
     // filter jj disputes only show those in CONFIRMED status or REQUIRE_COURT_HEARING
     this.data = this.data.filter(x => x.status == JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.RequireCourtHearing);
     this.dataSource.data = this.data;
@@ -151,39 +162,5 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     });
 
     this.tableHeight = this.calcTableHeight(325);
-  }
-
-  // for development/testing
-  sampleData() {
-    let sampleData: JJDispute[] = [
-      {
-        ticketNumber: "AK12345678",
-        jjDecisionDate: "2023-10-31",
-        jjAssignedToName: "Sam Smith",
-        violationDate: "2023-09-15",
-        occamDisputantName: "Timmons, Tim",
-        courthouseLocation: "Vancouver Law Courts",
-        status: JJDisputeStatus.Confirmed
-      },
-      {
-        ticketNumber: "AX11112222",
-        jjDecisionDate: "2023-10-15",
-        jjAssignedToName: "Jon Jones",
-        violationDate: "2023-09-20",
-        occamDisputantName: "Russel, Rick",
-        courthouseLocation: "North Vancouver Court",
-        status: JJDisputeStatus.Confirmed
-      },
-      {
-        ticketNumber: "AJ11223344",
-        jjDecisionDate: "2023-10-25",
-        jjAssignedToName: "Amanda Ada",
-        violationDate: "2023-09-25",
-        occamDisputantName: "Zeldic, Zack",
-        courthouseLocation: "Port Coquitlam Court",
-        status: JJDisputeStatus.Confirmed
-      }
-    ];
-    return sampleData;
   }
 }

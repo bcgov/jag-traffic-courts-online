@@ -396,6 +396,7 @@ export interface JJDispute extends JJDisputeBase {
   interpreterLanguage?: string;
   driversLicenceProvince?: string;
   mostRecentCourtAppearance?: JJDisputeCourtAppearanceRoP;
+  __status?: string;
 }
 
 // For Document Generation
