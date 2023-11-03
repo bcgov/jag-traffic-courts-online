@@ -65,6 +65,16 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     this.getAllDisputesWithPendingUpdates();
   }
 
+  ngAfterViewInit() {
+    // load dataFilters (Update Request tab) in session for page reload
+    let __dataFilter = sessionStorage.getItem("dataFilters-UR");
+    if (__dataFilter) {
+      this.dataFilters = JSON.parse(__dataFilter);
+    }
+
+    this.dataSource.sort = this.tickTbSort;
+  }
+
   getAllDisputesWithPendingUpdates(): void {
     this.logger.log('UpdateRequestInboxComponent::getAllDisputesWithPendingUpdates');
 
@@ -83,13 +93,8 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
-
-      this.tableHeight = this.calcTableHeight(352);
+      this.onApplyFilter(null, null);
     });
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.tickTbSort;
   }
 
   searchFilter = function (record: DisputeWithUpdates, filter: string) {
@@ -108,9 +113,15 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   };
 
   onApplyFilter(filterName: string, value: string) {
-    const filterValue = value;
-    this.dataFilters[filterName] = filterValue;
+    if (filterName) {
+      const filterValue = value;
+      this.dataFilters[filterName] = filterValue;
+    }
     this.dataSource.filter = JSON.stringify(this.dataFilters);
+    
+    // cache dataFilters (for Update Request tab) in session for page reload
+    sessionStorage.setItem("dataFilters-UR", this.dataSource.filter);
+
     this.tableHeight = this.calcTableHeight(352);
   }
 

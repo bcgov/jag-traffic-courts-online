@@ -80,16 +80,33 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
                     })
               };
             });
+          
+          // load dataFilters (Decision Validation tab) in session for page reload
+          let __dataFilter = sessionStorage.getItem("dataFilters-DV");
+          if (__dataFilter) {
+            this.dataFilters = JSON.parse(__dataFilter);
+          }
+          
           this.getAll();
         })
       }
     });
   }
 
-  onApplyFilter(filterName: string, value: string) {
-    const filterValue = value;
-    this.dataFilters[filterName] = filterValue;
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  onApplyFilter(filterName: string, value: string) {    
+    if (filterName) {
+      const filterValue = value;
+      this.dataFilters[filterName] = filterValue;
+    }
     this.dataSource.filter = JSON.stringify(this.dataFilters);
+    
+    // cache dataFilters (for Decision Validation tab) in session for page reload
+    sessionStorage.setItem("dataFilters-DV", this.dataSource.filter);
+
     this.tableHeight = this.calcTableHeight(352);
   }
 
@@ -136,10 +153,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     });
   }.bind(this);
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
   calcTableHeight(heightOther: number) {
     return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
@@ -161,6 +174,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
       if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
     });
 
-    this.tableHeight = this.calcTableHeight(325);
+    this.onApplyFilter(null, null);
   }
 }

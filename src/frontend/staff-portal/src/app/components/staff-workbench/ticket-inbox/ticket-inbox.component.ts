@@ -66,11 +66,21 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     this.getAllDisputes();
   }
 
+  ngAfterViewInit() {
+    // load dataFilters (Ticket Validation tab) in session for page reload
+    let __dataFilter = sessionStorage.getItem("dataFilters-TV");
+    if (__dataFilter) {
+      this.dataFilters = JSON.parse(__dataFilter);
+    }
+    
+    this.dataSource.sort = this.tickTbSort;
+  }
+
   isNew(d: Dispute): boolean {
     return d.status == DisputeStatus.New && (d.emailAddressVerified === true || !d.emailAddress);
   }
 
-  calcTableHeight(heightOther) {
+  calcTableHeight(heightOther: number) {
     return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 80)
   }
 
@@ -95,9 +105,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
-      this.onApplyFilter("status", null);
-
-      this.tableHeight = this.calcTableHeight(351);
+      this.onApplyFilter(null, null);
     });
   }
 
@@ -138,19 +146,21 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     else return 0;
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.tickTbSort;
-  }
-
   // called on keyup in filter field
   onApplyFilter(filterName: string, value: string) {
-    const filterValue = value;
-    this.dataFilters[filterName] = filterValue;
+    if (filterName) {
+      const filterValue = value;
+      this.dataFilters[filterName] = filterValue;
+    }
     this.dataSource.filter = JSON.stringify(this.dataFilters);
+    
+    // cache dataFilters (for Ticket Validation tab) in session for page reload
+    sessionStorage.setItem("dataFilters-TV", this.dataSource.filter);
+
     this.tableHeight = this.calcTableHeight(351);
   }
 
-  backWorkbench(element) {
+  backWorkbench(element: Dispute) {
     this.disputeInfo.emit(element);
   }
 }
