@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } fro
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, OcrViolationTicket, Field, DisputeSystemDetectedOcrIssues, DisputeListItem } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
@@ -18,17 +18,18 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   disputes: Dispute[] = [];
   dataSource = new MatTableDataSource(this.disputes);
   dataFilters = {
-    "dateFrom": "",
-    "dateTo": "",
-    "ticketNumber": "",
-    "disputantSurname": "",
-    "status": ""
+    "dateFrom": null,
+    "dateTo": null,
+    "ticketNumber": null,
+    "disputantSurname": null,
+    "status": null
   };
+  _dataFilters = { ...this.dataFilters };
   statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
   tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   displayedColumns: string[] = [
     '__RedGreenAlert',
-    '__DateSubmitted',
+    'submittedTs',
     'ticketNumber',
     'disputantSurname',
     'disputantGivenNames',
@@ -45,8 +46,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   showTicket = false;
-
-  private disputeStatusesExcluded = [DisputeStatus.Cancelled, DisputeStatus.Processing, DisputeStatus.Rejected];
 
   constructor(
     private disputeService: DisputeService,
@@ -79,14 +78,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     this.logger.log('TicketInboxComponent::getAllDisputes');
 
     this.disputes = [];
-
     this.dataSource.data = this.disputes;
-
-    // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
-
-    // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = this.searchFilter;
 
     this.disputeService.getDisputes().subscribe((response) => {
       this.logger.info(
@@ -94,38 +86,16 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
         response
       );
 
-      response.forEach(d => {
-        if (!this.disputeStatusesExcluded.includes(d.status)) {
-          var newDispute: Dispute = {
-            ticketNumber: d.ticketNumber,
-            disputantSurname: d.disputantSurname,
-            disputantGivenNames: d.disputantGivenNames,
-            disputeId: d.disputeId,
-            userAssignedTo: d.userAssignedTo,
-            disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
-            emailAddressVerified: d.emailAddressVerified,
-            emailAddress: d.emailAddress,
-            systemDetectedOcrIssues: d.systemDetectedOcrIssues,
-            __DateSubmitted: new Date(d.submittedTs),
-            submittedTs: d.submittedTs,
-            __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
-            additionalProperties: d.additionalProperties,
-            status: d.status,
-            __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
-            userAssignedTs: d.userAssignedTs,
-            requestCourtAppearanceYn: d.requestCourtAppearanceYn
-          }
-
-          this.disputes = this.disputes.concat(newDispute);
-        }
+      response.forEach((dispute: Dispute) => {
+        dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
+          this.disputes.push(dispute);
       });
-      this.dataSource.data = this.disputes;
-
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
+      this.dataSource.data = this.disputes.sort((a: Dispute, b: Dispute) => { if (new Date(a.submittedTs) > new Date(b.submittedTs)) { return -1; } else { return 1 } });
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
+      this.onApplyFilter("status", null);
 
       this.tableHeight = this.calcTableHeight(351);
     });
@@ -133,6 +103,10 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   searchFilter = function (record: Dispute, filter: string) {
     let searchTerms = JSON.parse(filter);
+    var excludingStatuses = !searchTerms?.status ? [DisputeStatus.Cancelled, DisputeStatus.Processing, DisputeStatus.Rejected] : [];
+    if (excludingStatuses.includes(record?.status)) {
+      return false;
+    }
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
       if ("dateFrom" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
@@ -141,21 +115,14 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
       else {
-        return record[field].toLocaleLowerCase().indexOf(value.trim().toLocaleLowerCase()) != -1;
+        return record[field].toLocaleLowerCase().indexOf(value?.trim().toLocaleLowerCase() ?? "") != -1;
       }
     });
   };
 
   resetSearchFilters() {
     // Will update search filters in UI
-    this.dataFilters = {
-      "dateFrom": "",
-      "dateTo": "",
-      "ticketNumber": "",
-      "disputantSurname": "",
-      "status": ""
-    };
-
+    this.dataFilters = { ...this._dataFilters };
     // Will re-execute the filter function, but will block UI rendering
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
@@ -186,19 +153,4 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   backWorkbench(element) {
     this.disputeInfo.emit(element);
   }
-
-}
-
-export interface Point {
-  x?: number;
-  y?: number;
-}
-
-export interface OcrCount {
-  description?: Field;
-  act_or_regulation_name_code?: Field;
-  is_act?: Field;
-  is_regulation?: Field;
-  section?: Field;
-  ticketed_amount?: Field;
 }

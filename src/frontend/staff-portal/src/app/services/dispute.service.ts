@@ -93,7 +93,7 @@ export class DisputeService implements IDisputeService {
      * @param none
      */
   public getDisputes(): Observable<Dispute[]> {
-    return this.disputeApiService.apiDisputeDisputesGet("CANCELLED")
+    return this.disputeApiService.apiDisputeDisputesGet()
       .pipe(
         map((response: Dispute[]) => {
           this.logger.info('DisputeService::getDisputes', response);
@@ -493,9 +493,7 @@ export interface Dispute extends DisputeBase {
   contactGivenNames?: string;
   lawyerFullName?: string;
   address?: string;
-  __DateSubmitted?: Date,
   __RedGreenAlert?: string,
-  __UserAssignedTs?: Date,
 }
 
 export interface Dispute extends DisputeListItem {
@@ -503,9 +501,7 @@ export interface Dispute extends DisputeListItem {
   contactGivenNames?: string;
   lawyerFullName?: string;
   address?: string;
-  __DateSubmitted?: Date,
   __RedGreenAlert?: string,
-  __UserAssignedTs?: Date,
 }
 
 export interface DisputeWithUpdates extends DisputeWithUpdatesBase {
