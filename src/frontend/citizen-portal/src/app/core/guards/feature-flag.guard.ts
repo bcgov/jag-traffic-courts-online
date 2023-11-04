@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AppConfigService } from 'app/services/app-config.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FeatureFlagGuard implements CanActivate {
+export class FeatureFlagGuard  {
   constructor(
     private router: Router,
     private appConfigService: AppConfigService
