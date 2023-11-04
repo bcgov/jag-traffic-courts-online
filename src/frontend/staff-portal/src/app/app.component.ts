@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Meta, Title } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { ConfigService } from '@config/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SnowplowService } from '@core/services/snowplow.service';
@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService,
     private titleService: Title,
     private configService: ConfigService,
-    private metaTagService: Meta,
     private router: Router,
     private snowplow: SnowplowService,
   ) {
@@ -28,23 +27,6 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.metaTagService.addTags([
-      {
-        name: 'title',
-        content: 'Violation and traffic ticket information in British Columbia',
-      },
-      {
-        name: 'description',
-        content:
-          'Looking for information on your BC violation or traffic ticket? Understand your ticket options and find out how to pay fines or dispute.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'Pay ticket, Pay traffic fine, Pay violation ticket, Pay fines, BC fines, Pay court fine, Pay traffic ticket, Pay ticket online, Check traffic fines, How to pay tickets online, Where to pay traffic ticket, Check fines online, Pay ticket online, Ticket fine payment, BC pay ticket, BC ticket dispute, BC ticket resolution, How to understand your ticket, What does my ticket mean, Understand my traffic ticket',
-      },
-    ]);
-
     this.translateService
       .get([
         'app_heading',

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { APP_DATE_FORMAT } from '@shared/modules/ngx-material/ngx-material.module';
+import { APP_DATE_FORMAT } from '@shared/modules/ngx-material/ngx-material.legacy.module';
 
 @Pipe({
   name: 'formatDate',
