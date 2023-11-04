@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfigModule } from 'app/config/config.module';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { AlertComponent } from './components/alert/alert.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -75,7 +75,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         ReactiveFormsModule,
         NgxBusyModule,
         NgxMaterialModule,
-        NgxMaskModule.forRoot(),
+        NgxMaskDirective, 
+        NgxMaskPipe,
         NgxProgressModule,
         ConfigModule,
         TranslateModule,
@@ -88,7 +89,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         ReactiveFormsModule,
         NgxBusyModule,
         NgxMaterialModule,
-        NgxMaskModule,
+        NgxMaskDirective, 
+        NgxMaskPipe,
         NgxProgressModule,
         CapitalizePipe,
         DefaultPipe,
@@ -111,6 +113,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         ResolutionHeaderComponent,
         FeatureFlagDirective,
         AddressAutocompleteComponent,
-    ]
+    ],
+    providers: [provideNgxMask()]
 })
 export class SharedModule { }
