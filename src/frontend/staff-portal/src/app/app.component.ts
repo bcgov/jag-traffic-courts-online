@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, RouterEvent } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { ConfigService } from '@config/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SnowplowService } from '@core/services/snowplow.service';
-import { UtilsService } from '@core/services/utils.service';
-import { RouteStateService } from '@core/services/route-state.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +13,11 @@ import { Observable } from 'rxjs';
 export class AppComponent implements OnInit {
   //  debugger;
   constructor(
-    private routeStateService: RouteStateService,
     private translateService: TranslateService,
     private titleService: Title,
     private configService: ConfigService,
     private metaTagService: Meta,
     private router: Router,
-    private utilsService: UtilsService,
     private snowplow: SnowplowService,
   ) {
     this.router.events.subscribe((evt) => {
@@ -33,9 +28,6 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    const onNavEnd = this.routeStateService.onNavigationEnd();
-    this.scrollTop(onNavEnd);
-
     this.metaTagService.addTags([
       {
         name: 'title',
@@ -91,13 +83,5 @@ export class AppComponent implements OnInit {
           this.translateService.instant('toaster.language_error')
         );
       });
-  }
-
-    /**
-   * @description
-   * Scroll the page to the top on route event.
-   */
-  private scrollTop(routeEvent: Observable<RouterEvent>) {
-    routeEvent.subscribe(() => this.utilsService.scrollTop());
   }
 }
