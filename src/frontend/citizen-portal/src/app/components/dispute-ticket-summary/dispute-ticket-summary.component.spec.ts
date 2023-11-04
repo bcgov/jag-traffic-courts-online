@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.legacy.module';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 import { DisputeTicketSummaryComponent } from './dispute-ticket-summary.component';

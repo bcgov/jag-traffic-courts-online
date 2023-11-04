@@ -22,7 +22,7 @@ import { DisputeNotFoundDialogComponent } from './dialogs/dispute-not-found-dial
 import { WaitForOcrDialogComponent } from './dialogs/wait-for-ocr-dialog/wait-for-ocr-dialog.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { NgxBusyModule } from './modules/ngx-busy/ngx-busy.module';
-import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
+import { NgxMaterialLegacyModule } from './modules/ngx-material/ngx-material.legacy.module';
 import { NgxProgressModule } from './modules/ngx-progress/ngx-progress.module';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { DefaultPipe } from './pipes/default.pipe';
@@ -74,7 +74,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         RouterModule,
         ReactiveFormsModule,
         NgxBusyModule,
-        NgxMaterialModule,
+        NgxMaterialLegacyModule,
         NgxMaskDirective, 
         NgxMaskPipe,
         NgxProgressModule,
@@ -88,7 +88,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         RouterModule,
         ReactiveFormsModule,
         NgxBusyModule,
-        NgxMaterialModule,
+        NgxMaterialLegacyModule,
         NgxMaskDirective, 
         NgxMaskPipe,
         NgxProgressModule,

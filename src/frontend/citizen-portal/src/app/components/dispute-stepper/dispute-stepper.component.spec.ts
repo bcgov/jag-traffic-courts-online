@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.legacy.module';
 import { DisputeStepperComponent } from './dispute-stepper.component';
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
