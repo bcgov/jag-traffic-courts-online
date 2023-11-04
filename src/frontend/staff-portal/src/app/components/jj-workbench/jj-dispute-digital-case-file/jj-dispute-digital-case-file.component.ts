@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { JJDisputeHearingType, JJDisputeStatus } from 'app/api';
