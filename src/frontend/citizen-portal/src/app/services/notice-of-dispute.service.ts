@@ -1,7 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { FormBuilder, FormControl, ValidatorFn, Validators } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
+import { MatLegacyDialog as MatDialog } from "@angular/material/legacy-dialog";
 import { Router } from "@angular/router";
 import { ConfigService } from "@config/config.service";
 import { LoggerService } from "@core/services/logger.service";
