@@ -52,6 +52,7 @@
               "faker",
               "luxon",
               "lodash",
+              "pdfjs-dist",
               "pdfjs-dist/build/pdf",
               "pdfjs-dist/web/pdf_viewer"
             ],
