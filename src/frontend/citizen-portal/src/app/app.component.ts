@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, RouterEvent } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { ConfigService } from '@config/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SnowplowService } from '@core/services/snowplow.service';
-import { UtilsService } from '@core/services/utils.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +17,6 @@ export class AppComponent implements OnInit {
     private configService: ConfigService,
     private metaTagService: Meta,
     private router: Router,
-    private utilsService: UtilsService,
     private snowplow: SnowplowService,
   ) {
     this.router.events.subscribe((evt) => {
