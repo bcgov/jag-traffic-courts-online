@@ -3,7 +3,7 @@ import { filter, Observable, Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { MatTab } from '@angular/material/tabs';
+import { MatLegacyTab as MatTab } from '@angular/material/legacy-tabs';
 import { AppState } from 'app/store';
 import { select, Store } from '@ngrx/store';
 import * as JJDisputeStore from "app/store/jj-dispute";
