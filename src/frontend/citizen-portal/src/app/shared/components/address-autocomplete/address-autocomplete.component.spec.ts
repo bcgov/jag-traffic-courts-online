@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AddressAutocompleteComponent } from './address-autocomplete.component';
-import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.legacy.module';
+import { NgxMaterialLegacyModule as NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.legacy.module';
 
 describe('AddressAutocompleteComponent', () => {
   let component: AddressAutocompleteComponent;
