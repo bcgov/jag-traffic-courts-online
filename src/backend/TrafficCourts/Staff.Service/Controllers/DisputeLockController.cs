@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
+using TrafficCourts.Common.Errors;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 
@@ -60,7 +62,8 @@ public class DisputeLockController : StaffControllerBase<DisputeLockController>
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to get lock for ticket: {ticketNumber}", ticketNumber);
-            return Task.FromResult<ActionResult<Lock>>(StatusCode((int)HttpStatusCode.InternalServerError));
+            var result = new HttpError(StatusCodes.Status500InternalServerError, ex.Message);
+            return Task.FromResult<ActionResult<Lock>>(result);
         }
     }
 
@@ -73,13 +76,13 @@ public class DisputeLockController : StaffControllerBase<DisputeLockController>
     [ProducesResponseType(typeof(DateTimeOffset), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public Task<ActionResult<Lock>> RefreshLock(string lockId)
+    public Task<ActionResult<DateTimeOffset>> RefreshLock(string lockId)
     {
         try
         {
-            var result = _disputeLockService.RefreshLock(lockId, User.Identity!.Name!);
-            if (result is null) return Task.FromResult<ActionResult<Lock>>(NotFound());
-            return Task.FromResult<ActionResult<Lock>>(Ok(result));
+            var result = _disputeLockService.RefreshLock(lockId, GetUserName(User));
+            if (result is null) return Task.FromResult<ActionResult<DateTimeOffset>>(NotFound());
+            return Task.FromResult<ActionResult<DateTimeOffset>>(Ok(result));
         }
         catch (LockIsInUseException e)
         {
@@ -100,12 +103,13 @@ public class DisputeLockController : StaffControllerBase<DisputeLockController>
                 problemDetails.Extensions.Add("errors", new string[] { e.Message });
             }
             var result = new ObjectResult(problemDetails);
-            return Task.FromResult<ActionResult<Lock>>(result);
+            return Task.FromResult<ActionResult<DateTimeOffset>>(result);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to refresh lock {lockId}", lockId);
-            return Task.FromResult<ActionResult<Lock>>(StatusCode((int)HttpStatusCode.InternalServerError));
+            var result = new HttpError(StatusCodes.Status500InternalServerError, ex.Message);
+            return Task.FromResult<ActionResult<DateTimeOffset>>(result);
         }
     }
 
@@ -128,7 +132,13 @@ public class DisputeLockController : StaffControllerBase<DisputeLockController>
         catch (Exception ex)
         {
             _logger.LogInformation(ex, "Failed to release lock {lockId}", lockId);
-            return Task.FromResult<ActionResult>(NotFound());
+            var result = new HttpError(StatusCodes.Status500InternalServerError, ex.Message);
+            return Task.FromResult<ActionResult>(result);
         }
+    }
+
+    private static string GetUserName(ClaimsPrincipal user)
+    {
+        return user?.Identity?.Name ?? string.Empty;
     }
 }

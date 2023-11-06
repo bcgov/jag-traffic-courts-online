@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Staff.Service.Models;
+﻿using System.Collections;
+using TrafficCourts.Staff.Service.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -63,10 +64,20 @@ public class DisputeLockService : IDisputeLockService
         {
             var toRemove = _database.Where(x => x.Value.LockId == lockId).ToList();
 
+            if (toRemove.Count == 0) throw new KeyNotFoundException($"Lock with id {lockId} not found");
+
             foreach (var item in toRemove)
             {
                 _database.Remove(item.Key);
             }
+        }
+    }
+
+    internal IEnumerable GetLocks()
+    {
+        lock (_database)
+        {
+            return _database.Values;
         }
     }
 }
