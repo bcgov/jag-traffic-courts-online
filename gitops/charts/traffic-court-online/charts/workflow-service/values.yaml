@@ -63,3 +63,14 @@ coms:
     host: postgres
   service:
     secretName: common-object-management-service-basicauth
+
+# saga db context values
+saga:
+  db:
+    secretName: ""
+    keys:
+      host: "host"
+      port: "port"
+      database: "dbname"
+      username: "username"
+      password: "password"

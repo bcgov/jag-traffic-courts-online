@@ -63,6 +63,31 @@ spec:
               secretKeyRef:
                 name: {{ .Values.coms.service.secretName }}
                 key: password
+          - name: DBCONNECTIONSTRING__HOST
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.saga.db.secretName }}
+                key: {{ .Values.saga.db.keys.host }}
+          - name: DBCONNECTIONSTRING__PORT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.saga.db.secretName }}
+                key: {{ .Values.saga.db.keys.port }}
+          - name: DBCONNECTIONSTRING__DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.saga.db.secretName }}
+                key: {{ .Values.saga.db.keys.database }}
+          - name: DBCONNECTIONSTRING__USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.saga.db.secretName }}
+                key: {{ .Values.saga.db.keys.username }}
+          - name: DBCONNECTIONSTRING__PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.saga.db.secretName }}
+                key: {{ .Values.saga.db.keys.password }}
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
