@@ -7,6 +7,7 @@ public static class ValidationMessages
     public static readonly string DriversLicenceNumberError = "Drivers Licence Number is not 7 digits.";
     public static readonly string DriversLicenceProvinceError = "Drivers Licence Province is not 'BC'. Could not validate Drivers Licence Number.";
     public static readonly string TicketTitleInvalid = @"Ticket title must be 'VIOLATION TICKET'.";
+    public static readonly string TicketVersionInvalid = @"Form recognizer has identified this ticket as having an old format (VT1) which is no longer accepted.";
     public static readonly string TicketNumberInvalid = @"Violation ticket number must start with an A and be of the form 'AX00000000'.";
     public static readonly string CheckboxInvalid = @"Checkbox '{0}' has an unknown value '{1}'. Expecting 'selected' or 'unselected'.";
     public static readonly string CurrencyInvalid = @"Amount '{0}' is not a valid currency value.";

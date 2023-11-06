@@ -213,11 +213,13 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     private static async void ApplyGlobalRules(OcrViolationTicket violationTicket)
     {
         // TCVP-933 A ticket is considered valid iff
+        // - TCVP-2559 Ticket Version must not be VT1 (superceded by VT2 and is no longer supported)
         // - Ticket title reads 'VIOLATION TICKET' at top
         // - Ticket number must start with 'A', another alphabetic character, and then 8 digits
         // - Count ACT/REGs must be MVA or MVR as text - all 3 counts must be MVA/R at this time.
         // - If the Date of Service is less than 30 days for handwritten tickets
         List<ValidationRule> rules = new();
+        rules.Add(new VersionVT1DisallowedRule(new Field(), violationTicket));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], _ticketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], _violationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
         if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion)) {

@@ -36,6 +36,7 @@ public class OcrViolationTicket
 
     public static readonly string ViolationTicketTitle = "violationTicketTitle";
     public static readonly string ViolationTicketNumber = "ticket_number";
+    public static readonly string Version = "ticket_version";
     public static readonly string Surname = "disputant_surname";
     public static readonly string GivenName = "disputant_given_names";
     public static readonly string DriverLicenceProvince = "drivers_licence_province";
