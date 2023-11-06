@@ -13,14 +13,13 @@ public interface IJJDisputeService
     Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken);
 
     /// <summary>Returns a specific JJ dispute from the database.</summary>
-    /// <param name="jjDisputeId">Unique identifier of a JJ Dispute record.</param>
     /// <param name="ticketNumber">Ticket number of a JJ Dispute record.</param>
     /// <param name="assignVTC">Boolean to indicate need to assign VTC staff.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>OK</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     /// <exception cref="ArgumentNullException">Thrown if id is null</exception>
-    Task<JJDispute> GetJJDisputeAsync(long jjDisputeId, string ticketNumber, bool assignVTC, CancellationToken cancellationToken);
+    Task<JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC, CancellationToken cancellationToken);
 
     /// <summary>Returns a specific JJ dispute from the database.</summary>
     /// <param name="ticketNumber">Ticket number of a JJ Dispute record.</param>

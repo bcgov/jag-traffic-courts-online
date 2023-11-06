@@ -6,7 +6,6 @@ using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using JJDisputeStatus = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDisputeStatus;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -38,12 +37,12 @@ public class JJDisputeService : IJJDisputeService
         return await _oracleDataApi.GetJJDisputesAsync(jjAssignedTo, null, cancellationToken);
     }
 
-    public async Task<JJDispute> GetJJDisputeAsync(long disputeId, string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
+    public async Task<JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
 
         // Search by dispute id
-        DocumentProperties properties = new() { TcoDisputeId = disputeId };
+        DocumentProperties properties = new() { TcoDisputeId = dispute.Id };
 
         List<FileMetadata> disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
 
@@ -63,7 +62,7 @@ public class JJDisputeService : IJJDisputeService
         {
             // Find statute by count's statute ID since the ID is stored in the Description field of the JJDisputedCount
             Statute? statute = await _lookupService.GetByIdAsync(count.Description);
-            if (statute != null)
+            if (statute is not null)
             {
                 string statuteDescription = string.Format("{0} {1} {2}",
                               statute.ActCode, statute.Code, statute.ShortDescriptionText);
