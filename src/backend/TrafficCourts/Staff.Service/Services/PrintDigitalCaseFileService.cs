@@ -113,6 +113,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the ticket information
         var ticket = digitalCaseFile.Ticket;
+        ticket.Number = dispute.TicketNumber;
         ticket.Surname = dispute.OccamDisputantSurnameNm;
         ticket.GivenNames = ConcatenateWithSpaces(dispute.OccamDisputantGiven1Nm, dispute.OccamDisputantGiven2Nm, dispute.OccamDisputantGiven3Nm);
         ticket.OffenceLocation = dispute.OffenceLocation;
@@ -166,6 +167,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             counts.Add(new OffenseCount
             {
                 Count = disputedCount.Count,
+                Date = ToDateTime(dispute.IssuedTs),
                 Plea = ToString(disputedCount.Plea),
                 Description = disputedCount.Description,
                 Due = ToDateTime(disputedCount.DueDate),
@@ -228,6 +230,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     {
         appearance.Date = ToDateTime(appearanceRop.AppearanceTs);
         appearance.Room = appearanceRop.Room;
+        appearance.Reason = appearanceRop.Reason;
         appearance.App = ToString(appearanceRop.AppCd);
         appearance.NoApp = ToDateTime(appearanceRop.NoAppTs);
         appearance.DefenseCouncil = appearanceRop.DefenceCounsel;
@@ -383,10 +386,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return string.Empty;
     }
 
-    private DateTime ToDateTime(DateTimeOffset? value)
-    {
-        return DateTime.MinValue;
-    }
+    private DateTime? ToDateTime(DateTimeOffset? value) => value?.DateTime;
 
     private string FormatAddress(JJDispute dispute)
     {

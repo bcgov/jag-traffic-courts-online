@@ -66,16 +66,16 @@ public class TicketSummary
     public string Address { get; set; } = string.Empty;
 
     [JsonProperty("issuedDate")]
-    public DateTime IssuedDate { get; set; }
+    public DateTime? IssuedDate { get; set; }
 
     [JsonProperty("submittedDate")]
-    public DateTime SubmittedDate { get; set; }
+    public DateTime? SubmittedDate { get; set; }
 
     [JsonProperty("courtHouse")]
     public string CourtHouse { get; set; } = string.Empty;
 
     [JsonProperty("icbcReceivedDate")]
-    public DateTime IcbcReceivedDate { get; set; }
+    public DateTime? IcbcReceivedDate { get; set; }
 
     [JsonProperty("policeDetachment")]
     public string PoliceDetachment { get; set; } = string.Empty;
@@ -117,7 +117,7 @@ public class Appearance
     /// The appearance date and time
     /// </summary>
     [JsonProperty("date")]
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; }
 
     [JsonProperty("reason")]
     public string Reason { get; set; } = string.Empty;
@@ -204,6 +204,14 @@ public class OffenseCount
     [JsonProperty("")]
     public int Count { get; set; }
 
+    /// <summary>
+    /// The offense date. This will be the same as the disute issued date.
+    /// Duplicating the field makes it easier for binding to the screen.
+    /// </summary>
+    [JsonProperty("offenseDate")]
+    public DateTime? Date { get; set; }
+
+
     [JsonProperty("plea")]
     public string Plea { get; set; } = string.Empty;
 
@@ -211,7 +219,7 @@ public class OffenseCount
     public string Description { get; set; } = string.Empty;
 
     [JsonProperty("due")]
-    public DateTime Due { get; set; }
+    public DateTime? Due { get; set; }
 
     [JsonProperty("fine")]
     public decimal Fine { get; set; }
@@ -250,7 +258,7 @@ public class FileHistoryEvent
 public class FileRemark
 {
     [JsonProperty("date")]
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; }
 
     [JsonProperty("username")]
     public string Username { get; set; } = string.Empty;
