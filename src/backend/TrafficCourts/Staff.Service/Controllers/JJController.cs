@@ -5,6 +5,7 @@ using Microsoft.Extensions.FileProviders;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common;
@@ -12,6 +13,7 @@ using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
@@ -20,6 +22,7 @@ public class JJController : StaffControllerBase<JJController>
 {
     private readonly IPrintDigitalCaseFileService _printService;
     private readonly IJJDisputeService _jjDisputeService;
+    private readonly IDisputeLockService _disputeLockService;
 
     /// <summary>
     /// Default Constructor
@@ -31,10 +34,12 @@ public class JJController : StaffControllerBase<JJController>
     public JJController(
         IJJDisputeService jjDisputeService,
         IPrintDigitalCaseFileService printService,
+        IDisputeLockService disputeLockService,
         ILogger<JJController> logger) : base(logger)
     {
         _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
         _printService = printService ?? throw new ArgumentNullException(nameof(printService));
+        _disputeLockService = disputeLockService ?? throw new ArgumentNullException(nameof(DisputeLockService));
     }
 
     /// <summary>
@@ -98,21 +103,29 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
-            JJDispute dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
+            JJDispute dispute = new();
 
-            // note, this would not be required if our APIs actually search by the primary key of the table and
-            // not just an attribute that does not even have a unique constraint on it.
-            if (dispute is not null && dispute.Id != jjDisputeId)
-            {
-                using var scope = _logger.BeginScope( new {
-                    ExpectedId = jjDisputeId,
-                    ActualId = dispute.Id,
-                    TicketNumber = ticketNumber
-                });
+            var disputeLock = _disputeLockService.GetLock(jjDisputeId, GetUserName(User));
 
-                _logger.LogWarning("GetJJDisputeAsync searches by ticket number, not jjDisputeId. The returned record does not have a matching dispute id.");
+            if ((disputeLock) is not null) {
+                dispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
+                // note, this would not be required if our APIs actually search by the primary key of the table and
+                // not just an attribute that does not even have a unique constraint on it.
+                if (dispute is not null && dispute.Id != jjDisputeId)
+                {
+                    using var scope = _logger.BeginScope( new {
+                        ExpectedId = jjDisputeId,
+                        ActualId = dispute.Id,
+                        TicketNumber = ticketNumber
+                    });
+    
+                    _logger.LogWarning("GetJJDisputeAsync searches by ticket number, not jjDisputeId. The returned record does not have a matching dispute id.");
+                }
+
+                dispute.LockId = disputeLock.LockId;
+                dispute.LockedBy = disputeLock.Username;
+                dispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
             }
-
             return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -144,6 +157,27 @@ public class JJController : StaffControllerBase<JJController>
             problemDetails.Title = e.Source + ": Error Invoking COMS";
             problemDetails.Instance = HttpContext?.Request?.Path;
             string? innerExceptionMessage = e.InnerException?.Message;
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
             if (innerExceptionMessage is not null)
             {
                 problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
@@ -791,4 +825,19 @@ public class JJController : StaffControllerBase<JJController>
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
+
+    private RenderedReport GetSampleRenderedReport()
+    {
+        IFileProvider fileProvder = new EmbeddedFileProvider(GetType().Assembly);
+        string path = $"Models.DigitalCaseFiles.Print.tmpFF54.pdf";
+        var fileInfo = fileProvder.GetFileInfo(path);
+
+        var content = new MemoryStream();
+        var stream = fileInfo.CreateReadStream();
+        stream.CopyTo(content);
+        content.Position = 0;
+
+        return new RenderedReport("DCF DK62053851.pdf", "application/pdf", content);
+    }
+
 }
