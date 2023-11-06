@@ -11,17 +11,31 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "module": "es2020",
-    "lib": ["es2018", "dom"],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "resolveJsonModule": true,
     "paths": {
-      "@env/*": ["./environments/*"],
-      "@config/*": ["./app/config/*"],
-      "@core/*": ["./app/core/*"],
-      "@shared/*": ["./app/shared/*"],
-      "@components/*": ["./app/components/*"]
-    }
+      "@env/*": [
+        "./environments/*"
+      ],
+      "@config/*": [
+        "./app/config/*"
+      ],
+      "@core/*": [
+        "./app/core/*"
+      ],
+      "@shared/*": [
+        "./app/shared/*"
+      ],
+      "@components/*": [
+        "./app/components/*"
+      ]
+    },
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "resolveJsonModule": true,

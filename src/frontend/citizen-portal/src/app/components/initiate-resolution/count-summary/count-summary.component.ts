@@ -5,7 +5,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { CountItemSummaryComponent } from '@components/initiate-resolution/count-item-summary/count-item-summary.component';
 import { ViolationTicket } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';

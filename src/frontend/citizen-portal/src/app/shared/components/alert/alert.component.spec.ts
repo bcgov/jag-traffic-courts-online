@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AlertComponent } from './alert.component';
-import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { NgxMaterialLegacyModule as NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.legacy.module';
 
 describe('AlertComponent', () => {
   let component: AlertComponent;

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { QueryParamsForSearch } from '@shared/models/query-params-for-search.model';
 import { DisputeStatus, JJDisputeHearingType, JJDisputeStatus, SearchDisputeResult } from 'app/api';
 import { StatusStepType } from 'app/services/dispute.service';

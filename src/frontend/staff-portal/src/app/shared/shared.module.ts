@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfigModule } from 'app/config/config.module';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { AlertComponent } from './components/alert/alert.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -57,7 +57,8 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         ReactiveFormsModule,
         NgxBusyModule,
         NgxMaterialModule,
-        NgxMaskModule.forRoot(),
+        NgxMaskDirective, 
+        NgxMaskPipe,
         NgxProgressModule,
         ConfigModule,
         TranslateModule,
@@ -68,7 +69,8 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         ReactiveFormsModule,
         NgxBusyModule,
         NgxMaterialModule,
-        NgxMaskModule,
+        NgxMaskDirective, 
+        NgxMaskPipe,
         NgxProgressModule,
         CapitalizePipe,
         DefaultPipe,
@@ -87,6 +89,7 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         HeaderComponent,
         FooterComponent,
         FeatureFlagDirective,
-    ]
+    ],
+    providers: [provideNgxMask()]
 })
 export class SharedModule { }

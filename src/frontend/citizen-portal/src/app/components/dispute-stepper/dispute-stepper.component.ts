@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy, Input, Output, EventEmitter, ElementRef } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
-import { MatCheckboxChange } from "@angular/material/checkbox";
-import { MatDialog } from "@angular/material/dialog";
+import { MatLegacyCheckboxChange as MatCheckboxChange } from "@angular/material/legacy-checkbox";
+import { MatLegacyDialog as MatDialog } from "@angular/material/legacy-dialog";
 import { TranslateService } from "@ngx-translate/core";
 import { ToastService } from "@core/services/toast.service";
 import { UtilsService } from "@core/services/utils.service";

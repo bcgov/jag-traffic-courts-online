@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { filter, Subscription, Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Dispute } from 'app/services/dispute.service';
-import { MatTab } from '@angular/material/tabs';
+import { MatLegacyTab as MatTab } from '@angular/material/legacy-tabs';
 import { JJDispute } from 'app/services/jj-dispute.service';
 import { DisputeDecisionInboxComponent } from '../dispute-decision-inbox/dispute-decision-inbox.component';
 import { TicketInboxComponent } from '../ticket-inbox/ticket-inbox.component';

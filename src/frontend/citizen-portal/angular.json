@@ -52,6 +52,7 @@
               "faker",
               "luxon",
               "lodash",
+              "pdfjs-dist",
               "pdfjs-dist/build/pdf",
               "pdfjs-dist/web/pdf_viewer"
             ],
@@ -187,6 +188,14 @@
           }
         }
       }
+    }
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
     }
   }
 }

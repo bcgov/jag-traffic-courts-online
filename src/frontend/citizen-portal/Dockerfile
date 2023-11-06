@@ -2,7 +2,7 @@ ARG BUILD_IMAGE=docker.io/node
 ARG RUNTIME_IMAGE=registry.access.redhat.com/ubi8/nginx-120
 
 # Build image
-FROM $BUILD_IMAGE:14.18 as build-deps
+FROM $BUILD_IMAGE:18.12 as build-deps
 
 # set working directory
 ENV NODE_ROOT /usr/src/app

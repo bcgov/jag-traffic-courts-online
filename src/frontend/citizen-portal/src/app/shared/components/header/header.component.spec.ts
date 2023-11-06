@@ -4,7 +4,7 @@ import {
 } from '@angular/core/testing';
 import { CoreModule } from '@core/core.module';
 import { LoggerService } from '@core/services/logger.service';
-import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { NgxMaterialLegacyModule as NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.legacy.module';
 import { NgxProgressModule } from '@shared/modules/ngx-progress/ngx-progress.module';
 import { HeaderComponent } from './header.component';
 

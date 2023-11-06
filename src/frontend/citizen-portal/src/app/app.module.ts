@@ -1,5 +1,4 @@
 import { HttpClient, HttpClientModule, } from '@angular/common/http';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +14,6 @@ import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
 import { WindowRefService } from '@core/services/window-ref.service';
-import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import localeEn from '@angular/common/locales/en';
@@ -83,7 +81,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   ],
   imports: [
     CommonModule,
-    MatTooltipModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -112,7 +109,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   ],
   exports: [
     NgBusyModule,
-    NgxMaterialModule,
     TranslateModule
   ],
   providers: [
