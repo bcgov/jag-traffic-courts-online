@@ -257,3 +257,5 @@ workflow-service:
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service:3000"
     "VIRUSSCAN__BASEURL": "http://virus-scan:8080"
+  saga:
+    secretName: "postgres-dev-pguser-masstransit"

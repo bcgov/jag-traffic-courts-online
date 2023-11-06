@@ -1,6 +1,7 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using Npgsql;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
@@ -64,7 +65,8 @@ public static class Startup
         builder.Services.AddEmailTemplates();
 
         // Configure Entity Framework Context for VerifyEmailAddressStateDbContext
-        string? connectionString = builder.Configuration.GetConnectionString("Saga");
+
+        var connectionString = GetConnectionString(builder, "Saga");
         builder.Services.AddDbContext<VerifyEmailAddressStateDbContext>(optionsBuilder =>
         {
             optionsBuilder.UseNpgsql(connectionString, options =>
@@ -116,5 +118,26 @@ public static class Startup
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
         }
+    }
+
+    private static string GetConnectionString(ConfigurationManager configuration, string name)
+    {
+        // dev environments, my just use connection string section with name
+        // but when using Crunchy Postgres, the generated secrets do not 
+        // have a compatible connection string, so we bind host, port, database, username and password
+        // from a section based on the name
+        string? connectionString = configuration.GetConnectionString(name);
+        if (connectionString is null)
+        {
+            NpgsqlConnectionStringBuilder builder = new NpgsqlConnectionStringBuilder();
+
+            var sectionName = $"{name}DbConnectionString";
+            var section = configuration.GetSection(sectionName);
+            section.Bind(builder);
+
+            connectionString = builder.ConnectionString;
+        }
+
+        return connectionString;
     }
 }
