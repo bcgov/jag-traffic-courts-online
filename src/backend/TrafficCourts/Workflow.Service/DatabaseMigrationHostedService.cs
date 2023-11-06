@@ -4,6 +4,11 @@ using MassTransit.RetryPolicies;
 
 namespace TrafficCourts.Workflow.Service;
 
+/// <summary>
+/// Hosted service to apply database migrations at startup.
+/// </summary>
+/// <typeparam name="TDbContext"></typeparam>
+/// <remarks>Based on <see cref="https://github.com/MassTransit/Sample-Outbox/blob/e4a5aaa1c38768db9f82141529df34c0718f03a5/src/Sample.Api/RecreateDatabaseHostedService.cs"/></remarks>
 public class DatabaseMigrationHostedService<TDbContext> :
     IHostedService
     where TDbContext : DbContext
