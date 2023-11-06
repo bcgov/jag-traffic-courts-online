@@ -1,0 +1,492 @@
+Table tco.tco_appearance_charge_counts {
+appearance_charge_count_id number(15) [not null]
+court_appearance_id number(15) [not null]
+dispute_count_id number(15) [not null]
+finding_result_cd varchar2(2)
+lesser_charge_desc_txt varchar2(500)
+susp_sntc_probation_durtn_txt varchar2(500)
+susp_sntc_probation_conds_txt varchar2(500)
+jail_duration_txt varchar2(500)
+jail_intermittent_yn varchar2(1) [not null]
+probation_duration_txt varchar2(500)
+probation_conditions_txt varchar2(1000)
+driving_prohib_duration_txt varchar2(500)
+driving_prohib_mva_section_txt varchar2(240)
+dismissed_yn varchar2(1) [not null]
+dismissed_for_want_prosec_yn varchar2(1) [not null]
+withdrawn_yn varchar2(1) [not null]
+abatement_yn varchar2(1) [not null]
+stay_of_proceedings_by_txt varchar2(500)
+other_txt varchar2(500)
+remarks_txt varchar2(500)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+  Indexes {
+    (appearance_charge_count_id) [pk]
+    (court_appearance_id)
+    (dispute_count_id)
+    (dispute_count_id,court_appearance_id) [unique]
+  }
+}
+Ref: tco.tco_court_appearances.court_appearance_id < tco.tco_appearance_charge_counts.court_appearance_id
+Ref: tco.tco_dispute_counts.dispute_count_id < tco.tco_appearance_charge_counts.dispute_count_id
+
+Table tco.tco_court_appearances {
+court_appearance_id number(15) [not null]
+dispute_id number(15) [not null]
+appearance_dtm date [not null]
+courtroom_number_txt varchar2(50) [not null]
+appearance_reason_txt varchar2(100) [not null]
+disputant_presence_cd varchar2(3)
+disputant_not_present_dtm date
+recording_clerk_name_txt varchar2(100)
+defence_counsel_name_txt varchar2(100)
+crown_presence_cd varchar2(1)
+seized_yn varchar2(1) [not null]
+judge_or_jj_name_txt varchar2(240)
+comments_txt varchar2(4000)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+justin_appr_id number(15,4) [not null]
+defence_counsel_presence_cd varchar2(1)
+  Indexes {
+    (court_appearance_id) [pk]
+    (justin_appr_id)
+    (dispute_id)
+  }
+}
+Ref: justin.justin_appearances.appr_id < tco.tco_court_appearances.justin_appr_id
+Ref: tco.tco_disputes.dispute_id < tco.tco_court_appearances.dispute_id
+
+Table tco.tco_disputes {
+dispute_id number(15) [not null]
+dispute_status_type_cd varchar2(10) [not null]
+ticket_number_txt varchar2(12) [not null]
+officer_from_agen_id number(15,4) [not null]
+to_be_heard_at_agen_id number(15,4) [not null]
+justin_rcc_id number(15,4) [not null]
+ticket_inbox_entry_id number(15) [not null]
+occam_violation_ticket_upld_id number(15) [not null]
+occam_dispute_id number(15,4) [not null]
+violation_dt date [not null]
+submitted_dt date [not null]
+icbc_received_dt date
+vtc_assigned_to varchar2(30)
+vtc_assigned_dtm date
+jj_assigned_to varchar2(30)
+jj_decision_dt date
+remarks_txt varchar2(500)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+hearing_type_cd varchar2(1) [not null]
+  Indexes {
+    (dispute_id) [pk]
+    (dispute_status_type_cd)
+    (officer_from_agen_id)
+    (to_be_heard_at_agen_id)
+    (justin_rcc_id)
+    (ticket_inbox_entry_id)
+  }
+}
+Ref: tco.tco_dispute_status_types.dispute_status_type_cd < tco.tco_disputes.dispute_status_type_cd
+Ref: justin.justin_agencies.agen_id < tco.tco_disputes.officer_from_agen_id
+Ref: justin.justin_agencies.agen_id < tco.tco_disputes.to_be_heard_at_agen_id
+Ref: justin.justin_rccs.rcc_id < tco.tco_disputes.justin_rcc_id
+Ref: justin.justin_ticket_inbox_entries.ticket_inbox_entry_id < tco.tco_disputes.ticket_inbox_entry_id
+
+Table tco.tco_dispute_counts {
+dispute_count_id number(15) [not null]
+dispute_id number(15) [not null]
+count_no number(1)
+violation_ticket_count_id number(15) [not null]
+ticket_inbox_count_seq_no number(4) [not null]
+ticket_inbox_entry_id number(15) [not null]
+justin_stat_id number(8) [not null]
+initial_plea_cd varchar2(3) [not null]
+fine_due_dt date
+adjusted_amt number(8,2)
+includes_surcharge_yn varchar2(1)
+revised_due_dt date
+total_fine_amt number(8,2)
+comments_txt varchar2(4000)
+system_message_txt varchar2(4000)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+latest_plea_cd varchar2(3)
+latest_plea_update_dtm date
+  Indexes {
+    (dispute_count_id) [pk]
+    (dispute_id)
+    (justin_stat_id)
+    (ticket_inbox_entry_id,ticket_inbox_count_seq_no)
+    (violation_ticket_count_id)
+    (initial_plea_cd)
+    (latest_plea_cd)
+    (dispute_id,count_no) [unique]
+  }
+}
+Ref: tco.tco_disputes.dispute_id < tco.tco_dispute_counts.dispute_id
+Ref: justin.justin_statutes.stat_id < tco.tco_dispute_counts.justin_stat_id
+Ref: justin.justin_ticket_inbox_counts.(ticket_inbox_entry_id,ticket_inbox_count_seq_no) < tco.tco_dispute_counts.(ticket_inbox_entry_id,ticket_inbox_count_seq_no)
+Ref: occam.occam_violation_ticket_counts.violation_ticket_count_id < tco.tco_dispute_counts.violation_ticket_count_id
+Ref: justin.justin_cd_pleas.plea_plea_cd < tco.tco_dispute_counts.initial_plea_cd
+Ref: justin.justin_cd_pleas.plea_plea_cd < tco.tco_dispute_counts.latest_plea_cd
+
+Table tco.tco_dispute_remarks {
+dispute_remark_id number(15) [not null]
+dispute_id number(15) [not null]
+dispute_remark_txt varchar2(4000) [not null]
+full_user_name_txt varchar2(200) [not null]
+remarks_made_dtm date
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+  Indexes {
+    (dispute_remark_id) [pk]
+    (dispute_id)
+  }
+}
+Ref: tco.tco_disputes.dispute_id < tco.tco_dispute_remarks.dispute_id
+
+Table tco.tco_dispute_status_types {
+dispute_status_type_cd varchar2(10) [not null]
+dispute_status_type_dsc varchar2(50) [not null]
+active_yn varchar2(1) [not null]
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+  Indexes {
+    (dispute_status_type_cd) [pk]
+    (dispute_status_type_dsc) [unique]
+  }
+}
+Table tco.tco_error_logs {
+error_log_id number(15) [not null]
+error_message_no number(10) [not null]
+error_message_txt varchar2(2000) [not null]
+program_nm varchar2(240)
+program_version_txt varchar2(5)
+error_detail_txt varchar2(4000)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+  Indexes {
+    (error_log_id) [pk]
+  }
+}
+Table justin.justin_appearances {
+appr_id number(15,4) [not null]
+appr_dt date [not null]
+appr_tm date [not null]
+appr_ent_dt date [not null]
+appr_ent_user_id varchar2(30) [not null]
+ctrm_agen_id number(15,4) [not null]
+ctrm_room_cd varchar2(6) [not null]
+appr_estimated_duration_hh number(2)
+appr_estimated_duration_mi number(2)
+appr_actual_duration_mi number(2)
+appr_actual_duration_hh number(2)
+appr_upd_dt date
+appr_upd_user_id varchar2(30)
+ccpt_ccas_case_no number(15,4)
+ccpt_part_id number(15,4)
+datt_cd varchar2(3)
+ccas_case_no number(15,4)
+cltp_type_cd varchar2(3)
+aatt_cd varchar2(3)
+appr_interpreter_required_yn varchar2(1) [not null]
+clst_id number(15,4)
+court_list_reference_no number(4)
+note_txt varchar2(4000)
+additions_list_yn varchar2(1)
+appr_judges_recommend_txt clob
+appr_participant_not_reqd_yn varchar2(1)
+bapt_type_cd varchar2(6)
+badt_type_cd varchar2(6)
+  Indexes {
+    (appr_id) [pk]
+    (aatt_cd)
+    (badt_type_cd)
+    (bapt_type_cd)
+    (ccas_case_no)
+    (ccpt_ccas_case_no,ccpt_part_id)
+    (clst_id)
+    (cltp_type_cd)
+    (ctrm_agen_id,ctrm_room_cd)
+    (datt_cd)
+    (ctrm_agen_id,appr_dt,ctrm_room_cd,cltp_type_cd,appr_tm,appr_id)
+    (appr_id,appr_dt)
+  }
+}
+Table justin.justin_ticket_inbox_entries {
+ticket_inbox_entry_id number(15) [not null]
+ticket_process_status_cd varchar2(10) [not null]
+transaction_dtm date [not null]
+ticket_series_txt varchar2(2) [not null]
+file_folder_no varchar2(12) [not null]
+filed_dt date
+violation_dt date [not null]
+surname_nm varchar2(30)
+given_1_nm varchar2(30)
+given_2_nm varchar2(30)
+comment_txt varchar2(4000)
+validated_yn varchar2(1)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+court_agen_id number(15,4)
+enforcement_agen_id number(15,4)
+paas_agen_id number(15,4)
+paas_part_id number(15,4)
+paas_seq_no number(3)
+ticket_message_type_cd varchar2(6) [not null]
+address_line_1_txt varchar2(40)
+address_postal_code_txt varchar2(10)
+prov_ctry_id number(8)
+prov_seq_no number(4)
+city_ctry_id number(8)
+city_seq_no number(4)
+part_type_cd varchar2(3)
+given_3_nm varchar2(30)
+org_nm varchar2(150)
+address_line_2_txt varchar2(40)
+address_line_3_txt varchar2(40)
+ctry_id number(8)
+system_message_txt varchar2(4000)
+email_address_txt varchar2(100)
+  Indexes {
+    (ticket_inbox_entry_id) [pk]
+    (enforcement_agen_id)
+    (court_agen_id)
+    (city_ctry_id,city_seq_no)
+    (ctry_id)
+    (paas_agen_id,paas_part_id,paas_seq_no)
+    (prov_ctry_id,prov_seq_no)
+    (ticket_series_txt,file_folder_no)
+    (ticket_message_type_cd)
+  }
+}
+Ref: justin.justin_agencies.agen_id < justin.justin_ticket_inbox_entries.enforcement_agen_id
+Ref: justin.justin_agencies.agen_id < justin.justin_ticket_inbox_entries.court_agen_id
+
+Table justin.justin_rccs {
+rcc_id number(15,4) [not null]
+rcc_state_cd varchar2(3) [not null]
+rcc_state_chg_dt date [not null]
+rcc_org_creation_dt date [not null]
+rcc_pma_cd varchar2(1) [not null]
+rcc_ent_dt date [not null]
+rcc_ent_user_id varchar2(30) [not null]
+rcc_agency_file_no varchar2(12)
+rcc_category_cd varchar2(3)
+rcc_sub_category_cd varchar2(6)
+rcc_most_recent_build_dt date
+rcc_most_recent_submit_dt date
+rcc_most_recent_reject_dt date
+rcc_decision_dt date
+rcc_rejecting_user_id varchar2(30)
+rcc_accept_dt date
+rcc_accepting_user_id varchar2(30)
+rcc_publication_ban_yn varchar2(1)
+rcc_locked_down_yn varchar2(1)
+rcc_crown_cvws_yn varchar2(1)
+rcc_upd_dt date
+rcc_upd_user_id varchar2(30)
+rcc_file_folder_home_agen_id number(15,4)
+rcc_priority_cd varchar2(3)
+proposed_crt_loc_agen_id number(15,4)
+rcc_security_clearance_lvl_no number(2)
+part_subm_approved_by_id number(15,4)
+part_approved_by_id number(15,4)
+part_initiated_by_id number(15,4)
+rcc_decision_cd varchar2(3)
+rcc_decision_crown_part_id number(15,4)
+rcc_decision_locn_agen_id number(15,4)
+vcss_service_state_cd varchar2(3)
+approval_officer_part_id number(15,4)
+jurisdiction_agen_id number(15,4)
+rcc_probation_access_yn varchar2(1)
+rcct_rcc_type_cd varchar2(3)
+rcc_intimate_relationship_yn varchar2(1)
+clearance_paas_agen_id number(15,4)
+clearance_paas_part_id number(15,4)
+clearance_paas_seq_no number(3)
+fla_order_breach_yn varchar2(1)
+cfc_order_breach_yn varchar2(1)
+file_designation_cd varchar2(4)
+fra_order_breach_yn varchar2(1)
+other_order_breach_yn varchar2(1)
+order_breach_reviewed_yn varchar2(1)
+afterhours_process_yn varchar2(1)
+initial_charge_asmt_agen_id number(15,4)
+pol_designated_hate_crime_yn varchar2(1)
+  Indexes {
+    (rcc_id) [pk]
+    (proposed_crt_loc_agen_id)
+    (rcc_decision_locn_agen_id)
+    (jurisdiction_agen_id)
+    (initial_charge_asmt_agen_id)
+    (file_designation_cd)
+    (clearance_paas_agen_id,clearance_paas_part_id,clearance_paas_seq_no)
+    (part_approved_by_id)
+    (part_initiated_by_id)
+    (part_subm_approved_by_id)
+    (rcc_decision_crown_part_id)
+    (approval_officer_part_id)
+    (rcc_agency_file_no)
+    (rcc_state_cd)
+    (rcc_most_recent_submit_dt,rcc_decision_locn_agen_id)
+    (rcc_decision_dt,rcc_decision_locn_agen_id)
+    (rcc_file_folder_home_agen_id,rcc_agency_file_no,rcc_id) [unique]
+    (rcc_decision_locn_agen_id,rcc_state_cd)
+    (rcc_file_folder_home_agen_id,rcc_state_cd)
+  }
+}
+Ref: justin.justin_agencies.agen_id < justin.justin_rccs.proposed_crt_loc_agen_id
+Ref: justin.justin_agencies.agen_id < justin.justin_rccs.rcc_file_folder_home_agen_id
+Ref: justin.justin_agencies.agen_id < justin.justin_rccs.rcc_decision_locn_agen_id
+Ref: justin.justin_agencies.agen_id < justin.justin_rccs.jurisdiction_agen_id
+Ref: justin.justin_agencies.agen_id < justin.justin_rccs.initial_charge_asmt_agen_id
+
+Table justin.justin_agencies {
+agen_id number(15,4) [not null]
+agen_agency_nm varchar2(150) [not null]
+agen_ent_dt date [not null]
+agen_ent_user_id varchar2(30) [not null]
+city_ctry_id number(8) [not null]
+city_seq_no number(4) [not null]
+agen_address_line_1_txt varchar2(40) [not null]
+cdat_agency_type_cd varchar2(3) [not null]
+agen_agency_short_nm varchar2(150)
+agen_agency_identifier_cd varchar2(4)
+agen_address_line_2_txt varchar2(40)
+agen_address_line_3_txt varchar2(40)
+agen_postal_code_txt varchar2(10)
+agen_contact_name varchar2(40)
+agen_contact_phone varchar2(13)
+agen_upd_dt date
+agen_upd_user_id varchar2(30)
+agen_contact_fax_no varchar2(13)
+agen_wit_notif_unit_phone_no varchar2(13)
+agen_justin_site_yn varchar2(1)
+agsb_agency_subtype_cd varchar2(3)
+agen_active_yn varchar2(1) [not null]
+agen_email_address_txt varchar2(100)
+time_zone_cd varchar2(1)
+mailing_address_txt varchar2(100)
+delivery_method_cd varchar2(4)
+receive_fax_cover_page_yn varchar2(1)
+rcmp_division_cd varchar2(4)
+crown_region_cd varchar2(4)
+file_designation_mandatory_yn varchar2(1)
+agen_observes_dst_yn varchar2(1) [not null]
+  Indexes {
+    (agen_id) [pk]
+    (city_ctry_id,city_seq_no)
+    (crown_region_cd)
+    (rcmp_division_cd)
+    (cdat_agency_type_cd,agen_agency_identifier_cd) [unique]
+  }
+}
+Table justin.justin_ticket_inbox_counts {
+ticket_inbox_entry_id number(15) [not null]
+ticket_inbox_count_seq_no number(4) [not null]
+count_seq_no number(4) [not null]
+system_message_txt varchar2(4000)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+stat_id number(8)
+icbc_message_id number(15) [not null]
+  Indexes {
+    (ticket_inbox_entry_id,ticket_inbox_count_seq_no) [pk]
+    (icbc_message_id)
+    (stat_id)
+    (ticket_inbox_entry_id)
+  }
+}
+Ref: justin.justin_statutes.stat_id < justin.justin_ticket_inbox_counts.stat_id
+Ref: justin.justin_ticket_inbox_entries.ticket_inbox_entry_id < justin.justin_ticket_inbox_counts.ticket_inbox_entry_id
+
+Table justin.justin_statutes {
+stat_id number(8) [not null]
+stat_effective_dt date [not null]
+stat_section_txt varchar2(10) [not null]
+stat_valid_reference_yn varchar2(1) [not null]
+stat_presumptive_offence_yn varchar2(1) [not null]
+stat_ent_dt date [not null]
+stat_ent_user_id varchar2(30) [not null]
+act_cd varchar2(3) [not null]
+stat_sub_section_txt varchar2(4)
+stat_paragraph_txt varchar2(3)
+stat_sub_paragraph_txt varchar2(5)
+stat_clause_txt varchar2(4)
+stat_short_description_txt varchar2(50)
+stat_description_txt varchar2(2000)
+stat_termination_dt date
+stat_ccjis_code_txt varchar2(6)
+stat_ucr_code_no number(5)
+stat_limitation_no number(4)
+stat_upd_dt date
+stat_upd_user_id varchar2(30)
+stat_charge_type_cd varchar2(3)
+stat_crrp_interest_yn varchar2(1)
+retention_period_cd varchar2(4)
+sentence_for_stat_id number(8)
+  Indexes {
+    (stat_id) [pk]
+    (act_cd,stat_section_txt)
+    (sentence_for_stat_id)
+    (act_cd,stat_effective_dt,stat_section_txt,stat_sub_section_txt,stat_paragraph_txt,stat_sub_paragraph_txt,stat_clause_txt) [unique]
+  }
+}
+Ref: justin.justin_statutes.stat_id < justin.justin_statutes.sentence_for_stat_id
+
+Table justin.justin_cd_pleas {
+plea_plea_cd varchar2(3) [not null]
+plea_plea_dsc varchar2(60) [not null]
+plea_active_yn varchar2(1) [not null]
+plea_ent_dt date [not null]
+plea_ent_user_id varchar2(30) [not null]
+plea_upd_dt date
+plea_upd_user_id varchar2(30)
+  Indexes {
+    (plea_plea_cd) [pk]
+  }
+}
+Table occam.occam_violation_ticket_counts {
+violation_ticket_count_id number(15) [not null]
+violation_ticket_upload_id number(15)
+count_no number(1) [not null]
+description_txt varchar2(4000)
+is_act_yn varchar2(1)
+is_regulation_yn varchar2(1)
+act_or_regulation_name_cd varchar2(5)
+stat_section_txt varchar2(10)
+stat_sub_section_txt varchar2(4)
+stat_paragraph_txt varchar2(3)
+stat_sub_paragraph_txt varchar2(5)
+ticketed_amt number(8,2)
+ent_dtm date [not null]
+ent_user_id varchar2(30) [not null]
+upd_dtm date
+upd_user_id varchar2(30)
+  Indexes {
+    (violation_ticket_count_id) [pk]
+    (violation_ticket_upload_id,count_no) [unique]
+    (violation_ticket_upload_id)
+  }
+}
