@@ -9,11 +9,11 @@ using TrafficCourts.Workflow.Service.Sagas;
 
 #nullable disable
 
-namespace TrafficCourts.Workflow.Service.Migrations
+namespace TrafficCourts.Workflow.Service.Migrations.VerifyEmailAddressStateMigrations
 {
     [DbContext(typeof(VerifyEmailAddressStateDbContext))]
-    [Migration("20231103060724_Initial")]
-    partial class Initial
+    [Migration("20231106173345_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,7 +69,7 @@ namespace TrafficCourts.Workflow.Service.Migrations
 
                     b.HasKey("CorrelationId");
 
-                    b.ToTable("VerifyEmailAddressState", (string)null);
+                    b.ToTable("VerifyEmailAddressState");
                 });
 #pragma warning restore 612, 618
         }

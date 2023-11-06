@@ -8,7 +8,7 @@ using TrafficCourts.Workflow.Service.Sagas;
 
 #nullable disable
 
-namespace TrafficCourts.Workflow.Service.Migrations
+namespace TrafficCourts.Workflow.Service.Migrations.VerifyEmailAddressStateMigrations
 {
     [DbContext(typeof(VerifyEmailAddressStateDbContext))]
     partial class VerifyEmailAddressStateDbContextModelSnapshot : ModelSnapshot
@@ -66,7 +66,7 @@ namespace TrafficCourts.Workflow.Service.Migrations
 
                     b.HasKey("CorrelationId");
 
-                    b.ToTable("VerifyEmailAddressState", (string)null);
+                    b.ToTable("VerifyEmailAddressState");
                 });
 #pragma warning restore 612, 618
         }
