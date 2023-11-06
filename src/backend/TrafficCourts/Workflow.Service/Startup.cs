@@ -66,7 +66,7 @@ public static class Startup
 
         // Configure Entity Framework Context for VerifyEmailAddressStateDbContext
 
-        var connectionString = GetConnectionString(builder, "Saga");
+        var connectionString = GetConnectionString(builder.Configuration, "Saga");
         builder.Services.AddDbContext<VerifyEmailAddressStateDbContext>(optionsBuilder =>
         {
             optionsBuilder.UseNpgsql(connectionString, options =>
