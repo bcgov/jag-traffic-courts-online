@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.FileProviders;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Net;
-using System.Text;
+using System.Security.Claims;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
@@ -19,21 +18,25 @@ public class JJController : StaffControllerBase<JJController>
 {
     private readonly IPrintDigitalCaseFileService _printService;
     private readonly IJJDisputeService _jjDisputeService;
+    private readonly IDisputeLockService _disputeLockService;
 
     /// <summary>
     /// Default Constructor
     /// </summary>
     /// <param name="jjDisputeService"></param>
     /// <param name="printService"></param>
+    /// <param name="disputeLockService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
     public JJController(
         IJJDisputeService jjDisputeService,
         IPrintDigitalCaseFileService printService,
+        IDisputeLockService disputeLockService,
         ILogger<JJController> logger) : base(logger)
     {
         _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
         _printService = printService ?? throw new ArgumentNullException(nameof(printService));
+        _disputeLockService = disputeLockService ?? throw new ArgumentNullException(nameof(DisputeLockService));
     }
 
     /// <summary>
@@ -95,9 +98,19 @@ public class JJController : StaffControllerBase<JJController>
     {
         _logger.LogDebug("Retrieving JJ Dispute {JJDisputeId} from oracle-data-api", jjDisputeId);
 
+        JJDispute JJDispute = new();
+
         try
         {
-            JJDispute JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
+            JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
+
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+
+            if (disputeLock != null) {
+                JJDispute.LockId = disputeLock.LockId;
+                JJDispute.LockedBy = disputeLock.Username;
+                JJDispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
+            }
             return Ok(JJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -139,6 +152,14 @@ public class JJController : StaffControllerBase<JJController>
             }
 
             return new ObjectResult(problemDetails);
+        }
+        catch (LockIsInUseException e)
+        {
+            JJDispute.LockId = e.Lock.LockId;
+            JJDispute.LockedBy = e.Lock.Username;
+            JJDispute.LockExpiresAtUtc = e.Lock.ExpiryTimeUtc;
+
+            return Ok(JJDispute);
         }
         catch (ApiException e)
         {
@@ -213,6 +234,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <summary>
     /// Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
     /// </summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="jjDisputeId">Unique identifier for a specific JJ Dispute record.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="jjDispute"></param>
@@ -232,15 +254,26 @@ public class JJController : StaffControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> SubmitAdminResolutionAsync(long jjDisputeId, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, long jjDisputeId, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
 
         try
         {
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+
             var updatedJJDispute = await _jjDisputeService.SubmitAdminResolutionAsync(jjDisputeId, checkVTC, jjDispute, User, cancellationToken);
+
+            if (disputeLock != null)
+            {
+                updatedJJDispute.LockId = disputeLock.LockId;
+                updatedJJDispute.LockedBy = disputeLock.Username;
+                updatedJJDispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
+            }
+
             return Ok(updatedJJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -254,6 +287,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -355,6 +409,8 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+
             await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, User, cancellationToken);
             return Ok();
         }
@@ -369,6 +425,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -417,6 +494,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
             await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, remark, User, cancellationToken);
             return Ok();
         }
@@ -431,6 +509,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -478,6 +577,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
             await _jjDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
             return Ok();
         }
@@ -492,6 +592,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -541,6 +662,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
             await _jjDisputeService.ConcludeJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
             return Ok();
         }
@@ -551,6 +673,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -599,6 +742,7 @@ public class JJController : StaffControllerBase<JJController>
 
         try
         {
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
             await _jjDisputeService.CancelJJDisputeAsync(ticketNumber, checkVTC, User, cancellationToken);
             return Ok();
         }
@@ -609,6 +753,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -655,7 +820,7 @@ public class JJController : StaffControllerBase<JJController>
         try
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
-
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
             await _jjDisputeService.RequireCourtHearingJJDisputeAsync(ticketNumber, null, User, cancellationToken);
             return Ok();
         }
@@ -670,6 +835,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -713,7 +899,7 @@ public class JJController : StaffControllerBase<JJController>
         try
         {
             // TODO: Call Oracle API to update court appearance when TCVP-1999 is completed as per TCVP-1978
-
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
             await _jjDisputeService.ConfirmJJDisputeAsync(ticketNumber, User, cancellationToken);
             return Ok();
         }
@@ -728,6 +914,27 @@ public class JJController : StaffControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {
@@ -789,6 +996,11 @@ public class JJController : StaffControllerBase<JJController>
         content.Position = 0;
 
         return new RenderedReport("DCF DK62053851.pdf", "application/pdf", content);
+    }
+
+    private static string GetUserName(ClaimsPrincipal user)
+    {
+        return user?.Identity?.Name ?? string.Empty;
     }
 
 }
