@@ -147,7 +147,7 @@ public class JJDisputeServiceTest
         _statuteLookupService.Setup(_ => _.GetByIdAsync(dispute.JjDisputedCounts.First().Description)).ReturnsAsync(expected);
 
         // Act
-        JJDispute _jjDispute = await jJDisputeService.GetJJDisputeAsync(dispute.Id, dispute.TicketNumber, false, CancellationToken.None);
+        JJDispute _jjDispute = await jJDisputeService.GetJJDisputeAsync(dispute.TicketNumber, false, CancellationToken.None);
 
         // Assert
         var expectedCount = Assert.Single(_jjDispute.JjDisputedCounts);

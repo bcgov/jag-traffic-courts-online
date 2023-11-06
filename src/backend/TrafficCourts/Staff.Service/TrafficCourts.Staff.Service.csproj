@@ -72,8 +72,4 @@
 	<ItemGroup>
 	  <EmbeddedResource Include="Models\DigitalCaseFiles\Print\Templates\**" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Models\DigitalCaseFiles\Print\tmpFF54.pdf" />
-	</ItemGroup>
 </Project>

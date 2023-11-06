@@ -3641,21 +3641,20 @@
         }
       }
     },
-    "/api/jj/{disputeId}/print": {
+    "/api/jj/{ticketNumber}/print": {
       "get": {
         "tags": [
           "JJ"
         ],
-        "summary": "Returns generated document",
+        "summary": "Returns generated document. This really should be using the tco_dispute.dispute_id.",
         "parameters": [
           {
-            "name": "disputeId",
+            "name": "ticketNumber",
             "in": "path",
-            "description": "",
+            "description": "The ticket number to print. This really should be using the tco_dispute.dispute_id",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -3714,6 +3713,9 @@
           },
           "500": {
             "description": "There was a server error that prevented the search from completing successfully or no data found."
+          },
+          "400": {
+            "description": "The"
           }
         }
       }

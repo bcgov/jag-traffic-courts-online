@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
 using TrafficCourts.Cdogs.Client;
+using TrafficCourts.Common;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -98,20 +99,33 @@ public class JJController : StaffControllerBase<JJController>
     {
         _logger.LogDebug("Retrieving JJ Dispute {JJDisputeId} from oracle-data-api", jjDisputeId);
 
-        JJDispute JJDispute = new();
-
         try
         {
-            JJDispute = await _jjDisputeService.GetJJDisputeAsync(jjDisputeId, ticketNumber, assignVTC, cancellationToken);
+            JJDispute dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
+
+            // note, this would not be required if our APIs actually search by the primary key of the table and
+            // not just an attribute that does not even have a unique constraint on it.
+            if (dispute.Id != jjDisputeId)
+            {
+                using var scope = _logger.BeginScope(new {
+                    ExpectedId = jjDisputeId,
+                    ActualId = dispute.Id,
+                    TicketNumber = ticketNumber
+                });
+
+                _logger.LogWarning("GetJJDisputeAsync searches by ticket number, not jjDisputeId. The returned record does not have a matching dispute id.");
+            }
 
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
 
-            if (disputeLock != null) {
-                JJDispute.LockId = disputeLock.LockId;
-                JJDispute.LockedBy = disputeLock.Username;
-                JJDispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
+            if (disputeLock is not null)
+            {
+                dispute.LockId = disputeLock.LockId;
+                dispute.LockedBy = disputeLock.Username;
+                dispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
             }
-            return Ok(JJDispute);
+
+            return Ok(dispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
@@ -155,11 +169,12 @@ public class JJController : StaffControllerBase<JJController>
         }
         catch (LockIsInUseException e)
         {
-            JJDispute.LockId = e.Lock.LockId;
-            JJDispute.LockedBy = e.Lock.Username;
-            JJDispute.LockExpiresAtUtc = e.Lock.ExpiryTimeUtc;
-
-            return Ok(JJDispute);
+            return Ok(new JJDispute 
+            {
+                LockId = e.Lock.LockId,
+                LockedBy = e.Lock.Username,
+                LockExpiresAtUtc = e.Lock.ExpiryTimeUtc,
+            });
         }
         catch (ApiException e)
         {
@@ -195,7 +210,7 @@ public class JJController : StaffControllerBase<JJController>
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> GetJustinDocument(string ticketNumber, DocumentType documentType, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving Justin Documnet {ticketNumber} from oracle-data-api", ticketNumber);
+        _logger.LogDebug("Retrieving Justin document {ticketNumber} from oracle-data-api", ticketNumber);
 
         try
         {
@@ -949,31 +964,31 @@ public class JJController : StaffControllerBase<JJController>
     }
 
     /// <summary>
-    /// Returns generated document
+    /// Returns generated document. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    /// <param name="disputeId"></param>
+    /// <param name="ticketNumber">The ticket number to print. This really should be using the tco_dispute.dispute_id</param>
     /// <param name="timeZone">The IANA timze zone id</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Generated Document.</response>
+    /// <response code="400">The </response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A generated document</returns>
     [AllowAnonymous]
-    [HttpGet("{disputeId}/print")]
+    [HttpGet("{ticketNumber}/print")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/octet-stream")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> PrintDisputeAsync([Required] long disputeId, [Required] string timeZone, CancellationToken cancellationToken)
+    public async Task<IActionResult> PrintDisputeAsync([Required] string ticketNumber, [Required] string timeZone, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Penerating print version of dispute {disputeId} in timezone {timeZone}", disputeId, timeZone);
+        _logger.LogDebug("Rendering print version of dispute {ticketNumber} in timezone {timeZone}. This really should be using the tco_dispute.dispute_id", ticketNumber, timeZone);
 
         try
         {
-            //RenderedReport report = await _printService.PrintDigitalCaseFileAsync(disputeId, timeZone, cancellationToken);
-            RenderedReport report = GetSampleRenderedReport();
+            RenderedReport report = await _printService.PrintDigitalCaseFileAsync(ticketNumber, timeZone, cancellationToken);
             // Report will be a pdf, but by using application/octet-stream, it is easier for the browser to open in a new tab
             return File(report.Content, "application/octet-stream", report.ReportName);
         }
@@ -984,23 +999,8 @@ public class JJController : StaffControllerBase<JJController>
         }
     }
 
-    private RenderedReport GetSampleRenderedReport()
-    {
-        IFileProvider fileProvder = new EmbeddedFileProvider(GetType().Assembly);
-        string path = $"Models.DigitalCaseFiles.Print.tmpFF54.pdf";
-        var fileInfo = fileProvder.GetFileInfo(path);
-
-        var content = new MemoryStream();
-        var stream = fileInfo.CreateReadStream();
-        stream.CopyTo(content);
-        content.Position = 0;
-
-        return new RenderedReport("DCF DK62053851.pdf", "application/pdf", content);
-    }
-
     private static string GetUserName(ClaimsPrincipal user)
     {
         return user?.Identity?.Name ?? string.Empty;
     }
-
 }
