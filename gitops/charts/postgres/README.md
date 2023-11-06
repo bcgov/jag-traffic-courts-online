@@ -99,7 +99,7 @@ Create the application database initalization config map and create the cluster.
 ```powershell
 # PowerShell
 kubectl create -f postgres-test-application-bootstrap-sql-configmap.yaml
-helm upgrade postgres-app postgrescluster-5.4.3.tgz `
+helm install postgres-app postgrescluster-5.4.3.tgz `
      --values postgres-test-application-values.yaml `
      --set databaseInitSQL.name=application-bootstrap-sql `
      --set databaseInitSQL.key=bootstrap.sql

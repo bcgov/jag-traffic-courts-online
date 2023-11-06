@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 using System.Diagnostics;
 using System.Security.Cryptography;
@@ -7,9 +8,9 @@ using TrafficCourts.Messaging.Models;
 
 namespace TrafficCourts.Workflow.Service.Sagas;
 
-public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<VerifyEmailAddressSagaState>
+public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmailAddressState>
 {
-    private readonly ILogger<VerifyEmailAddressSagaStateMachine> _logger;
+    private readonly ILogger<VerifyEmailAddressStateMachine> _logger;
     private readonly IClock _clock;
 
     #region States
@@ -40,25 +41,23 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
     #endregion
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public VerifyEmailAddressSagaStateMachine(IClock clock, ILogger<VerifyEmailAddressSagaStateMachine> logger)
+    public VerifyEmailAddressStateMachine(IClock clock, ILogger<VerifyEmailAddressStateMachine> logger)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        InstanceState(state => state.CurrentState, Active);
+        InstanceState(x => x.CurrentState);
 
-        // TODO: CorrelationId is the key in Redis, so need to ensure the CorrelationId used is unique for this saga
-
-        Event(() => RequestEmailVerification, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
-        Event(() => ResendEmailVerificationEmail, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
-        Event(() => SendEmailVerificationFailed, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
-        Event(() => EmailVerificationSuccessful, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
-        Event(() => NoticeOfDisputeSubmitted, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
+        Event(() => RequestEmailVerification, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
+        Event(() => ResendEmailVerificationEmail, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
+        Event(() => SendEmailVerificationFailed, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
+        Event(() => EmailVerificationSuccessful, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
+        Event(() => NoticeOfDisputeSubmitted, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
 
         Event(() => CheckEmailVerificationToken, x =>
         {
-            x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid));
+            x.CorrelateById(context => context.Message.NoticeOfDisputeGuid);
             x.OnMissingInstance(m => m.ExecuteAsync(context =>
             {
                 _logger.LogInformation("Count not find an instance for {NoticeOfDisputeGuid}", context.Message.NoticeOfDisputeGuid);
@@ -104,36 +103,9 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         SetCompletedWhenFinalized();
     }
 
-    /// <summary>
-    /// Creates a state machine specific correlation id based on the incoming notice of dispute id.
-    /// This is required because redis persisence uses the correlationId as the key to store state.
-    /// Two different sagas using the same key would clobber each other's state.
-    /// </summary>
-    /// <typeparam name="TStateMachine"></typeparam>
-    /// <param name="NoticeOfDisputeGuid"></param>
-    /// <returns></returns>
-    internal static Guid ToCorrelationId(Guid NoticeOfDisputeGuid)
-    {
-        var buffer = new byte[16 * 2];
-
-        Array.Copy(SagaGuid.ToByteArray(), 0, buffer, 0, 16);
-        Array.Copy(NoticeOfDisputeGuid.ToByteArray(), 0, buffer, 16, 16);
-
-        Guid correlationId = new Guid(MD5.HashData(buffer));
-        return correlationId;
-    }
-
-    /// <summary>
-    /// Saga specific guid to combine with the notice of dispute id to create a unique saga instance
-    /// This value must not be used by other sagas. This value must not be changed once state has
-    /// been persisted otherwise the existing state will be orphaned.
-    /// </summary>
-    private static readonly Guid SagaGuid = new Guid("0e413bec-0794-4a54-8501-443264a0c74b");
-
-    private void CreateToken(BehaviorContext<VerifyEmailAddressSagaState, RequestEmailVerification> context)
+    private void CreateToken(BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
     {
         var state = context.Saga;
-        state.NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid;
         state.EmailAddress = context.Message.EmailAddress;
         state.TicketNumber = context.Message.TicketNumber;
         state.IsUpdateEmailVerification = context.Message.IsUpdateEmailVerification;
@@ -158,7 +130,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
     /// Recreates the email verification token if the email address has changed since the validation
     /// process started.
     /// </summary>
-    private void RecreateTokenIfRequired(BehaviorContext<VerifyEmailAddressSagaState, RequestEmailVerification> context)
+    private void RecreateTokenIfRequired(BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
     {
         if (!string.Equals(context.Saga.EmailAddress, context.Message.EmailAddress, StringComparison.OrdinalIgnoreCase))
         {
@@ -166,7 +138,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         }
     }
 
-    private async Task SendVerificationEmail(BehaviorContext<VerifyEmailAddressSagaState, RequestEmailVerification> context)
+    private async Task SendVerificationEmail(BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
     {
         var state = context.Saga;
 
@@ -179,7 +151,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         }, context.CancellationToken);
     }
 
-    private async Task SendVerificationEmail(BehaviorContext<VerifyEmailAddressSagaState, ResendEmailVerificationEmail> context)
+    private async Task SendVerificationEmail(BehaviorContext<VerifyEmailAddressState, ResendEmailVerificationEmail> context)
     {
         var state = context.Saga;
 
@@ -191,7 +163,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
             Token = state.Token
         }, context.CancellationToken);
     }
-    private async Task CheckToken(BehaviorContext<VerifyEmailAddressSagaState, CheckEmailVerificationTokenRequest> context)
+    private async Task CheckToken(BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context)
     {
         // save the start time cause the time on both messages below should be the same
         DateTimeOffset now = _clock.GetCurrentInstant().ToDateTimeOffset();
@@ -218,7 +190,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         }
     }
 
-    private async Task HandleNoticeOfDisputeSubmitted(BehaviorContext<VerifyEmailAddressSagaState, NoticeOfDisputeSubmitted> context)
+    private async Task HandleNoticeOfDisputeSubmitted(BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context)
     {
         var state = context.Saga;
 
@@ -230,7 +202,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         }
     }
 
-    private async Task PublishEmailVerificationSuccessful<TMessage>(BehaviorContext<VerifyEmailAddressSagaState, TMessage> context, long disputeId) where TMessage : class
+    private async Task PublishEmailVerificationSuccessful<TMessage>(BehaviorContext<VerifyEmailAddressState, TMessage> context, long disputeId) where TMessage : class
     {
         var state = context.Saga;
 
@@ -258,7 +230,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         });
     }
 
-    private async Task SendResponse(BehaviorContext<VerifyEmailAddressSagaState, CheckEmailVerificationTokenRequest> context, bool valid, DateTimeOffset when)
+    private async Task SendResponse(BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context, bool valid, DateTimeOffset when)
     {
         await context.RespondAsync(new CheckEmailVerificationTokenResponse
         {

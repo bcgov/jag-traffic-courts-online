@@ -1,14 +1,11 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Configuration;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.Converters;
 using TrafficCourts.Messaging.Configuration;
-using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Messaging;
 

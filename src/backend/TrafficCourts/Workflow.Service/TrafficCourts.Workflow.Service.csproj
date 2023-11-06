@@ -13,12 +13,22 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="MailKitLite" Version="4.2.0" />
-    <PackageReference Include="MassTransit" Version="8.1.0" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.0" />
-    <PackageReference Include="MassTransit.Redis" Version="8.1.0" />
+    <PackageReference Include="MassTransit" Version="8.1.1" />
+    <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.1.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
+    <PackageReference Include="MassTransit.Redis" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="7.0.13" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
@@ -28,5 +38,9 @@
     <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Client\TrafficCourts.Arc.Dispute.Client.csproj" />
     <ProjectReference Include="..\TrafficCourts.Coms.Client\TrafficCourts.Coms.Client.csproj" />
     <ProjectReference Include="..\TrafficCourts.Core\TrafficCourts.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>
