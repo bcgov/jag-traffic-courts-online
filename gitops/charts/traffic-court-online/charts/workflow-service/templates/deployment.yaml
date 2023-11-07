@@ -63,27 +63,27 @@ spec:
               secretKeyRef:
                 name: {{ .Values.coms.service.secretName }}
                 key: password
-          - name: DBCONNECTIONSTRING__HOST
+          - name: SAGADBCONNECTIONSTRING__HOST
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.saga.db.secretName }}
                 key: {{ .Values.saga.db.keys.host }}
-          - name: DBCONNECTIONSTRING__PORT
+          - name: SAGADBCONNECTIONSTRING__PORT
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.saga.db.secretName }}
                 key: {{ .Values.saga.db.keys.port }}
-          - name: DBCONNECTIONSTRING__DATABASE
+          - name: SAGADBCONNECTIONSTRING__DATABASE
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.saga.db.secretName }}
                 key: {{ .Values.saga.db.keys.database }}
-          - name: DBCONNECTIONSTRING__USERNAME
+          - name: SAGADBCONNECTIONSTRING__USERNAME
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.saga.db.secretName }}
                 key: {{ .Values.saga.db.keys.username }}
-          - name: DBCONNECTIONSTRING__PASSWORD
+          - name: SAGADBCONNECTIONSTRING__PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.saga.db.secretName }}
