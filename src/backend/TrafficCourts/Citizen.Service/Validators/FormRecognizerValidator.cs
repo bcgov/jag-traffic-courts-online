@@ -162,7 +162,6 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             violationDate = violationDate.Replace("l", "1");
             violationDate = violationDate.Replace("f", "1");
             violationTicket.Fields[OcrViolationTicket.ViolationDate].Value = violationDate;
-
             violationTicket.Fields[OcrViolationTicket.ViolationDate].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd");
         }
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DateOfService))
@@ -174,13 +173,19 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             dateOfService = dateOfService.Replace("l", "1");
             dateOfService = dateOfService.Replace("f", "1");
             violationTicket.Fields[OcrViolationTicket.DateOfService].Value = dateOfService;
+            violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.DateOfService].GetDate()?.ToString("yyyy-MM-dd");
+        }
 
-            if (violationTicket.Fields[OcrViolationTicket.DateOfService].IsPopulated()) // if date of service is present try putting it in good format
-                violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.DateOfService].GetDate()?.ToString("yyyy-MM-dd");
-
-            // if formatting date of service didnt work or its null or not populated set it to violation date
-            if (violationTicket.Fields[OcrViolationTicket.DateOfService].Value is null || !violationTicket.Fields[OcrViolationTicket.DateOfService].IsPopulated())
-                violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd");
+        // ViolationDate and DateOfService are usually the same day. If either is misread/null, try using the other date value.
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationDate) && violationTicket.Fields.ContainsKey(OcrViolationTicket.DateOfService)) {
+            if (violationTicket.Fields[OcrViolationTicket.ViolationDate].Value is null
+                && violationTicket.Fields[OcrViolationTicket.DateOfService].Value is not null) {
+                violationTicket.Fields[OcrViolationTicket.ViolationDate].Value = violationTicket.Fields[OcrViolationTicket.DateOfService].Value;
+            }
+            if (violationTicket.Fields[OcrViolationTicket.DateOfService].Value is null
+                && violationTicket.Fields[OcrViolationTicket.ViolationDate].Value is not null) {
+                violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].Value;
+            }
         }
 
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationTime)) {
