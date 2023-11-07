@@ -91,5 +91,25 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Assert.NotNull(actual);
             Assert.Same(exception, actual.Result.Value);
         }
+
+        [Fact]
+        public async Task search_throws_InvalidTicketVersionException()
+        {
+            DateTime violationDate = new(2023, 4, 9);
+            InvalidTicketVersionException exception = new(violationDate);
+
+            _serviceMock
+                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(exception);
+
+            var request = new Search.Request("AA00000000", "00:00");
+
+            var sut = new Search.Handler(_serviceMock.Object, _loggerMock.Object, _redisCacheServiceMock.Object);
+
+            var actual = await sut.Handle(request, CancellationToken.None);
+
+            Assert.NotNull(actual);
+            Assert.Same(exception, actual.Result.Value);
+        }
     }
 }

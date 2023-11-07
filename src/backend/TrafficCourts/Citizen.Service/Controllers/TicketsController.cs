@@ -34,6 +34,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
         [HttpGet]
         [ProducesResponseType(typeof(Models.Tickets.ViolationTicket), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SearchAsync(
@@ -55,7 +56,8 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
             var result = response.Result.Match<IActionResult>(
                 ticket => Ok(ticket),
-                exception => StatusCode(StatusCodes.Status500InternalServerError));
+                exception => StatusCode(StatusCodes.Status500InternalServerError),
+                invalidTicketException => StatusCode(StatusCodes.Status400BadRequest));
 
             return result;
         }

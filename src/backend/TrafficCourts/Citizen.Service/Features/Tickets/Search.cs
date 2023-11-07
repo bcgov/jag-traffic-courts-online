@@ -1,6 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using OneOf;
+using System;
 using System.Diagnostics;
+using System.Net;
 using System.Text.RegularExpressions;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
@@ -73,10 +76,15 @@ public static class Search
             Result = exception ?? throw new ArgumentNullException(nameof(exception));
         }
 
+        public Response(InvalidTicketVersionException invalidTicketException)
+        {
+            Result = invalidTicketException ?? throw new ArgumentNullException(nameof(invalidTicketException));
+        }
+
         /// <summary>
         /// The result value.
         /// </summary>
-        public OneOf<ViolationTicket, Exception> Result { get; }
+        public OneOf<ViolationTicket, Exception, InvalidTicketVersionException> Result { get; }
 
         /// <summary>
         /// Represents an empty result, ie not found.
@@ -131,6 +139,12 @@ public static class Search
                 ticket.TicketId = ticketId;
 
                 return new Response(ticket);
+            }
+            catch (InvalidTicketVersionException exception)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
+                _logger.LogError(exception, "Could not return a ticket with invalid violation date and version (VT1)");
+                return new Response(exception);
             }
             catch (Exception exception)
             {

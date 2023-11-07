@@ -9,6 +9,7 @@ public class TicketSearchService : ITicketSearchService
 {
     private readonly ITicketInvoiceSearchService _invoiceSearchService;
     private readonly ILogger<TicketSearchService> _logger;
+    private static readonly DateTime _validVT2TicketEffectiveDate = new(2024, 4, 9);
 
     public TicketSearchService(ITicketInvoiceSearchService invoiceSearchService, ILogger<TicketSearchService> logger)
     {
@@ -50,6 +51,10 @@ public class TicketSearchService : ITicketSearchService
 
             return null;
         }
+        catch (InvalidTicketVersionException exception)
+        {
+            throw exception;
+        }
         catch (Exception exception)
         {
             _logger.LogInformation(exception, "Error finding violation ticket");
@@ -72,7 +77,15 @@ public class TicketSearchService : ITicketSearchService
 
         if (DateTime.TryParseExact(invoices[0].ViolationDateTime, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime violationDateTime))
         {
-            ticket.IssuedTs = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);
+            var issuedTs = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);
+            
+            // TCVP-2560 all tickets before April 9, 2024 (VT1) will be ineligible for TCO
+            if (issuedTs < _validVT2TicketEffectiveDate)
+            {
+                _logger.LogInformation("Ticket found is not a valid VT2 type");
+                throw new InvalidTicketVersionException(issuedTs);
+            }
+            ticket.IssuedTs = issuedTs;
         }
 
         foreach (var invoice in invoices)
@@ -92,3 +105,15 @@ public class TicketSearchService : ITicketSearchService
         return ticket;
     }
 }
+
+[Serializable]
+public class InvalidTicketVersionException : Exception
+{
+    public InvalidTicketVersionException(DateTime violationDate) : base($"Invalid ticket found with violation date: {violationDate}. The version of the Ticket is not VT2 since its violation date is before April 9, 2024")
+    {
+        ViolationDate = violationDate;
+    }
+
+    public DateTime ViolationDate { get; init; }
+}
+
