@@ -372,7 +372,12 @@ export class ViolationTicketService {
         }
         this.logger.error("ViolationTicketService:onError critical validation error has occurred", errorMessages);
         this.openErrorScenarioOneDialog();
-      } else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
+      }
+      else if (this.isErrorMatch(err, "Form recognizer has identified this ticket as having an old format (VT1) which is no longer accepted.")) {
+        this.logger.error("ViolationTicketService:onError validation error has occurred", "VT1 no longer supported");
+        this.openErrorScenarioThreeDialog();
+      }
+      else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {  // more than 30 days old
         this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
         this.openErrorScenarioTwoDialog();
       }
@@ -411,6 +416,10 @@ export class ViolationTicketService {
 
   private openErrorScenarioTwoDialog() {
     return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
+  }
+
+  private openErrorScenarioThreeDialog() {
+    return this.openImageTicketNotFoundDialog("The system has identified your ticket as an old format that is no longer supported.", "error3");
   }
 
   private openErrorScenarioFourDialog() {
