@@ -72,5 +72,5 @@ saga:
       host: "host"
       port: "port"
       database: "dbname"
-      username: "username"
+      username: "user"
       password: "password"
