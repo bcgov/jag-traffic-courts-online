@@ -258,7 +258,8 @@ workflow-service:
     "COMS__BASEURL": "http://common-object-management-service:3000"
     "VIRUSSCAN__BASEURL": "http://virus-scan:8080"
   saga:
-    secretName: "postgres-app-pguser-masstransit"
-    keys:
-      host: "pgbouncer-host"
-      port: "pgbouncer-port"
+    db:
+      secretName: "postgres-app-pguser-masstransit"
+      keys:
+        host: "pgbouncer-host"
+        port: "pgbouncer-port"
