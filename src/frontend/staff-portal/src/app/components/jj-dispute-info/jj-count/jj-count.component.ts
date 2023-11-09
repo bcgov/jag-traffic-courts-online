@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JJDispute } from '../../../services/jj-dispute.service';
-import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
+import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
+import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
 
 @Component({
   selector: 'app-jj-count',
@@ -31,6 +32,7 @@ export class JJCountComponent implements OnInit {
   ForWantOfProsecution = JJDisputedCountRoPForWantOfProsecution;
   Dismissed = JJDisputedCountRoPDismissed;
   Finding = JJDisputedCountRoPFinding;
+  LatestPlea = JJDisputedCountLatestPlea;
 
   // Variables
   todayDate: Date = new Date();
@@ -47,6 +49,7 @@ export class JJCountComponent implements OnInit {
   constructor(
     private lookupsService: LookupsService,
     private formBuilder: FormBuilder,
+    private datePipe: CustomDatePipe
   ) {
   }
 
@@ -56,13 +59,17 @@ export class JJCountComponent implements OnInit {
         totalFineAmount: [null, [Validators.required, Validators.max(9999), Validators.min(0)]],
         lesserOrGreaterAmount: [null, [Validators.required, Validators.max(9999), Validators.min(0)]],
         revisedDueDate: [null, [Validators.required]],
-        comments: [{ value: null, disabled: !this.jjDisputedCount }]
+        comments: [{ value: null, disabled: !this.jjDisputedCount }],
+        latestPlea: [{ value: null, disabled: !this.jjDisputedCount }],
+        latestPleaUpdateTs: [{ value: null, disabled: !this.jjDisputedCount }],
       }) :
       this.formBuilder.group({
         totalFineAmount: [null, [Validators.max(9999), Validators.min(0)]],
         lesserOrGreaterAmount: [null, [Validators.max(9999), Validators.min(0)]],
         revisedDueDate: [null],
         comments: [{ value: null, disabled: !this.jjDisputedCount }],
+        latestPlea: [{ value: null, disabled: !this.jjDisputedCount }],
+        latestPleaUpdateTs: [{ value: null, disabled: !this.jjDisputedCount }],
         jjDisputedCountRoP: this.formBuilder.group({
           finding: [{ value: null, disabled: !this.jjDisputedCount }],
           lesserDescription: [{ value: null, disabled: !this.jjDisputedCount }],
@@ -86,7 +93,7 @@ export class JJCountComponent implements OnInit {
           stayOfProceedingsByCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
           stayOfProceedingsBy: [{ value: null, disabled: !this.jjDisputedCount }],
           otherCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          other: [{ value: null, disabled: !this.jjDisputedCount }],
+          other: [{ value: null, disabled: !this.jjDisputedCount }],          
         })
       });
 
@@ -167,6 +174,16 @@ export class JJCountComponent implements OnInit {
           this.form.get('jjDisputedCountRoP').get('otherCheckbox').setValue(true);
         } else {
           this.form.get('jjDisputedCountRoP').get('other').disable();
+        }
+
+        //latestPlea
+        if(this.jjDisputedCount?.latestPlea){
+          this.bindLatestPlea(this.jjDisputedCount.latestPlea);
+        }
+
+        //latestPleaUpdatedTs
+        if(this.jjDisputedCount?.latestPleaUpdateTs){
+          this.bindLatestPleaUpdateTs(this.jjDisputedCount.latestPleaUpdateTs);
         }
       }
 
@@ -325,6 +342,23 @@ export class JJCountComponent implements OnInit {
     if (event.value == "no") {
       this.form.get('revisedDueDate').setValue(this.jjDisputedCount?.dueDate);
     }
+  }
+
+  //Latest Plea
+  bindLatestPlea(value){
+    this.form.get("latestPlea").setValue(value);
+  }
+
+  bindLatestPleaUpdateTs(value){
+    this.form.get("latestPleaUpdateTs").setValue(new Date(value));
+  }
+
+  onLatestPleaChange(value: JJDisputedCountLatestPlea){
+    this.jjDisputedCount.latestPlea=value;
+  }
+
+  onLatestPleaUpdateTsChange(value){
+    this.jjDisputedCount.latestPleaUpdateTs=value.toISOString();
   }
 }
 
