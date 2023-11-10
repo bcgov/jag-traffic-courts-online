@@ -17,8 +17,7 @@ import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.WebDriverManager;
 
 public class AdditionalInfoValidation {
-	
-	
+
 	private WebDriver driver;
 
 	@After
@@ -69,15 +68,6 @@ public class AdditionalInfoValidation {
 				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-6 .mat-radio-outer-circle")));
 		jse2.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-		JavascriptExecutor jse3 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-9 .mat-radio-outer-circle")));
-		jse3.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
-		JavascriptExecutor jse4 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-12 .mat-radio-outer-circle")));
-		jse4.executeScript("arguments[0].click();", element);
 
 		JavascriptExecutor jse22 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
@@ -93,42 +83,45 @@ public class AdditionalInfoValidation {
 			System.out.println("Text: " + a + " is not present. ");
 		}
 		JavascriptExecutor jse21 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("mat-checkbox-12-input")));
+		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//*[contains(text(), ' I intend to be represented by a lawyer in court. ')]")));
 		jse21.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
 
 		// Additional Info with lawyer, interpreter and witness
-		element = driverWait.until(ExpectedConditions
-				.elementToBeClickable(By.cssSelector("#mat-checkbox-13 .mat-checkbox-inner-container")));
-		element.click();
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qua");
+		element.sendKeys(
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qua");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
-		element.sendKeys("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m");
+		element.sendKeys(
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
-		element.sendKeys("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede");
+		element.sendKeys(
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
-		element.sendKeys("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@a.com");
+		element.sendKeys(
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@a.com");
 		JavascriptExecutor jse6 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("mat-select-value-9")));
+		element = driverWait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//*[contains(text(), ' I require a language interpreter at the hearing. ')]")));
 		jse6.executeScript("arguments[0].click();", element);
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-option-267 > .mat-option-text")));
-		element.click();
-		Thread.sleep(1000);
+
+		JavascriptExecutor jse7 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
-				.elementToBeClickable(By.cssSelector("#mat-checkbox-14 .mat-checkbox-inner-container")));
-		element.click();
+				.elementToBeClickable(By.xpath("//*[contains(text(), ' I intend to call a witness(es). ')]")));
+		jse7.executeScript("arguments[0].click();", element);
+		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
 		element.clear();
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
-		element.sendKeys("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
-		
+		element.sendKeys(
+				"9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
+
 		Thread.sleep(1000);
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 200')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 200')]")));
 
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 100')]")));
@@ -137,7 +130,7 @@ public class AdditionalInfoValidation {
 				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Must be a valid email address')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'must be a number less than 100')]")));
-		
+
 	}
 
 }
