@@ -14,7 +14,7 @@ import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.WebDriverManager;
 
 public class DisputeTicketByLawyerContactDetails {
-	
+
 	private WebDriver driver;
 
 	@After
@@ -36,21 +36,22 @@ public class DisputeTicketByLawyerContactDetails {
 		WebDriverManager.getElements();
 
 		CommonUtils.login();
-		
+
 		DisputeTicketOptionsPicker disputeTicketExisting = new DisputeTicketOptionsPicker();
 		disputeTicketExisting.startDisputeTicket(element, driverWait, driver);
-		
+
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
 		element.sendKeys("Test");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
 		element.sendKeys("User");
-		//Select Lawyer
+		// Select Lawyer
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-value-1")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
 		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-1 > .mat-option-text")));
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-1 > .mat-option-text")));
 		Thread.sleep(1000);
 		js1.executeScript("arguments[0].click();", element);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
@@ -71,24 +72,24 @@ public class DisputeTicketByLawyerContactDetails {
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
 		element.sendKeys("999 999 1234");
-		
+
 		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
 		review.reviewProcess(element, driverWait, driver);
-		
+
 		DisputeTicketByLawyerContactDetails lawyerOther = new DisputeTicketByLawyerContactDetails();
 		lawyerOther.additionalInfoLawyerOther(element, driverWait, driver);
-		
+
 		DisputeTicketOptionsPicker overview = new DisputeTicketOptionsPicker();
 		overview.ticketRequestOverview(element, driverWait, driver);
-		
+
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
 		popup.popupSubmitWindow(element, driverWait, driver);
-		
-		
+
 	}
-	
-	public void additionalInfoLawyerOther(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
-		
+
+	public void additionalInfoLawyerOther(WebElement element, WebDriverWait driverWait, WebDriver driver)
+			throws Exception {
+
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
 		element.sendKeys(

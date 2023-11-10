@@ -25,16 +25,12 @@ public class DisputeTicketOptionsPicker {
 
 	private static String user;
 
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		WebDriverManager.instance = null;
-	}
+	
+	  @After public void tearDown() { driver.close(); driver.quit(); }
+	  
+	  @AfterClass public static void afterClass() { WebDriverManager.instance =
+	  null; }
+	 
 
 	@Test
 	public void test() throws Exception {
@@ -50,22 +46,6 @@ public class DisputeTicketOptionsPicker {
 
 		DisputeTicketOptionsPicker persInfo = new DisputeTicketOptionsPicker();
 		persInfo.addressInput(element, driverWait, driver);
-
-		// Add DOB
-		/*
-		 * new WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[@aria-label='Open calendar']"))) .click(); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' 2004 ')]"))) .click(); Thread.sleep(1000); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' JAN ')]"))).click(); Thread.sleep(1000); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' 31 ')]"))).click();
-		 */
 
 		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
 		review.reviewProcess(element, driverWait, driver);
@@ -105,16 +85,16 @@ public class DisputeTicketOptionsPicker {
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Traffic Ticket ')]")))
 				.click();
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
-		element.sendKeys("EA03148599");
+		element.sendKeys("EZ02005200");
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
-				By.xpath("//*[contains(@placeholder,'HH')]")));
-		element.sendKeys("17");
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'HH')]")));
+		element.sendKeys("09");
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'MM')]")))
-				.sendKeys("16");
-		
+				.sendKeys("09");
+
 		System.out.println("Ticket found");
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
@@ -126,10 +106,11 @@ public class DisputeTicketOptionsPicker {
 		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 		System.out.println("Scroll down till the bottom of the page");
 		Thread.sleep(1000);
+		JavascriptExecutor js2 = (JavascriptExecutor) driver;
 		element = driverWait
 				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-button-wrapper > strong")));
-		element.click();
-		System.out.println("Start dispute ticket");
+		js2.executeScript("arguments[0].click();", element);
+		System.out.println("Start traffic ticket dispute request");
 	}
 
 	public void reviewProcess(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
@@ -156,42 +137,24 @@ public class DisputeTicketOptionsPicker {
 		// Select rdo button
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-2")));
 		element.click();
-
+		System.out.println("RDO selected");
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
 				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-4 .mat-checkbox-inner-container")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
 
+		System.out.println("I would like to plead guilty and request time to pay on this count.- selected");
+
 		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-5 .mat-checkbox-inner-container")));
-		js1.executeScript("arguments[0].click();", element);
+		// Scroll down till the bottom of the page
+		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+		System.out.println("Scroll down till the bottom of the page");
 		JavascriptExecutor js2 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-7 .mat-checkbox-inner-container")));
+		Thread.sleep(1000);
+		// Click Next
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
 		js2.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
-		JavascriptExecutor js3 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions
-				.visibilityOfElementLocated(By.cssSelector("#mat-checkbox-8 .mat-checkbox-inner-container")));
-		js3.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
-		JavascriptExecutor js4 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions
-				.visibilityOfElementLocated(By.cssSelector("#mat-checkbox-9 .mat-checkbox-inner-container")));
-		js4.executeScript("arguments[0].click();", element);
-//		Thread.sleep(1000);
-//		element = driverWait.until(ExpectedConditions
-//				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-7 .mat-checkbox-inner-container")));
-//		element.click();
-		Thread.sleep(1000);
-		JavascriptExecutor js12 = (JavascriptExecutor) driver;
-		js12.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		Thread.sleep(1000);
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ng-star-inserted > .row #primaryButton")));
-		element.click();
 
 		String c = "Additional information";
 		// identify elements with text()
@@ -209,9 +172,6 @@ public class DisputeTicketOptionsPicker {
 
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 		// Click Next

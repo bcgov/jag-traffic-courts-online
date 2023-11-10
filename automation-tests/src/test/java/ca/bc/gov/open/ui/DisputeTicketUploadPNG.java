@@ -50,7 +50,7 @@ public class DisputeTicketUploadPNG {
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'May 24, 2023')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Kent')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'kent')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'BC')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))

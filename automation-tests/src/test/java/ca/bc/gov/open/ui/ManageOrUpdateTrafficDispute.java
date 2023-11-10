@@ -19,16 +19,16 @@ public class ManageOrUpdateTrafficDispute {
 
 	private WebDriver driver;
 
-//	@After
-//	public void tearDown() {
-//		driver.close();
-//		driver.quit();
-//	}
-//
-//	@AfterClass
-//	public static void afterClass() {
-//		WebDriverManager.instance = null;
-//	}
+	@After
+	public void tearDown() {
+		driver.close();
+		driver.quit();
+	}
+
+	@AfterClass
+	public static void afterClass() {
+		WebDriverManager.instance = null;
+	}
 
 	@Test
 	public void test() throws Exception {
@@ -60,6 +60,17 @@ public class ManageOrUpdateTrafficDispute {
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
 				.click();
+		Thread.sleep(1000);
+		// Start Traffic ticket dispute request
+		JavascriptExecutor js1 = (JavascriptExecutor) driver;
+		// Scroll down till the bottom of the page
+		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+		System.out.println("Scroll down till the bottom of the page");
+		Thread.sleep(1000);
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-button-wrapper > strong")));
+		element.click();
+		System.out.println("Start dispute ticket");
 
 	}
 
