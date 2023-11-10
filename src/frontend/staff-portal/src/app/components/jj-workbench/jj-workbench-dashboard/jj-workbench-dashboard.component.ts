@@ -5,7 +5,7 @@ import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { MatLegacyTab as MatTab } from '@angular/material/legacy-tabs';
 import { AppState } from 'app/store';
-import { select, Store } from '@ngrx/store';
+import {  Store } from '@ngrx/store';
 import * as JJDisputeStore from "app/store/jj-dispute";
 
 @Component({
@@ -40,7 +40,7 @@ export class JjWorkbenchDashboardComponent implements OnInit {
         this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
       }
     })
-    this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
+    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
   }
 
   changeJJDispute(jjDispute: JJDispute) {

@@ -7,7 +7,7 @@ import { DIALOG_DEFAULT_OPTION } from '../dialogs-properties.provider';
 import { DialogContentOutput } from '../dialog-output.model';
 
 @Component({
-  selector: 'more-options-dialog',
+  selector: 'app-more-options-dialog',
   templateUrl: './more-options-dialog.component.html',
   styleUrls: ['./more-options-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

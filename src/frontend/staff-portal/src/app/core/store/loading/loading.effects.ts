@@ -13,7 +13,7 @@ export class LoadingEffects {
     private store: Store,
   ) { }
 
-  removeLoadingitem$ = createEffect(() => this.actions$.pipe(
+  removeLoadingitem$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Remove),
     withLatestFrom(this.store.select(LoadingStore.Selectors.NumberOfLoadingItems)),
     switchMap(([action, numberOfLoadingItems]) => {
@@ -21,6 +21,6 @@ export class LoadingEffects {
         return of(Actions.LoadingDone());
       }
       return of();
-    }))
+    })) }
   );
 }

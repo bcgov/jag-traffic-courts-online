@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { LoadingStore } from '@core/store';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { filter, Subscription } from 'rxjs';
 
 @Component({
@@ -16,7 +16,7 @@ export class PageComponent {
     private store: Store
   ) {
     this.mode = 'default';
-    this.store.pipe(select(LoadingStore.Selectors.IsLoading), filter(i => !!i)).subscribe(() => {
+    this.store.select(LoadingStore.Selectors.IsLoading).pipe(filter(i => !!i)).subscribe(() => {
       if (!this.busy || this.busy.closed) {
         this.busy = this.store.select(LoadingStore.Selectors.IsLoading).subscribe(isLoading => {
           if (!isLoading) {

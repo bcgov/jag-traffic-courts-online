@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { JJDisputeHearingType, JJDisputeStatus, DisputeStatus } from 'app/api';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeService } from 'app/services/dispute.service';
@@ -31,7 +31,7 @@ export class UpdateDisputeLandingComponent implements OnInit {
     this.disputeService.checkStoredDispute().subscribe(found => {
       if (found) {
         // subscribe to all changes
-        this.store.pipe(select(DisputeStore.Selectors.State)).subscribe(state => {
+        this.store.select((DisputeStore.Selectors.State)).subscribe(state => {
           if (state.result) {
             this.state = state;
             let dispute = state.result;

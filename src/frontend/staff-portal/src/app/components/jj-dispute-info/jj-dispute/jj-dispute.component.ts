@@ -30,7 +30,7 @@ export class JJDisputeComponent implements OnInit {
   @Input() jjDisputeInfo: JJDispute
   @Input() type: string;
   @Input() isViewOnly = false;
-  @Output() onBack: EventEmitter<any> = new EventEmitter();
+  @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
@@ -468,6 +468,6 @@ export class JJDisputeComponent implements OnInit {
 
   onBackClicked() {
     this.jjDisputeService.refreshDisputes.emit();
-    this.onBack.emit();
+    this.backInbox.emit();
   }
 }

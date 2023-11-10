@@ -15,13 +15,13 @@
     <span class="section-grid-cell">
       <p class="section-grid-header">Requested Update</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer !== null">
       <p class="section-grid-header">Represented By Lawyer</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer !== null">
       <p class="section-grid-text" >{{ disputeInfo.representedByLawyer }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer !== null">
       <p class="section-grid-text">{{ updateRequested.RepresentedByLawyer === true ? RepresentedByLawyer.Y : RepresentedByLawyer.N }}</p>
     </span>
     <span class="section-grid-cell" *ngIf="updateRequested.LawFirmName">
@@ -105,13 +105,13 @@
     <span class="section-grid-cell" *ngIf="updateRequested.RequestCourtAppearance">
       <p class="section-grid-text">{{ updateRequested.RequestCourtAppearance }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired !== null">
       <p class="section-grid-header">Interpreter Language Required</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired !== null">
       <p class="section-grid-text" >{{ disputeInfo.interpreterRequired }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired !== null">
       <p class="section-grid-text">{{ updateRequested.InterpreterRequired === true ? InterpreterRequired.Y : InterpreterRequired.N }}</p>
     </span>
     <span class="section-grid-cell" *ngIf="updateRequested.InterpreterLanguageCd">
@@ -159,10 +159,10 @@
     <span class="section-grid-cell">
       <p class="section-grid-header">Requested Update</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer !== null">
       <p class="section-grid-header">Represented By Lawyer</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.RepresentedByLawyer !== null">
       <p class="section-grid-text">{{ updateRequested.RepresentedByLawyer === true ? RepresentedByLawyer.Y : RepresentedByLawyer.N }}</p>
     </span>
     <span class="section-grid-cell" *ngIf="updateRequested.LawFirmName">
@@ -219,10 +219,10 @@
     <span class="section-grid-cell" *ngIf="updateRequested.RequestCourtAppearance">
       <p class="section-grid-text">{{ updateRequested.RequestCourtAppearance }}</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired !== null">
       <p class="section-grid-header">Interpreter Language Required</p>
     </span>
-    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired != null">
+    <span class="section-grid-cell" *ngIf="updateRequested.InterpreterRequired !== null">
       <p class="section-grid-text">{{ updateRequested.InterpreterRequired === true ? InterpreterRequired.Y : InterpreterRequired.N }}</p>
     </span>
     <span class="section-grid-cell" *ngIf="updateRequested.InterpreterLanguageCd">

@@ -33,6 +33,6 @@
   </mat-tab-group>
 </app-page>
 <ng-container *ngIf="showDispute">
-  <app-jj-dispute (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo"
+  <app-jj-dispute (backInbox)="backInbox()" [jjDisputeInfo]="jjDisputeInfo"
     [isViewOnly]="!isInfoEditable"></app-jj-dispute>
 </ng-container>

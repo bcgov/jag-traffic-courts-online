@@ -8,7 +8,7 @@ import { DisputeDecisionInboxComponent } from '../dispute-decision-inbox/dispute
 import { TicketInboxComponent } from '../ticket-inbox/ticket-inbox.component';
 import { DisputeService } from 'app/services/dispute.service';
 import { UpdateRequestInboxComponent } from '../update-request-inbox/update-request-inbox.component';
-import { select, Store } from '@ngrx/store';
+import {  Store } from '@ngrx/store';
 import { AppState } from 'app/store';
 
 @Component({
@@ -38,7 +38,7 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
+    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
   }
 
   changeDispute(dispute: Dispute) {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpInterceptor, HttpResponse, HttpEvent } from '@angular/common/http';
 import { filter, map, Observable, of } from 'rxjs';
-import { select, Store } from '@ngrx/store';
+import {  Store } from '@ngrx/store';
 import { AuthStore } from '../store';
 import { AppConfigService } from 'app/services/app-config.service';
 import { AuthConfig } from '../models/auth-config.model';
@@ -15,7 +15,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     private appConfigService: AppConfigService,
     private store: Store
   ) {
-    this.store.pipe(select(AuthStore.Selectors.AccessToken), filter(i => !!i)).subscribe(token => {
+    this.store.select(AuthStore.Selectors.AccessToken).pipe( filter(i => !!i)).subscribe(token => {
       this.token = token;
     })
   }

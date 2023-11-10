@@ -7,7 +7,7 @@ import { filter, Observable } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
+import {  Store } from '@ngrx/store';
 import { AppState } from 'app/store';
 
 @Component({
@@ -76,7 +76,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         }
       )
 
-    this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
+    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
   }
 
   ngOnInit(): void {
