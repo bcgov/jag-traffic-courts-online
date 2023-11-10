@@ -43,6 +43,16 @@ let routes: Routes = [
     title: "Unauthorized"
   },
   {
+    path: 'ticket',
+    redirectTo: AppRoutes.STAFF,
+    pathMatch: 'full',
+  },
+  {
+    path: 'jjworkbench',
+    redirectTo: AppRoutes.JJ,
+    pathMatch: 'full',
+  },
+  {
     path: '**',
     redirectTo: AppRoutes.LANDING,
     pathMatch: 'full',
