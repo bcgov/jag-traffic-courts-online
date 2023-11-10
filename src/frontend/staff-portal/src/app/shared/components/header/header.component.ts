@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { NavigationEnd, Router, Scroll } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,7 +19,6 @@ import { filter, forkJoin } from 'rxjs';
 export class HeaderComponent implements OnInit {
   fullName: string;
   todayDate: Date = new Date();
-  @Output() toggle: EventEmitter<void>;
 
   languageCode: string;
   languageDesc: string;
@@ -32,20 +32,18 @@ export class HeaderComponent implements OnInit {
   userProfile: KeycloakProfile = {};
   jjRole: boolean = false;
   vtcRole: boolean = false;
-  headingText: string = "Authenticating...";
+  headingText: string;
 
   constructor(
     private appConfigService: AppConfigService,
     private translateService: TranslateService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private title: Title,
     private authService: AuthService,
     private lookupsService: LookupsService,
     private logger: LoggerService,
     private store: Store<AppState>,
   ) {
-    this.toggle = new EventEmitter<void>();
-
     this.languageCode = this.translateService.getDefaultLang();
     this.onLanguage();
 
@@ -54,11 +52,10 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.headingText = this.activatedRoute.snapshot?.data?.title ? this.activatedRoute.snapshot?.data?.title : "Authenticating...";
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event: Scroll) => event.routerEvent instanceof NavigationEnd))
       .subscribe(() => {
-        this.headingText = this.activatedRoute.snapshot?.data?.title ? this.activatedRoute.snapshot?.data?.title : "Authenticating...";
+        this.headingText = this.title.getTitle();
       });
 
     this.authService.checkAuth().subscribe(() => {
@@ -88,10 +85,6 @@ export class HeaderComponent implements OnInit {
         }
       })
     })
-  }
-
-  toggleSidenav(): void {
-    this.toggle.emit();
   }
 
   private toggleLanguage(lang: string): {

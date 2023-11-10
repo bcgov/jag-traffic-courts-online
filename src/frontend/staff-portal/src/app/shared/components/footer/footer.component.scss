@@ -1,15 +1,7 @@
 @import "palette";
 
 .site-footer {
-  background-color: #003366;
-  width: 100%;
-  min-height: 60px;
-  padding: 20px 0;
   border-top: 2px solid theme-palette(yellow);
-  position: absolute;
-  position: fixed;
-  left: 0;
-  bottom: 0;
 }
 
 .site-footer-links {
@@ -27,7 +19,7 @@
 }
 
 .site-footer-links a {
-  font-size: 1em;
+  font-size: 1rem;
   color: #fff !important;
   font-weight: 200;
 }

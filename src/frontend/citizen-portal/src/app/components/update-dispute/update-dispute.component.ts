@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
 import { DisputeService, FileMetadata } from 'app/services/dispute.service';
 import { NoticeOfDispute } from 'app/services/notice-of-dispute.service';
@@ -20,7 +20,7 @@ export class UpdateDisputeComponent implements OnInit {
   ticketType: string;
   fileData$: Observable<FileMetadata[]>;
 
-   constructor(
+  constructor(
     private violationTicketService: ViolationTicketService,
     private disputeService: DisputeService,
     private store: Store,
@@ -30,7 +30,7 @@ export class UpdateDisputeComponent implements OnInit {
   ngOnInit(): void {
     this.disputeService.checkStoredDispute().pipe(filter(i => !!i), take(1)).subscribe(found => {
       if (found) {
-        this.store.pipe(select(DisputeStore.Selectors.NoticeOfDispute), filter(i => !!i)).subscribe(noticeOfDispute => {
+        this.store.select(DisputeStore.Selectors.NoticeOfDispute).pipe(filter(i => !!i)).subscribe(noticeOfDispute => {
           this.noticeOfDispute = noticeOfDispute;
           this.ticketType = this.violationTicketService.getTicketType(this.noticeOfDispute);
         })

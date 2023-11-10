@@ -8,7 +8,7 @@ import { JJDisputeService } from 'app/services/jj-dispute.service';
 @Component({
   selector: 'app-document-update-request-info',
   templateUrl: './document-update-request-info.component.html',
-  styleUrls: ['./document-update-request-info.component.scss', '../../../../app.component.scss']
+  styleUrls: ['./document-update-request-info.component.scss']
 })
 export class DocumentUpdateRequestInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

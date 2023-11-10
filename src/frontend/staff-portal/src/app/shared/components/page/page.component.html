@@ -1,27 +1,16 @@
-<app-busy-overlay [busy]="busy">
-  <div class="row">
-    <!--
-      class="col-sm-12 offset-md-1"
-      [ngClass]="{
-        'col-md-8 col-xl-6': mode === 'default',
-        'col-md-10': mode === 'full'
-      }"
-
-      class="col-sm-12"
-      [ngClass]="{
-        'col-md-10 col-xl-10': mode === 'default',
-        'col-md-10': mode === 'full'
-      }"
-    -->
-    <div class="col-sm-12 col-md-12 col-lg-12">
-      <ng-content select="app-page-header"></ng-content>
-
-      <ng-content select="app-progress-indicator"></ng-content>
-      <div style="height:40px;"></div>
-
-      <ng-content></ng-content>
-
-      <ng-content select="app-page-footer"></ng-content>
-    </div>
+<div class="flex-wrapper">
+  <div class="d-print-none">
+    <app-header></app-header>
   </div>
-</app-busy-overlay>
+  <div class="d-print-none">
+    <ng-content select="[stickyToolBar]"></ng-content>
+  </div>
+  <div fxFlex class="container app-width">
+    <app-busy-overlay [busy]="busy">
+      <ng-content></ng-content>
+    </app-busy-overlay>
+  </div>
+  <div class="d-print-none">
+    <app-footer></app-footer>
+  </div>
+</div>

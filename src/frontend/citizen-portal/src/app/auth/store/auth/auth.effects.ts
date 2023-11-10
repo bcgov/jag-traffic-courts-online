@@ -17,16 +17,16 @@ export class AuthEffects {
     private userService: UserService
   ) { }
 
-  Authorize$ = createEffect(() => this.actions$.pipe(
+  Authorize$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Authorize),
     switchMap(action => {
       localStorage.setItem("url", action.redirectUrl);
       this.oidcSecurityService.authorize();
       return of(Actions.Authorizing());
-    }))
+    })) }
   );
 
-  Authorized$ = createEffect(() => this.actions$.pipe(
+  Authorized$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Authorized),
     switchMap((action) => {
       if (action.payload.isAuthenticated) {
@@ -42,6 +42,6 @@ export class AuthEffects {
         return of(Actions.Redirect());
       }
       return of();
-    }))
+    })) }
   );
 }

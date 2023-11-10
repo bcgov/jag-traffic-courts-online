@@ -12,34 +12,35 @@ let routes: Routes = [
   {
     path: AppRoutes.LANDING,
     component: LandingComponent,
-    data: {
-      title: "Please sign in"
-    }
   },
   {
-    path: AppRoutes.TICKET,
-    component: StaffWorkbenchDashboardComponent,
+    path: AppRoutes.STAFF,
     canActivate: [AuthorizationGuard],
-    data: {
-      expectedRole: UserGroup.VTC_STAFF,
-      title: "Staff Workbench"
-    }
+    data: { expectedRole: UserGroup.VTC_STAFF },
+    children: [
+      {
+        path: '',
+        component: StaffWorkbenchDashboardComponent,
+        title: "Staff Workbench",
+      }
+    ],
   },
   {
-    path: AppRoutes.JJWORKBENCH,
-    component: JjWorkbenchDashboardComponent,
+    path: AppRoutes.JJ,
     canActivate: [AuthorizationGuard],
-    data: {
-      expectedRole: UserGroup.JUDICIAL_JUSTICE,
-      title: "JJ Workbench"
-    }
+    data: { expectedRole: UserGroup.JUDICIAL_JUSTICE },
+    children: [
+      {
+        path: '',
+        component: JjWorkbenchDashboardComponent,
+        title: "JJ Workbench",
+      }
+    ],
   },
   {
     path: AppRoutes.UNAUTHORIZED,
     component: UnauthorizedComponent,
-    data: {
-      title: "Unauthorized"
-    }
+    title: "Unauthorized"
   },
   {
     path: '**',
@@ -48,15 +49,11 @@ let routes: Routes = [
   },
 ];
 
-// Replace the starting "/" since it is not needed in RouterModule
-routes.forEach(route => {
-  if (route.path?.startsWith("/")) {
-    route.path = route.path.replace("/", "");
-  }
-})
-
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    onSameUrlNavigation: 'reload',
+    bindToComponentInputs: true
+  })],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }

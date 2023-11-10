@@ -9,7 +9,7 @@ import { LookupsService } from 'app/services/lookups.service';
 @Component({
   selector: 'app-court-options-update-request-info',
   templateUrl: './court-options-update-request-info.component.html',
-  styleUrls: ['./court-options-update-request-info.component.scss', '../../../../app.component.scss']
+  styleUrls: ['./court-options-update-request-info.component.scss']
 })
 export class CourtOptionsUpdateRequestInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

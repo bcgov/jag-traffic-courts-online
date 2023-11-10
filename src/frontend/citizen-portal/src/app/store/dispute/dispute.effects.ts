@@ -22,7 +22,7 @@ export class DisputeEffects {
     private store: Store
   ) { }
 
-  searchDispute$ = createEffect(() => this.actions$.pipe(
+  searchDispute$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Search),
     switchMap(action => {
       let params = action.params;
@@ -51,10 +51,10 @@ export class DisputeEffects {
             return of(Actions.SearchFailed());
           })
         )
-    }))
+    })) }
   );
 
-  getDispute$ = createEffect(() => this.actions$.pipe(
+  getDispute$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Get),
     withLatestFrom(this.store.select(DisputeStore.Selectors.Result), this.store.select(DisputeStore.Selectors.Params)),
     switchMap(([action, searchResult, params]) => {
@@ -78,10 +78,10 @@ export class DisputeEffects {
             return of(Actions.GetFailed());
           })
         )
-    }))
+    })) }
   );
 
-  updateContact$ = createEffect(() => this.actions$.pipe(
+  updateContact$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.UpdateContact),
     withLatestFrom(this.store.select(DisputeStore.Selectors.Result)),
     mergeMap(([action, searchResult]) => {
@@ -109,10 +109,10 @@ export class DisputeEffects {
             return of(Actions.UpdateContactFailed());
           })
         )
-    }))
+    })) }
   );
 
-  update$ = createEffect(() => this.actions$.pipe(
+  update$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Update),
     withLatestFrom(this.store.select(DisputeStore.Selectors.Result), this.store.select(DisputeStore.Selectors.Params)),
     mergeMap(([action, searchResult, params]) => {
@@ -147,10 +147,10 @@ export class DisputeEffects {
             return of(Actions.UpdateFailed());
           })
         )
-    }))
+    })) }
   );
 
-  getDocument$ = createEffect(() => this.actions$.pipe(
+  getDocument$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.GetDocument),
     mergeMap(action => {
       return this.documentService.apiDocumentGetGet(action.fileId)
@@ -164,6 +164,6 @@ export class DisputeEffects {
             return of(Actions.GetDocumentFailed());
           })
         )
-    }))
+    })) }
   );
 }

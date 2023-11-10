@@ -1,12 +1,11 @@
 import { OnInit, Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppRoutes } from 'app/app.routes';
 import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss', '../../app.component.scss'],
+  styleUrls: ['./landing.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class LandingComponent implements OnInit {

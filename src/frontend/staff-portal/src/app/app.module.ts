@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
@@ -11,7 +11,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 import localeEn from '@angular/common/locales/en';
@@ -119,7 +118,6 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     NgxMatDatetimePickerModule,
     NgxMatNativeDateModule,
     FormsModule,
-    FlexLayoutModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

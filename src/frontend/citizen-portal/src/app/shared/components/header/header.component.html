@@ -1,36 +1,24 @@
 <div class="header d-print-none">
-  <div class="container">
-    <mat-toolbar color="primary" *ngIf="environment === 'prod'">
+  <div [ngClass]="environment === 'prod' ? 'container' : ''">
+    <mat-toolbar color="primary">
       <span>
-        <a href="https://www2.gov.bc.ca/gov/content/home"
-           class="government-of-bc-logo"
-           target="_blank"
-           rel="noopener">
-          <img src="/assets/gov_bc_logo.jpg"
-               alt="Government of BC Logo" />
+        <a href="https://www2.gov.bc.ca/gov/content/home" class="government-of-bc-logo" target="_blank" rel="noopener">
+          <img src="/assets/gov_bc_logo.jpg" alt="Government of BC Logo" />
         </a>
       </span>
 
-      <span class="flex-fill"></span>
+      <ng-container *ngIf="environment !== 'prod'">
+        <span class="flex-fill"
+          style="margin-left: 0.5rem; background-color: #19fb4a; text-align:center; color: #003366;">
+          <b>UNDER CONSTRUCTION DO NOT USE UNLESS YOU ARE AN AUTHORIZED TESTER</b>
+        </span>
+
+        <span class="badge badge-pill badge-light">
+          {{ environment }} v{{ version }}
+        </span>
+      </ng-container>
     </mat-toolbar>
   </div>
-  <mat-toolbar color="primary" *ngIf="environment !== 'prod'">
-    <span>
-      <a href="https://www2.gov.bc.ca/gov/content/home"
-         class="government-of-bc-logo"
-         target="_blank"
-         rel="noopener">
-        <img src="/assets/gov_bc_logo.jpg"
-             alt="Government of BC Logo" />
-      </a>
-    </span>
-
-    &nbsp;&nbsp;<span class="flex-fill" style="background-color: #19fb4a; text-align:center; color: #003366;"><b>UNDER CONSTRUCTION DO NOT USE UNLESS YOU ARE AN AUTHORIZED TESTER</b></span>
-
-    <span class="badge badge-pill badge-light">
-      {{ environment }} v{{ version }}
-    </span>
-  </mat-toolbar>
 </div>
 
 <div class="ngx-progress">

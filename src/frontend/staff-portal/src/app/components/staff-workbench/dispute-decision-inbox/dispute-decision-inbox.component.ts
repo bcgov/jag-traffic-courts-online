@@ -8,13 +8,13 @@ import { JJDisputeStatus } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 import { LookupsService } from 'app/services/lookups.service';
 import { AppState } from 'app/store/app.state';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { DateUtil } from '@shared/utils/date-util';
 
 @Component({
   selector: 'app-dispute-decision-inbox',
   templateUrl: './dispute-decision-inbox.component.html',
-  styleUrls: ['../../../app.component.scss', './dispute-decision-inbox.component.scss'],
+  styleUrls: ['./dispute-decision-inbox.component.scss'],
 })
 export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   private courthouseTeamNames = ["A", "B", "C", "D"];
@@ -55,7 +55,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     private lookupsService: LookupsService,
     private store: Store<AppState>
   ) {
-    this.data$ = this.store.pipe(select(state => state.jjDispute.data), filter(i => !!i));
+    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
     this.courthouseTeamNames.forEach(teamName => {
       this.courthouseTeams[teamName] = this.lookupsService.courthouseTeams.filter(x => x.__team === teamName).map(x => x.name.toLocaleLowerCase());
     })

@@ -7,7 +7,7 @@ import { DisputeContactTypeCd, DisputeUpdateRequestStatus2 } from 'app/api';
 @Component({
   selector: 'app-name-update-request-info',
   templateUrl: './name-update-request-info.component.html',
-  styleUrls: ['./name-update-request-info.component.scss', '../../../../app.component.scss']
+  styleUrls: ['./name-update-request-info.component.scss']
 })
 export class NameUpdateRequestInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

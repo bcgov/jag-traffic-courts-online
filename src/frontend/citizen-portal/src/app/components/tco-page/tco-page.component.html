@@ -1,5 +1,5 @@
 <div class="flex-wrapper">
-  <div class="flex-header d-print-none">
+  <div class="d-print-none">
     <app-header></app-header>
 
     <div class="header-summary" [ngClass]="{ 'header-summary-background': isLanding$ | async }">
@@ -62,10 +62,10 @@
     </div>
 
   </div>
-  <div fxFlex class="flex-content container">
+  <div fxFlex class="container">
     <router-outlet></router-outlet>
   </div>
-  <div class="flex-footer">
+  <div class="d-print-none">
     <app-footer></app-footer>
   </div>
 </div>

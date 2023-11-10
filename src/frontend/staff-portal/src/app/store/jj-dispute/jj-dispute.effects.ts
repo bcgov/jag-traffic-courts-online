@@ -14,17 +14,17 @@ export class JJDisputeEffects {
     private jjDisputeService: JJDisputeService
   ) { }
 
-  getJJDisputes$ = createEffect(() => this.actions$.pipe(
+  getJJDisputes$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Get),
     switchMap(() => this.jjDisputeService.getJJDisputes()
       .pipe(
         map(data => {
           return Actions.GetSuccess({ data })
         }),
-      )))
+      ))) }
   );
 
-  assignJJDisputes$ = createEffect(() => this.actions$.pipe(
+  assignJJDisputes$ = createEffect(() => { return this.actions$.pipe(
     ofType(Actions.Assign),
     mergeMap(action => this.jjDisputeService.apiJjAssignPut(action.ticketNumbers, action.username)
       .pipe(
@@ -32,6 +32,6 @@ export class JJDisputeEffects {
           this.store.dispatch(Actions.Get());
           return Actions.AssignSuccess();
         }),
-      )))
+      ))) }
   );
 }
