@@ -26,7 +26,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   };
   _dataFilters = { ...this.dataFilters };
   statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
-  tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   displayedColumns: string[] = [
     '__RedGreenAlert',
     'submittedTs',
@@ -70,10 +69,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     return d.status == DisputeStatus.New && (d.emailAddressVerified === true || !d.emailAddress);
   }
 
-  calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 80)
-  }
-
   getAllDisputes(): void {
     this.logger.log('TicketInboxComponent::getAllDisputes');
 
@@ -96,8 +91,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
       this.onApplyFilter("status", null);
-
-      // this.tableHeight = this.calcTableHeight(351);
     });
   }
 
@@ -127,8 +120,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
       this.dataSource.filter = "{}";
-      // FIXME: This static table height has got to go. The panel should vertically extend to the footer (100%) not some arbitrary pixel height that is not resized when the window is resized.
-      // this.tableHeight = this.calcTableHeight(351);
     }, 100);
   }
 
@@ -147,7 +138,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     const filterValue = value;
     this.dataFilters[filterName] = filterValue;
     this.dataSource.filter = JSON.stringify(this.dataFilters);
-    // this.tableHeight = this.calcTableHeight(351);
   }
 
   backWorkbench(element) {

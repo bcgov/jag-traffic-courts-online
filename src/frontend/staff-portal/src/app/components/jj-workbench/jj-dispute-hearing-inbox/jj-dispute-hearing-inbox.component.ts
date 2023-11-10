@@ -7,8 +7,8 @@ import { filter, Observable } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
-import {  Store } from '@ngrx/store';
-import { AppState } from 'app/store';
+import { Store } from '@ngrx/store';
+import { AppState, JJDisputeStore } from 'app/store';
 
 @Component({
   selector: 'app-jj-dispute-hearing-inbox',
@@ -26,7 +26,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     appearanceTs: new Date()
   }
   appearanceDateFilter = new FormControl(null);
-  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   jjAssignedToFilter = new FormControl('');
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
   statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
@@ -50,7 +49,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     private jjDisputeService: JJDisputeService,
     private logger: LoggerService,
     private authService: AuthService,
-    private store: Store<AppState>
+    private store: Store
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -62,7 +61,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.jjAssignedTo = this.jjAssignedToFilter.value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
-          this.tableHeight = this.calcTableHeight(300);
         }
       )
 
@@ -72,11 +70,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.appearanceTs = this.appearanceDateFilter.value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
-          this.tableHeight = this.calcTableHeight(300);
         }
       )
 
-    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
+    this.data$ = this.store.select(JJDisputeStore.Selectors.JJDisputes).pipe(filter(i => !!i));
   }
 
   ngOnInit(): void {
@@ -89,10 +86,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         })
       }
     })
-  }
-
-  calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
   }
 
   ngAfterViewInit() {
@@ -110,8 +103,8 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
       return (record.jjAssignedTo?.toLocaleLowerCase().indexOf(searchTerms.jjAssignedTo?.toLocaleLowerCase()) > -1 || searchTerms?.jjAssignedTo === '' && !record.jjAssignedto)
         && ((record.appearanceTs?.getFullYear() === searchDate.getFullYear()
-        && record.appearanceTs?.getMonth() === searchDate.getMonth()
-        && record.appearanceTs?.getDate() === searchDate.getDate()) || !searchTerms.appearanceTs );
+          && record.appearanceTs?.getMonth() === searchDate.getMonth()
+          && record.appearanceTs?.getDate() === searchDate.getDate()) || !searchTerms.appearanceTs);
     }
 
     return filterFunction;
@@ -140,7 +133,5 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
     this.jjAssignedToFilter.setValue("");
     this.appearanceDateFilter.setValue(null);
-
-    this.tableHeight = this.calcTableHeight(300);
   }
 }

@@ -36,7 +36,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     'userAssignedTo'
   ];
   public userProfile: KeycloakProfile = {};
-  tableHeight: number = window.innerHeight - 352; // less size of other fixed elements
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -47,11 +46,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
   ) {
     this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputesWithPendingUpdates(); })
-  }
-
-  // FIXME: This static table height has got to go. The query results panel should vertically extend to the footer (100%) not some arbitrary pixel height that is not resized when the window is resized.
-  calcTableHeight(heightOther: number) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60);
   }
 
   public async ngOnInit() {
@@ -83,8 +77,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
-
-      this.tableHeight = this.calcTableHeight(352);
     });
   }
 
@@ -111,7 +103,6 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     const filterValue = value;
     this.dataFilters[filterName] = filterValue;
     this.dataSource.filter = JSON.stringify(this.dataFilters);
-    this.tableHeight = this.calcTableHeight(352);
   }
 
   resetSearchFilters() {
@@ -128,12 +119,10 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
       this.dataSource.filter = "{}";
-      this.tableHeight = this.calcTableHeight(352);
     }, 100);
   }
 
   backWorkbench(element) {
     this.disputeInfo.emit(element);
   }
-
 }

@@ -7,7 +7,7 @@ export function LoadingReducer(state: LoadingState = initialState, action: Actio
 }
 
 const loadingReducer = createReducer(initialState,
-  on(Actions.Add, (state) => ({ ...state, isLoading: true, numberOfLoadingItems: state.numberOfLoadingItems + 1 })),
-  on(Actions.Remove, (state) => ({ ...state, numberOfLoadingItems: state.numberOfLoadingItems - 1 })),
-  on(Actions.LoadingDone, state => ({ ...state, isLoading: false })),
+  on(Actions.Add, (state: LoadingState) => ({ ...state, isLoading: true, numberOfLoadingItems: state.numberOfLoadingItems + 1 })),
+  on(Actions.Remove, (state: LoadingState) => ({ ...state, numberOfLoadingItems: state.numberOfLoadingItems - 1 })),
+  on(Actions.LoadingDone, (state: LoadingState) => ({ ...state, isLoading: false })),
 )

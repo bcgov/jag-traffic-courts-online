@@ -1,4 +1,4 @@
-export { LoadingActionTypes as ActionTypes } from "./laoding.actions-types";
+export { LoadingActionTypes as ActionTypes } from "./loading.actions-types";
 export { LoadingState as State, initialState as InitialState } from "./loading.state";
 export * as Actions from "./loading.actions";
 export { LoadingReducer as Reducer } from "./loading.reducers";

@@ -33,7 +33,7 @@ export class JJDisputeService {
     private jjApiService: JJService,
     private http: HttpClient,
     private authService: AuthService,
-    private store: Store<AppState>,
+    private store: Store,
     private lookupsService: LookupsService,
   ) {
   }

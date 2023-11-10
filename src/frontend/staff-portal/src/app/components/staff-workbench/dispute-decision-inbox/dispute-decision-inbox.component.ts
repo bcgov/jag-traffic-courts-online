@@ -22,8 +22,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
-  tableHeight: number = window.innerHeight - 325; // less size of other fixed elements
-
   IDIR: string = "";
   currentTeam: string = "All";
   courthouseTeams = {};
@@ -90,7 +88,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     const filterValue = value;
     this.dataFilters[filterName] = filterValue;
     this.dataSource.filter = JSON.stringify(this.dataFilters);
-    this.tableHeight = this.calcTableHeight(352);
   }
 
   resetSearchFilters() {
@@ -108,7 +105,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     // Put this call in a Timeout to keep UI responsive.
     setTimeout(() => {
       this.dataSource.filter = "{}";
-      this.tableHeight = this.calcTableHeight(352);
     }, 100);
   }
 
@@ -140,10 +136,6 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  calcTableHeight(heightOther: number) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
-  }
-
   backWorkbench(value: JJDispute) {
     this.jjDisputeInfo.emit(value);
   }
@@ -160,7 +152,5 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.dataSource.data.sort((a, b) => {
       if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
     });
-
-    this.tableHeight = this.calcTableHeight(325);
   }
 }

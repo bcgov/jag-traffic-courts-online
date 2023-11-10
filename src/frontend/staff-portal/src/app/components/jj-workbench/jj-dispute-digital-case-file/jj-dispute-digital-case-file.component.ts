@@ -18,7 +18,6 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   HearingType = JJDisputeHearingType;
   jjAssignedToFilter: string;
-  tableHeight: number = window.innerHeight - 350; // less size of other fixed elements
   filterText: string;
   // data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
@@ -45,10 +44,6 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     this.dataSource.filterPredicate = this.searchFilter;
   }
 
-  calcTableHeight(heightOther: number) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
-  }
-
   ngOnInit(): void {    
     if (!this.subscription) {
       this.subscription = this.data$.subscribe(data => {
@@ -68,7 +63,6 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
 
   onApplyFilter() {
     this.dataSource.filter = JSON.stringify(this.dataFilters);
-    this.tableHeight = this.calcTableHeight(350);
   }
 
   resetSearchFilters() {
@@ -81,13 +75,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
       "courthouseLocation": ""
     };
 
-    // Will re-execute the filter function, but will block UI rendering
-    // Put this call in a Timeout to keep UI responsive.
-    setTimeout(() => {
-      //this.data = this.sampleData();
-      this.dataSource.filter = "{}";
-      this.tableHeight = this.calcTableHeight(350);
-    }, 100);
+    this.onApplyFilter();
   }
     
   searchFilter = function (record: JJDispute, filter: string) {
