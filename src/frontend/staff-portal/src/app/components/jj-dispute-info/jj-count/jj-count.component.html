@@ -231,7 +231,7 @@
     <br>
     <div class="row">
       <div class="col-md-4">
-        <span class="section-grid-header section-plea-header">Change Plea</span>
+        <span class="section-grid-header">Change Plea</span>
       </div>
       <div class="col-md-8">
         <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="!isViewOnly && jjDisputedCount" style="width:75%; background:#fffee6"
@@ -240,21 +240,26 @@
           <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
         </mat-select>
         <div *ngIf="isViewOnly && jjDisputedCount">
-          <span *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G" class="section-grid-text">Guilty</span>
-          <span *ngIf="jjDisputedCount?.latestPlea === LatestPlea.N" class="section-grid-text">Not guilty</span>
+          <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G">Guilty</span>
+          <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.N">Not guilty</span>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <span class="section-grid-header section-plea-header">Date/Time</span>
+        <span class="section-grid-header">Date/Time</span>
       </div>
       <div class="col-md-8">
         <mat-form-field *ngIf="!isViewOnly && jjDisputedCount" class="form-field-latest-plea">
           <input matInput [ngxMatDatetimePicker]="picker" [value]="jjDisputedCount?.latestPleaUpdateTs" formControlName="latestPleaUpdateTs"
             (dateChange)="onLatestPleaUpdateTsChange($event.value)" >
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+          <ngx-mat-datetime-picker #picker>
+            <ngx-mat-datepicker-actions>
+              <button mat-button ngxMatDatepickerCancel>Cancel</button>
+              <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
+            </ngx-mat-datepicker-actions>
+          </ngx-mat-datetime-picker>
         </mat-form-field>
         <div *ngIf="isViewOnly && jjDisputedCount && jjDisputedCount?.latestPleaUpdateTs">
           <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "MM/dd/YYYY HH:mm" }}</span>
@@ -269,7 +274,7 @@
     <br>
     <div class="row">
       <div class="col-md-4">
-        <span class="section-grid-header section-plea-header">Change Plea</span>
+        <span class="section-grid-header">Change Plea</span>
       </div>
       <div class="col-md-8">
         <span *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G" class="section-grid-text">Guilty</span>
@@ -278,7 +283,7 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <span class="section-grid-header section-plea-header">Date/Time</span>
+        <span class="section-grid-header">Date/Time</span>
       </div>
       <div class="col-md-8">
         <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPleaUpdateTs">{{ jjDisputedCount?.latestPleaUpdateTs | date: "MM/dd/YYYY HH:mm" }}</span>
