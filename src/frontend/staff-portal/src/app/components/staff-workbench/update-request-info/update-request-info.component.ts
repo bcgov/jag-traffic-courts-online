@@ -13,7 +13,7 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 @Component({
   selector: 'app-update-request-info',
   templateUrl: './update-request-info.component.html',
-  styleUrls: ['./update-request-info.component.scss', '../../../app.component.scss']
+  styleUrls: ['./update-request-info.component.scss']
 })
 export class UpdateRequestInfoComponent implements OnInit {
   @Input() disputeInfo: Dispute;
@@ -21,7 +21,6 @@ export class UpdateRequestInfoComponent implements OnInit {
   initialDisputeValues: Dispute;
   retrieving: boolean = true;
   violationDate: string = "";
-  infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
   violationTime: string = "";
   conflict: boolean = false;
   collapseObj: any = {

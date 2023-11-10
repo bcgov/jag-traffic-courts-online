@@ -14,7 +14,7 @@ import { DateUtil } from '@shared/utils/date-util';
 @Component({
   selector: 'app-dispute-decision-inbox',
   templateUrl: './dispute-decision-inbox.component.html',
-  styleUrls: ['../../../app.component.scss', './dispute-decision-inbox.component.scss'],
+  styleUrls: ['./dispute-decision-inbox.component.scss'],
 })
 export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   private courthouseTeamNames = ["A", "B", "C", "D"];

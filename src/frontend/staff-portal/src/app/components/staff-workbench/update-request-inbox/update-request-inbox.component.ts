@@ -10,7 +10,7 @@ import { DateUtil } from '@shared/utils/date-util';
 @Component({
   selector: 'app-update-request-inbox',
   templateUrl: './update-request-inbox.component.html',
-  styleUrls: ['../../../app.component.scss', './update-request-inbox.component.scss'],
+  styleUrls: ['./update-request-inbox.component.scss'],
 })
 export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   @Output() public disputeInfo: EventEmitter<Dispute> = new EventEmitter();

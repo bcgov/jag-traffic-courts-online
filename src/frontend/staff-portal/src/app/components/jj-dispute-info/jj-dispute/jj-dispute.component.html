@@ -1,483 +1,494 @@
-<div style="display:flex; margin-top: 40px" [ngStyle]="{'width.px': infoWidth}">
-  <button mat-raised-button [matMenuTriggerFor]="printMenu" style="float: right;">Print Options</button>&nbsp;
-  <mat-menu #printMenu="matMenu" yPosition="below">
-    <button mat-menu-item (click)="printOptions.disputeDetails=!printOptions.disputeDetails"><mat-icon
-        *ngIf="printOptions.disputeDetails">check</mat-icon><mat-icon
-        *ngIf="!printOptions.disputeDetails">close</mat-icon>Dispute Details</button>
-    <button mat-menu-item (click)="printOptions.uploadedDocuments=!printOptions.uploadedDocuments"><mat-icon
-        *ngIf="printOptions.uploadedDocuments">check</mat-icon><mat-icon
-        *ngIf="!printOptions.uploadedDocuments">close</mat-icon>Uploaded Documents</button>
-    <button mat-menu-item (click)="printOptions.fileHistory=!printOptions.fileHistory"><mat-icon
-        *ngIf="printOptions.fileHistory">check</mat-icon><mat-icon
-        *ngIf="!printOptions.fileHistory">close</mat-icon>File History</button>
-    <button mat-menu-item (click)="printOptions.fileRemarks=!printOptions.fileRemarks"><mat-icon
-        *ngIf="printOptions.fileRemarks">check</mat-icon><mat-icon
-        *ngIf="!printOptions.fileRemarks">close</mat-icon>File Remarks</button>
-  </mat-menu>
-  <button mat-raised-button style="float:right;" (click)="onPrint()">Print</button>
-  &nbsp;
-  <button mat-raised-button [matMenuTriggerFor]="gotoMenu" style="float:right;">Go to</button>
-  <mat-menu #gotoMenu="matMenu" yPosition="below">
-    <button mat-menu-item (click)="goTo('dispute-details')">Dispute Details</button>
-    <button mat-menu-item (click)="goTo('uploaded-documents')">Uploaded Documents</button>
-    <button mat-menu-item (click)="goTo('file-history')">File History</button>
-    <button mat-menu-item (click)="goTo('file-remarks')">File Remarks</button>
-  </mat-menu>
-</div><br />
-<div [ngClass]="{'contact-info' : type === 'ticket'}" class="info-component" [ngStyle]="{'height.px': infoHeight}">
-
-  <a (click)="onBackClicked()" style="color: #48afe5">
-    <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
-  </a>
-  <div *ngIf="retrieving === true">
-    <span>
-      <h3>Retrieving ticket information...</h3>
-    </span>
-  </div>
-  <a id="dispute-details"></a>
-  <div *ngIf="lastUpdatedJJDispute && retrieving === false">
-    <div style="float:inline">
-      <span style="float:left">
-        <h1><b>
-            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons Dispute&nbsp;</span>
-            <span
-              *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing
-              Ticket Dispute</span>
-            <span *ngIf="jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
-            - {{ lastUpdatedJJDispute.occamDisputantName }} </b></h1>
-      </span>
-      <span style="float:right">
-        <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
-      </span>
-    </div> <br /><br />
-    <section>
-      <ng-container subHeader>
-        <span>
-          <h3>Ticket Information / Dispute History</h3>
-        </span>
-      </ng-container>
-      <div style="display: grid; grid-template-columns: auto auto auto auto">
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Location of Offence</p>
-          <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Organization/Detachment/Location</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Violation Date</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "MMM dd, yyyy HH:mm" : "UTC" }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Violation Time</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" : "UTC" }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Online Submission Date</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "MMM dd, yyyy" : "UTC" }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Date Received from ICBC</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
-        </span>
-        <ng-container *ngIf="type !== 'ticket'">
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Court Location Code</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.courtAgenId }}</p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Court Location</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.courthouseLocation }}</p>
-          </span>
-        </ng-container>
-      </div>
-    </section><br />
-    <section>
-      <ng-container subHeader>
-        <span>
-          <h3>Contact Information</h3>
-        </span>
-      </ng-container>
-      <div style="display: grid; grid-template-columns: auto auto auto auto">
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
-            lastUpdatedJJDispute.occamDisputantSurnameNm : lastUpdatedJJDispute.contactSurname }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
-            lastUpdatedJJDispute.occamDisputantGivenNames : lastUpdatedJJDispute.contactGivenNames }}</p>
-        </span>
-        <span class="section-grid-cell" style="grid-column: span 2">
-          <p class="section-grid-header">Address</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Prov / State of DL</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Driver's Licence #</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Email</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
-        </span>
-      </div>
-    </section><br />
-    <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
-      <ng-container subHeader>
-        <span>
-          <h3>Court Options</h3>
-        </span>
-      </ng-container>
-      <div style="display: grid; grid-template-columns: auto auto auto">
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Legal Counsel Name</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.lawyerGivenName1 }}&nbsp;{{
-            lastUpdatedJJDispute.lawyerSurname }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Legal Counsel Firm</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.lawFirmName }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Defence Witnesses</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.witnessNo }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Interpreter</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.interpreterLanguage }}
-          </p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Disputant Attendance Type</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">&nbsp;</p>
-          <p class="section-grid-text">&nbsp;</p>
-        </span>
-      </div>
-    </section><br />
-    <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
-      <ng-container subHeader>
-        <span>
-          <h3>Court Appearance</h3>
-        </span>
-      </ng-container>
-      <form [formGroup]="courtAppearanceForm" novalidate>
-        <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">
-              {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Room</p>
-            <p class="section-grid-text">
-              <span>{{ courtAppearanceForm?.value.room }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Reason</p>
-            <p class="section-grid-text">
-              <span>{{ courtAppearanceForm?.value.reason }} </span>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">APP (P/N/A)</p>
-            <p class="section-grid-text">
-              <mat-select *ngIf="!isViewOnly" formControlName="appCd" style="background:#fffee6"
-                (selectionChange)="onUpdateAPPCd()">
-                <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
-                <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
-                <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
-              </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.appCd }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">No APP</p>
-            <p class="section-grid-text" style="padding-right: 5px !important;">
-              <span *ngIf="isViewOnly || !isNoAppEnabled">
-                {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
-              </span>
-              <span *ngIf="!isViewOnly && isNoAppEnabled">
-                <button type="button" style="background:#fffee6; width: 136px;" (click)="picker.open()">
-                  {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
-                </button>
-                <input [ngxMatDatetimePicker]="picker" formControlName="_noAppTs" style="width: 0;"
-                  (ngModelChange)="updateNoAppDateTime($event)" />
-                <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
-                &nbsp;<button type="button" style="background:#fffee6" (click)="updateNoAppTsToNow()">Now</button>
-              </span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">CLERK REC.</p>
-            <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="clerkRecord" style="width:75px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.clerkRecord }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">DEF. COUNSEL</p>
-            <p class="section-grid-text">
-              <input *ngIf="!isViewOnly" formControlName="defenceCounsel" style="width:75px; background:#fffee6" />
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.defenceCounsel }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Def Att</p>
-            <p class="section-grid-text">
-              <mat-select *ngIf="!isViewOnly" formControlName="dattCd" style="background:#fffee6">
-                <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
-                <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
-                <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
-              </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Crown</p>
-            <p class="section-grid-text">
-              <mat-select *ngIf="!isViewOnly" formControlName="crown" style="background:#fffee6">
-                <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
-                <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
-              </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.crown }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Seized</p>
-            <p class="section-grid-text">
-              <mat-select *ngIf="!isViewOnly" formControlName="jjSeized" style="background:#fffee6">
-                <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
-                <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
-              </mat-select>
-              <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.jjSeized }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Judicial Justice</p>
-            <p class="section-grid-text">
-              <span>{{ courtAppearanceForm?.value.adjudicatorName }}</span>
-            </p>
-          </span>
-          <span class="section-grid-cell" style="grid-column: span 11">
-            <p class="section-grid-header">Comments:</p>
-            <p class="section-grid-text">
-              <textarea *ngIf="!isViewOnly" formControlName="comments" style="width:95%; background:#fffee6"
-                rows="8"> </textarea>
-              <span class="formatComments" *ngIf="isViewOnly">{{ courtAppearanceForm.get('comments').value }}</span>
-            </p>
-          </span>
-        </div>
-      </form>
-    </section><br />
-    <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
-      <ng-container subHeader>
-        <span>
-          <h3>Court Appearances History</h3>
-        </span>
-      </ng-container>
-      <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
-      </app-jj-dispute-court-appearances>
-    </section>
-    <section>
-      <ng-container subHeader>
-        <span>
-          <h3>Written Reasons</h3>
-        </span>
-      </ng-container>
-      <div>
-        <h4><b>Fine Reduction</b>
-          <span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
-        </h4>
-        <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
-        <br /><br />
+<app-page>
+  <ng-container stickyToolBar>
+    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+      <div fxFlex>
+        <button mat-button (click)="onBackClicked()" color="primary">
+          <mat-icon inline="true">arrow_back</mat-icon> Back
+        </button>
       </div>
       <div>
-        <h4><b>Time to Pay</b>
-          <span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading}}</span>
-        </h4>
-        <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
-      </div>
-    </section><br />
-    <section>
-      <ng-container subHeader>
-        <span>
-          <h3>Count(s)</h3>
-        </span>
-      </ng-container>
-      <div style="display: grid; grid-template-columns: 33% 33% 33%">
-        <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
-          <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
-            (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly">
-          </app-jj-count>
-        </span>
-      </div>
-    </section><br />
-    <div fxLayout="row" *ngIf="type === 'ticket'" style="padding-bottom: 2rem;">
-      <div fxFlex="40">
-        <div fxFlex>
-          <h3>Signed By</h3>
-          <div>{{ lastUpdatedJJDispute.jjAssignedTo }}</div>
-        </div>
-        <div fxFlex></div>
-        <div fxFlex>
-          <h3>Date Signed</h3>
-          <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
-        </div>
+        <button mat-raised-button [matMenuTriggerFor]="gotoMenu">Go to</button>
+        <mat-menu #gotoMenu="matMenu" yPosition="below">
+          <button mat-menu-item (click)="goTo('disputeDetails')">Dispute Details</button>
+          <button mat-menu-item (click)="goTo('uploadedDocuments')">Uploaded Documents</button>
+          <button mat-menu-item (click)="goTo('fileHistory')">File History</button>
+          <button mat-menu-item (click)="goTo('fileRemarks')">File Remarks</button>
+        </mat-menu>
+        <button mat-raised-button (click)="onPrint()">Print</button>
+        <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
+        <mat-menu #printMenu="matMenu" yPosition="below">
+          <button mat-menu-item (click)="printOptions.disputeDetails=!printOptions.disputeDetails"><mat-icon
+              *ngIf="printOptions.disputeDetails">check</mat-icon><mat-icon
+              *ngIf="!printOptions.disputeDetails">close</mat-icon>Dispute Details</button>
+          <button mat-menu-item (click)="printOptions.uploadedDocuments=!printOptions.uploadedDocuments"><mat-icon
+              *ngIf="printOptions.uploadedDocuments">check</mat-icon><mat-icon
+              *ngIf="!printOptions.uploadedDocuments">close</mat-icon>Uploaded Documents</button>
+          <button mat-menu-item (click)="printOptions.fileHistory=!printOptions.fileHistory"><mat-icon
+              *ngIf="printOptions.fileHistory">check</mat-icon><mat-icon
+              *ngIf="!printOptions.fileHistory">close</mat-icon>File History</button>
+          <button mat-menu-item (click)="printOptions.fileRemarks=!printOptions.fileRemarks"><mat-icon
+              *ngIf="printOptions.fileRemarks">check</mat-icon><mat-icon
+              *ngIf="!printOptions.fileRemarks">close</mat-icon>File Remarks</button>
+        </mat-menu>
       </div>
     </div>
-    <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
-      <mat-expansion-panel [expanded]="true" id="uploaded-documents" hideToggle>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <span style="color: black;"><b>Documents</b></span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <span><b>JUSTIN Documents</b></span><br />
-        <span *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.N">Electronic Ticket (not
-          available)</span>
-        <button type="button" class="linkbutton" (click)="onGetJustinDocument(DocumentType.TicketImage)"
-          *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.Y">Electronic Ticket Image</button><br />
-        <span *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.N">Notice Of Hearing (not
-          available)</span>
-        <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)"
-          *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y">Notice Of Hearing</button><br /><br />
-        <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br />
-        <div *ngFor="let doc of lastUpdatedJJDispute.fileData">
-          <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
-            *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>&nbsp;
-          <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
-          <button type="button" style="width:50px !important; border:none; background-color:white"
-            (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
+  </ng-container>
+  <div [ngClass]="{'contact-info' : type === 'ticket'}" style="padding-bottom: 1.5vh;">
+    <div *ngIf="retrieving === true">
+      <span>
+        <h3>Retrieving ticket information...</h3>
+      </span>
+    </div>
+
+    <span #disputeDetails></span>
+    <div *ngIf="lastUpdatedJJDispute && retrieving === false">
+      <div style="float:inline">
+        <span style="float:left">
+          <h1><b>
+              <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons
+                Dispute&nbsp;</span>
+              <span
+                *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && jjDisputeInfo.status !== DisputeStatus.RequireCourtHearing">Hearing
+                Ticket Dispute</span>
+              <span *ngIf="jjDisputeInfo.status === DisputeStatus.RequireCourtHearing">REQUIRES COURT HEARING</span>
+              - {{ lastUpdatedJJDispute.occamDisputantName }} </b></h1>
+        </span>
+        <span style="float:right">
+          <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
+        </span>
+      </div> <br /><br />
+      <section>
+        <ng-container subHeader>
+          <span>
+            <h3>Ticket Information / Dispute History</h3>
+          </span>
+        </ng-container>
+        <div style="display: grid; grid-template-columns: auto auto auto auto">
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Surname</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Given Name(s)</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Location of Offence</p>
+            <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Organization/Detachment/Location</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Violation Date</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "MMM dd, yyyy HH:mm" : "UTC" }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Violation Time</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.issuedTs | date: "HH:mm" : "UTC" }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Online Submission Date</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedTs | date: "MMM dd, yyyy" : "UTC" }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Date Received from ICBC</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
+          </span>
+          <ng-container *ngIf="type !== 'ticket'">
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Court Location Code</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.courtAgenId }}</p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Court Location</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.courthouseLocation }}</p>
+            </span>
+          </ng-container>
         </div>
-        <mat-form-field class="select-box-only">
-          <mat-label>File type for upload</mat-label>
-          <mat-select [(ngModel)]="fileTypeToUpload">
-            <mat-option value="Certified Extract">Certified Extract</mat-option>
-            <mat-option value="Adjournment">Adjournment</mat-option>
-            <mat-option value="Other">Other</mat-option>
-          </mat-select>
-        </mat-form-field>&nbsp;
-        <button class="large" mat-flat-button type="button" color="primary"
-          onclick="document.getElementById('getFile').click()">
-          <mat-icon>upload</mat-icon>&nbsp;Upload File
-        </button>
-        <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
-          (change)="onUpload($event.target.files)">
-      </mat-expansion-panel>
-      <mat-expansion-panel [expanded]="true" id="file-history" hideToggle>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <span style="color: black;"><b>File History </b></span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div>
-          <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
-        </div>
-      </mat-expansion-panel>
-      <mat-expansion-panel [expanded]="true" id="file-remarks" hideToggle>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <span style="color: black;"><b>File Remarks </b></span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div>
-          <span class="small-note">
-            <i><span style="color:red;">*</span> Remarks are for internal use only and will be visible to everyone who
-              views this file</i>
+      </section><br />
+      <section>
+        <ng-container subHeader>
+          <span>
+            <h3>Contact Information</h3>
+          </span>
+        </ng-container>
+        <div style="display: grid; grid-template-columns: auto auto auto auto">
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Surname</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
+              lastUpdatedJJDispute.occamDisputantSurnameNm : lastUpdatedJJDispute.contactSurname }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Given Name(s)</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
+              lastUpdatedJJDispute.occamDisputantGivenNames : lastUpdatedJJDispute.contactGivenNames }}</p>
+          </span>
+          <span class="section-grid-cell" style="grid-column: span 2">
+            <p class="section-grid-header">Address</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Prov / State of DL</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Driver's Licence #</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Email</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
           </span>
         </div>
-        <div>
-          <app-jj-dispute-remarks [data]="lastUpdatedJJDispute.remarks"></app-jj-dispute-remarks>
+      </section><br />
+      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+        <ng-container subHeader>
+          <span>
+            <h3>Court Options</h3>
+          </span>
+        </ng-container>
+        <div style="display: grid; grid-template-columns: auto auto auto">
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Legal Counsel Name</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.lawyerGivenName1 }}&nbsp;{{
+              lastUpdatedJJDispute.lawyerSurname }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Legal Counsel Firm</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.lawFirmName }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Defence Witnesses</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.witnessNo }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Interpreter</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.interpreterLanguage }}
+            </p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Disputant Attendance Type</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">&nbsp;</p>
+            <p class="section-grid-text">&nbsp;</p>
+          </span>
         </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-    <section style="padding-top: 2rem;" *ngIf="!isViewOnly">
-      <ng-container subHeader>
-        <span>
-          <h3>Add Remarks<br />
-            <span *ngIf="type !== 'ticket'" class="small-note">
-              <i><span style="color:red;">*</span> This is for internal use only</i>
+      </section><br />
+      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+        <ng-container subHeader>
+          <span>
+            <h3>Court Appearance</h3>
+          </span>
+        </ng-container>
+        <form [formGroup]="courtAppearanceForm" novalidate>
+          <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto">
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Appearance Date/Time</p>
+              <p class="section-grid-text">
+                {{ lastUpdatedJJDispute.mostRecentCourtAppearance?.appearanceTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+              </p>
             </span>
-          </h3>
-        </span>
-      </ng-container>
-      <textarea matInput [(ngModel)]="remarks" maxlength="1500" rows="6"
-        style="background: #fffee6; width: 100%"></textarea>
-    </section>
-    <div fxLayout="row">
-      <div *ngIf="type === 'ticket' && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed"
-        fxFlex="40" fxLayout="row">
-        <div style="margin-right: 1rem;">
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Room</p>
+              <p class="section-grid-text">
+                <span>{{ courtAppearanceForm?.value.room }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Reason</p>
+              <p class="section-grid-text">
+                <span>{{ courtAppearanceForm?.value.reason }} </span>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">APP (P/N/A)</p>
+              <p class="section-grid-text">
+                <mat-select *ngIf="!isViewOnly" formControlName="appCd" style="background:#fffee6"
+                  (selectionChange)="onUpdateAPPCd()">
+                  <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
+                  <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
+                  <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
+                </mat-select>
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.appCd }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">No APP</p>
+              <p class="section-grid-text" style="padding-right: 5px !important;">
+                <span *ngIf="isViewOnly || !isNoAppEnabled">
+                  {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+                </span>
+                <span *ngIf="!isViewOnly && isNoAppEnabled">
+                  <button type="button" style="background:#fffee6; width: 136px;" (click)="picker.open()">
+                    {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+                  </button>
+                  <input [ngxMatDatetimePicker]="picker" formControlName="_noAppTs" style="width: 0;"
+                    (ngModelChange)="updateNoAppDateTime($event)" />
+                  <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+                  &nbsp;<button type="button" style="background:#fffee6" (click)="updateNoAppTsToNow()">Now</button>
+                </span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">CLERK REC.</p>
+              <p class="section-grid-text">
+                <input *ngIf="!isViewOnly" formControlName="clerkRecord" style="width:75px; background:#fffee6" />
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.clerkRecord }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">DEF. COUNSEL</p>
+              <p class="section-grid-text">
+                <input *ngIf="!isViewOnly" formControlName="defenceCounsel" style="width:75px; background:#fffee6" />
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.defenceCounsel }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Def Att</p>
+              <p class="section-grid-text">
+                <mat-select *ngIf="!isViewOnly" formControlName="dattCd" style="background:#fffee6">
+                  <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
+                  <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
+                  <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
+                </mat-select>
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Crown</p>
+              <p class="section-grid-text">
+                <mat-select *ngIf="!isViewOnly" formControlName="crown" style="background:#fffee6">
+                  <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
+                  <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
+                </mat-select>
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.crown }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Seized</p>
+              <p class="section-grid-text">
+                <mat-select *ngIf="!isViewOnly" formControlName="jjSeized" style="background:#fffee6">
+                  <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
+                  <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
+                </mat-select>
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.jjSeized }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Judicial Justice</p>
+              <p class="section-grid-text">
+                <span>{{ courtAppearanceForm?.value.adjudicatorName }}</span>
+              </p>
+            </span>
+            <span class="section-grid-cell" style="grid-column: span 11">
+              <p class="section-grid-header">Comments:</p>
+              <p class="section-grid-text">
+                <textarea *ngIf="!isViewOnly" formControlName="comments" style="width:95%; background:#fffee6"
+                  rows="8"> </textarea>
+                <span class="formatComments" *ngIf="isViewOnly">{{ courtAppearanceForm.get('comments').value }}</span>
+              </p>
+            </span>
+          </div>
+        </form>
+      </section><br />
+      <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+        <ng-container subHeader>
+          <span>
+            <h3>Court Appearances History</h3>
+          </span>
+        </ng-container>
+        <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
+        </app-jj-dispute-court-appearances>
+      </section>
+      <section>
+        <ng-container subHeader>
+          <span>
+            <h3>Written Reasons</h3>
+          </span>
+        </ng-container>
+        <div>
+          <h4><b>Fine Reduction</b>
+            <span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
+          </h4>
+          <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
+          <br /><br />
+        </div>
+        <div>
+          <h4><b>Time to Pay</b>
+            <span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading}}</span>
+          </h4>
+          <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
+        </div>
+      </section><br />
+      <section>
+        <ng-container subHeader>
+          <span>
+            <h3>Count(s)</h3>
+          </span>
+        </ng-container>
+        <div style="display: grid; grid-template-columns: 33% 33% 33%">
+          <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
+            <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
+              (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly">
+            </app-jj-count>
+          </span>
+        </div>
+      </section><br />
+      <div fxLayout="row" *ngIf="type === 'ticket'" style="padding-bottom: 2rem;">
+        <div fxFlex="40">
+          <div fxFlex>
+            <h3>Signed By</h3>
+            <div>{{ lastUpdatedJJDispute.jjAssignedTo }}</div>
+          </div>
+          <div fxFlex></div>
+          <div fxFlex>
+            <h3>Date Signed</h3>
+            <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <span #uploadedDocuments></span>
+      <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
+        <mat-expansion-panel [expanded]="true" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span style="color: black;"><b>Documents</b></span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <span><b>JUSTIN Documents</b></span><br />
+          <span *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.N">Electronic Ticket (not
+            available)</span>
+          <button type="button" class="linkbutton" (click)="onGetJustinDocument(DocumentType.TicketImage)"
+            *ngIf="lastUpdatedJJDispute.electronicTicketYn === ElectronicTicket.Y">Electronic Ticket
+            Image</button><br />
+          <span *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.N">Notice Of Hearing (not
+            available)</span>
+          <button type="linkbutton" class="linkbutton" (click)="onGetJustinDocument(DocumentType.NoticeOfDispute)"
+            *ngIf="lastUpdatedJJDispute.noticeOfHearingYn === NoticeOfHearing.Y">Notice Of Hearing</button><br /><br />
+          <span><b>Uploaded Documents ({{lastUpdatedJJDispute.fileData?.length }})</b></span><br />
+          <div *ngFor="let doc of lastUpdatedJJDispute.fileData">
+            <button type="button" class="linkbutton" (click)="onGetFile(doc.fileId)"
+              *ngIf="doc.virusScanStatus === 'clean'">{{ doc.fileName }}</button>&nbsp;
+            <span *ngIf="doc.virusScanStatus !== 'clean'">{{ doc.fileName }} {{ doc.virusScanStatus }}</span>
+            <button type="button" style="width:50px !important; border:none; background-color:white"
+              (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
+          </div>
           <mat-form-field class="select-box-only">
-            <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
-              <mat-option [value]=""></mat-option>
-              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
-              </mat-option>
+            <mat-label>File type for upload</mat-label>
+            <mat-select [(ngModel)]="fileTypeToUpload">
+              <mat-option value="Certified Extract">Certified Extract</mat-option>
+              <mat-option value="Adjournment">Adjournment</mat-option>
+              <mat-option value="Other">Other</mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field>&nbsp;
+          <button class="large" mat-flat-button type="button" color="primary"
+            onclick="document.getElementById('getFile').click()">
+            <mat-icon>upload</mat-icon>&nbsp;Upload File
+          </button>
+          <input type="file" id="getFile" style="display:none" accept="image/*,.pdf"
+            (change)="onUpload($event.target.files)">
+        </mat-expansion-panel>
+
+        <span #fileHistory></span>
+        <mat-expansion-panel [expanded]="true" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span style="color: black;"><b>File History </b></span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
+          </div>
+        </mat-expansion-panel>
+
+        <span #fileRemarks></span>
+        <mat-expansion-panel [expanded]="true" id="file-remarks" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span style="color: black;"><b>File Remarks </b></span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <span class="small-note">
+              <i><span style="color:red;">*</span> Remarks are for internal use only and will be visible to everyone who
+                views this file</i>
+            </span>
+          </div>
+          <div>
+            <app-jj-dispute-remarks [data]="lastUpdatedJJDispute.remarks"></app-jj-dispute-remarks>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <section style="padding-top: 2rem;" *ngIf="!isViewOnly">
+        <ng-container subHeader>
+          <span>
+            <h3>Add Remarks<br />
+              <span *ngIf="type !== 'ticket'" class="small-note">
+                <i><span style="color:red;">*</span> This is for internal use only</i>
+              </span>
+            </h3>
+          </span>
+        </ng-container>
+        <textarea matInput [(ngModel)]="remarks" maxlength="1500" rows="6"
+          style="background: #fffee6; width: 100%"></textarea>
+      </section>
+      <div fxLayout="row">
+        <div *ngIf="type === 'ticket' && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed"
+          fxFlex="40" fxLayout="row">
+          <div style="margin-right: 1rem;">
+            <mat-form-field class="select-box-only">
+              <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
+                <mat-option [value]=""></mat-option>
+                <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex>
+            <button fxFlex class="large" mat-flat-button type="button" color="primary" (click)="returnToJJ()"
+              [disabled]="!selectedJJ">
+              Return to JJ
+            </button>
+          </div>
         </div>
         <div fxFlex>
-          <button fxFlex class="large" mat-flat-button type="button" color="primary" (click)="returnToJJ()"
-            [disabled]="!selectedJJ">
-            Return to JJ
-          </button>
         </div>
+        <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
+          (click)="onRequireCourtHearing()"
+          *ngIf="type !== 'ticket' && lastUpdatedJJDispute.status != DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status != DisputeStatus.Accepted && lastUpdatedJJDispute.status !== DisputeStatus.Cancelled && lastUpdatedJJDispute.status !== DisputeStatus.Concluded && concludeStatusOnly === false && cancelStatusOnly === false">
+          {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Require Court Hearing' :
+          'Adjourn/Continue' }}
+        </button>
+        <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
+          (click)="onSave()"
+          *ngIf="type !== 'ticket' && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && cancelStatusOnly === false && concludeStatusOnly === false">
+          Save & Finish Later
+        </button>
+        <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()"
+          *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false">
+          Confirm
+        </button>
+        <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()"
+          *ngIf="concludeStatusOnly === true && cancelStatusOnly === false">
+          Conclude
+        </button>
+        <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()"
+          *ngIf="cancelStatusOnly === true && concludeStatusOnly === false">
+          Cancel
+        </button>
+        <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
+          *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false">
+          Accept
+        </button>
+        <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()"
+          *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing || lastUpdatedJJDispute.status === DisputeStatus.Cancelled || lastUpdatedJJDispute.status === DisputeStatus.Concluded">
+          Back
+        </button>
       </div>
-      <div fxFlex>
-      </div>
-      <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
-        (click)="onRequireCourtHearing()"
-        *ngIf="type !== 'ticket' && lastUpdatedJJDispute.status != DisputeStatus.RequireCourtHearing && lastUpdatedJJDispute.status != DisputeStatus.Accepted && lastUpdatedJJDispute.status !== DisputeStatus.Cancelled && lastUpdatedJJDispute.status !== DisputeStatus.Concluded && concludeStatusOnly === false && cancelStatusOnly === false">
-        {{ lastUpdatedJJDispute.hearingType === HearingType.WrittenReasons ? 'Require Court Hearing' :
-        'Adjourn/Continue' }}
-      </button>
-      <button fxFlex="30" class="large" mat-flat-button type="button" color="primary" style="margin-right: 20px;"
-        (click)="onSave()"
-        *ngIf="type !== 'ticket' && [DisputeStatus.New, DisputeStatus.InProgress, DisputeStatus.HearingScheduled, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && cancelStatusOnly === false && concludeStatusOnly === false">
-        Save & Finish Later
-      </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConfirm()"
-        *ngIf="[DisputeStatus.New, DisputeStatus.HearingScheduled, DisputeStatus.InProgress, DisputeStatus.Review].indexOf(lastUpdatedJJDispute.status) >= 0 && concludeStatusOnly === false && cancelStatusOnly === false">
-        Confirm
-      </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onConcluded()"
-        *ngIf="concludeStatusOnly === true && cancelStatusOnly === false">
-        Conclude
-      </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onCancelled()"
-        *ngIf="cancelStatusOnly === true && concludeStatusOnly === false">
-        Cancel
-      </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onAccept()"
-        *ngIf="lastUpdatedJJDispute.status === DisputeStatus.Confirmed && cancelStatusOnly === false && concludeStatusOnly === false">
-        Accept
-      </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onBackClicked()"
-        *ngIf="lastUpdatedJJDispute.status === DisputeStatus.RequireCourtHearing || lastUpdatedJJDispute.status === DisputeStatus.Cancelled || lastUpdatedJJDispute.status === DisputeStatus.Concluded">
-        Back
-      </button>
-    </div><br /><br />
+    </div>
   </div>
-  <br />
-  <div *ngIf="type === 'ticket'" fxLayout="row">
-
-  </div>
-</div>
+</app-page>

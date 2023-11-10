@@ -21,8 +21,8 @@ export class AuthService {
 
   private site: string = "staff-api";
   private roles = [
-    { name: UserGroup.JUDICIAL_JUSTICE, redirectUrl: AppRoutes.JJWORKBENCH },
-    { name: UserGroup.VTC_STAFF, redirectUrl: AppRoutes.TICKET },
+    { name: UserGroup.JUDICIAL_JUSTICE, redirectUrl: AppRoutes.JJ },
+    { name: UserGroup.VTC_STAFF, redirectUrl: AppRoutes.STAFF },
   ]
 
   constructor(

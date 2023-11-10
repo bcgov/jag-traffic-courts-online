@@ -10,7 +10,7 @@ import { DateUtil } from '@shared/utils/date-util';
 @Component({
   selector: 'app-ticket-inbox',
   templateUrl: './ticket-inbox.component.html',
-  styleUrls: ['../../../app.component.scss', './ticket-inbox.component.scss'],
+  styleUrls: ['./ticket-inbox.component.scss'],
 })
 export class TicketInboxComponent implements OnInit, AfterViewInit {
   @Output() disputeInfo: EventEmitter<Dispute> = new EventEmitter();
@@ -97,7 +97,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.filterPredicate = this.searchFilter;
       this.onApplyFilter("status", null);
 
-      this.tableHeight = this.calcTableHeight(351);
+      // this.tableHeight = this.calcTableHeight(351);
     });
   }
 
@@ -128,7 +128,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.dataSource.filter = "{}";
       // FIXME: This static table height has got to go. The panel should vertically extend to the footer (100%) not some arbitrary pixel height that is not resized when the window is resized.
-      this.tableHeight = this.calcTableHeight(351);
+      // this.tableHeight = this.calcTableHeight(351);
     }, 100);
   }
 
@@ -147,7 +147,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     const filterValue = value;
     this.dataFilters[filterName] = filterValue;
     this.dataSource.filter = JSON.stringify(this.dataFilters);
-    this.tableHeight = this.calcTableHeight(351);
+    // this.tableHeight = this.calcTableHeight(351);
   }
 
   backWorkbench(element) {

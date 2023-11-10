@@ -7,7 +7,7 @@ import { ConfigService } from '@config/config.service';
 @Component({
   selector: 'app-address-update-request-info',
   templateUrl: './address-update-request-info.component.html',
-  styleUrls: ['./address-update-request-info.component.scss', '../../../../app.component.scss']
+  styleUrls: ['./address-update-request-info.component.scss']
 })
 export class AddressUpdateRequestInfoComponent implements OnInit {
   @Input() public disputeInfo: Dispute;

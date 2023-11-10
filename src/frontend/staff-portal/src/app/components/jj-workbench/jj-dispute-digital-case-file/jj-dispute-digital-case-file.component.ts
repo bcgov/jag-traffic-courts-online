@@ -9,7 +9,7 @@ import { DateUtil } from '@shared/utils/date-util';
 @Component({
   selector: 'app-jj-dispute-digital-case-file',
   templateUrl: './jj-dispute-digital-case-file.component.html',
-  styleUrls: ['../../../app.component.scss', './jj-dispute-digital-case-file.component.scss']
+  styleUrls: ['./jj-dispute-digital-case-file.component.scss']
 })
 export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit {
   @Input() data$: Observable<JJDispute[]>;

@@ -29,7 +29,6 @@ export class TicketInfoComponent implements OnInit {
   public previousButtonIcon = 'keyboard_arrow_left';
 
   public retrieving: boolean = true;
-  public infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
   public conflict: boolean = false;
   public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';

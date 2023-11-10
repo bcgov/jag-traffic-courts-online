@@ -1,0 +1,16 @@
+@import "palette";
+@import "bootstrap/bootstrap-imports";
+
+div.container {
+  overflow-y: auto;
+  opacity: unset;
+
+  button a {
+    color: theme-palette(blue);
+  }
+
+  a {
+    color: theme-palette(blue, link);
+    white-space: nowrap;
+  }
+}

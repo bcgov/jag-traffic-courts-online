@@ -27,6 +27,7 @@ import { ReplacePipe } from './pipes/replace.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 import { CustomDatePipe } from './pipes/custom-date.pipe';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     declarations: [
@@ -62,6 +63,7 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         NgxProgressModule,
         ConfigModule,
         TranslateModule,
+        FlexLayoutModule
     ],
     exports: [
         CommonModule,
@@ -89,6 +91,7 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         HeaderComponent,
         FooterComponent,
         FeatureFlagDirective,
+        FlexLayoutModule,
     ],
     providers: [provideNgxMask()]
 })

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Observable, map } from 'rxjs';
@@ -22,6 +22,11 @@ import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
   styleUrls: ['./jj-dispute.component.scss']
 })
 export class JJDisputeComponent implements OnInit {
+  @ViewChild("disputeDetails") disputeDetailsAnchor: ElementRef;
+  @ViewChild("uploadedDocuments") uploadedDocumentsAnchor: ElementRef;
+  @ViewChild("fileHistory") fileHistoryAnchor: ElementRef;
+  @ViewChild("fileRemarks") fileRemarksAnchor: ElementRef;
+
   @Input() jjDisputeInfo: JJDispute
   @Input() type: string;
   @Input() isViewOnly = false;
@@ -59,8 +64,6 @@ export class JJDisputeComponent implements OnInit {
     adjudicatorName: [{ value: null, disabled: true }]
   });
 
-  infoHeight: number = window.innerHeight - 150; // less size of other fixed elements
-  infoWidth: number = window.innerWidth;
   lastUpdatedJJDispute: JJDispute;
   jjIDIR: string;
   jjName: string;
@@ -156,8 +159,22 @@ export class JJDisputeComponent implements OnInit {
   }
 
   goTo(id: string) {
-    const element = document.getElementById(id);
-    element?.scrollIntoView(true);
+    let element: ElementRef;
+    switch(id) {
+      case "disputeDetails":
+        element = this.disputeDetailsAnchor;
+        break;
+      case "uploadedDocuments":
+        element = this.uploadedDocumentsAnchor;
+        break;
+      case "fileHistory":
+        element = this.fileHistoryAnchor;
+        break;
+      case "fileRemarks":
+        element = this.fileRemarksAnchor;
+        break;
+    }
+    element?.nativeElement.scrollIntoView({behavior: 'smooth'});
   }
 
   onConfirm(): void {
