@@ -32,6 +32,8 @@ export class JJDisputeComponent implements OnInit {
   @Input() isViewOnly = false;
   @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
+  isSupportStaff: boolean = false;
+  isEditMode: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -107,7 +109,9 @@ export class JJDisputeComponent implements OnInit {
         this.jjIDIR = userProfile.idir;
         this.jjName = userProfile.fullName;
       }
-    })
+    });
+
+    this.isSupportStaff = this.authService.checkRole("support-staff");
   }
 
   // get dispute by id
