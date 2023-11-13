@@ -1,5 +1,5 @@
 <h3><b>Violation Ticket Inbox</b> ({{data.length}} results)</h3>
-<div class="row" style="overflow: auto;" [ngStyle]="{'height.px': tableHeight}">
+<div class="row" style="overflow: auto;">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="ticketNumber">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>

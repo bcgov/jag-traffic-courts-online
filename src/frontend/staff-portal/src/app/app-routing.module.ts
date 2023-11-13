@@ -43,12 +43,12 @@ let routes: Routes = [
     title: "Unauthorized"
   },
   {
-    path: 'ticket',
+    path: 'ticket', // old routing
     redirectTo: AppRoutes.STAFF,
     pathMatch: 'full',
   },
   {
-    path: 'jjworkbench',
+    path: 'jjworkbench', // old routing
     redirectTo: AppRoutes.JJ,
     pathMatch: 'full',
   },

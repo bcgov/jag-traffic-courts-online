@@ -2,9 +2,9 @@ import { ActionReducerMap } from "@ngrx/store";
 import { JJDisputeStore } from ".";
 
 export interface AppState {
-    jjDispute: JJDisputeStore.State
+    [JJDisputeStore.StoreName]: JJDisputeStore.State
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-    jjDispute: JJDisputeStore.Reducers,
+    [JJDisputeStore.StoreName]: JJDisputeStore.Reducers,
 }

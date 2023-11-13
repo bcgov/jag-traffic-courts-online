@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { filter, Observable, Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { AuthService, KeycloakProfile } from 'app/services/auth.service';
+import { AuthService } from 'app/services/auth.service';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { MatLegacyTab as MatTab } from '@angular/material/legacy-tabs';
 import { AppState } from 'app/store';
-import {  Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import * as JJDisputeStore from "app/store/jj-dispute";
+import { BusyService } from '@core/services/busy.service';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -15,7 +16,6 @@ import * as JJDisputeStore from "app/store/jj-dispute";
 })
 export class JjWorkbenchDashboardComponent implements OnInit {
   @ViewChild("DCF") dcfTab: MatTab;
-  userProfile: KeycloakProfile = {};
   busy: Subscription;
 
   data$: Observable<JJDispute[]>;
@@ -28,19 +28,20 @@ export class JjWorkbenchDashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private busyService: BusyService,
     private jjDisputeService: JJDisputeService,
     private store: Store<AppState>
   ) {
   }
 
   ngOnInit() {
+    this.busyService.busy$.subscribe(i => this.busy = i);
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
-        this.userProfile = userProfile;
         this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
       }
     })
-    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
+    this.data$ = this.store.select(state => state.jjDispute.data).pipe(filter(i => !!i));
   }
 
   changeJJDispute(jjDispute: JJDispute) {

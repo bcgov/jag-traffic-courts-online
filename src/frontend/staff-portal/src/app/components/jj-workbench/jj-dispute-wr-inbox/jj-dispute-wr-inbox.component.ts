@@ -19,7 +19,6 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort = new MatSort();
 
   jjIDIR: string;
-  tableHeight: number = window.innerHeight - 300; // less size of other fixed elements
   HearingType = JJDisputeHearingType;
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
   statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
@@ -59,10 +58,6 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
     })
   }
 
-  calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 60)
-  }
-
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
@@ -90,6 +85,5 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
         if (this.jjDisputeService.jjDisputeStatusesSorted.indexOf(a.status) > this.jjDisputeService.jjDisputeStatusesSorted.indexOf(b.status)) { return 1; } else { return -1; }
       }
     });
-    this.tableHeight = this.calcTableHeight(300);
   }
 }

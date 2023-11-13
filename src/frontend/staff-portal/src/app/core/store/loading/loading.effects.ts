@@ -13,14 +13,15 @@ export class LoadingEffects {
     private store: Store,
   ) { }
 
-  removeLoadingitem$ = createEffect(() => { return this.actions$.pipe(
-    ofType(Actions.Remove),
-    withLatestFrom(this.store.select(LoadingStore.Selectors.NumberOfLoadingItems)),
-    switchMap(([action, numberOfLoadingItems]) => {
-      if (numberOfLoadingItems === 0) {
-        return of(Actions.LoadingDone());
-      }
-      return of();
-    })) }
-  );
+  removeLoadingitem$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(Actions.Remove),
+      withLatestFrom(this.store.select(LoadingStore.Selectors.NumberOfLoadingItems)),
+      switchMap(([action, numberOfLoadingItems]) => {
+        if (numberOfLoadingItems === 0) {
+          return of(Actions.LoadingDone());
+        }
+        return of();
+      }))
+  });
 }

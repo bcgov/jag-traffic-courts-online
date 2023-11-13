@@ -8,8 +8,9 @@ import { DisputeDecisionInboxComponent } from '../dispute-decision-inbox/dispute
 import { TicketInboxComponent } from '../ticket-inbox/ticket-inbox.component';
 import { DisputeService } from 'app/services/dispute.service';
 import { UpdateRequestInboxComponent } from '../update-request-inbox/update-request-inbox.component';
-import {  Store } from '@ngrx/store';
-import { AppState } from 'app/store';
+import { Store } from '@ngrx/store';
+import { JJDisputeStore } from 'app/store';
+import { BusyService } from '@core/services/busy.service';
 
 @Component({
   selector: 'app-staff-workbench-dashboard',
@@ -18,6 +19,7 @@ import { AppState } from 'app/store';
 })
 export class StaffWorkbenchDashboardComponent implements OnInit {
   @ViewChild("DCF") dcfTab: MatTab;
+
   busy: Subscription;
   tabSelected = new FormControl(0);
   showTicket: boolean = false;
@@ -32,13 +34,14 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
 
   constructor(
     private disputeService: DisputeService,
-    private store: Store<AppState>
+    private busyService: BusyService,
+    private store: Store
   ) {
-
   }
-
-  ngOnInit() {
-    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
+  
+  ngOnInit(): void {
+    this.busyService.busy$.subscribe(i => this.busy = i);
+    this.data$ = this.store.select(JJDisputeStore.Selectors.JJDisputes).pipe(filter(i => !!i));
   }
 
   changeDispute(dispute: Dispute) {

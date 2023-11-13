@@ -1,36 +1,49 @@
 <app-page *ngIf="!showTicket">
-  <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
-    (selectedIndexChange)="tabSelected.setValue($event)">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <h2>Ticket Validation</h2>
-      </ng-template>
-      <br />
-      <app-ticket-inbox (disputeInfo)="changeDispute($event)"></app-ticket-inbox>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <h2>Decision Validation</h2>
-      </ng-template>
-      <br />
-      <app-dispute-decision-inbox (jjDisputeInfo)="changeJJDispute($event)"></app-dispute-decision-inbox>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <h2>Update Requests</h2>
-      </ng-template>
-      <br />
-      <app-update-request-inbox (disputeInfo)="changeDispute($event)"></app-update-request-inbox>
-    </mat-tab>
-    <mat-tab #DCF>
-      <ng-template mat-tab-label>
-        <h2>DCF</h2>
-      </ng-template>
-      <br />
-      <app-jj-dispute-digital-case-file (jjDisputeInfo)="changeJJDispute($event)"
-        [data$]="data$"></app-jj-dispute-digital-case-file>
-    </mat-tab>
-  </mat-tab-group>
+  <ng-container stickyToolBar>
+    <div class="busy-container app-width">
+      <div [ngBusy]="busy">
+        <div class="content">
+          <mat-tab-group class="dashTabs" mat-align-tabs="start" [selectedIndex]="tabSelected.value"
+            (selectedIndexChange)="tabSelected.setValue($event)">
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <h2>Ticket Validation</h2>
+              </ng-template>
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <h2>Decision Validation</h2>
+              </ng-template>
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <h2>Update Requests</h2>
+              </ng-template>
+            </mat-tab>
+            <mat-tab #DCF>
+              <ng-template mat-tab-label>
+                <h2>DCF</h2>
+              </ng-template>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tabSelected?.value === 0">
+    <app-ticket-inbox (disputeInfo)="changeDispute($event)"></app-ticket-inbox>
+  </ng-container>
+  <ng-container *ngIf="tabSelected?.value === 1">
+    <app-dispute-decision-inbox (jjDisputeInfo)="changeJJDispute($event)"></app-dispute-decision-inbox>
+  </ng-container>
+  <ng-container *ngIf="tabSelected?.value === 2">
+    <app-update-request-inbox (disputeInfo)="changeDispute($event)"></app-update-request-inbox>
+  </ng-container>
+  <ng-container *ngIf="tabSelected?.value === 3">
+    <app-jj-dispute-digital-case-file (jjDisputeInfo)="changeJJDispute($event)"
+      [data$]="data$"></app-jj-dispute-digital-case-file>
+  </ng-container>
 </app-page>
 <ng-container *ngIf="showTicket">
   <app-contact-info *ngIf="decidePopup === 'A' && tabSelected.value === 0" (backInbox)="backInbox()"

@@ -20,7 +20,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
-  tableHeight: number = window.innerHeight - 425; // less size of other fixed elements
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   currentTeam: string = "A";
@@ -64,10 +63,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     this.getAll("A");
     // override the default sortData with our custom sort function
     this.dataSource.sortData = this.customSortData('jjAssignedTo');
-  }
-
-  calcTableHeight(heightOther) {
-    return Math.min(window.innerHeight - heightOther, (this.dataSource.filteredData.length + 1) * 80)
   }
 
   ngAfterViewInit() {
@@ -132,7 +127,6 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     ((teamCourthouses.filter(y => y.id === x.courtAgenId).length > 0) // court agency id found in team ist of courthouses
       || (team === 'D' && this.lookupsService.courthouseTeams.filter(y => y.id === x.courtAgenId).length <= 0))); // or team D and court agency id not found in complete list of courthouses
     this.currentTeam = team;
-    this.tableHeight = this.calcTableHeight(425);
   }
 
   getCurrentTeamCounts(): teamCounts {

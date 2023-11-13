@@ -1,5 +1,6 @@
-import { createAction } from "@ngrx/store";
+import { createAction, props } from "@ngrx/store";
 import { ActionTypes } from ".";
+import { Subscription } from "rxjs";
 
 export const Add = createAction(
   ActionTypes.ADD,

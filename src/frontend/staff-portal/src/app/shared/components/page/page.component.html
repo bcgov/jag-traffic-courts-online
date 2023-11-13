@@ -7,7 +7,7 @@
   </div>
   <div fxFlex class="container app-width">
     <app-busy-overlay [busy]="busy">
-      <ng-content></ng-content>
+      <ng-content [busy]="busy"></ng-content>
     </app-busy-overlay>
   </div>
   <div class="d-print-none">
