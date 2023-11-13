@@ -12,6 +12,19 @@
   cursor: pointer;
 }
 
+.form-button {
+  color: #fff;
+  background-color: #38598a;
+  border-color: #38598a;  
+  font-size: 14px;
+  margin: 10px 10px 0px 0px;
+
+  &:hover {
+    background-color: #2d476f;
+    border-color: #294266;
+  }
+}
+
 h3 {
   font-weight: bold;
   color: black !important;
@@ -29,8 +42,7 @@ p {
 
 .section-grid-cell {
   border: 1px solid black;
-  padding-left: 5px;
-  padding-bottom: 5px;
+  padding: 5px 5px 0px 5px;
 }
 
 .section-grid-cell-noshow {
@@ -42,7 +54,7 @@ p {
 .section-grid-header {
   font-size: small;
   font-weight: bold;
-  margin: 5px 0 0 0 !important;
+  margin: 0px 0 0 0 !important;
   color: #707070;
   padding: 0 !important;
 }
@@ -129,7 +141,7 @@ p {
   }
 }
 
-::ng-deep {
+:host::ng-deep {
   .heading-hr {
     width: 700% !important;
   }
@@ -137,6 +149,37 @@ p {
   .subheader span {
     font-weight: 600;
     color: #1d4a77;
+  }
+
+  .mat-form-field {
+    width: 100%;
+    margin-bottom: 0px !important;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+      margin: 0px;
+
+      .mat-form-field-flex {
+        margin-top: 0 !important;
+        padding-right: 5px;
+        border: none !important;
+
+        .mat-form-field-infix {
+          padding: 0px 0px 7px 0px !important;
+          line-height: 0px;
+
+          input {
+            line-height: 18px !important;
+          }
+        }
+      }
+      
+      .mat-form-field-subscript-wrapper {
+        position: relative;
+        overflow: unset;
+        margin-top: 0px;
+      }
+    }
   }
 
   .select-box-only {

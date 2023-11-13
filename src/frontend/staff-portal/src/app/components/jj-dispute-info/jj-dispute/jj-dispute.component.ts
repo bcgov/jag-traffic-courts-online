@@ -6,7 +6,7 @@ import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDi
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LookupsService } from 'app/services/lookups.service';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
@@ -32,6 +32,8 @@ export class JJDisputeComponent implements OnInit {
   @Input() isViewOnly = false;
   @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
+  isSupportStaff: boolean = false;
+  isEditMode: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -48,6 +50,9 @@ export class JJDisputeComponent implements OnInit {
   DisputeStatus = JJDisputeStatus;
   ContactType = JJDisputeContactType;
 
+  ticketInformationForm: FormGroup = this.formBuilder.group({
+    occamDisputantSurnameNm: [null, Validators.maxLength(100)]
+  });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
     appCd: [{ value: null, disabled: true }],
     room: [{ value: null, disabled: true }],
@@ -107,7 +112,9 @@ export class JJDisputeComponent implements OnInit {
         this.jjIDIR = userProfile.idir;
         this.jjName = userProfile.fullName;
       }
-    })
+    });
+
+    this.isSupportStaff = this.authService.checkRole("support-staff");
   }
 
   // get dispute by id
@@ -152,6 +159,7 @@ export class JJDisputeComponent implements OnInit {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
           }
         }
+        this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
         this.determineIfConcludeOrCancel();
       }
@@ -271,6 +279,36 @@ export class JJDisputeComponent implements OnInit {
       };
       this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
     });
+  }
+
+  /**
+   * Called by support-staff when editing the Ticket Information form (user must have update-admin permissions on the JJDispute resource).
+   */
+  onSaveTicketInformation(): void {
+    this.isEditMode = false;
+    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.ticketInformationForm.value };
+
+    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {
+      const data: DialogOptions = {
+        titleKey: "Saved",
+        messageKey: "Dispute saved",
+        actionTextKey: "Ok",
+        actionType: "primary",
+        icon: "done"
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
+      
+      // refresh JJDispute data
+      this.getJJDispute();
+    });
+  }
+
+  /**
+   * Called by support-staff when reverting any changes they may have made to the Ticket Information form.
+   */
+  onCancelTicketInformation(): void {
+    this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
+    this.isEditMode = false;
   }
 
   onAccept(): void {

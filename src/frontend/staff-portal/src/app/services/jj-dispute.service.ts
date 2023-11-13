@@ -180,6 +180,34 @@ export class JJDisputeService {
         })
       );
   }
+
+  /**
+   * Updates a single JJ Dispute and related Dispute data. Must have update-admin permission on the JJDispute resource to use this endpoint.
+   * @param ticketNumber 
+   * @param jjDispute 
+   * @returns update JJDispute
+   */
+  public apiJjTicketNumberCascadePut(ticketNumber: string, jjDispute: JJDispute): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberCascadePut(ticketNumber, jjDispute)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberCascadePut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberCascadePut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
   public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC: boolean): Observable<any> {
     return this.jjApiService.apiJjTicketNumberConcludePut(ticketNumber, checkVTC)
       .pipe(
