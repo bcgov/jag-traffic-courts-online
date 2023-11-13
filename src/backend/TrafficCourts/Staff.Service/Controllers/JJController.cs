@@ -247,6 +247,103 @@ public class JJController : StaffControllerBase<JJController>
     }
 
     /// <summary>
+    /// Updates a single JJ Dispute and related Dispute data.
+    /// Must have update-admin permission on the JJDispute resource to use this endpoint.
+    /// </summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDispute"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The JJ Dispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:update permission.</response>
+    /// <response code="404">The JJ Dispute to update was not found.</response>
+    /// <response code="405">An invalid JJ Dispute status is provided. Update failed.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}/cascade")]
+    [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateAdmin)]
+    public async Task<IActionResult> UpdateJJDisputeCascadeAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
+    {
+        if (jjDispute is null || jjDispute.TicketNumber is null) {
+            return new HttpError(StatusCodes.Status400BadRequest, "JJDispute missing unique identifier");
+        }
+
+        if (ticketNumber != jjDispute.TicketNumber) {
+            return new HttpError(StatusCodes.Status400BadRequest, "JJDispute ticketNumber mismatch");
+        }
+
+        try
+        {
+            _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
+
+            var disputeLock = _disputeLockService.GetLock(jjDispute.TicketNumber, GetUserName(User));
+
+            var updatedJJDispute = await _jjDisputeService.UpdateJJDisputeCascadeAsync(jjDispute, User, cancellationToken);
+
+            if (disputeLock != null)
+            {
+                updatedJJDispute.LockId = disputeLock.LockId;
+                updatedJJDispute.LockedBy = disputeLock.Username;
+                updatedJJDispute.LockExpiresAtUtc = disputeLock.ExpiryTimeUtc;
+            }
+
+            return Ok(updatedJJDispute);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "API Exception: error submitting JJ Dispute Admin Resolution to oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "General Exception: server error submitting JJ Dispute Admin Resolution");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
