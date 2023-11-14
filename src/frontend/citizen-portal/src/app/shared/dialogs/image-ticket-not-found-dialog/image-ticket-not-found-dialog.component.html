@@ -37,6 +37,17 @@
       If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing.
     </div>
   </div>
+  <div *ngIf="options.messageKey === 'error3'">
+    <span class="flex-grow-1"></span>
+    <p>Your ticket cannot be disputed online. Please visit 
+      <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+        target="blank">https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket</a> for information on how to start your dispute.
+    </p>
+    <p>
+      If you require support, please contact the Violation Ticket Centre at
+      <a href="mailto:Courts.TCO@gov.bc.ca" target="blank">Courts.TCO@gov.bc.ca <img class="me-2" src="/assets/mail-icon.svg" style="width: 15px; height: 13px; vertical-align: text-top;"/></a>
+    </p>
+  </div>
   <div *ngIf="options.messageKey === 'error4'">
     <span class="flex-grow-1"></span>
     <p>If your ticket could not be scanned successfully, please
