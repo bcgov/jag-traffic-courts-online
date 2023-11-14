@@ -174,13 +174,13 @@ export class JJCountComponent implements OnInit {
           this.form.get('jjDisputedCountRoP').get('other').disable();
         }
 
-        //latestPlea
+        // Latest Plea
         if(this.jjDisputedCount?.latestPlea){
           this.bindLatestPlea(this.jjDisputedCount.latestPlea);
         }
 
-        //latestPleaUpdatedTs
-        if(this.jjDisputedCount?.latestPleaUpdateTs){
+        // Latest Plea UpdatedTs
+        if(this.jjDisputedCount?.latestPleaUpdateTs){          
           this.bindLatestPleaUpdateTs(this.jjDisputedCount.latestPleaUpdateTs);
         }
       }
@@ -192,6 +192,9 @@ export class JJCountComponent implements OnInit {
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
         Object.assign(this.jjDisputedCount, this.form.getRawValue()); // get raw value includes disabled fields
+        if(this.jjDisputedCount.latestPleaUpdateTs){
+          this.jjDisputedCount.latestPleaUpdateTs = new Date(this.jjDisputedCount.latestPleaUpdateTs).toISOString();
+        }        
         this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N);
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
@@ -348,15 +351,14 @@ export class JJCountComponent implements OnInit {
   }
 
   bindLatestPleaUpdateTs(value){
-    this.form.get("latestPleaUpdateTs").setValue(new Date(value));
+    this.form.get("latestPleaUpdateTs").setValue(this.toDateString(new Date(value)));
   }
 
-  onLatestPleaChange(value: JJDisputedCountLatestPlea){
-    this.jjDisputedCount.latestPlea=value;
-  }
-
-  onLatestPleaUpdateTsChange(value){
-    this.jjDisputedCount.latestPleaUpdateTs=value.toISOString();
+  toDateString(date: Date): string {
+    return (date.getFullYear().toString() + '-' 
+       + ("0" + (date.getMonth() + 1)).slice(-2) + '-' 
+       + ("0" + (date.getDate())).slice(-2))
+       + 'T' + date.toTimeString().slice(0,5);
   }
 }
 

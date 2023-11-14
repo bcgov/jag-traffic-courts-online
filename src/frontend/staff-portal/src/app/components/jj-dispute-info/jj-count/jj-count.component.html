@@ -234,8 +234,8 @@
         <span class="section-grid-header">Change Plea</span>
       </div>
       <div class="col-md-8">
-        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="!isViewOnly && jjDisputedCount" style="width:75%; background:#fffee6"
-          (selectionChange)="onLatestPleaChange($event.value)" >
+        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="!isViewOnly && jjDisputedCount" 
+          style="width:75%; background:#fffee6" >
           <mat-option [value]="LatestPlea.G">Guilty</mat-option>
           <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
         </mat-select>
@@ -245,22 +245,14 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mt-1">
       <div class="col-md-4">
         <span class="section-grid-header">Date/Time</span>
       </div>
       <div class="col-md-8">
-        <mat-form-field *ngIf="!isViewOnly && jjDisputedCount" class="form-field-latest-plea">
-          <input matInput [ngxMatDatetimePicker]="picker" [value]="jjDisputedCount?.latestPleaUpdateTs" formControlName="latestPleaUpdateTs"
-            (dateChange)="onLatestPleaUpdateTsChange($event.value)" >
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #picker>
-            <ngx-mat-datepicker-actions>
-              <button mat-button ngxMatDatepickerCancel>Cancel</button>
-              <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
-            </ngx-mat-datepicker-actions>
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
+        <div *ngIf="!isViewOnly && jjDisputedCount">
+          <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text" >
+        </div>
         <div *ngIf="isViewOnly && jjDisputedCount && jjDisputedCount?.latestPleaUpdateTs">
           <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "MM/dd/YYYY HH:mm" }}</span>
         </div>
