@@ -22,12 +22,12 @@ public class DisputeTicketUploadPNG {
 
 	private WebDriver driver;
 
-	/*
-	 * @After public void tearDown() { driver.close(); driver.quit(); }
-	 * 
-	 * @AfterClass public static void afterClass() { WebDriverManager.instance =
-	 * null; }
-	 */
+	
+	  @After public void tearDown() { driver.close(); driver.quit(); }
+	  
+	  @AfterClass public static void afterClass() { WebDriverManager.instance =
+	  null; }
+	 
 
 	@Test
 	public void test() throws Exception {
@@ -39,24 +39,24 @@ public class DisputeTicketUploadPNG {
 		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
 		upload.uploadPNG(element, driverWait, driver);
 
-		new WebDriverWait(driver, Duration.ofSeconds(20)).until(
+		new WebDriverWait(driver, Duration.ofSeconds(60)).until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket details')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AN00893391')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AC00000150')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'May 24, 2023')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Oct 20, 2023')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'kent')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Bubley')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'BC')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '12:44')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '15:23')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'clark')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Michael')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '3139264')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '1234567')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Pass On Right')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Excessive Speeding')]")));
 		System.out.println("File uploaded properly");
 
 		Thread.sleep(1000);
@@ -87,15 +87,18 @@ public class DisputeTicketUploadPNG {
 		element.sendKeys("claudiu.vlasceanu@nttdata.com");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
-
+		Thread.sleep(1000);
+		
 		DisputeTicketUploadPNG review = new DisputeTicketUploadPNG();
 		review.review(element, driverWait, driver);
+		
+		Thread.sleep(1000);
+		JavascriptExecutor jse33 = (JavascriptExecutor) driver;
+		// Click Next
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		jse33.executeScript("arguments[0].click();", element);
 
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
-
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
@@ -105,10 +108,10 @@ public class DisputeTicketUploadPNG {
 		js5.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
 
-		JavascriptExecutor jse3 = (JavascriptExecutor) driver;
+		JavascriptExecutor jse31 = (JavascriptExecutor) driver;
 		// Click Next
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-3")));
-		jse3.executeScript("arguments[0].scrollIntoView();", element);
+		jse31.executeScript("arguments[0].scrollIntoView();", element);
 		Thread.sleep(1000);
 		element.click();
 
@@ -147,11 +150,12 @@ public class DisputeTicketUploadPNG {
 
 		Thread.sleep(1000);
 		WebElement upload = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("file")));
-		upload.sendKeys(System.getProperty("user.dir") + '/' + "NewTicket.png");
+		upload.sendKeys(System.getProperty("user.dir") + '/' + "TestUpload.png");
 
 	}
 
 	public void review(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
 
 		Thread.sleep(1000);
 		// Scroll down till the bottom of the page
@@ -175,6 +179,7 @@ public class DisputeTicketUploadPNG {
 		// Select rdo button
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-2")));
 		element.click();
+		System.out.println("RDO selected");
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
@@ -202,12 +207,10 @@ public class DisputeTicketUploadPNG {
 		js4.executeScript("arguments[0].click();", element);
 
 		Thread.sleep(1000);
-		JavascriptExecutor js12 = (JavascriptExecutor) driver;
-		js12.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		Thread.sleep(1000);
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.cssSelector(".ng-star-inserted > .row #primaryButton")));
-		element.click();
+		JavascriptExecutor jse34 = (JavascriptExecutor) driver;
+		// Click Next
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		jse34.executeScript("arguments[0].scrollIntoView();", element);
 
 		String c = "Additional information";
 		// identify elements with text()
