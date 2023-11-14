@@ -1,5 +1,6 @@
 package ca.bc.gov.open.ui;
 
+import java.time.Duration;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,15 +67,6 @@ public class DisputeTicketAttendCourtHearing {
 				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-6 .mat-radio-outer-circle")));
 		jse2.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-		JavascriptExecutor jse3 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-9 .mat-radio-outer-circle")));
-		jse3.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
-		JavascriptExecutor jse4 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-12 .mat-radio-outer-circle")));
-		jse4.executeScript("arguments[0].click();", element);
 
 		JavascriptExecutor jse22 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
@@ -90,14 +82,10 @@ public class DisputeTicketAttendCourtHearing {
 			System.out.println("Text: " + a + " is not present. ");
 		}
 		JavascriptExecutor jse21 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("mat-checkbox-12-input")));
+		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//*[contains(text(), ' I intend to be represented by a lawyer in court. ')]")));
 		jse21.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-
-		// Additional Info with lawyer, interpreter and witness
-		element = driverWait.until(ExpectedConditions
-				.elementToBeClickable(By.cssSelector("#mat-checkbox-13 .mat-checkbox-inner-container")));
-		element.click();
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
 		element.sendKeys("Test LTD");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
@@ -107,22 +95,42 @@ public class DisputeTicketAttendCourtHearing {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+		element.clear();
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
 		element.sendKeys("test@test.com");
+
+		// Additional Info with lawyer, interpreter and witness
 		JavascriptExecutor jse6 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("mat-select-value-9")));
+		element = driverWait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//*[contains(text(), ' I require a language interpreter at the hearing. ')]")));
 		jse6.executeScript("arguments[0].click();", element);
+		JavascriptExecutor jse61 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("mat-select-value-9")));
+		jse61.executeScript("arguments[0].click();", element);
 		element = driverWait
 				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-option-267 > .mat-option-text")));
 		element.click();
 		Thread.sleep(1000);
+		// Additional Info with lawyer, interpreter and witness
+		JavascriptExecutor jse62 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
-				.elementToBeClickable(By.cssSelector("#mat-checkbox-14 .mat-checkbox-inner-container")));
-		element.click();
+				.elementToBeClickable(By.xpath("//*[contains(text(), ' I intend to call a witness(es). ')]")));
+		jse62.executeScript("arguments[0].click();", element);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
 		element.clear();
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
 		element.sendKeys("3");
 		Thread.sleep(1000);
+
+		// Check text
+		new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"//*[contains(text(), 'If you are calling a witness please keep the following information in mind:')]")));
+
+		new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"//*[contains(text(), 'If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your Notice')]")));
+
+		new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"//*[contains(text(), 'If you bring a witness, you are responsible for ensuring they are aware of the hearing date and know')]")));
 
 		JavascriptExecutor jse7 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
@@ -143,7 +151,8 @@ public class DisputeTicketAttendCourtHearing {
 		System.out.println("Tick declare box checked");
 		Thread.sleep(1000);
 		JavascriptExecutor jse9 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Submit request')]")));
+		element = driverWait.until(
+				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Submit request')]")));
 		jse9.executeScript("arguments[0].click();", element);
 
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();

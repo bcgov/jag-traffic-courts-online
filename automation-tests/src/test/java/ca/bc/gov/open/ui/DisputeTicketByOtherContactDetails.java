@@ -14,7 +14,7 @@ import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.WebDriverManager;
 
 public class DisputeTicketByOtherContactDetails {
-	
+
 	private WebDriver driver;
 
 	@After
@@ -36,21 +36,22 @@ public class DisputeTicketByOtherContactDetails {
 		WebDriverManager.getElements();
 
 		CommonUtils.login();
-		
+
 		DisputeTicketOptionsPicker disputeTicketExisting = new DisputeTicketOptionsPicker();
 		disputeTicketExisting.startDisputeTicket(element, driverWait, driver);
-		
+
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
 		element.sendKeys("Test");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
 		element.sendKeys("User");
-		//Select Lawyer
+		// Select Lawyer
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-value-1")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
 		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-2 > .mat-option-text")));
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-2 > .mat-option-text")));
 		Thread.sleep(1000);
 		js1.executeScript("arguments[0].click();", element);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
@@ -69,29 +70,25 @@ public class DisputeTicketByOtherContactDetails {
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
 		element.sendKeys("999 999 1234");
-		
+
 		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
 		review.reviewProcess(element, driverWait, driver);
-		
+
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
-		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 		// Click Next
 		JavascriptExecutor js5 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
 		js5.executeScript("arguments[0].click();", element);
-		
+
 		DisputeTicketOptionsPicker overview = new DisputeTicketOptionsPicker();
 		overview.ticketRequestOverview(element, driverWait, driver);
-		
+
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
 		popup.popupSubmitWindow(element, driverWait, driver);
-		
-		
+
 	}
 
 }

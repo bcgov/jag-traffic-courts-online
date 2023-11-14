@@ -20,8 +20,7 @@ import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.WebDriverManager;
 
 public class DisputeTicketOptionsPickerByMail {
-	
-	
+
 	private WebDriver driver;
 
 	private static String user;
@@ -52,22 +51,6 @@ public class DisputeTicketOptionsPickerByMail {
 		DisputeTicketOptionsPickerByMail persInfo = new DisputeTicketOptionsPickerByMail();
 		persInfo.addressInput(element, driverWait, driver);
 
-		// Add DOB
-		/*
-		 * new WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[@aria-label='Open calendar']"))) .click(); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' 2004 ')]"))) .click(); Thread.sleep(1000); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' JAN ')]"))).click(); Thread.sleep(1000); new
-		 * WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), ' 31 ')]"))).click();
-		 */
-
 		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
 		review.reviewProcess(element, driverWait, driver);
 
@@ -78,11 +61,11 @@ public class DisputeTicketOptionsPickerByMail {
 
 		DisputeTicketOptionsPicker overview = new DisputeTicketOptionsPicker();
 		overview.ticketRequestOverview(element, driverWait, driver);
-		
+
 		// Switch to pop-up window
 		DisputeTicketOptionsPickerByMail popupWindowHandle = new DisputeTicketOptionsPickerByMail();
 		popupWindowHandle.popup(element, driverWait, driver);
-		
+
 	}
 
 	public static String getUser() {
@@ -118,38 +101,37 @@ public class DisputeTicketOptionsPickerByMail {
 		element.sendKeys("999 999 1234");
 		Thread.sleep(1000);
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
-		
+
 	}
-	
+
 	public void popup(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
 		// Switch to pop-up window
-				String parentWindowHandler = driver.getWindowHandle(); // Store your parent window
-				String subWindowHandler = null;
+		String parentWindowHandler = driver.getWindowHandle(); // Store your parent window
+		String subWindowHandler = null;
 
-				Set<String> handles = driver.getWindowHandles(); // get all window handles
-				Iterator<String> iterator = handles.iterator();
-				while (iterator.hasNext()) {
-					subWindowHandler = iterator.next();
-				}
-				driver.switchTo().window(subWindowHandler); // switch to popup window
+		Set<String> handles = driver.getWindowHandles(); // get all window handles
+		Iterator<String> iterator = handles.iterator();
+		while (iterator.hasNext()) {
+			subWindowHandler = iterator.next();
+		}
+		driver.switchTo().window(subWindowHandler); // switch to popup window
 
-				JavascriptExecutor js = (JavascriptExecutor) driver;
-				element = driverWait
-						.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
-				js.executeScript("arguments[0].click();", element);
-				System.out.println("Submit in pop-up clicked");
-				driver.switchTo().window(parentWindowHandler); // switch back to parent window
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
+		js.executeScript("arguments[0].click();", element);
+		System.out.println("Submit in pop-up clicked");
+		driver.switchTo().window(parentWindowHandler); // switch back to parent window
 
-				new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-						.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Dispute your ticket ')]")));
-				System.out.println("Ticket submitted without email");
-		
+		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket request sent successfully')]")));
+		System.out.println("Ticket submitted without email");
+
 	}
-
 
 }

@@ -58,14 +58,13 @@ public class DisputeTicketOptionsPickerDiffCountry {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
 		element.sendKeys("Chicago");
 		Thread.sleep(1000);
-		JavascriptExecutor jse1 = (JavascriptExecutor) driver;
+		JavascriptExecutor jse22 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-value-3")));
-		jse1.executeScript("scroll(0, 450);");
-		element.click();
+		jse22.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-270 > .mat-option-text")));
-		element.click();
+		JavascriptExecutor jse62 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(), 'USA')]")));
+		jse62.executeScript("arguments[0].click();", element);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys("98001");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
@@ -78,27 +77,31 @@ public class DisputeTicketOptionsPickerDiffCountry {
 		jse2.executeScript("arguments[0].scrollIntoView();", element);
 		Thread.sleep(1000);
 		element.click();
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-233 > .mat-option-text")));
-		element.click();
+		JavascriptExecutor jse63 = (JavascriptExecutor) driver;
+		element = driverWait
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(), 'Arizona ')]")));
+		jse63.executeScript("arguments[0].click();", element);
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
+		element.sendKeys("test Law firm");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
+		element.sendKeys("test Given");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
+		element.sendKeys("12345");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("999 999 1234");
-		
+
 		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
 		review.reviewProcess(element, driverWait, driver);
-		
+
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
-		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, ven");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
 		element.sendKeys(
-				"semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel,");
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, ven");
 		// Click Next
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[5]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
-		element.click();
-		
+		JavascriptExecutor js5 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		js5.executeScript("arguments[0].click();", element);
+
 		DisputeTicketOptionsPicker overview = new DisputeTicketOptionsPicker();
 		overview.ticketRequestOverview(element, driverWait, driver);
 
