@@ -534,6 +534,9 @@
                 "name": "read"
               },
               {
+                "name": "update-admin"
+              },
+              {
                 "name": "require_court_hearing"
               },
               {
@@ -543,9 +546,13 @@
                 "name": "review"
               },
               {
+                "name": "update_court_appearance"
+              },
+              {
                 "name": "assign"
               }
-            ]
+            ],
+            "icon_uri": ""
           },
           {
             "name": "dispute",
@@ -622,6 +629,17 @@
             "decisionStrategy": "UNANIMOUS",
             "config": {
               "roles": "[{\"id\":\"staff-api/judicial-justice\",\"required\":true}]"
+            }
+          },
+          {
+            "id": "741f65d1-8316-438f-88df-542316389ade",
+            "name": "has role support-staff",
+            "description": "Has ability to allow CSB support team users to edit a variety of fields in DCF to ensure they match JUSTIN.",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "roles": "[{\"id\":\"staff-api/support-staff\",\"required\":true}]"
             }
           },
           {
@@ -767,6 +785,31 @@
               "scopes": "[\"review\"]",
               "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
             }
+          },
+          {
+            "id": "88c9008c-af82-4ea6-b537-cf75f92a086e",
+            "name": "can update_court_appearance jj-dispute",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"update_court_appearance\"]",
+              "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+            }
+          },
+          {
+            "id": "256c918b-9d46-4336-ba5e-6a479b035806",
+            "name": "can update-admin jj-dispute",
+            "description": "This permission is to update a jj-dispute, all fields, any field. Not to be confused with \"can update jj-dispute\" where updates are not really updates but rather only adding or removing associated documents.",
+            "type": "scope",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "resources": "[\"jj-dispute\"]",
+              "scopes": "[\"update-admin\"]",
+              "applyPolicies": "[\"has role support-staff\"]"
+            }
           }
         ],
         "scopes": [
@@ -820,6 +863,17 @@
             "id": "899689eb-f7d3-4494-9c06-37d9a841a336",
             "name": "require_court_hearing",
             "displayName": "require_court_hearing"
+          },
+          {
+            "id": "0b2af363-f7ab-4337-b02a-c56f08624f47",
+            "name": "update_court_appearance",
+            "displayName": "update_court_appearance"
+          },
+          {
+            "id": "550b8e63-3bbb-4c9b-bada-c40d51eb7682",
+            "name": "update-admin",
+            "iconUri": "",
+            "displayName": "update-admin"
           }
         ],
         "decisionStrategy": "UNANIMOUS"
