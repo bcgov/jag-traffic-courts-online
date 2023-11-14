@@ -347,11 +347,11 @@ export class JJCountComponent implements OnInit {
 
   //Latest Plea
   bindLatestPlea(value){
-    this.form.get("latestPlea").setValue(value);
+    this.form.controls.latestPlea.setValue(value);
   }
 
   bindLatestPleaUpdateTs(value){
-    this.form.get("latestPleaUpdateTs").setValue(this.toDateString(new Date(value)));
+    this.form.controls.latestPleaUpdateTs.setValue(this.toDateString(new Date(value)));
   }
 
   toDateString(date: Date): string {
