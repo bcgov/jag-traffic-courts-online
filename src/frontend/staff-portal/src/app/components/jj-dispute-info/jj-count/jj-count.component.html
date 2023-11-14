@@ -225,6 +225,42 @@
     </mat-label>
     <div class="section-grid-text" style="padding-bottom: 2rem !important;">{{ jjDisputedCount?.comments }}</div>
   </div>
+  <!-- JJ Latest Change Plea -->
+  <section [formGroup]="form" *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance"
+    style="padding: 0 0.2rem;">
+    <br>
+    <div class="row">
+      <div class="col-md-4">
+        <span class="section-grid-header">Change Plea</span>
+      </div>
+      <div class="col-md-8" *ngIf="jjDisputedCount">
+        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_content" 
+          style="width:75%; background:#fffee6" >
+          <mat-option [value]="LatestPlea.G">Guilty</mat-option>
+          <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
+        </mat-select>
+        <ng-template #view_plea_content>
+          <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G">Guilty</span>
+          <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.N">Not guilty</span>
+        </ng-template>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-md-4">
+        <span class="section-grid-header">Date/Time</span>
+      </div>
+      <div class="col-md-8" *ngIf="jjDisputedCount">
+        <div *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_date_content ">
+          <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text" >
+        </div>
+        <ng-template #view_plea_date_content>
+          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "YYYY-MM-dd HH:mm" }}</span>
+        </ng-template>
+      </div>
+    </div>
+    <br>
+    <hr style="margin: 0 0 0 0" />
+  </section>
   <!-- JJ RoP for Court Appearance -->
   <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance"
     style="padding: 0 0.2rem;">
@@ -274,6 +310,7 @@
         <mat-tooltip style="font-size:x-small">Hover over section to see full description</mat-tooltip>
       </div><br />
     </div>
+    <br>
     <hr style="margin: 0 0 0 0" />
   </section>
   <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance"
