@@ -4,7 +4,6 @@ import { JJDispute } from '../../../services/jj-dispute.service';
 import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
-import { DateUtil } from '@shared/utils/date-util';
 import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
 
 @Component({

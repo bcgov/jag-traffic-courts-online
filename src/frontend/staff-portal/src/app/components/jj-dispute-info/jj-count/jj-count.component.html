@@ -233,29 +233,29 @@
       <div class="col-md-4">
         <span class="section-grid-header">Change Plea</span>
       </div>
-      <div class="col-md-8">
-        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="type !== 'ticket' && !isViewOnly && jjDisputedCount" 
+      <div class="col-md-8" *ngIf="jjDisputedCount">
+        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_content" 
           style="width:75%; background:#fffee6" >
           <mat-option [value]="LatestPlea.G">Guilty</mat-option>
           <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
         </mat-select>
-        <div *ngIf="(isViewOnly && jjDisputedCount) || type === 'ticket'">
+        <ng-template #view_plea_content>
           <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G">Guilty</span>
           <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.N">Not guilty</span>
-        </div>
+        </ng-template>
       </div>
     </div>
     <div class="row mt-1">
       <div class="col-md-4">
         <span class="section-grid-header">Date/Time</span>
       </div>
-      <div class="col-md-8">
-        <div *ngIf="type !== 'ticket' && !isViewOnly && jjDisputedCount">
+      <div class="col-md-8" *ngIf="jjDisputedCount">
+        <div *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_date_content ">
           <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text" >
         </div>
-        <div *ngIf="((isViewOnly && jjDisputedCount) || type === 'ticket') && jjDisputedCount?.latestPleaUpdateTs">
+        <ng-template #view_plea_date_content>
           <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "YYYY-MM-dd HH:mm" }}</span>
-        </div>
+        </ng-template>
       </div>
     </div>
     <br>
