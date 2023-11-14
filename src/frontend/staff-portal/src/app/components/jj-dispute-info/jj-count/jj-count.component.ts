@@ -4,6 +4,8 @@ import { JJDispute } from '../../../services/jj-dispute.service';
 import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
+import { DateUtil } from '@shared/utils/date-util';
+import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
 
 @Component({
   selector: 'app-jj-count',
@@ -47,7 +49,8 @@ export class JJCountComponent implements OnInit {
 
   constructor(
     private lookupsService: LookupsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private datePipe: CustomDatePipe
   ) {
   }
 
@@ -351,14 +354,7 @@ export class JJCountComponent implements OnInit {
   }
 
   bindLatestPleaUpdateTs(value){
-    this.form.controls.latestPleaUpdateTs.setValue(this.toDateString(new Date(value)));
-  }
-
-  toDateString(date: Date): string {
-    return (date.getFullYear().toString() + '-' 
-       + ("0" + (date.getMonth() + 1)).slice(-2) + '-' 
-       + ("0" + (date.getDate())).slice(-2))
-       + 'T' + date.toTimeString().slice(0,5);
+    this.form.controls.latestPleaUpdateTs.setValue(this.datePipe.transform(new Date(value), "YYYY-MM-dd HH:mm"));
   }
 }
 

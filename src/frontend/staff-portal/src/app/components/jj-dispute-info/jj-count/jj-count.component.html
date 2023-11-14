@@ -226,7 +226,7 @@
     <div class="section-grid-text" style="padding-bottom: 2rem !important;">{{ jjDisputedCount?.comments }}</div>
   </div>
   <!-- JJ Latest Change Plea -->
-  <section [formGroup]="form" *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance"
+  <section [formGroup]="form" *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance"
     style="padding: 0 0.2rem;">
     <br>
     <div class="row">
@@ -234,12 +234,12 @@
         <span class="section-grid-header">Change Plea</span>
       </div>
       <div class="col-md-8">
-        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="!isViewOnly && jjDisputedCount" 
+        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="type !== 'ticket' && !isViewOnly && jjDisputedCount" 
           style="width:75%; background:#fffee6" >
           <mat-option [value]="LatestPlea.G">Guilty</mat-option>
           <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
         </mat-select>
-        <div *ngIf="isViewOnly && jjDisputedCount">
+        <div *ngIf="(isViewOnly && jjDisputedCount) || type === 'ticket'">
           <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G">Guilty</span>
           <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPlea === LatestPlea.N">Not guilty</span>
         </div>
@@ -250,35 +250,12 @@
         <span class="section-grid-header">Date/Time</span>
       </div>
       <div class="col-md-8">
-        <div *ngIf="!isViewOnly && jjDisputedCount">
+        <div *ngIf="type !== 'ticket' && !isViewOnly && jjDisputedCount">
           <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text" >
         </div>
-        <div *ngIf="isViewOnly && jjDisputedCount && jjDisputedCount?.latestPleaUpdateTs">
-          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "MM/dd/YYYY HH:mm" }}</span>
+        <div *ngIf="((isViewOnly && jjDisputedCount) || type === 'ticket') && jjDisputedCount?.latestPleaUpdateTs">
+          <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "YYYY-MM-dd HH:mm" }}</span>
         </div>
-      </div>
-    </div>
-    <br>
-    <hr style="margin: 0 0 0 0" />
-  </section>
-  <section [formGroup]="form" *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance"
-    style="padding: 0 0.2rem;">
-    <br>
-    <div class="row">
-      <div class="col-md-4">
-        <span class="section-grid-header">Change Plea</span>
-      </div>
-      <div class="col-md-8">
-        <span *ngIf="jjDisputedCount?.latestPlea === LatestPlea.G" class="section-grid-text">Guilty</span>
-        <span *ngIf="jjDisputedCount?.latestPlea === LatestPlea.N" class="section-grid-text">Not guilty</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <span class="section-grid-header">Date/Time</span>
-      </div>
-      <div class="col-md-8">
-        <span class="section-grid-text" *ngIf="jjDisputedCount?.latestPleaUpdateTs">{{ jjDisputedCount?.latestPleaUpdateTs | date: "MM/dd/YYYY HH:mm" }}</span>
       </div>
     </div>
     <br>
