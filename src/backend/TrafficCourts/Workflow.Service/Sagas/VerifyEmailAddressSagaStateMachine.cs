@@ -70,13 +70,7 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
                 .Then(context => _logger.LogDebug("Email verification started"))
                 .Then(CreateToken)
                 .ThenAsync(SendVerificationEmail)
-                .TransitionTo(Active),
-            When(NoticeOfDisputeSubmitted)
-                .If(context => context.Message.RequiresEmailVerification,
-                    x => x.Then(context => _logger.LogDebug("Notice of dispute submitted and requires email verification"))
-                          .ThenAsync(HandleNoticeOfDisputeSubmitted)
-                          .TransitionTo(Active))
-        );
+                .TransitionTo(Active));
 
         During(Active,
             When(ResendEmailVerificationEmail)
