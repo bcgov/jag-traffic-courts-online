@@ -9,6 +9,24 @@ spec:
   lookupPolicy:
     local: true
   tags:
+    - name: '21'
+      from:
+        kind: DockerImage
+        name: 'docker.io/eclipse-temurin:21'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: '17'
+      from:
+        kind: DockerImage
+        name: 'docker.io/eclipse-temurin:17'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
     - name: '11'
       from:
         kind: DockerImage

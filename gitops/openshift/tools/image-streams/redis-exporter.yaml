@@ -9,19 +9,19 @@ spec:
   lookupPolicy:
     local: true
   tags:
-    - name: '1.36.0-debian-10-r5'
+    - name: '1.55.0-debian-11-r0'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/redis-exporter:1.36.0-debian-10-r5'
+        name: 'docker.io/bitnami/redis-exporter:1.55.0-debian-11-r0'
         imagePullSecret: 'pipeline-docker-hub-pull'
       importPolicy:
         scheduled: true
       referencePolicy:
         type: Source
-    - name: '1.46.0-debian-11-r7'
+    - name: '1.54.0-debian-11-r25'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/redis-exporter:1.46.0-debian-11-r7'
+        name: 'docker.io/bitnami/redis-exporter:1.54.0-debian-11-r25'
         imagePullSecret: 'pipeline-docker-hub-pull'
       importPolicy:
         scheduled: true
@@ -36,10 +36,19 @@ spec:
         scheduled: true
       referencePolicy:
         type: Source
-    - name: '1.54.0-debian-11-r25'
+    - name: '1.46.0-debian-11-r7'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/redis-exporter:1.54.0-debian-11-r25'
+        name: 'docker.io/bitnami/redis-exporter:1.46.0-debian-11-r7'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: '1.36.0-debian-10-r5'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/redis-exporter:1.36.0-debian-10-r5'
         imagePullSecret: 'pipeline-docker-hub-pull'
       importPolicy:
         scheduled: true

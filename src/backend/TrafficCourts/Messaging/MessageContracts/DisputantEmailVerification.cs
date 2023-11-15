@@ -64,7 +64,6 @@ public class NoticeOfDisputeSubmitted
     public long DisputeId { get; set; }
     public Guid NoticeOfDisputeGuid { get; set; }
     public string EmailAddress { get; set; } = string.Empty;
-    public bool RequiresEmailVerification { get; set; } = true;
 }
 
 /// <summary>
