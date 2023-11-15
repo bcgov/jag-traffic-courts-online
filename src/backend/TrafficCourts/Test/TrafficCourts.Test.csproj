@@ -20,8 +20,8 @@
 		<PackageReference Include="Moq" Version="4.20.69" />
 		<PackageReference Include="NodaTime.Testing" Version="3.1.9" />
 		<PackageReference Include="SshKeyGenerator" Version="1.1.51" />
-		<PackageReference Include="xunit" Version="2.5.1" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
+		<PackageReference Include="xunit" Version="2.6.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
