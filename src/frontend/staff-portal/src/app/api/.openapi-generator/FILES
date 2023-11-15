@@ -3,6 +3,7 @@ README.md
 api.module.ts
 api/api.ts
 api/dispute.service.ts
+api/disputeLock.service.ts
 api/document.service.ts
 api/emailHistory.service.ts
 api/fileHistory.service.ts
@@ -77,6 +78,7 @@ model/jJDisputedCountRoPForWantOfProsecution.model.ts
 model/jJDisputedCountRoPJailIntermittent.model.ts
 model/jJDisputedCountRoPWithdrawn.model.ts
 model/language.model.ts
+model/lock.model.ts
 model/models.ts
 model/ocrViolationTicket.model.ts
 model/point.model.ts
