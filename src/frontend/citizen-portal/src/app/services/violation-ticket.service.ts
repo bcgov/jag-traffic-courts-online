@@ -419,7 +419,7 @@ export class ViolationTicketService {
   }
 
   private openErrorScenarioThreeDialog() {
-    return this.openImageTicketNotFoundDialog("The system has identified your ticket as an old format that is no longer supported.", "error3");
+    return this.openImageTicketNotFoundDialog("Ticket cannot be disputed online", "error3");
   }
 
   private openErrorScenarioFourDialog() {
