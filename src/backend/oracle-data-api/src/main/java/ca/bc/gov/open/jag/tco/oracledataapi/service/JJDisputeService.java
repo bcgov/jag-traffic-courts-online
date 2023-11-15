@@ -34,6 +34,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRemarkRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.TicketImageDataRepository;
@@ -47,6 +48,9 @@ public class JJDisputeService {
 
 	@Autowired
 	private JJDisputeRepository jjDisputeRepository;
+
+	@Autowired
+	private DisputeRepository disputeRepository;
 
 	@Autowired
 	private TicketImageDataRepository ticketImageDataRepository;
@@ -151,7 +155,7 @@ public class JJDisputeService {
 							.collect(Collectors.toList())
 					);
 		}
-		
+
 
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
 
@@ -170,6 +174,26 @@ public class JJDisputeService {
 		}
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
+	}
+
+
+	/**
+	 * Updates the properties of a specific {@link JJDispute} as well as related {@link Dispute} data
+	 *
+	 * @param ticketNumber
+	 * @param {@link JJDispute}
+	 * @return
+	 */
+	@Transactional
+	public JJDispute updateJJDisputeCascade(String ticketNumber, JJDispute jjDispute, Principal principal) {
+
+		// TCVP-1981 Update certain fields on the related OCCAM Dispute as well.
+		Dispute dispute = disputeRepository.findById(jjDispute.getOccamDisputeId()).orElseThrow();
+		dispute.setDisputantSurname(jjDispute.getOccamDisputantSurnameNm());
+		// TODO: add many more other fields
+		disputeRepository.update(dispute);
+
+		return updateJJDispute(ticketNumber, jjDispute, principal);
 	}
 
 	/**
