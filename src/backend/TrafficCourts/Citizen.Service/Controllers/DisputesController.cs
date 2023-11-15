@@ -398,14 +398,28 @@ public class DisputesController : ControllerBase
 
             if (dispute.FileData is not null)
             {
-                var uploadPendingFiles = dispute.FileData.Where(i => !String.IsNullOrEmpty(i.PendingFileStream));
+                var uploadPendingFiles = dispute.FileData.Where(i => !string.IsNullOrEmpty(i.PendingFileStream));
                 request.UploadedDocuments = new List<UploadDocumentRequest>();
+                
                 foreach (FileMetadata fileMetadata in uploadPendingFiles)
                 {
+                    if (fileMetadata is null)
+                    {
+                        _logger.LogWarning("Uploaded file missing a file metadata");
+                        continue;
+                    }
+
+                    if (fileMetadata.FileName is null)
+                    {
+                        // should this throw an error?
+                        _logger.LogWarning("Uploaded file missing a filename, file cannot be uploaded");
+                        continue;
+                    }
+
                     DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };
 
                     // can throw
-                    Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream, fileMetadata.FileName, properties, cancellationToken);
+                    Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream!, fileMetadata.FileName, properties, cancellationToken);
 
                     UploadDocumentRequest uploadDocumentRequest = new() { DocumentId= id, DocumentType = fileMetadata.DocumentType };
 
@@ -416,7 +430,7 @@ public class DisputesController : ControllerBase
                 foreach (FileMetadata fileMetadata in deletePendingFiles)
                 {
                     // can throw
-                    await _documentService.DeleteFileAsync(fileMetadata.FileId.Value, cancellationToken);
+                    await _documentService.DeleteFileAsync(fileMetadata.FileId!.Value, cancellationToken);
                 }
             }
 

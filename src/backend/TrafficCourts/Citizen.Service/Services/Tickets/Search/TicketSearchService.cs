@@ -51,9 +51,9 @@ public class TicketSearchService : ITicketSearchService
 
             return null;
         }
-        catch (InvalidTicketVersionException exception)
+        catch (InvalidTicketVersionException)
         {
-            throw exception;
+            throw;
         }
         catch (Exception exception)
         {

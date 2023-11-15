@@ -8,7 +8,7 @@ public class Token
     /// The access token.
     /// </summary>
     [JsonPropertyName("access_token")]
-    public string AccessToken { get; set; }
+    public string AccessToken { get; set; } = string.Empty;
 
     /// <summary>
     /// When the access token expires.
@@ -26,13 +26,13 @@ public class Token
     /// The refresh token.
     /// </summary>
     [JsonPropertyName("refresh_token")]
-    public string RefreshToken { get; set; }
+    public string RefreshToken { get; set; } = string.Empty;
 
     /// <summary>
     /// The access token type.
     /// </summary>
     [JsonPropertyName("token_type")]
-    public string TokenType { get; set; }
+    public string TokenType { get; set; } = string.Empty;
 
     /// <summary>
     /// The session state ID.
@@ -43,6 +43,6 @@ public class Token
     /// <summary>
     /// The scope of the token.
     /// </summary>
-    public string Scope { get; set; }
+    public string Scope { get; set; } = string.Empty;
 
 }

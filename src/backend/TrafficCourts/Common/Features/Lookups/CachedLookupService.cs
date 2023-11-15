@@ -92,7 +92,7 @@ namespace TrafficCourts.Common.Features.Lookups
                 T[]? values = JsonSerializer.Deserialize<T[]>(json, _jsonSerializerOptions);
                 if (values is null)
                 {
-                    _logger.LogError("Deserializing redis value returned null, returning empty collection", typeof(T).Name);
+                    _logger.LogError("Deserializing Redis value returned null, returning empty collection, Type={Type}", typeof(T).Name);
                     return Array.Empty<T>();
                 }
 
@@ -100,7 +100,7 @@ namespace TrafficCourts.Common.Features.Lookups
             }
             catch (JsonException exception)
             {
-                _logger.LogError(exception, "Error deserializing redis value into an array of {Type}, returning empty collection", typeof(T).Name);
+                _logger.LogError(exception, "Error deserializing Redis value into an array of {Type}, returning empty collection", typeof(T).Name);
                 return Array.Empty<T>();
             }
         }

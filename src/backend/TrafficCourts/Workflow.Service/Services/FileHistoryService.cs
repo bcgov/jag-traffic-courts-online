@@ -77,8 +77,10 @@ namespace TrafficCourts.Workflow.Service.Services
                         throw new Exception("Dispute not found in save file history");
                     }
                 }
-                else { throw new Exception("No identiifying information for dispute in save file history"); }
-                return -1;
+                else 
+                { 
+                    throw new Exception("No identifying information for dispute in save file history"); 
+                }
             }
             catch (Exception ex)
             {

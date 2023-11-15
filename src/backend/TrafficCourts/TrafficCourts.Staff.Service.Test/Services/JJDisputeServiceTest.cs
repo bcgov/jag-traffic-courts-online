@@ -110,7 +110,7 @@ public class JJDisputeServiceTest
         _keycloakService.Setup(_ => _.TryGetPartIds(_userRep.Object)).Returns(_expectedPartIds);
 
         // Act
-        string _actualPartId = await jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None);
+        string? _actualPartId = await jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None);
 
         // Assert
         var expectedPartId = Assert.Single(_expectedPartIds);

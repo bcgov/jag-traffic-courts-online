@@ -1,7 +1,5 @@
 ﻿using MassTransit;
-using MassTransit.SagaStateMachine;
 using Newtonsoft.Json;
-using System.Drawing.Text;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -47,7 +45,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
             {
                 // Extract patched Dispute values per updateType
                 UpdateRequest? patch = JsonConvert.DeserializeObject<UpdateRequest>(updateRequest.UpdateJson);
-                if (patch == null)
+                if (patch is null)
                 {
                    throw new InvalidOperationException("Unable to process update request JSON.");
                 }
