@@ -24,7 +24,7 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestRejectedTemplate = updateRequestRejectedTemplate ?? throw new ArgumentNullException(nameof(updateRequestRejectedTemplate));
-        _workflowDocumentService = workflowDocumentService ?? throw new ArgumentNullException();
+        _workflowDocumentService = workflowDocumentService ?? throw new ArgumentNullException(nameof(workflowDocumentService));
     }
 
     public async Task Consume(ConsumeContext<DisputeUpdateRequestRejected> context)
@@ -40,13 +40,17 @@ public class DisputeUpdateRequestRejectedConsumer : IConsumer<DisputeUpdateReque
         // Set the status of the DisputeUpdateRequest object to REJECTED.
         DisputeUpdateRequest updateRequest = await _oracleDataApiService.UpdateDisputeUpdateRequestStatusAsync(message.UpdateRequestId, DisputeUpdateRequestStatus.REJECTED, context.CancellationToken);
 
-        if (updateRequest?.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
+        if (updateRequest.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT)
         {
             // remove document from repository
             UpdateRequest? patch = JsonConvert.DeserializeObject<UpdateRequest>(updateRequest.UpdateJson);
-            foreach(UploadDocumentRequest doc in patch?.UploadedDocuments)
+            
+            if (patch?.UploadedDocuments is not null)
             {
-                if (doc.DocumentId is not null) await _workflowDocumentService.RemoveFileAsync((Guid)doc.DocumentId, context.CancellationToken);
+                foreach (UploadDocumentRequest doc in patch.UploadedDocuments)
+                {
+                    if (doc.DocumentId is not null) await _workflowDocumentService.RemoveFileAsync((Guid)doc.DocumentId, context.CancellationToken);
+                }
             }
         }
 

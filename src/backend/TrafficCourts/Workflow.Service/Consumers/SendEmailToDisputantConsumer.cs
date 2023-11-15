@@ -1,11 +1,7 @@
 ﻿using MassTransit;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using NodaTime;
-using System.Net;
 using TrafficCourts.Common.Features.Mail;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
 
@@ -39,17 +35,20 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
             // search for dispute log warning if not found
             Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(context.Message.NoticeOfDisputeGuid, context.CancellationToken);
             if (dispute is null) 
-            { 
-                _logger.LogWarning("Sending email without existing dispute", context.Message); 
+            {
+                // avoid logging PII, do not log the message
+                _logger.LogWarning("Sending email without existing dispute"); 
             }
 
             EmailMessage emailMessage = context.Message.Message;
 
             // try to fill in to if missing
-            if (emailMessage.To.IsNullOrEmpty() && dispute is not null && dispute.EmailAddress is not null && dispute.EmailAddressVerified == true)
+            if (string.IsNullOrEmpty(emailMessage.To) && dispute is not null && dispute.EmailAddress is not null && dispute.EmailAddressVerified == true)
                 emailMessage.To = dispute.EmailAddress;
 
-            var result = emailMessage.To.IsNullOrEmpty() ? SendEmailResult.Filtered : await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
+            var result = string.IsNullOrEmpty(emailMessage.To) 
+                ? SendEmailResult.Filtered 
+                : await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
 
             var now = _clock.GetCurrentInstant().ToDateTimeOffset();
 
@@ -84,11 +83,12 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
         }
         catch (ArgumentNullException ex) // log it and move on
         {
-            _logger.LogError(ex.Message, context);
+            // why does ArgumentNullException get thrown??
+            _logger.LogError(ex, "Failed to send email");
         }
         catch (InvalidEmailMessageException ex) // log it and move on
         {
-            _logger.LogError(ex.Message, context);
+            _logger.LogError(ex, "Failed to send email, invalid email message");
         }
     }
 }

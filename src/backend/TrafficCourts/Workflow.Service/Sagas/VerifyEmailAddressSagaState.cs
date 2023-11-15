@@ -7,9 +7,9 @@ public class VerifyEmailAddressState : SagaStateMachineInstance
 {
     [Key]
     public Guid CorrelationId { get; set; }
-    
+
     [MaxLength(64)]
-    public string CurrentState { get; set; }
+    public string CurrentState { get; set; } = null!;
 
     [Timestamp]
     public uint Version { get; set; }

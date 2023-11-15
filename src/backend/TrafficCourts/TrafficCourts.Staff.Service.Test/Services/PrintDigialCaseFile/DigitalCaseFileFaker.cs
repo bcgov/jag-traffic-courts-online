@@ -7,14 +7,14 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile;
 
 public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
 {
-    private const string Locale = "en_CA";
+    private const string OurLocale = "en_CA";
 
-    private static readonly Faker<DriversLicence> _driversLicenceFaker = new Faker<DriversLicence>(Locale)
+    private static readonly Faker<DriversLicence> _driversLicenceFaker = new Faker<DriversLicence>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.Province, f => f.Address.State())
         .RuleFor(_ => _.Number, f => f.DriversLicenceNumber());
 
-    private static readonly Faker<TicketSummary> _ticketSummaryFaker = new Faker<TicketSummary>(Locale)
+    private static readonly Faker<TicketSummary> _ticketSummaryFaker = new Faker<TicketSummary>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.Number, f => f.TicketNumber())
         .RuleFor(_ => _.Surname, f => f.Name.LastName())
@@ -29,7 +29,7 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         .RuleFor(_ => _.CourtHouse, f => f.Address.City())
         ;
 
-    private static readonly Faker<ContactInformation> _contactInformationFaker = new Faker<ContactInformation>(Locale)
+    private static readonly Faker<ContactInformation> _contactInformationFaker = new Faker<ContactInformation>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.Surname, f => f.Name.LastName())
         .RuleFor(_ => _.GivenNames, f => f.Name.FirstName())
@@ -38,12 +38,12 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         .RuleFor(_ => _.Email, (f, d) => f.Internet.Email(d.GivenNames, d.Surname))
         ;
 
-    private static readonly Faker<LegalCounsel> _legalCounselFaker = new Faker<LegalCounsel>(Locale)
+    private static readonly Faker<LegalCounsel> _legalCounselFaker = new Faker<LegalCounsel>(OurLocale)
         .RuleFor(_ => _.FullName, f => f.Name.FullName())
         .RuleFor(_ => _.FirmName, f => f.LegalCounselFirmName())
         ;
 
-    private static readonly Faker<CourtOptions> _courtOptionsFaker = new Faker<CourtOptions>(Locale)
+    private static readonly Faker<CourtOptions> _courtOptionsFaker = new Faker<CourtOptions>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.LegalCounsel, f => _legalCounselFaker)
         .RuleFor(_ => _.WitnessCount, f => f.WitnessCount(5))
@@ -54,7 +54,7 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         //.RuleFor(_ => _.Email, (f, d) => f.Internet.Email(d.GivenNames, d.Surname))
         ;
 
-    private static readonly Faker<Appearance> _futureAppearanceFaker = new Faker<Appearance>(Locale)
+    private static readonly Faker<Appearance> _futureAppearanceFaker = new Faker<Appearance>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.Date, f => f.Date.Soon(7))
         .RuleFor(_ => _.Room, f => f.Room())
@@ -70,7 +70,7 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         .RuleFor(_ => _.JudicialJustice, f => f.Name.FullName())
         ;
 
-    private static readonly Faker<Appearance> _pastAppearanceFaker = new Faker<Appearance>(Locale)
+    private static readonly Faker<Appearance> _pastAppearanceFaker = new Faker<Appearance>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.Date, f => f.Date.Past())
         .RuleFor(_ => _.Room, f => f.Room())
@@ -86,18 +86,18 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         .RuleFor(_ => _.JudicialJustice, f => f.Name.FullName())
         ;
 
-    private static readonly Faker<WrittenReasons> _writtenReasonsFaker = new Faker<WrittenReasons>(Locale)
+    private static readonly Faker<WrittenReasons> _writtenReasonsFaker = new Faker<WrittenReasons>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.FineReduction, f => f.Lorem.Lines(2))
         .RuleFor(_ => _.TimeToPay, f => f.Lorem.Lines(2))
         ;
 
-    private static readonly Faker<Document> _documentFaker = new Faker<Document>(Locale)
+    private static readonly Faker<Document> _documentFaker = new Faker<Document>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.FileName, f => f.Random.String2(8).ToLower() + ".pdf")
         ;
 
-    private static readonly Faker<OffenseCount> _offenseCountFaker = new Faker<OffenseCount>(Locale)
+    private static readonly Faker<OffenseCount> _offenseCountFaker = new Faker<OffenseCount>(OurLocale)
         .StrictMode(true)
         .RuleFor(_ => _.Count, f => f.Random.Int(1, 3))
         .RuleFor(_ => _.Description, f => f.OffenseDescription())
@@ -109,20 +109,20 @@ public class DigitalCaseFileFaker : Faker<DigitalCaseFile>
         .RuleFor(_ => _.RequestTimeToPay, f => f.YesOrNo(word: true))
         ;
 
-    private static readonly Faker<FileHistoryEvent> _fileHistoryEventFaker = new Faker<FileHistoryEvent>(Locale)
+    private static readonly Faker<FileHistoryEvent> _fileHistoryEventFaker = new Faker<FileHistoryEvent>(OurLocale)
         .RuleFor(_ => _.Date, f => f.Date.Past())
         .RuleFor(_ => _.Username, f => $"{f.Name.FirstName()[0]}{f.Name.LastName()}".ToUpper())
         .RuleFor(_ => _.Type, f => f.Lorem.Text())
         .RuleFor(_ => _.Description, f => f.Lorem.Text())
         ;
 
-    private static readonly Faker<FileRemark> _fileRemarkFaker = new Faker<FileRemark>(Locale)
+    private static readonly Faker<FileRemark> _fileRemarkFaker = new Faker<FileRemark>(OurLocale)
         .RuleFor(_ => _.Date, f => f.Date.Past())
         .RuleFor(_ => _.Username, f => $"{f.Name.FirstName()[0]}{f.Name.LastName()}".ToUpper())
         .RuleFor(_ => _.Note, f => f.Lorem.Lines())
     ;
 
-    public DigitalCaseFileFaker() : base(Locale)
+    public DigitalCaseFileFaker() : base(OurLocale)
     {
         RuleFor(_ => _.Ticket, f => _ticketSummaryFaker);
         RuleFor(_ => _.Contact, f => _contactInformationFaker);
