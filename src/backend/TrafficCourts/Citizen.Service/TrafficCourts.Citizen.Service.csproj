@@ -24,7 +24,7 @@
     <PackageReference Include="Azure.AI.FormRecognizer" Version="4.0.0" />
     <PackageReference Include="FlatFiles" Version="5.0.4" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.0" />
     <PackageReference Include="Hashids.net" Version="1.7.0" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.2" />
     <PackageReference Include="MediatR" Version="12.1.1" />
