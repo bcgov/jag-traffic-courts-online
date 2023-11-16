@@ -19,17 +19,16 @@ public class SubmitToStaffWorkbench {
 
 	private WebDriver driver;
 	private String user;
+	 private static String  bceidUSERNAME = System.getenv("USERNAME_BCEID");
+	 private static String bceidPASSWORD = System.getenv("PASSWORD_BCEID");
 
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
-	}
 
-	@AfterClass
-	public static void afterClass() {
-		WebDriverManager.instance = null;
-	}
+		/*
+		 * @After public void tearDown() { driver.close(); driver.quit(); }
+		 * 
+		 * @AfterClass public static void afterClass() { WebDriverManager.instance =
+		 * null; }
+		 */
 
 	@Test
 	public void test() throws Exception {
@@ -88,14 +87,15 @@ public class SubmitToStaffWorkbench {
 	}
 
 	public void loginToStaffWorkbench(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
-
+		
+		
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'IDIR')]"))).click();
 
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("user")));
-		element.sendKeys("cvlascea");
+		element.sendKeys(bceidUSERNAME);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("password")));
-		element.sendKeys("Solaris567%^&");
+		element.sendKeys(bceidPASSWORD);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("btnSubmit")));
 		element.click();
 

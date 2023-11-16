@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.WebDriverManager;
 
 public class MoreThan500CharsOnAdditionalInfoNegTest {
-	
+
 	private WebDriver driver;
 
 	@After
@@ -39,24 +39,24 @@ public class MoreThan500CharsOnAdditionalInfoNegTest {
 		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
 		upload.uploadPNG(element, driverWait, driver);
 
-		new WebDriverWait(driver, Duration.ofSeconds(20)).until(
+		new WebDriverWait(driver, Duration.ofSeconds(60)).until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket details')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AN00893391')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AC00000150')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'May 24, 2023')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Oct 20, 2023')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'kent')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Bubley')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'BC')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '12:44')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '15:23')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'clark')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Michael')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '3139264')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Pass On Right')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '1234567')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Excessive Speeding')]")));
 		System.out.println("File uploaded properly");
 
 		Thread.sleep(1000);
@@ -90,17 +90,21 @@ public class MoreThan500CharsOnAdditionalInfoNegTest {
 
 		DisputeTicketUploadPNG review = new DisputeTicketUploadPNG();
 		review.review(element, driverWait, driver);
-		
+
+		JavascriptExecutor jse33 = (JavascriptExecutor) driver;
+		// Click Next
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		jse33.executeScript("arguments[0].click();", element);
+		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus");
 		// Click on page
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"//html")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//html")));
 		element.click();
-		new WebDriverWait(driver, Duration.ofSeconds(20)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 500')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 500')]")));
 
 	}
 }

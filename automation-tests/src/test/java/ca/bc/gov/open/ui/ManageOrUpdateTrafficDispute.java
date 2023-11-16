@@ -38,25 +38,23 @@ public class ManageOrUpdateTrafficDispute {
 		WebDriverManager.getElements();
 
 		CommonUtils.login();
-		
-		
+
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
 				.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Manage or update my traffic dispute ')]")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
-		
-		
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
-		element.sendKeys("EA03148599");
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
-				By.xpath("//*[contains(@placeholder,'HH')]")));
-		element.sendKeys("17");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
+		element.sendKeys("EZ02005201");
+
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'HH')]")));
+		element.sendKeys("09");
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'MM')]")))
-				.sendKeys("16");
+				.sendKeys("109");
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
 				.click();
