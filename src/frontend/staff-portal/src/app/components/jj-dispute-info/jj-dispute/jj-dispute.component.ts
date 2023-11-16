@@ -51,7 +51,10 @@ export class JJDisputeComponent implements OnInit {
   ContactType = JJDisputeContactType;
 
   ticketInformationForm: FormGroup = this.formBuilder.group({
-    occamDisputantSurnameNm: [null, Validators.maxLength(100)]
+    occamDisputantSurnameNm: [null, Validators.maxLength(30)],
+    occamDisputantGiven1Nm: [null, Validators.maxLength(30)],
+    occamDisputantGiven2Nm: [null, Validators.maxLength(30)],
+    occamDisputantGiven3Nm: [null, Validators.maxLength(30)]
   });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
     appCd: [{ value: null, disabled: true }],
@@ -97,7 +100,7 @@ export class JJDisputeComponent implements OnInit {
     private config: ConfigService,
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
-    private datePipe: CustomDatePipe
+    private datePipe: CustomDatePipe,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -159,10 +162,11 @@ export class JJDisputeComponent implements OnInit {
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
           }
         }
-        this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
         this.determineIfConcludeOrCancel();
       }
+
+      this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
     });
   }
 
@@ -285,21 +289,13 @@ export class JJDisputeComponent implements OnInit {
    * Called by support-staff when editing the Ticket Information form (user must have update-admin permissions on the JJDispute resource).
    */
   onSaveTicketInformation(): void {
-    this.isEditMode = false;
     this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.ticketInformationForm.value };
 
-    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {
-      const data: DialogOptions = {
-        titleKey: "Saved",
-        messageKey: "Dispute saved",
-        actionTextKey: "Ok",
-        actionType: "primary",
-        icon: "done"
-      };
-      this.dialog.open(ConfirmDialogComponent, { data, width: "200px" });
-      
+    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
       // refresh JJDispute data
       this.getJJDispute();
+
+      this.isEditMode = false;
     });
   }
 

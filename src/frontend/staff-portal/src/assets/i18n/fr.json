@@ -171,7 +171,9 @@
     "statute_error": "Les statuts n’ont pas pu être chargés",
     "language_error": "Les langs n’ont pas pu être chargés",
     "agency_error": "Les agences n’ont pas pu être chargées",
-    "dispute_error": "Les litiges n’ont pas pu être rejugés / sauvegardés."
+    "dispute_error": "Les litiges n’ont pas pu être rejugés / sauvegardés.",
+    "dispute_saved": "Le litige a été enregistré avec succès.",
+    "dispute_not_saved": "Erreur lors de l'enregistrement du litige. Non enregistré."
   },
   "error": {
     "required": "Obligatoire",

@@ -172,7 +172,9 @@
     "statute_error": "Statutes could not be loaded",
     "language_error": "Languages could not be loaded",
     "agency_error": "Agencies could not be loaded",
-    "dispute_error": "Disputes could not be retrieved / saved."
+    "dispute_error": "Disputes could not be retrieved / saved.",
+    "dispute_saved": "Dispute was successfully saved.",
+    "dispute_not_saved": "Error saving Dispute. Not saved."
   },
   "error": {
     "required": "Required",

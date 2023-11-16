@@ -70,12 +70,27 @@
               <p class="section-grid-text" *ngIf="!isEditMode">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
               <mat-form-field appearance="outline" *ngIf="isEditMode">
                 <input matInput formControlName="occamDisputantSurnameNm">
-                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantSurnameNm.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
+                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantSurnameNm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Given Name(s)</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
+              <p class="section-grid-header" *ngIf="!isEditMode">Given Name(s)</p>
+              <p class="section-grid-text" *ngIf="!isEditMode">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
+              <p class="section-grid-header" *ngIf="isEditMode">Given Name 1</p>
+              <mat-form-field appearance="outline" *ngIf="isEditMode">
+                <input matInput formControlName="occamDisputantGiven1Nm">
+                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven1Nm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+              <p class="section-grid-header" *ngIf="isEditMode">Given Name 2</p>
+              <mat-form-field appearance="outline" *ngIf="isEditMode">
+                <input matInput formControlName="occamDisputantGiven2Nm">
+                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven2Nm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+              <p class="section-grid-header" *ngIf="isEditMode">Given Name 3</p>
+              <mat-form-field appearance="outline" *ngIf="isEditMode">
+                <input matInput formControlName="occamDisputantGiven3Nm">
+                <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven3Nm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Location of Offence</p>

@@ -13,6 +13,7 @@ import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
 import { LookupsService } from './lookups.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class JJDisputeService {
     private authService: AuthService,
     private store: Store,
     private lookupsService: LookupsService,
+    private translateService: TranslateService
   ) {
   }
 
@@ -193,12 +195,17 @@ export class JJDisputeService {
         map((response: any) => {
           this.logger.info('jj-DisputeService::apiJjTicketNumberCascadePut', response)
           this.store.dispatch(JJDisputeStore.Actions.Get());
+          
+          this.toastService.openSuccessToast(
+            this.translateService.instant('toaster.dispute_saved')
+          );
+          
           return response;
         }),
         catchError((error: any) => {
-          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
-          this.toastService.openErrorToast(errorMsg);
-          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.toastService.openErrorToast(
+            this.translateService.instant('toaster.dispute_not_saved')
+          );
           this.logger.error(
             'jj-DisputeService::apiJjTicketNumberCascadePut error has occurred: ',
             error
