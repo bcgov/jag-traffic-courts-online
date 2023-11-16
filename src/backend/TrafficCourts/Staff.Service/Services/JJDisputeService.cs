@@ -86,6 +86,18 @@ public class JJDisputeService : IJJDisputeService
         return justinDocument;
     }
 
+    public async Task<JJDispute> UpdateJJDisputeCascadeAsync(JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken) {
+        JJDispute dispute = await _oracleDataApi.UpdateJJDisputeCascadeAsync(jjDispute.TicketNumber, true, jjDispute, cancellationToken);
+
+        // TCVP-2522 save FileHistory
+        SaveFileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.TicketNumber = jjDispute.TicketNumber;
+        fileHistoryRecord.AuditLogEntryType = FileHistoryAuditLogEntryType.SADM; // Dispute updated by Support Admin Staff 
+        fileHistoryRecord.ActionByApplicationUser = GetUserName(user);
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
+
+        return dispute;
+    }
 
     public async Task<JJDispute> SubmitAdminResolutionAsync(long disputeId, bool checkVTC, JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken)
     {

@@ -116,6 +116,37 @@ public class JJDisputeController {
 	}
 
 	/**
+	 * PUT endpoint that updates a JJ Dispute as well as underlying Dispute data.
+	 *
+	 * @param jj dispute to be updated
+	 * @param ticketNumber unique key of the saved {@link JJDispute} to update
+	 * @param principal user doing the updating
+	 * @param boolean (optional) check assignment to VTC
+	 * @return updated {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the properties of a particular JJ Dispute record as well as cascading to underlying related Dispute data.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
+	})
+	@PutMapping("/dispute/{ticketNumber}/cascade")
+	public ResponseEntity<JJDispute> updateJJDisputeCascade(
+			@PathVariable("ticketNumber") String ticketNumber,
+			boolean checkVTCAssigned,
+			Principal principal,
+			@RequestBody JJDispute jjDispute) {
+		logger.debug("PUT /jj/dispute/{}/cascade called", StructuredArguments.value("ticketNumber", ticketNumber));
+
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDisputeCascade(ticketNumber, jjDispute, principal), HttpStatus.OK);
+	}
+
+	/**
 	 * PUT endpoint that updates each JJ Dispute based on the passed in ticket number to assign them to a specific JJ or unassign them if JJ not specified.
 	 *
 	 * @param ticketNumberList unique keys of JJ Dispute(s) to be updated/assigned

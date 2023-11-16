@@ -100,6 +100,21 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         System.Threading.Tasks.Task<JJDispute> ConcludeJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
+        /// Updates the properties of a particular JJ Dispute record as well as cascading to underlying related Dispute data.
+        /// </summary>
+        /// <returns>Ok</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, JJDispute body);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Updates the properties of a particular JJ Dispute record as well as cascading to underlying related Dispute data.
+        /// </summary>
+        /// <returns>Ok</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, JJDispute body, System.Threading.CancellationToken cancellationToken);
+
+        /// <summary>
         /// Updates the status of a particular JJDispute record to CANCELLED.
         /// </summary>
         /// <returns>Ok. Updated JJDispute record returned.</returns>
@@ -644,16 +659,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -664,14 +669,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -682,6 +687,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("An invalid JJ Dispute status is provided. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -780,16 +795,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -800,14 +805,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -818,6 +823,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -910,16 +925,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -930,14 +935,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -948,6 +953,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -1035,16 +1050,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1055,14 +1060,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -1073,6 +1078,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -1165,6 +1180,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1175,14 +1200,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 400)
+                        if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -1195,6 +1220,122 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<JJDispute>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Updates the properties of a particular JJ Dispute record as well as cascading to underlying related Dispute data.
+        /// </summary>
+        /// <returns>Ok</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, JJDispute body)
+        {
+            return UpdateJJDisputeCascadeAsync(ticketNumber, checkVTCAssigned, body, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Updates the properties of a particular JJ Dispute record as well as cascading to underlying related Dispute data.
+        /// </summary>
+        /// <returns>Ok</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, JJDispute body, System.Threading.CancellationToken cancellationToken)
+        {
+            if (ticketNumber == null)
+                throw new System.ArgumentNullException("ticketNumber");
+
+            if (checkVTCAssigned == null)
+                throw new System.ArgumentNullException("checkVTCAssigned");
+
+            if (body == null)
+                throw new System.ArgumentNullException("body");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/v1.0/jj/dispute/{ticketNumber}/cascade?");
+            urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("PUT");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("*/*"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 404)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 405)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1202,7 +1343,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("An invalid JJ Dispute status is provided. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -1295,16 +1446,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1315,14 +1456,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -1333,6 +1474,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -1431,16 +1582,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1451,14 +1592,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("JJDispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -1469,6 +1610,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -1560,16 +1711,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("JJDispute record(s) not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1580,14 +1721,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("JJDispute record(s) not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -1598,6 +1739,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -1686,16 +1837,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1706,14 +1847,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -1724,6 +1865,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 409)
@@ -1819,16 +1970,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute record not found. Delete failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1839,14 +1980,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. Delete failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute record not found. Delete failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -1857,6 +1998,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Delete failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -1939,16 +2090,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -1959,14 +2100,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -1977,6 +2118,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -2074,16 +2225,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -2094,14 +2235,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -2112,6 +2253,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -2215,16 +2366,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -2235,14 +2376,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -2253,6 +2394,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -2351,16 +2502,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute with specified id not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -2371,14 +2512,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute with specified id not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -2389,6 +2530,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -2480,16 +2631,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute with specified id not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -2500,14 +2641,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("If the email address is > 100 characters", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute with specified id not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -2518,6 +2659,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -2611,16 +2762,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -2631,14 +2772,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute record not found. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -2649,6 +2790,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -2755,16 +2906,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("DisputeUpdateRequest could not be found.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -2775,14 +2916,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. Save failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("DisputeUpdateRequest could not be found.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -2793,6 +2934,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Save failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -2882,16 +3033,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("An invalid file history record provided. Insert failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -2902,14 +3043,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("An invalid file history record provided. Insert failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -2920,6 +3061,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3009,16 +3160,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("An invalid email history record provided. Insert failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3029,14 +3170,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("An invalid email history record provided. Insert failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3047,6 +3188,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3130,16 +3281,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3150,14 +3291,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3168,6 +3309,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3263,16 +3414,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute could not be found.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3283,14 +3424,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. Save failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute could not be found.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3301,6 +3442,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Save failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3390,16 +3541,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3410,14 +3551,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3428,6 +3569,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3514,16 +3665,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3534,14 +3675,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3552,6 +3693,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3636,16 +3787,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3656,14 +3797,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3674,6 +3815,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3756,16 +3907,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3776,14 +3917,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3794,6 +3935,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -3876,16 +4027,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -3896,14 +4037,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -3914,6 +4055,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4009,16 +4160,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4029,14 +4170,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. Getting disputes failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4047,6 +4188,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Getting disputes failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4134,16 +4285,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4154,14 +4295,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. Unassigned failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4172,6 +4313,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Unassigned failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4251,16 +4402,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4271,14 +4412,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4289,6 +4430,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4384,16 +4535,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4404,14 +4545,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. retrieve update requests failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4422,6 +4563,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. retrieve update requests failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4523,16 +4674,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4543,14 +4684,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request, check parameters.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. Search failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4561,6 +4702,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Search failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4649,16 +4800,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Dispute could not be found.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4669,14 +4810,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Dispute could not be found.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4687,6 +4828,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal server error occured.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4774,16 +4925,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4794,14 +4935,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4812,6 +4953,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -4901,16 +5052,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 404)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
                         if (status_ == 400)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -4921,14 +5062,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                             throw new ApiException<FileResponse>("Bad Request.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        if (status_ == 500)
+                        if (status_ == 404)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new ApiException<FileResponse>("Internal Server Error. Delete failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new ApiException<FileResponse>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 405)
@@ -4939,6 +5080,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FileResponse>("Method Not Allowed", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FileResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<FileResponse>("Internal Server Error. Delete failed.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 200)
@@ -7305,35 +7456,41 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [System.Runtime.Serialization.EnumMember(Value = @"JPRG")]
         JPRG = 37,
 
+        [System.Runtime.Serialization.EnumMember(Value = @"OCNT")]
+        OCNT = 38,
+
         [System.Runtime.Serialization.EnumMember(Value = @"RECN")]
-        RECN = 38,
+        RECN = 39,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SADM")]
+        SADM = 40,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SCAN")]
-        SCAN = 39,
+        SCAN = 41,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SPRC")]
-        SPRC = 40,
+        SPRC = 42,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SREJ")]
-        SREJ = 41,
+        SREJ = 43,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SUB")]
-        SUB = 42,
+        SUB = 44,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SUPL")]
-        SUPL = 43,
+        SUPL = 45,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SVAL")]
-        SVAL = 44,
+        SVAL = 46,
 
         [System.Runtime.Serialization.EnumMember(Value = @"URSR")]
-        URSR = 45,
+        URSR = 47,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VREV")]
-        VREV = 46,
+        VREV = 48,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VSUB")]
-        VSUB = 47,
+        VSUB = 49,
 
     }
 

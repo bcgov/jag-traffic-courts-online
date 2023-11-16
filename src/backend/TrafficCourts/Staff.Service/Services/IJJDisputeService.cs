@@ -30,6 +30,15 @@ public interface IJJDisputeService
     /// <exception cref="ArgumentNullException">Thrown if id is null</exception>
     Task<TicketImageDataJustinDocument> GetJustinDocumentAsync(string ticketNumber, DocumentType documentType, CancellationToken cancellationToken);
 
+    /// <summary>Updates the properties of a particular JJ Dispute record based on the given values as well as certain Dispute related data.</summary>
+    /// <param name="jjDispute">A modified version of the JJ Dispute record to save.</param>    
+    /// <param name="user">The user executing the operation</param>    
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>The submitted/updated JJ Dispute record.</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
+    Task<JJDispute> UpdateJJDisputeCascadeAsync(JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken);
+
     /// <summary>Updates the properties of a particular JJ Dispute record based on the given values.</summary>
     /// <param name="jjDisputeId">Unique identifier of a JJ Dispute record to modify.</param>
     /// <param name="checkVTC">Boolean to indicate need to check VTC assigned</param>
