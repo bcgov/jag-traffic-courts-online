@@ -24,6 +24,9 @@ import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 export interface JJDispute { 
     fileData?: Array<FileMetadata> | null;
+    lockId?: string | null;
+    lockedBy?: string | null;
+    lockExpiresAtUtc?: string | null;
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;

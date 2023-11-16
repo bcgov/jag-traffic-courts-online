@@ -3,6 +3,7 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 import { DisputeService } from './api/dispute.service';
+import { DisputeLockService } from './api/disputeLock.service';
 import { DocumentService } from './api/document.service';
 import { EmailHistoryService } from './api/emailHistory.service';
 import { FileHistoryService } from './api/fileHistory.service';

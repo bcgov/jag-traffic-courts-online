@@ -486,6 +486,85 @@ export class JJService {
     }
 
     /**
+     * Updates a single JJ Dispute and related Dispute data.  Must have update-admin permission on the JJDispute resource to use this endpoint.
+     * @param ticketNumber Unique identifier for a specific JJ Dispute record.
+     * @param jJDispute 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<JJDispute>;
+    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<JJDispute>>;
+    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<JJDispute>>;
+    public apiJjTicketNumberCascadePut(ticketNumber: string, jJDispute?: JJDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (ticketNumber === null || ticketNumber === undefined) {
+            throw new Error('Required parameter ticketNumber was null or undefined when calling apiJjTicketNumberCascadePut.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (Bearer) required
+        localVarCredential = this.configuration.lookupCredential('Bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json',
+                'text/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        return this.httpClient.put<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/cascade`,
+            jJDispute,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Updates the status of a particular JJDispute record to CONCLUDED.
      * @param ticketNumber Ticket number for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
@@ -593,7 +672,7 @@ export class JJService {
             localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
         }
 
-        let localVarHttpHeaderAcceptSelected: string | undefined = '*/*';
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
@@ -639,7 +718,7 @@ export class JJService {
 
     /**
      * Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
-     * @param ticketNumber 
+     * @param ticketNumber Unique identifier for a specific JJ Dispute record.
      * @param jjDisputeId Unique identifier for a specific JJ Dispute record.
      * @param checkVTC boolean to indicate need to check VTC assigned.
      * @param jJDispute 
