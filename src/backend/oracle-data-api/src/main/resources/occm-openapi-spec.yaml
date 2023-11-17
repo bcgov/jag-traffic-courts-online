@@ -586,6 +586,52 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       tags:
         - Outgoing Email
+  /v1/disputeList:
+    get:
+      operationId: disputeListGet
+      parameters:
+        - name: fromDate
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 10
+        - name: excludeStatus
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 4
+        - name: ticketNumber
+          in: query
+          description: ''
+          schema:
+            type: string
+        - name: noticeOfDisputeGuid
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 36
+            minLength: 36
+        - name: issueTime
+          in: query
+          description: 'Not issueTime, but issuedTime. This is the time portion of the issuedTs field.'
+          schema:
+            type: string
+            maxLength: 5
+            minLength: 5
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisputeListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - Violation Ticket
 components:
   securitySchemes:
     basicAuth:
@@ -768,6 +814,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AuditLogEntry'
+    DisputeListResponse:
+      type: object
+      properties:
+        disputeListItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisputeListItem'
     OutgoingEmailResponseResult:
       type: object
       properties:
@@ -1036,6 +1089,61 @@ components:
           type: string
       allOf:
         - $ref: '#/components/schemas/AuditBase'
+    DisputeListItem:
+      type: object
+      properties:
+        dispute_id:
+          type: integer
+        ticket_number_txt:
+          type: string
+        submitted_dt:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        disputant_surname_nm:
+          type: string
+        disputant_given_1_nm:
+          type: string
+        disputant_given_2_nm:
+          type: string
+        disputant_given_3_nm:
+          type: string
+        email_address_txt:
+          type: string
+        email_verified_yn:
+          type: string
+        dispute_status_type_cd:
+          type: string
+        filing_dt:
+          type: string
+          format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
+        request_court_appearance_yn:
+          type: string
+        disputant_detect_ocr_issues_yn:
+          type: string
+        system_detect_ocr_issues_yn:
+          type: string
+        user_assigned_to:
+          type: string
+        user_assigned_dtm:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        violation_dt:
+          type: string
+          format: date
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'Z'\")"
+        tco_dispute_status:
+          type: string
+        jj_assigned_to:
+          type: string
+        jj_decision_dt:
+          type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd'T'HH:mm:ss'Z'\")"
+        court_agen_id:
+          type: number
     Statute:
       type: object
       properties:

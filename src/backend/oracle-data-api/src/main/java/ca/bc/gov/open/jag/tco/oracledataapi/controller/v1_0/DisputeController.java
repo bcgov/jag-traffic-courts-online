@@ -60,11 +60,12 @@ public class DisputeController {
 	private Logger logger = LoggerFactory.getLogger(DisputeController.class);
 
 	/**
-	 * GET endpoint that retrieves all the dispute detail from the database
+	 * GET endpoint that retrieves all the dispute list details including some JJ dispute fields from the database
 	 * @param olderThan if specified, will filter the result set to those older than this date.
-	 * @return list of all dispute tickets
+	 * @param excludeStatus if specified, will retrieve records which do not have the specified status
+	 * @return list of all {@link DisputeListItem}
 	 */
-	@Operation(summary = "Returns all Dispute records based on the specified optional parameters.")
+	@Operation(summary = "Returns all dispute list details based on the specified optional parameters.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. Disputes are returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),

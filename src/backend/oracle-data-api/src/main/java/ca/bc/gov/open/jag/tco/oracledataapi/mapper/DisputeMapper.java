@@ -17,6 +17,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
@@ -142,27 +143,28 @@ public interface DisputeMapper {
 	Dispute convertViolationTicketDtoToDispute (ViolationTicket violationTicketDto);
 
 	// Map dispute data from ORDS to Oracle Data API dispute list item model
-	@Mapping(source = "createdTs", target = "createdTs")
-	@Mapping(source = "createdBy", target = "createdBy")
-	@Mapping(source = "modifiedTs", target = "modifiedTs")
-	@Mapping(source = "modifiedBy", target = "modifiedBy")
 	@Mapping(source = "disputeId", target = "disputeId")
-	@Mapping(source = "status", target = "status")
-	@Mapping(source = "submittedTs", target = "submittedTs")
-	@Mapping(source = "disputantSurname", target = "disputantSurname")
-	@Mapping(source = "ticketNumber", target = "ticketNumber")
-	@Mapping(source = "disputantGivenName1", target = "disputantGivenName1")
-	@Mapping(source = "disputantGivenName2", target = "disputantGivenName2")
-	@Mapping(source = "disputantGivenName3", target = "disputantGivenName3")
+	@Mapping(source = "disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
+	@Mapping(source = "submittedDt", target = "submittedTs")
+	@Mapping(source = "disputantSurnameNm", target = "disputantSurname")
+	@Mapping(source = "ticketNumberTxt", target = "ticketNumber")
+	@Mapping(source = "disputantGiven1Nm", target = "disputantGivenName1")
+	@Mapping(source = "disputantGiven2Nm", target = "disputantGivenName2")
+	@Mapping(source = "disputantGiven3Nm", target = "disputantGivenName3")
 	@Mapping(source = "requestCourtAppearanceYn", target = "requestCourtAppearanceYn")
-	@Mapping(source = "emailAddress", target = "emailAddress")
-	@Mapping(source = "emailAddressVerified", target = "emailAddressVerified")
-	@Mapping(source = "filingDate", target = "filingDate")
+	@Mapping(source = "emailAddressTxt", target = "emailAddress")
+	@Mapping(source = "emailVerifiedYn", target = "emailAddressVerified")
+	@Mapping(source = "filingDt", target = "filingDate")
 	@Mapping(source = "userAssignedTo", target = "userAssignedTo")
-	@Mapping(source = "userAssignedTs", target = "userAssignedTs")
-	@Mapping(source = "disputantDetectedOcrIssues", target = "disputantDetectedOcrIssues")
-	@Mapping(source = "systemDetectedOcrIssues", target = "systemDetectedOcrIssues")
-	DisputeListItem convertDisputeToDisputeListItem (Dispute dispute);
+	@Mapping(source = "userAssignedDtm", target = "userAssignedTs")
+	@Mapping(source = "disputantDetectOcrIssuesYn", target = "disputantDetectedOcrIssues")
+	@Mapping(source = "systemDetectOcrIssuesYn", target = "systemDetectedOcrIssues")
+	@Mapping(source = "violationDt", target = "violationDate")
+	@Mapping(source = "tcoDisputeStatus", target = "jjDisputeStatus", qualifiedByName="mapJJDisputeStatus")
+	@Mapping(source = "jjAssignedTo", target = "jjAssignedTo")
+	@Mapping(source = "jjDecisionDt", target = "jjDecisionDate")
+	@Mapping(source = "courtAgenId", target = "courtAgenId")
+	DisputeListItem convertDisputeListItemDtoToDisputeListItem (ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListItem disputeListItemDto);
 
 	@Mapping(target = "violationTicket", ignore = true) // ignore back reference mapping
 	@Mapping(source = "entUserId", target = "createdBy")
@@ -197,6 +199,17 @@ public interface DisputeMapper {
 		for (DisputeStatus disputeStatus : values) {
 			if (disputeStatus.toShortName().equals(statusShortCd)) {
 				return disputeStatus;
+			}
+		}
+		return null;
+	}
+	
+	@Named("mapJJDisputeStatus")
+	default JJDisputeStatus mapJJDisputeStatus(String statusShortCd) {
+		JJDisputeStatus[] values = JJDisputeStatus.values();
+		for (JJDisputeStatus statusType : values) {
+			if (statusType.getShortName().equals(statusShortCd)) {
+				return statusType;
 			}
 		}
 		return null;

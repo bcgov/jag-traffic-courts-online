@@ -26,7 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DisputeListItem extends Auditable<String> {
+public class DisputeListItem {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
@@ -138,4 +138,39 @@ public class DisputeListItem extends Auditable<String> {
 	@Schema(nullable= false)
 	@Enumerated(EnumType.STRING)
 	private YesNo systemDetectedOcrIssues;
+	
+	/**
+	 * The date and time the violation ticket was issued.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date violationDate;
+	
+	@Column
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private JJDisputeStatus jjDisputeStatus;
+	
+	/**
+	 * The ID of the Staff whom the dispute is assigned to be reviewed on JJ Workbench.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String jjAssignedTo;
+
+	/**
+	 * The date that JJ made a decision
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date jjDecisionDate;
+	
+	/**
+	 * Lookup ID for courthouse data
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String courtAgenId;
 }

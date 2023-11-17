@@ -53,15 +53,16 @@ public class DisputeService {
 	private DisputeUpdateRequestRepository disputeUpdateRequestRepository;
 
 	/**
-	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
+	 * Retrieves all {@link DisputeListItem} records
 	 * @param olderThan if specified, will filter the result set to those older than this date.
+	 * @param excludeStatus if specified, will retrieve records which do not have the specified status.
 	 *
 	 * @return
 	 */
 	public List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
-		List<Dispute> allDisputes = null;
+		List<DisputeListItem> allDisputes = null;
 		if (olderThan == null && excludeStatus == null) {
-			allDisputes =  disputeRepository.findAll();
+			allDisputes =  disputeRepository.getDisputeList();
 		} else if (olderThan == null) {
 			allDisputes =  disputeRepository.findByStatusNot(excludeStatus);
 		} else if (excludeStatus == null) {
@@ -70,11 +71,11 @@ public class DisputeService {
 			allDisputes = disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
 		}
 
-		// Convert Disputes to DisputeListItem objects
-		List<DisputeListItem> disputeListItems = allDisputes.stream()
-				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
-				.collect(Collectors.toList());
-		return disputeListItems;
+//		// Convert Disputes to DisputeListItem objects
+//		List<DisputeListItem> disputeListItems = allDisputes.stream()
+//				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
+//				.collect(Collectors.toList());
+		return allDisputes;
 	}
 
 	/**
