@@ -13,6 +13,7 @@ import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from 'app/store/jj-dispute';
 import { LookupsService } from './lookups.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class JJDisputeService {
     private authService: AuthService,
     private store: Store,
     private lookupsService: LookupsService,
+    private translateService: TranslateService
   ) {
   }
 
@@ -180,6 +182,39 @@ export class JJDisputeService {
         })
       );
   }
+
+  /**
+   * Updates a single JJ Dispute and related Dispute data. Must have update-admin permission on the JJDispute resource to use this endpoint.
+   * @param ticketNumber 
+   * @param jjDispute 
+   * @returns update JJDispute
+   */
+  public apiJjTicketNumberCascadePut(ticketNumber: string, jjDispute: JJDispute): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberCascadePut(ticketNumber, jjDispute)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberCascadePut', response)
+          this.store.dispatch(JJDisputeStore.Actions.Get());
+          
+          this.toastService.openSuccessToast(
+            this.translateService.instant('toaster.dispute_saved')
+          );
+          
+          return response;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(
+            this.translateService.instant('toaster.dispute_not_saved')
+          );
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberCascadePut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
   public apiJjTicketNumberConcludePut(ticketNumber: string, checkVTC: boolean): Observable<any> {
     return this.jjApiService.apiJjTicketNumberConcludePut(ticketNumber, checkVTC)
       .pipe(

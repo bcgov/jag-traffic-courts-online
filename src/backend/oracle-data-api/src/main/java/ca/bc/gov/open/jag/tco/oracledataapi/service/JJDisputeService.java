@@ -190,6 +190,9 @@ public class JJDisputeService {
 		// TCVP-1981 Update certain fields on the related OCCAM Dispute as well.
 		Dispute dispute = disputeRepository.findById(jjDispute.getOccamDisputeId()).orElseThrow();
 		dispute.setDisputantSurname(jjDispute.getOccamDisputantSurnameNm());
+		dispute.setDisputantGivenName1(jjDispute.getOccamDisputantGiven1Nm());
+		dispute.setDisputantGivenName2(jjDispute.getOccamDisputantGiven2Nm());
+		dispute.setDisputantGivenName3(jjDispute.getOccamDisputantGiven3Nm());
 		// TODO: add many more other fields
 		disputeRepository.update(dispute);
 
