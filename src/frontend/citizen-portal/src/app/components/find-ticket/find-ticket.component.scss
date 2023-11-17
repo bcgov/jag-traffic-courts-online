@@ -52,6 +52,12 @@
   font: 400 16px/22px BCSans, Noto Sans, Verdana, Arial, sans-serif;
 }
 
+/** Width of error message popup. */
+.cdk-overlay-pane { width: 90vw !important; } /* 90% screen width on xs devices (portrait phones).*/
+@media (min-width: 576px) { .cdk-overlay-pane { width: 75vw !important; } } /* 75% screen width on sm devices (landscape phones).*/
+@media (min-width: 768px) { .cdk-overlay-pane { width: 50vw !important; } } /* 50% screen width on md devices (tablets).*/
+@media (min-width: 992px) { .cdk-overlay-pane { width: 520px !important; } } /* max width on lg devices (desktops).*/
+
 @media (min-width: 751px) {
   .subheader-desc {
     font: 400 18px/26px BCSans, Noto Sans, Verdana, Arial, sans-serif;
