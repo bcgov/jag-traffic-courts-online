@@ -54,21 +54,21 @@ public class DisputeService {
 
 	/**
 	 * Retrieves all {@link DisputeListItem} records
-	 * @param olderThan if specified, will filter the result set to those older than this date.
+	 * @param newerThan if specified, will filter the result set to those older than this date.
 	 * @param excludeStatus if specified, will retrieve records which do not have the specified status.
 	 *
 	 * @return
 	 */
-	public List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
+	public List<DisputeListItem> getAllDisputes(Date newerThan, DisputeStatus excludeStatus) {
 		List<DisputeListItem> allDisputes = null;
-		if (olderThan == null && excludeStatus == null) {
+		if (newerThan == null && excludeStatus == null) {
 			allDisputes =  disputeRepository.getDisputeList();
-		} else if (olderThan == null) {
+		} else if (newerThan == null) {
 			allDisputes =  disputeRepository.findByStatusNot(excludeStatus);
 		} else if (excludeStatus == null) {
-			allDisputes = disputeRepository.findByCreatedTsBefore(olderThan);
+			allDisputes = disputeRepository.findByCreatedTsAfter(newerThan);
 		} else {
-			allDisputes = disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
+			allDisputes = disputeRepository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludeStatus, newerThan, null);
 		}
 
 //		// Convert Disputes to DisputeListItem objects

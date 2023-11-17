@@ -51,28 +51,28 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public List<DisputeListItem> findByCreatedTsBefore(Date olderThan) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, olderThan, null);
+	public List<DisputeListItem> findByCreatedTsAfter(Date newerThan) {
+		return findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(null, newerThan, null);
 	}
 
 	@Override
 	public List<DisputeListItem> findByStatusNot(DisputeStatus excludeStatus) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, null, null);
+		return findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludeStatus, null, null);
 	}
 
 	@Override
-	public List<DisputeListItem> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus,
-			Date olderThan, String noticeOfDisputeGuid) {
-		String olderThanDate = null;
+	public List<DisputeListItem> findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(DisputeStatus excludeStatus,
+			Date newerThan, String noticeOfDisputeGuid) {
+		String newerThanDate = null;
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
 
-		if (olderThan != null) {
+		if (newerThan != null) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT);
-			olderThanDate = simpleDateFormat.format(olderThan);
+			newerThanDate = simpleDateFormat.format(newerThan);
 		}
 
 		try {
-			DisputeListResponse response = violationTicketApi.disputeListGet(olderThanDate, statusShortName, null,
+			DisputeListResponse response = violationTicketApi.disputeListGet(newerThanDate, statusShortName, null,
 					noticeOfDisputeGuid, null);
 			return extractDisputeListItems(response);
 
@@ -151,7 +151,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<DisputeListItem> getDisputeList() {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, null, null);
+		return findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(null, null, null);
 	}
 
 	@Override
@@ -231,11 +231,11 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public void unassignDisputes(Date olderThan) {
+	public void unassignDisputes(Date newerThan) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // FIXME: UTC is a time standard, not a time zone - I
 																	// think this should be GMT.
-		String dateStr = simpleDateFormat.format(olderThan);
+		String dateStr = simpleDateFormat.format(newerThan);
 
 		logger.debug("Unassigning Disputes older than {}", StructuredArguments.value("date", dateStr));
 
@@ -277,18 +277,18 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		// no-op. Not needed for ORDS.
 	}
 
-	private List<Dispute> findByNoticeOfDisputeGuidImpl(DisputeStatus excludeStatus, Date olderThan,
+	private List<Dispute> findByNoticeOfDisputeGuidImpl(DisputeStatus excludeStatus, Date newerThan,
 			String noticeOfDisputeGuid) {
-		String olderThanDate = null;
+		String newerThanDate = null;
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
 
-		if (olderThan != null) {
+		if (newerThan != null) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT);
-			olderThanDate = simpleDateFormat.format(olderThan);
+			newerThanDate = simpleDateFormat.format(newerThan);
 		}
 
 		try {
-			ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(olderThanDate,
+			ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(newerThanDate,
 					statusShortName, null, noticeOfDisputeGuid, null);
 			return extractDisputes(response);
 

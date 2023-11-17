@@ -650,10 +650,10 @@ class DisputeControllerTest extends BaseTestSuite {
 	 * Issues a GET request to /api/v1.0/disputes. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
 	 */
-	private List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) throws Exception {
+	private List<DisputeListItem> getAllDisputes(Date newerThan, DisputeStatus excludeStatus) throws Exception {
 		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
 				.get("/api/v1.0/disputes")
-				.param("olderThan", olderThan == null ? null : DateFormatUtils.format(olderThan, "yyyy-MM-dd"))
+				.param("newerThan", newerThan == null ? null : DateFormatUtils.format(newerThan, "yyyy-MM-dd"))
 				.param("excludeStatus", excludeStatus == null ? null : excludeStatus.name())
 				.principal(getPrincipal()))
 				.andExpect(status().isOk());

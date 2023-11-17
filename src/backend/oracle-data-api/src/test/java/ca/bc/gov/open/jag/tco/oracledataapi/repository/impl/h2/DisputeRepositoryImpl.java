@@ -33,9 +33,9 @@ public interface DisputeRepositoryImpl extends DisputeRepository, JpaRepository<
 
 	@Override
 	@Modifying
-	@Query("update Dispute d set d.userAssignedTo = null, d.userAssignedTs = null where d.userAssignedTs < :olderThan")
+	@Query("update Dispute d set d.userAssignedTo = null, d.userAssignedTs = null where d.userAssignedTs < :newerThan")
 	@Transactional
-	public void unassignDisputes(@Param(value="olderThan") Date olderThan);
+	public void unassignDisputes(@Param(value="newerThan") Date newerThan);
 
 	@Override
 	@Modifying

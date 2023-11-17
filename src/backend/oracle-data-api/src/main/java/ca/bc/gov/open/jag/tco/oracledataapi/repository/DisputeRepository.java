@@ -13,13 +13,13 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 public interface DisputeRepository {
 
 	/** Fetch all records older than the given date. */
-	public List<DisputeListItem> findByCreatedTsBefore(Date olderThan);
+	public List<DisputeListItem> findByCreatedTsAfter(Date newerThan);
 
 	/** Fetch all records which do not have the specified status. */
 	public List<DisputeListItem> findByStatusNot(DisputeStatus excludeStatus);
 
 	/** Fetch all records which do not have the specified status and older than the given date. */
-	public List<DisputeListItem> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeGuid);
+	public List<DisputeListItem> findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date newerThan, String noticeOfDisputeGuid);
 	
 	/** Fetch all Dispute List Items. */
 	public List<DisputeListItem> getDisputeList();
@@ -90,7 +90,7 @@ public interface DisputeRepository {
 	/**
 	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
 	 */
-	public void unassignDisputes(Date olderThan);
+	public void unassignDisputes(Date newerThan);
 
 	/**
 	 * Sets the status and rejectedReason fields on the given dispute.
