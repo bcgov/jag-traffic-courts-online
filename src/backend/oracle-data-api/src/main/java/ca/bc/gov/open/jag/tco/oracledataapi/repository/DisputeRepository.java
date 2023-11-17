@@ -12,13 +12,13 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 
 public interface DisputeRepository {
 
-	/** Fetch all records older than the given date. */
+	/** Fetch all records newer than the given date. */
 	public List<DisputeListItem> findByCreatedTsAfter(Date newerThan);
 
 	/** Fetch all records which do not have the specified status. */
 	public List<DisputeListItem> findByStatusNot(DisputeStatus excludeStatus);
 
-	/** Fetch all records which do not have the specified status and older than the given date. */
+	/** Fetch all records which do not have the specified status and newer than the given date. */
 	public List<DisputeListItem> findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date newerThan, String noticeOfDisputeGuid);
 	
 	/** Fetch all Dispute List Items. */

@@ -54,7 +54,7 @@ public class DisputeService {
 
 	/**
 	 * Retrieves all {@link DisputeListItem} records
-	 * @param newerThan if specified, will filter the result set to those older than this date.
+	 * @param newerThan if specified, will filter the result set to those newer than this date.
 	 * @param excludeStatus if specified, will retrieve records which do not have the specified status.
 	 *
 	 * @return
