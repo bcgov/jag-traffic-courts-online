@@ -231,11 +231,11 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public void unassignDisputes(Date newerThan) {
+	public void unassignDisputes(Date olderThan) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // FIXME: UTC is a time standard, not a time zone - I
 																	// think this should be GMT.
-		String dateStr = simpleDateFormat.format(newerThan);
+		String dateStr = simpleDateFormat.format(olderThan);
 
 		logger.debug("Unassigning Disputes older than {}", StructuredArguments.value("date", dateStr));
 

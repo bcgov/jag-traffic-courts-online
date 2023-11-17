@@ -90,7 +90,7 @@ public interface DisputeRepository {
 	/**
 	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
 	 */
-	public void unassignDisputes(Date newerThan);
+	public void unassignDisputes(Date olderThan);
 
 	/**
 	 * Sets the status and rejectedReason fields on the given dispute.
