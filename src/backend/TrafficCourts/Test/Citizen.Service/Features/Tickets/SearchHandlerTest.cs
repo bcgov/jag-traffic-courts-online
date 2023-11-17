@@ -9,6 +9,7 @@ using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using Xunit;
 using Xunit.Abstractions;
+using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {
@@ -102,7 +103,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
                 .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(exception);
 
-            var request = new Search.Request("AA00000000", "00:00");
+            var request = new Search.Request("SA00000000", "00:00");
 
             var sut = new Search.Handler(_serviceMock.Object, _loggerMock.Object, _redisCacheServiceMock.Object);
 
