@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
@@ -44,5 +45,9 @@ public interface DisputeRepositoryImpl extends DisputeRepository, JpaRepository<
 			@Param(value = "disputeId") Long disputeId,
 			@Param(value = "disputeStatus") DisputeStatus disputeStatus,
 			@Param(value = "rejectedReason") String rejectedReason);
+	
+	@Override
+	@Query("from ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem")
+	public List<DisputeListItem> getDisputeList();
 
 }

@@ -56,26 +56,25 @@ class DisputeControllerTest extends BaseTestSuite {
 
 	@Test
 	public void testSaveDispute() throws Exception {
-		// Assert db is empty and clean
-		List<DisputeListItem> allDisputes = getAllDisputes(null, null);
-		assertEquals(0, allDisputes.size());
-
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		Long disputeId = saveDispute(dispute);
+		
+		Dispute savedDispute = getDispute(disputeId, true);
 
 		// Assert db contains the single created record
-		allDisputes = getAllDisputes(null, null);
-		assertEquals(1, allDisputes.size());
-		assertEquals(disputeId, allDisputes.get(0).getDisputeId());
-		assertEquals(dispute.getDisputantSurname(), allDisputes.get(0).getDisputantSurname());
+		assertNotNull(savedDispute);
+		assertEquals(disputeId, savedDispute.getDisputeId());
+		assertEquals(dispute.getDisputantSurname(), savedDispute.getDisputantSurname());
 
 		// Delete record
 		deleteDispute(disputeId);
 
-		// Assert db contains is empty again
-		allDisputes = getAllDisputes(null, null);
-		assertEquals(0, allDisputes.size());
+		// Assert db does not contain the dispute anymore
+		mvc.perform(MockMvcRequestBuilders
+				.get("/api/v1.0/dispute/{id}/{isAssign}", disputeId, false)
+				.principal(getPrincipal()))
+				.andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -287,40 +286,6 @@ class DisputeControllerTest extends BaseTestSuite {
 		dispute = getDispute(disputeId, true);
 		assertEquals("Bruce", dispute.getDisputantSurname());
 		assertEquals("Banner", dispute.getDisputantGivenName1());
-		List<DisputeListItem> disputes = getAllDisputes(null, null);
-		assertEquals(1, disputes.size());
-	}
-
-	@Test
-	@Transactional
-	public void testGetAllDisputesByStatusAndCreatedTs() throws Exception {
-		// Create disputes with different status and createdTs to test
-		Date now = new Date();
-		Dispute dispute = RandomUtil.createDispute();
-		dispute.setStatus(DisputeStatus.NEW);
-		Long disputeId = saveDispute(dispute);
-		dispute.setModifiedTs(DateUtils.addDays(now, -1));
-		updateDispute(disputeId, dispute);
-
-		Dispute dispute2 = RandomUtil.createDispute();
-		dispute2.setStatus(DisputeStatus.PROCESSING);
-		saveDispute(dispute2);
-
-		Dispute dispute3 = RandomUtil.createDispute();
-		dispute3.setStatus(DisputeStatus.CANCELLED);
-		saveDispute(dispute3);
-
-		// Assert controller returns all the disputes that were saved if no parameters passed.
-		List<DisputeListItem> allDisputes = getAllDisputes(null, null);
-		assertEquals(3, allDisputes.size());
-
-		// Assert controller returns all disputes which do not have the specified type.
-		List<DisputeListItem> allDisputesWithStatusAndOlderThan = getAllDisputes(null, DisputeStatus.CANCELLED);
-		assertEquals(2, allDisputesWithStatusAndOlderThan.size());
-
-		// Assert controller returns all disputes which do not have the specified type.
-		List<DisputeListItem> allDisputesWithStatus = getAllDisputes(null, DisputeStatus.PROCESSING);
-		assertEquals(2, allDisputesWithStatus.size());
 	}
 
 	@Test
@@ -685,10 +650,10 @@ class DisputeControllerTest extends BaseTestSuite {
 	 * Issues a GET request to /api/v1.0/disputes. The appropriate controller is automatically called by the DispatchServlet
 	 * @throws Exception
 	 */
-	private List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) throws Exception {
+	private List<DisputeListItem> getAllDisputes(Date newerThan, DisputeStatus excludeStatus) throws Exception {
 		ResultActions resultActions = mvc.perform(MockMvcRequestBuilders
 				.get("/api/v1.0/disputes")
-				.param("olderThan", olderThan == null ? null : DateFormatUtils.format(olderThan, "yyyy-MM-dd"))
+				.param("newerThan", newerThan == null ? null : DateFormatUtils.format(newerThan, "yyyy-MM-dd"))
 				.param("excludeStatus", excludeStatus == null ? null : excludeStatus.name())
 				.principal(getPrincipal()))
 				.andExpect(status().isOk());

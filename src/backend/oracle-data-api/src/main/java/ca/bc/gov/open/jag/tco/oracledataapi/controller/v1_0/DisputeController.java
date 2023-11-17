@@ -60,11 +60,12 @@ public class DisputeController {
 	private Logger logger = LoggerFactory.getLogger(DisputeController.class);
 
 	/**
-	 * GET endpoint that retrieves all the dispute detail from the database
-	 * @param olderThan if specified, will filter the result set to those older than this date.
-	 * @return list of all dispute tickets
+	 * GET endpoint that retrieves all the dispute list details including some JJ dispute fields from the database
+	 * @param newerThan if specified, will filter the result set to those newer than this date.
+	 * @param excludeStatus if specified, will retrieve records which do not have the specified status
+	 * @return list of all {@link DisputeListItem}
 	 */
-	@Operation(summary = "Returns all Dispute records based on the specified optional parameters.")
+	@Operation(summary = "Returns all dispute list details based on the specified optional parameters.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. Disputes are returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
@@ -74,14 +75,14 @@ public class DisputeController {
 	public ResponseEntity<List<DisputeListItem>> getAllDisputes(
 			@RequestParam(required = false)
 			@DateTimeFormat(pattern = "yyyy-MM-dd")
-			@Parameter(description = "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
-			Date olderThan,
+			@Parameter(description = "If specified, will retrieve records newer than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
+			Date newerThan,
 			@RequestParam(required = false)
 			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
 			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes called");
 		logger.debug("Excluding status: {}", StructuredArguments.value("excludeStatus", excludeStatus));
-		List<DisputeListItem> disputeListItems = disputeService.getAllDisputes(olderThan, excludeStatus);
+		List<DisputeListItem> disputeListItems = disputeService.getAllDisputes(newerThan, excludeStatus);
 		
 		return new ResponseEntity<List<DisputeListItem>>(disputeListItems, HttpStatus.OK);
 	}

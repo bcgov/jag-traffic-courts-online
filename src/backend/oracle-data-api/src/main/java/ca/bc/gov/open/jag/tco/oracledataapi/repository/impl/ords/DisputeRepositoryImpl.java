@@ -21,12 +21,14 @@ import org.springframework.stereotype.Repository;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
@@ -40,7 +42,7 @@ import net.logstash.logback.argument.StructuredArguments;
 public class DisputeRepositoryImpl implements DisputeRepository {
 
 	private static Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
-	
+
 	// Delegate, OpenAPI generated client
 	private final ViolationTicketApi violationTicketApi;
 
@@ -49,28 +51,30 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public List<Dispute> findByCreatedTsBefore(Date olderThan) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, olderThan, null);
+	public List<DisputeListItem> findByCreatedTsAfter(Date newerThan) {
+		return findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(null, newerThan, null);
 	}
 
 	@Override
-	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, null, null);
+	public List<DisputeListItem> findByStatusNot(DisputeStatus excludeStatus) {
+		return findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludeStatus, null, null);
 	}
 
 	@Override
-	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeGuid) {
-		String olderThanDate = null ;
+	public List<DisputeListItem> findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(DisputeStatus excludeStatus,
+			Date newerThan, String noticeOfDisputeGuid) {
+		String newerThanDate = null;
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
 
-		if (olderThan != null) {
+		if (newerThan != null) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT);
-			olderThanDate = simpleDateFormat.format(olderThan);
+			newerThanDate = simpleDateFormat.format(newerThan);
 		}
 
 		try {
-			ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(olderThanDate, statusShortName, null, noticeOfDisputeGuid, null);
-			return extractDisputes(response);
+			DisputeListResponse response = violationTicketApi.disputeListGet(newerThanDate, statusShortName, null,
+					noticeOfDisputeGuid, null);
+			return extractDisputeListItems(response);
 
 		} catch (ApiException e) {
 			logger.error("ERROR retrieving Disputes from ORDS");
@@ -80,19 +84,21 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findByNoticeOfDisputeGuid(String noticeOfDisputeGuid) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, null, noticeOfDisputeGuid);
+		return findByNoticeOfDisputeGuidImpl(null, null, noticeOfDisputeGuid);
 	}
 
 	@Override
 	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date issuedTime) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.TIME_FORMAT);
 		String time = simpleDateFormat.format(issuedTime);
-		ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(null, null, ticketNumber, null, time);
+		ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(null, null, ticketNumber, null,
+				time);
 		List<Dispute> extractedDisputes = extractDisputes(response);
 
 		// Convert Disputes to DisputeResult objects
 		List<DisputeResult> disputeResults = extractedDisputes.stream()
-				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(), dispute.getStatus()))
+				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(),
+						dispute.getStatus()))
 				.collect(Collectors.toList());
 
 		return disputeResults;
@@ -100,12 +106,14 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<DisputeResult> findByTicketNumber(String ticketNumber) {
-		ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(null, null, ticketNumber, null, null);
+		ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(null, null, ticketNumber, null,
+				null);
 		List<Dispute> extractedDisputes = extractDisputes(response);
 
 		// Convert Disputes to DisputeResult objects
 		List<DisputeResult> disputeResults = extractedDisputes.stream()
-				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(), dispute.getStatus()))
+				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(),
+						dispute.getStatus()))
 				.collect(Collectors.toList());
 
 		return disputeResults;
@@ -127,8 +135,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		if (result == null) {
 			throw new InternalServerErrorException("Invalid ResponseResult object");
-		}
-		else if (result.getException() != null) {
+		} else if (result.getException() != null) {
 			// Known error if no data found
 			if ("0".equals(result.getStatus()) && result.getException().startsWith("ORA-01403")) {
 				throw new NoSuchElementException(result.getException());
@@ -137,15 +144,19 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			else {
 				throw new InternalServerErrorException(result.getException());
 			}
-		}
-		else if (!"1".equals(result.getStatus())) {
+		} else if (!"1".equals(result.getStatus())) {
 			throw new InternalServerErrorException("Dispute deletion status is not 1 (success)");
 		}
 	}
 
 	@Override
+	public List<DisputeListItem> getDisputeList() {
+		return findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(null, null, null);
+	}
+
+	@Override
 	public List<Dispute> findAll() {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, null, null);
+		return findByNoticeOfDisputeGuidImpl(null, null, null);
 	}
 
 	@Override
@@ -157,9 +168,9 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			ViolationTicket violationTicket = violationTicketApi.violationTicketGet(null, id);
 			if (violationTicket == null || violationTicket.getViolationTicketId() == null) {
 				return Optional.empty();
-			}
-			else {
-				logger.debug("Successfully returned the violation ticket from ORDS with dispute id {}", StructuredArguments.value("disputeId", id));
+			} else {
+				logger.debug("Successfully returned the violation ticket from ORDS with dispute id {}",
+						StructuredArguments.value("disputeId", id));
 				Dispute dispute = DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket);
 
 				// Set missing back reference
@@ -178,7 +189,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 				return Optional.ofNullable(dispute);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR retrieving Dispute from ORDS with dispute id {}", StructuredArguments.value("disputeId", id), e);
+			logger.error("ERROR retrieving Dispute from ORDS with dispute id {}",
+					StructuredArguments.value("disputeId", id), e);
 			throw new InternalServerErrorException(e);
 		}
 	}
@@ -196,13 +208,16 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		ViolationTicket violationTicket = ViolationTicketMapper.INSTANCE.convertDisputeToViolationTicketDto(entity);
 		try {
-			ResponseResult result = assertNoExceptions(() -> violationTicketApi.processViolationTicketPost(violationTicket));
+			ResponseResult result = assertNoExceptions(
+					() -> violationTicketApi.processViolationTicketPost(violationTicket));
 			if (result.getDisputeId() != null) {
-				logger.debug("Successfully saved the dispute through ORDS with dispute id {}", StructuredArguments.value("disputeId", result.getDisputeId()));
+				logger.debug("Successfully saved the dispute through ORDS with dispute id {}",
+						StructuredArguments.value("disputeId", result.getDisputeId()));
 				return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}", StructuredArguments.fields(violationTicket), e);
+			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}",
+					StructuredArguments.fields(violationTicket), e);
 			throw new InternalServerErrorException(e);
 		}
 
@@ -211,13 +226,15 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public void assignDisputeToUser(Long disputeId, String userName) {
-		assertNoExceptions(() -> violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance));
+		assertNoExceptions(
+				() -> violationTicketApi.assignViolationTicketPost(disputeId, userName, EmptyObject.instance));
 	}
 
 	@Override
 	public void unassignDisputes(Date olderThan) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
-		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); //FIXME: UTC is a time standard, not a time zone - I think this should be GMT.
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // FIXME: UTC is a time standard, not a time zone - I
+																	// think this should be GMT.
 		String dateStr = simpleDateFormat.format(olderThan);
 
 		logger.debug("Unassigning Disputes older than {}", StructuredArguments.value("date", dateStr));
@@ -227,7 +244,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public void setStatus(Long disputeId, DisputeStatus disputeStatus, String rejectedReason) {
-		assertNoExceptions(() -> violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId, disputeStatus.toShortName(), rejectedReason));
+		assertNoExceptions(() -> violationTicketApi.violationTicketStatusPost(EmptyObject.instance, disputeId,
+				disputeStatus.toShortName(), rejectedReason));
 	}
 
 	@Override
@@ -238,13 +256,16 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		ViolationTicket violationTicket = ViolationTicketMapper.INSTANCE.convertDisputeToViolationTicketDto(dispute);
 		try {
-			ResponseResult result = assertNoExceptions(() -> violationTicketApi.v1UpdateViolationTicketPut(violationTicket));
+			ResponseResult result = assertNoExceptions(
+					() -> violationTicketApi.v1UpdateViolationTicketPut(violationTicket));
 			if (result.getDisputeId() != null) {
-				logger.debug("Successfully updated the dispute through ORDS with dispute id {}", StructuredArguments.value("disputeId", result.getDisputeId()));
+				logger.debug("Successfully updated the dispute through ORDS with dispute id {}",
+						StructuredArguments.value("disputeId", result.getDisputeId()));
 				return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
 			}
 		} catch (ApiException e) {
-			logger.error("ERROR updating Dispute through ORDS with dispute data: {}", StructuredArguments.fields(violationTicket), e);
+			logger.error("ERROR updating Dispute through ORDS with dispute data: {}",
+					StructuredArguments.fields(violationTicket), e);
 			throw new InternalServerErrorException(e);
 		}
 
@@ -256,8 +277,32 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		// no-op. Not needed for ORDS.
 	}
 
+	private List<Dispute> findByNoticeOfDisputeGuidImpl(DisputeStatus excludeStatus, Date newerThan,
+			String noticeOfDisputeGuid) {
+		String newerThanDate = null;
+		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
+
+		if (newerThan != null) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT);
+			newerThanDate = simpleDateFormat.format(newerThan);
+		}
+
+		try {
+			ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(newerThanDate,
+					statusShortName, null, noticeOfDisputeGuid, null);
+			return extractDisputes(response);
+
+		} catch (ApiException e) {
+			logger.error("ERROR retrieving Disputes from ORDS");
+			throw new InternalServerErrorException(e);
+		}
+	}
+
 	/**
-	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
+	 * A helper method that will throw an appropriate InternalServerErrorException
+	 * based on the ResponseResult. Any RuntimeExceptions throw will propagate up to
+	 * caller.
+	 * 
 	 * @return
 	 */
 	private ResponseResult assertNoExceptions(Supplier<ResponseResult> m) {
@@ -289,17 +334,38 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 					.map(violationTicket -> DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket))
 					.collect(Collectors.toList());
 
-			// NPE fix - Some Disputes have missing counts. This should be impossible - presumably bad data.
+			// NPE fix - Some Disputes have missing counts. This should be impossible -
+			// presumably bad data.
 			if (disputesToReturn != null) {
 				for (Dispute dispute : disputesToReturn) {
 					if (dispute.getDisputeCounts() == null) {
-						logger.error("Dispute missing counts. Bad data? DisputeId: {}", StructuredArguments.value("disputeId", dispute.getDisputeId()));
+						logger.error("Dispute missing counts. Bad data? DisputeId: {}",
+								StructuredArguments.value("disputeId", dispute.getDisputeId()));
 						dispute.setDisputeCounts(new ArrayList<>());
 					}
 				}
 			}
 		}
 		return disputesToReturn;
+	}
+
+	/**
+	 * Helper method to convert a DisputeListResponse to a list of
+	 * {@link DisputeListItem}
+	 * 
+	 * @param response
+	 * @return a list of {@link DisputeListItem}
+	 */
+	private List<DisputeListItem> extractDisputeListItems(DisputeListResponse response) {
+		List<DisputeListItem> disputeListToReturn = new ArrayList<DisputeListItem>();
+		if (response != null && !response.getDisputeListItems().isEmpty()) {
+			logger.debug("Successfully returned dispute list items from ORDS");
+
+			disputeListToReturn = response.getDisputeListItems().stream().map(
+					diputeListItem -> DisputeMapper.INSTANCE.convertDisputeListItemDtoToDisputeListItem(diputeListItem))
+					.collect(Collectors.toList());
+		}
+		return disputeListToReturn;
 	}
 
 }

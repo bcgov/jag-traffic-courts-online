@@ -6,19 +6,23 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 
 public interface DisputeRepository {
 
-	/** Fetch all records older than the given date. */
-	public List<Dispute> findByCreatedTsBefore(Date olderThan);
+	/** Fetch all records newer than the given date. */
+	public List<DisputeListItem> findByCreatedTsAfter(Date newerThan);
 
 	/** Fetch all records which do not have the specified status. */
-	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus);
+	public List<DisputeListItem> findByStatusNot(DisputeStatus excludeStatus);
 
-	/** Fetch all records which do not have the specified status and older than the given date. */
-	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeGuid);
+	/** Fetch all records which do not have the specified status and newer than the given date. */
+	public List<DisputeListItem> findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date newerThan, String noticeOfDisputeGuid);
+	
+	/** Fetch all Dispute List Items. */
+	public List<DisputeListItem> getDisputeList();
 
 	/** Fetch all records that matches the noticeOfDisputeGuid. */
 	public List<Dispute> findByNoticeOfDisputeGuid(String noticeOfDisputeGuid);

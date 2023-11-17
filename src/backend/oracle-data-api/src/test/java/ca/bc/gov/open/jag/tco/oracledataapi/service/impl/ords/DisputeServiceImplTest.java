@@ -27,6 +27,8 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListItem;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketListResponse;
@@ -387,34 +389,34 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Test
 	public void testGetAllDisputesExpect200() throws Exception {
 		Date now = new Date();
-		String olderThanDate = dateToString(now, DateUtil.DATE_FORMAT);
+		String newerThanDate = dateToString(now, DateUtil.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
 		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
-		ViolationTicketListResponse response = new ViolationTicketListResponse();
-		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
-		response.setViolationTickets(violationTickets);
+		DisputeListResponse response = new DisputeListResponse();
+		List<DisputeListItem> disputeListItems = new ArrayList<DisputeListItem>();
+		response.setDisputeListItems(disputeListItems);
 
-		Mockito.when(violationTicketApi.violationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenReturn(response);
+		Mockito.when(violationTicketApi.disputeListGet(newerThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
-			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
+			repository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
 		});
 	}
 
 	@Test
 	public void testGetAllDisputesExpect500_InternalServerError() throws Exception {
 		Date now = new Date();
-		String olderThanDate = dateToString(now, DateUtil.DATE_FORMAT);
+		String newerThanDate = dateToString(now, DateUtil.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
 		String noticeOfDisputeGuid = java.util.UUID.randomUUID().toString();
-		ViolationTicketListResponse response = new ViolationTicketListResponse();
-		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
-		response.setViolationTickets(violationTickets);
+		DisputeListResponse response = new DisputeListResponse();
+		List<DisputeListItem> disputeListItems = new ArrayList<DisputeListItem>();
+		response.setDisputeListItems(disputeListItems);
 
-		Mockito.when(violationTicketApi.violationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.disputeListGet(newerThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenThrow(ApiException.class);
 
 		assertThrows(InternalServerErrorException.class, () -> {
-			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
+			repository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
 		});
 	}
 

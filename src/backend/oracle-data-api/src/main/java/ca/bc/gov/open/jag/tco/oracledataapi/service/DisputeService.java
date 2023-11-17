@@ -53,28 +53,29 @@ public class DisputeService {
 	private DisputeUpdateRequestRepository disputeUpdateRequestRepository;
 
 	/**
-	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
-	 * @param olderThan if specified, will filter the result set to those older than this date.
+	 * Retrieves all {@link DisputeListItem} records
+	 * @param newerThan if specified, will filter the result set to those newer than this date.
+	 * @param excludeStatus if specified, will retrieve records which do not have the specified status.
 	 *
 	 * @return
 	 */
-	public List<DisputeListItem> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
-		List<Dispute> allDisputes = null;
-		if (olderThan == null && excludeStatus == null) {
-			allDisputes =  disputeRepository.findAll();
-		} else if (olderThan == null) {
+	public List<DisputeListItem> getAllDisputes(Date newerThan, DisputeStatus excludeStatus) {
+		List<DisputeListItem> allDisputes = null;
+		if (newerThan == null && excludeStatus == null) {
+			allDisputes =  disputeRepository.getDisputeList();
+		} else if (newerThan == null) {
 			allDisputes =  disputeRepository.findByStatusNot(excludeStatus);
 		} else if (excludeStatus == null) {
-			allDisputes = disputeRepository.findByCreatedTsBefore(olderThan);
+			allDisputes = disputeRepository.findByCreatedTsAfter(newerThan);
 		} else {
-			allDisputes = disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
+			allDisputes = disputeRepository.findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(excludeStatus, newerThan, null);
 		}
 
-		// Convert Disputes to DisputeListItem objects
-		List<DisputeListItem> disputeListItems = allDisputes.stream()
-				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
-				.collect(Collectors.toList());
-		return disputeListItems;
+//		// Convert Disputes to DisputeListItem objects
+//		List<DisputeListItem> disputeListItems = allDisputes.stream()
+//				.map(dispute -> DisputeMapper.INSTANCE.convertDisputeToDisputeListItem(dispute))
+//				.collect(Collectors.toList());
+		return allDisputes;
 	}
 
 	/**
