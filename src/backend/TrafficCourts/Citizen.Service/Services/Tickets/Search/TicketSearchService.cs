@@ -79,8 +79,8 @@ public class TicketSearchService : ITicketSearchService
         {
             var issuedTs = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);
             
-            // TCVP-2560 all tickets before April 9, 2024 (VT1) will be ineligible for TCO
-            if (issuedTs < _validVT2TicketEffectiveDate)
+            // TCVP-2560 all ISC tickets that always start with the letter 'S' and have a violation date before April 9, 2024 (VT1) are ineligible for TCO
+            if (ticketNumber.ToUpper().StartsWith("S") && issuedTs < _validVT2TicketEffectiveDate)
             {
                 _logger.LogInformation("Ticket found is not a valid VT2 type");
                 throw new InvalidTicketVersionException(issuedTs);
