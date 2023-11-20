@@ -211,6 +211,17 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     this.form.controls.contact_surname.clearValidators();
     this.form.controls.contact_given_names.clearValidators();
     this.form.controls.contact_law_firm_name.setValue(null);
+    this.form.controls.address.setValue(null);
+    this.form.controls.address.updateValueAndValidity();
+    this.form.controls.address_city.setValue(null);
+    this.form.controls.address_city.updateValueAndValidity();
+    this.countryFormControl.setValue(this.canada);
+    this.provinceFormControl.setValue(this.bc);
+    this.form.controls.email_address.setValue(null);
+    this.form.controls.email_address.updateValueAndValidity();
+    this.form.controls.home_phone_number.setValue(null);
+    this.form.controls.home_phone_number.updateValueAndValidity();
+
     if (newContactType == this.ContactType.Lawyer) {
       // make all contact info required
       this.form.controls.contact_law_firm_name.addValidators([Validators.required]);
