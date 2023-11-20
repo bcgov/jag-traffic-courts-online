@@ -525,8 +525,15 @@
       </div>
       <mat-checkbox [(ngModel)]="declared" color="primary" class="w-100 mt-4">I declare all of the information
         above is correct to the best of my knowledge.</mat-checkbox>
+      <div class="col mt-4 mb-2">
+        <app-alert type="warning" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>You must complete the declaration and tick the box before you can submit your dispute</strong>
+          </ng-container>
+        </app-alert>
+      </div>
 
-      <app-stepper-footer [disableSave]="!declared" (save)="submitDispute()" (back)="disputeStepper.previous()"
+      <app-stepper-footer [disableSave]="disableSave" (save)="onSubmitClicked()" (back)="disputeStepper.previous()"
         [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
         [saveButtonKey]="'stepper.submit'" [hasSecondaryAction]="true">
       </app-stepper-footer>

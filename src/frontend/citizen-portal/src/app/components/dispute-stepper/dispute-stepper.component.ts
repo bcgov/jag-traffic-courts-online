@@ -75,6 +75,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   // Summary
   declared = false;
+  disableSave = false;
 
   // Upload
   adjournmentFileType = { key: "Adjournment", value: "Application for Adjournment" };
@@ -438,7 +439,31 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.dialog.open(ConfirmDialogComponent, { data });
   }
 
-  submitDispute() {
+  onSubmitClicked() {
+    if (!this.declared) {
+      const data: DialogOptions = {
+        titleKey: "Warning",
+        actionType: "warn",
+        messageKey: `You must complete the declaration and tick the box before you can submit your dispute`,
+        actionTextKey: "Close",
+        cancelHide: true
+      };
+      this.dialog.open(ConfirmDialogComponent, { data });
+    } else {
+      this.submitDispute();
+    }
+  }
+
+  private submitDispute() {
+    this.disableSave = true;
+    const data: DialogOptions = {
+      titleKey: "Warning",
+      actionType: "warn",
+      messageKey: `Submitting dispute. Please don't click Submit button again`,
+      actionTextKey: "Close",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data });
     this.saveDispute.emit(this.noticeOfDispute);
   }
 }
