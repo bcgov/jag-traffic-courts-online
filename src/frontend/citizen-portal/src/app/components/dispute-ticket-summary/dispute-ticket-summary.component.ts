@@ -3,6 +3,8 @@ import { DisputeContactTypeCd, DisputeRepresentedByLawyer, DisputeRequestCourtAp
 import { LookupsService } from "app/services/lookups.service";
 import { NoticeOfDisputeService, NoticeOfDispute, CountsActions, DisputeCount } from "app/services/notice-of-dispute.service";
 import { ConfigService } from "@config/config.service";
+import { TicketTypes } from "@shared/enums/ticket-type.enum";
+import { ViolationTicketService } from "app/services/violation-ticket.service";
 
 @Component({
   selector: "app-dispute-ticket-summary",
@@ -13,6 +15,8 @@ export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
   @Input() noticeOfDispute: NoticeOfDispute;
   @Input() ticketCounts: ViolationTicketCount[] = [];
   @Input() showWarnings: boolean = false;
+  ticketType: string;
+  ticketTypes = TicketTypes;
   countsActions: CountsActions;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   ContactType = DisputeContactTypeCd;
@@ -21,18 +25,21 @@ export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
   constructor(
     private configService: ConfigService,
     private noticeOfDisputeService: NoticeOfDisputeService,
+    private violationTicketService: ViolationTicketService,
     private lookups: LookupsService
   ) {
   }
 
   ngOnInit(): void {
     if (this.noticeOfDispute) {
+      this.ticketType = this.violationTicketService.ticketType;
       this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
     }
   }
 
   ngOnChanges(): void {
     if (this.noticeOfDispute) {
+      this.ticketType = this.violationTicketService.ticketType;
       this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
     }
   }
