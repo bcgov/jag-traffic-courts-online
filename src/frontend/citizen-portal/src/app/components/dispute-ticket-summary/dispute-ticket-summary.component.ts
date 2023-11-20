@@ -12,6 +12,7 @@ import { ConfigService } from "@config/config.service";
 export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
   @Input() noticeOfDispute: NoticeOfDispute;
   @Input() ticketCounts: ViolationTicketCount[] = [];
+  @Input() showWarnings: boolean = false;
   countsActions: CountsActions;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   ContactType = DisputeContactTypeCd;

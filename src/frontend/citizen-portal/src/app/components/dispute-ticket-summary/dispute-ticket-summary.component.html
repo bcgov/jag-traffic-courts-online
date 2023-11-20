@@ -25,16 +25,20 @@
           </div>
           <div class="lg-2 col-lg-4">
             <small class="d-block" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">Law firm</small>
-            <div class="text" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">{{ noticeOfDispute.contact_law_firm_name }}</div>
+            <div class="text" *ngIf="noticeOfDispute.contact_type === ContactType.Lawyer">{{
+              noticeOfDispute.contact_law_firm_name }}</div>
           </div>
         </div>
         <div class="row mb-2">
           <div class="lg-2 col-lg-4">
-            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? '' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer surname' : 'Other surname') }}</small>
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? '' :
+              (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer surname' : 'Other surname') }}</small>
             <div class="text">{{ noticeOfDispute.contact_surname }}</div>
           </div>
           <div class="col-lg-4">
-            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? '' : (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer given names' : 'Other given names') }}</small>
+            <small class="d-block">{{ noticeOfDispute.contact_type === ContactType.Individual ? '' :
+              (noticeOfDispute.contact_type === ContactType.Lawyer ? 'Lawyer given names' : 'Other given names')
+              }}</small>
             <div class="text">{{ noticeOfDispute.contact_given_names }}</div>
           </div>
         </div>
@@ -89,9 +93,9 @@
       </div>
     </section>
 
-
     <section class="px-4 py-2 mb-3 card-section" *ngFor="let disputeCount of noticeOfDispute.dispute_counts;">
-      <app-count-item-dispute-summary [ticketCount]="getCount(disputeCount)" [disputeCount]="disputeCount" [noticeOfDispute]="noticeOfDispute"></app-count-item-dispute-summary>
+      <app-count-item-dispute-summary [ticketCount]="getCount(disputeCount)" [disputeCount]="disputeCount"
+        [noticeOfDispute]="noticeOfDispute"></app-count-item-dispute-summary>
     </section>
 
     <section class="px-4 py-2 mb-4 card-section">
@@ -117,7 +121,8 @@
             </strong>
           </ng-container>
           <ng-container *ngIf="countsActions.request_time_to_pay?.length > 0">
-            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to plead guilty and supply written
+            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to plead guilty and
+              supply written
               reasons.</h3>
             <small>Written reasons for <strong>time to pay</strong> request</small>
             <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
@@ -195,4 +200,87 @@
       </div>
     </section>
   </div>
+
+  <ng-container *ngIf="showWarnings">
+    <section class="mb-2 mt-4 d-print-none">
+      <div class="row" *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.Y">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              You will be required to attend a hearing to defend your claim. A Notice of Hearing will be mailed to you –
+              it will have the date, time and location of your hearing. <br><br>
+
+              Please Note: If you need to make changes to your dispute, you may do so up to 5 business days before the original scheduled date of your hearing. <br><br>
+
+              If you fail to appear before the provincial court on your hearing date you will be found guilty and the
+              full
+              ticketed amount must be paid immediately.
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+      <div class="row"
+        *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              If you dispute the ticket, an intersection safety camera officer will always appear in court to explain
+              the
+              offence and provide evidence.
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-2 mt-4 d-print-none">
+      <div class="row" *ngIf="noticeOfDispute.represented_by_lawyer === RepresentedByLawyer.Y">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your
+              Notice of Dispute. The lawyer’s schedule will have to be considered when a date is set for your hearing
+              and
+              many lawyers are not available on short notice.<br /> If you hire a lawyer they will generally give the
+              Violation Ticket Center dates when they are available for your hearing.
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+      <div class="row" *ngIf="noticeOfDispute.interpreter_language_cd">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              The court also provides visual language interpreters (American Sign Language) and CART (Communication
+              Access
+              Realtime Translation - captioning services) for any court proceeding.
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+      <div class="row" *ngIf="noticeOfDispute.witness_no > 0">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              <strong>If you are calling a witness please keep the following information in mind:</strong><br />
+              If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the
+              violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the
+              record
+              of the disputant.
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+      <div class="row" *ngIf="noticeOfDispute.request_court_appearance === RequestCourtAppearance.N">
+        <div class="col">
+          <app-alert type="warning" icon="info">
+            <ng-container #alertContent class="alert-content">
+              <strong>You have selected that you do not want to attend a court hearing</strong>
+              You will be notified in writing to the address supplied above by the Court if your request was successful.
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+    </section>
+  </ng-container>
 </ng-container>
