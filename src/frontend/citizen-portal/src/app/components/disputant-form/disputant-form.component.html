@@ -202,7 +202,7 @@
     <div *ngIf="mode !== DisputeFormMode.UPDATEDISPUTANT" class="row">
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label>Province or state of driver's licence</mat-label>
+          <mat-label>Province or state of disputant's driver's licence</mat-label>
           <mat-select [formControl]="driversLicenceProvinceFormControl">
             <mat-option [value]="bc">British Columbia</mat-option>
             <mat-option *ngFor="let province of provincesAndStates" [value]="province">
@@ -214,7 +214,7 @@
       </div>
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label>Driver's licence number</mat-label>
+          <mat-label>Disputant's driver's licence number</mat-label>
           <input *ngIf="driversLicenceProvinceFormControl.value?.provId === bc.provId" matInput
             formControlName="drivers_licence_number" (keypress)="($event.charCode >= 48 && $event.charCode < 58)"
             minlength="7" maxlength="9" />

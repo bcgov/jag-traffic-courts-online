@@ -229,8 +229,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_time_to_pay.length > 0) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
     } else this.additionalForm.controls.time_to_pay_reason.removeValidators([Validators.required]);
-
-    this.changeRepresentedByLawyer(this.form.value.contact_type === DisputeContactTypeCd.Lawyer);
   }
 
   isCountFormsValid(): boolean {
@@ -280,7 +278,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     let value = checked ? this.RepresentedByLawyer.Y : this.RepresentedByLawyer.N;
     this.additionalForm.controls.represented_by_lawyer.setValue(value);
 
-    if (checked) {
+    if (checked && this.form.value.contact_type === DisputeContactTypeCd.Lawyer) {
       this.legalRepresentationForm.controls.law_firm_name.patchValue(this.form.value.contact_law_firm_name);
 
       var contactNames = [this.form.value.contact_surname, this.form.value.contact_given_names]
