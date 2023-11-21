@@ -212,7 +212,7 @@ staff-api:
     "Jwt__Authority": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court"
     "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/admin/realms/"
     "KeycloakAdminApi__Realm": "traffic-court"
-    "OAuth__TokenUri": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
+    "OAuth__TokenEndpoint": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
     "Swagger__Enabled": "true"
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service:3000"
