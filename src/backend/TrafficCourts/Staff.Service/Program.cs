@@ -42,7 +42,7 @@ catch (SettingsValidationException exception)
 }
 catch (Exception exception)
 {
-    logger.Fatal(exception, "Exception occured causing application termination");
+    logger.Fatal(exception, "Exception occurred causing application termination");
 }
 finally
 {
