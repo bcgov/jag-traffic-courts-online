@@ -11,8 +11,8 @@ public class CommonUtils {
 
 	public static void login() throws Exception {
 
-		WebDriver driver = WebDriverManager.getDriver();
-		WebElement element = WebDriverManager.getElement();
+		WebDriver driver = CustomWebDriverManager.getDriver();
+		WebElement element = CustomWebDriverManager.getElement();
 
 		if (Config.ENVIROMENT.equals(Constants.DEV)) {
 			driver.get("https://dev.tickets.gov.bc.ca");
@@ -29,8 +29,8 @@ public class CommonUtils {
 
 	public static void loginStaffWorkbench() throws Exception {
 
-		WebDriver driver = WebDriverManager.getDriver();
-		WebElement element = WebDriverManager.getElement();
+		WebDriver driver = CustomWebDriverManager.getDriver();
+		WebElement element = CustomWebDriverManager.getElement();
 
 		if (Config.ENVIROMENT.equals(Constants.DEV)) {
 			driver.get("https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/auth?client_id=staff-portal&redirect_uri=https%3A%2F%2Fstaff-web-0198bb-dev.apps.silver.devops.gov.bc.ca%2Fticket&state=bcb55b04-5956-403d-8bf5-0273f34e5cdb&response_mode=fragment&response_type=code&scope=openid&nonce=5b0a9ef9-c066-47e7-8cf7-5b7dfd7f5f24");

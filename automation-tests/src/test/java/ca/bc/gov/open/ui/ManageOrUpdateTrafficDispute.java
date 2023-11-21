@@ -13,7 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
-import ca.bc.gov.open.cto.WebDriverManager;
+import ca.bc.gov.open.cto.CustomWebDriverManager;
 
 public class ManageOrUpdateTrafficDispute {
 
@@ -27,15 +27,15 @@ public class ManageOrUpdateTrafficDispute {
 
 	@AfterClass
 	public static void afterClass() {
-		WebDriverManager.instance = null;
+		CustomWebDriverManager.instance = null;
 	}
 
 	@Test
 	public void test() throws Exception {
-		driver = WebDriverManager.getDriver();
-		WebDriverWait driverWait = WebDriverManager.getDriverWait();
-		WebElement element = WebDriverManager.getElement();
-		WebDriverManager.getElements();
+		driver = CustomWebDriverManager.getDriver();
+		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
+		WebElement element = CustomWebDriverManager.getElement();
+		CustomWebDriverManager.getElements();
 
 		CommonUtils.login();
 

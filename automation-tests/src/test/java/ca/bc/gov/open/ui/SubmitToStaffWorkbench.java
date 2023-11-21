@@ -2,8 +2,6 @@ package ca.bc.gov.open.ui;
 
 import java.time.Duration;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -13,7 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
-import ca.bc.gov.open.cto.WebDriverManager;
+import ca.bc.gov.open.cto.CustomWebDriverManager;
 
 public class SubmitToStaffWorkbench {
 
@@ -32,10 +30,10 @@ public class SubmitToStaffWorkbench {
 
 	@Test
 	public void test() throws Exception {
-		driver = WebDriverManager.getDriver();
-		WebDriverWait driverWait = WebDriverManager.getDriverWait();
-		WebElement element = WebDriverManager.getElement();
-		WebDriverManager.getElements();
+		driver = CustomWebDriverManager.getDriver();
+		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
+		WebElement element = CustomWebDriverManager.getElement();
+		CustomWebDriverManager.getElements();
 
 		DisputeTicketOptionsPickerByMail dispute = new DisputeTicketOptionsPickerByMail();
 		dispute.test();
