@@ -6,7 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ConfigModule } from 'app/config/config.module';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { AlertComponent } from './components/alert/alert.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { PageComponent } from './components/page/page.component';
@@ -48,7 +47,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         DialogContentDirective,
         AlertComponent,
         HeaderComponent,
-        FooterComponent,
         FeatureFlagDirective,
         TicketImageDialogComponent
     ],
@@ -89,7 +87,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         AlertComponent,
         ConfigModule,
         HeaderComponent,
-        FooterComponent,
         FeatureFlagDirective,
         FlexLayoutModule,
     ],
