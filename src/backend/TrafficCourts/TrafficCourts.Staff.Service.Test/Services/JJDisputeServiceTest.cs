@@ -1,11 +1,11 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
@@ -19,7 +19,7 @@ public class JJDisputeServiceTest
 {
 
     [Fact]
-    public void TestGetPartId_JJAssignedToNull()
+    public async Task TestGetPartId_JJAssignedToNull()
     {
         // Arrange
         var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
@@ -35,11 +35,11 @@ public class JJDisputeServiceTest
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
 
         // Assert/Act
-        Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
     }
 
     [Fact]
-    public void TestGetPartId_HearingTypeNull()
+    public async Task TestGetPartId_HearingTypeNull()
     {
         // Arrange
         var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
@@ -56,11 +56,11 @@ public class JJDisputeServiceTest
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
 
         // Assert/Act
-        Assert.ThrowsAsync<ArgumentException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
     }
 
     [Fact]
-    public void TestGetPartId_EmptyKeycloak()
+    public async Task TestGetPartId_EmptyKeycloak()
     {
         // Arrange
         var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
@@ -80,11 +80,11 @@ public class JJDisputeServiceTest
         _keycloakService.Setup(_ => _.UsersByIdirAsync(dispute.JjAssignedTo, CancellationToken.None)).ReturnsAsync(_userReps.Object);
 
         // Assert/Act
-        Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
     }
 
     [Fact]
-    public async void TestGetPartId()
+    public async Task TestGetPartId()
     {
         // Arrange
         var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
@@ -118,7 +118,7 @@ public class JJDisputeServiceTest
     }
 
     [Fact]
-    public async void TestGetStatuteDescription()
+    public async Task TestGetStatuteDescription()
     {
         // Arrange
         var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
