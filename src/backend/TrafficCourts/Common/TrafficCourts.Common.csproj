@@ -72,4 +72,8 @@
 			<_Parameter1>TrafficCourts.Common.Test</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\TrafficCourts.Core\TrafficCourts.Core.csproj" />
+	</ItemGroup>
 </Project>

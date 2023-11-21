@@ -1,21 +1,28 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Core.Http;
-using Microsoft.Extensions.Caching.Memory;
+using TrafficCourts.Http;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static partial class Extensions
 {
-    public static IServiceCollection AddDocumentGenerationService(this IServiceCollection services, string section)
+    public static IServiceCollection AddDocumentGenerationService(this IServiceCollection services, string section, IConfiguration configuration)
     {
+        // setup the token cache
         services.AddMemoryCache();
+        services.AddTransient<ITokenCache, TokenCache>();
 
-        services.AddTransient(serviceProvider =>
+        // setup the hosted service used to refresh the access token
+        services.AddHostedService<CdogsTokenRefreshService>(serviceProvider =>
         {
-            IOidcConfidentialClient oidc = CreateOidcConfidentialClient(serviceProvider, section);
-            return new OidcConfidentialClientDelegatingHandler(oidc);
+            var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+            var options = GetOidcConfiguration(serviceProvider, section);
+            var logger = serviceProvider.GetRequiredService<ILogger<CdogsTokenRefreshService>>();
+
+            return new CdogsTokenRefreshService(cache, options, logger);
         });
 
         // register HttpClient for client ObjectManagementClient
@@ -27,35 +34,38 @@ public static partial class Extensions
 
                 httpClient.BaseAddress = configuration.Endpoint;
             })
-            .AddHttpMessageHandler<OidcConfidentialClientDelegatingHandler>(); // depends on IOidcConfidentialClient
+            .AddHttpMessageHandler((serviceProvider) => CreateOidcDelegatingHandler(serviceProvider, section));
 
         services.AddTransient<IDocumentGenerationService, DocumentGenerationService>();
 
         return services;
     }
 
-    private static IOidcConfidentialClient CreateOidcConfidentialClient(IServiceProvider serviceProvider, string section)
+    private static OidcConfidentialClientConfiguration GetOidcConfiguration(IServiceProvider serviceProvider, string sectionName)
     {
-        // get the named configuration
-        var configuration = GetOidcConfidentialClientConfiguration(serviceProvider, section);
-
-        var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
-
-        var logger = serviceProvider.GetRequiredService<ILogger<OidcConfidentialClient>>();
-
-        var oidc = new OidcConfidentialClient(configuration, memoryCache, logger);
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var oidc = GetOidcConfiguration(configuration, sectionName);
         return oidc;
     }
 
-    private static OidcConfidentialClientConfiguration GetOidcConfidentialClientConfiguration(IServiceProvider serviceProvider, string section)
+    private static OidcConfidentialClientConfiguration GetOidcConfiguration(IConfiguration configuration, string sectionName)
     {
-        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var section = configuration.GetSection(sectionName);
+        var oidc = new OidcConfidentialClientConfiguration();
+        section.Bind(oidc);
 
-        OidcConfidentialClientConfiguration options = new();
-        configuration.GetSection(section).Bind(options);
-
-        return options;
+        return oidc;
     }
+
+    private static OidcConfidentialClientDelegatingHandler CreateOidcDelegatingHandler(IServiceProvider services, string sectionName)
+    {
+        var configuration = GetOidcConfiguration(services, sectionName);
+        var tokenCache = services.GetRequiredService<ITokenCache>();
+
+        var handler = new OidcConfidentialClientDelegatingHandler(configuration, tokenCache);
+        return handler;
+    }
+
 
     private static DocumentGenerationClientConfiguration GetDocumentGenerationClientConfiguration(IServiceProvider serviceProvider, string section)
     {
@@ -65,5 +75,14 @@ public static partial class Extensions
         configuration.GetSection(section).Bind(options);
 
         return options;
+    }
+}
+
+
+public class CdogsTokenRefreshService : TokenRefreshService
+{
+    public CdogsTokenRefreshService(IMemoryCache memoryCache, OidcConfidentialClientConfiguration configuration, ILogger<TokenRefreshService> logger) 
+        : base(memoryCache, configuration, logger)
+    {
     }
 }
