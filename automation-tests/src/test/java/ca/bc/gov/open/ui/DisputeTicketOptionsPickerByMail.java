@@ -23,18 +23,16 @@ public class DisputeTicketOptionsPickerByMail {
 
 	private WebDriver driver;
 
-	private static String user;
-
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		WebDriverManager.instance = null;
-	}
+	
+	  private static String user;
+	  
+		
+		  @After public void tearDown() { driver.close(); driver.quit(); }
+		  
+		  @AfterClass public static void afterClass() { WebDriverManager.instance =
+		  null; }
+		 
+	 
 
 	@Test
 	public void test() throws Exception {
@@ -123,8 +121,9 @@ public class DisputeTicketOptionsPickerByMail {
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"mat-dialog-1\"]/app-confirm-dialog/mat-dialog-actions/button[2]/span[1]")));
 		js.executeScript("arguments[0].click();", element);
+		System.out.println("Submit in pop-up clicked");
 		System.out.println("Submit in pop-up clicked");
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
 
