@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DisputeDisputantDetectedOcrIssues, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
@@ -11,7 +12,7 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
 })
 export class ScanTicketComponent implements OnInit {
   private ticket: ViolationTicket;
-  ticketImageSrc: string;
+  ticketImageSrc: SafeUrl;
   ticketImageFile: string;
   ticketFilename: string;
   form: FormGroup;
@@ -22,6 +23,7 @@ export class ScanTicketComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private violationTicketService: ViolationTicketService,
+    private sanitizer: DomSanitizer
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
   }
@@ -40,7 +42,7 @@ export class ScanTicketComponent implements OnInit {
     });
     this.violationTicketCounts = this.violationTicketCounts.sort((a,b)=> a.count_no - b.count_no);
 
-    this.ticketImageSrc = inputTicketData.ticketImage;
+    this.ticketImageSrc = this.sanitizer.bypassSecurityTrustUrl(inputTicketData.ticketImage);
     this.ticketFilename = inputTicketData.filename;
     this.ticketImageFile = inputTicketData.ticketFile.type
     this.form = this.formBuilder.group(this.ticket); // can add control
