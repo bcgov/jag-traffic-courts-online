@@ -159,7 +159,7 @@ jobs:
         with:
           dotnet-version: 8.x
       - name: Generate .NET Code Coverage - CitizenAPI
-        run: dotnet test ${{github.workspace}}/src/backend/TrafficCourts /p:CollectCoverage=true /p:CoverletOutputFormat=lcov  /p:EmitCompilerGeneratedFiles=true
+        run: dotnet test ${{github.workspace}}/src/backend/TrafficCourts /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:ExcludeByFile=\"**/*.g.cs\"
 
       # Formatting the Backend Coverage Report
       - name: Format the CitizenAPI Coverage Report
