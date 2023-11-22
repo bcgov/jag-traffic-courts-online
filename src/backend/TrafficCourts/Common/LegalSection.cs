@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace TrafficCourts.Common
+﻿namespace TrafficCourts.Common
 {
     /// <summary>
     /// Represents a Legistics Paragraphing.

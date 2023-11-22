@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
-using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;

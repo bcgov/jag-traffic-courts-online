@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TrafficCourts.Citizen.Service.Features.CurrentUserInfo;
-using TrafficCourts.Citizen.Service.Models.OAuth;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {

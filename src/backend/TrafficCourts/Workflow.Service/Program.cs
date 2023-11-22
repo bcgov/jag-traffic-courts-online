@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Diagnostics;
 using TrafficCourts.Workflow.Service;
 
@@ -45,7 +45,7 @@ catch (SettingsValidationException exception)
 }
 catch (Exception exception)
 {
-    logger.Fatal(exception, "Exception occured causing application termination");
+    logger.Fatal(exception, "Exception occurred causing application termination");
 }
 finally
 {

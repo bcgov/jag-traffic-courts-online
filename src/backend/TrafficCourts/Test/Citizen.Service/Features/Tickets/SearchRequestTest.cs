@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using Xunit;

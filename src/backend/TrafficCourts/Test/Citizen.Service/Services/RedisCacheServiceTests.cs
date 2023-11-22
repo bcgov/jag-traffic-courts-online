@@ -1,7 +1,6 @@
 ﻿using StackExchange.Redis;
 using Microsoft.Extensions.Logging;
 using Moq;
-using MassTransit;
 using System;
 using System.IO;
 using System.Text.Json;

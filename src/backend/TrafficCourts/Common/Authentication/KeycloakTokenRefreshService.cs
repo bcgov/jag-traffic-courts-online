@@ -5,10 +5,15 @@ using TrafficCourts.Http;
 
 namespace TrafficCourts.Common.Authentication;
 
-public class KeycloakTokenRefreshService : TokenRefreshService
+public class KeycloakTokenRefreshService : TokenRefreshService<KeycloakTokenRefreshService>
 {
-    public KeycloakTokenRefreshService(IMemoryCache memoryCache, OidcConfidentialClientConfiguration configuration, ILogger<KeycloakTokenRefreshService> logger)
-        : base(memoryCache, configuration, logger)
+    public KeycloakTokenRefreshService(
+        IHttpClientFactory httpClientFactory,
+        string httpClientName,
+        TimeProvider timeProvider, 
+        IMemoryCache memoryCache, 
+        OidcConfidentialClientConfiguration configuration, 
+        ILogger<KeycloakTokenRefreshService> logger) : base(httpClientFactory, httpClientName, timeProvider, memoryCache, configuration, logger)
     {
     }
 }

@@ -1,5 +1,4 @@
-﻿using MassTransit;
-using TrafficCourts.Common.Authentication;
+﻿using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
 
 namespace TrafficCourts.Staff.Service.Services;

@@ -2,20 +2,15 @@
 using HashidsNet;
 using MassTransit;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.IO;
-using System.Net;
 using System.Threading;
 using TrafficCourts.Citizen.Service.Controllers;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common.Features.EmailVerificationToken;
-using TrafficCourts.Coms.Client;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Controllers

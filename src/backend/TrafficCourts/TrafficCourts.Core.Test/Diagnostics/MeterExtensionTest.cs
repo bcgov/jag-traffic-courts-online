@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.Metrics;
-using TrafficCourts.Diagnostics;
 
 namespace TrafficCourts.Core.Test.Diagnostics;
 

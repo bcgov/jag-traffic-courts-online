@@ -1,8 +1,5 @@
 ﻿using StackExchange.Redis;
 using System.Text.Json;
-using System.Buffers;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Diagnostics;
 
 namespace TrafficCourts.Citizen.Service.Services.Impl
 {

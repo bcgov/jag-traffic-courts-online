@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.FileProviders;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
 using TrafficCourts.Cdogs.Client;
-using TrafficCourts.Common;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.Errors;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;

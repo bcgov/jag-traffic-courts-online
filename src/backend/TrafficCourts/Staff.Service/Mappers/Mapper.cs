@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Common.Models;
 
 namespace TrafficCourts.Staff.Service.Mappers;
 

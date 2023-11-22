@@ -1,6 +1,4 @@
-﻿using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
-
-namespace TrafficCourts.Common.Models;
+﻿namespace TrafficCourts.Common.Models;
 
 /// <summary>
 /// Contains the common document properties across the staff and citizen portal applications.

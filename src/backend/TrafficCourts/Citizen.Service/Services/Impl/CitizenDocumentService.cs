@@ -1,6 +1,4 @@
 ﻿using MassTransit;
-using TrafficCourts.Citizen.Service.Models;
-using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;

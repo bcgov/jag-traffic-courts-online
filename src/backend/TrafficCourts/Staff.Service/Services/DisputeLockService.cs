@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using TrafficCourts.Staff.Service.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TrafficCourts.Staff.Service.Services;
 

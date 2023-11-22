@@ -1,6 +1,4 @@
-﻿using TrafficCourts.Citizen.Service.Models.OAuth;
-
-namespace TrafficCourts.Citizen.Service.Services
+﻿namespace TrafficCourts.Citizen.Service.Services
 {
     public interface IOAuthUserService
     {

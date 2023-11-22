@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TrafficCourts.Cdogs.Client;
+using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Core.Http;
 using TrafficCourts.Http;
 
@@ -9,20 +10,24 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static partial class Extensions
 {
-    public static IServiceCollection AddDocumentGenerationService(this IServiceCollection services, string section, IConfiguration configuration)
+    public static IServiceCollection AddDocumentGenerationService(this IServiceCollection services, string section)
     {
         // setup the token cache
         services.AddMemoryCache();
         services.AddTransient<ITokenCache, TokenCache>();
 
+        services.AddHttpClient("CDOGS")
+            .AddStandardResilienceHandler(); 
+
         // setup the hosted service used to refresh the access token
         services.AddHostedService<CdogsTokenRefreshService>(serviceProvider =>
         {
+            var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
             var cache = serviceProvider.GetRequiredService<IMemoryCache>();
             var options = GetOidcConfiguration(serviceProvider, section);
             var logger = serviceProvider.GetRequiredService<ILogger<CdogsTokenRefreshService>>();
 
-            return new CdogsTokenRefreshService(cache, options, logger);
+            return new CdogsTokenRefreshService(factory, "CDOGS", TimeProvider.System, cache, options, logger);
         });
 
         // register HttpClient for client ObjectManagementClient
@@ -50,19 +55,26 @@ public static partial class Extensions
 
     private static OidcConfidentialClientConfiguration GetOidcConfiguration(IConfiguration configuration, string sectionName)
     {
+        // we are not using ConfigureValidatableSetting because there may be multiple instances of OIDC clients
         var section = configuration.GetSection(sectionName);
         var oidc = new OidcConfidentialClientConfiguration();
         section.Bind(oidc);
 
+        // validate
+        if (string.IsNullOrEmpty(oidc.ClientId)) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.ClientId), "is required");
+        if (string.IsNullOrEmpty(oidc.ClientSecret)) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.ClientSecret), "is required");
+        if (oidc.TokenEndpoint is null) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.TokenEndpoint), "is required");
+
         return oidc;
     }
 
-    private static OidcConfidentialClientDelegatingHandler CreateOidcDelegatingHandler(IServiceProvider services, string sectionName)
+    private static OidcConfidentialClientDelegatingHandler CreateOidcDelegatingHandler(IServiceProvider serviceProvider, string sectionName)
     {
-        var configuration = GetOidcConfiguration(services, sectionName);
-        var tokenCache = services.GetRequiredService<ITokenCache>();
+        var configuration = GetOidcConfiguration(serviceProvider, sectionName);
+        var tokenCache = serviceProvider.GetRequiredService<ITokenCache>();
+        var logger = serviceProvider.GetRequiredService<ILogger<OidcConfidentialClientDelegatingHandler>>();
 
-        var handler = new OidcConfidentialClientDelegatingHandler(configuration, tokenCache);
+        var handler = new OidcConfidentialClientDelegatingHandler(configuration, tokenCache, logger);
         return handler;
     }
 
@@ -79,10 +91,15 @@ public static partial class Extensions
 }
 
 
-public class CdogsTokenRefreshService : TokenRefreshService
+public class CdogsTokenRefreshService : TokenRefreshService<CdogsTokenRefreshService>
 {
-    public CdogsTokenRefreshService(IMemoryCache memoryCache, OidcConfidentialClientConfiguration configuration, ILogger<TokenRefreshService> logger) 
-        : base(memoryCache, configuration, logger)
+    public CdogsTokenRefreshService(
+        IHttpClientFactory httpClientFactory,
+        string httpClientName,
+        TimeProvider timeProvider, 
+        IMemoryCache memoryCache, 
+        OidcConfidentialClientConfiguration configuration, 
+        ILogger<CdogsTokenRefreshService> logger) : base(httpClientFactory, httpClientName, timeProvider, memoryCache, configuration, logger)
     {
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Workflow.Service.Services;
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
-using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
+﻿using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 {

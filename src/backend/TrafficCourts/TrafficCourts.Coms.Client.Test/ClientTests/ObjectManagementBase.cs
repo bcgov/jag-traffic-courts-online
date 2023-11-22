@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using RichardSzalay.MockHttp;
-using System.Net.Http.Headers;
 
 namespace TrafficCourts.Coms.Client.Test.ClientTests;
 

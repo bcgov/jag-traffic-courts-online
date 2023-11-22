@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using System.Diagnostics;
-using System.Reflection.Metadata;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
 using TrafficCourts.Coms.Client;

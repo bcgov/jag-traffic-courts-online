@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Models;
 using MediatR;

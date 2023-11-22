@@ -1,5 +1,4 @@
-﻿using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
-using TrafficCourts.Staff.Service.Models;
+﻿using TrafficCourts.Staff.Service.Models;
 
 namespace TrafficCourts.Staff.Service.Services;
 

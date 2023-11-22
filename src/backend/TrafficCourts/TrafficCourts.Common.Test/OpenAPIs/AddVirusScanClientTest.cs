@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
-using TrafficCourts.Common.Configuration.Validation;
 using TrafficCourts.Common.OpenAPIs.VirusScan;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
+using TrafficCourts.Configuration.Validation;
 using Xunit;
 
 namespace TrafficCourts.Common.Test.OpenAPIs;

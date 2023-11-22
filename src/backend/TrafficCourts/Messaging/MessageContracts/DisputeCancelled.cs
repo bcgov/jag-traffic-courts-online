@@ -1,6 +1,4 @@
-﻿using MassTransit;
-
-namespace TrafficCourts.Messaging.MessageContracts
+﻿namespace TrafficCourts.Messaging.MessageContracts
 {
     public class DisputeCancelled
     {

@@ -1,13 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication;
-using TrafficCourts.Common.Authorization;
-using Microsoft.AspNetCore.Authorization;
-using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
-using OpenTelemetry.Resources;
-using System.Xml.Linq;
-using Microsoft.AspNetCore.Mvc.Routing;
-using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Citizen.Service.Authentication;
 

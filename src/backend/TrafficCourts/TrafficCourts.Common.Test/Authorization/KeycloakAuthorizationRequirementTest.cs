@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using System;
-using System.Reflection;
 using TrafficCourts.Common.Authorization;
 using Xunit;
 

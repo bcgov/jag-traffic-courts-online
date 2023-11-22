@@ -1,6 +1,4 @@
 using MassTransit;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using NodaTime;
 using OpenTelemetry.Trace;
@@ -11,8 +9,6 @@ using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
-using TrafficCourts.Core.Http;
-using TrafficCourts.Http;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
@@ -79,7 +75,7 @@ public static class Startup
         builder.Services.AddObjectManagementService("COMS");
 
         // Add CDOGS (Common Document Generation Service) Client
-        builder.Services.AddDocumentGenerationService("CDOGS", builder.Configuration);
+        builder.Services.AddDocumentGenerationService("CDOGS");
         builder.Services.AddTransient<IPrintDigitalCaseFileService, PrintDigitalCaseFileService>();
         builder.Services.AddSingleton<IDateTimeZoneProvider>(DateTimeZoneProviders.Tzdb);
 

@@ -12,7 +12,7 @@ using Serilog.Exceptions.Destructurers;
 using StackExchange.Redis;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Common.Configuration;
 
@@ -96,7 +96,7 @@ public static class Extensions
     /// Configures the host to use Serilog logging in a standard way. It configures logging from configuration.
     /// </summary>
     /// <param name="builder">The builder for the application</param>
-    /// <param name="additionalDestructurers">Additioanl <see cref="IExceptionDestructurer"/> to destructure exceptions.</param>
+    /// <param name="additionalDestructurers">Additional <see cref="IExceptionDestructurer"/> to destructure exceptions.</param>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> or <paramref name="additionalDestructurers"/> is null.</exception>
     public static void AddSerilog(this WebApplicationBuilder builder, IEnumerable<IExceptionDestructurer> additionalDestructurers)
     {
@@ -113,7 +113,8 @@ public static class Extensions
            
             loggerConfiguration
                 .ReadFrom.Configuration(builder.Configuration)
-                .Enrich.WithExceptionDetails(destructurers);
+                .Enrich.WithExceptionDetails(destructurers)
+                .Enrich.With<TrafficCourts.Logging.Enrichers.HostNameEnricher>();
         });
     }
 

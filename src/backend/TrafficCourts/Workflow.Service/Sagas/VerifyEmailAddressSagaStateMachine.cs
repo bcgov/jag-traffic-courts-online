@@ -1,8 +1,6 @@
 ﻿using MassTransit;
-using Microsoft.Extensions.Logging;
 using NodaTime;
 using System.Diagnostics;
-using System.Security.Cryptography;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
 
