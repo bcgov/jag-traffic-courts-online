@@ -2,6 +2,8 @@ package ca.bc.gov.open.ui;
 
 import java.time.Duration;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -28,7 +30,7 @@ public class SubmitToStaffWorkbench {
 
 	@AfterClass
 	public static void afterClass() {
-		WebDriverManager.instance = null;
+		CustomWebDriverManager.instance = null;
 	}
 
 	@Test
