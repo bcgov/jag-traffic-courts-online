@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { LoggerService } from '@core/services/logger.service';
 import { filter, Observable } from 'rxjs';
 import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { AppState, JJDisputeStore } from 'app/store';
+import { JJDisputeStore } from 'app/store';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-jj-dispute-hearing-inbox',
@@ -18,6 +18,8 @@ import { AppState, JJDisputeStore } from 'app/store';
 export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
+
+  @ViewChild('fauxPicker') private readonly fauxPicker: MatDatepicker<null>; // Temp fix for DatetimePicker styles
 
   jjIDIR: string;
   HearingType = JJDisputeHearingType;
@@ -47,9 +49,9 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
   constructor(
     private jjDisputeService: JJDisputeService,
-    private logger: LoggerService,
     private authService: AuthService,
-    private store: Store
+    private store: Store,
+    private readonly changeDetectorRef: ChangeDetectorRef, // Temp fix for DatetimePicker styles
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -89,6 +91,13 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (this.fauxPicker !== undefined) { // Temp fix for DatetimePicker styles
+      this.fauxPicker.open()
+      this.changeDetectorRef.detectChanges()
+      this.fauxPicker.close()
+      this.changeDetectorRef.detectChanges()
+    }
+
     this.dataSource.sort = this.sort;
   }
 
