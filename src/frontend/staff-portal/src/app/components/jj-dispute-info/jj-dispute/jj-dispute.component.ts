@@ -33,7 +33,8 @@ export class JJDisputeComponent implements OnInit {
   @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
   isSupportStaff: boolean = false;
-  isEditMode: boolean = false;
+  isTIEditMode: boolean = false;
+  isCIEditMode: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -55,6 +56,16 @@ export class JJDisputeComponent implements OnInit {
     occamDisputantGiven1Nm: [null, Validators.maxLength(30)],
     occamDisputantGiven2Nm: [null, Validators.maxLength(30)],
     occamDisputantGiven3Nm: [null, Validators.maxLength(30)]
+  });
+  contactInformationForm: FormGroup = this.formBuilder.group({
+    addressLine1: [null, Validators.maxLength(100)],
+    addressLine2: [null, Validators.maxLength(100)],
+    addressLine3: [null, Validators.maxLength(100)],
+    addressCity: [null, Validators.maxLength(100)],
+    addressProvince: [null, Validators.maxLength(100)],
+    addressCountry: [null, Validators.maxLength(100)],
+    addressPostalCode: [null, Validators.maxLength(10)],
+    driversLicenceNumber: [null, Validators.maxLength(30)]    
   });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
     appCd: [{ value: null, disabled: true }],
@@ -167,6 +178,7 @@ export class JJDisputeComponent implements OnInit {
       }
 
       this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
+      this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
     });
   }
 
@@ -295,7 +307,7 @@ export class JJDisputeComponent implements OnInit {
       // refresh JJDispute data
       this.getJJDispute();
 
-      this.isEditMode = false;
+      this.isTIEditMode = false;
     });
   }
 
@@ -304,7 +316,29 @@ export class JJDisputeComponent implements OnInit {
    */
   onCancelTicketInformation(): void {
     this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
-    this.isEditMode = false;
+    this.isTIEditMode = false;
+  }
+
+  /**
+   * Called by support-staff when editing the Ticket Information form (user must have update-admin permissions on the JJDispute resource).
+   */
+  onSaveContactInformation(): void {
+    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.contactInformationForm.value };
+
+    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
+      // refresh JJDispute data
+      this.getJJDispute();
+
+      this.isCIEditMode = false;
+    });
+  }
+
+  /**
+   * Called by support-staff when reverting any changes they may have made to the Ticket Information form.
+   */
+  onCancelContactInformation(): void {
+    this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
+    this.isCIEditMode = false;
   }
 
   onAccept(): void {
