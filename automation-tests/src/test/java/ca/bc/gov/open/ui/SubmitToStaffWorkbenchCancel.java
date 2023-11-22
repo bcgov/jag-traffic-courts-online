@@ -37,7 +37,7 @@ public class SubmitToStaffWorkbenchCancel {
 
 		SubmitToStaffWorkbench dispute = new SubmitToStaffWorkbench();
 		dispute.test();
-		
+
 		SubmitToStaffWorkbenchCancel cancel = new SubmitToStaffWorkbenchCancel();
 		cancel.cancelRequest(element, driverWait, driver);
 
@@ -49,7 +49,7 @@ public class SubmitToStaffWorkbenchCancel {
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Cancel ')]")))
 				.click();
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-17")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
 		element.sendKeys("Test Cancel of ticket");
 
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions

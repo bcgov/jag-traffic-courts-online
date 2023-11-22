@@ -14,31 +14,27 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
-import ca.bc.gov.open.cto.CustomWebDriverManager;
+import ca.bc.gov.open.cto.WebDriverManager;
 import junit.framework.Assert;
 
 public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
 
 	private WebDriver driver;
 
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		CustomWebDriverManager.instance = null;
-	}
+	/*
+	 * @After public void tearDown() { driver.close(); driver.quit(); }
+	 * 
+	 * @AfterClass public static void afterClass() { WebDriverManager.instance =
+	 * null; }
+	 */
 
 	@SuppressWarnings("deprecation")
 	@Test
 	public void test() throws Exception {
-		driver = CustomWebDriverManager.getDriver();
-		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
+		driver = WebDriverManager.getDriver();
+		WebDriverWait driverWait = WebDriverManager.getDriverWait();
+		WebElement element = WebDriverManager.getElement();
+		WebDriverManager.getElements();
 
 		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
 		upload.uploadPNG(element, driverWait, driver);

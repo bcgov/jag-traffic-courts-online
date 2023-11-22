@@ -17,7 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
-import ca.bc.gov.open.cto.CustomWebDriverManager;
+import ca.bc.gov.open.cto.WebDriverManager;
 
 public class DisputeTicketOptionsPicker {
 
@@ -25,19 +25,23 @@ public class DisputeTicketOptionsPicker {
 
 	private static String user;
 
-	
-	  @After public void tearDown() { driver.close(); driver.quit(); }
-	  
-	  @AfterClass public static void afterClass() { CustomWebDriverManager.instance =
-	  null; }
-	 
+	@After
+	public void tearDown() {
+		driver.close();
+		driver.quit();
+	}
+
+	@AfterClass
+	public static void afterClass() {
+		WebDriverManager.instance = null;
+	}
 
 	@Test
 	public void test() throws Exception {
-		driver = CustomWebDriverManager.getDriver();
-		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
+		driver = WebDriverManager.getDriver();
+		WebDriverWait driverWait = WebDriverManager.getDriverWait();
+		WebElement element = WebDriverManager.getElement();
+		WebDriverManager.getElements();
 
 		CommonUtils.login();
 
@@ -195,17 +199,18 @@ public class DisputeTicketOptionsPicker {
 		Thread.sleep(1000);
 		JavascriptExecutor js15 = (JavascriptExecutor) driver;
 		// Scroll down till the bottom of the page
-		js15.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-2")));
-		element.click();
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+				"//*[contains(text(),'I declare all of the information above is correct to the best of my knowledge.')]")));
+		js15.executeScript("arguments[0].click();", element);
+
 		System.out.println("Tick declare box checked");
 		System.out.println("Click Submit button");
 		Thread.sleep(1000);
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-tco-page/div/div[2]/app-create-notice-of-dispute/app-page/app-busy-overlay/div/div/div/div/div/app-dispute-stepper/mat-vertical-stepper/div[4]/div/div/div/app-page/app-busy-overlay/div/div/div/div/div/app-stepper-footer/div/div[2]/button")));
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(),'Submit request')]")));
 		js.executeScript("arguments[0].click();", element);
 
 	}
@@ -224,8 +229,8 @@ public class DisputeTicketOptionsPicker {
 		driver.switchTo().window(subWindowHandler); // switch to popup window
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[@id=\"mat-dialog-1\"]/app-confirm-dialog/mat-dialog-actions/button[2]/span[1]")));
 		js.executeScript("arguments[0].click();", element);
 		System.out.println("Submit in pop-up clicked");
 

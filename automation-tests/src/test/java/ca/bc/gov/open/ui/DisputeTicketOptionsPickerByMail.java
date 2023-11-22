@@ -3,6 +3,7 @@ package ca.bc.gov.open.ui;
 import java.time.Duration;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -16,31 +17,29 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
-import ca.bc.gov.open.cto.CustomWebDriverManager;
+import ca.bc.gov.open.cto.WebDriverManager;
 
 public class DisputeTicketOptionsPickerByMail {
 
 	private WebDriver driver;
 
-	private static String user;
-
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		CustomWebDriverManager.instance = null;
-	}
+	
+	  private static String user;
+	  
+		
+		  @After public void tearDown() { driver.close(); driver.quit(); }
+		  
+		  @AfterClass public static void afterClass() { WebDriverManager.instance =
+		  null; }
+		 
+	 
 
 	@Test
 	public void test() throws Exception {
-		driver = CustomWebDriverManager.getDriver();
-		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
+		driver = WebDriverManager.getDriver();
+		WebDriverWait driverWait = WebDriverManager.getDriverWait();
+		WebElement element = WebDriverManager.getElement();
+		WebDriverManager.getElements();
 
 		CommonUtils.login();
 
@@ -122,8 +121,9 @@ public class DisputeTicketOptionsPickerByMail {
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".me-1 > .mat-button-wrapper")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"mat-dialog-1\"]/app-confirm-dialog/mat-dialog-actions/button[2]/span[1]")));
 		js.executeScript("arguments[0].click();", element);
+		System.out.println("Submit in pop-up clicked");
 		System.out.println("Submit in pop-up clicked");
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window
 

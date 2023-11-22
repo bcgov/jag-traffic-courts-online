@@ -42,7 +42,7 @@ public class SubmitToStaffWorkbenchReject {
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Reject ')]")))
 				.click();
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-17")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
 		element.sendKeys("Test Rejection of ticket");
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
