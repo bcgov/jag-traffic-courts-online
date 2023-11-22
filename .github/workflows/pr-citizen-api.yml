@@ -19,6 +19,6 @@ jobs:
         with:
           dotnet-version: 8.x
       - name: Build Citizen Api
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Release /p:EmitCompilerGeneratedFiles=true
       - name: Run Tests
-        run: dotnet test --configuration Release
+        run: dotnet test --configuration Release /p:EmitCompilerGeneratedFiles=true
