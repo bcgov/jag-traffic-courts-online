@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
-import { TicketTypes } from '@shared/enums/ticket-type.enum';
 import { DisputeRepresentedByLawyer, DisputeRequestCourtAppearanceYn } from 'app/api';
-import { NoticeOfDisputeService, NoticeOfDispute, CountsActions } from 'app/services/notice-of-dispute.service';
-import { ViolationTicketService } from 'app/services/violation-ticket.service';
+import { NoticeOfDisputeService, NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 
 @Component({
   selector: 'app-email-verification-required',
@@ -16,9 +14,6 @@ export class EmailVerificationRequiredComponent implements OnInit {
   private mode: DisputeFormMode;
 
   email: string;
-  ticketType: string;
-  ticketTypes = TicketTypes;
-  countsActions: CountsActions;
   disputeFormMode = DisputeFormMode;
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
@@ -28,7 +23,6 @@ export class EmailVerificationRequiredComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private noticeOfDisputeService: NoticeOfDisputeService,
-    private violationTicketService: ViolationTicketService,
   ) {
     let params = this.route.snapshot.queryParams;
     this.email = params?.email;
@@ -39,8 +33,6 @@ export class EmailVerificationRequiredComponent implements OnInit {
   ngOnInit() {
     if (this.mode === DisputeFormMode.CREATE) {
       this.dispute = this.noticeOfDisputeService.noticeOfDispute;
-      this.ticketType = this.violationTicketService.ticketType;
-      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.dispute.dispute_counts);
     }
   }
 

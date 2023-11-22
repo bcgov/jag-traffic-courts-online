@@ -12,7 +12,8 @@
                 TemplateName =  "SubmitDisputeTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Ticket Dispute for <ticketid> submitted.",
-                PlainContentTemplate = "The ticket <ticketid> has been submitted, and will be reviewed.\n\nIf you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
+                PlainContentTemplate = "The ticket <ticketid> has been submitted, and will be reviewed.\n\nIf you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm." +
+                    "\n\nPlease Note: If you need to make changes to your dispute, you may do so up to 5 business days before the original scheduled date of your hearing."
             },
         new MailTemplate()
             {
