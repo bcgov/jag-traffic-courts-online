@@ -1,19 +1,21 @@
-﻿using TrafficCourts.Core.Http.Models;
+﻿using TrafficCourts.Http;
 
 namespace TrafficCourts.Core.Http;
 
 public class OidcConfidentialClientDelegatingHandler : DelegatingHandler
 {
-    private readonly IOidcConfidentialClient _client;
+    private readonly OidcConfidentialClientConfiguration _configuration;
+    private readonly ITokenCache _cache;
 
-    public OidcConfidentialClientDelegatingHandler(IOidcConfidentialClient client)
+    public OidcConfidentialClientDelegatingHandler(OidcConfidentialClientConfiguration configuration, ITokenCache cache)
     {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _configuration = configuration;
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var accessToken = await GetAccessTokenAsync(cancellationToken);
+        var accessToken = GetAccessTokenAsync(cancellationToken);
 
         if (accessToken is not null)
         {
@@ -23,9 +25,9 @@ public class OidcConfidentialClientDelegatingHandler : DelegatingHandler
         return await base.SendAsync(request, cancellationToken);
     }
 
-    private async Task<string?> GetAccessTokenAsync(CancellationToken cancellationToken)
+    private string? GetAccessTokenAsync(CancellationToken cancellationToken)
     {
-        Token? token = await _client.RequestAccessTokenAsync(cancellationToken);
+        var token = _cache.GetToken(_configuration);
         return token?.AccessToken;
     }
 }

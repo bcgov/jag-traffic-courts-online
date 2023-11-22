@@ -72,7 +72,10 @@ public static class Startup
             optionsBuilder.UseNpgsql(connectionString, options =>
             {
                 options.MigrationsAssembly(assembly.GetName().Name);
-                options.MigrationsHistoryTable($"__{nameof(VerifyEmailAddressStateDbContext)}");
+
+                // instead of using public schema, our implementation uses a schema named the same as the username
+                string? schema = GetConnectionStringUsername(connectionString);
+                options.MigrationsHistoryTable($"__{nameof(VerifyEmailAddressStateDbContext)}", schema);
 
                 // TODO: validate these, came from example https://github.com/MassTransit/Sample-Outbox/blob/master/src/Sample.Api/Program.cs
                 options.EnableRetryOnFailure(5);
@@ -139,5 +142,11 @@ public static class Startup
         }
 
         return connectionString;
+    }
+
+    private static string? GetConnectionStringUsername(string connectionString)
+    {
+        NpgsqlConnectionStringBuilder builder = new NpgsqlConnectionStringBuilder(connectionString);
+        return builder.Username;
     }
 }

@@ -75,6 +75,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   // Summary
   declared = false;
+  disableSave = false;
 
   // Upload
   adjournmentFileType = { key: "Adjournment", value: "Application for Adjournment" };
@@ -228,8 +229,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N && this.countsActions.request_time_to_pay.length > 0) {
       this.additionalForm.controls.time_to_pay_reason.addValidators(Validators.required);
     } else this.additionalForm.controls.time_to_pay_reason.removeValidators([Validators.required]);
-
-    this.changeRepresentedByLawyer(this.form.value.contact_type === DisputeContactTypeCd.Lawyer);
   }
 
   isCountFormsValid(): boolean {
@@ -279,7 +278,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     let value = checked ? this.RepresentedByLawyer.Y : this.RepresentedByLawyer.N;
     this.additionalForm.controls.represented_by_lawyer.setValue(value);
 
-    if (checked) {
+    if (checked && this.form.value.contact_type === DisputeContactTypeCd.Lawyer) {
       this.legalRepresentationForm.controls.law_firm_name.patchValue(this.form.value.contact_law_firm_name);
 
       var contactNames = [this.form.value.contact_surname, this.form.value.contact_given_names]
@@ -440,7 +439,31 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.dialog.open(ConfirmDialogComponent, { data });
   }
 
-  submitDispute() {
+  onSubmitClicked() {
+    if (!this.declared) {
+      const data: DialogOptions = {
+        titleKey: "Warning",
+        actionType: "warn",
+        messageKey: `You must complete the declaration and tick the box before you can submit your dispute`,
+        actionTextKey: "Close",
+        cancelHide: true
+      };
+      this.dialog.open(ConfirmDialogComponent, { data });
+    } else {
+      this.submitDispute();
+    }
+  }
+
+  private submitDispute() {
+    this.disableSave = true;
+    const data: DialogOptions = {
+      titleKey: "Warning",
+      actionType: "warn",
+      messageKey: `Submitting dispute. Please don't click Submit button again`,
+      actionTextKey: "Close",
+      cancelHide: true
+    };
+    this.dialog.open(ConfirmDialogComponent, { data });
     this.saveDispute.emit(this.noticeOfDispute);
   }
 }

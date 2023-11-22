@@ -1,11 +1,11 @@
 ARG BUILD_IMAGE=image-registry.openshift-image-registry.svc:5000/0198bb-tools/dotnet-sdk
-ARG RUNTIME_IMAGE=image-registry.openshift-image-registry.svc:5000/0198bb-tools/dotnet-70-runtime:latest
+ARG RUNTIME_IMAGE=image-registry.openshift-image-registry.svc:5000/0198bb-tools/dotnet-80-runtime:latest
 
 FROM $RUNTIME_IMAGE AS base
 WORKDIR /opt/app-root/app
 EXPOSE 8080
 
-FROM $BUILD_IMAGE:7.0 AS build
+FROM $BUILD_IMAGE:8.0 AS build
 WORKDIR /src
 COPY ["BCGov.VirusScan.Api/BCGov.VirusScan.Api.csproj", "BCGov.VirusScan.Api/"]
 RUN dotnet restore "BCGov.VirusScan.Api/BCGov.VirusScan.Api.csproj"

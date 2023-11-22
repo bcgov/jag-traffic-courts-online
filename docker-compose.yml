@@ -77,7 +77,7 @@ services:
       JWT__AUTHORITY: ${JWT__AUTHORITY:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court}     
       KEYCLOAKADMINAPI__BASEURI: ${KEYCLOAKADMINAPI__BASEURI:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/admin/realms/}
       KEYCLOAKADMINAPI__REALM: ${KEYCLOAKADMINAPI__REALM:-traffic-court}
-      OAUTH__TOKENURI: ${OAUTH__TOKENURI:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token}
+      OAUTH__TOKENENDPOINT: ${OAUTH__TOKENURI:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token}
       OAUTH__CLIENTID: ${OAUTH__CLIENTID:-staff-api}
       OAUTH__CLIENTSECRET: ${OAUTH__CLIENTSECRET:-}      
       REDIS__CONNECTIONSTRING: ${REDIS__CONNECTIONSTRING:-redis:6379,password=password}
