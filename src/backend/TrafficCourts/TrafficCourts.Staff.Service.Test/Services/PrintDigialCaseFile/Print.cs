@@ -139,7 +139,7 @@ public class PrintTest : CommonDocumentGenerationServiceTest
 
         services.AddSingleton<IConfiguration>(configuration);
 
-        services.AddDocumentGenerationService("cdogs", configuration);
+        services.AddDocumentGenerationService("cdogs");
         var provider = services.BuildServiceProvider();
 
         var service = provider.GetRequiredService<IDocumentGenerationService>();

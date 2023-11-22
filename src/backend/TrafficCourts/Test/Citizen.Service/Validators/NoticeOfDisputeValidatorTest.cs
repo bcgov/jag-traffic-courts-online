@@ -3,7 +3,6 @@ using TrafficCourts.Citizen.Service.Validators;
 using Xunit;
 using FluentValidation.TestHelper;
 using FluentValidation;
-using System.Collections.Generic;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators;
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
+using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Core.Http;
 using TrafficCourts.Http;
 
@@ -16,6 +17,9 @@ public static class KeycloakExtension
         string section = "OAuth"; // TODO: switch to Keycloak or something
 
         services.ConfigureValidatableSetting<KeycloakOptions>(configuration.GetRequiredSection(KeycloakOptions.Section));
+
+        services.AddHttpClient("Keycloak")
+            .AddStandardResilienceHandler();
 
         services.AddMemoryCache();
         services.AddTransient<ITokenCache, TokenCache>();
@@ -36,26 +40,34 @@ public static class KeycloakExtension
     {
         var configuration = GetConfiguration(serviceProvider, sectionName);
         var tokenCache = serviceProvider.GetRequiredService<ITokenCache>();
+        var logger = serviceProvider.GetRequiredService<ILogger<OidcConfidentialClientDelegatingHandler>>();
 
-        var handler = new OidcConfidentialClientDelegatingHandler(configuration, tokenCache);
+        var handler = new OidcConfidentialClientDelegatingHandler(configuration, tokenCache, logger);
         return handler;
     }
 
     private static KeycloakTokenRefreshService CreateTokenRefreshService(IServiceProvider serviceProvider, string sectionName)
     {
+        var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
         var cache = serviceProvider.GetRequiredService<IMemoryCache>();
         var configuration = GetConfiguration(serviceProvider, sectionName);
         var logger = serviceProvider.GetRequiredService<ILogger<KeycloakTokenRefreshService>>();
 
-        return new KeycloakTokenRefreshService(cache, configuration, logger);
+        return new KeycloakTokenRefreshService(factory, "Keycloak", TimeProvider.System, cache, configuration, logger);
     }
 
     private static OidcConfidentialClientConfiguration GetConfiguration(IServiceProvider serviceProvider, string sectionName)
     {
+        // we are not using ConfigureValidatableSetting because there may be multiple instances of OIDC clients
         var configuration = serviceProvider.GetRequiredService<IConfiguration>();
         var section = configuration.GetSection(sectionName);
         var oidc = new OidcConfidentialClientConfiguration();
         section.Bind(oidc);
+
+        // validate
+        if (string.IsNullOrEmpty(oidc.ClientId)) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.ClientId), "is required");
+        if (string.IsNullOrEmpty(oidc.ClientSecret)) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.ClientSecret), "is required");
+        if (oidc.TokenEndpoint is null) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.TokenEndpoint), "is required");
 
         return oidc;
     }

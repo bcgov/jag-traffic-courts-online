@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 

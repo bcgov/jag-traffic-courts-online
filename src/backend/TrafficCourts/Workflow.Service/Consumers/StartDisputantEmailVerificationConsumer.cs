@@ -1,6 +1,4 @@
 ﻿using MassTransit;
-using Microsoft.Extensions.Logging;
-using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Workflow.Service.Consumers;

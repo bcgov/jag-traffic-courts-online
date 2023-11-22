@@ -1,13 +1,9 @@
 ﻿using HashidsNet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
-using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
-using TrafficCourts.Common;
 using TrafficCourts.Common.Errors;
-using TrafficCourts.Common.Models;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 

@@ -1,4 +1,5 @@
 ﻿using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Arc.Dispute.Service.Configuration
 {

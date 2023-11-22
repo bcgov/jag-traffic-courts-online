@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using RichardSzalay.MockHttp;
 using System.Net;
-using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Coms.Client.Test.ClientTests;
 

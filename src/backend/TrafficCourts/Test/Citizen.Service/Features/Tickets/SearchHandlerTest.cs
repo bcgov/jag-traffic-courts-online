@@ -9,7 +9,6 @@ using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using Xunit;
 using Xunit.Abstractions;
-using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {

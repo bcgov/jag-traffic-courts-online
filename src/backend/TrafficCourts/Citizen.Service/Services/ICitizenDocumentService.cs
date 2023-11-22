@@ -1,5 +1,4 @@
-﻿using TrafficCourts.Citizen.Service.Models;
-using TrafficCourts.Common.Models;
+﻿using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Citizen.Service.Services;

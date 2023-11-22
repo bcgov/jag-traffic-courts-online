@@ -1,6 +1,4 @@
-﻿using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Common.Features.Mail;
+﻿using TrafficCourts.Common.Features.Mail;
 
 namespace TrafficCourts.Workflow.Service.Services
 {

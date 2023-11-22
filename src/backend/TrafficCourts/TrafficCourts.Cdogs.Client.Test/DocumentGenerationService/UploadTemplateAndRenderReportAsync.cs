@@ -14,7 +14,9 @@ public class UploadTemplateAndRenderReportAsync : DocumentGenerationServiceTests
             .AddUserSecrets<UploadTemplateAndRenderReportAsync>()
             .Build();
 
-        Extensions.AddDocumentGenerationService(services, "Cdogs", configuration);
+        services.AddSingleton<IConfiguration>(configuration);
+
+        Extensions.AddDocumentGenerationService(services, "Cdogs");
 
         var serviceProvider = services.BuildServiceProvider();
 

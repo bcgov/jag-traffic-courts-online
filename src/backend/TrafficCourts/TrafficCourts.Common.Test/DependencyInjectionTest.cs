@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using Xunit;
 
 namespace TrafficCourts.Common.Test;
 

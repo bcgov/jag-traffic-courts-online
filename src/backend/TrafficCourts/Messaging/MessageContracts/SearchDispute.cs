@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-
-namespace TrafficCourts.Messaging.MessageContracts;
+﻿namespace TrafficCourts.Messaging.MessageContracts;
 
 public class SearchDisputeRequest
 {

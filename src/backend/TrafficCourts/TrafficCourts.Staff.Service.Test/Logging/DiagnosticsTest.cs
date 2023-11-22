@@ -1,5 +1,4 @@
-﻿using TrafficCourts.Staff.Service;
-using Xunit;
+﻿using Xunit;
 
 namespace TrafficCourts.Staff.Service.Test.Logging;
 

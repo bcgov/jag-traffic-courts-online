@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Arc.Dispute.Service.Services;
 

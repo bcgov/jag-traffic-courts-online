@@ -1,4 +1,3 @@
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;

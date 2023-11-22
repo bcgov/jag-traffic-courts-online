@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TrafficCourts.Common.Configuration.Validation;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
+using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Common.OpenAPIs.VirusScan;
 

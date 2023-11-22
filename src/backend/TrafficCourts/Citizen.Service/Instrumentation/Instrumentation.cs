@@ -1,5 +1,4 @@
-﻿using Azure;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using TrafficCourts.Diagnostics;
 using Timer = TrafficCourts.Diagnostics.Timer;

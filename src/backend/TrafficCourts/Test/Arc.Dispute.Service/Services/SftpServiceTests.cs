@@ -1,17 +1,4 @@
-﻿using AutoFixture;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Renci.SshNet;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TrafficCourts.Arc.Dispute.Service.Services;
-using Xunit;
-
-namespace TrafficCourts.Test.Arc.Dispute.Service.Services
+﻿namespace TrafficCourts.Test.Arc.Dispute.Service.Services
 {
     // Due to the lack of interface and abstraction support of Renci.SshNet library, this unit test coverage has been removed from the context.
     // If there will be interface support added for the connect methods of the library in the future or a wrapper will be implemented, the tests can be enabled. 

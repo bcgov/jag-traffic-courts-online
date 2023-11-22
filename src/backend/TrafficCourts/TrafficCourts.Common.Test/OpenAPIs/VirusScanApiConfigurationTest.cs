@@ -1,5 +1,5 @@
-﻿using TrafficCourts.Common.Configuration.Validation;
-using TrafficCourts.Common.OpenAPIs.VirusScan;
+﻿using TrafficCourts.Common.OpenAPIs.VirusScan;
+using TrafficCourts.Configuration.Validation;
 using Xunit;
 
 namespace TrafficCourts.Common.Test.OpenAPIs;

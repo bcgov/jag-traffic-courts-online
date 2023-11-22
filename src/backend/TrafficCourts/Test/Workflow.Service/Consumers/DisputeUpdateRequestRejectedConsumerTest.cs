@@ -1,8 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Mail.Templates;

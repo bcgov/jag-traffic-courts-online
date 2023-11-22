@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using Newtonsoft.Json;
 
 namespace TrafficCourts.Staff.Service.Models;
 

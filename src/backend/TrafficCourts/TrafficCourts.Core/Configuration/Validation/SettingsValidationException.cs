@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace TrafficCourts.Common.Configuration.Validation;
+namespace TrafficCourts.Configuration.Validation;
 
 /// <summary>
 /// A utility <see cref="Exception"/> that indicates a strong typed configuration model was not configured correctly

@@ -1,9 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using OneOf;
-using System;
 using System.Diagnostics;
-using System.Net;
 using System.Text.RegularExpressions;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;

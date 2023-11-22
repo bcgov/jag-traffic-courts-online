@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using System.Linq;
 using TrafficCourts.Common.Models;
 
 namespace TrafficCourts.Common.Features.Lookups

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Common.Authentication;
 

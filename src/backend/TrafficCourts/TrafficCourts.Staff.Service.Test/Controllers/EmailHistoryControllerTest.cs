@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Types;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;

@@ -1,5 +1,4 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace TrafficCourts.Citizen.Service.Models.Search
 {

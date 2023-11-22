@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace TrafficCourts.Common.Authorization
 {

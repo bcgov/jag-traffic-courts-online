@@ -1,7 +1,6 @@
 ﻿using HashidsNet;
 using Moq;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace TrafficCourts.Common.Test;

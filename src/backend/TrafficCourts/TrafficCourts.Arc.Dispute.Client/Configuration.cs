@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace TrafficCourts.Arc.Dispute.Client
+﻿namespace TrafficCourts.Arc.Dispute.Client
 {
     internal class Configuration
     {

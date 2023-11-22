@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Controllers;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Arc.Dispute.Service.Services;

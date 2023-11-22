@@ -1,7 +1,6 @@
 ﻿using NodaTime;
 using NodaTime.Testing;
 using System;
-using TrafficCourts.Common;
 using Xunit;
 
 namespace TrafficCourts.Common.Test;
