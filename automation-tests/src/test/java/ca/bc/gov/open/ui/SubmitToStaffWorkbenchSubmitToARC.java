@@ -56,9 +56,9 @@ public class SubmitToStaffWorkbenchSubmitToARC {
 
 		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions.invisibilityOfElementLocated(
 				By.xpath("//*[contains(text(), '" + DisputeTicketOptionsPickerByMail.getUser() + "')]")));
-		
+
 		new WebDriverWait(driver, Duration.ofSeconds(50))
-		.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'PROCESSING')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'PROCESSING')]")));
 
 		// click first in queue
 
@@ -83,7 +83,7 @@ public class SubmitToStaffWorkbenchSubmitToARC {
 
 		new WebDriverWait(driver, Duration.ofSeconds(50))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Unassigned')]")));
-		
+
 		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions.invisibilityOfElementLocated(
 				By.xpath("//*[contains(text(), '" + DisputeTicketOptionsPickerByMail.getUser() + "')]")));
 
