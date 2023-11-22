@@ -3,6 +3,15 @@
   <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
     <h3><b>Hearing Inbox</b> ({{dataSource.filteredData.length}} results)</h3>
   </div>
+
+  <!-- Temp fix for DatetimePicker styles -->
+  <mat-form-field style="display: none">
+    <input matInput [matDatepicker]="fauxPicker">
+    <mat-datepicker-toggle matIconSuffix [for]="fauxPicker"></mat-datepicker-toggle>
+    <mat-datepicker #fauxPicker></mat-datepicker>
+  </mat-form-field>
+  <!-- Temp fix for DatetimePicker styles -->
+
   <div style="display:flex; flex-direction: row; justify-content: right;">
     <input matInput [matDatepicker]="picker" [formControl]="appearanceDateFilter" (click)='picker.open()'
       placeholder="court date" style="background-color: #f2f2f2; width:250px;" />
