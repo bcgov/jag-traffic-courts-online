@@ -14,7 +14,7 @@ import { ViolationTicketService } from "app/services/violation-ticket.service";
 export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
   @Input() noticeOfDispute: NoticeOfDispute;
   @Input() ticketCounts: ViolationTicketCount[] = [];
-  @Input() showWarnings: boolean = false;
+  @Input() showWarnings: boolean;
   ticketType: string;
   ticketTypes = TicketTypes;
   countsActions: CountsActions;

@@ -37,7 +37,8 @@
       {{ noticeOfDispute.email_address }}
     </p>
     <p *ngIf="isCreate && !noticeOfDispute.email_address" class="text-dark">
-      A member of the court registry will review your request and inform you if the ticket request has been approved or rejected, and what to expect next.
+      A member of the court registry will review your request and inform you if the ticket request has been approved or
+      rejected, and what to expect next.
       <br>
     </p>
     <p *ngIf="!isCreate" class="text-dark">
@@ -50,7 +51,8 @@
   <ng-container *ngIf="isCreate && noticeOfDispute">
     <strong class="d-print-none">Request details</strong>
 
-    <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute" [ticketCounts]="noticeOfDispute.counts"></app-dispute-ticket-summary>
+    <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute" [ticketCounts]="noticeOfDispute.counts"
+      [showWarnings]="true"></app-dispute-ticket-summary>
   </ng-container>
 
   <app-resolution-footer></app-resolution-footer>
