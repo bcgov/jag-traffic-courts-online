@@ -15,6 +15,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR) // This is required for tests to work
 public abstract class JJDisputeMapper extends BaseMapper {
 
+	@Mapping(source = "accidentYn", target = "accidentYn")
 	@Mapping(source = "addressLine1Txt", target = "addressLine1")
 	@Mapping(source = "addressLine2Txt", target = "addressLine2")
 	@Mapping(source = "addressLine3Txt", target = "addressLine3")
@@ -57,6 +58,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "lawyerGiven2Nm", target = "lawyerGivenName2")
 	@Mapping(source = "lawyerGiven3Nm", target = "lawyerGivenName3")
 	@Mapping(source = "lawyerSurnameNm", target = "lawyerSurname")
+	@Mapping(source = "multipleOfficersYn", target = "multipleOfficersYn")
 	@Mapping(source = "noticeOfDisputeGuid", target = "noticeOfDisputeGuid")
 	@Mapping(source = "noticeOfHearingYn", target = "noticeOfHearingYn")
 	@Mapping(source = "occamDisputantGiven1Nm", target = "occamDisputantGiven1Nm")
@@ -76,7 +78,8 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "vtcAssignedDtm", target = "vtcAssignedTs")
 	@Mapping(source = "witnessNo", target = "witnessNo")
 	public abstract JJDispute convert(ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute jjDispute);
-
+	
+	@Mapping(source = "accidentYn", target = "accidentYn")
 	@Mapping(source = "addressLine1", target = "addressLine1Txt")
 	@Mapping(source = "addressLine2", target = "addressLine2Txt")
 	@Mapping(source = "addressLine3", target = "addressLine3Txt")
@@ -117,6 +120,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "lawyerSurname", target = "lawyerSurnameNm")
 	@Mapping(source = "modifiedBy", target = "updUserId")
 	@Mapping(source = "modifiedTs", target = "updDtm")
+	@Mapping(source = "multipleOfficersYn", target = "multipleOfficersYn")
 	@Mapping(source = "noticeOfDisputeGuid", target = "noticeOfDisputeGuid")
 	@Mapping(source = "noticeOfHearingYn", target = "noticeOfHearingYn")
 	@Mapping(source = "occamDisputantGiven1Nm", target = "occamDisputantGiven1Nm")
