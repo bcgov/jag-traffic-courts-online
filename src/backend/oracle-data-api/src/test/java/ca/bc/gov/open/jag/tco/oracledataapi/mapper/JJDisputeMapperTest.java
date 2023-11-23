@@ -34,6 +34,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 
 	@Test
 	public void testJJDispute() throws Exception {
+		YesNo accidentYn = YesNo.Y;
 		String addressLine1 = "123 Main St";
 		String addressLine2 = "234 Main St";
 		String addressLine3 = "345 Main St";
@@ -74,6 +75,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		String lawyerGiven2Nm = "LawyerGiven2";
 		String lawyerGiven3Nm = "LawyerGiven3";
 		String lawyerSurnameNm = "LawyerSurname";
+		YesNo multipleOfficersYn = YesNo.Y;
 		String noticeOfDisputeGuid = "noticeOfDisputeGuid";
 		YesNo noticeOfHearingYn = YesNo.Y;
 		String occamDisputantGiven1Nm = "name1";
@@ -97,6 +99,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		YesNo requestCourtAppearanceYn = YesNo.Y;
 
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute source = new ca.bc.gov.open.jag.tco.oracledataapi.ords.tco.api.model.JJDispute();
+		source.setAccidentYn(accidentYn.toString());
 		source.setAddressLine1Txt(addressLine1);
 		source.setAddressLine2Txt(addressLine2);
 		source.setAddressLine3Txt(addressLine3);
@@ -137,6 +140,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setLawyerGiven2Nm(lawyerGiven2Nm);
 		source.setLawyerGiven3Nm(lawyerGiven3Nm);
 		source.setLawyerSurnameNm(lawyerSurnameNm);
+		source.setMultipleOfficersYn(multipleOfficersYn.toString());
 		source.setNoticeOfDisputeGuid(noticeOfDisputeGuid);
 		source.setNoticeOfHearingYn(noticeOfHearingYn.toString());
 		source.setOccamDisputantGiven1Nm(occamDisputantGiven1Nm);
@@ -160,6 +164,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		source.setUpdUserId(modifiedBy);
 
 		JJDispute target = jjDisputeMapper.convert(source);
+		assertEquals(accidentYn, target.getAccidentYn());
 		assertEquals(addressLine1, target.getAddressLine1());
 		assertEquals(addressLine2, target.getAddressLine2());
 		assertEquals(addressLine3, target.getAddressLine3());
@@ -195,6 +200,7 @@ public class JJDisputeMapperTest extends BaseTestSuite {
 		assertEquals(lawyerGiven2Nm, target.getLawyerGivenName2());
 		assertEquals(lawyerGiven3Nm, target.getLawyerGivenName3());
 		assertEquals(lawyerSurnameNm, target.getLawyerSurname());
+		assertEquals(multipleOfficersYn, target.getMultipleOfficersYn());
 		assertEquals(noticeOfDisputeGuid, target.getNoticeOfDisputeGuid());
 		assertEquals(noticeOfHearingYn, target.getNoticeOfHearingYn());
 		assertEquals(occamDisputantGiven1Nm, target.getOccamDisputantGiven1Nm());

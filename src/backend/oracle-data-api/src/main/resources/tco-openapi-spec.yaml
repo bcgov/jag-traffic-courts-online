@@ -365,7 +365,9 @@ components:
           format: nullable
     JJDispute:
       type: object
-      properties:          
+      properties:
+        accidentYn:
+          type: string
         addressLine1Txt:
           type: string
         addressLine2Txt:
@@ -406,7 +408,7 @@ components:
         contactTypeCd:
           type: string
         requestCourtAppearanceYn:
-          type: string 
+          type: string
         courtAgenId:
           type: string
         courtAppearances:
@@ -497,6 +499,8 @@ components:
         lawyerSurnameNm:
           type: string
           format: nullable
+        multipleOfficersYn:
+          type: string
         noticeOfDisputeGuid:
           type: string
         noticeOfHearingYn:

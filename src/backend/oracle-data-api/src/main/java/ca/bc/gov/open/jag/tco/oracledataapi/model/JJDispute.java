@@ -50,6 +50,14 @@ public class JJDispute extends Auditable<String> {
 	@Column(length = 100, nullable=false)
 	@Schema(nullable = false)
 	private String ticketNumber;
+	
+	/**
+	 * Indicates whether the dispute is associated with an accident or not
+	 */
+	@Column(nullable = true)
+	@Schema(description = "Indicates whether the dispute is associated with an accident or not", nullable = true)
+	@Enumerated(EnumType.STRING)
+	private YesNo accidentYn;
 
 	/**
 	 * The mailing address line1 of the disputant from contact information submitted via TCO as free form text.
@@ -144,6 +152,14 @@ public class JJDispute extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	private JJDisputeHearingType hearingType;
+	
+	/**
+	 * Indicates whether the dispute is associated with multiple officers or not
+	 */
+	@Column
+	@Schema(description = "Indicates whether the dispute is associated with multiple officers or not", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private YesNo multipleOfficersYn;
 
 	@Column(length = 36)
 	@Schema(nullable = true)
