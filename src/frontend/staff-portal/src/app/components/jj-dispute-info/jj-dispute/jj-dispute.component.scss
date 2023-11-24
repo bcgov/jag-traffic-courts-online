@@ -168,8 +168,13 @@ p {
           padding: 0px 0px 7px 0px !important;
           line-height: 0px;
 
-          input {
+          input, .mat-select {
             line-height: 18px !important;
+          }
+
+          .mat-select {
+            border-top: none;
+            padding: 0px 0px 0px 0px !important;
           }
         }
       }
@@ -182,28 +187,24 @@ p {
     }
   }
 
-  .select-box-only {
-    margin-top: 1em;
-    margin-bottom: 0 !important;
+  .mat-form-field-type-mat-select {
+    margin: 4px 0px 0px 0px;
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 5px;
+    padding: 6px 0px 0px 10px;
 
-    .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
-
+    .mat-form-field-wrapper {      
       .mat-form-field-flex {
-        padding-top: 0 !important;
+        .mat-form-field-infix {
+          border: none !important;
+          .mat-select-value {
+            line-height: normal;
+          }
+        }
       }
-
-      .mat-select-trigger .mat-select-arrow-wrapper {
-        transform: none !important;
-      }
     }
-
-    .mat-form-field-underline {
-      bottom: 0;
-    }
-
-    .mat-form-field-subscript-wrapper {
-      display: none;
-    }
+  }
+  .mat-form-field-type-mat-select:hover {
+    border: 1px solid rgb(0, 0, 0);
   }
 }

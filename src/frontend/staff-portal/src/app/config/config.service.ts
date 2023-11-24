@@ -27,6 +27,7 @@ export class ConfigService {
     new BehaviorSubject<string>('');
   private statuteError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private languageError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private provinceError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private agencyError: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   private _countries: CountryCodeValue[] = [];
@@ -123,6 +124,13 @@ export class ConfigService {
   }
   public get language_error(): string {
     return this.languageError.value;
+  }
+
+  public get province_error$(): BehaviorSubject<string> {
+    return this.provinceError;
+  }
+  public get province_error(): string {
+    return this.provinceError.value;
   }
 
   public get agency_error$(): BehaviorSubject<string> {

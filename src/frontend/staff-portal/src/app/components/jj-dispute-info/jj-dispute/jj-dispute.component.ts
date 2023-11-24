@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Observable, map } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -33,7 +33,8 @@ export class JJDisputeComponent implements OnInit {
   @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
   isSupportStaff: boolean = false;
-  isEditMode: boolean = false;
+  isTIEditMode: boolean = false;
+  isCIEditMode: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -55,6 +56,21 @@ export class JJDisputeComponent implements OnInit {
     occamDisputantGiven1Nm: [null, Validators.maxLength(30)],
     occamDisputantGiven2Nm: [null, Validators.maxLength(30)],
     occamDisputantGiven3Nm: [null, Validators.maxLength(30)]
+  });
+  contactInformationForm: FormGroup = this.formBuilder.group({
+    contactSurname: [null, Validators.maxLength(30)],
+    contactGivenName1: [null, Validators.maxLength(30)],
+    contactGivenName2: [null, Validators.maxLength(30)],
+    contactGivenName3: [null, Validators.maxLength(30)],
+    addressLine1: [null, Validators.maxLength(100)],
+    addressLine2: [null, Validators.maxLength(100)],
+    addressLine3: [null, Validators.maxLength(100)],
+    addressCity: [null, Validators.maxLength(100)],
+    addressProvince: [null, Validators.maxLength(100)],
+    addressCountry: [null, Validators.maxLength(100)],
+    addressPostalCode: [null, Validators.maxLength(10)],
+    driversLicenceProvince: [null],
+    driversLicenceNumber: [null, Validators.maxLength(30)]    
   });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
     appCd: [{ value: null, disabled: true }],
@@ -82,6 +98,7 @@ export class JJDisputeComponent implements OnInit {
   fineReductionCountsHeading: string = "";
   remarks: string = "";
   jjList: UserRepresentation[];
+  provinces: Province[];
   selectedJJ: string;
   fileTypeToUpload: string = "Certified Extract";
   filesToUpload: any[] = [];
@@ -96,7 +113,7 @@ export class JJDisputeComponent implements OnInit {
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
-    private lookups: LookupsService,
+    private lookupsService: LookupsService,
     private config: ConfigService,
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
@@ -118,6 +135,7 @@ export class JJDisputeComponent implements OnInit {
     });
 
     this.isSupportStaff = this.authService.checkRole("support-staff");
+    this.provinces = this.lookupsService.provinces;
   }
 
   // get dispute by id
@@ -148,7 +166,7 @@ export class JJDisputeComponent implements OnInit {
       let dLProvinceFound = this.config.provincesAndStates.filter(x => x.ctryId == +this.lastUpdatedJJDispute.drvLicIssuedCtryId && x.provSeqNo == +this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo);
       this.lastUpdatedJJDispute.driversLicenceProvince = dLProvinceFound.length > 0 ? dLProvinceFound[0].provNm : "Unknown";
 
-      this.lastUpdatedJJDispute.interpreterLanguage = this.lookups.getLanguageDescription(this.lastUpdatedJJDispute.interpreterLanguageCd);
+      this.lastUpdatedJJDispute.interpreterLanguage = this.lookupsService.getLanguageDescription(this.lastUpdatedJJDispute.interpreterLanguageCd);
 
       if (this.lastUpdatedJJDispute?.mostRecentCourtAppearance) {
         if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = 'N';
@@ -167,6 +185,10 @@ export class JJDisputeComponent implements OnInit {
       }
 
       this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
+      this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
+      this.contactInformationForm.patchValue({
+        "driversLicenceProvince" : this.lastUpdatedJJDispute.drvLicIssuedCtryId + "," + this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo
+      });
     });
   }
 
@@ -295,7 +317,7 @@ export class JJDisputeComponent implements OnInit {
       // refresh JJDispute data
       this.getJJDispute();
 
-      this.isEditMode = false;
+      this.isTIEditMode = false;
     });
   }
 
@@ -304,7 +326,40 @@ export class JJDisputeComponent implements OnInit {
    */
   onCancelTicketInformation(): void {
     this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
-    this.isEditMode = false;
+    this.isTIEditMode = false;
+  }
+
+  /**
+   * Called by support-staff when editing the Contact Information form (user must have update-admin permissions on the JJDispute resource).
+   */
+  onSaveContactInformation(): void {
+    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.contactInformationForm.value };
+
+    // extract ctryId and provSeqNo from Province select list (composite key value should be 2 digits separated by a comma)
+    let drvLicIssuedProv = this.contactInformationForm.controls.driversLicenceProvince.value + "";
+    const [ctryId, provSeqNo] = drvLicIssuedProv.split(",").map(Number);
+    if (!isNaN(ctryId) && !isNaN(provSeqNo)) {
+      this.lastUpdatedJJDispute.drvLicIssuedCtryId = ctryId + "";
+      this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo = provSeqNo + "";
+    }
+
+    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
+      // refresh JJDispute data
+      this.getJJDispute();
+
+      this.isCIEditMode = false;
+    });
+  }
+
+  /**
+   * Called by support-staff when reverting any changes they may have made to the Contact Information form.
+   */
+  onCancelContactInformation(): void {
+    this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
+    this.contactInformationForm.patchValue({
+      "driversLicenceProvince" : this.lastUpdatedJJDispute.drvLicIssuedCtryId + "," + this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo
+    });
+    this.isCIEditMode = false;
   }
 
   onAccept(): void {
