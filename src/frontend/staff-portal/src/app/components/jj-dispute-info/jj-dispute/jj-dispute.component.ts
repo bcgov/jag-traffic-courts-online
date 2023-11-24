@@ -58,6 +58,10 @@ export class JJDisputeComponent implements OnInit {
     occamDisputantGiven3Nm: [null, Validators.maxLength(30)]
   });
   contactInformationForm: FormGroup = this.formBuilder.group({
+    contactSurname: [null, Validators.maxLength(30)],
+    contactGivenName1: [null, Validators.maxLength(30)],
+    contactGivenName2: [null, Validators.maxLength(30)],
+    contactGivenName3: [null, Validators.maxLength(30)],
     addressLine1: [null, Validators.maxLength(100)],
     addressLine2: [null, Validators.maxLength(100)],
     addressLine3: [null, Validators.maxLength(100)],

@@ -142,13 +142,32 @@
           <div style="display: grid; grid-template-columns: auto auto auto auto">
             <span class="section-grid-cell">
               <p class="section-grid-header">Surname</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
+              <p class="section-grid-text" *ngIf="!(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
                 lastUpdatedJJDispute.occamDisputantSurnameNm : lastUpdatedJJDispute.contactSurname }}</p>
+              <mat-form-field appearance="outline" *ngIf="(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
+                <input matInput formControlName="contactSurname">
+                <mat-error *ngIf="contactInformationForm.controls.contactSurname.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Given Name(s)</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
+              <p class="section-grid-header" *ngIf="!(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name(s)</p>
+              <p class="section-grid-text" *ngIf="!(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
                 lastUpdatedJJDispute.occamDisputantGivenNames : lastUpdatedJJDispute.contactGivenNames }}</p>
+              <p class="section-grid-header" *ngIf="(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name 1</p>
+              <mat-form-field appearance="outline" *ngIf="(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
+                <input matInput formControlName="contactGivenName1">
+                <mat-error *ngIf="contactInformationForm.controls.contactGivenName1.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+              <p class="section-grid-header" *ngIf="(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name 2</p>
+              <mat-form-field appearance="outline" *ngIf="(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
+                <input matInput formControlName="contactGivenName2">
+                <mat-error *ngIf="contactInformationForm.controls.contactGivenName2.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+              <p class="section-grid-header" *ngIf="(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name 3</p>
+              <mat-form-field appearance="outline" *ngIf="(isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
+                <input matInput formControlName="contactGivenName3">
+                <mat-error *ngIf="contactInformationForm.controls.contactGivenName3.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
             </span>
             <span class="section-grid-cell" style="grid-column: span 2">
               <p class="section-grid-header" *ngIf="!isCIEditMode">Address</p>
