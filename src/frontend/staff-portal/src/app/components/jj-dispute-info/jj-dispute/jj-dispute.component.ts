@@ -12,6 +12,7 @@ import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dia
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@config/config.service';
 import { DocumentService } from 'app/api/api/document.service';
+import { DisputeLockService } from 'app/api/api/disputeLock.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
 import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
@@ -118,6 +119,7 @@ export class JJDisputeComponent implements OnInit {
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
     private datePipe: CustomDatePipe,
+    private disputeLockService: DisputeLockService,
   ) {
     this.authService.jjList$.subscribe(result => {
       this.jjList = result;
@@ -189,6 +191,9 @@ export class JJDisputeComponent implements OnInit {
       this.contactInformationForm.patchValue({
         "driversLicenceProvince" : this.lastUpdatedJJDispute.drvLicIssuedCtryId + "," + this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo
       });
+      if(this.jjIDIR===this.lastUpdatedJJDispute.lockedBy){
+        this.startTimer(this.lastUpdatedJJDispute.lockExpiresAtUtc, this.lastUpdatedJJDispute.lockId);
+      }
     });
   }
 
@@ -558,5 +563,34 @@ export class JJDisputeComponent implements OnInit {
   onBackClicked() {
     this.jjDisputeService.refreshDisputes.emit();
     this.backInbox.emit();
+    this.releaseLock(this.lastUpdatedJJDispute.lockId);
   }
+
+  /**
+   * Dispute Lock
+   */
+
+  // to start the timer
+  startTimer(timerValue: string, lockId: string){
+    var start = new Date();
+    var end = new Date(timerValue);
+    var milliseconds = end.getTime() - start.getTime();
+    var value = milliseconds > 10000 ? (milliseconds-10000) : 0;
+    setTimeout(()=>{
+      this.refreshLock(lockId);
+    }, value);
+  }
+
+  // to refresh the lock
+  refreshLock(lockId: string){
+    this.disputeLockService.apiDisputelockLockIdPut(lockId).subscribe(response => {
+      this.startTimer(response, lockId);
+    });
+  }
+
+  // to release the lock
+  releaseLock(lockId: string){
+     this.disputeLockService.apiDisputelockLockIdDelete(lockId).subscribe(response => {});
+  }
+  
 }
