@@ -1,7 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Statute as StatuteBase, LookupService, Language, Agency } from 'app/api';
+import { Statute as StatuteBase, LookupService, Language, Agency, Province } from 'app/api';
 import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -13,8 +13,11 @@ export interface ILookupsService {
   courthouseAgencies: Agency[];
   languages$: Observable<Language[]>;
   languages: Language[];
+  provinces$: Observable<Province[]>;
+  provinces: Province[];
   getStatutes(): Observable<Statute[]>;
   getLanguages(): Observable<Language[]>;
+  getProvinces(): Observable<Province[]>;
   getCourthouseAgencies(): Observable<Agency[]>;
   getLanguageDescription(code: string): string;
   init(): Observable<any>;
@@ -27,6 +30,7 @@ export class LookupsService implements ILookupsService {
   private _statutes: BehaviorSubject<Statute[]> = new BehaviorSubject<Statute[]>([]);;
   private _languages: BehaviorSubject<Language[]> = new BehaviorSubject<Language[]>([]);;
   private _courthouseAgencies: BehaviorSubject<Agency[]> = new BehaviorSubject<Agency[]>([]);;
+  private _provinces: BehaviorSubject<Province[]> = new BehaviorSubject<Province[]>([]);;
 
   constructor(
     private toastService: ToastService,
@@ -40,13 +44,15 @@ export class LookupsService implements ILookupsService {
     let observables = {
       courtLocations: this.getCourthouseAgencies(),
       statutes: this.getStatutes(),
-      languages: this.getLanguages()
+      languages: this.getLanguages(),
+      provinces: this.getProvinces()
     };
     return forkJoin(observables).pipe(
       map(results => {
         this._courthouseAgencies.next(results.courtLocations);
         this._statutes.next(results.statutes);
         this._languages.next(results.languages);
+        this._provinces.next(results.provinces);
       }
       ));
   }
@@ -130,6 +136,44 @@ export class LookupsService implements ILookupsService {
 
   public get languages(): Language[] {
     return this._languages.value;
+  }
+
+  /**
+     * Get the provinces from Redis.
+     *
+     * @param none
+     */
+  public getProvinces(): Observable<Province[]> {
+
+    return this.lookupService.apiLookupProvinceGet()
+      .pipe(
+        map((response: Province[]) =>
+          response ? response : []
+        ),
+        map((provinces: Province[]) => {
+          provinces.sort((a, b) => { if (a.provNm < b.provNm) return -1; })
+          return provinces;
+        }),
+        tap((provinces) =>
+          this.logger.info('LookupsService::getProvinces', provinces.length)
+        ),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.province_error);
+          this.logger.error(
+            'LookupsService::getProvinces error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  public get provinces$(): Observable<Province[]> {
+    return this._provinces.asObservable();
+  }
+
+  public get provinces(): Province[] {
+    return this._provinces.value;
   }
 
   public getLanguageDescription(code: string): string {

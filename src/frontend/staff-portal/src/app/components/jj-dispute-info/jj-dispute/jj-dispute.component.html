@@ -191,7 +191,14 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Prov / State of DL</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
+              <p class="section-grid-text" *ngIf="!isCIEditMode">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
+              <mat-form-field appearance="select-box-only" *ngIf="isCIEditMode">
+                <mat-select formControlName="driversLicenceProvince" placeholder="Province">
+                  <mat-option [value]=""></mat-option>
+                  <mat-option *ngFor="let prov of provinces" [value]="prov.ctryId + ',' + prov.provSeqNo">{{ prov.provNm }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Driver's Licence #</p>
