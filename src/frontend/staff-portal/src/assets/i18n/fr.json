@@ -178,6 +178,16 @@
   "error": {
     "required": "Obligatoire",
     "email_address": "Doit être une adresse e-mail valide",
-    "max_length": "La longueur maximale est "
+    "max_length": "La longueur maximale est ",
+    "min_value":"La valeur minimale est ",
+    "max_value":"La valeur maximale est "
+  },
+  "attendanceType": {
+    "in_person": "En Personne",
+    "msteams_audio": "Audio des équipes Microsoft",
+    "msteams_video": "Vidéo sur les équipes Microsoft",
+    "telephone_conference": "Conférence téléphonique",
+    "written_reasons": "Motifs écrits",
+    "video_conference": "Conférence vidéo"
   }
 }

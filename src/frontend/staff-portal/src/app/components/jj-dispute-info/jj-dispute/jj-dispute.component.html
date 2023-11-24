@@ -127,7 +127,7 @@
               </span>
             </ng-container>
           </div>
-          <button mat-raised-button *ngIf="isSupportStaff && !isTIEditMode" (click)="isTIEditMode=true" class="form-button" [disabled]="isCIEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isSupportStaff && !isTIEditMode" (click)="isTIEditMode=true" class="form-button" [disabled]="isCIEditMode || isCOEditMode">Edit</button>
           <button mat-raised-button *ngIf="isTIEditMode" (click)="onSaveTicketInformation()" class="form-button" [disabled]="!ticketInformationForm.valid">Save</button>
           <button mat-raised-button *ngIf="isTIEditMode" (click)="onCancelTicketInformation()" class="form-button">Cancel</button>
         </form>
@@ -232,7 +232,7 @@
               <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
             </span>
           </div>
-          <button mat-raised-button *ngIf="isSupportStaff && !isCIEditMode" (click)="isCIEditMode=true" class="form-button" [disabled]="isTIEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isSupportStaff && !isCIEditMode" (click)="isCIEditMode=true" class="form-button" [disabled]="isTIEditMode || isCOEditMode">Edit</button>
           <button mat-raised-button *ngIf="isCIEditMode" (click)="onSaveContactInformation()" class="form-button" [disabled]="!contactInformationForm.valid">Save</button>
           <button mat-raised-button *ngIf="isCIEditMode" (click)="onCancelContactInformation()" class="form-button">Cancel</button>
         </form>
@@ -243,34 +243,87 @@
             <h3>Court Options</h3>
           </span>
         </ng-container>
-        <div style="display: grid; grid-template-columns: auto auto auto">
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Legal Counsel Name</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.lawyerGivenName1 }}&nbsp;{{
-              lastUpdatedJJDispute.lawyerSurname }}</p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Legal Counsel Firm</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.lawFirmName }}</p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Defence Witnesses</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.witnessNo }}</p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Interpreter</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.interpreterLanguage }}
-            </p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">Disputant Attendance Type</p>
-            <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
-          </span>
-          <span class="section-grid-cell">
-            <p class="section-grid-header">&nbsp;</p>
-            <p class="section-grid-text">&nbsp;</p>
-          </span>
-        </div>
+        <form [formGroup]="courtOptionsForm">
+          <div style="display: grid; grid-template-columns: auto auto auto">
+            <span class="section-grid-cell">
+              <p class="section-grid-header" *ngIf="!isCOEditMode">Legal Counsel Name</p>
+              <p class="section-grid-text" *ngIf="!isCOEditMode">
+                {{ lastUpdatedJJDispute.lawyerGivenName1 }}
+                {{ lastUpdatedJJDispute.lawyerGivenName2 }}
+                {{ lastUpdatedJJDispute.lawyerGivenName3 }}
+                {{ lastUpdatedJJDispute.lawyerSurname }}
+              </p>
+              <p class="section-grid-header" *ngIf="isCOEditMode">Legal Counsel Given Name 1</p>
+              <mat-form-field appearance="outline" *ngIf="isCOEditMode">
+                <input matInput formControlName="lawyerGivenName1">
+                <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName1.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+              <p class="section-grid-header" *ngIf="isCOEditMode">Legal Counsel Given Name 2</p>
+              <mat-form-field appearance="outline" *ngIf="isCOEditMode">
+                <input matInput formControlName="lawyerGivenName2">
+                <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName2.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+              <p class="section-grid-header" *ngIf="isCOEditMode">Legal Counsel Given Name 3</p>
+              <mat-form-field appearance="outline" *ngIf="isCOEditMode">
+                <input matInput formControlName="lawyerGivenName3">
+                <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName3.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+              <p class="section-grid-header" *ngIf="isCOEditMode">Legal Counsel Surname</p>
+              <mat-form-field appearance="outline" *ngIf="isCOEditMode">
+                <input matInput formControlName="lawyerSurname">
+                <mat-error *ngIf="courtOptionsForm.controls.lawyerSurname.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
+              </mat-form-field>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Legal Counsel Firm</p>
+              <p class="section-grid-text" *ngIf="!isCOEditMode">{{ lastUpdatedJJDispute.lawFirmName }}</p>
+              <mat-form-field appearance="outline" *ngIf="isCOEditMode">
+                <input matInput formControlName="lawFirmName">
+                <mat-error *ngIf="courtOptionsForm.controls.lawFirmName.hasError('maxlength')">{{ "error.max_length" | translate }}200</mat-error>
+              </mat-form-field>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Defence Witnesses</p>
+              <p class="section-grid-text" *ngIf="!isCOEditMode">{{ lastUpdatedJJDispute.witnessNo }}</p>
+              <mat-form-field appearance="outline" *ngIf="isCOEditMode">
+                <input matInput formControlName="witnessNo" maxlength="10" type="number">
+                <mat-error *ngIf="courtOptionsForm.controls.witnessNo.hasError('min')">{{ "error.min_value" | translate }}0</mat-error>
+                <mat-error *ngIf="courtOptionsForm.controls.witnessNo.hasError('max')">{{ "error.max_value" | translate }}2147483647</mat-error>
+              </mat-form-field>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Interpreter</p>
+              <p class="section-grid-text" *ngIf="!isCOEditMode">{{ lastUpdatedJJDispute.interpreterLanguage }}</p>
+              <mat-form-field appearance="select-box-only" *ngIf="isCOEditMode">
+                <mat-select formControlName="interpreterLanguageCd" placeholder="Language">
+                  <mat-option [value]=""></mat-option>
+                  <mat-option *ngFor="let lang of languages" [value]="lang.code">{{ lang.description }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">Disputant Attendance Type</p>
+              <p class="section-grid-text" *ngIf="!isCOEditMode">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
+              <mat-form-field appearance="select-box-only" *ngIf="isCOEditMode">
+                <mat-select formControlName="disputantAttendanceType" placeholder="Attendance">
+                  <mat-option [value]="AttendanceType.InPerson">{{ "attendanceType.in_person" | translate }}</mat-option>
+                  <mat-option [value]="AttendanceType.MsteamsAudio">{{ "attendanceType.msteams_audio" | translate }}</mat-option>
+                  <mat-option [value]="AttendanceType.MsteamsVideo">{{ "attendanceType.msteams_video" | translate }}</mat-option>
+                  <mat-option [value]="AttendanceType.TelephoneConference">{{ "attendanceType.telephone_conference" | translate }}</mat-option>
+                  <mat-option [value]="AttendanceType.WrittenReasons">{{ "attendanceType.written_reasons" | translate }}</mat-option>
+                  <mat-option [value]="AttendanceType.VideoConference">{{ "attendanceType.video_conference" | translate }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </span>
+            <span class="section-grid-cell">
+              <p class="section-grid-header">&nbsp;</p>
+              <p class="section-grid-text">&nbsp;</p>
+            </span>
+          </div>
+          <button mat-raised-button *ngIf="isSupportStaff && !isCOEditMode" (click)="isCOEditMode=true" class="form-button" [disabled]="isTIEditMode || isCIEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isCOEditMode" (click)="onSaveCourtOptions()" class="form-button" [disabled]="!courtOptionsForm.valid">Save</button>
+          <button mat-raised-button *ngIf="isCOEditMode" (click)="onCancelCourtOptions()" class="form-button">Cancel</button>
+        </form>
       </section><br />
       <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
         <ng-container subHeader>

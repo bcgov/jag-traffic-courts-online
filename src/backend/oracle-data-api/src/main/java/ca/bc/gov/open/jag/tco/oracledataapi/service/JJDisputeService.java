@@ -193,7 +193,13 @@ public class JJDisputeService {
 		dispute.setDisputantGivenName1(jjDispute.getOccamDisputantGiven1Nm());
 		dispute.setDisputantGivenName2(jjDispute.getOccamDisputantGiven2Nm());
 		dispute.setDisputantGivenName3(jjDispute.getOccamDisputantGiven3Nm());
-		// TODO: add many more other fields
+		dispute.setLawyerGivenName1(jjDispute.getLawyerGivenName1());
+		dispute.setLawyerGivenName2(jjDispute.getLawyerGivenName2());
+		dispute.setLawyerGivenName3(jjDispute.getLawyerGivenName3());
+		dispute.setLawyerSurname(jjDispute.getLawyerSurname());
+		dispute.setLawFirmName(jjDispute.getLawFirmName());
+		dispute.setWitnessNo(jjDispute.getWitnessNo());
+		dispute.setInterpreterLanguageCd(jjDispute.getInterpreterLanguageCd());
 		disputeRepository.update(dispute);
 
 		return updateJJDispute(ticketNumber, jjDispute, principal);
