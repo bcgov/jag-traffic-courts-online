@@ -170,71 +170,25 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell" style="grid-column: span 2">
-              <p class="section-grid-header" *ngIf="!isCIEditMode">Address</p>
-              <p class="section-grid-text" *ngIf="!isCIEditMode">{{ lastUpdatedJJDispute.address }}</p>
-              <p class="section-grid-header" *ngIf="isCIEditMode">Address Line 1</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="addressLine1">
-                <mat-error *ngIf="contactInformationForm.controls.addressLine1.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isCIEditMode">Address Line 2</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="addressLine2">
-                <mat-error *ngIf="contactInformationForm.controls.addressLine2.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isCIEditMode">Address Line 3</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="addressLine3">
-                <mat-error *ngIf="contactInformationForm.controls.addressLine3.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isCIEditMode">City</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="addressCity">
-                <mat-error *ngIf="contactInformationForm.controls.addressCity.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isCIEditMode">Province</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="addressProvince">
-                <mat-error *ngIf="contactInformationForm.controls.addressProvince.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isCIEditMode">Country</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="addressCountry">
-                <mat-error *ngIf="contactInformationForm.controls.addressCountry.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
-              </mat-form-field>
-              <p class="section-grid-header" *ngIf="isCIEditMode">Postal Code</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="addressPostalCode">
-                <mat-error *ngIf="contactInformationForm.controls.addressPostalCode.hasError('maxlength')">{{ "error.max_length" | translate }}10</mat-error>
-              </mat-form-field>
+              <p class="section-grid-header">Address</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Prov / State of DL</p>
-              <p class="section-grid-text" *ngIf="!isCIEditMode">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
-              <mat-form-field appearance="select-box-only" *ngIf="isCIEditMode">
-                <mat-select formControlName="driversLicenceProvince" placeholder="Province">
-                  <mat-option [value]=""></mat-option>
-                  <mat-option *ngFor="let prov of provinces" [value]="prov.ctryId + ',' + prov.provSeqNo">{{ prov.provNm }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Driver's Licence #</p>
-              <p class="section-grid-text" *ngIf="!isCIEditMode">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
-              <mat-form-field appearance="outline" *ngIf="isCIEditMode">
-                <input matInput formControlName="driversLicenceNumber">
-                <mat-error *ngIf="contactInformationForm.controls.driversLicenceNumber.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
-              </mat-form-field>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Email</p>
               <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
             </span>
           </div>
-          <button mat-raised-button *ngIf="isSupportStaff && !isCIEditMode" (click)="isCIEditMode=true" class="form-button" [disabled]="isTIEditMode || isCOEditMode">Edit</button>
-          <button mat-raised-button *ngIf="isCIEditMode" (click)="onSaveContactInformation()" class="form-button" [disabled]="!contactInformationForm.valid">Save</button>
-          <button mat-raised-button *ngIf="isCIEditMode" (click)="onCancelContactInformation()" class="form-button">Cancel</button>
+          <button mat-raised-button *ngIf="isSupportStaff && !isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual" (click)="isCIEditMode=true" class="form-button" [disabled]="isTIEditMode || isCOEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual" (click)="onSaveContactInformation()" class="form-button" [disabled]="!contactInformationForm.valid">Save</button>
+          <button mat-raised-button *ngIf="isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual" (click)="onCancelContactInformation()" class="form-button">Cancel</button>
         </form>
       </section><br />
       <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
