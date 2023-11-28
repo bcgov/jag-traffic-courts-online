@@ -34,10 +34,7 @@ export class JJDisputeComponent implements OnInit {
   @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
   isSupportStaff: boolean = false;
-  isTIEditMode: boolean = false;
-  isCIEditMode: boolean = false;
-  isCOEditMode: boolean = false;
-  isCAEditMode: boolean = false;
+  isSSEditMode: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -320,92 +317,30 @@ export class JJDisputeComponent implements OnInit {
   }
 
   /**
-   * Called by support-staff when editing the Ticket Information form (user must have update-admin permissions on the JJDispute resource).
+   * Called by support-staff when editing the form (user must have update-admin permissions on the JJDispute resource).
    */
-  onSaveTicketInformation(): void {
+  onSupportStaffSave(): void {
     this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.ticketInformationForm.value };
-
-    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
-      // refresh JJDispute data
-      this.getJJDispute();
-
-      this.isTIEditMode = false;
-    });
-  }
-
-  /**
-   * Called by support-staff when reverting any changes they may have made to the Ticket Information form.
-   */
-  onCancelTicketInformation(): void {
-    this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
-    this.isTIEditMode = false;
-  }
-
-  /**
-   * Called by support-staff when editing the Contact Information form (user must have update-admin permissions on the JJDispute resource).
-   */
-  onSaveContactInformation(): void {
     this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.contactInformationForm.value };
-
-    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
-      // refresh JJDispute data
-      this.getJJDispute();
-
-      this.isCIEditMode = false;
-    });
-  }
-
-  /**
-   * Called by support-staff when reverting any changes they may have made to the Contact Information form.
-   */
-  onCancelContactInformation(): void {
-    this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
-    this.isCIEditMode = false;
-  }
-
-  /**
-   * Called by support-staff when editing the Court Options form (user must have update-admin permissions on the JJDispute resource).
-   */
-  onSaveCourtOptions(): void {
     this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.courtOptionsForm.value };
-
-    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
-      // refresh JJDispute data
-      this.getJJDispute();
-
-      this.isCOEditMode = false;
-    });
-  }
-
-  /**
-   * Called by support-staff when reverting any changes they may have made to the Court Options form.
-   */
-  onCancelCourtOptions(): void {
-    this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
-    this.isCOEditMode = false;
-  }
-
-  /**
-   * Called by support-staff when editing the Court Options form (user must have update-admin permissions on the JJDispute resource).
-   */
-  onSaveCourtAppearance(): void {
     this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
 
     this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
+      this.isSSEditMode = false;
+
       // refresh JJDispute data
       this.getJJDispute();
-
-      this.isCAEditMode = false;
     });
   }
 
   /**
-   * Called by support-staff when reverting any changes they may have made to the Court Options form.
+   * Called by support-staff when reverting any changes they may have made to the form.
    */
-  onCancelCourtAppearance(): void {
+  onSupportStaffCancel(): void {
+    this.isSSEditMode = false;
+    
     // refresh JJDispute data
     this.getJJDispute();
-    this.isCAEditMode = false;
   }
 
   onAccept(): void {
