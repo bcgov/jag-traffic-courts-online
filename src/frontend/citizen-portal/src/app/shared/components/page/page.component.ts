@@ -16,14 +16,14 @@ export class PageComponent {
     private store: Store
   ) {
     this.mode = 'default';
-    this.store.select(LoadingStore.Selectors.IsLoading).pipe(filter(i => !!i)).subscribe(() => {
-      if (!this.busy || this.busy.closed) {
-        this.busy = this.store.select(LoadingStore.Selectors.IsLoading).subscribe(isLoading => {
-          if (!isLoading) {
-            this.busy.unsubscribe();
-          }
-        });
-      }
-    })
+    // this.store.select(LoadingStore.Selectors.IsLoading).pipe(filter(i => !!i)).subscribe(() => {
+    //   if (!this.busy || this.busy.closed) {
+    //     this.busy = this.store.select(LoadingStore.Selectors.IsLoading).subscribe(isLoading => {
+    //       if (!isLoading) {
+    //         this.busy.unsubscribe();
+    //       }
+    //     });
+    //   }
+    // })
   }
 }
