@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { LoggerService } from '@core/services/logger.service';
 import { JJDisputeService, JJDispute } from '../../../services/jj-dispute.service';
 import { Observable, map } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoPAppCd, JJDisputeCourtAppearanceRoPCrown, JJDisputeCourtAppearanceRoPDattCd, JJDisputeCourtAppearanceRoPJjSeized, FileMetadata, JJDisputeElectronicTicketYn, JJDisputeNoticeOfHearingYn, TicketImageDataJustinDocumentReportType, DocumentType, JJDisputeContactType, JJDisputedCountRoPFinding, Province, Language, JJDisputeDisputantAttendanceType } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
@@ -36,10 +36,12 @@ export class JJDisputeComponent implements OnInit {
   isSupportStaff: boolean = false;
   isTIEditMode: boolean = false;
   isCIEditMode: boolean = false;
+  isCOEditMode: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
   RequestReduction = JJDisputedCountRequestReduction;
+  AttendanceType = JJDisputeDisputantAttendanceType;
   HearingType = JJDisputeHearingType;
   RoPApp = JJDisputeCourtAppearanceRoPAppCd;
   RoPCrown = JJDisputeCourtAppearanceRoPCrown;
@@ -62,16 +64,17 @@ export class JJDisputeComponent implements OnInit {
     contactSurname: [null, Validators.maxLength(30)],
     contactGivenName1: [null, Validators.maxLength(30)],
     contactGivenName2: [null, Validators.maxLength(30)],
-    contactGivenName3: [null, Validators.maxLength(30)],
-    addressLine1: [null, Validators.maxLength(100)],
-    addressLine2: [null, Validators.maxLength(100)],
-    addressLine3: [null, Validators.maxLength(100)],
-    addressCity: [null, Validators.maxLength(100)],
-    addressProvince: [null, Validators.maxLength(100)],
-    addressCountry: [null, Validators.maxLength(100)],
-    addressPostalCode: [null, Validators.maxLength(10)],
-    driversLicenceProvince: [null],
-    driversLicenceNumber: [null, Validators.maxLength(30)]    
+    contactGivenName3: [null, Validators.maxLength(30)]  
+  });
+  courtOptionsForm: FormGroup = this.formBuilder.group({
+    lawyerGivenName1: [null, Validators.maxLength(30)],
+    lawyerGivenName2: [null, Validators.maxLength(30)],
+    lawyerGivenName3: [null, Validators.maxLength(30)],
+    lawyerSurname: [null, Validators.maxLength(30)],
+    lawFirmName: [null, Validators.maxLength(200)],
+    witnessNo: [null, Validators.compose([Validators.min(0), Validators.max(2147483647)])],
+    interpreterLanguageCd: [null],
+    disputantAttendanceType: [null, Validators.maxLength(20)]
   });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
     appCd: [{ value: null, disabled: true }],
@@ -100,6 +103,7 @@ export class JJDisputeComponent implements OnInit {
   remarks: string = "";
   jjList: UserRepresentation[];
   provinces: Province[];
+  languages: Language[];
   selectedJJ: string;
   fileTypeToUpload: string = "Certified Extract";
   filesToUpload: any[] = [];
@@ -138,6 +142,7 @@ export class JJDisputeComponent implements OnInit {
 
     this.isSupportStaff = this.authService.checkRole("support-staff");
     this.provinces = this.lookupsService.provinces;
+    this.languages = this.lookupsService.languages;
   }
 
   // get dispute by id
@@ -188,9 +193,8 @@ export class JJDisputeComponent implements OnInit {
 
       this.ticketInformationForm.patchValue(this.lastUpdatedJJDispute);
       this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
-      this.contactInformationForm.patchValue({
-        "driversLicenceProvince" : this.lastUpdatedJJDispute.drvLicIssuedCtryId + "," + this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo
-      });
+      this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
+
       if(this.jjIDIR===this.lastUpdatedJJDispute.lockedBy){
         this.startTimer(this.lastUpdatedJJDispute.lockExpiresAtUtc, this.lastUpdatedJJDispute.lockId);
       }
@@ -340,14 +344,6 @@ export class JJDisputeComponent implements OnInit {
   onSaveContactInformation(): void {
     this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.contactInformationForm.value };
 
-    // extract ctryId and provSeqNo from Province select list (composite key value should be 2 digits separated by a comma)
-    let drvLicIssuedProv = this.contactInformationForm.controls.driversLicenceProvince.value + "";
-    const [ctryId, provSeqNo] = drvLicIssuedProv.split(",").map(Number);
-    if (!isNaN(ctryId) && !isNaN(provSeqNo)) {
-      this.lastUpdatedJJDispute.drvLicIssuedCtryId = ctryId + "";
-      this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo = provSeqNo + "";
-    }
-
     this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
       // refresh JJDispute data
       this.getJJDispute();
@@ -361,10 +357,29 @@ export class JJDisputeComponent implements OnInit {
    */
   onCancelContactInformation(): void {
     this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
-    this.contactInformationForm.patchValue({
-      "driversLicenceProvince" : this.lastUpdatedJJDispute.drvLicIssuedCtryId + "," + this.lastUpdatedJJDispute.drvLicIssuedProvSeqNo
-    });
     this.isCIEditMode = false;
+  }
+
+  /**
+   * Called by support-staff when editing the Court Options form (user must have update-admin permissions on the JJDispute resource).
+   */
+  onSaveCourtOptions(): void {
+    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.courtOptionsForm.value };
+
+    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
+      // refresh JJDispute data
+      this.getJJDispute();
+
+      this.isCOEditMode = false;
+    });
+  }
+
+  /**
+   * Called by support-staff when reverting any changes they may have made to the Court Options form.
+   */
+  onCancelCourtOptions(): void {
+    this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
+    this.isCOEditMode = false;
   }
 
   onAccept(): void {

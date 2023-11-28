@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
@@ -189,11 +190,23 @@ public class JJDisputeService {
 
 		// TCVP-1981 Update certain fields on the related OCCAM Dispute as well.
 		Dispute dispute = disputeRepository.findById(jjDispute.getOccamDisputeId()).orElseThrow();
-		dispute.setDisputantSurname(jjDispute.getOccamDisputantSurnameNm());
 		dispute.setDisputantGivenName1(jjDispute.getOccamDisputantGiven1Nm());
 		dispute.setDisputantGivenName2(jjDispute.getOccamDisputantGiven2Nm());
 		dispute.setDisputantGivenName3(jjDispute.getOccamDisputantGiven3Nm());
-		// TODO: add many more other fields
+		dispute.setDisputantSurname(jjDispute.getOccamDisputantSurnameNm());
+		if (!ContactType.INDIVIDUAL.equals(dispute.getContactTypeCd())) {
+			dispute.setContactGiven1Nm(jjDispute.getContactGivenName1());
+			dispute.setContactGiven2Nm(jjDispute.getContactGivenName2());
+			dispute.setContactGiven3Nm(jjDispute.getContactGivenName3());
+			dispute.setContactSurnameNm(jjDispute.getContactSurname());
+		}
+		dispute.setLawyerGivenName1(jjDispute.getLawyerGivenName1());
+		dispute.setLawyerGivenName2(jjDispute.getLawyerGivenName2());
+		dispute.setLawyerGivenName3(jjDispute.getLawyerGivenName3());
+		dispute.setLawyerSurname(jjDispute.getLawyerSurname());
+		dispute.setLawFirmName(jjDispute.getLawFirmName());
+		dispute.setWitnessNo(jjDispute.getWitnessNo());
+		dispute.setInterpreterLanguageCd(jjDispute.getInterpreterLanguageCd());
 		disputeRepository.update(dispute);
 
 		return updateJJDispute(ticketNumber, jjDispute, principal);

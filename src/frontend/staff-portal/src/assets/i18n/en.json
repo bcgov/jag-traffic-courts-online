@@ -180,12 +180,22 @@
     "required": "Required",
     "positive_number": "Enter positive number",
     "email_address": "Must be a valid email address",
-    "max_length":"Maximum length is "
+    "max_length":"Maximum length is ",
+    "min_value":"Minimum value is ",
+    "max_value":"Maximum value is "
   },
   "shell_ticket_confirmation": {
     "heading": "Create your traffic ticket",
     "message": "Are you sure the information is correct and you want to create this ticket?",
     "confirm": "Yes, create ticket",
     "cancel": "No, do not create ticket"
+  },
+  "attendanceType": {
+    "in_person": "In Person",
+    "msteams_audio": "Microsoft Teams Audio",
+    "msteams_video": "Microsoft Teams Video",
+    "telephone_conference": "Telephone Conference",
+    "written_reasons": "Written Reasons",
+    "video_conference": "Video Conference"
   }
 }
