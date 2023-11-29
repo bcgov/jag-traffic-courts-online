@@ -5,7 +5,7 @@ h3 {
   color: #1d4a77 !important;
 }
 
-::ng-deep .mat-radio-label-content {
+:host::ng-deep .mat-radio-label-content {
   font-size: small !important;
 
   .select-box-only {
@@ -30,6 +30,33 @@ h3 {
 
     .mat-form-field-subscript-wrapper {
       display: none;
+    }
+  }
+}
+
+:host::ng-deep {
+  .mat-form-field-type-mat-select {
+    margin: 0px !important;
+    padding: 0px !important;
+    border: none !important;
+
+    .mat-form-field-wrapper {      
+      .mat-form-field-flex {
+        padding: 10px 0px 0px 10px;
+
+        .mat-form-field-outline {
+          background-color: #ffffff;
+        }
+
+        .mat-form-field-infix {
+          .mat-select-value {
+            line-height: normal;
+          }
+          .mat-select-arrow-wrapper {
+            transform: none;
+          }
+        }
+      }
     }
   }
 }
@@ -150,6 +177,11 @@ p {
   border: 1px black;
   margin-bottom: 12%;
 
+  section {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .contact-info {
 
     // margin-bottom: 60px;
@@ -216,7 +248,7 @@ p {
   }
 }
 
-::ng-deep .mat-tooltip {
+:host::ng-deep .mat-tooltip {
   /* your own custom styles here */ 
   /* e.g. */
   color: black !important;

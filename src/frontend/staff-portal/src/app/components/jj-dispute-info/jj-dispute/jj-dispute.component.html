@@ -440,7 +440,7 @@
         <div style="display: grid; grid-template-columns: 33% 33% 33%">
           <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
             <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
-              (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly">
+              (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly" [isSSEditMode]="isSSEditMode">
             </app-jj-count>
           </span>
         </div>

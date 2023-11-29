@@ -415,7 +415,10 @@ export class JJDisputeComponent implements OnInit {
   updateFinalDispositionCount(updatedJJDisputedCount: JJDisputedCount) {
     this.lastUpdatedJJDispute.jjDisputedCounts.forEach(jjDisputedCount => {
       if (jjDisputedCount.count == updatedJJDisputedCount.count) {
-        jjDisputedCount = updatedJJDisputedCount;
+        jjDisputedCount.appearInCourt = updatedJJDisputedCount.appearInCourt;
+        jjDisputedCount.requestReduction = updatedJJDisputedCount.requestReduction;
+        jjDisputedCount.requestTimeToPay = updatedJJDisputedCount.requestTimeToPay;
+        jjDisputedCount.jjDisputedCountRoP.finding = updatedJJDisputedCount.jjDisputedCountRoP.finding;
       }
     });
     this.determineIfConcludeOrCancel();

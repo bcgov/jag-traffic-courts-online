@@ -25,6 +25,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceAPP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceDATT;
@@ -32,6 +33,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
@@ -207,6 +209,17 @@ public class JJDisputeService {
 		dispute.setLawFirmName(jjDispute.getLawFirmName());
 		dispute.setWitnessNo(jjDispute.getWitnessNo());
 		dispute.setInterpreterLanguageCd(jjDispute.getInterpreterLanguageCd());
+		for (JJDisputedCount jjDisputedCount : jjDispute.getJjDisputedCounts()) {
+			for (DisputeCount disputeCount : dispute.getDisputeCounts()) {
+				if (disputeCount.getCountNo() == jjDisputedCount.getCount().intValue()) {
+					disputeCount.setRequestCourtAppearance(jjDisputedCount.getAppearInCourt());
+					disputeCount.setRequestTimeToPay(jjDisputedCount.getRequestTimeToPay());
+					disputeCount.setRequestReduction(jjDisputedCount.getRequestReduction());
+					break;
+				}
+			}
+		}
+
 		disputeRepository.update(dispute);
 
 		return updateJJDispute(ticketNumber, jjDispute, principal);
