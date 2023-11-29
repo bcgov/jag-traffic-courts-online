@@ -7,9 +7,9 @@
         </button>
       </div>
       <div>        
-        <button mat-raised-button *ngIf="isSupportStaff && !isSSEditMode" (click)="isSSEditMode=true" class="form-button">Edit</button>
-        <button mat-raised-button *ngIf="isSSEditMode" (click)="onSupportStaffSave()" class="form-button" [disabled]="!ticketInformationForm.valid">Save</button>
-        <button mat-raised-button *ngIf="isSSEditMode" (click)="onSupportStaffCancel()" class="form-button">Cancel</button>
+        <button mat-raised-button *ngIf="isSupportStaff && !isSSEditMode" (click)="isSSEditMode=true" class="form-button">{{ "common.button.edit" | translate }}</button>
+        <button mat-raised-button *ngIf="isSSEditMode" (click)="onSupportStaffSave()" class="form-button" [disabled]="!ticketInformationForm.valid">{{ "common.button.save" | translate }}</button>
+        <button mat-raised-button *ngIf="isSSEditMode" (click)="onSupportStaffCancel()" class="form-button">{{ "common.button.cancel" | translate }}</button>
 
         <button mat-raised-button [matMenuTriggerFor]="gotoMenu">Go to</button>
         <mat-menu #gotoMenu="matMenu" yPosition="below">
@@ -70,7 +70,7 @@
         <form [formGroup]="ticketInformationForm">
           <div style="display: grid; grid-template-columns: auto auto auto auto">
             <span class="section-grid-cell">
-              <p class="section-grid-header">Surname</p>
+              <p class="section-grid-header">{{ "label.surname" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.occamDisputantSurnameNm }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="occamDisputantSurnameNm">
@@ -78,19 +78,19 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header" *ngIf="!isSSEditMode">Given Name(s)</p>
+              <p class="section-grid-header" *ngIf="!isSSEditMode">{{ "label.given_names" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.occamDisputantGivenNames }}</p>
-              <p class="section-grid-header" *ngIf="isSSEditMode">Given Name 1</p>
+              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_1" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="occamDisputantGiven1Nm">
                 <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven1Nm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">Given Name 2</p>
+              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_2" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="occamDisputantGiven2Nm">
                 <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven2Nm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">Given Name 3</p>
+              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.given_name_3" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="occamDisputantGiven3Nm">
                 <mat-error *ngIf="ticketInformationForm.controls.occamDisputantGiven3Nm.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
@@ -142,7 +142,7 @@
         <form [formGroup]="contactInformationForm">
           <div style="display: grid; grid-template-columns: auto auto auto auto">
             <span class="section-grid-cell">
-              <p class="section-grid-header">Surname</p>
+              <p class="section-grid-header">{{ "label.surname" | translate }}</p>
               <p class="section-grid-text" *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
                 lastUpdatedJJDispute.occamDisputantSurnameNm : lastUpdatedJJDispute.contactSurname }}</p>
               <mat-form-field appearance="outline" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
@@ -151,20 +151,20 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header" *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name(s)</p>
+              <p class="section-grid-header" *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ "label.given_names" | translate }}</p>
               <p class="section-grid-text" *ngIf="!(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ lastUpdatedJJDispute.contactType === ContactType.Individual ?
                 lastUpdatedJJDispute.occamDisputantGivenNames : lastUpdatedJJDispute.contactGivenNames }}</p>
-              <p class="section-grid-header" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name 1</p>
+              <p class="section-grid-header" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ "label.given_name_1" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
                 <input matInput formControlName="contactGivenName1">
                 <mat-error *ngIf="contactInformationForm.controls.contactGivenName1.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
-              <p class="section-grid-header" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name 2</p>
+              <p class="section-grid-header" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ "label.given_name_2" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
                 <input matInput formControlName="contactGivenName2">
                 <mat-error *ngIf="contactInformationForm.controls.contactGivenName2.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
-              <p class="section-grid-header" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">Given Name 3</p>
+              <p class="section-grid-header" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">{{ "label.given_name_3" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="(isSSEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual)">
                 <input matInput formControlName="contactGivenName3">
                 <mat-error *ngIf="contactInformationForm.controls.contactGivenName3.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
@@ -198,36 +198,36 @@
         <form [formGroup]="courtOptionsForm">
           <div style="display: grid; grid-template-columns: auto auto auto">
             <span class="section-grid-cell">
-              <p class="section-grid-header" *ngIf="!isSSEditMode">Legal Counsel Name</p>
+              <p class="section-grid-header" *ngIf="!isSSEditMode">{{ "label.legal_counsel_name" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">
                 {{ lastUpdatedJJDispute.lawyerGivenName1 }}
                 {{ lastUpdatedJJDispute.lawyerGivenName2 }}
                 {{ lastUpdatedJJDispute.lawyerGivenName3 }}
                 {{ lastUpdatedJJDispute.lawyerSurname }}
               </p>
-              <p class="section-grid-header" *ngIf="isSSEditMode">Legal Counsel Given Name 1</p>
+              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_given_name_1" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="lawyerGivenName1">
                 <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName1.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">Legal Counsel Given Name 2</p>
+              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_given_name_2" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="lawyerGivenName2">
                 <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName2.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">Legal Counsel Given Name 3</p>
+              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_given_name_3" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="lawyerGivenName3">
                 <mat-error *ngIf="courtOptionsForm.controls.lawyerGivenName3.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
-              <p class="section-grid-header" *ngIf="isSSEditMode">Legal Counsel Surname</p>
+              <p class="section-grid-header" *ngIf="isSSEditMode">{{ "label.legal_counsel_surname" | translate }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="lawyerSurname">
                 <mat-error *ngIf="courtOptionsForm.controls.lawyerSurname.hasError('maxlength')">{{ "error.max_length" | translate }}30</mat-error>
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Legal Counsel Firm</p>
+              <p class="section-grid-header">{{ "label.legal_counsel_firm" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.lawFirmName }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="lawFirmName">
@@ -235,7 +235,7 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Defence Witnesses</p>
+              <p class="section-grid-header">{{ "label.defence_witness" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.witnessNo }}</p>
               <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <input matInput formControlName="witnessNo" maxlength="10" type="number">
@@ -244,7 +244,7 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
-              <p class="section-grid-header">Interpreter</p>
+              <p class="section-grid-header">{{ "label.interpreter" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.interpreterLanguage }}</p>
               <mat-form-field appearance="select-box-only" *ngIf="isSSEditMode">
                 <mat-select formControlName="interpreterLanguageCd" placeholder="Language">

@@ -46,7 +46,7 @@
     <form [formGroup]="countForm">
       <div style="display: grid; grid-template-columns: auto auto">
         <span class="section-grid-cell" style="grid-column: span 2">
-          <p class="section-grid-header">For this count I would like to</p>
+          <p class="section-grid-header">{{ "label.appearInCourt" | translate }}</p>
           <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y">
             I want to appear in court</p>
           <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N">
@@ -54,8 +54,8 @@
           <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
           <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
             <mat-select formControlName="appearInCourt">
-              <mat-option [value]="AppearInCourt.Y">I want to appear in court</mat-option>
-              <mat-option [value]="AppearInCourt.N">I do not want to appear in court</mat-option>
+              <mat-option [value]="AppearInCourt.Y">{{ "appearInCourtType.yes" | translate }}</mat-option>
+              <mat-option [value]="AppearInCourt.N">{{ "appearInCourtType.no" | translate }}</mat-option>
             </mat-select>
           </mat-form-field>
         </span>
@@ -69,8 +69,8 @@
             no</p>
           <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
             <mat-select formControlName="requestReduction">
-              <mat-option [value]="RequestReduction.Y">Yes</mat-option>
-              <mat-option [value]="RequestReduction.N">No</mat-option>
+              <mat-option [value]="RequestReduction.Y">{{ "yesNo.yes" | translate }}</mat-option>
+              <mat-option [value]="RequestReduction.N">{{ "yesNo.no" | translate }}</mat-option>
             </mat-select>
           </mat-form-field>
         </span>
@@ -84,8 +84,8 @@
             no</p>
           <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
             <mat-select formControlName="requestTimeToPay">
-              <mat-option [value]="RequestTimeToPay.Y">Yes</mat-option>
-              <mat-option [value]="RequestTimeToPay.N">No</mat-option>
+              <mat-option [value]="RequestTimeToPay.Y">{{ "yesNo.yes" | translate }}</mat-option>
+              <mat-option [value]="RequestTimeToPay.N">{{ "yesNo.no" | translate }}</mat-option>
             </mat-select>
           </mat-form-field>
         </span>
@@ -373,11 +373,11 @@
       <form [formGroup]="countRoPForm">
         <mat-form-field appearance="outline" *ngIf="jjDisputedCount">
           <mat-select formControlName="finding">
-            <mat-option [value]="Finding.Guilty">Guilty as charged</mat-option>
-            <mat-option [value]="Finding.GuiltyLesser">Not guilty as charged but guilty of lesser / included other offence</mat-option>
-            <mat-option [value]="Finding.NotGuilty">Not guilty</mat-option>
-            <mat-option [value]="Finding.PaidPriorToAppearance">Paid Prior to Appearance</mat-option>
-            <mat-option [value]="Finding.Cancelled">Cancelled</mat-option>
+            <mat-option [value]="Finding.Guilty">{{ "findingType.guilty" | translate }}</mat-option>
+            <mat-option [value]="Finding.GuiltyLesser">{{ "findingType.guilty_lesser" | translate }}</mat-option>
+            <mat-option [value]="Finding.NotGuilty">{{ "findingType.not_guilty" | translate }}</mat-option>
+            <mat-option [value]="Finding.PaidPriorToAppearance">{{ "findingType.paid_prior" | translate }}</mat-option>
+            <mat-option [value]="Finding.Cancelled">{{ "findingType.cancelled" | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
       </form>

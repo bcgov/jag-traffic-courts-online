@@ -140,22 +140,37 @@
     "heading": "Différend d'Infraction au Tribunal CB"
   },
   "label": {
-    "search": "Rechercher",
+    "amount_due": "Montant Dû",
+    "appearInCourt": "Pour ce compte, j'aimerais",
     "back": "Reculer",
+    "count_number": "Infraction #",
+    "defence_witness": "Témoins à décharge",
+    "desc_of_offence": "Description de l'Infraction",
+    "find_another_ticket": "Trouver un Autre Billet",
+    "for_vehicle": "pour Véhicule",
+    "given_names": "Prénom(s)",
+    "given_name_1": "Prénoms 1",
+    "given_name_2": "Prénoms 2",
+    "given_name_3": "Prénoms 3",
+    "initiate_dispute": "Lancer un Litige",
+    "interpreter": "Interprète",
+    "legal_counsel_firm": "Cabinet de conseiller juridique",
+    "legal_counsel_name": "Nom du conseiller juridique",
+    "legal_counsel_given_name_1": "Conseiller juridique Prénom 1",
+    "legal_counsel_given_name_2": "Conseiller juridique Prénom 2",
+    "legal_counsel_given_name_3": "Conseiller juridique Prénom 3",
+    "legal_counsel_surname": "Nom du conseiller juridique",
+    "offence_amount": "Montant de l'Infraction",
     "pay_now": "Payez Maintenant",
     "pay_count": "Payer l'Infraction",
     "pay_balance": "Payer le solde du billet de",
-    "initiate_dispute": "Lancer un Litige",
-    "find_another_ticket": "Trouver un Autre Billet",
+    "plea": "Plaidoyer",
+    "search": "Rechercher",
+    "surname": "Nom de famille",
+    "status": "Statut",
     "violation_ticket_number": "Numéro de Ticket de Violation",
     "violation_ticket_number_hint": "Un numéro de ticket de violation est composé de 2 lettres et 8 chiffres",
-    "violation_time": "Temps de Biolation",
-    "count_number": "Infraction #",
-    "desc_of_offence": "Description de l'Infraction",
-    "for_vehicle": "pour Véhicule",
-    "offence_amount": "Montant de l'Infraction",
-    "amount_due": "Montant Dû",
-    "status": "Statut"
+    "violation_time": "Temps de Biolation"
   },
   "submit_confirmation": {
     "heading": "Soumettre un Litige",
@@ -189,5 +204,31 @@
     "telephone_conference": "Conférence téléphonique",
     "written_reasons": "Motifs écrits",
     "video_conference": "Conférence vidéo"
+  },
+  "pleaType": {
+    "guilty": "Coupable",
+    "not_guilty": "Non Coupable"
+  },
+  "appearInCourtType": {
+    "yes": "Je veux comparaître au tribunal",
+    "no": "Je ne veux pas comparaître devant le tribunal"
+  },
+  "findingType": {
+    "guilty": "Coupable comme accusé",
+    "guilty_lesser": "Non coupable des accusations portées, mais coupable d'une autre infraction moindre/incluse",
+    "not_guilty": "Non coupable",
+    "paid_prior": "Payé avant la comparution",
+    "cancelled": "Annulé"
+  },
+  "yesNo": {
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "common": {
+    "button": {
+      "edit": "Modifier",
+      "save": "Sauvegarder",
+      "cancel": "Annuler"
+    }
   }
 }
