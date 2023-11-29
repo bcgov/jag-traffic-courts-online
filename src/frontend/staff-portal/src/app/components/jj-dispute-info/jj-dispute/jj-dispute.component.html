@@ -127,7 +127,7 @@
               </span>
             </ng-container>
           </div>
-          <button mat-raised-button *ngIf="isSupportStaff && !isTIEditMode" (click)="isTIEditMode=true" class="form-button" [disabled]="isCIEditMode || isCOEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isSupportStaff && !isTIEditMode" (click)="isTIEditMode=true" class="form-button" [disabled]="isCIEditMode || isCOEditMode || isCAEditMode">Edit</button>
           <button mat-raised-button *ngIf="isTIEditMode" (click)="onSaveTicketInformation()" class="form-button" [disabled]="!ticketInformationForm.valid">Save</button>
           <button mat-raised-button *ngIf="isTIEditMode" (click)="onCancelTicketInformation()" class="form-button">Cancel</button>
         </form>
@@ -186,7 +186,7 @@
               <p class="section-grid-text">{{ lastUpdatedJJDispute.emailAddress }}</p>
             </span>
           </div>
-          <button mat-raised-button *ngIf="isSupportStaff && !isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual" (click)="isCIEditMode=true" class="form-button" [disabled]="isTIEditMode || isCOEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isSupportStaff && !isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual" (click)="isCIEditMode=true" class="form-button" [disabled]="isTIEditMode || isCOEditMode || isCAEditMode">Edit</button>
           <button mat-raised-button *ngIf="isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual" (click)="onSaveContactInformation()" class="form-button" [disabled]="!contactInformationForm.valid">Save</button>
           <button mat-raised-button *ngIf="isCIEditMode && lastUpdatedJJDispute.contactType !== ContactType.Individual" (click)="onCancelContactInformation()" class="form-button">Cancel</button>
         </form>
@@ -256,6 +256,8 @@
               </mat-form-field>
             </span>
             <span class="section-grid-cell">
+              <!-- Comment out this field for now as BA thinks it may not be necessary and is not really used. -->
+              <!--                
               <p class="section-grid-header">Disputant Attendance Type</p>
               <p class="section-grid-text" *ngIf="!isCOEditMode">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
               <mat-form-field appearance="select-box-only" *ngIf="isCOEditMode">
@@ -268,13 +270,14 @@
                   <mat-option [value]="AttendanceType.VideoConference">{{ "attendanceType.video_conference" | translate }}</mat-option>
                 </mat-select>
               </mat-form-field>
+              -->
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">&nbsp;</p>
               <p class="section-grid-text">&nbsp;</p>
             </span>
           </div>
-          <button mat-raised-button *ngIf="isSupportStaff && !isCOEditMode" (click)="isCOEditMode=true" class="form-button" [disabled]="isTIEditMode || isCIEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isSupportStaff && !isCOEditMode" (click)="isCOEditMode=true" class="form-button" [disabled]="isTIEditMode || isCIEditMode || isCAEditMode">Edit</button>
           <button mat-raised-button *ngIf="isCOEditMode" (click)="onSaveCourtOptions()" class="form-button" [disabled]="!courtOptionsForm.valid">Save</button>
           <button mat-raised-button *ngIf="isCOEditMode" (click)="onCancelCourtOptions()" class="form-button">Cancel</button>
         </form>
@@ -307,65 +310,74 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">APP (P/N/A)</p>
               <p class="section-grid-text">
-                <mat-select *ngIf="!isViewOnly" formControlName="appCd" style="background:#fffee6"
-                  (selectionChange)="onUpdateAPPCd()">
-                  <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
-                  <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
-                  <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
-                </mat-select>
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.appCd }}</span>
+                <span *ngIf="isViewOnly && !isCAEditMode">{{ courtAppearanceForm?.value.appCd }}</span>
+                <mat-form-field appearance="select-box-only" *ngIf="!isViewOnly || isCAEditMode">
+                  <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()">
+                    <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
+                    <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
+                    <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">No APP</p>
               <p class="section-grid-text" style="padding-right: 5px !important;">
-                <span *ngIf="isViewOnly || !isNoAppEnabled">
-                  {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
+                <span *ngIf="((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs">
+                  {{ courtAppearanceForm?.value.noAppTs | date: "yyyy-MM-dd HH:mm" : "UTC" }} UTC
                 </span>
-                <span *ngIf="!isViewOnly && isNoAppEnabled">
-                  <button type="button" style="background:#fffee6; width: 136px;" (click)="picker.open()">
-                    {{ courtAppearanceForm?.value.noAppTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}
-                  </button>
-                  <input [ngxMatDatetimePicker]="picker" formControlName="_noAppTs" style="width: 0;"
-                    (ngModelChange)="updateNoAppDateTime($event)" />
-                  <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
-                  &nbsp;<button type="button" style="background:#fffee6" (click)="updateNoAppTsToNow()">Now</button>
+                <span *ngIf="(!isViewOnly || isSSEditMode) && isNoAppEnabled">
+                  <mat-form-field appearance="outline" class="datetime-picker">
+                    <mat-hint>mm/dd/yyyy, hh:mm</mat-hint>
+                    <mat-datetimepicker-toggle [for]="datetimePicker" matSuffix></mat-datetimepicker-toggle>
+                    <mat-datetimepicker #datetimePicker type="datetime" openOnFocus="true" timeInterval="5"> </mat-datetimepicker>
+                    <input matInput formControlName="noAppTs" [matDatetimepicker]="datetimePicker" autocomplete="false" />
+                  </mat-form-field>
+                  <button mat-raised-button class="form-button-secondary" (click)="updateNoAppTsToNow()">Now</button>
                 </span>
               </p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">CLERK REC.</p>
               <p class="section-grid-text">
-                <input *ngIf="!isViewOnly" formControlName="clerkRecord" style="width:75px; background:#fffee6" />
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.clerkRecord }}</span>
+                <span *ngIf="(isViewOnly && !isCAEditMode)">{{ courtAppearanceForm?.value.clerkRecord }}</span>
+                <mat-form-field appearance="outline" *ngIf="(!isViewOnly || isCAEditMode)">
+                  <input matInput formControlName="clerkRecord" maxlength="30">
+                  <mat-error *ngIf="courtAppearanceForm.controls.clerkRecord.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
+                </mat-form-field>
               </p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">DEF. COUNSEL</p>
               <p class="section-grid-text">
-                <input *ngIf="!isViewOnly" formControlName="defenceCounsel" style="width:75px; background:#fffee6" />
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.defenceCounsel }}</span>
+                <span *ngIf="(isViewOnly && !isCAEditMode)">{{ courtAppearanceForm?.value.defenceCounsel }}</span>
+                <mat-form-field appearance="outline" *ngIf="(!isViewOnly || isCAEditMode)">
+                  <input matInput formControlName="defenceCounsel" maxlength="30">
+                  <mat-error *ngIf="courtAppearanceForm.controls.defenceCounsel.hasError('maxlength')">{{ "error.max_length" | translate }}100</mat-error>
+                </mat-form-field>
               </p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Def Att</p>
               <p class="section-grid-text">
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>
                 <mat-select *ngIf="!isViewOnly" formControlName="dattCd" style="background:#fffee6">
                   <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
                   <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
                   <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
                 </mat-select>
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>
               </p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Crown</p>
               <p class="section-grid-text">
-                <mat-select *ngIf="!isViewOnly" formControlName="crown" style="background:#fffee6">
-                  <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
-                  <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
-                </mat-select>
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.crown }}</span>
+                <span *ngIf="isViewOnly && !isCAEditMode">{{ courtAppearanceForm?.value.crown }}</span>
+                <mat-form-field appearance="select-box-only" *ngIf="!isViewOnly || isCAEditMode">
+                  <mat-select formControlName="crown">
+                    <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
+                    <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </p>
             </span>
             <span class="section-grid-cell">
@@ -393,6 +405,9 @@
               </p>
             </span>
           </div>
+          <button mat-raised-button *ngIf="isSupportStaff && !isCAEditMode" (click)="isCAEditMode=true" class="form-button" [disabled]="isTIEditMode || isCIEditMode || isCOEditMode">Edit</button>
+          <button mat-raised-button *ngIf="isCAEditMode" (click)="onSaveCourtAppearance()" class="form-button" [disabled]="!courtAppearanceForm.valid">Save</button>
+          <button mat-raised-button *ngIf="isCAEditMode" (click)="onCancelCourtAppearance()" class="form-button">Cancel</button>
         </form>
       </section><br />
       <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">

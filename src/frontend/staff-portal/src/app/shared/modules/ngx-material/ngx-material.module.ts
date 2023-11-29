@@ -41,6 +41,7 @@ import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/le
 import { MatSortModule } from '@angular/material/sort';
 import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDatetimepickerModule, MatNativeDatetimeModule } from '@mat-datetimepicker/core';
 
 export const APP_DATE_FORMAT = 'D MMM YYYY';
 export const APP_DATE_FORMATS = {
@@ -82,6 +83,8 @@ export const GRI_DATE_FORMATS: MatDateFormats = {
     MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
+    MatDatetimepickerModule,
+    MatNativeDatetimeModule,
     MatDialogModule,
     MatExpansionModule,
     MatIconModule,

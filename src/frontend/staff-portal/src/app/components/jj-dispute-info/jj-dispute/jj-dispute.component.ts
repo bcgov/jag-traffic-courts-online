@@ -37,6 +37,7 @@ export class JJDisputeComponent implements OnInit {
   isTIEditMode: boolean = false;
   isCIEditMode: boolean = false;
   isCOEditMode: boolean = false;
+  isCAEditMode: boolean = false;
 
   RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   Finding = JJDisputedCountRoPFinding;
@@ -77,13 +78,13 @@ export class JJDisputeComponent implements OnInit {
     disputantAttendanceType: [null, Validators.maxLength(20)]
   });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
-    appCd: [{ value: null, disabled: true }],
+    appCd: [null],
     room: [{ value: null, disabled: true }],
     reason: [null],
     noAppTs: [null],
     _noAppTs: [null],
-    clerkRecord: [null],
-    defenceCounsel: [null],
+    clerkRecord: [null, Validators.maxLength(100)],
+    defenceCounsel: [null, Validators.maxLength(100)],
     crown: [null],
     jjSeized: [null],
     adjudicator: [null],
@@ -178,7 +179,7 @@ export class JJDisputeComponent implements OnInit {
       if (this.lastUpdatedJJDispute?.mostRecentCourtAppearance) {
         if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = 'N';
 
-        if (!this.isViewOnly) {
+        // if (!this.isViewOnly) {
           this.lastUpdatedJJDispute.mostRecentCourtAppearance.adjudicator = this.jjIDIR;
           this.lastUpdatedJJDispute.mostRecentCourtAppearance["adjudicatorName"] = this.jjName; // force to add property
           this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
@@ -186,7 +187,7 @@ export class JJDisputeComponent implements OnInit {
             this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
             this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
           }
-        }
+        // }
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
         this.determineIfConcludeOrCancel();
       }
@@ -198,6 +199,8 @@ export class JJDisputeComponent implements OnInit {
       if(this.jjIDIR===this.lastUpdatedJJDispute.lockedBy){
         this.startTimer(this.lastUpdatedJJDispute.lockExpiresAtUtc, this.lastUpdatedJJDispute.lockId);
       }
+      
+      this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
     });
   }
 
@@ -285,7 +288,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   updateNoAppTs(date: Date) {
-    this.courtAppearanceForm.controls.noAppTs.setValue(this.datePipe.transform(date, "MM/dd/yyyy HH:mm:ss") + " UTC");
+    this.courtAppearanceForm.controls.noAppTs.setValue(date.toISOString());
   }
 
   updateNoAppTsToNow() {
@@ -380,6 +383,29 @@ export class JJDisputeComponent implements OnInit {
   onCancelCourtOptions(): void {
     this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
     this.isCOEditMode = false;
+  }
+
+  /**
+   * Called by support-staff when editing the Court Options form (user must have update-admin permissions on the JJDispute resource).
+   */
+  onSaveCourtAppearance(): void {
+    this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
+
+    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
+      // refresh JJDispute data
+      this.getJJDispute();
+
+      this.isCAEditMode = false;
+    });
+  }
+
+  /**
+   * Called by support-staff when reverting any changes they may have made to the Court Options form.
+   */
+  onCancelCourtAppearance(): void {
+    // refresh JJDispute data
+    this.getJJDispute();
+    this.isCAEditMode = false;
   }
 
   onAccept(): void {
