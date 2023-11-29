@@ -55,7 +55,7 @@ public class JJDisputeController {
 			@PathVariable("ticketNumber") String ticketNumber,
 			@PathVariable("assignVTC") boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("GET /dispute/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("checkVTCAssigned", checkVTCAssigned));
+		logger.debug("GET /jj/dispute/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("checkVTCAssigned", checkVTCAssigned));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -79,7 +79,7 @@ public class JJDisputeController {
 			@Pattern(regexp = "[A-Z]{2}\\d{8}")
 			@Parameter(description = "If specified will filter by TicketNumber. (Format is XX00000000)", example = "AX12345678")
 			String ticketNumber) {
-		logger.debug("GET /disputes called");
+		logger.debug("GET /jj/disputes called");
 
 		return jjDisputeService.getJJDisputes(jjAssignedTo, ticketNumber);
 	}
@@ -106,7 +106,7 @@ public class JJDisputeController {
 			boolean checkVTCAssigned,
 			Principal principal,
 			@RequestBody JJDispute jjDispute) {
-		logger.debug("PUT /dispute/{} called", StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("PUT /jj/dispute/{} called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -163,7 +163,7 @@ public class JJDisputeController {
 	public ResponseEntity<Void> assignJJDisputesToJJ(
 			@RequestParam("ticketNumbers") List<String> ticketNumberList,
 			@RequestParam(required = false, name = "jjUsername") String jjUsername) {
-		logger.debug("PUT /dispute/assign called");
+		logger.debug("PUT /jj/dispute/assign called");
 
 		jjDisputeService.assignJJDisputesToJJ(ticketNumberList, jjUsername);
 
@@ -192,7 +192,7 @@ public class JJDisputeController {
 			@RequestBody @Size(max = 256) String remark,
 			boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/review called", StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("PUT /jj/dispute/{}/review called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -220,7 +220,7 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> concludeJJDispute(@PathVariable String ticketNumber,
 			boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/conclude called", StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("PUT /jj/dispute/{}/conclude called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -247,7 +247,7 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> cancelJJDispute(@PathVariable String ticketNumber,
 			boolean checkVTCAssigned,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/cancel called", StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("PUT /jj/dispute/{}/cancel called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -277,7 +277,7 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> requireCourtHearingJJDispute(@PathVariable String ticketNumber,
 			@RequestParam (required = false) @Size(max = 256) String remark,
 			Principal principal) {
-		logger.debug("PUT /dispute/{}/requirecourthearing called", StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("PUT /jj/dispute/{}/requirecourthearing called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.requireCourtHearing(ticketNumber, principal, remark), HttpStatus.OK);
 	}
@@ -304,7 +304,7 @@ public class JJDisputeController {
 			Principal principal,
 			@RequestParam(required = false) @Parameter(description = "Adjudicator's participant ID") String partId) {
 
-		logger.debug("PUT /dispute/{}/accept called", StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("PUT /jj/dispute/{}/accept called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -331,7 +331,7 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/confirm")
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
-		logger.debug("PUT /dispute/{}/confirm called", StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("PUT /jj/dispute/{}/confirm called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null), HttpStatus.OK);
 	}
@@ -348,7 +348,7 @@ public class JJDisputeController {
 			@PathVariable("ticketNumber") String ticketNumber,
 			@PathVariable("documentType") TicketImageDataDocumentType documentType,
 			Principal principal) {
-		logger.debug("GET /dispute/ticketImage/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("documentType", documentType));
+		logger.debug("GET /jj/dispute/ticketImage/{}/{} called", StructuredArguments.value("ticketNumber", ticketNumber), StructuredArguments.value("documentType", documentType));
 
 		return new ResponseEntity<TicketImageDataJustinDocument>(jjDisputeService.getTicketImageByTicketNumber(ticketNumber, documentType), HttpStatus.OK);
 	}
@@ -374,7 +374,7 @@ public class JJDisputeController {
 			@Pattern(regexp = "[A-Z]{2}\\d{8}")
 			@Parameter(description = "If specified, will delete the record of the specified jj dispute by this TicketNumber. (Format is XX00000000)", example = "AX12345678")
 			String ticketNumber) {
-		logger.debug("DELETE /dispute called with jjDisputeId: {}, and ticketNumber: {}", StructuredArguments.value("jjDisputeId", jjDisputeId), StructuredArguments.value("ticketNumber", ticketNumber));
+		logger.debug("DELETE /jj/dispute called with jjDisputeId: {}, and ticketNumber: {}", StructuredArguments.value("jjDisputeId", jjDisputeId), StructuredArguments.value("ticketNumber", ticketNumber));
 		if (jjDisputeId == null && StringUtils.isBlank(ticketNumber)) {
 			throw new IllegalArgumentException("Either ticketNumber or jjDisputeId must be specified.");
 		}
