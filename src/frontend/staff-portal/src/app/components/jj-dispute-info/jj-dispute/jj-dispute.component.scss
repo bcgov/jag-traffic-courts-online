@@ -25,6 +25,19 @@
   }
 }
 
+.form-button-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;  
+  font-size: 14px;
+  margin: 0px 10px 0px 10px;
+
+  &:hover {
+    background-color: #5a6268;
+    border-color: #5a6268;
+  }
+}
+
 h3 {
   font-weight: bold;
   color: black !important;
@@ -149,6 +162,21 @@ p {
   .subheader span {
     font-weight: 600;
     color: #1d4a77;
+  }
+    
+  .mat-form-field.datetime-picker {
+    width: 200px !important;
+    margin-right: 0px;
+    vertical-align: top;
+
+    .mat-form-field-flex {
+      margin-right: 0px;
+
+      .mat-form-field-suffix {
+        top: -2px;
+        height: 36px;
+      }
+    }
   }
 
   .mat-form-field {

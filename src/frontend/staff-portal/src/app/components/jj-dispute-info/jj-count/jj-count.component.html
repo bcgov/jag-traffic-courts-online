@@ -6,33 +6,34 @@
         <h3>Count {{ count }} </h3>
       </span>
     </ng-container>
-    <div style="display: grid; grid-template-columns: auto auto">
-      <span class="section-grid-cell">
-        <p class="section-grid-header">Plea</p>
-        <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.plea === Plea.G ? 'Guilty' : 'Not Guilty' ) :
-          '&nbsp;' }}</p>
-      </span>
-      <span class="section-grid-cell">
-        <p class="section-grid-header">Offence Date</p>
-        <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputeInfo.issuedTs | date: "MMM dd, yyyy" : "UTC") :
-          '&nbsp;' }}</p>
-      </span>
-      <span class="section-grid-cell" style="grid-column: span 2">
-        <p class="section-grid-header">Description of offence</p>
-        <p class="section-grid-text">{{ jjDisputedCount ? jjDisputedCount.description : '&nbsp;' }}</p>
-      </span>
-      <span class="section-grid-cell">
-        <p class="section-grid-header">Due Date</p>
-        <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.dueDate | date: "MMM dd, yyyy" : "UTC") :
-          '&nbsp;' }}
-        </p>
-      </span>
-      <span class="section-grid-cell">
-        <p class="section-grid-header">Fine amount</p>
-        <p class="section-grid-text">{{ jjDisputedCount?.ticketedFineAmount |currency:'CAD':'symbol-narrow':'1.0-0' }}
-        </p>
-      </span>
-    </div>
+    <form [formGroup]="countForm">
+      <div style="display: grid; grid-template-columns: auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">{{ "label.plea" | translate }}</p>
+          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.plea === Plea.G ? 'Guilty' : 'Not Guilty' ) : '&nbsp;' }}</p>          
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Offence Date</p>
+          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputeInfo.issuedTs | date: "MMM dd, yyyy" : "UTC") :
+            '&nbsp;' }}</p>
+        </span>
+        <span class="section-grid-cell" style="grid-column: span 2">
+          <p class="section-grid-header">Description of offence</p>
+          <p class="section-grid-text">{{ jjDisputedCount ? jjDisputedCount.description : '&nbsp;' }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Due Date</p>
+          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.dueDate | date: "MMM dd, yyyy" : "UTC") :
+            '&nbsp;' }}
+          </p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Fine amount</p>
+          <p class="section-grid-text">{{ jjDisputedCount?.ticketedFineAmount |currency:'CAD':'symbol-narrow':'1.0-0' }}
+          </p>
+        </span>
+      </div>
+    </form>
     <hr style="margin: 0 0 0 0" />
   </section>
   <!-- Disputant Request -->
@@ -42,34 +43,54 @@
         <h3>Disputant Request</h3>
       </span>
     </ng-container>
-    <div style="display: grid; grid-template-columns: auto auto">
-      <span class="section-grid-cell" style="grid-column: span 2">
-        <p class="section-grid-header">For this count I would like to</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount?.appearInCourt === AppearInCourt.Y">
-          I want to appear in court</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount?.appearInCourt === AppearInCourt.N">
-          I do not want to appear in court</p>
-        <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-      </span>
-      <span class="section-grid-cell">
-        <p class="section-grid-header">Request fine reduction</p>
-        <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestReduction === RequestReduction.Y">
-          yes</p>
-        <p class="section-grid-text"
-          *ngIf="jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y">
-          no</p>
-      </span>
-      <span class="section-grid-cell">
-        <p class="section-grid-header">Request time to pay</p>
-        <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y">
-          yes</p>
-        <p class="section-grid-text"
-          *ngIf="jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y">
-          no</p>
-      </span>
-    </div>
+    <form [formGroup]="countForm">
+      <div style="display: grid; grid-template-columns: auto auto">
+        <span class="section-grid-cell" style="grid-column: span 2">
+          <p class="section-grid-header">{{ "label.appearInCourt" | translate }}</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.Y">
+            I want to appear in court</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.appearInCourt === AppearInCourt.N">
+            I do not want to appear in court</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
+          <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
+            <mat-select formControlName="appearInCourt">
+              <mat-option [value]="AppearInCourt.Y">{{ "appearInCourtType.yes" | translate }}</mat-option>
+              <mat-option [value]="AppearInCourt.N">{{ "appearInCourtType.no" | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Request fine reduction</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.requestReduction === RequestReduction.Y">
+            yes</p>
+          <p class="section-grid-text"
+            *ngIf="!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y">
+            no</p>
+          <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
+            <mat-select formControlName="requestReduction">
+              <mat-option [value]="RequestReduction.Y">{{ "yesNo.yes" | translate }}</mat-option>
+              <mat-option [value]="RequestReduction.N">{{ "yesNo.no" | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Request time to pay</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
+          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y">
+            yes</p>
+          <p class="section-grid-text"
+            *ngIf="!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y">
+            no</p>
+          <mat-form-field appearance="outline" *ngIf="jjDisputedCount && isSSEditMode">
+            <mat-select formControlName="requestTimeToPay">
+              <mat-option [value]="RequestTimeToPay.Y">{{ "yesNo.yes" | translate }}</mat-option>
+              <mat-option [value]="RequestTimeToPay.N">{{ "yesNo.no" | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+      </div>
+    </form>
     <hr style="margin: 0 0 0 0" />
   </section>
   <!-- JJ Decision for Written Reasons -->
@@ -262,7 +283,7 @@
     <hr style="margin: 0 0 0 0" />
   </section>
   <!-- JJ RoP for Court Appearance -->
-  <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance"
+  <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance && !isSSEditMode"
     style="padding: 0 0.2rem;">
     <ng-container subHeader>
       <span class="count-text">
@@ -313,7 +334,7 @@
     <br>
     <hr style="margin: 0 0 0 0" />
   </section>
-  <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance"
+  <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance && !isSSEditMode"
     style="padding: 0 0.2rem;">
     <ng-container subHeader>
       <span class="count-text">
@@ -339,6 +360,27 @@
         <span class="section-grid-header">MVA Section&nbsp;</span>
         <span class="section-jj-grid-text">{{ form.get('jjDisputedCountRoP').get('lesserDescription').value }}</span>
       </div>
+    </div>
+  </section>
+  <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && isSSEditMode">
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>Findings</h3>
+      </span>
+    </ng-container>
+    <div>
+      <div class="section-grid-header">Finding:</div>
+      <form [formGroup]="countRoPForm">
+        <mat-form-field appearance="outline" *ngIf="jjDisputedCount">
+          <mat-select formControlName="finding">
+            <mat-option [value]="Finding.Guilty">{{ "findingType.guilty" | translate }}</mat-option>
+            <mat-option [value]="Finding.GuiltyLesser">{{ "findingType.guilty_lesser" | translate }}</mat-option>
+            <mat-option [value]="Finding.NotGuilty">{{ "findingType.not_guilty" | translate }}</mat-option>
+            <mat-option [value]="Finding.PaidPriorToAppearance">{{ "findingType.paid_prior" | translate }}</mat-option>
+            <mat-option [value]="Finding.Cancelled">{{ "findingType.cancelled" | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
     </div>
   </section>
   <section>

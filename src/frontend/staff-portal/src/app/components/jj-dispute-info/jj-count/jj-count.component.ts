@@ -16,6 +16,7 @@ export class JJCountComponent implements OnInit {
   @Input() count: number;
   @Input() type: string;
   @Input() isViewOnly: boolean = false;
+  @Input() isSSEditMode: boolean = false;
   @Input() jjDisputedCount: JJDisputedCount;
   @Output() jjDisputedCountUpdate: EventEmitter<JJDisputedCount> = new EventEmitter<JJDisputedCount>();
 
@@ -37,6 +38,14 @@ export class JJCountComponent implements OnInit {
   // Variables
   todayDate: Date = new Date();
   form: FormGroup;
+  countForm: FormGroup = this.formBuilder.group({
+    appearInCourt: [null],
+    requestReduction: [null],
+    requestTimeToPay: [null]
+  });
+  countRoPForm: FormGroup = this.formBuilder.group({
+    finding: [null]
+  });
   timeToPay: string = "";
   fineReduction: string = "";
   inclSurcharge: string = "";
@@ -200,6 +209,18 @@ export class JJCountComponent implements OnInit {
         this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N);
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
+
+      this.countForm.patchValue(this.jjDisputedCount);
+      this.countForm.valueChanges.subscribe(() => {
+        this.jjDisputedCount = { ...this.jjDisputedCount, ...this.countForm.value };
+        this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
+      });
+      this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);
+      this.countRoPForm.valueChanges.subscribe(() => {
+        this.jjDisputedCount.jjDisputedCountRoP = { ...this.jjDisputedCount.jjDisputedCountRoP, ...this.countRoPForm.value };
+        this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
+      });
+      
     }
   }
 

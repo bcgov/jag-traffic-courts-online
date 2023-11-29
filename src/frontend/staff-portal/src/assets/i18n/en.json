@@ -141,22 +141,37 @@
     "heading": "BC Traffic Court Offence Dispute"
   },
   "label": {
-    "search": "Search",
+    "amount_due": "Amount Due",
+    "appearInCourt": "For this count I would like to",
     "back": "Back",
+    "count_number": "Count #",
+    "defence_witness": "Defence Witnesses",
+    "desc_of_offence": "Description of Offence",
+    "find_another_ticket": "Find Another Ticket",
+    "for_vehicle": "for Vehicle",
+    "given_names": "Given Names(s)",
+    "given_name_1": "Given Names 1",
+    "given_name_2": "Given Names 2",
+    "given_name_3": "Given Names 3",
+    "initiate_dispute": "Initiate Dispute",
+    "interpreter": "Interpreter",
+    "legal_counsel_firm": "Legal Counsel Firm",
+    "legal_counsel_name": "Legal Counsel Name",
+    "legal_counsel_given_name_1": "Legal Counsel Given Name 1",
+    "legal_counsel_given_name_2": "Legal Counsel Given Name 2",
+    "legal_counsel_given_name_3": "Legal Counsel Given Name 3",
+    "legal_counsel_surname": "Legal Counsel Surname",
+    "offence_amount": "Offence Amount",
     "pay_now": "Pay Now",
     "pay_count": "Pay Count",
     "pay_balance": "Pay Ticket Balance of",
-    "initiate_dispute": "Initiate Dispute",
-    "find_another_ticket": "Find Another Ticket",
+    "plea": "Plea",
+    "search": "Search",
+    "surname": "Surname",
+    "status": "Status",
     "violation_ticket_number": "Violation Ticket Number",
     "violation_ticket_number_hint": "A Violation Ticket Number is 2 letters and 8 numbers",
-    "violation_time": "Violation Time",
-    "count_number": "Count #",
-    "desc_of_offence": "Description of Offence",
-    "for_vehicle": "for Vehicle",
-    "offence_amount": "Offence Amount",
-    "amount_due": "Amount Due",
-    "status": "Status"
+    "violation_time": "Violation Time"
   },
   "submit_confirmation": {
     "heading": "Submit request",
@@ -197,5 +212,31 @@
     "telephone_conference": "Telephone Conference",
     "written_reasons": "Written Reasons",
     "video_conference": "Video Conference"
+  },
+  "pleaType": {
+    "guilty": "Guilty",
+    "not_guilty": "Not Guilty"
+  },
+  "appearInCourtType": {
+    "yes": "I want to appear in court",
+    "no": "I do not want to appear in court"
+  },
+  "findingType": {
+    "guilty": "Guilty as charged",
+    "guilty_lesser": "Not guilty as charged but guilty of lesser / included other offence",
+    "not_guilty": "Not guilty",
+    "paid_prior": "Paid Prior to Appearance",
+    "cancelled": "Cancelled"
+  },
+  "yesNo": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "common": {
+    "button": {
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
   }
 }
