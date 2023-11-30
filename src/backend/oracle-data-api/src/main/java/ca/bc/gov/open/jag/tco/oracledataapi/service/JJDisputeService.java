@@ -277,12 +277,17 @@ public class JJDisputeService {
 		}
 
 		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
+		
+		JJDispute jjDisputeToReturn = new JJDispute();
+		
+		// Indicates whether the dispute is re-opened by a JJ and set to review
+		boolean recalled = false;
 
 		// TCVP-1435 - business rules
 		// - current status can be unchanged
 		// - current status must be REQUIRE_COURT_HEARING to change to HEARING_SCHEDULED
 		// - current status must be NEW, IN_PROGRESS, HEARING_SCHEDULED to change to IN_PROGRESS
-		// - current status must be CONFIRMED, REVIEW to change to REVIEW
+		// - current status must be ACCEPTED, CONCLUDED, CONFIRMED, REVIEW to change to REVIEW
 		// - current status must be NEW, IN_PROGRESS, REVIEW, CONFIRMED, HEARING_SCHEDULED to change to CONFIRMED
 		// - current status must be NEW, REVIEW, IN_PROGRESS, or same to change to REQUIRE_COURT_HEARING, DATA_UPDATE, REQUIRE_MORE_INFO
 		// - current status must be CONFIRMED to change to ACCEPTED
@@ -299,7 +304,7 @@ public class JJDisputeService {
 			}
 			break;
 		case REVIEW:
-			if (!List.of(JJDisputeStatus.CONFIRMED, JJDisputeStatus.REVIEW).contains(jjDisputeToUpdate.getStatus())) {
+			if (!List.of(JJDisputeStatus.CONFIRMED, JJDisputeStatus.REVIEW, JJDisputeStatus.ACCEPTED, JJDisputeStatus.CONCLUDED).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
@@ -357,15 +362,34 @@ public class JJDisputeService {
 			logger.error("Updating a court appearance requires a staff part id. staffPartId is null.");
 			throw new NotAllowedException("Updating a court appearance requires a staff part id.");
 		}
-
+		
+		// TCVP-2615 Allow JJs to re-open a accepted or concluded dispute by setting the status to "review required"
+		if (JJDisputeStatus.REVIEW.equals(jjDisputeStatus) && 
+				(JJDisputeStatus.ACCEPTED.equals(jjDisputeToUpdate.getStatus()) || 
+						JJDisputeStatus.CONCLUDED.equals(jjDisputeToUpdate.getStatus()))) {
+			if (courtAppearance.getAppearanceTs() != null && DateUtils.isSameDay(courtAppearance.getAppearanceTs(), new Date())) {
+				recalled = true;
+			} else {
+				logger.warn("Make sure there is a court appearance associated to the dispute with ID: {} and has a current hearing date = today's date.", 
+						StructuredArguments.value("disputeID", jjDisputeToUpdate.getId().toString()));
+				throw new NotAllowedException("Recalling and opening a dispute is only allowed if the DCF's current hearing date = today's date.");
+			}
+		}
+		
 		jjDisputeRepository.setStatus(jjDisputeToUpdate.getId(), jjDisputeStatus, principal.getName(), courtAppearanceId, seizedYn , adjudicatorPartId, aattCd, dattCd, staffPartId);
 
 		// Set remarks with user's full name if a remark note is provided along with the status update
 		if(!StringUtils.isBlank(remark)) {
 			addRemark(jjDisputeToUpdate.getId(), remark, principal);
 		}
+		
+		jjDisputeToReturn = findByTicketNumberUnique(ticketNumber).orElseThrow();
+		
+		if (recalled) {
+			jjDisputeToReturn.setRecalled(true);
+		}
 
-		return findByTicketNumberUnique(ticketNumber).orElseThrow();
+		return jjDisputeToReturn;
 	}
 
 	/**
@@ -377,7 +401,7 @@ public class JJDisputeService {
 	 */
 	private JJDisputeCourtAppearanceRoP findCourtAppearanceByJJDispute(JJDispute jjDispute, String partId, JJDisputeStatus jjDisputeStatus) {
 		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) &&
-				partId != null && JJDisputeStatus.ACCEPTED.equals(jjDisputeStatus)) {
+				partId != null && (JJDisputeStatus.ACCEPTED.equals(jjDisputeStatus) || JJDisputeStatus.REVIEW.equals(jjDisputeStatus))) {
 
 			// TCVP-1968: Return the latest record iff the status is ACCEPTED
 			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
