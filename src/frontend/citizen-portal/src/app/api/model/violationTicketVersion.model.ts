@@ -9,14 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Field } from './field.model';
-import { ViolationTicketVersion } from './violationTicketVersion.model';
 
 
-export interface OcrViolationTicket { 
-    ticketVersion?: ViolationTicketVersion;
-    imageFilename?: string | null;
-    globalConfidence?: number;
-    fields?: { [key: string]: Field; } | null;
-}
+export type ViolationTicketVersion = 'VT1' | 'VT2';
+
+export const ViolationTicketVersion = {
+    Vt1: 'VT1' as ViolationTicketVersion,
+    Vt2: 'VT2' as ViolationTicketVersion
+};
 

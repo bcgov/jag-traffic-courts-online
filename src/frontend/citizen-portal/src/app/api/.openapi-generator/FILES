@@ -46,5 +46,6 @@ model/violationTicketIsChangeOfAddress.model.ts
 model/violationTicketIsDriver.model.ts
 model/violationTicketIsOwner.model.ts
 model/violationTicketIsYoungPerson.model.ts
+model/violationTicketVersion.model.ts
 param.ts
 variables.ts

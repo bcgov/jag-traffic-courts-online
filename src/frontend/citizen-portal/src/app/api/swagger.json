@@ -659,6 +659,26 @@
               }
             }
           },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "404": {
             "description": "The violation ticket was not found.",
             "content": {
@@ -681,9 +701,6 @@
           },
           "500": {
             "description": "There was a server error that prevented the search from completing successfully."
-          },
-          "400": {
-            "description": "The request was not well formed. Check the parameters."
           }
         }
       }
@@ -696,11 +713,21 @@
         "summary": "Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.",
         "parameters": [
           {
+            "name": "sanitize",
+            "in": "query",
+            "description": "If true, will perform basic cleanup on ocr results before validation. Defaults to true.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
             "name": "validate",
             "in": "query",
-            "description": "Optional. If true, will perform business validation on ocr results. Defaults to true.",
+            "description": "If true, will perform business validation on ocr results. Defaults to true.",
             "schema": {
-              "type": "boolean"
+              "type": "boolean",
+              "default": true
             }
           }
         ],
@@ -1734,6 +1761,9 @@
       "OcrViolationTicket": {
         "type": "object",
         "properties": {
+          "ticketVersion": {
+            "$ref": "#/components/schemas/ViolationTicketVersion"
+          },
           "imageFilename": {
             "type": "string",
             "nullable": true
@@ -2124,6 +2154,13 @@
           "UNKNOWN",
           "Y",
           "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketVersion": {
+        "enum": [
+          "VT1",
+          "VT2"
         ],
         "type": "string"
       }
