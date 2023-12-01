@@ -177,6 +177,7 @@ public class JJDisputeController {
 	 * @param remark, the note explaining why the status was set to REVIEW.
 	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
 	 * @param principal, the logged-in user
+	 * @param recalled, indicates the dispute is re-opened by a JJ
 	 * @return {@link JJDispute}
 	 */
 	@Operation(summary = "Updates the status of a particular JJDispute record to REVIEW.")
@@ -184,21 +185,23 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 256 characters OR "
+				+ "if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed."),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@PutMapping("/dispute/{ticketNumber}/review")
 	public ResponseEntity<JJDispute> reviewJJDispute(@PathVariable String ticketNumber,
-			@RequestBody @Size(max = 256) String remark,
+			@RequestBody (required = false) @Size(max = 256) String remark,
 			boolean checkVTCAssigned,
-			Principal principal) {
+			Principal principal,
+			boolean recalled) {
 		logger.debug("PUT /jj/dispute/{}/review called", StructuredArguments.value("ticketNumber", ticketNumber));
 
 		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark, null, recalled), HttpStatus.OK);
 	}
 
 	/**
@@ -226,7 +229,7 @@ public class JJDisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONCLUDED, principal, null, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONCLUDED, principal, null, null, false), HttpStatus.OK);
 	}
 	/**
 	 * PUT endpoint that updates the JJDispute, setting the status to CANCELLED.
@@ -253,7 +256,7 @@ public class JJDisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CANCELLED, principal, null, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CANCELLED, principal, null, null, false), HttpStatus.OK);
 	}
 
 	/**
@@ -310,7 +313,7 @@ public class JJDisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null, partId, false), HttpStatus.OK);
 	}
 
 	/**
@@ -333,7 +336,7 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> confirmJJDispute(@PathVariable String ticketNumber, Principal principal) {
 		logger.debug("PUT /jj/dispute/{}/confirm called", StructuredArguments.value("ticketNumber", ticketNumber));
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.CONFIRMED, principal, null, null, false), HttpStatus.OK);
 	}
 
 	/**

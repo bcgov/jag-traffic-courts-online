@@ -64,12 +64,13 @@ public interface IJJDisputeService
     /// <param name="ticketNumber">Ticket number JJ Dispute record.</param>
     /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
     /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
-    /// <param name="user">The user executing the operation</param>    
+    /// <param name="user">The user executing the operation</param>
+    /// <param name="recalled">Indicates the dispute is re-opened by a JJ</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
-    Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken);
+    Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, ClaimsPrincipal user, bool recalled, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular JJDispute record to REQUIRE_COURT_HEARING as well as adds an optional remark that explaining why the status was set to REVIEW and sets hearing type to COURT_APPEARANCE.</summary>
     /// <param name="ticketNumber">Ticket number for a specific JJ Dispute record.</param>

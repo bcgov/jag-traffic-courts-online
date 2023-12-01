@@ -140,14 +140,21 @@ public class JJDisputeService : IJJDisputeService
         }
     }
 
-    public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, ClaimsPrincipal user, bool recalled, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, remark, cancellationToken);
+        JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, recalled, remark, cancellationToken);
+
+        FileHistoryAuditLogEntryType fileHistoryType = FileHistoryAuditLogEntryType.VREV; // Dispute returned to JJ for review
+
+        if (dispute.Recalled == true)
+        {
+            fileHistoryType = FileHistoryAuditLogEntryType.RCLD; // Dispute recalled by JJ
+        }
 
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithTicketNumber(
             dispute.TicketNumber,
-            FileHistoryAuditLogEntryType.VREV, 
-            GetUserName(user)); // Dispute returned to JJ for review
+            fileHistoryType,
+            GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;

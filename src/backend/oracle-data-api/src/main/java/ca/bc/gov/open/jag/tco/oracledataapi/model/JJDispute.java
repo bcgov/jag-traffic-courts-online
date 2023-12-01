@@ -334,6 +334,12 @@ public class JJDispute extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	private String courtAgenId;
+	
+	/**
+	 * Indicates whether the dispute is re-opened by a JJ and set to review from its previous accepted or concluded status or not.
+	 */
+	@Schema(description = "Indicates whether the dispute is re-opened by a JJ and set to review from its previous accepted or concluded status or not.", nullable = true)
+	private Boolean recalled;
 
 	/**
 	 * Name of the law firm that will represent the disputant at the hearing.

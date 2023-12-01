@@ -121,6 +121,9 @@ public enum AuditLogEntryType {
 
 	/** JUSTIN count not found in OCCAM - Counts not added to TCO **/
 	OCNT,
+	
+	/** JJ has chosen to recall and open the dispute, status changed to Review **/
+	RCLD,
 
 	/** Data reconciliation complete, dispute is visible in JJ workbench, status is New **/
 	RECN,

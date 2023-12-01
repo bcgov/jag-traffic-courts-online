@@ -1,10 +1,14 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +52,36 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = JJDisputeStatus.class, names = { "ACCEPTED", "DATA_UPDATE", "IN_PROGRESS", "NEW", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO" })
+	@EnumSource(value = JJDisputeStatus.class, names = { "ACCEPTED", "CONCLUDED", "DATA_UPDATE", "IN_PROGRESS", "NEW", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO" })
 	void testSetStatusToREVIEW_405(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REVIEW);
 		assertThrows(NotAllowedException.class, () -> {
 			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, this.getPrincipal());
+		});
+	}
+	
+	@ParameterizedTest
+	@EnumSource(value = JJDisputeStatus.class, names = { "ACCEPTED", "CONFIRMED", "CONCLUDED" })
+	void testSetStatusToREVIEW_200_validAppearanceDate(JJDisputeStatus jjDisputeStatus) {
+		JJDisputeCourtAppearanceRoP courtAppearance =  new JJDisputeCourtAppearanceRoP();
+		Date appearanceDate = new Date();
+		courtAppearance.setAppearanceTs(appearanceDate);
+		JJDispute jjDisputeToUpdate = saveDisputeWithCourtAppearance(jjDisputeStatus, courtAppearance);
+		JJDispute disputeInReview = jjDisputeService.setStatus(jjDisputeToUpdate.getTicketNumber(), JJDisputeStatus.REVIEW, this.getPrincipal(), null, null, true);
+		assertEquals(JJDisputeStatus.REVIEW, disputeInReview.getStatus());
+		assertTrue(disputeInReview.getRecalled());
+	}
+	
+	@ParameterizedTest
+	@EnumSource(value = JJDisputeStatus.class, names = { "ACCEPTED", "CONFIRMED", "CONCLUDED" })
+	void testSetStatusToREVIEW_405_invalidAppearanceDate(JJDisputeStatus jjDisputeStatus) {
+		JJDisputeCourtAppearanceRoP courtAppearance =  new JJDisputeCourtAppearanceRoP();
+		Date appearanceDate = DateUtils.addDays(new Date(), -1);
+		courtAppearance.setAppearanceTs(appearanceDate);
+		JJDispute jjDisputeToUpdate = saveDisputeWithCourtAppearance(jjDisputeStatus, courtAppearance);
+		assertThrows(NotAllowedException.class, () -> {
+			jjDisputeService.setStatus(jjDisputeToUpdate.getTicketNumber(), JJDisputeStatus.REVIEW, this.getPrincipal(), null, null, true);
 		});
 	}
 
@@ -187,7 +215,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		// Do not provide a staff part ID for the update
 		this.setPrincipal("System", false);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, this.getPrincipal(), null, "170225.0877");
+			jjDisputeService.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, this.getPrincipal(), null, "170225.0877", false);
 		});
 	}
 
