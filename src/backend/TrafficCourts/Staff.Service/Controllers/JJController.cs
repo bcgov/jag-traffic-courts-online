@@ -483,6 +483,90 @@ public class JJController : StaffControllerBase<JJController>
     }
 
     /// <summary>
+    /// Updates the status of a particular JJDispute record to REVIEW when JJ wants to recall and open an ACCEPTED, CONFIRMED or CONCLUDED dispute.
+    /// </summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The JJDispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
+    /// <response code="404">JJDispute record not found. Update failed.</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
+    /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}/recall")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Review)]
+    public async Task<IActionResult> RecallJJDisputeAsync(
+        string ticketNumber,
+        bool checkVTC,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJDispute status to REVIEW");
+
+        try
+        {
+            var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
+
+            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, null!, checkVTC, User, true, cancellationToken);
+            return Ok();
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.Conflict;
+            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            string? lockedBy = e.Username;
+            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
@@ -495,7 +579,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
-    /// <response code="405">A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be less than or equal to 256 characters. Update failed.</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}/review")]
@@ -521,7 +605,7 @@ public class JJController : StaffControllerBase<JJController>
         {
             var disputeLock = _disputeLockService.GetLock(ticketNumber, GetUserName(User));
 
-            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, User, cancellationToken);
+            await _jjDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, User, false, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
