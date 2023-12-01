@@ -47,5 +47,8 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Common
 
         [JsonPropertyName("attribute4")]
         public string? DiscountAmount { get; set; }
+
+        [JsonPropertyName("evt_form_number")]
+        public string? FormNumber { get; set; }
     }
 }
