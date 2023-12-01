@@ -512,7 +512,7 @@ public class JJController : StaffControllerBase<JJController>
         bool checkVTC,
         CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Updating the JJDispute status to REVIEW");
+        _logger.LogDebug("Dispute is recalled. Updating the JJDispute status to REVIEW");
 
         try
         {
