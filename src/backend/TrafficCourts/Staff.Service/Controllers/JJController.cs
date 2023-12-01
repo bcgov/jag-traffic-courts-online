@@ -494,7 +494,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
-    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}/recall")]
@@ -579,7 +579,7 @@ public class JJController : StaffControllerBase<JJController>
     /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
-    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}/review")]
