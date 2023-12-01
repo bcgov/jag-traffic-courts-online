@@ -162,8 +162,14 @@ export class NoticeOfDisputeService {
     input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
     input.appearance_less_than_14_days = false;  // init to false
 
-    input.dispute_counts.forEach(count => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
+    input.dispute_counts.forEach((count : DisputeCount) => { // TODO: remove this once request_court_appearance removed from dispute count schema, API
       count.request_court_appearance = input.request_court_appearance;
+
+      // TCVP-2624 "skipped" is an extrapolated property based on requestCourtAppearance, requestReduction, and requestTimeToPay all equal 'N'
+      // If the count is skipped, force requestCourtAppearance to be N so the skipped variable can be extrapolated on the staff-portal.
+      if (count.__skip) {
+        count.request_court_appearance = this.RequestCourtAppearance.N;
+      }
     });
 
     const data: DialogOptions = {
@@ -290,10 +296,10 @@ export class NoticeOfDisputeService {
   getCountsActions(counts: DisputeCount[]): CountsActions {
     let countsActions: CountsActions = {};
     let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.count_no).join(", ");
-    countsActions.guilty = toCountStr(counts.filter(i => i.plea_cd === this.PleaCode.G));
-    countsActions.not_guilty = toCountStr(counts.filter(i => i.plea_cd === this.PleaCode.N));
-    countsActions.request_reduction = toCountStr(counts.filter(i => i.request_reduction === this.RequestReduction.Y));
-    countsActions.request_time_to_pay = toCountStr(counts.filter(i => i.request_time_to_pay === this.RequestTimeToPay.Y));
+    countsActions.guilty = toCountStr(counts.filter(i => i.plea_cd === this.PleaCode.G && !i.__skip));
+    countsActions.not_guilty = toCountStr(counts.filter(i => i.plea_cd === this.PleaCode.N && !i.__skip));
+    countsActions.request_reduction = toCountStr(counts.filter(i => i.request_reduction === this.RequestReduction.Y && !i.__skip));
+    countsActions.request_time_to_pay = toCountStr(counts.filter(i => i.request_time_to_pay === this.RequestTimeToPay.Y && !i.__skip));
     return countsActions;
   }
 
