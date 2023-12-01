@@ -175,7 +175,7 @@ export class NoticeOfDisputeService {
       icon: null
     };
     if (input.ticket_number.substring(0, 1) == "A") {
-      data.messageKey = data.messageKey + " Note that handwritten tickets may take several months to process.";
+      data.messageKey = data.messageKey + " Note that tickets may take several months to process.";
     }
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: boolean) => {
