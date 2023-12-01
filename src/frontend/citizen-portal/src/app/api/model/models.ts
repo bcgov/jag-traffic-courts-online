@@ -32,3 +32,4 @@ export * from './violationTicketIsChangeOfAddress.model';
 export * from './violationTicketIsDriver.model';
 export * from './violationTicketIsOwner.model';
 export * from './violationTicketIsYoungPerson.model';
+export * from './violationTicketVersion.model';
