@@ -135,7 +135,7 @@ public class JJDisputeService {
 
 		// Update the status of the JJ Dispute if the status is not the same as current one
 		if (jjDispute.getStatus() != null &&  jjDisputeToUpdate.getStatus() != jjDispute.getStatus()) {
-			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null, null);
+			jjDisputeToUpdate = setStatus(ticketNumber, jjDispute.getStatus(), principal, null, null, false);
 		}
 
 		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "id", "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
@@ -265,7 +265,7 @@ public class JJDisputeService {
 	 * @return the saved JJDispute
 	 */
 	public JJDispute setStatus(String ticketNumber, JJDisputeStatus jjDisputeStatus, Principal principal, String remark,
-			String adjudicatorPartId) {
+			String adjudicatorPartId, boolean recalled) {
 		if (jjDisputeStatus == null) {
 			logger.error("Attempting to set JJDispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set JJDispute status to null");
@@ -279,9 +279,6 @@ public class JJDisputeService {
 		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(ticketNumber).orElseThrow();
 		
 		JJDispute jjDisputeToReturn = new JJDispute();
-		
-		// Indicates whether the dispute is re-opened by a JJ and set to review
-		boolean recalled = false;
 
 		// TCVP-1435 - business rules
 		// - current status can be unchanged
@@ -364,17 +361,17 @@ public class JJDisputeService {
 		}
 		
 		// TCVP-2615 Allow JJs to re-open a accepted or concluded dispute by setting the status to "review required"
-		if (JJDisputeStatus.REVIEW.equals(jjDisputeStatus) && 
-				(JJDisputeStatus.ACCEPTED.equals(jjDisputeToUpdate.getStatus()) || 
-						JJDisputeStatus.CONCLUDED.equals(jjDisputeToUpdate.getStatus()))) {
-			if (courtAppearance.getAppearanceTs() != null && DateUtils.isSameDay(courtAppearance.getAppearanceTs(), new Date())) {
-				recalled = true;
-			} else {
+		if (JJDisputeStatus.REVIEW.equals(jjDisputeStatus) && recalled && 
+			courtAppearance.getAppearanceTs() != null && !DateUtils.isSameDay(courtAppearance.getAppearanceTs(), new Date())) {
 				logger.warn("Make sure there is a court appearance associated to the dispute with ID: {} and has a current hearing date = today's date.", 
 						StructuredArguments.value("disputeID", jjDisputeToUpdate.getId().toString()));
 				throw new NotAllowedException("Recalling and opening a dispute is only allowed if the DCF's current hearing date = today's date.");
-			}
 		}
+		
+		if (JJDisputeStatus.REVIEW.equals(jjDisputeStatus) && !recalled && 
+				!List.of(JJDisputeStatus.CONFIRMED, JJDisputeStatus.REVIEW).contains(jjDisputeToUpdate.getStatus())) {
+			throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
+		}	
 		
 		jjDisputeRepository.setStatus(jjDisputeToUpdate.getId(), jjDisputeStatus, principal.getName(), courtAppearanceId, seizedYn , adjudicatorPartId, aattCd, dattCd, staffPartId);
 
@@ -401,9 +398,13 @@ public class JJDisputeService {
 	 */
 	private JJDisputeCourtAppearanceRoP findCourtAppearanceByJJDispute(JJDispute jjDispute, String partId, JJDisputeStatus jjDisputeStatus) {
 		if (!CollectionUtils.isEmpty(jjDispute.getJjDisputeCourtAppearanceRoPs()) &&
-				partId != null && (JJDisputeStatus.ACCEPTED.equals(jjDisputeStatus) || JJDisputeStatus.REVIEW.equals(jjDisputeStatus))) {
-
-			// TCVP-1968: Return the latest record iff the status is ACCEPTED
+				(JJDisputeStatus.ACCEPTED.equals(jjDisputeStatus) || JJDisputeStatus.REVIEW.equals(jjDisputeStatus))) {
+			
+			// TCVP-1968: Return the latest record iff the status is ACCEPTED and partId is provided
+			if (JJDisputeStatus.ACCEPTED.equals(jjDisputeStatus) && partId == null) {
+				return null;
+			}
+			// TCVP-2615 Allow returning latest record if the status is being set to REVIEW
 			return jjDispute.getJjDisputeCourtAppearanceRoPs().stream()
 					.filter(p -> p.getId() != null)
 					.sorted(new Comparator<JJDisputeCourtAppearanceRoP>() {
@@ -429,7 +430,7 @@ public class JJDisputeService {
 
 		JJDispute jjDisputeToUpdate = findByTicketNumberUnique(id).orElseThrow();
 
-		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark, null);
+		jjDisputeToUpdate = this.setStatus(id, JJDisputeStatus.REQUIRE_COURT_HEARING, principal, remark, null, false);
 		jjDisputeToUpdate.setHearingType(JJDisputeHearingType.COURT_APPEARANCE);
 
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
