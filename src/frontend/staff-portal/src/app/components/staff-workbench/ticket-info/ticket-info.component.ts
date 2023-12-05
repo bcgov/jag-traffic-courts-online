@@ -792,7 +792,10 @@ export class TicketInfoComponent implements OnInit {
           countForm.get('description').setValue(violationTicketCount.description);
 
           // lookup legal statute
-          let foundStatute = this.lookupsService.statutes?.filter(x => x.code === violationTicketCount.section && x.actCode === violationTicketCount.actOrRegulationNameCode).shift();
+          let foundStatute = this.lookupsService.statutes?.filter(x => {
+            return x.code === this.getSectionText(violationTicketCount)
+                && x.actCode === violationTicketCount.actOrRegulationNameCode;
+          }).shift();
           if (foundStatute) {
             countForm.get('section').setValue(foundStatute.sectionText);
             countForm.get('subsection').setValue(foundStatute.subsectionText);
@@ -848,5 +851,18 @@ export class TicketInfoComponent implements OnInit {
         this.retrieving = false;
         if (error.status == 409) this.conflict = true;
       });
+  }
+   
+  /**
+   * Returns the full section text from a ViolationTicketCount, ie 44(3)(a)(iii)
+   * @param vtc 
+   * @returns 
+   */
+  private getSectionText(vtc: ViolationTicketCount) : string {
+    let sectionText = vtc.section ?? "";
+    sectionText += vtc.subsection ? '(' + vtc.subsection + ')' : "";
+    sectionText += vtc.paragraph ? + '(' + vtc.paragraph + ')' : "";
+    sectionText += vtc.subparagraph ? + '(' + vtc.subparagraph + ')' : "";
+    return sectionText;
   }
 }
