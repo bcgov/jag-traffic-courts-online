@@ -51,14 +51,19 @@ export class TicketRequestComponent implements OnInit {
 
     let requestType = "";
     if (disputeCount) {
-      if (disputeCount.pleaCode === this.PleaCode.G && this.disputeInfo.requestCourtAppearanceYn === this.RequestCourtAppearance.N) {
-        requestType = disputeCount.requestTimeToPay === this.RequestTimeToPay.Y ? "Time to pay" : "";
+      // TCVP-2622 if all three variables are 'N', we can extrapolate that this count is "skipped". 
+      //   We need to extrapolate since "skipped" is not captured or saved in the database.
+      if (this.isSkipped(disputeCount)) {
+        requestType = "No action at this time";
+      }
+      else if (disputeCount.pleaCode === this.PleaCode.G && this.disputeInfo.requestCourtAppearanceYn === this.RequestCourtAppearance.N) {
+        requestType = disputeCount.requestTimeToPay === this.RequestTimeToPay.Y ? "Plead guilty and request time to pay with written reasons" : "";
         requestType = requestType.concat(disputeCount.requestTimeToPay === this.RequestTimeToPay.Y && disputeCount.requestReduction === this.RequestReduction.Y ? " + " : "");
-        requestType = requestType.concat(disputeCount.requestReduction === this.RequestReduction.Y ? "Fine reduction" : "");
+        requestType = requestType.concat(disputeCount.requestReduction === this.RequestReduction.Y ? "Plead guilty and request a fine reduction with written reasons" : "");
       } else if (disputeCount.pleaCode === this.PleaCode.G && this.disputeInfo.requestCourtAppearanceYn === this.RequestCourtAppearance.Y) {
-        requestType = 'Time to pay and/or fine reduction';
+        requestType = 'Plead guilty and request a fine reduction and/or time to pay on this count in court';
       } else if (disputeCount.pleaCode === this.PleaCode.N) {
-        requestType = "Dispute offence";
+        requestType = "Dispute the charge";
       }
     }
 
@@ -95,18 +100,19 @@ export class TicketRequestComponent implements OnInit {
 
   public getCountsActions(counts: DisputeCount[]): any {
     let countsActions: any = {};
-
-    let fields = Object.keys(this.countFormFields);
     let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.countNo).join(", ");
-    fields.forEach(field => {
-      if (counts && counts.length > 0) {
-        countsActions[field] = toCountStr(counts.filter(i => i[field]));
-      } else {
-        countsActions[field] = [];
-      }
-    });
-    countsActions.Guilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G));
-    countsActions.NotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N));
+    countsActions.Guilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G && !this.isSkipped(i)));
+    countsActions.NotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N && !this.isSkipped(i)));
+    countsActions.requestReduction = toCountStr(counts.filter(i => i.requestReduction === this.RequestReduction.Y && !this.isSkipped(i)));
+    countsActions.requestTimeToPay = toCountStr(counts.filter(i => i.requestTimeToPay === this.RequestTimeToPay.Y && !this.isSkipped(i)));
     return countsActions;
   }
+
+  // TCVP-2622 "skipped" is an extrapolated property based on requestCourtAppearance, requestReduction, and requestTimeToPay all equal 'N'
+  private isSkipped(disputeCount: DisputeCount): boolean {
+    return disputeCount?.requestCourtAppearance === this.RequestCourtAppearance.N
+      && disputeCount?.requestReduction === this.RequestReduction.N
+      && disputeCount?.requestTimeToPay === this.RequestTimeToPay.N
+  }
+
 }
