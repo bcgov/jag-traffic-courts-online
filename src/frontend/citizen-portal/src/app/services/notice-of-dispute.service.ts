@@ -177,12 +177,22 @@ export class NoticeOfDisputeService {
     if (input.ticket_number.substring(0, 1) == "A") {
       data.messageKey = data.messageKey + " Note that tickets may take several months to process.";
     }
-    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+    this.dialog.open(ConfirmDialogComponent, { data, disableClose: true }).afterClosed()
       .subscribe((action: boolean) => {
         if (action) {
+          const data: DialogOptions = {
+            titleKey: "Warning",
+            actionType: "warn",
+            messageKey: `Submitting dispute. Please don't click Submit button again`,
+            actionTextKey: "Close",
+            cancelHide: true
+          };
+          let dialogRef = this.dialog.open(ConfirmDialogComponent, { data, disableClose: true });
+
           input.dispute_counts = input.dispute_counts.filter(i => i.plea_cd);
           return this.disputesService.apiDisputesCreatePost(input)
             .subscribe(res => {
+              dialogRef.close();
               this._noticeOfDispute.next(input);
               if (input.email_address) {
                 this.router.navigate([AppRoutes.EMAILVERIFICATIONREQUIRED], {

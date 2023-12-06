@@ -455,15 +455,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   private submitDispute() {
-    this.disableSave = true;
-    const data: DialogOptions = {
-      titleKey: "Warning",
-      actionType: "warn",
-      messageKey: `Submitting dispute. Please don't click Submit button again`,
-      actionTextKey: "Close",
-      cancelHide: true
-    };
-    this.dialog.open(ConfirmDialogComponent, { data });
     this.saveDispute.emit(this.noticeOfDispute);
   }
 }
