@@ -12,8 +12,6 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using MassTransit;
 using System.Collections.Generic;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
-using static TrafficCourts.Citizen.Service.Features.Tickets.AnalyseHandler;
-using System;
 
 namespace TrafficCourts.Test.Citizen.Service.Controllers;
 

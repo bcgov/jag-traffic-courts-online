@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TrafficCourts.Citizen.Service.Models.Tickets;
+﻿using TrafficCourts.Citizen.Service.Models.Tickets;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search;
 
