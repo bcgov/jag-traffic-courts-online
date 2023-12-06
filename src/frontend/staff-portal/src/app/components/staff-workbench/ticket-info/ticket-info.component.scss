@@ -17,6 +17,10 @@ h3 {
   width: 100%;
 }
 
+.ticket-image:hover {
+  cursor: pointer;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator {
   background: none;
 }

@@ -50,6 +50,7 @@ export class TicketInfoComponent implements OnInit {
   public IsRegulation = ViolationTicketCountIsRegulation;
   public ContactType = DisputeContactTypeCd;
   public DispStatus = DisputeStatus;
+  public isTicketInformationReadOnly: boolean = false;
 
   /**
    * @description
@@ -269,7 +270,6 @@ export class TicketInfoComponent implements OnInit {
           });
       })
   }
-
 
   public onExpandTicketImage() {
     const dialogConfig = new MatDialogConfig();
@@ -841,6 +841,9 @@ export class TicketInfoComponent implements OnInit {
           this.form.controls.violationTicket.disable();
         }
         this.form.get('violationTicket').updateValueAndValidity();
+        
+        // TCVP-2554 make a static variable to indicate if the TicketInformation section is editable or not.
+        this.isTicketInformationReadOnly = this.lastUpdatedDispute.status === this.DispStatus.Validated;        
       }, (error: any) => {
         this.retrieving = false;
         if (error.status == 409) this.conflict = true;
