@@ -367,7 +367,7 @@ export class ViolationTicketService {
         || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
         || this.isErrorMatch(err, "low confidence", false)) {
         var errorMessages = "";
-        if (err.error?.errors) {
+        if (err.error?.errors && typeof err.error.errors.forEach === "function") {
           err.error.errors.forEach(error => { errorMessages += ". \n" + error });
         }
         this.logger.error("ViolationTicketService:onError critical validation error has occurred", errorMessages);
