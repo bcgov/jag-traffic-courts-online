@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
+using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
@@ -14,10 +15,12 @@ namespace TrafficCourts.Citizen.Service.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<TicketsController> _logger;
+        private readonly ITicketSearchService _ticketSearchService;
 
-        public TicketsController(IMediator mediator, ILogger<TicketsController> logger)
+        public TicketsController(IMediator mediator, ITicketSearchService ticketSearchService, ILogger<TicketsController> logger)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _ticketSearchService = ticketSearchService ?? throw new ArgumentNullException(nameof(ticketSearchService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -54,6 +57,33 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 return NotFound();
             }
 
+            try
+            {
+                var check = await _ticketSearchService.IsDisputeSubmittedBefore(ticketNumber, cancellationToken);
+                if (check)
+                {
+                    return BadRequest($"A dispute has already been submitted for the ticket number: {ticketNumber}. A dispute can only be submitted once for a violation ticket.");
+                }
+            }
+            catch (DisputeSearchFailedException e)
+            {
+                ProblemDetails problemDetails = new();
+                problemDetails.Status = StatusCodes.Status500InternalServerError;
+                problemDetails.Title = e.Source + ": Error searching dispute for the ticket";
+                problemDetails.Instance = HttpContext?.Request?.Path;
+                string? innerExceptionMessage = e.InnerException?.Message;
+                if (innerExceptionMessage is not null)
+                {
+                    problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+                }
+                else
+                {
+                    problemDetails.Extensions.Add("errors", new string[] { e.Message });
+                }
+
+                return new ObjectResult(problemDetails);
+            }
+
             var result = response.Result.Match<IActionResult>(
                 ticket => Ok(ticket),
                 exception => StatusCode(StatusCodes.Status500InternalServerError),
@@ -74,9 +104,11 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <response code="400">The uploaded file is too large or the Violation Ticket does not appear to be valid. Either 
         /// the ticket title could not be found, the ticket number is invalid, the violation date is invalid or more than 
         /// 30 days ago, or MVA is not selected or not the only ACT selected.</response>
+        /// <response code="500">There was a server error that prevented the analyse from completing successfully.</response>
         [HttpPost]
         [ProducesResponseType(typeof(OcrViolationTicket), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [RequestSizeLimit(10485760)]
         public async Task<IActionResult> AnalyseAsync(
             [Required]
@@ -140,6 +172,36 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
                 return new ObjectResult(problemDetails);
             }
+
+            string? ticketNumber = response.OcrViolationTicket.Fields[OcrViolationTicket.ViolationTicketNumber].Value;
+            // Verify a dispute for the ticket has not been submitted before
+            try
+            {
+                var check = await _ticketSearchService.IsDisputeSubmittedBefore(ticketNumber!, cancellationToken);
+                if (check)
+                {
+                    return BadRequest($"A dispute has already been submitted for the ticket number: {ticketNumber}. A dispute can only be submitted once for a violation ticket.");
+                }
+            }
+            catch (DisputeSearchFailedException e)
+            {
+                ProblemDetails problemDetails = new();
+                problemDetails.Status = StatusCodes.Status500InternalServerError;
+                problemDetails.Title = e.Source + ": Error searching dispute for the ticket";
+                problemDetails.Instance = HttpContext?.Request?.Path;
+                string? innerExceptionMessage = e.InnerException?.Message;
+                if (innerExceptionMessage is not null)
+                {
+                    problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+                }
+                else
+                {
+                    problemDetails.Extensions.Add("errors", new string[] { e.Message });
+                }
+
+                return new ObjectResult(problemDetails);
+            }
+
             return Ok(response.OcrViolationTicket);
         }
     }
