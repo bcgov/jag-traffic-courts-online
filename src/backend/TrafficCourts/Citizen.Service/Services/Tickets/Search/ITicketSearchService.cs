@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Citizen.Service.Models.Tickets;
+﻿using Microsoft.AspNetCore.Mvc;
+using TrafficCourts.Citizen.Service.Models.Tickets;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search;
 
@@ -17,4 +18,12 @@ public interface ITicketSearchService
     /// <exception cref="TicketSearchErrorException">An error occurred executing the search.</exception>
     /// <returns>The found <see cref="ViolationTicket"/> or null if the ticket was not found.</returns>
     Task<ViolationTicket?> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Searches for the dispute in OCCAM database by <paramref name="ticketNumber"/> to check if a dispute submitted for the violation ticket before.
+    /// </summary>
+    /// <param name="ticketNumber"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<bool> IsDisputeSubmittedBefore(string ticketNumber, CancellationToken cancellationToken);
 }
