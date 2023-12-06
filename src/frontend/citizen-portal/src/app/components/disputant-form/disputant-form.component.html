@@ -234,7 +234,17 @@
           </mat-error>
         </mat-form-field>
       </div>
-    </div><br />
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <app-alert type="warning" icon="info">
+          <ng-container #alertContent class="alert-content">
+            You <u>must</u> keep your contact information updated (email and mailing address).
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
 
     <div class="row">
       <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}" (change)="onOptOut()">
