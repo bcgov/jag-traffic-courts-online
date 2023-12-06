@@ -14,6 +14,7 @@ import javax.ws.rs.InternalServerErrorException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
@@ -45,6 +46,9 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	// Delegate, OpenAPI generated client
 	private final ViolationTicketApi violationTicketApi;
+	
+	@Autowired
+	private DisputeMapper disputeMapper;
 
 	public DisputeRepositoryImpl(ViolationTicketApi violationTicketApi) {
 		this.violationTicketApi = violationTicketApi;
@@ -171,7 +175,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			} else {
 				logger.debug("Successfully returned the violation ticket from ORDS with dispute id {}",
 						StructuredArguments.value("disputeId", id));
-				Dispute dispute = DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket);
+				Dispute dispute = disputeMapper.convertViolationTicketDtoToDispute(violationTicket);
 
 				// Set missing back reference
 				if (dispute != null) {
@@ -331,7 +335,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			logger.debug("Successfully returned disputes from ORDS");
 
 			disputesToReturn = response.getViolationTickets().stream()
-					.map(violationTicket -> DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket))
+					.map(violationTicket -> disputeMapper.convertViolationTicketDtoToDispute(violationTicket))
 					.collect(Collectors.toList());
 
 			// NPE fix - Some Disputes have missing counts. This should be impossible -
@@ -362,7 +366,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			logger.debug("Successfully returned dispute list items from ORDS");
 
 			disputeListToReturn = response.getDisputeListItems().stream().map(
-					diputeListItem -> DisputeMapper.INSTANCE.convertDisputeListItemDtoToDisputeListItem(diputeListItem))
+					diputeListItem -> disputeMapper.convertDisputeListItemDtoToDisputeListItem(diputeListItem))
 					.collect(Collectors.toList());
 		}
 		return disputeListToReturn;

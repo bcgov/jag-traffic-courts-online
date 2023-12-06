@@ -10,14 +10,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
-
-import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
@@ -29,9 +24,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
  */
 @Mapper
 (componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR) // This is required for tests to work
-public interface DisputeMapper {
-
-	DisputeMapper INSTANCE = Mappers.getMapper(DisputeMapper.class);
+public abstract class DisputeMapper extends BaseMapper {
 
 	// Map dispute data from ORDS to Oracle Data API dispute model
 	@Mapping(source = "dispute.entDtm", target = "createdTs")
@@ -140,7 +133,7 @@ public interface DisputeMapper {
 	@Mapping(source = "violationTicketCounts", target = "violationTicket.violationTicketCounts")
 	// Map dispute counts data from ORDS to Oracle Data API dispute count model
 	@Mapping(source = "violationTicketCounts", target = "disputeCounts", qualifiedByName="mapCounts")
-	Dispute convertViolationTicketDtoToDispute (ViolationTicket violationTicketDto);
+	public abstract Dispute convertViolationTicketDtoToDispute (ViolationTicket violationTicketDto);
 
 	// Map dispute data from ORDS to Oracle Data API dispute list item model
 	@Mapping(source = "disputeId", target = "disputeId")
@@ -153,7 +146,7 @@ public interface DisputeMapper {
 	@Mapping(source = "disputantGiven3Nm", target = "disputantGivenName3")
 	@Mapping(source = "requestCourtAppearanceYn", target = "requestCourtAppearanceYn")
 	@Mapping(source = "emailAddressTxt", target = "emailAddress")
-	@Mapping(source = "emailVerifiedYn", target = "emailAddressVerified")
+	@Mapping(source = "emailVerifiedYn", target = "emailAddressVerified", qualifiedByName="mapYnToBoolean")
 	@Mapping(source = "filingDt", target = "filingDate")
 	@Mapping(source = "userAssignedTo", target = "userAssignedTo")
 	@Mapping(source = "userAssignedDtm", target = "userAssignedTs")
@@ -164,7 +157,7 @@ public interface DisputeMapper {
 	@Mapping(source = "jjAssignedTo", target = "jjAssignedTo")
 	@Mapping(source = "jjDecisionDt", target = "jjDecisionDate")
 	@Mapping(source = "courtAgenId", target = "courtAgenId")
-	DisputeListItem convertDisputeListItemDtoToDisputeListItem (ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListItem disputeListItemDto);
+	public abstract DisputeListItem convertDisputeListItemDtoToDisputeListItem (ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.DisputeListItem disputeListItemDto);
 
 	@Mapping(target = "violationTicket", ignore = true) // ignore back reference mapping
 	@Mapping(source = "entUserId", target = "createdBy")
@@ -180,51 +173,7 @@ public interface DisputeMapper {
 	@Mapping(source = "statParagraphTxt", target = "paragraph")
 	@Mapping(source = "statSubParagraphTxt", target = "subparagraph")
 	@Mapping(source = "ticketedAmt", target = "ticketedAmount")
-	ViolationTicketCount convertViolationTicketCountDtoToViolationTicketCount (ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketCount violationTicketCountDto);
-
-	/**
-	 * Custom mapping for mapping YesNo fields to Boolean value
-	 *
-	 * @param value
-	 * @return Boolean value of {@link YesNo} enum
-	 */
-	@Named("mapYnToBoolean")
-	default Boolean mapYnToBoolean(YesNo value) {
-		return YesNo.Y.equals(value);
-	}
-
-	@Named("mapDisputeStatus")
-	default DisputeStatus mapDisputeStatus(String statusShortCd) {
-		DisputeStatus[] values = DisputeStatus.values();
-		for (DisputeStatus disputeStatus : values) {
-			if (disputeStatus.toShortName().equals(statusShortCd)) {
-				return disputeStatus;
-			}
-		}
-		return null;
-	}
-	
-	@Named("mapJJDisputeStatus")
-	default JJDisputeStatus mapJJDisputeStatus(String statusShortCd) {
-		JJDisputeStatus[] values = JJDisputeStatus.values();
-		for (JJDisputeStatus statusType : values) {
-			if (statusType.getShortName().equals(statusShortCd)) {
-				return statusType;
-			}
-		}
-		return null;
-	}
-	
-	@Named("mapContactTypeCd")
-	default ContactType mapContactTypeCd(String statusShortCd) {
-		ContactType[] values = ContactType.values();
-		for (ContactType contactType : values) {
-			if (contactType.getShortName().equals(statusShortCd)) {
-				return contactType;
-			}
-		}
-		return null;
-	}
+	public abstract ViolationTicketCount convertViolationTicketCountDtoToViolationTicketCount (ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketCount violationTicketCountDto);
 
 	/**
 	 * Custom mapping for dispute counts
@@ -233,7 +182,7 @@ public interface DisputeMapper {
 	 * @return list of {@link DisputeCount}
 	 */
 	@Named("mapCounts")
-	default List<DisputeCount> mapCounts(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketCount> violationTicketCounts) {
+	protected List<DisputeCount> mapCounts(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicketCount> violationTicketCounts) {
 		if ( violationTicketCounts == null || violationTicketCounts.isEmpty()) {
 			return null;
 		}
@@ -273,7 +222,7 @@ public interface DisputeMapper {
 	}
 
 	@AfterMapping
-	default void setLawyerAddress(@MappingTarget Dispute dispute, ViolationTicket violationTicket) {
+	protected void setLawyerAddress(@MappingTarget Dispute dispute, ViolationTicket violationTicket) {
 		ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Dispute disputeFromApi = violationTicket.getDispute();
 		if (dispute != null && violationTicket != null && disputeFromApi != null) {
 			String addressLine1 = disputeFromApi.getLawFirmAddrLine1Txt();
