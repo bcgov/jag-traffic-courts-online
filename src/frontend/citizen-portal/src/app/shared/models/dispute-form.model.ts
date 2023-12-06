@@ -29,6 +29,7 @@ export interface NoticeOfDispute extends NoticeOfDisputeBase {
   address?: string;
   lawyer_full_name?: string;
   __witness_present?: boolean;
+  counts?: ViolationTicketCount[]; // for creating notice of dispute
 }
 export type NoticeOfDisputeKeys = keyof NoticeOfDispute;
 export type NoticeOfDisputeFormConfigs = {

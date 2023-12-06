@@ -35,7 +35,6 @@ export class FindTicketComponent implements OnInit {
     private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
   ) {
-
     this.progressRef?.state?.subscribe(value => {
       if (value.active === false) this.dialogRef?.close();
     });
