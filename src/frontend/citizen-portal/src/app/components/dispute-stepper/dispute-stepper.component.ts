@@ -346,7 +346,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       const data: DialogOptions = {
         titleKey: "Warning",
         actionType: "warn",
-        messageKey: `You have selected "Skip this count, no action required" for all counts on your ticket. No request will be created. Please review your selection(s).`,
+        messageKey: `You have selected "Skip this count, no action required" for all counts on your ticket. No dispute request will be created. If you do not pay or dispute your ticket within 30 days, you will be deemed to have plead guilty and you will be required to pay the full offence amount. Please review your selection(s) if you intend to file a dispute.`,
         actionTextKey: "Close",
         cancelHide: true
       };
