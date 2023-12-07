@@ -197,14 +197,37 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         }
     }
 
+    /// <summary>
+    /// If the computed next refresh interval is higher than this, we will cap the retry to this value
+    /// </summary>
+    private static TimeSpan TwoMinutes = TimeSpan.FromMinutes(2);
+
     private void ScheduleRefresh(Token token)
     {
-        double seconds = token.ExpiresIn * 2.0 / 3.0; // refresh again when there is only 1/3 of the life left
-        ScheduleRefresh(TimeSpan.FromSeconds(seconds));
+        // assumption: token will not be returned with a "ExpiresIn" that is less than or equal to zero
+
+        TimeSpan expires = TimeSpan.FromSeconds(token.ExpiresIn);
+        // start refreshing the token two minutes before it expires
+        TimeSpan nextFresh = expires - TwoMinutes;
+
+        // if the original token expires in two or less minutes which would be odd,
+        // then refresh when the token has 1/2 its life left
+        if (nextFresh <= TimeSpan.Zero)
+        {
+            nextFresh = expires / 2.0;
+        }
+        
+        ScheduleRefresh(nextFresh);
     }
 
     private void ScheduleRefresh(TimeSpan dueTime)
     {
+        if (dueTime <= TimeSpan.Zero)
+        {
+            LogRefreshScheduledLessThanOrEqualToZero(dueTime);
+            dueTime = TimeSpan.FromSeconds(1); // try again in one second, is this a good value?
+        }
+
         LogRefreshScheduled(dueTime);
         _timer?.Change(dueTime, Timeout.InfiniteTimeSpan);
     }
@@ -264,5 +287,8 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
 
     [LoggerMessage(EventId = 9, Level = LogLevel.Error, Message = "Error occurred while getting access token")]
     public partial void LogRefreshAccessTokenFailed(Exception exception);
+
+    [LoggerMessage(EventId = 10, Level = LogLevel.Warning, Message = "Requested scheduled token refresh was less than or equal to zero, it was {Duration}")]
+    public partial void LogRefreshScheduledLessThanOrEqualToZero(TimeSpan duration);
 
 }
