@@ -1,9 +1,16 @@
-﻿using Refit;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using Refit;
 using System.Configuration;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi.Authentication;
+using TrafficCourts.Common.Authentication;
+using TrafficCourts.Configuration.Validation;
+using TrafficCourts.Core.Http;
+using TrafficCourts.Http;
+using static System.Collections.Specialized.BitVector32;
 
 namespace TrafficCourts.Citizen.Service
 {
@@ -37,40 +44,27 @@ namespace TrafficCourts.Citizen.Service
         {
             logger.Information("Using RSI ticket search service");
 
-            builder.Services.ConfigureValidatableSetting<RsiServiceOptions>(builder.Configuration.GetSection(Section));
-
-            builder.Services.AddHttpClient<OpenIdAuthenticationClient>((serviceProvider, client) =>
-            {
-                var options = serviceProvider.GetRequiredService<RsiServiceOptions>();
-                var uri = options.AuthenticationUrl;
-                client.BaseAddress = new Uri($"{uri.Scheme}://{uri.Host}:{uri.Port}");
-                client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
-                client.DefaultRequestHeaders.Add("return-client-request-id", "true");
-            });
-
             builder.Services
                 .AddRefitClient<IRoadSafetyTicketSearchApi>()
-                .ConfigureHttpClient((serviceProvider, client) =>
-                {
-                    var options = serviceProvider.GetRequiredService<RsiServiceOptions>();
-                    client.BaseAddress = options.ResourceUrl;
-                })
-                .AddHttpMessageHandler<AuthenticationHandler>()
-                .AddHttpMessageHandler<LoggingHandler>(); ;
+                .ConfigureHttpClient(ConfigureClient)
+                .AddHttpMessageHandler((serviceProvider) => CreateOidcDelegatingHandler(serviceProvider, "TicketSearch"))
+                .AddStandardResilienceHandler();
 
             builder.Services.AddOptions();
             builder.Services.AddMemoryCache();
             builder.Services.AddTransient<ITokenCache, TokenCache>();
 
-            builder.Services.AddTransient<AuthenticationHandler>();
-            builder.Services.AddTransient<LoggingHandler>();
+            builder.Services.AddHostedService<RsiTokenRefreshService>(serviceProvider =>
+            {
+                var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+                var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+                var options = GetConfiguration(serviceProvider, "TicketSearch");
+                var logger = serviceProvider.GetRequiredService<ILogger<RsiTokenRefreshService>>();
 
-            // seems the OpenId endpoint does not work and we need to get access token via basic auth now
-            ////builder.Services.AddTransient<IAuthenticationClient, OpenIdAuthenticationClient>();
-            builder.Services.AddTransient<IAuthenticationClient, BasicAuthAuthenticationClient>();
+                return new RsiTokenRefreshService(factory, "RSI", TimeProvider.System, cache, options, logger);
+            });
 
             builder.Services.AddTransient<ITicketInvoiceSearchService, RoadSafetyTicketSearchService>();
-            builder.Services.AddHostedService<AccessTokenUpdateWorker>();
         }
 
         public static void UseMockTickets(WebApplicationBuilder builder, Serilog.ILogger logger)
@@ -94,6 +88,60 @@ namespace TrafficCourts.Citizen.Service
                 logger.Information("Using embedded mock ticket data");
                 builder.Services.AddTransient<IMockDataProvider, EmbeddedMockDataProvider>();
             }
+        }
+
+        private static void ConfigureClient(IServiceProvider serviceProvider, HttpClient client)
+        {
+            IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            IConfigurationSection section = configuration.GetSection("TicketSearch");
+            var resourceUrl = section["ResourceUrl"];
+
+            if (string.IsNullOrEmpty(resourceUrl) || !Uri.TryCreate(resourceUrl, UriKind.Absolute, out var baseAddress))
+            {
+                throw new SettingsValidationException("TicketSearch", "ResourceUrl", " is required");
+            }
+
+            client.BaseAddress = baseAddress;
+        }
+
+        private static OidcConfidentialClientDelegatingHandler CreateOidcDelegatingHandler(IServiceProvider serviceProvider, string sectionName)
+        {
+            var configuration = GetConfiguration(serviceProvider, sectionName);
+            var tokenCache = serviceProvider.GetRequiredService<ITokenCache>();
+            var logger = serviceProvider.GetRequiredService<ILogger<OidcConfidentialClientDelegatingHandler>>();
+
+            var handler = new OidcConfidentialClientDelegatingHandler(configuration, tokenCache, logger);
+            return handler;
+        }
+
+        private static OidcConfidentialClientConfiguration GetConfiguration(IServiceProvider serviceProvider, string sectionName)
+        {
+            // we are not using ConfigureValidatableSetting because there may be multiple instances of OIDC clients
+            IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            IConfigurationSection section = configuration.GetSection(sectionName);
+            var oidc = new OidcConfidentialClientConfiguration();
+            section.Bind(oidc);
+
+            // validate
+            if (string.IsNullOrEmpty(oidc.ClientId)) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.ClientId), "is required");
+            if (string.IsNullOrEmpty(oidc.ClientSecret)) throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.ClientSecret), "is required");
+            if (oidc.TokenEndpoint is null)
+            {
+                // old configuration had this property on "AuthenticationUrl" so see if that is there
+                string? authenticationUrl = section["AuthenticationUrl"];
+                if (string.IsNullOrEmpty(authenticationUrl) || !Uri.TryCreate(authenticationUrl, UriKind.Absolute, out var tokenEndpoint)) 
+                {
+                    throw new SettingsValidationException(sectionName, nameof(OidcConfidentialClientConfiguration.TokenEndpoint), "is required");
+                }
+
+                // log out the warning that the deprecated configuration is still being used
+                var logger = serviceProvider.GetRequiredService<ILogger<OidcConfidentialClientConfiguration>>();
+                logger.LogWarning("OIDC configuration for {Section} is using deprecated configuration property AuthenticationUrl, please change to TokenEndpoint", section);
+
+                oidc.TokenEndpoint = tokenEndpoint;
+            }
+
+            return oidc;
         }
     }
 }
