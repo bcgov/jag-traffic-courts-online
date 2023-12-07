@@ -74,6 +74,12 @@
       for more options for submitting your dispute or request.
     </p>
   </div>
+  <div *ngIf="options.messageKey === 'error7'">
+    <span class="flex-grow-1"></span>
+    <p>A dispute for this violation ticket already exists. If you need to make updates to your dispute, use Update Dispute or contact 
+      <a href="mailto:Courts.TCO@gov.bc.ca" target="blank">Courts.TCO@gov.bc.ca <img class="me-2" src="/assets/mail-icon.svg" style="width: 15px; height: 13px; vertical-align: text-top;"/></a>
+    </p>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <span class="flex-grow-1"></span>
