@@ -18,8 +18,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ContactType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
@@ -37,6 +38,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 
 
 class DisputeServiceImplTest extends BaseTestSuite {
+	
+	@Autowired
+	DisputeMapper disputeMapper;
 
 	@Mock
 	private ViolationTicketApi violationTicketApi;
@@ -45,7 +49,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	@Override
 	@BeforeEach
 	public void beforeEach() {
-		repository = new DisputeRepositoryImpl(violationTicketApi);
+		repository = new DisputeRepositoryImpl(violationTicketApi, disputeMapper);
 	}
 
 	@Test

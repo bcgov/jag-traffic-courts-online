@@ -47,11 +47,12 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	// Delegate, OpenAPI generated client
 	private final ViolationTicketApi violationTicketApi;
 	
-	@Autowired
 	private DisputeMapper disputeMapper;
-
-	public DisputeRepositoryImpl(ViolationTicketApi violationTicketApi) {
+	
+	@Autowired
+	public DisputeRepositoryImpl(ViolationTicketApi violationTicketApi, DisputeMapper disputeMapper) {
 		this.violationTicketApi = violationTicketApi;
+		this.disputeMapper = disputeMapper;
 	}
 
 	@Override
