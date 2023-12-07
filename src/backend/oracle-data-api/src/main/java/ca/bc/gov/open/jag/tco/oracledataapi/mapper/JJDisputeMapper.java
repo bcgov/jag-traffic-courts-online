@@ -39,7 +39,7 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "disputeCounts", target = "jjDisputedCounts")
 	@Mapping(source = "disputeId", target = "id")
 	@Mapping(source = "disputeRemarks", target = "remarks")
-	@Mapping(source = "disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
+	@Mapping(source = "disputeStatusTypeCd", target = "status", qualifiedByName="mapJJDisputeStatus")
 	@Mapping(source = "drvLicIssuedProvSeqNo", target = "drvLicIssuedProvSeqNo")
 	@Mapping(source = "drvLicIssuedCtryId", target = "drvLicIssuedCtryId")
 	@Mapping(source = "electronicTicketYn", target = "electronicTicketYn")
