@@ -112,7 +112,7 @@ export class ViolationTicketService {
         }),
         catchError((error: any) => {
           this.logger.error("ViolationTicketService::searchTicket error has occurred: ", error);
-          this.onError();
+          this.onError(error);
           throw error;
         })
       );
@@ -383,7 +383,11 @@ export class ViolationTicketService {
       }
       else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
         this.openErrorScenarioFourDialog();
-      } else { // fall back option
+      }
+      else if (this.isErrorMatch(err, "A dispute has already been submitted for the ticket number", false)) {
+        this.openErrorScenarioSevenDialog();
+      }
+      else { // fall back option
         var errorMessages = "";
         if (err.error?.errors) {
           err.error.errors.forEach(error => { errorMessages += ". \n" + error });
@@ -396,7 +400,9 @@ export class ViolationTicketService {
   }
 
   private isErrorMatch(err: HttpErrorResponse, msg: string, exactMatch: boolean = true) {
-    return exactMatch ? err.error.errors?.includes(msg) : err.error.errors?.filter(i => i.indexOf(msg) > -1).length > 0;
+    return exactMatch ?
+      (err.error.errors?.includes(msg) || err.error.includes(msg)) :
+      (err.error.errors?.filter(i => i.indexOf(msg) > -1).length > 0) || err.error.indexOf(msg) >= 0;
   }
 
   private openImageTicketNotFoundDialog(title: string, key: string) {
@@ -424,6 +430,10 @@ export class ViolationTicketService {
 
   private openErrorScenarioFourDialog() {
     return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error2");
+  }
+
+  private openErrorScenarioSevenDialog() {
+    return this.openImageTicketNotFoundDialog("Duplicate Ticket Number", "error7");
   }
 
   private openInValidHandwrittenTicketDateDialog() {
