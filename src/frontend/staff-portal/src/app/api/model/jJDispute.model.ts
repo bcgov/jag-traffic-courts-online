@@ -9,16 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { JJDisputeCourtAppearanceRoP } from './jJDisputeCourtAppearanceRoP.model';
 import { JJDisputeRemark } from './jJDisputeRemark.model';
-import { JJDisputedCount } from './jJDisputedCount.model';
 import { JJDisputeNoticeOfHearingYn } from './jJDisputeNoticeOfHearingYn.model';
-import { JJDisputeContactType } from './jJDisputeContactType.model';
 import { JJDisputeDisputantAttendanceType } from './jJDisputeDisputantAttendanceType.model';
 import { FileMetadata } from './fileMetadata.model';
 import { JJDisputeHearingType } from './jJDisputeHearingType.model';
 import { JJDisputeElectronicTicketYn } from './jJDisputeElectronicTicketYn.model';
 import { JJDisputeAppearInCourt } from './jJDisputeAppearInCourt.model';
+import { JJDisputeAccidentYn } from './jJDisputeAccidentYn.model';
+import { JJDisputeCourtAppearanceRoP } from './jJDisputeCourtAppearanceRoP.model';
+import { JJDisputedCount } from './jJDisputedCount.model';
+import { JJDisputeContactType } from './jJDisputeContactType.model';
+import { JJDisputeMultipleOfficersYn } from './jJDisputeMultipleOfficersYn.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 
@@ -33,6 +35,7 @@ export interface JJDispute {
     modifiedTs?: string | null;
     id?: number;
     ticketNumber?: string | null;
+    accidentYn?: JJDisputeAccidentYn;
     addressLine1?: string | null;
     addressLine2?: string | null;
     addressLine3?: string | null;
@@ -47,6 +50,7 @@ export interface JJDispute {
     emailAddress?: string | null;
     status?: JJDisputeStatus;
     hearingType?: JJDisputeHearingType;
+    multipleOfficersYn?: JJDisputeMultipleOfficersYn;
     noticeOfDisputeGuid?: string | null;
     noticeOfHearingYn?: JJDisputeNoticeOfHearingYn;
     occamDisputantGiven1Nm?: string | null;
@@ -78,6 +82,7 @@ export interface JJDispute {
     contactType?: JJDisputeContactType;
     appearInCourt?: JJDisputeAppearInCourt;
     courtAgenId?: string | null;
+    recalled?: boolean | null;
     lawFirmName?: string | null;
     lawyerSurname?: string | null;
     lawyerGivenName1?: string | null;

@@ -11,7 +11,7 @@
  */
 
 
-export type FileHistoryAuditLogEntryType = 'UNKNOWN' | 'ARFL' | 'CAIN' | 'CAWT' | 'CCAN' | 'CCON' | 'CCWR' | 'CLEG' | 'CUEM' | 'CUEV' | 'CUIN' | 'CULG' | 'CUPD' | 'CUWR' | 'CUWT' | 'DURA' | 'DURR' | 'EMCA' | 'EMCF' | 'EMCR' | 'EMDC' | 'EMFD' | 'EMPR' | 'EMRJ' | 'EMRV' | 'EMST' | 'EMUP' | 'EMVF' | 'ESUR' | 'FDLD' | 'FDLS' | 'FUPD' | 'FUPS' | 'INIT' | 'JASG' | 'JCNF' | 'JDIV' | 'JPRG' | 'OCNT' | 'RECN' | 'SADM' | 'SCAN' | 'SPRC' | 'SREJ' | 'SUB' | 'SUPL' | 'SVAL' | 'URSR' | 'VREV' | 'VSUB';
+export type FileHistoryAuditLogEntryType = 'UNKNOWN' | 'ARFL' | 'CAIN' | 'CAWT' | 'CCAN' | 'CCON' | 'CCWR' | 'CLEG' | 'CUEM' | 'CUEV' | 'CUIN' | 'CULG' | 'CUPD' | 'CUWR' | 'CUWT' | 'DURA' | 'DURR' | 'EMCA' | 'EMCF' | 'EMCR' | 'EMDC' | 'EMFD' | 'EMPR' | 'EMRJ' | 'EMRV' | 'EMST' | 'EMUP' | 'EMVF' | 'ESUR' | 'FDLD' | 'FDLS' | 'FUPD' | 'FUPS' | 'INIT' | 'JASG' | 'JCNF' | 'JDIV' | 'JPRG' | 'OCNT' | 'RCLD' | 'RECN' | 'SADM' | 'SCAN' | 'SPRC' | 'SREJ' | 'SUB' | 'SUPL' | 'SVAL' | 'URSR' | 'VREV' | 'VSUB';
 
 export const FileHistoryAuditLogEntryType = {
     Unknown: 'UNKNOWN' as FileHistoryAuditLogEntryType,
@@ -53,6 +53,7 @@ export const FileHistoryAuditLogEntryType = {
     Jdiv: 'JDIV' as FileHistoryAuditLogEntryType,
     Jprg: 'JPRG' as FileHistoryAuditLogEntryType,
     Ocnt: 'OCNT' as FileHistoryAuditLogEntryType,
+    Rcld: 'RCLD' as FileHistoryAuditLogEntryType,
     Recn: 'RECN' as FileHistoryAuditLogEntryType,
     Sadm: 'SADM' as FileHistoryAuditLogEntryType,
     Scan: 'SCAN' as FileHistoryAuditLogEntryType,

@@ -10,16 +10,13 @@
  * Do not edit the class manually.
  */
 import { DisputeListItemDisputantDetectedOcrIssues } from './disputeListItemDisputantDetectedOcrIssues.model';
+import { DisputeListItemJjDisputeStatus } from './disputeListItemJjDisputeStatus.model';
 import { DisputeListItemSystemDetectedOcrIssues } from './disputeListItemSystemDetectedOcrIssues.model';
 import { DisputeListItemStatus } from './disputeListItemStatus.model';
 import { DisputeListItemRequestCourtAppearanceYn } from './disputeListItemRequestCourtAppearanceYn.model';
 
 
 export interface DisputeListItem { 
-    createdBy?: string | null;
-    createdTs?: string;
-    modifiedBy?: string | null;
-    modifiedTs?: string | null;
     disputeId?: number;
     ticketNumber?: string | null;
     submittedTs?: string | null;
@@ -36,6 +33,11 @@ export interface DisputeListItem {
     userAssignedTs?: string | null;
     disputantDetectedOcrIssues?: DisputeListItemDisputantDetectedOcrIssues;
     systemDetectedOcrIssues?: DisputeListItemSystemDetectedOcrIssues;
+    violationDate?: string | null;
+    jjDisputeStatus?: DisputeListItemJjDisputeStatus;
+    jjAssignedTo?: string | null;
+    jjDecisionDate?: string | null;
+    courtAgenId?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

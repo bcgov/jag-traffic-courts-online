@@ -2966,6 +2966,161 @@
         }
       }
     },
+    "/api/jj/{ticketNumber}/recall": {
+      "put": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Updates the status of a particular JJDispute record to REVIEW when JJ wants to recall and open an ACCEPTED, CONFIRMED or CONCLUDED dispute.",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "Unique identifier for a specific JJ Dispute record.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "checkVTC",
+            "in": "query",
+            "description": "boolean to indicate need to check VTC assigned.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The JJDispute is updated."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires jjdispute:review permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
     "/api/jj/{ticketNumber}/review": {
       "put": {
         "tags": [
@@ -3097,7 +3252,7 @@
             }
           },
           "405": {
-            "description": "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be less than or equal to 256 characters. Update failed.",
+            "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be less than 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4875,23 +5030,6 @@
       "DisputeListItem": {
         "type": "object",
         "properties": {
-          "createdBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "modifiedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
           "disputeId": {
             "type": "integer",
             "format": "int64"
@@ -4954,6 +5092,27 @@
           "systemDetectedOcrIssues": {
             "$ref": "#/components/schemas/DisputeListItemSystemDetectedOcrIssues"
           },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "jjDisputeStatus": {
+            "$ref": "#/components/schemas/DisputeListItemJjDisputeStatus"
+          },
+          "jjAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjDecisionDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "courtAgenId": {
+            "type": "string",
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
@@ -4967,6 +5126,23 @@
           "UNKNOWN",
           "Y",
           "N"
+        ],
+        "type": "string"
+      },
+      "DisputeListItemJjDisputeStatus": {
+        "enum": [
+          "UNKNOWN",
+          "NEW",
+          "IN_PROGRESS",
+          "DATA_UPDATE",
+          "CONFIRMED",
+          "REQUIRE_COURT_HEARING",
+          "REQUIRE_MORE_INFO",
+          "ACCEPTED",
+          "REVIEW",
+          "CONCLUDED",
+          "CANCELLED",
+          "HEARING_SCHEDULED"
         ],
         "type": "string"
       },
@@ -5451,6 +5627,7 @@
           "JDIV",
           "JPRG",
           "OCNT",
+          "RCLD",
           "RECN",
           "SADM",
           "SCAN",
@@ -5561,6 +5738,9 @@
             "type": "string",
             "nullable": true
           },
+          "accidentYn": {
+            "$ref": "#/components/schemas/JJDisputeAccidentYn"
+          },
           "addressLine1": {
             "type": "string",
             "nullable": true
@@ -5615,6 +5795,9 @@
           },
           "hearingType": {
             "$ref": "#/components/schemas/JJDisputeHearingType"
+          },
+          "multipleOfficersYn": {
+            "$ref": "#/components/schemas/JJDisputeMultipleOfficersYn"
           },
           "noticeOfDisputeGuid": {
             "type": "string",
@@ -5742,6 +5925,10 @@
             "type": "string",
             "nullable": true
           },
+          "recalled": {
+            "type": "boolean",
+            "nullable": true
+          },
           "lawFirmName": {
             "type": "string",
             "nullable": true
@@ -5806,6 +5993,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "JJDisputeAccidentYn": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
+        ],
+        "type": "string"
       },
       "JJDisputeAppearInCourt": {
         "enum": [
@@ -5956,6 +6151,14 @@
           "UNKNOWN",
           "COURT_APPEARANCE",
           "WRITTEN_REASONS"
+        ],
+        "type": "string"
+      },
+      "JJDisputeMultipleOfficersYn": {
+        "enum": [
+          "UNKNOWN",
+          "Y",
+          "N"
         ],
         "type": "string"
       },

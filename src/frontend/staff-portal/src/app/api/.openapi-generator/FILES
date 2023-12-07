@@ -29,6 +29,7 @@ model/disputeDisputantDetectedOcrIssues.model.ts
 model/disputeInterpreterRequired.model.ts
 model/disputeListItem.model.ts
 model/disputeListItemDisputantDetectedOcrIssues.model.ts
+model/disputeListItemJjDisputeStatus.model.ts
 model/disputeListItemRequestCourtAppearanceYn.model.ts
 model/disputeListItemStatus.model.ts
 model/disputeListItemSystemDetectedOcrIssues.model.ts
@@ -50,6 +51,7 @@ model/fileHistory.model.ts
 model/fileHistoryAuditLogEntryType.model.ts
 model/fileMetadata.model.ts
 model/jJDispute.model.ts
+model/jJDisputeAccidentYn.model.ts
 model/jJDisputeAppearInCourt.model.ts
 model/jJDisputeContactType.model.ts
 model/jJDisputeCourtAppearanceRoP.model.ts
@@ -60,6 +62,7 @@ model/jJDisputeCourtAppearanceRoPJjSeized.model.ts
 model/jJDisputeDisputantAttendanceType.model.ts
 model/jJDisputeElectronicTicketYn.model.ts
 model/jJDisputeHearingType.model.ts
+model/jJDisputeMultipleOfficersYn.model.ts
 model/jJDisputeNoticeOfHearingYn.model.ts
 model/jJDisputeRemark.model.ts
 model/jJDisputeStatus.model.ts
