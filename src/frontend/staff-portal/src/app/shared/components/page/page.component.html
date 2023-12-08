@@ -6,8 +6,8 @@
     <ng-content select="[stickyToolBar]"></ng-content>
   </div>
   <div fxFlex class="container app-width">
-    <app-busy-overlay [busy]="busy">
-      <ng-content [busy]="busy"></ng-content>
+    <app-busy-overlay>
+      <ng-content></ng-content>
     </app-busy-overlay>
   </div>
 </div>
