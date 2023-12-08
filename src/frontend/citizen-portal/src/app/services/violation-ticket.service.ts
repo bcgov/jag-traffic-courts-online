@@ -400,9 +400,9 @@ export class ViolationTicketService {
   }
 
   private isErrorMatch(err: HttpErrorResponse, msg: string, exactMatch: boolean = true) {
-    return exactMatch ?
-      (err.error.errors?.includes(msg) || err.error.includes(msg)) :
-      (err.error.errors?.filter(i => i.indexOf(msg) > -1).length > 0) || err.error.indexOf(msg) >= 0;
+    return exactMatch
+      ? (err.error.errors?.includes(msg) || (typeof err.error.includes === "function" && err.error.includes(msg)))
+      : (err.error.errors?.filter(i => i.indexOf(msg) > -1).length > 0) || (typeof err.error.indexOf === "function" && err.error.indexOf(msg) >= 0);
   }
 
   private openImageTicketNotFoundDialog(title: string, key: string) {
