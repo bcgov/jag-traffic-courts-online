@@ -31,6 +31,7 @@ export class JJDisputeComponent implements OnInit {
   @Input() jjDisputeInfo: JJDispute
   @Input() type: string;
   @Input() isViewOnly = false;
+  @Input() enableStaffSupport = false;
   @Output() backInbox: EventEmitter<any> = new EventEmitter();
   printOptions: PrintOptions = new PrintOptions();
   isSupportStaff: boolean = false;
@@ -138,7 +139,7 @@ export class JJDisputeComponent implements OnInit {
       }
     });
 
-    this.isSupportStaff = this.authService.checkRole("support-staff");
+    this.isSupportStaff = this.enableStaffSupport && this.authService.checkRole("support-staff");
     this.provinces = this.lookupsService.provinces;
     this.languages = this.lookupsService.languages;
   }
