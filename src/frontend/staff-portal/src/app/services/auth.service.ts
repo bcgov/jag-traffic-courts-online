@@ -4,16 +4,20 @@ import { AppRoutes } from 'app/app.routes';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
 import { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
-import { BehaviorSubject, from, Observable, map, catchError, forkJoin } from 'rxjs';
+import { BehaviorSubject, from, Observable, map, catchError, forkJoin, first } from 'rxjs';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { ConfigService } from '@config/config.service';
 import { UserGroup } from '@shared/enums/user-group.enum';
+import { AppState, JJDisputeStore } from 'app/store';
+import { Store } from '@ngrx/store';
+import { LookupsService } from './lookups.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private isInit = true;
   private _isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   private _userProfile: BehaviorSubject<KeycloakProfile> = new BehaviorSubject<KeycloakProfile>(null);
   private _jjList: BehaviorSubject<UserRepresentation[]> = new BehaviorSubject<UserRepresentation[]>([]);
@@ -31,6 +35,8 @@ export class AuthService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
+    private lookupsService: LookupsService, // to be moved
+    private store: Store<AppState>, // to be moved
   ) {
     this.keycloak.keycloakEvents$.subscribe({
       next(event) {
@@ -50,8 +56,26 @@ export class AuthService {
       .pipe(
         map((response: boolean) => {
           if (response) {
-            this.loadUserProfile().subscribe(() => {
+            this.loadUserProfile().subscribe(() => { // to be moved
               this._isLoggedIn.next(response);
+              if (this.isLoggedIn && this.isInit) {
+                this.userProfile$.pipe(first()).subscribe(() => {
+                  this.isInit = false;
+                  let observables = [
+                    this.loadUsersLists(),
+                    this.lookupsService.init()
+                  ];
+
+                  forkJoin(observables).subscribe({
+                    next: results => {
+                      this.store.dispatch(JJDisputeStore.Actions.Get());
+                    },
+                    error: err => {
+                      this.logger.error("Landing Page Init: Initial data loading failed");
+                    }
+                  });
+                })
+              }
               return response;
             });
           } else {
