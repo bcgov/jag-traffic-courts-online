@@ -34,5 +34,5 @@
 </app-page>
 <ng-container *ngIf="showDispute">
   <app-jj-dispute (backInbox)="backInbox()" [jjDisputeInfo]="jjDisputeInfo"
-    [isViewOnly]="!isInfoEditable"></app-jj-dispute>
+    [isViewOnly]="!isInfoEditable" [enableStaffSupport]="false"></app-jj-dispute>
 </ng-container>

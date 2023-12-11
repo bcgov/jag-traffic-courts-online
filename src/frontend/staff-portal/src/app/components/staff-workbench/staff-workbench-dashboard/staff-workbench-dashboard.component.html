@@ -53,5 +53,5 @@
   <app-update-request-info *ngIf="tabSelected.value === 2" (backInbox)="backInbox()"
     [disputeInfo]="disputeInfo"></app-update-request-info>
   <app-jj-dispute *ngIf="tabSelected.value === 1 || tabSelected.value === 3" (backInbox)="backInbox()"
-    [jjDisputeInfo]="jjDisputeInfo" [type]="'ticket'" [isViewOnly]="true"></app-jj-dispute>
+    [jjDisputeInfo]="jjDisputeInfo" [type]="'ticket'" [isViewOnly]="true" [enableStaffSupport]="true"></app-jj-dispute>
 </ng-container>
