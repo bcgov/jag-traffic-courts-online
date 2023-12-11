@@ -317,7 +317,7 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">No APP</p>
-              <p class="section-grid-text" style="padding-right: 5px !important;">
+              <p class="section-grid-text" style="white-space: nowrap;">
                 <span *ngIf="((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs">
                   {{ courtAppearanceForm?.value.noAppTs | date: "yyyy-MM-dd HH:mm" : "UTC" }} UTC
                 </span>

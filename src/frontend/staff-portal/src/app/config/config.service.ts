@@ -6,6 +6,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import CanadaProvincesJSON from 'assets/canada_provinces_list.json';
 import USStatesJSON from 'assets/us_states_list.json';
 import CountriesListJSON from 'assets/countries_list.json';
+import CourthouseDataJSON from 'assets/courthouse-data.json';
+import { CourthouseTeam } from 'app/services/lookups.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +34,7 @@ export class ConfigService {
 
   private _countries: CountryCodeValue[] = [];
   private _provincesAndStates: ProvinceCodeValue[] = [];
+  private _courthouses: CourthouseTeam[] = [];
 
   private _bcCodeValue: ProvinceCodeValue;
   private _canadaCodeValue: CountryCodeValue;
@@ -55,6 +58,9 @@ export class ConfigService {
       this._provincesAndStates.push(new ProvinceCodeValue(+x.ctryId, +x.provSeqNo, x.provNm, x.provAbbreviationCd, i));
       i++;
     })
+
+    // import courthouses
+    this._courthouses = CourthouseDataJSON.courthouses;
 
     // import states
     USStatesJSON.provinceCodeValues.forEach(x => {
@@ -154,6 +160,10 @@ export class ConfigService {
 
   public get countries(): CountryCodeValue[] {
     return [...this._countries];
+  }
+
+  public get courthouses(): CourthouseTeam[] {
+    return [...this._courthouses];
   }
 
   public get bcCodeValue(): ProvinceCodeValue {
