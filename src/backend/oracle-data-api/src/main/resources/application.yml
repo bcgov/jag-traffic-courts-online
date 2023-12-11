@@ -15,7 +15,7 @@ spring:
     sentinel:
       master: ${REDIS_SENTINAL_MASTER:}
       nodes: ${REDIS_SENTINAL_NODES:}
-  
+
 management:
   trace:
     http:
@@ -34,6 +34,7 @@ metrics:
 
 springdoc:
   swagger-ui:
+    path: /
     tagsSorter: alpha
     # Configure swagger to list by sorted endpoint
     operations-sorter: alpha
