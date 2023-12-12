@@ -57,7 +57,7 @@ namespace TrafficCourts.Citizen.Service
             builder.Services.AddHostedService<RsiTokenRefreshService>(serviceProvider =>
             {
                 var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-                var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+                var cache = serviceProvider.GetRequiredService<ITokenCache>();
                 var options = GetConfiguration(serviceProvider, "TicketSearch");
                 var logger = serviceProvider.GetRequiredService<ILogger<RsiTokenRefreshService>>();
 

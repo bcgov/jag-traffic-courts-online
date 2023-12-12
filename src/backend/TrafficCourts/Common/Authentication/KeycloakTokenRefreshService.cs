@@ -11,9 +11,9 @@ public class KeycloakTokenRefreshService : TokenRefreshService<KeycloakTokenRefr
         IHttpClientFactory httpClientFactory,
         string httpClientName,
         TimeProvider timeProvider, 
-        IMemoryCache memoryCache, 
+        ITokenCache cache, 
         OidcConfidentialClientConfiguration configuration, 
-        ILogger<KeycloakTokenRefreshService> logger) : base(httpClientFactory, httpClientName, timeProvider, memoryCache, configuration, logger)
+        ILogger<KeycloakTokenRefreshService> logger) : base(httpClientFactory, httpClientName, timeProvider, cache, configuration, logger)
     {
     }
 }

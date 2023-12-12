@@ -21,10 +21,9 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly string _httpClientName;
     private readonly TimeProvider _timeProvider;
-    private readonly IMemoryCache _memoryCache;
+    private readonly ITokenCache _cache;
     private readonly OidcConfidentialClientConfiguration _configuration;
     private readonly IDictionary<string,string> _content;
-    private readonly string _cacheKey;
     private readonly ILogger<TImplementation> _logger;
     private readonly CancellationTokenSource _cts = new();
 
@@ -34,21 +33,18 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         IHttpClientFactory httpClientFactory,
         string httpClientName,
         TimeProvider timeProvider,
-        IMemoryCache memoryCache,
+        ITokenCache cache,
         OidcConfidentialClientConfiguration configuration,
         ILogger<TImplementation> logger)
     {
         _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         _httpClientName = httpClientName ?? throw new ArgumentNullException(nameof(httpClientName));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
-        _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         _content = GetRequestContent(configuration);
-        _cacheKey = configuration.GetCacheKey();
-
-        LogUsingCacheKey(_cacheKey);
     }
 
     public void Dispose()
@@ -152,8 +148,9 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
 
         // flag in the job's state that access token updated
         DateTimeOffset expiresAt = state.TokenUpdated(token);
+
+        _cache.SaveToken(_configuration, token, expiresAt);
         
-        _memoryCache.Set(_cacheKey, token, expiresAt); // should be refreshed by this
         ScheduleRefresh(token);
     }
 
@@ -261,8 +258,8 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
     [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Got token {Token}")]
     public partial void LogGotToken(object token);
 
-    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Access token will be cached using cache key {CacheKey}")]
-    public partial void LogUsingCacheKey(object cacheKey);
+    //[LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Access token will be cached using cache key {CacheKey}")]
+    //public partial void LogUsingCacheKey(object cacheKey);
 
     [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Service started")]
     public partial void LogStarted();

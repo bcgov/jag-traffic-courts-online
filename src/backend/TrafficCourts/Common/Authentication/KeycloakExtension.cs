@@ -49,7 +49,7 @@ public static class KeycloakExtension
     private static KeycloakTokenRefreshService CreateTokenRefreshService(IServiceProvider serviceProvider, string sectionName)
     {
         var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-        var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+        var cache = serviceProvider.GetRequiredService<ITokenCache>();
         var configuration = GetConfiguration(serviceProvider, sectionName);
         var logger = serviceProvider.GetRequiredService<ILogger<KeycloakTokenRefreshService>>();
 
