@@ -23,7 +23,7 @@ public static partial class Extensions
         services.AddHostedService<CdogsTokenRefreshService>(serviceProvider =>
         {
             var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-            var cache = serviceProvider.GetRequiredService<IMemoryCache>();
+            var cache = serviceProvider.GetRequiredService<ITokenCache>();
             var options = GetOidcConfiguration(serviceProvider, section);
             var logger = serviceProvider.GetRequiredService<ILogger<CdogsTokenRefreshService>>();
 
@@ -97,9 +97,9 @@ public class CdogsTokenRefreshService : TokenRefreshService<CdogsTokenRefreshSer
         IHttpClientFactory httpClientFactory,
         string httpClientName,
         TimeProvider timeProvider, 
-        IMemoryCache memoryCache, 
+        ITokenCache cache, 
         OidcConfidentialClientConfiguration configuration, 
-        ILogger<CdogsTokenRefreshService> logger) : base(httpClientFactory, httpClientName, timeProvider, memoryCache, configuration, logger)
+        ILogger<CdogsTokenRefreshService> logger) : base(httpClientFactory, httpClientName, timeProvider, cache, configuration, logger)
     {
     }
 }

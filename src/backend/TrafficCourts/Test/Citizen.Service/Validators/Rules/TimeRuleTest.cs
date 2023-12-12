@@ -19,7 +19,7 @@ public class TimeRuleTest
     [InlineData(null, false, 0, 0)]
     [InlineData("", false, 0, 0)]
     [InlineData("text", false, 0, 0)]
-    public void TestTimeParse(string timeStr, bool expectedValid, int expectedHour, int expectedMinute)
+    public void TestTimeParse(string? timeStr, bool expectedValid, int expectedHour, int expectedMinute)
     {
         // Given
         Field timeField = new();

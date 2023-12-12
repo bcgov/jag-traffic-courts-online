@@ -84,7 +84,7 @@ public class DisputeUpdateRequestConsumerTest
     [InlineData(null, "fname2", null, "lname", DisputeContactTypeCd.INDIVIDUAL, null)]
     [InlineData(null, null, "fname3", "lname", DisputeContactTypeCd.INDIVIDUAL, null)]
     [InlineData(null, null, null, "lname", DisputeContactTypeCd.INDIVIDUAL, "contactLawFirmName")]
-    public async Task TestDisputeUpdateRequestConsumer_Name(string fname1, string fname2, string fname3, string lname, DisputeContactTypeCd contactType, string contactLawFirmName)
+    public async Task TestDisputeUpdateRequestConsumer_Name(string? fname1, string? fname2, string? fname3, string lname, DisputeContactTypeCd contactType, string? contactLawFirmName)
     {
         // Arrange
         _message.DisputantGivenName1 = fname1;
