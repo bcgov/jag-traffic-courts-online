@@ -8,7 +8,6 @@ namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 
 public class DriversLicenceValidRuleTest
 {
-
     [Theory]
     [InlineData("BC", "1234567", true, true)]
     [InlineData("BC", "1234567 ", true, false)]
@@ -20,7 +19,7 @@ public class DriversLicenceValidRuleTest
     [InlineData("AB", "1234567", false, true)]
     [InlineData(null, "1234567", true, true)]
     [InlineData("BC", null, true, true)]
-    public async Task TestDriversLicenceIsValid(string province, string licenceNumber, bool expectProvValid, bool expectLicValid)
+    public async Task TestDriversLicenceIsValid(string? province, string? licenceNumber, bool expectProvValid, bool expectLicValid)
     {
         // Given
         Field provinceField = new(province);
