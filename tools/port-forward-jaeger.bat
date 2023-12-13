@@ -20,7 +20,7 @@ set server=0198bb-%env%
 set port=16686
 
 REM find podname
-for /F %%i in ('oc get pods -n %server% -o "custom-columns=POD:.metadata.name" --no-headers --selector "app.kubernetes.io/instance=jaeger-%env%"') do set podname=%%i
+for /F %%i in ('oc get pods -n %server% -o "custom-columns=POD:.metadata.name" --no-headers --selector "app.kubernetes.io/instance=jaeger"') do set podname=%%i
 
 REM run port-forward OpenShift command
 echo oc -n %server% port-forward %podname% %port%:16686
