@@ -1,16 +1,13 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
 using Refit;
 using System.Configuration;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi.Authentication;
-using TrafficCourts.Common.Authentication;
 using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Core.Http;
 using TrafficCourts.Http;
-using static System.Collections.Specialized.BitVector32;
 
 namespace TrafficCourts.Citizen.Service
 {
@@ -71,6 +68,7 @@ namespace TrafficCourts.Citizen.Service
         {
             logger.Information("Using mock ticket search service");
             builder.Services.AddTransient<ITicketInvoiceSearchService, MockTicketSearchService>();
+            builder.Services.AddMemoryCache();
 
             // determine if configured to use a external file or embedded data
             var section = builder.Configuration.GetSection(Section);

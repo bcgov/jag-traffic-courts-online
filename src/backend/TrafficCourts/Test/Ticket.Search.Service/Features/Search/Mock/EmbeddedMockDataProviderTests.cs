@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Time.Testing;
 using Moq;
-using NodaTime;
-using NodaTime.Testing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,9 +43,10 @@ namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
         {
             IMockDataProvider mockDataProvider = GetEmbeddedMockDataProvider();
             Mock<ILogger<MockTicketSearchService>> mockLogger = new();
-            IClock clock = GetClock();
+            TimeProvider clock = GetClock();
+            Mock<IMemoryCache> cacheMock = new Mock<IMemoryCache>();
 
-            MockTicketSearchService sut = new MockTicketSearchService(mockDataProvider, mockLogger.Object, clock);
+            MockTicketSearchService sut = new MockTicketSearchService(mockDataProvider, mockLogger.Object, clock, cacheMock.Object);
             IEnumerable<Invoice>? actual = await sut.SearchAsync("EA02000460", new TimeOnly(9, 54), CancellationToken.None);
 
             Assert.NotNull(actual);
@@ -57,9 +58,10 @@ namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
         {
             IMockDataProvider mockDataProvider = GetEmbeddedMockDataProvider();
             Mock<ILogger<MockTicketSearchService>> mockLogger = new();
-            IClock clock = GetClock(6);
+            TimeProvider clock = GetClock(6);
+            Mock<IMemoryCache> cacheMock = new Mock<IMemoryCache>();
 
-            MockTicketSearchService sut = new MockTicketSearchService(mockDataProvider, mockLogger.Object, clock);
+            MockTicketSearchService sut = new MockTicketSearchService(mockDataProvider, mockLogger.Object, clock, cacheMock.Object);
             IEnumerable<Invoice>? actual = await sut.SearchAsync("EA02000460", new TimeOnly(9, 54), CancellationToken.None);
 
             Assert.NotNull(actual);
@@ -73,7 +75,7 @@ namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
             // now adjust clock to July
             clock = GetClock(7);
 
-            sut = new MockTicketSearchService(mockDataProvider, mockLogger.Object, clock);
+            sut = new MockTicketSearchService(mockDataProvider, mockLogger.Object, clock, cacheMock.Object);
             actual = await sut.SearchAsync("EA02000460", new TimeOnly(9, 54), CancellationToken.None);
             Assert.NotNull(actual);
             Assert.NotEmpty(actual);
@@ -91,9 +93,9 @@ namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
             return provider;
         }
 
-        private IClock GetClock(int month = 6)
+        private TimeProvider GetClock(int month = 6)
         {
-            FakeClock clock = new FakeClock(Instant.FromDateTimeUtc(new DateTime(2022, month, 1, 7, 0, 0, DateTimeKind.Utc)));
+            FakeTimeProvider clock = new FakeTimeProvider(new DateTimeOffset(new DateTime(2022, month, 1, 7, 0, 0, DateTimeKind.Utc)));
 
             // validate pre-condiction
             var june1 = clock.GetCurrentPacificTime();

@@ -1,6 +1,6 @@
 ﻿using FlatFiles;
 using FlatFiles.TypeMapping;
-using NodaTime;
+using Microsoft.Extensions.Caching.Memory;
 using System.Globalization;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 using TrafficCourts.Common;
@@ -11,13 +11,18 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
     {
         private readonly IMockDataProvider _mockDataProvider;
         private readonly ILogger<MockTicketSearchService> _logger;
-        private readonly IClock _clock;
+        private readonly TimeProvider _clock;
+        private readonly MockInvoiceCache _cache;
 
-        public MockTicketSearchService(IMockDataProvider mockDataProvider, ILogger<MockTicketSearchService> logger, IClock clock)
+        public MockTicketSearchService(IMockDataProvider mockDataProvider, ILogger<MockTicketSearchService> logger, TimeProvider clock, IMemoryCache cache)
         {
+            ArgumentNullException.ThrowIfNull(cache);
+
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _clock = clock ?? throw new ArgumentNullException(nameof(clock));
             _mockDataProvider = mockDataProvider ?? throw new ArgumentNullException(nameof(mockDataProvider));
+
+            _cache = new MockInvoiceCache(cache);
         }
 
         public Task<IList<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
@@ -59,7 +64,6 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
             // On May 9th, the first ticket date was May 8th. We want
             // the first ticket to be on the previous date based on today's
             // date
-
             baseViolationDateTime = baseViolationDateTime.Date.AddDays(1);  // May 8 -> May 9
             var today = _clock.GetCurrentPacificTime().DateTime.Date;       // May 9
 
@@ -91,17 +95,29 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 
         private IList<Invoice> GetMockData()
         {
+            List<Invoice> invoices = _cache.GetAll();
+
             IDelimitedTypeMapper<Invoice> mapper = GetTypeMapper();
 
             using Stream? stream = _mockDataProvider.GetDataStream();
             if (stream is null)
             {
-                return Array.Empty<Invoice>();
+                return invoices;
             }
 
             using var reader = new StreamReader(stream);
             var options = new DelimitedOptions() { IsFirstRecordSchema = true };
-            var invoices = mapper.Read(reader, options).ToList();
+            var data = mapper.Read(reader, options);
+
+            // make sure there are no duplicate in invoice numbers
+            foreach (var invoice in data)
+            {
+                if (!invoices.Any(_ => _.InvoiceNumber == invoice.InvoiceNumber))
+                {
+                    invoices.Add(invoice);
+                }
+            }
+
             return invoices;
         }
 
