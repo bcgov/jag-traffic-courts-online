@@ -389,7 +389,7 @@
               <mat-form-field class="pe-4 w-25">
                 <mat-label>Number of witnesses</mat-label>
                 <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
-                  formControlName="witness_no" [errorStateMatcher]="matcher" />
+                  formControlName="witness_no" [errorStateMatcher]="matcher" (keypress)="($event.charCode >= 48 && $event.charCode < 58)"/>
                 <mat-error *ngIf="additionalForm.controls.witness_no.hasError('requiredIfTrue')">
                   {{ "error.required" | translate }}
                 </mat-error>
