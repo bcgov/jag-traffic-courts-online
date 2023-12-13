@@ -6,6 +6,7 @@ api/disputes.service.ts
 api/document.service.ts
 api/lookup.service.ts
 api/tickets.service.ts
+api/trafficCourtsCitizenService.service.ts
 api/user.service.ts
 configuration.ts
 encoder.ts
@@ -28,6 +29,7 @@ model/disputeStatus.model.ts
 model/disputeSystemDetectedOcrIssues.model.ts
 model/field.model.ts
 model/fileMetadata.model.ts
+model/invoice.model.ts
 model/jJDisputeHearingType.model.ts
 model/jJDisputeStatus.model.ts
 model/language.model.ts

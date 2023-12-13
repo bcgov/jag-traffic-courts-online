@@ -68,7 +68,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     NoticeOfDisputeGuid = guid,
                     DisputeStatus = result?.DisputeStatus.ToString(),
                     JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
-                    HearingType = result?.JjDisputeHearingType?.ToString()
+                    HearingType = result?.JjDisputeHearingType?.ToString(),
+                    IsEmailVerified = result?.IsEmailAddressVerified
                 });
             }
             catch (Exception ex)

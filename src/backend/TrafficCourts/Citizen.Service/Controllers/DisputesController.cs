@@ -240,7 +240,8 @@ public class DisputesController : ControllerBase
                     NoticeOfDisputeGuid = token,
                     DisputeStatus = disputeStatus,
                     JJDisputeStatus = jjDisputeStatus,
-                    HearingType = hearingType
+                    HearingType = hearingType,
+                    IsEmailVerified = searchResponse.IsEmailVerified
                 };
 
                 return Ok(searchResult);

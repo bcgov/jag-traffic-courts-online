@@ -24,10 +24,13 @@ public class DisputeResult {
 	@Schema(nullable = true)
 	private JJDisputeHearingType jjDisputeHearingType;
 
-	public DisputeResult(Long disputeId, String noticeOfDisputeGuid, DisputeStatus disputeStatus) {
+	private Boolean isEmailAddressVerified = Boolean.FALSE;
+
+	public DisputeResult(Long disputeId, String noticeOfDisputeGuid, DisputeStatus disputeStatus, Boolean isEmailAddressVerified) {
 		this.disputeId = disputeId;
 		this.noticeOfDisputeGuid = noticeOfDisputeGuid;
 		this.disputeStatus = disputeStatus;
+		this.isEmailAddressVerified  = isEmailAddressVerified;
 	}
 
 }

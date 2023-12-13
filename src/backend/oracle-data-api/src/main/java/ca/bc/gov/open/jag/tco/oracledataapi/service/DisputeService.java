@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -368,7 +369,11 @@ public class DisputeService {
 		// if noticeOfDisputeGuid is specified, use that
 		if (StringUtils.isNotBlank(noticeOfDisputeGuid)) {
 			for (Dispute dispute : disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid)) {
-				disputeResults.add(new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(), dispute.getStatus()));
+				disputeResults.add(new DisputeResult(
+						dispute.getDisputeId(),
+						dispute.getNoticeOfDisputeGuid(),
+						dispute.getStatus(),
+						dispute.getEmailAddressVerified()));
 				ticketNumber = dispute.getTicketNumber();
 				issuedTime = dispute.getIssuedTs();
 			}
