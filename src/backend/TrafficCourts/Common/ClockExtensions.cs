@@ -24,4 +24,12 @@ public static class ClockExtensions
         DateTimeOffset pacificTime = now.InZone(_vancouver).ToDateTimeOffset();
         return pacificTime;
     }
+
+    public static DateTimeOffset GetCurrentPacificTime(this TimeProvider clock)
+    {
+        ArgumentNullException.ThrowIfNull(clock);
+        Instant now = Instant.FromDateTimeOffset(clock.GetUtcNow());
+        DateTimeOffset pacificTime = now.InZone(_vancouver).ToDateTimeOffset();
+        return pacificTime;
+    }
 }
