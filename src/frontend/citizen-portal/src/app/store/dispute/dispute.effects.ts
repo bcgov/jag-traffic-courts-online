@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { DisputeStore } from '..';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
 import { DocumentService } from 'app/api';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class DisputeEffects {
@@ -73,7 +73,12 @@ export class DisputeEffects {
             }
           }),
           catchError(err => {
-            this.disputeService.openDisputantNotMatchDialog(err?.message);
+            if (this.isErrorMatch(err, "Dispute email address must be verified", false)) {
+              this.disputeService.openDisputantEmailNotVerifiedDialog();
+            }
+            else {
+              this.disputeService.openDisputantNotMatchDialog(err?.message);
+            }
             this.disputeService.goToUpdateDisputeLanding(params);
             return of(Actions.GetFailed());
           })
@@ -166,4 +171,10 @@ export class DisputeEffects {
         )
     })) }
   );
+
+  private isErrorMatch(err: HttpErrorResponse, msg: string, exactMatch: boolean = true) {
+    return exactMatch
+      ? (err.error.errors?.includes(msg) || (typeof err.error.includes === "function" && err.error.includes(msg)))
+      : (err.error.errors?.filter(i => i.indexOf(msg) > -1).length > 0) || (typeof err.error.indexOf === "function" && err.error.indexOf(msg) >= 0);
+  }
 }

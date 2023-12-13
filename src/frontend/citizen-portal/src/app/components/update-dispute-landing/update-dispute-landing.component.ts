@@ -18,6 +18,7 @@ export class UpdateDisputeLandingComponent implements OnInit {
   private nonEditableStatus = [JJDisputeStatus.Cancelled, JJDisputeStatus.Concluded, DisputeStatus.Concluded, DisputeStatus.Cancelled, DisputeStatus.Rejected];
   public isEditable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public bcServicesCardInfoLink: string;
+  public isEmailVerified: boolean = false;
 
   constructor(
     private appConfigService: AppConfigService,
@@ -40,6 +41,8 @@ export class UpdateDisputeLandingComponent implements OnInit {
             else if (this.nonEditableStatus.includes(dispute.jjdispute_status)) this.isEditable.next(false); // JJ Dispute over
             else if (dispute.hearing_type === JJDisputeHearingType.WrittenReasons && dispute.jjdispute_status) this.isEditable.next(false); // written reasons and has a jj workbench status
             else this.isEditable.next(true); // otherwise allow editing
+
+            this.isEmailVerified = dispute?.is_email_verified ? true : false;
           }
         })
       }

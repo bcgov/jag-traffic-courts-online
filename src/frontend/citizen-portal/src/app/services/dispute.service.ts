@@ -139,6 +139,17 @@ export class DisputeService {
     };
     return this.dialog.open(ConfirmDialogComponent, { data });
   }
+  
+  openDisputantEmailNotVerifiedDialog() {
+    const data: DialogOptions = {
+      titleKey: "Warning",
+      actionType: "warn",
+      messageKey: "Dispute email address is not yet verified",
+      actionTextKey: "Close",
+      cancelHide: true
+    };
+    return this.dialog.open(ConfirmDialogComponent, { data });
+  }
 
   showDisputeStatus(state: DisputeStore.State): void {
     this.dialog.open(DisputeStatusDialogComponent, {

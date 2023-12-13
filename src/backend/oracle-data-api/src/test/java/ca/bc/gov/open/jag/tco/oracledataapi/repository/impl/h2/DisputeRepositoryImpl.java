@@ -22,7 +22,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 public interface DisputeRepositoryImpl extends DisputeRepository, JpaRepository<Dispute, Long>, DisputeRepositoryCustom {
 
 	@Override
-	@Query("select new ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult(d.id, d.noticeOfDisputeGuid, d.status) from Dispute d where d.ticketNumber = :ticketNumber and hour(d.issuedTs) = hour(:issuedTime) and minute(d.issuedTs) = minute(:issuedTime)")
+	@Query("select new ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult(d.id, d.noticeOfDisputeGuid, d.status, d.emailAddressVerified) from Dispute d where d.ticketNumber = :ticketNumber and hour(d.issuedTs) = hour(:issuedTime) and minute(d.issuedTs) = minute(:issuedTime)")
 	public List<DisputeResult> findByTicketNumberAndTime(@Param(value = "ticketNumber") String ticketNumber, @Param(value = "issuedTime") Date issuedTime);
 
 	@Override
@@ -45,7 +45,7 @@ public interface DisputeRepositoryImpl extends DisputeRepository, JpaRepository<
 			@Param(value = "disputeId") Long disputeId,
 			@Param(value = "disputeStatus") DisputeStatus disputeStatus,
 			@Param(value = "rejectedReason") String rejectedReason);
-	
+
 	@Override
 	@Query("from ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem")
 	public List<DisputeListItem> getDisputeList();
