@@ -109,11 +109,7 @@
       </div>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="20">
-    <div class="vcenter">
-      <ng-content select="[recordCount]"></ng-content>
-    </div>
-  </div>
+  <ng-content select="[recordCount]"></ng-content>
   <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.courthouseLocation">
     <div fxFlex="30">
       <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse

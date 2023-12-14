@@ -1,7 +1,12 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
   (onFilterChanged)="onApplyFilter($event)">
   <ng-container recordCount>
-    <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ countNewTickets() }} NEW ticket records</b></span>
+    <div fxFlex fxFlex.gt-md="20">
+      <div class="vcenter">
+        <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ countNewTickets() }} NEW ticket
+            records</b></span>
+      </div>
+    </div>
   </ng-container>
 </app-table-filters>
 
