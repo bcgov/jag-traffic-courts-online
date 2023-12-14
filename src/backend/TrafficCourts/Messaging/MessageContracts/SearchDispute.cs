@@ -16,6 +16,7 @@ public class SearchDisputeResponse
     public string? DisputeStatus { get; set; }
     public string? JJDisputeStatus { get; set; }
     public string? HearingType { get; set; }
+    public bool? IsEmailVerified { get; set; }
 
     /// <summary>
     /// Indicates there was an error searching for the dispute.

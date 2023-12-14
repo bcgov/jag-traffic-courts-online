@@ -19,6 +19,7 @@ export interface SearchDisputeResult {
     dispute_status?: DisputeStatus;
     jjdispute_status?: JJDisputeStatus;
     hearing_type?: JJDisputeHearingType;
+    is_email_verified?: boolean | null;
     is_error?: boolean;
 }
 
