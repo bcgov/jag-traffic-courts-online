@@ -297,7 +297,7 @@ export class DisputeService implements IDisputeService {
         }),
         catchError((error: any) => {
           var errorMsg = this.configService.dispute_error;
-          error?.error?.errors.forEach(error => {
+          error?.error?.errors?.forEach(error => { // Review this is correct or not. Seems not working well
             errorMsg += " " + error;
           });
           this.toastService.openErrorToast(errorMsg);

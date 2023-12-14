@@ -1,50 +1,5 @@
-<table class="filterTable">
-  <tr>
-    <td>
-      <mat-label><span class="BC-Gov-15px-blue-text"><b>Date Submitted:</b></span></mat-label>
-    </td>
-    <td>
-      <mat-form-field appearance="outline" class="dateField">
-        <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
-        <input matInput [(ngModel)]="dataFilters['dateFrom']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter()" (change)="onApplyFilter()" autocomplete="off"/>
-      </mat-form-field>          
-      <mat-form-field appearance="outline" class="dateField">
-        <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
-        <input matInput [(ngModel)]="dataFilters['dateTo']" type="date" placeholder="yyyy-MM-DD" (keyup)="onApplyFilter()" (change)="onApplyFilter()" autocomplete="off"/>
-      </mat-form-field>
-    </td>
-    <td>
-      <label for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
-    </td>
-    <td>
-      <mat-form-field appearance="outline">
-        <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters['ticketNumber']" type="search" (keyup)="onApplyFilter()" autocomplete="off" class="input"/>
-      </mat-form-field>
-    </td>
-    <td>
-      <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <label for="fullName"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
-    </td>
-    <td>
-      <mat-form-field appearance="outline">
-        <input id="fullName" name="fullName" matInput [(ngModel)]="dataFilters['occamDisputantName']" type="search" (keyup)="onApplyFilter()" autocomplete="off" class="input" />
-      </mat-form-field>
-    </td>
-    <td>
-      <label for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse Location:</b></span></label>
-    </td>
-    <td>
-      <mat-form-field appearance="outline">
-        <input id="courthouseLocation" name="courthouseLocation" matInput [(ngModel)]="dataFilters['courthouseLocation']" type="search" (keyup)="onApplyFilter()" autocomplete="off" class="input"/>
-      </mat-form-field>
-    </td>
-    <td></td>
-  </tr>
-</table>
+<app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" (onFilterChanged)="onApplyFilter($event)">
+</app-table-filters>
 
 <div class="table-responsive">
   <table mat-table [dataSource]="dataSource" matSort>

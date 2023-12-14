@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, DisputeWithUpdates } from 'app/services/dispute.service';
@@ -6,6 +6,8 @@ import { Dispute, DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
+import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
   selector: 'app-update-request-inbox',
@@ -13,16 +15,11 @@ import { DateUtil } from '@shared/utils/date-util';
   styleUrls: ['./update-request-inbox.component.scss'],
 })
 export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
+  @Input() tabIndex: number;
   @Output() public disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   dataSource = new MatTableDataSource();
-  dataFilters = {
-    "dateFrom": "",
-    "dateTo": "",
-    "ticketNumber": "",
-    "disputantSurname": "",
-    "status": ""
-  };
+  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
   statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
   displayedColumns: string[] = [
     'submittedTs',
@@ -44,6 +41,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     public disputeService: DisputeService,
     private logger: LoggerService,
     private authService: AuthService,
+    private tableFilterService: TableFilterService,
   ) {
     this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputesWithPendingUpdates(); })
   }
@@ -77,6 +75,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
+      this.onApplyFilter(this.tableFilterService.tableFilters[this.tabIndex]);
     });
   }
 
@@ -87,10 +86,10 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
   searchFilter = function (record: DisputeWithUpdates, filter: string) {
     let searchTerms = JSON.parse(filter);
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
-      if ("dateFrom" === field) {
+      if ("dateSubmittedFrom" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
       }
-      else if ("dateTo" === field) {
+      else if ("dateSubmittedTo" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
       else {
@@ -99,27 +98,8 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     });
   };
 
-  onApplyFilter(filterName: string, value: string) {
-    const filterValue = value;
-    this.dataFilters[filterName] = filterValue;
-    this.dataSource.filter = JSON.stringify(this.dataFilters);
-  }
-
-  resetSearchFilters() {
-    // Will update search filters in UI
-    this.dataFilters = {
-      "dateFrom": "",
-      "dateTo": "",
-      "ticketNumber": "",
-      "disputantSurname": "",
-      "status": ""
-    };
-
-    // Will re-execute the filter function, but will block UI rendering
-    // Put this call in a Timeout to keep UI responsive.
-    setTimeout(() => {
-      this.dataSource.filter = "{}";
-    }, 100);
+  onApplyFilter(dataFilters: TableFilter) {
+    this.dataSource.filter = JSON.stringify(dataFilters);
   }
 
   backWorkbench(element) {

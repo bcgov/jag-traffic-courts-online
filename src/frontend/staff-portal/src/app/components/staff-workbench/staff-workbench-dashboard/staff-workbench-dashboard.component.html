@@ -32,16 +32,16 @@
   </ng-container>
 
   <ng-container *ngIf="tabSelected?.value === 0">
-    <app-ticket-inbox (disputeInfo)="changeDispute($event)"></app-ticket-inbox>
+    <app-ticket-inbox [tabIndex]="0" (disputeInfo)="changeDispute($event)"></app-ticket-inbox>
   </ng-container>
   <ng-container *ngIf="tabSelected?.value === 1">
-    <app-dispute-decision-inbox (jjDisputeInfo)="changeJJDispute($event)"></app-dispute-decision-inbox>
+    <app-dispute-decision-inbox [tabIndex]="1" (jjDisputeInfo)="changeJJDispute($event)"></app-dispute-decision-inbox>
   </ng-container>
   <ng-container *ngIf="tabSelected?.value === 2">
-    <app-update-request-inbox (disputeInfo)="changeDispute($event)"></app-update-request-inbox>
+    <app-update-request-inbox [tabIndex]="2" (disputeInfo)="changeDispute($event)"></app-update-request-inbox>
   </ng-container>
   <ng-container *ngIf="tabSelected?.value === 3">
-    <app-jj-dispute-digital-case-file (jjDisputeInfo)="changeJJDispute($event)"
+    <app-jj-dispute-digital-case-file [tabIndex]="3" (jjDisputeInfo)="changeJJDispute($event)"
       [data$]="data$"></app-jj-dispute-digital-case-file>
   </ng-container>
 </app-page>
