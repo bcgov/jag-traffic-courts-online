@@ -240,7 +240,8 @@ public class DisputesController : ControllerBase
                     NoticeOfDisputeGuid = token,
                     DisputeStatus = disputeStatus,
                     JJDisputeStatus = jjDisputeStatus,
-                    HearingType = hearingType
+                    HearingType = hearingType,
+                    IsEmailVerified = searchResponse.IsEmailVerified
                 };
 
                 return Ok(searchResult);
@@ -497,6 +498,8 @@ public class DisputesController : ControllerBase
     private async Task<IActionResult?> CheckDisputeStatus(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
         // Verify Dispute exists and whose value is one of [NEW, VALIDATED, or PROCESSING] and there is no corresponding JJDispute
+        // TCVP-2499 and whose email address has been verified.
+        
         SearchDisputeRequest searchRequest = new() { NoticeOfDisputeGuid = noticeOfDisputeGuid };
         Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
 
@@ -531,6 +534,12 @@ public class DisputesController : ControllerBase
         {
             _logger.LogDebug("JJDispute status is not null for a written reasons hearing, returning bad request");
             return BadRequest($"JJDispute has status of {searchResponse.JJDisputeStatus}. Must be blank for a written reasons dispute.");
+        }
+
+        // TCVP-2499
+        if (!(searchResponse.IsEmailVerified is true)) {
+            _logger.LogDebug("Dispute email address has not yet been verified - cannot update Dispute.");
+            return BadRequest("Dispute email address must be verified before an update is permitted.");
         }
 
         _logger.LogDebug("Dispute status is ok, returning null");

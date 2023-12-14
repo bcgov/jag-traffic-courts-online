@@ -794,6 +794,31 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "There was a server error that prevented the analyse from completing successfully."
+          }
+        }
+      }
+    },
+    "/api/invoice": {
+      "post": {
+        "tags": [
+          "TrafficCourts.Citizen.Service"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Invoice"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -1433,6 +1458,72 @@
         },
         "additionalProperties": false
       },
+      "Invoice": {
+        "type": "object",
+        "properties": {
+          "invoice_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "pbc_ref_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "party_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "party_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "account_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "site_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "cust_trx_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "term_due_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "number",
+            "format": "double"
+          },
+          "amount_due": {
+            "type": "number",
+            "format": "double"
+          },
+          "attribute1": {
+            "type": "string",
+            "nullable": true
+          },
+          "attribute2": {
+            "type": "string",
+            "nullable": true
+          },
+          "attribute3": {
+            "type": "string",
+            "nullable": true
+          },
+          "attribute4": {
+            "type": "string",
+            "nullable": true
+          },
+          "evt_form_number": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JJDisputeHearingType": {
         "enum": [
           "UNKNOWN",
@@ -1838,6 +1929,10 @@
           },
           "hearing_type": {
             "$ref": "#/components/schemas/JJDisputeHearingType"
+          },
+          "is_email_verified": {
+            "type": "boolean",
+            "nullable": true
           },
           "is_error": {
             "type": "boolean"

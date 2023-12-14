@@ -16,6 +16,9 @@ namespace TrafficCourts.Citizen.Service.Models.Disputes
 
         [JsonPropertyName("hearing_type")]
         public JJDisputeHearingType? HearingType { get; set; }
+        
+        [JsonPropertyName("is_email_verified")]
+        public bool? IsEmailVerified { get; set; }
 
         [JsonPropertyName("is_error")]
         public bool IsError { get; set; }

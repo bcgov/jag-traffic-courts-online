@@ -23,3 +23,9 @@
   font-weight: bold;
   width: 100%;
 }
+
+.mat-flat-button.mat-button-base.mat-primary:hover[disabled] {
+  border: 1px solid #003366;
+  color: rgba(0, 0, 0, 0.26);
+  background-color: rgba(0, 0, 0, 0.12);
+}

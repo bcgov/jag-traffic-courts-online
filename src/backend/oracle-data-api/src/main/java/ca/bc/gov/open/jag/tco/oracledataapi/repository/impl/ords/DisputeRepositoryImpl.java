@@ -46,9 +46,9 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	// Delegate, OpenAPI generated client
 	private final ViolationTicketApi violationTicketApi;
-	
+
 	private DisputeMapper disputeMapper;
-	
+
 	@Autowired
 	public DisputeRepositoryImpl(ViolationTicketApi violationTicketApi, DisputeMapper disputeMapper) {
 		this.violationTicketApi = violationTicketApi;
@@ -102,8 +102,11 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		// Convert Disputes to DisputeResult objects
 		List<DisputeResult> disputeResults = extractedDisputes.stream()
-				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(),
-						dispute.getStatus()))
+				.map(dispute -> new DisputeResult(
+						dispute.getDisputeId(),
+						dispute.getNoticeOfDisputeGuid(),
+						dispute.getStatus(),
+						dispute.getEmailAddressVerified()))
 				.collect(Collectors.toList());
 
 		return disputeResults;
@@ -117,8 +120,11 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 		// Convert Disputes to DisputeResult objects
 		List<DisputeResult> disputeResults = extractedDisputes.stream()
-				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getNoticeOfDisputeGuid(),
-						dispute.getStatus()))
+				.map(dispute -> new DisputeResult(
+						dispute.getDisputeId(),
+						dispute.getNoticeOfDisputeGuid(),
+						dispute.getStatus(),
+						dispute.getEmailAddressVerified()))
 				.collect(Collectors.toList());
 
 		return disputeResults;
@@ -307,7 +313,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	 * A helper method that will throw an appropriate InternalServerErrorException
 	 * based on the ResponseResult. Any RuntimeExceptions throw will propagate up to
 	 * caller.
-	 * 
+	 *
 	 * @return
 	 */
 	private ResponseResult assertNoExceptions(Supplier<ResponseResult> m) {
@@ -357,7 +363,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	/**
 	 * Helper method to convert a DisputeListResponse to a list of
 	 * {@link DisputeListItem}
-	 * 
+	 *
 	 * @param response
 	 * @return a list of {@link DisputeListItem}
 	 */

@@ -15,6 +15,7 @@ export * from './disputeStatus.model';
 export * from './disputeSystemDetectedOcrIssues.model';
 export * from './field.model';
 export * from './fileMetadata.model';
+export * from './invoice.model';
 export * from './jJDisputeHearingType.model';
 export * from './jJDisputeStatus.model';
 export * from './language.model';
