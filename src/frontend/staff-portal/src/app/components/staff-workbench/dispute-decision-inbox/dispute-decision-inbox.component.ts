@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { JJDispute } from 'app/services/jj-dispute.service';
@@ -10,6 +10,7 @@ import { LookupsService } from 'app/services/lookups.service';
 import { AppState } from 'app/store/app.state';
 import { Store } from '@ngrx/store';
 import { DateUtil } from '@shared/utils/date-util';
+import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
 
 @Component({
   selector: 'app-dispute-decision-inbox',
@@ -17,7 +18,8 @@ import { DateUtil } from '@shared/utils/date-util';
   styleUrls: ['./dispute-decision-inbox.component.scss'],
 })
 export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
-  private courthouseTeamNames = ["A", "B", "C", "D"];
+  @Input() tabIndex: number;
+  courthouseTeamNames = ["A", "B", "C", "D"];
 
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
@@ -28,14 +30,8 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
-  dataFilters = {
-    "dateFrom": "",
-    "dateTo": "",
-    "ticketNumber": "",
-    "occamDisputantName": "",
-    "courthouseLocation": "",
-    "team": ""
-  };
+  tableFilterKeys: TableFilterKeys[] = ["decisionDateFrom", "decisionDateTo", "occamDisputantName", "courthouseLocation", "ticketNumber", "team"];
+
   displayedColumns: string[] = [
     "ticketNumber",
     "jjDecisionDate",
@@ -84,37 +80,17 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onApplyFilter(filterName: string, value: string) {
-    const filterValue = value;
-    this.dataFilters[filterName] = filterValue;
-    this.dataSource.filter = JSON.stringify(this.dataFilters);
-  }
-
-  resetSearchFilters() {
-    // Will update search filters in UI
-    this.dataFilters = {
-      "dateFrom": "",
-      "dateTo": "",
-      "ticketNumber": "",
-      "occamDisputantName": "",
-      "courthouseLocation": "",
-      "team": ""
-    };
-
-    // Will re-execute the filter function, but will block UI rendering
-    // Put this call in a Timeout to keep UI responsive.
-    setTimeout(() => {
-      this.dataSource.filter = "{}";
-    }, 100);
+  onApplyFilter(dataFilters: TableFilter) {
+    this.dataSource.filter = JSON.stringify(dataFilters);
   }
 
   searchFilter = function (record: JJDispute, filter: string) {
     let searchTerms = JSON.parse(filter);
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
-      if ("dateFrom" === field) {
+      if ("decisionDateFrom" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.jjDecisionDate, value);
       }
-      else if ("dateTo" === field) {
+      else if ("decisionDateTo" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.jjDecisionDate, value);
       }
       else if ("team" === field) {

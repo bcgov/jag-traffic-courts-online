@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
@@ -6,6 +6,8 @@ import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, Dis
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
+import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
   selector: 'app-ticket-inbox',
@@ -13,19 +15,15 @@ import { DateUtil } from '@shared/utils/date-util';
   styleUrls: ['./ticket-inbox.component.scss'],
 })
 export class TicketInboxComponent implements OnInit, AfterViewInit {
+  @Input() tabIndex: number;
   @Output() disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   disputes: Dispute[] = [];
   dataSource = new MatTableDataSource(this.disputes);
-  dataFilters = {
-    "dateFrom": null,
-    "dateTo": null,
-    "ticketNumber": null,
-    "disputantSurname": null,
-    "status": null
-  };
-  _dataFilters = { ...this.dataFilters };
+  
+  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
   statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
+
   displayedColumns: string[] = [
     '__RedGreenAlert',
     'submittedTs',
@@ -50,6 +48,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     private disputeService: DisputeService,
     private logger: LoggerService,
     private authService: AuthService,
+    private tableFilterService: TableFilterService,
   ) {
     this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputes(); })
   }
@@ -90,7 +89,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
-      this.onApplyFilter("status", null);
+      this.onApplyFilter(this.tableFilterService.tableFilters[this.tabIndex]);
     });
   }
 
@@ -101,10 +100,10 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       return false;
     }
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
-      if ("dateFrom" === field) {
+      if ("dateSubmittedFrom" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
       }
-      else if ("dateTo" === field) {
+      else if ("dateSubmittedTo" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
       }
       else {
@@ -112,16 +111,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       }
     });
   };
-
-  resetSearchFilters() {
-    // Will update search filters in UI
-    this.dataFilters = { ...this._dataFilters };
-    // Will re-execute the filter function, but will block UI rendering
-    // Put this call in a Timeout to keep UI responsive.
-    setTimeout(() => {
-      this.dataSource.filter = "{}";
-    }, 100);
-  }
 
   countNewTickets(): number {
     if (this.dataSource.data?.filter((x: Dispute) => x.status == DisputeStatus.New))
@@ -134,10 +123,8 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
   // called on keyup in filter field
-  onApplyFilter(filterName: string, value: string) {
-    const filterValue = value;
-    this.dataFilters[filterName] = filterValue;
-    this.dataSource.filter = JSON.stringify(this.dataFilters);
+  onApplyFilter(dataFilters: TableFilter) {
+    this.dataSource.filter = JSON.stringify(dataFilters);
   }
 
   backWorkbench(element) {

@@ -1,0 +1,130 @@
+<div fxFlex fxFlex.gt-md="60vw" fxLayout="row wrap">
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.dateSubmittedFrom || tableFilterConfigs.dateSubmittedTo">
+    <div fxFlex="30">
+      <mat-label class="vcenter"><span class="BC-Gov-15px-blue-text"><b>Date Submitted:</b></span></mat-label>
+    </div>
+    <div fxFlex>
+      <mat-form-field *ngIf="tableFilterConfigs.dateSubmittedFrom" appearance="outline" class="dateField">
+        <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
+        <input matInput [(ngModel)]="dataFilters.dateSubmittedFrom" type="date" placeholder="yyyy-MM-DD"
+          (keyup)="onApplyFilter('dateSubmittedFrom', $event.target.value)"
+          (change)="onApplyFilter('dateSubmittedFrom', $event.target.value)" autocomplete="off" />
+      </mat-form-field>
+      <mat-form-field *ngIf="tableFilterConfigs.dateSubmittedTo" appearance="outline" class="dateField">
+        <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
+        <input matInput [(ngModel)]="dataFilters.dateSubmittedTo" type="date" placeholder="yyyy-MM-DD"
+          (keyup)="onApplyFilter('dateSubmittedTo', $event.target.value)"
+          (change)="onApplyFilter('dateSubmittedTo', $event.target.value)" autocomplete="off" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.decisionDateFrom || tableFilterConfigs.decisionDateTo">
+    <div fxFlex="30">
+      <mat-label class="vcenter"><span class="BC-Gov-15px-blue-text"><b>Decision Date:</b></span></mat-label>
+    </div>
+    <div fxFlex>
+      <mat-form-field *ngIf="tableFilterConfigs.decisionDateFrom" appearance="outline" class="dateField">
+        <mat-label><span class="BC-Gov-15px-blue-text"><b>From:</b></span></mat-label>
+        <input matInput [(ngModel)]="dataFilters.decisionDateFrom" type="date" placeholder="yyyy-MM-DD"
+          (keyup)="onApplyFilter('decisionDateFrom', $event.target.value)"
+          (change)="onApplyFilter('decisionDateFrom', $event.target.value)" autocomplete="off" />
+      </mat-form-field>
+      <mat-form-field *ngIf="tableFilterConfigs.decisionDateTo" appearance="outline" class="dateField">
+        <mat-label><span class="BC-Gov-15px-blue-text"><b>To:</b></span></mat-label>
+        <input matInput [(ngModel)]="dataFilters.decisionDateTo" type="date" placeholder="yyyy-MM-DD"
+          (keyup)="onApplyFilter('decisionDateTo', $event.target.value)"
+          (change)="onApplyFilter('decisionDateTo', $event.target.value)" autocomplete="off" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.ticketNumber">
+    <div fxFlex="30">
+      <label class="vcenter" for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
+    </div>
+    <div fxFlex>
+      <mat-form-field appearance="outline">
+        <input id="ticketNumber" name="ticketNumber" matInput [(ngModel)]="dataFilters.ticketNumber" type="search"
+          (keyup)="onApplyFilter('ticketNumber', $event.target.value)" autocomplete="off" class="input" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="20">
+    <div class="vcenter">
+      <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.disputantSurname">
+    <div fxFlex="30">
+      <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
+    </div>
+    <div fxFlex>
+      <mat-form-field appearance="outline">
+        <input id="surname" name="surname" matInput [(ngModel)]="dataFilters.disputantSurname" type="search"
+          (keyup)="onApplyFilter('disputantSurname', $event.target.value)" autocomplete="off" class="input" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.occamDisputantName">
+    <div fxFlex="30">
+      <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
+    </div>
+    <div fxFlex>
+      <mat-form-field appearance="outline">
+        <input id="surname" name="surname" matInput [(ngModel)]="dataFilters.occamDisputantName" type="search"
+          (keyup)="onApplyFilter('occamDisputantName', $event.target.value)" autocomplete="off" class="input" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.status">
+    <div fxFlex="30">
+      <label class="vcenter" for="status" (click)="statusCtl.open()"><span
+          class="BC-Gov-15px-blue-text"><b>Status:</b></span></label>
+    </div>
+    <div fxFlex>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-select #statusCtl matNativeControl name="status" [ngModel]="dataFilters.status"
+            (selectionChange)="onApplyFilter('status', $event.value)">
+            <mat-option value="">-- select --</mat-option>
+            <mat-option [value]="item" *ngFor="let item of statusFilterOptions">{{item}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.team">
+    <div fxFlex="30">
+      <label class="vcenter" for="team" (click)="teamCtl.open()"><span
+          class="BC-Gov-15px-blue-text"><b>Team:</b></span></label>
+    </div>
+    <div fxFlex>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-select #teamCtl matNativeControl name="team" [ngModel]="dataFilters.team"
+            (selectionChange)="onApplyFilter('team', $event.value)">
+            <mat-option value="">-- select --</mat-option>
+            <mat-option [value]="team" *ngFor="let team of courthouseTeamNames">Team {{team}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="20">
+    <div class="vcenter">
+      <ng-content select="[recordCount]"></ng-content>
+    </div>
+  </div>
+  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.courthouseLocation">
+    <div fxFlex="30">
+      <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse
+            Location:</b></span></label>
+    </div>
+    <div fxFlex>
+      <mat-form-field appearance="outline">
+        <input id="courthouseLocation" name="courthouseLocation" matInput [(ngModel)]="dataFilters.courthouseLocation"
+          type="search" (keyup)="onApplyFilter('courthouseLocation', $event.target.value)" autocomplete="off"
+          class="input" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>

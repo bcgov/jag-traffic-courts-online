@@ -55,6 +55,7 @@ import { CourtOptionsUpdateRequestInfoComponent } from '@components/staff-workbe
 import { CountUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/count-update-request-info/count-update-request-info.component';
 import { DocumentUpdateRequestInfoComponent } from '@components/staff-workbench/update-request-info/document-update-request-info/document-update-request-info.component';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { TableFiltersComponent } from '@components/table-filters/table-filters.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -101,7 +102,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     JJDisputeRemarksComponent,
     JJDisputeCourtAppearancesComponent,
     JJFileHistoryComponent,
-    JJDisputeDigitalCaseFileComponent
+    JJDisputeDigitalCaseFileComponent,
+    TableFiltersComponent
   ],
   imports: [
     CommonModule,
