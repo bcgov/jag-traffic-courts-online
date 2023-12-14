@@ -24,7 +24,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   filterText: string;
   // data = [] as JJDispute[];
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
-  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "occamDisputantName", "courthouseLocation"];
+  tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "occamDisputantName", "courthouseLocation", "ticketNumber"];
 
   displayedColumns: string[] = [
     "ticketNumber",
