@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
-import { JJDisputeHearingType, JJDisputeStatus } from 'app/api';
+import { JJDispute } from 'app/services/jj-dispute.service';
+import { JJDisputeHearingType } from 'app/api';
 import { Observable, Subscription } from 'rxjs';
 import { DateUtil } from '@shared/utils/date-util';
 import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
   selector: 'app-jj-dispute-digital-case-file',
@@ -36,7 +37,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   subscription: Subscription;
 
   constructor(
-    private jjDisputeService: JJDisputeService,
+    private tableFilterService: TableFilterService,
   ) {
     this.dataSource.filterPredicate = this.searchFilter;
   }
@@ -45,7 +46,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
     if (!this.subscription) {
       this.subscription = this.data$.subscribe(data => {
         this.dataSource.data = data;
-        // this.dataSource.data = this.sampleData();
+        this.onApplyFilter(this.tableFilterService.tableFilters[this.tabIndex]);
       });
     }
   }

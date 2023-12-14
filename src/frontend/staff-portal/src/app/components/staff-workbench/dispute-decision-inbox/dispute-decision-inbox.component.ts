@@ -11,6 +11,7 @@ import { AppState } from 'app/store/app.state';
 import { Store } from '@ngrx/store';
 import { DateUtil } from '@shared/utils/date-util';
 import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
   selector: 'app-dispute-decision-inbox',
@@ -47,7 +48,8 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     private logger: LoggerService,
     private authService: AuthService,
     private lookupsService: LookupsService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private tableFilterService: TableFilterService,
   ) {
     this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
     this.courthouseTeamNames.forEach(teamName => {
@@ -128,5 +130,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.dataSource.data.sort((a, b) => {
       if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
     });
+
+    this.onApplyFilter(this.tableFilterService.tableFilters[this.tabIndex]);
   }
 }

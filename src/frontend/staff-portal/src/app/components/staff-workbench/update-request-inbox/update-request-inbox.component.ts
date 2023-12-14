@@ -7,6 +7,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
 import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
+import { TableFilterService } from 'app/services/table-filter.service';
 
 @Component({
   selector: 'app-update-request-inbox',
@@ -40,6 +41,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
     public disputeService: DisputeService,
     private logger: LoggerService,
     private authService: AuthService,
+    private tableFilterService: TableFilterService,
   ) {
     this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputesWithPendingUpdates(); })
   }
@@ -73,6 +75,7 @@ export class UpdateRequestInboxComponent implements OnInit, AfterViewInit {
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
+      this.onApplyFilter(this.tableFilterService.tableFilters[this.tabIndex]);
     });
   }
 
