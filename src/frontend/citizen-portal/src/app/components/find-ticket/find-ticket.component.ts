@@ -24,7 +24,7 @@ export class FindTicketComponent implements OnInit {
   dialogRef: MatDialogRef<WaitForOcrDialogComponent>;
   analyzingTicket: boolean = false;
   notFound = false;
-  toolTipData = 'If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver\'s Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing.';
+  toolTipData = 'If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca. You must include your Given Name, Surname and Violation Ticket Number.';
   configuration = new Configuration();
 
   constructor(
@@ -90,7 +90,8 @@ export class FindTicketComponent implements OnInit {
     const data: DialogOptions = {
       titleKey: "Upload Ticket",
       actionType: "primary",
-      messageKey: `If you cannot upload a copy of your handwritten ticket, you can initiate a dispute by contacting the Violation Ticket Centre: violationticketcentre@gov.bc.ca.  You must include your Given Name, Surname, Driver's Licence Number, Violation Ticket Number, and Violation Time. Do not include any evidence, such as videos or pictures, with your email. Evidence can only be presented at the hearing. `,
+      messageKey: `If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca.
+      You must include your Given Name, Surname and Violation Ticket Number. `,
       actionTextKey: "Close",
       cancelHide: true
     };
