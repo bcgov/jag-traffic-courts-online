@@ -9,7 +9,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -163,10 +165,20 @@ public class TicketGeneratorController {
 			try (FileOutputStream fos = new FileOutputStream(file);
 					ZipOutputStream zos = new ZipOutputStream(fos)) {
 
+				Map<String, Integer> uniquefileNames = new HashMap<>();
+
 				List<BaseViolationTicket> violationTickets = ticketGenService.extractTickets(xlsx);
 				for (BaseViolationTicket violationTicket : violationTickets) {
 
-					ZipEntry ze = new ZipEntry(violationTicket.getViolationTicketNumber() + ".png");
+					String filename = violationTicket.getViolationTicketNumber();
+					int count = 1;
+					if (uniquefileNames.containsKey(filename)) {
+						count = uniquefileNames.get(filename).intValue();
+					}
+					uniquefileNames.put(filename, Integer.valueOf(count + 1));
+					filename = (count == 1) ? filename : filename + "(" + count + ")";
+
+					ZipEntry ze = new ZipEntry(filename + ".png");
 					zos.putNextEntry(ze);
 
 					BufferedImage ticketImage = ticketGenService.createTicketImage(violationTicket);
