@@ -214,12 +214,6 @@ services:
       ORDS_API_RETRY_DELAY_SEC: ${ORDS_API_RETRY_DELAY_SEC:-5}
       SPRING_SLEUTH_ENABLED: ${SPRING_SLEUTH_ENABLED:-false}
       JAVA_OPTS: ${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG}
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
     depends_on:
       redis:
         condition: service_healthy

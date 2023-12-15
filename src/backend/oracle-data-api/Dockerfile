@@ -47,6 +47,11 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8000
 
+# add curl for health check
+RUN apt-get update \
+  && apt-get install -y ca-certificates curl git --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/*
+
 ADD https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${PROMETHEUS_AGENT_VERSION}/jmx_prometheus_javaagent-${PROMETHEUS_AGENT_VERSION}.jar /app/jmx_prometheus_javaagent.jar
 RUN printf "Generate jmx_prometheus_javaagent_config.yaml\n" & \
  echo "startDelaySeconds: 0 \n\
@@ -65,6 +70,9 @@ ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/release
 RUN chgrp 0 /app/opentelemetry-javaagent.jar          && chmod a+rw,o-rw opentelemetry-javaagent.jar
 
 ENV TZ=America/Vancouver
+
+# Configure healthcheck 
+HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=12 CMD curl --fail http://localhost:8080/actuator/health || exit 1
 
 COPY --from=build ./target/oracle-data-api.jar .
 COPY --from=build ./entrypoint.sh .

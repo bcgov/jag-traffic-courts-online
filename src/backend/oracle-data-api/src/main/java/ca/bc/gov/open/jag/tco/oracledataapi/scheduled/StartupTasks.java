@@ -25,7 +25,7 @@ public class StartupTasks implements ApplicationListener<ApplicationReadyEvent> 
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		if (refreshAtStartup) {
 			logger.debug("Refreshing code tables at startup.");
-			lookupService.refresh();
+			new Thread(() -> lookupService.refresh()).start();
 		}
 	}
 
