@@ -360,7 +360,7 @@ export class ViolationTicketService {
 
   private onError(err?: HttpErrorResponse): void {
     this.reset();
-    if (!err) {
+    if (!err || err.status === 404) {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
       if (err.error?.errors?.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
@@ -381,11 +381,15 @@ export class ViolationTicketService {
         this.logger.error("ViolationTicketService:onError validation error has occurred", "More than 30 days old");
         this.openErrorScenarioTwoDialog();
       }
-      else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
+      else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time.", false)) {
         this.openErrorScenarioFourDialog();
       }
       else if (this.isErrorMatch(err, "A dispute has already been submitted for the ticket number", false)) {
         this.openErrorScenarioSevenDialog();
+      }
+      else if (this.isErrorMatch(err, "MVA or MVAR must be selected under the", false) || 
+               this.isErrorMatch(err, "MVA or MVAR must be the only selected ACT under the", false)) {
+        this.openErrorScenarioEightDialog();
       }
       else { // fall back option
         var errorMessages = "";
@@ -434,6 +438,10 @@ export class ViolationTicketService {
 
   private openErrorScenarioSevenDialog() {
     return this.openImageTicketNotFoundDialog("Duplicate Ticket Number", "error7");
+  }
+
+  private openErrorScenarioEightDialog() {
+    return this.openImageTicketNotFoundDialog("Invalid ticket type", "error8");
   }
 
   private openInValidHandwrittenTicketDateDialog() {
