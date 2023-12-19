@@ -34,33 +34,6 @@ h3 {
   }
 }
 
-:host::ng-deep {
-  .mat-form-field-type-mat-select {
-    margin: 0px !important;
-    padding: 0px !important;
-    border: none !important;
-
-    .mat-form-field-wrapper {      
-      .mat-form-field-flex {
-        padding: 10px 0px 0px 10px;
-
-        .mat-form-field-outline {
-          background-color: #ffffff;
-        }
-
-        .mat-form-field-infix {
-          .mat-select-value {
-            line-height: normal;
-          }
-          .mat-select-arrow-wrapper {
-            transform: none;
-          }
-        }
-      }
-    }
-  }
-}
-
 .text {
   font-weight: 700;
   line-height: 1.5em;
@@ -248,6 +221,7 @@ p {
   }
 }
 
+// FIXME: ng-deep applies global styles, not component-specific styles. But these styles should be global anyway. Move to main scss.
 :host::ng-deep .mat-tooltip {
   /* your own custom styles here */ 
   /* e.g. */

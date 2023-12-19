@@ -246,7 +246,7 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">{{ "label.interpreter" | translate }}</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.interpreterLanguage }}</p>
-              <mat-form-field appearance="select-box-only" *ngIf="isSSEditMode">
+              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <mat-select formControlName="interpreterLanguageCd" placeholder="Language">
                   <mat-option [value]=""></mat-option>
                   <mat-option *ngFor="let lang of languages" [value]="lang.code">{{ lang.description }}</mat-option>
@@ -258,7 +258,7 @@
               <!--                
               <p class="section-grid-header">Disputant Attendance Type</p>
               <p class="section-grid-text" *ngIf="!isSSEditMode">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
-              <mat-form-field appearance="select-box-only" *ngIf="isSSEditMode">
+              <mat-form-field appearance="outline" *ngIf="isSSEditMode">
                 <mat-select formControlName="disputantAttendanceType" placeholder="Attendance">
                   <mat-option [value]="AttendanceType.InPerson">{{ "attendanceType.in_person" | translate }}</mat-option>
                   <mat-option [value]="AttendanceType.MsteamsAudio">{{ "attendanceType.msteams_audio" | translate }}</mat-option>
@@ -306,7 +306,7 @@
               <p class="section-grid-header">APP (P/N/A)</p>
               <p class="section-grid-text">
                 <span *ngIf="isViewOnly && !isSSEditMode">{{ courtAppearanceForm?.value.appCd }}</span>
-                <mat-form-field appearance="select-box-only" *ngIf="!isViewOnly || isSSEditMode">
+                <mat-form-field appearance="outline" *ngIf="!isViewOnly || isSSEditMode">
                   <mat-select formControlName="appCd" (selectionChange)="onUpdateAPPCd()">
                     <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
                     <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
@@ -355,19 +355,21 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">Def Att</p>
               <p class="section-grid-text">
-                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>
-                <mat-select *ngIf="!isViewOnly" formControlName="dattCd" style="background:#fffee6">
-                  <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
-                  <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
-                  <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
-                </mat-select>
+                <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.dattCd }}</span>                
+                <mat-form-field appearance="outline" *ngIf="!isViewOnly">
+                    <mat-select formControlName="dattCd">
+                      <mat-option [value]="RoPDatt.A">{{ RoPDatt.A }}</mat-option>
+                      <mat-option [value]="RoPDatt.C">{{ RoPDatt.C }}</mat-option>
+                      <mat-option [value]="RoPDatt.N">{{ RoPDatt.N }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
               </p>
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Crown</p>
               <p class="section-grid-text">
                 <span *ngIf="isViewOnly && !isSSEditMode">{{ courtAppearanceForm?.value.crown }}</span>
-                <mat-form-field appearance="select-box-only" *ngIf="!isViewOnly || isSSEditMode">
+                <mat-form-field appearance="outline" *ngIf="!isViewOnly || isSSEditMode">
                   <mat-select formControlName="crown">
                     <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
                     <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
@@ -378,10 +380,12 @@
             <span class="section-grid-cell">
               <p class="section-grid-header">Seized</p>
               <p class="section-grid-text">
-                <mat-select *ngIf="!isViewOnly" formControlName="jjSeized" style="background:#fffee6">
-                  <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
-                  <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
-                </mat-select>
+                <mat-form-field appearance="outline" *ngIf="!isViewOnly">
+                  <mat-select formControlName="jjSeized">
+                    <mat-option [value]="RoPSeized.Y">{{ RoPSeized.Y }}</mat-option>
+                    <mat-option [value]="RoPSeized.N">{{ RoPSeized.N }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <span *ngIf="isViewOnly">{{ courtAppearanceForm?.value.jjSeized }}</span>
               </p>
             </span>
@@ -485,14 +489,16 @@
             <button type="button" style="width:50px !important; border:none; background-color:white"
               (click)="onRemoveFile(doc.fileId, doc.fileName)"><mat-icon style="color:red">delete</mat-icon></button>
           </div>
-          <mat-form-field class="select-box-only">
-            <mat-label>File type for upload</mat-label>
-            <mat-select [(ngModel)]="fileTypeToUpload">
-              <mat-option value="Certified Extract">Certified Extract</mat-option>
-              <mat-option value="Adjournment">Adjournment</mat-option>
-              <mat-option value="Other">Other</mat-option>
-            </mat-select>
-          </mat-form-field>&nbsp;
+          <div>
+            <label>File type for upload:</label>
+            <mat-form-field appearance="outline" style="display: inline-flex;">
+              <mat-select [(ngModel)]="fileTypeToUpload">
+                <mat-option value="Certified Extract">Certified Extract</mat-option>
+                <mat-option value="Adjournment">Adjournment</mat-option>
+                <mat-option value="Other">Other</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
           <button class="large" mat-flat-button type="button" color="primary"
             onclick="document.getElementById('getFile').click()">
             <mat-icon>upload</mat-icon>&nbsp;Upload File
@@ -548,7 +554,7 @@
         <div *ngIf="type === 'ticket' && isViewOnly && lastUpdatedJJDispute.status === DisputeStatus.Confirmed"
           fxFlex="40" fxLayout="row">
           <div style="margin-right: 1rem;">
-            <mat-form-field class="select-box-only">
+            <mat-form-field appearance="outline">
               <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
                 <mat-option [value]=""></mat-option>
                 <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>{{ jj.jjDisplayName }}</i>
