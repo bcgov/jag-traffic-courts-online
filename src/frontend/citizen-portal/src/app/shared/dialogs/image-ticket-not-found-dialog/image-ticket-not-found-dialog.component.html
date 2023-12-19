@@ -80,6 +80,12 @@
       <a href="mailto:Courts.TCO@gov.bc.ca" target="blank">Courts.TCO@gov.bc.ca <img class="me-2" src="/assets/mail-icon.svg" style="width: 15px; height: 13px; vertical-align: text-top;"/></a>
     </p>
   </div>
+  <div *ngIf="options.messageKey === 'error8'">
+    <span class="flex-grow-1"></span>
+    <p>It appears that your ticket is not a Motor Vehicle Act violation ticket. 
+
+      Please click <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket">here</a> for more options.</p>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <span class="flex-grow-1"></span>
