@@ -47,6 +47,13 @@ p {
   line-height: 1.1;
 }
 
+label {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 24px;
+  font-family: BCSans, Noto Sans, Verdana, Arial, sans-serif;
+}
+
 .text {
   font-weight: 700;
   line-height: 1.5em;
@@ -154,7 +161,8 @@ p {
   }
 }
 
-:host::ng-deep {
+// FIXME: ng-deep applies global styles, not component-specific styles. But these styles should be global anyway. Move to main scss.
+::ng-deep {
   .heading-hr {
     width: 700% !important;
   }
@@ -196,13 +204,8 @@ p {
           padding: 0px 0px 7px 0px !important;
           line-height: 0px;
 
-          input, .mat-select {
+          input {
             line-height: 18px !important;
-          }
-
-          .mat-select {
-            border-top: none;
-            padding: 0px 0px 0px 0px !important;
           }
         }
       }
@@ -214,25 +217,32 @@ p {
       }
     }
   }
+}
 
+// FIXME: ng-deep applies global styles, not component-specific styles. But these styles should be global anyway. Move to main scss.
+::ng-deep {
   .mat-form-field-type-mat-select {
-    margin: 4px 0px 0px 0px;
-    border: 1px solid rgb(224, 224, 224);
-    border-radius: 5px;
-    padding: 6px 0px 0px 10px;
+    margin: 0px !important;
+    padding: 0px !important;
+    border: none !important;
 
     .mat-form-field-wrapper {      
       .mat-form-field-flex {
+        padding: 0px 5px 0px 10px !important;
+
+        .mat-form-field-outline {
+          background-color: #ffffff;
+        }
+
         .mat-form-field-infix {
-          border: none !important;
           .mat-select-value {
             line-height: normal;
+          }
+          .mat-select-arrow-wrapper {
+            transform: none;
           }
         }
       }
     }
-  }
-  .mat-form-field-type-mat-select:hover {
-    border: 1px solid rgb(0, 0, 0);
   }
 }
