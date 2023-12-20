@@ -464,10 +464,10 @@ services:
   #############################################################################################
   smtp-server:
     container_name: smtp-server
-    image: gessnerfl/fake-smtp-server
+    image: gessnerfl/fake-smtp-server:2.1.4
     environment:
       - "SERVER_PORT=8080"
-      - "SMTP_PORT=5025"
+      - "FAKESMTP_PORT=5025"
     ports:
       - "5125:8080"
       - "5025:5025"
