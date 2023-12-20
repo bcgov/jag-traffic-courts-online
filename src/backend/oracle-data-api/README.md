@@ -1,5 +1,9 @@
 # Oracle Data API
 
+## IDE Setup
+Lombok is required to be enabled in Eclipse for this project to build correctly
+(https://www.baeldung.com/lombok-ide#eclipse)
+
 ## Online Court Case Management ORDS Service OpenAPI Specification
 
 The specification can be found in the src/main/resources directory here: [occm-openapi-spec.yaml](src/main/resources/occm-openapi-spec.yaml)
