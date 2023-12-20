@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Debug Soure Generator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\Common\\TrafficCourts.Common.csproj"
+    }
+  }
+}

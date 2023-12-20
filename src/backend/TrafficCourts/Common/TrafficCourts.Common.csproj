@@ -7,6 +7,14 @@
 		<UserSecretsId>b43fc786-cac8-48b0-850a-568750f4546e</UserSecretsId>
 	</PropertyGroup>
 
+	<!--
+	<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>generated</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+	-->
+	
+
 	<ItemGroup>
 		<PackageReference Include="Hashids.net" Version="1.7.0" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
@@ -76,5 +84,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\TrafficCourts.Core\TrafficCourts.Core.csproj" />
+	  <ProjectReference Include="..\TrafficCourts.SourceGenerators\TrafficCourts.SourceGenerators.csproj"
+						OutputItemType="Analyzer"
+						ReferenceOutputAssembly="false"/>
 	</ItemGroup>
 </Project>
