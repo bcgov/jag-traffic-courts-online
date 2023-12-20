@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Diagnostics.Latency;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
 namespace TrafficCourts.Diagnostics;
@@ -84,6 +85,7 @@ public sealed class Timer : Instrument<double>
         public TimerMark(Timer timer)
         {
             _timer = timer;
+            _tags = new List<KeyValuePair<string, object?>>(8);
             _startTimestamp = _timeProvider.GetTimestamp();
         }
 
