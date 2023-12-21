@@ -2,11 +2,14 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Npgsql;
+using System.Diagnostics.Metrics;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
 using TrafficCourts.Common.OpenAPIs.VirusScan;
 using TrafficCourts.Messaging;
 using TrafficCourts.Workflow.Service.Configuration;
@@ -45,6 +48,14 @@ public static class Startup
         builder.Services.AddTransient<IVerificationEmailTemplate, VerificationEmailTemplate>();
 
         builder.Services.AddOracleDataApiClient(builder.Configuration);
+
+        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>(services =>
+        {
+            var meterFactory = services.GetRequiredService<IMeterFactory>();
+            return new OracleDataApiOperationMetrics(meterFactory, "WorkflowService");
+        });
+
+        builder.Services.Decorate<IOracleDataApiClient, TimedOracleDataApiClient>();
 
         builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
 

@@ -2,13 +2,16 @@ using MassTransit;
 using Microsoft.OpenApi.Models;
 using NodaTime;
 using OpenTelemetry.Trace;
+using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
+using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
@@ -28,7 +31,7 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        }, meters: new string[] { "MassTransit", "ComsClient" });
+        }, meters: new string[] { "MassTransit", "ComsClient", "StaffService" });
 
         builder.AddRedis();
 
@@ -36,6 +39,17 @@ public static class Startup
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddOracleDataApiClient(builder.Configuration)
             .AddHttpMessageHandler<UserIdentityProviderHandler>();
+
+        // register instance for tracking metrics to the Oracle Data API
+        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>(services =>
+        {
+            var meterFactory = services.GetRequiredService<IMeterFactory>();
+            return new OracleDataApiOperationMetrics(meterFactory, "StaffService");
+        });
+
+        // decorate will replace injected instances of IOracleDataApiClient with the TimedOracleDataApiClient
+        // except for the TimedOracleDataApiClient type
+        builder.Services.Decorate<IOracleDataApiClient, TimedOracleDataApiClient>();
 
         builder.Services.AddRecyclableMemoryStreams();
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);

@@ -27,56 +27,26 @@ public class OracleDataApiService : IOracleDataApiService
             // TODO: initialize ViolationTicket with data from OCR 
         }
 
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.SaveDisputeAsync));
-
-        try
-        {
-            var response = await _client.SaveDisputeAsync(dispute, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.SaveDisputeAsync(dispute, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.InsertFileHistoryAsync));
-
-        try
-        {
-            var response = await _client.InsertFileHistoryAsync(fileHistory, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.InsertFileHistoryAsync(fileHistory, cancellationToken).ConfigureAwait(false);
+        return response;
     }
+
     public async Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.InsertEmailHistoryAsync));
-
-        try
-        {
-            var response = await _client.InsertEmailHistoryAsync(emailHistory, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.InsertEmailHistoryAsync(emailHistory, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetDisputeByNoticeOfDisputeGuidAsync));
-
         string id = noticeOfDisputeGuid.ToString(NoticeOfDisputeGuidFormat);
+     
         try
         {
             var response = await _client.GetDisputeByNoticeOfDisputeGuidAsync(id, cancellationToken).ConfigureAwait(false);
@@ -87,42 +57,17 @@ public class OracleDataApiService : IOracleDataApiService
             // 404 is ok, do not end in exception
             return null;
         }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
     }
 
     public async Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.VerifyDisputeEmailAsync));
-
-        try
-        {
-            await _client.VerifyDisputeEmailAsync(disputeId, cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        await _client.VerifyDisputeEmailAsync(disputeId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<Dispute> ResetDisputeEmailAsync(long disputeId, string emailAddress, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.ResetDisputeEmailAsync));
-
-        try
-        {
-            var response = await _client.ResetDisputeEmailAsync(disputeId, emailAddress, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.ResetDisputeEmailAsync(disputeId, emailAddress, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, CancellationToken cancellationToken)
@@ -137,132 +82,50 @@ public class OracleDataApiService : IOracleDataApiService
 
         var noticeOfDisputeId = noticeOfDisputeGuid?.ToString(NoticeOfDisputeGuidFormat);
 
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.FindDisputeStatusesAsync));
-
-        try
-        {
-            var response = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeId, cancellationToken).ConfigureAwait(false);
-            return new List<DisputeResult>(response);
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeId, cancellationToken).ConfigureAwait(false);
+        return new List<DisputeResult>(response);
     }
 
     public async Task<Dispute> GetDisputeByIdAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetDisputeAsync));
-
-        try
-        {
-            var response = await _client.GetDisputeAsync(disputeId, isAssign, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.GetDisputeAsync(disputeId, isAssign, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<long> SaveDisputeUpdateRequestAsync(string guid, DisputeUpdateRequest disputeUpdateRequest, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.SaveDisputeUpdateRequestAsync));
-
-        try
-        {
-            var response = await _client.SaveDisputeUpdateRequestAsync(guid, disputeUpdateRequest, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.SaveDisputeUpdateRequestAsync(guid, disputeUpdateRequest, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.UpdateDisputeAsync));
-
-        try
-        {
-            var response = await _client.UpdateDisputeAsync(disputeId, dispute, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
-
+        var response = await _client.UpdateDisputeAsync(disputeId, dispute, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetJJDisputesAsync));
-
-        try
-        {
-            var response = await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.GetJJDisputesAsync(jjAssignedTo, ticketNumber, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetJJDisputeAsync));
-
-        try
-        {
-            var response = await _client.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
-
+        var response = await _client.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long disputeUpdateRequestId, DisputeUpdateRequestStatus disputeUpdateRequestStatus, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.UpdateDisputeUpdateRequestStatusAsync));
-
-        try
-        {
-            var response = await _client.UpdateDisputeUpdateRequestStatusAsync(disputeUpdateRequestId, disputeUpdateRequestStatus, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.UpdateDisputeUpdateRequestStatusAsync(disputeUpdateRequestId, disputeUpdateRequestStatus, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     public async Task<ICollection<DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, Status? disputeUpdateRequestStatus, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.OracleDataApi.BeginOperation(nameof(IOracleDataApiClient.GetDisputeUpdateRequestsAsync));
-
-        try
-        {
-            var response = await _client.GetDisputeUpdateRequestsAsync(disputeId, disputeUpdateRequestStatus, cancellationToken).ConfigureAwait(false);
-            return response;
-        }
-        catch (Exception exception)
-        {
-            Instrumentation.OracleDataApi.EndOperation(operation, exception);
-            throw;
-        }
+        var response = await _client.GetDisputeUpdateRequestsAsync(disputeId, disputeUpdateRequestStatus, cancellationToken).ConfigureAwait(false);
+        return response;
     }
 
     private static ViolationTicket CreateViolationTicketFromDispute(Dispute dispute)
