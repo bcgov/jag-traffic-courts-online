@@ -153,7 +153,8 @@ export class DisputeService {
 
   showDisputeStatus(state: DisputeStore.State): void {
     this.dialog.open(DisputeStatusDialogComponent, {
-      width: "60vw",
+      width: "auto",
+      minWidth: "60vw",
       data: state
     })
   }
