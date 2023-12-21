@@ -69,8 +69,8 @@ public class BaseTestSuite {
 
 	@BeforeEach
 	protected void beforeEach() throws Exception {
-		disputeRepository.deleteAll();
-		jjDisputeRepository.deleteAll();
+//		disputeRepository.deleteAll();
+//		jjDisputeRepository.deleteAll();
 
 		setPrincipal("System", true);
 	}
