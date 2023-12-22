@@ -419,7 +419,25 @@ export class JJDisputeComponent implements OnInit {
         jjDisputedCount.appearInCourt = updatedJJDisputedCount.appearInCourt;
         jjDisputedCount.requestReduction = updatedJJDisputedCount.requestReduction;
         jjDisputedCount.requestTimeToPay = updatedJJDisputedCount.requestTimeToPay;
+        jjDisputedCount.lesserOrGreaterAmount = updatedJJDisputedCount.lesserOrGreaterAmount;
+        jjDisputedCount.includesSurcharge = updatedJJDisputedCount.includesSurcharge;
+        jjDisputedCount.revisedDueDate = updatedJJDisputedCount.revisedDueDate;
+        jjDisputedCount.comments = updatedJJDisputedCount.comments;
         jjDisputedCount.jjDisputedCountRoP.finding = updatedJJDisputedCount.jjDisputedCountRoP.finding;
+        jjDisputedCount.jjDisputedCountRoP.ssProbationDuration = updatedJJDisputedCount.jjDisputedCountRoP.ssProbationDuration;
+        jjDisputedCount.jjDisputedCountRoP.ssProbationConditions = updatedJJDisputedCount.jjDisputedCountRoP.ssProbationConditions;
+        jjDisputedCount.jjDisputedCountRoP.jailDuration = updatedJJDisputedCount.jjDisputedCountRoP.jailDuration;
+        jjDisputedCount.jjDisputedCountRoP.jailIntermittent = updatedJJDisputedCount.jjDisputedCountRoP.jailIntermittent;
+        jjDisputedCount.jjDisputedCountRoP.probationDuration = updatedJJDisputedCount.jjDisputedCountRoP.probationDuration;
+        jjDisputedCount.jjDisputedCountRoP.probationConditions = updatedJJDisputedCount.jjDisputedCountRoP.probationConditions;
+        jjDisputedCount.jjDisputedCountRoP.drivingProhibition = updatedJJDisputedCount.jjDisputedCountRoP.drivingProhibition;
+        jjDisputedCount.jjDisputedCountRoP.drivingProhibitionMVASection = updatedJJDisputedCount.jjDisputedCountRoP.drivingProhibitionMVASection;
+        jjDisputedCount.jjDisputedCountRoP.dismissed = updatedJJDisputedCount.jjDisputedCountRoP.dismissed;
+        jjDisputedCount.jjDisputedCountRoP.forWantOfProsecution = updatedJJDisputedCount.jjDisputedCountRoP.forWantOfProsecution;
+        jjDisputedCount.jjDisputedCountRoP.withdrawn = updatedJJDisputedCount.jjDisputedCountRoP.withdrawn;
+        jjDisputedCount.jjDisputedCountRoP.abatement = updatedJJDisputedCount.jjDisputedCountRoP.abatement;        
+        jjDisputedCount.jjDisputedCountRoP.stayOfProceedingsBy = updatedJJDisputedCount.jjDisputedCountRoP.stayOfProceedingsBy;
+        jjDisputedCount.jjDisputedCountRoP.other = updatedJJDisputedCount.jjDisputedCountRoP.other;
       }
     });
     this.determineIfConcludeOrCancel();
