@@ -34,6 +34,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeHearingType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataDocumentType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketImageDataJustinDocument;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
@@ -139,6 +140,21 @@ public class JJDisputeService {
 		}
 
 		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "id", "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
+		
+		// Update the LatestPleaUpdateTs if the LatestPlea is not the same as current one (before we drop and replace the list)
+		for (JJDisputedCount jjDisputedCountToUpdate : jjDisputeToUpdate.getJjDisputedCounts()) {
+			JJDisputedCount jjDisputedCount = getJjDisputedCount(jjDispute, jjDisputedCountToUpdate.getCount());
+			if (jjDisputedCount != null) {				
+				Plea uiLatestPlea = jjDisputedCount.getLatestPlea();
+				Plea dbLatestPlea = jjDisputedCountToUpdate.getLatestPlea();
+				// If the new LatestPlea is null or does not match the current database value, set the LatestPleaUpdateTs to now
+				if ((dbLatestPlea == null && uiLatestPlea != null)
+						|| (dbLatestPlea != null && !dbLatestPlea.equals(uiLatestPlea))) {
+					jjDisputedCount.setLatestPleaUpdateTs(new Date());
+				}
+			}
+		}
+		
 		// Remove all existing jj disputed counts that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
 			jjDisputeToUpdate.getJjDisputedCounts().clear();
@@ -179,6 +195,24 @@ public class JJDisputeService {
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
 
+	/**
+	 * Retrieves the JJDisputedCount object from a JJDispute object based on the given count index.
+	 *
+	 * @param jjDispute The JJDispute object to search within.
+	 * @param countNo   The count number to match.
+	 * @return The JJDisputedCount object that matches the given count number, or null if not found.
+	 */
+	private JJDisputedCount getJjDisputedCount(JJDispute jjDispute, Integer countNo) {
+		if (countNo == null) {
+			return null;
+		}
+		for (JJDisputedCount jjDisputedCount : jjDispute.getJjDisputedCounts()) {
+			if (countNo.equals(jjDisputedCount.getCount())) {
+				return jjDisputedCount;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Updates the properties of a specific {@link JJDispute} as well as related {@link Dispute} data

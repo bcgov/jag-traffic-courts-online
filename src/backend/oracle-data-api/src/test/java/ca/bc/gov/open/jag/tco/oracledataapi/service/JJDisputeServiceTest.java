@@ -1,14 +1,16 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.commons.lang3.time.DateUtils;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,17 @@ import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeCourtAppearanceRoP;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 class JJDisputeServiceTest extends BaseTestSuite {
 
 	@Autowired
 	private JJDisputeService jjDisputeService;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@ParameterizedTest
 	@EnumSource(value = JJDisputeStatus.class, names = { "NEW", "IN_PROGRESS" })
@@ -217,6 +224,45 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		assertThrows(NotAllowedException.class, () -> {
 			jjDisputeService.setStatus(jjDisputeToUpdate.getTicketNumber(), jjDisputeStatus, this.getPrincipal(), null, "170225.0877", false);
 		});
+	}
+	
+	@Test
+	void testUpdateJJDispute() throws Exception {
+		// TCVP-1981 confirm LatestPlea and LatestPleaUpdateTs on JJDisputedCount is updated
+		// Initially, the LatestPlea and LatestPleaUpdateTs are null, confirm persistence doesn't change that
+		JJDispute jjDispute = saveDispute(JJDisputeStatus.NEW);		
+		JJDisputedCount jjDisputedCount = RandomUtil.createJJDisputedCount(1);
+		jjDisputedCount.setLatestPlea(null);
+		jjDisputedCount.setLatestPleaUpdateTs(null);
+		jjDisputedCount.setJjDispute(jjDispute);
+		jjDispute.getJjDisputedCounts().add(jjDisputedCount);
+		jjDisputeRepository.saveAndFlush(jjDispute);
+		
+		entityManager.detach(jjDispute);
+		jjDispute = jjDisputeService.updateJJDispute(jjDispute.getTicketNumber(), jjDispute, this.getPrincipal());
+
+		assertNull(jjDispute.getJjDisputedCounts().get(0).getLatestPlea());
+		assertNull(jjDispute.getJjDisputedCounts().get(0).getLatestPleaUpdateTs());
+		
+		// Update the LatestPlea and confirm service layer automatically set the LatestPleaUpdateTs
+		jjDispute.getJjDisputedCounts().get(0).setLatestPlea(Plea.G);
+		
+		jjDispute.getRemarks().size(); // lazy load remarks
+		entityManager.detach(jjDispute);
+		jjDispute = jjDisputeService.updateJJDispute(jjDispute.getTicketNumber(), jjDispute, this.getPrincipal());
+		
+		assertNotNull(jjDispute.getJjDisputedCounts().get(0).getLatestPlea());
+		assertNotNull(jjDispute.getJjDisputedCounts().get(0).getLatestPleaUpdateTs());
+
+		// Update the LatestPlea again, this time setting it to null - confirm service layer automatically set the LatestPleaUpdateTs
+		jjDispute.getJjDisputedCounts().get(0).setLatestPlea(null);
+		
+		jjDispute.getRemarks().size(); // lazy load remarks
+		entityManager.detach(jjDispute);
+		jjDispute = jjDisputeService.updateJJDispute(jjDispute.getTicketNumber(), jjDispute, this.getPrincipal());
+
+		assertNull(jjDispute.getJjDisputedCounts().get(0).getLatestPlea());
+		assertNotNull(jjDispute.getJjDisputedCounts().get(0).getLatestPleaUpdateTs());
 	}
 
 	private JJDispute saveDispute(JJDisputeStatus jjDisputeStatus) {
