@@ -42,6 +42,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDatetimepickerModule, MatNativeDatetimeModule } from '@mat-datetimepicker/core';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 export const APP_DATE_FORMAT = 'D MMM YYYY';
 export const APP_DATE_FORMATS = {
@@ -89,6 +90,7 @@ export const GRI_DATE_FORMATS: MatDateFormats = {
     MatExpansionModule,
     MatIconModule,
     MatInputModule,
+    CurrencyMaskModule,
     MatFormFieldModule,
     MatListModule,
     MatMenuModule,

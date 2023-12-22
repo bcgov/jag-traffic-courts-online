@@ -22,6 +22,9 @@
 		<org.projectlombok.version>1.18.30</org.projectlombok.version>
 		<occam-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.occam</occam-package>
 		<tco-package>ca.bc.gov.open.jag.tco.oracledataapi.ords.tco</tco-package>
+		
+		<!-- automatically run annotation processors within the incremental compilation -->
+  		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>
 
 	<dependencyManagement>

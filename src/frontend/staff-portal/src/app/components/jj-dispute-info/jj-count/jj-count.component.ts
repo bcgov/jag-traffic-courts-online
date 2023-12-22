@@ -1,22 +1,24 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JJDispute } from '../../../services/jj-dispute.service';
 import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountLatestPlea, JJDisputedCountPlea, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputedCountRoPAbatement, JJDisputedCountRoPDismissed, JJDisputedCountRoPFinding, JJDisputedCountRoPForWantOfProsecution, JJDisputedCountRoPJailIntermittent, JJDisputedCountRoPWithdrawn, JJDisputeHearingType } from 'app/api';
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-jj-count',
   templateUrl: './jj-count.component.html',
   styleUrls: ['./jj-count.component.scss']
 })
-export class JJCountComponent implements OnInit {
+export class JJCountComponent implements OnInit, OnChanges {
   @Input() jjDisputeInfo: JJDispute;
   @Input() count: number;
   @Input() type: string;
   @Input() isViewOnly: boolean = false;
-  @Input() isSSEditMode: boolean = false;
+  /** Admin Staff Support edit mode */
+  @Input() isSSEditMode: boolean = false; 
   @Input() jjDisputedCount: JJDisputedCount;
   @Output() jjDisputedCountUpdate: EventEmitter<JJDisputedCount> = new EventEmitter<JJDisputedCount>();
 
@@ -41,10 +43,28 @@ export class JJCountComponent implements OnInit {
   countForm: FormGroup = this.formBuilder.group({
     appearInCourt: [null],
     requestReduction: [null],
-    requestTimeToPay: [null]
+    requestTimeToPay: [null],
+    lesserOrGreaterAmount: [null],
+    includesSurcharge: [null],
+    revisedDueDate: [null],
+    comments: [null, Validators.maxLength(4000)],
   });
   countRoPForm: FormGroup = this.formBuilder.group({
-    finding: [null]
+    finding: [null],
+    ssProbationDuration: [null, Validators.maxLength(500)],
+    ssProbationConditions: [null, Validators.maxLength(500)],
+    jailDuration: [null, Validators.maxLength(500)],
+    _jailIntermittent: [false],
+    probationDuration: [null, Validators.maxLength(500)],
+    probationConditions: [null, Validators.maxLength(1000)],
+    drivingProhibition: [null, Validators.maxLength(500)],
+    drivingProhibitionMVASection: [null, Validators.maxLength(240)],
+    _dismissed: [false],
+    _forWantOfProsecution: [false],
+    _withdrawn: [false],
+    _abatement: [false],
+    stayOfProceedingsBy: [null, Validators.maxLength(500)],
+    other: [null, Validators.maxLength(500)]
   });
   timeToPay: string = "";
   fineReduction: string = "";
@@ -63,6 +83,12 @@ export class JJCountComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initForm();
+    this.initFormData();
+    this.initListeners();
+  }
+
+  private initForm() {
     this.form = this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons ?
       this.formBuilder.group({
         totalFineAmount: [null, [Validators.required, Validators.max(9999), Validators.min(0)]],
@@ -102,10 +128,12 @@ export class JJCountComponent implements OnInit {
           stayOfProceedingsByCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
           stayOfProceedingsBy: [{ value: null, disabled: !this.jjDisputedCount }],
           otherCheckbox: [{ value: false, disabled: !this.jjDisputedCount }],
-          other: [{ value: null, disabled: !this.jjDisputedCount }],          
+          other: [{ value: null, disabled: !this.jjDisputedCount }],
         })
       });
+  }
 
+  private initFormData(): void {
     // initialize if no value
     if (this.jjDisputedCount) {
       if (this.jjDisputedCount.totalFineAmount != null) {
@@ -186,12 +214,12 @@ export class JJCountComponent implements OnInit {
         }
 
         // Latest Plea
-        if(this.jjDisputedCount?.latestPlea){
+        if (this.jjDisputedCount?.latestPlea) {
           this.bindLatestPlea(this.jjDisputedCount.latestPlea);
         }
 
         // Latest Plea UpdatedTs
-        if(this.jjDisputedCount?.latestPleaUpdateTs){          
+        if (this.jjDisputedCount?.latestPleaUpdateTs) {
           this.bindLatestPleaUpdateTs(this.jjDisputedCount.latestPleaUpdateTs);
         }
       }
@@ -199,28 +227,63 @@ export class JJCountComponent implements OnInit {
       if (this.isViewOnly || !this.jjDisputedCount) {
         this.form.disable();
       }
+      
+      this.countForm.patchValue(this.jjDisputedCount);
+        
+      if (this.jjDisputedCount.jjDisputedCountRoP) {
+        this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);
+        this.countRoPForm.patchValue({
+          _jailIntermittent: this.jjDisputedCount.jjDisputedCountRoP.jailIntermittent === this.JailIntermittent.Y,
+          _dismissed: this.jjDisputedCount.jjDisputedCountRoP.dismissed === this.Dismissed.Y,
+          _forWantOfProsecution: this.jjDisputedCount.jjDisputedCountRoP.forWantOfProsecution === this.ForWantOfProsecution.Y,
+          _withdrawn: this.jjDisputedCount.jjDisputedCountRoP.withdrawn === this.Withdrawn.Y,
+          _abatement: this.jjDisputedCount.jjDisputedCountRoP.abatement === this.Abatement.Y
+        });
+      }
+    }
+  }
 
+  private initListeners() {
+    if (this.jjDisputedCount) {
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
         Object.assign(this.jjDisputedCount, this.form.getRawValue()); // get raw value includes disabled fields
-        if(this.jjDisputedCount.latestPleaUpdateTs){
+        if (this.jjDisputedCount.latestPleaUpdateTs) {
           this.jjDisputedCount.latestPleaUpdateTs = new Date(this.jjDisputedCount.latestPleaUpdateTs).toISOString();
-        }        
+        }
         this.jjDisputedCount.includesSurcharge = (this.inclSurcharge === "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N);
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
 
-      this.countForm.patchValue(this.jjDisputedCount);
       this.countForm.valueChanges.subscribe(() => {
         this.jjDisputedCount = { ...this.jjDisputedCount, ...this.countForm.value };
+        this.inclSurcharge = (this.jjDisputedCount.includesSurcharge === this.IncludesSurcharge.Y ? "yes" : "no");
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
-      this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);
+
       this.countRoPForm.valueChanges.subscribe(() => {
         this.jjDisputedCount.jjDisputedCountRoP = { ...this.jjDisputedCount.jjDisputedCountRoP, ...this.countRoPForm.value };
+        this.jjDisputedCount.jjDisputedCountRoP.jailIntermittent = this.countRoPForm.value._jailIntermittent ? this.JailIntermittent.Y : this.JailIntermittent.N;        
+        this.jjDisputedCount.jjDisputedCountRoP.dismissed = this.countRoPForm.value._dismissed ? this.Dismissed.Y : this.Dismissed.N;
+        this.jjDisputedCount.jjDisputedCountRoP.forWantOfProsecution = this.countRoPForm.value._forWantOfProsecution ? this.ForWantOfProsecution.Y : this.ForWantOfProsecution.N;
+        this.jjDisputedCount.jjDisputedCountRoP.withdrawn = this.countRoPForm.value._withdrawn ? this.Withdrawn.Y : this.Withdrawn.N;
+        this.jjDisputedCount.jjDisputedCountRoP.abatement = this.countRoPForm.value._abatement ? this.Abatement.Y : this.Abatement.N;
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
-      
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.jjDisputeInfo?.currentValue) {
+      this.jjDisputeInfo = { ...this.jjDisputeInfo, ...this.jjDisputeInfo };
+      this.initFormData();
+    }
+    if (changes?.jjDisputedCount?.currentValue) {
+      this.jjDisputedCount = { ...this.jjDisputedCount, ...this.jjDisputedCount };
+      this.initFormData();
+    }
+    if (changes?.isSSEditMode?.currentValue) {
+      this.initFormData();
     }
   }
 
@@ -376,6 +439,7 @@ export class JJCountComponent implements OnInit {
   bindLatestPleaUpdateTs(value){
     this.form.controls.latestPleaUpdateTs.setValue(this.datePipe.transform(new Date(value), "YYYY-MM-dd HH:mm"));
   }
+  
 }
 
 
