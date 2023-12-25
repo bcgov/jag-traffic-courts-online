@@ -3,7 +3,7 @@ import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/materia
 import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { filter, Observable } from 'rxjs';
-import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
+import { JJDisputeStatus, JJDisputeHearingType, JJDisputeAccidentYn, JJDisputeMultipleOfficersYn } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -23,6 +23,8 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
 
   jjIDIR: string;
   HearingType = JJDisputeHearingType;
+  Accident = JJDisputeAccidentYn;
+  MultipleOfficers = JJDisputeMultipleOfficersYn;
   filterValues: any = {
     jjAssignedTo: '',
     appearanceTs: new Date()
@@ -44,6 +46,8 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     "appearanceTs",
     "duration",
     "room",
+    "accidentYn",
+    "multipleOfficersYn",
     "status",
   ];
 

@@ -6,7 +6,7 @@ import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { filter, Observable } from 'rxjs';
 import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
-import { JJDisputeHearingType } from 'app/api';
+import { JJDisputeAccidentYn, JJDisputeHearingType } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { AppState } from 'app/store';
 import {  Store } from '@ngrx/store';
@@ -20,6 +20,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   @Output() jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @ViewChild(MatSort) sort = new MatSort();
 
+  Accident = JJDisputeAccidentYn;
   data$: Observable<JJDispute[]>;
   data = [] as JJDispute[];
   currentTeam: string = "A";
@@ -39,6 +40,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     "courthouseLocation",
     "policeDetachment",
     "timeToPayReason",
+    "accidentYn",
   ];
 
   constructor(
