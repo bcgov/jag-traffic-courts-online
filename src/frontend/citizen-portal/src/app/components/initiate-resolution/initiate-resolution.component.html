@@ -2,8 +2,8 @@
   <app-page-header>
     <ng-container header>Violation ticket details</ng-container>
     <ng-container subHeader>
-      <strong class="text-success" *ngIf="ticketType !== 'Handwritten ticket'">Ticket found. </strong>Review ticket details below, then <strong>start a ticket
-        dispute request (includes requesting fine reductions, time to pay or disputes). </strong>
+      <strong class="text-success" *ngIf="ticketType !== 'Handwritten ticket'">Ticket found. </strong>
+      Review ticket details below, then start a dispute request (includes requests for fine reduction or time to pay).
     </ng-container>
   </app-page-header>
   <cdk-accordion>
@@ -60,10 +60,8 @@
                     href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket"><u>Payment
                       Options</u></a> for more information.
                 </li>
-                <li>You can plead guilty and request a fine reduction or time to pay without having to dispute your ticket and go to a
+                <li>You can agree you committed the offence and request a fine reduction or time to pay without going to a 
                   court hearing.</li>
-                <li>If you don’t pay your fine you may not be able to get or renew licences and permits, including your
-                  driver’s licence.</li>
               </ul>
             </ng-container>
           </app-alert>
@@ -77,7 +75,7 @@
 
     <div fxLayout="row wrap" class="mt-4 d-print-none">
       <button fxFlex="33" fxFlex.lt-md="100" mat-stroked-button type="button" color="primary" class="large" routerLink="/ticket/find">
-        Cancel and search again
+        Cancel and try again
       </button>
       <div fxFlex></div>
       <button fxFlex="50" fxFlex.lt-md="100" mat-flat-button color="primary" class="large" (click)="onDisputeTicket()">
