@@ -63,7 +63,7 @@
       </div>
       <mat-radio-button [value]="RequestCourtAppearance.Y">
         <span class="wrap-mat-radio-label">
-          I want to attend a court hearing in person.
+          I want my dispute heard at an in-person court hearing.
         </span>
       </mat-radio-button>
       <mat-error *ngIf="requestCourtAppearanceFormControl.touched
@@ -89,15 +89,17 @@
       <app-alert type="warning" icon="info">
         <ng-container #alertContent class="alert-content">
           <span class="text-dark">
-            <p>A Notice of Hearing will be sent to the email or mailing address provided. It will have the date, time 
-            and location of your hearing and other important notices.</p>
+            <p><strong>You or your agent must appear at the court hearing.</strong> A Notice of Hearing will be sent to the contact address 
+              provided earlier. It will have the date, time and location of your hearing. If you or your agent do not appear 
+              in court on the hearing date, the court must treat the ticket as not disputed, you will be considered to have 
+              plead guilty and the full ticketed amount must be paid immediately.</p>
             
-            <p>If you or your agent does not attend the court hearing, the court will treat the violation ticket as not 
-            disputed, the conviction(s) to the allegation(s) will be recorded against your record, and the prescribed 
-            ticketed amount(s) will become immediately due and payable.</p>
+            <p><strong>Please Note:</strong> If you want to make changes to your dispute, online changes may be made up to 5 business days 
+              before the original scheduled date of your hearing. If it is less than 5 business days, you must contact 
+              your nearest provincial court registry.</p>
             
-            <p>Please Note: If you need to make changes to your dispute, you may do so up to 5 business days before the
-            original scheduled date of your hearing.</p>
+            <p><strong>Important:</strong> Written reasons for a fine reduction and/or time to pay may not be submitted online or at a court registry less 
+              than 5 business days before the scheduled hearing date.</p>
           </span>
         </ng-container>
       </app-alert>
@@ -164,14 +166,15 @@
                     *ngIf="count?.dispute_count?.plea_cd !== Plea.G || mode !== DisputeFormMode.UPDATE">
                     <mat-radio-button [value]="Plea.G" color="primary" class="w-100"
                       (change)="count?.form.controls.__skip.setValue(false)">
-                      I agree I committed this offence and would like to plead guilty and request a fine reduction
-                      and/or time to pay on
-                      this count.
+                      I agree I committed this offence and would like to request a fine reduction and/or time to 
+                      pay on this count.
                     </mat-radio-button>
-                    <p> and/or</p>
+                    <p> or</p>
                     <mat-radio-button [value]="Plea.N" color="primary" class="w-100"
                       (change)="count?.form.controls.__skip.setValue(false)">
-                      I do not agree I committed this offence and would like to dispute this count.</mat-radio-button>
+                      I do not agree I committed this offence, but if found guilty, I may request a fine reduction 
+                      and/or time to pay on this count.
+                    </mat-radio-button>
                   </mat-radio-group>
                   <div *ngIf="count?.dispute_count?.plea_cd === Plea.G && mode === DisputeFormMode.UPDATE">
                     <app-alert type="warning" icon="info">
@@ -225,7 +228,8 @@
               <div class="col-md-12">
                 <mat-form-field class="w-100">
                   <mat-label>
-                    Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
+                    Please enter your reasons for why you are requesting a <strong>fine reduction</strong> 
+                    (must not contain a defence of the allegation)
                   </mat-label>
                   <input matInput formControlName="fine_reduction_reason" [errorStateMatcher]="matcher" />
                   <mat-error *ngIf="(additionalForm.controls.fine_reduction_reason.dirty
@@ -249,7 +253,8 @@
               <div class="col-md-12">
                 <mat-form-field class="w-100">
                   <mat-label>
-                    Please enter your reasons for why you are requesting <strong>time to pay</strong>
+                    Please enter your reasons for why you are requesting <strong>time to pay</strong> 
+                    (must not contain a defence of the allegation)
                   </mat-label>
                   <input matInput formControlName="time_to_pay_reason" [errorStateMatcher]="matcher" />
                   <mat-error *ngIf="(additionalForm.controls.time_to_pay_reason.dirty
@@ -448,11 +453,8 @@
           <div class="col">
             <app-alert type="info" icon="info">
               <ng-container class="alert-content" #alertContent>
-                <strong>Did you know? </strong><br>
-                You can make a dispute request by attending a court hearing in person, or you may plead guilty and
-                supply
-                written reasons requesting a fine reduction and/or time to pay without having to attend a
-                court hearing.
+                <strong>Important Notice </strong><br>
+                Certain Motor Vehicle Act offences have a minimum fine and cannot be reduced.
               </ng-container>
             </app-alert>
           </div>
