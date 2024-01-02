@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { filter, Observable } from 'rxjs';
-import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
+import { JJDisputeStatus, JJDisputeHearingType, JJDisputeAccidentYn } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 import { AppState } from 'app/store';
 import {  Store } from '@ngrx/store';
@@ -20,6 +20,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
 
   jjIDIR: string;
   HearingType = JJDisputeHearingType;
+  Accident = JJDisputeAccidentYn;
   statusComplete = this.jjDisputeService.jjDisputeStatusComplete;
   statusDisplay: JJDisputeStatus[] = this.jjDisputeService.jjDisputeStatusDisplay;
   data$: Observable<JJDispute[]>;
@@ -32,6 +33,7 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
     "fullName",
     "courthouseLocation",
     "policeDetachment",
+    "accidentYn",
     "status",
   ];
 

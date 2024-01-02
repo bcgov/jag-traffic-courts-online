@@ -1,9 +1,9 @@
 @import "palette.scss";
 
 .linkbutton {
-  background: none!important;
+  background: none !important;
   border: none;
-  padding: 0!important;
+  padding: 0 !important;
   /*optional*/
   font-family: arial, sans-serif;
   /*input has OS specific font-family*/
@@ -15,7 +15,7 @@
 .form-button {
   color: #fff;
   background-color: #38598a;
-  border-color: #38598a;  
+  border-color: #38598a;
   font-size: 14px;
   margin: 10px 10px 0px 0px;
 
@@ -28,7 +28,7 @@
 .form-button-secondary {
   color: #fff;
   background-color: #6c757d;
-  border-color: #6c757d;  
+  border-color: #6c757d;
   font-size: 14px;
   margin: 0px 10px 0px 10px;
 
@@ -36,6 +36,15 @@
     background-color: #5a6268;
     border-color: #5a6268;
   }
+}
+
+.ticket-number {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: 1.2;
+  color: inherit;
 }
 
 h3 {
@@ -85,7 +94,7 @@ label {
   font-weight: bold;
   padding: 0 !important;
 
-  .formatComments{
+  .formatComments {
     white-space: pre-wrap;
   }
 }
@@ -170,7 +179,7 @@ label {
     font-weight: 600;
     color: #1d4a77;
   }
-    
+
   .mat-form-field.datetime-picker {
     width: 200px !important;
     margin-right: 0px;
@@ -208,7 +217,7 @@ label {
           }
         }
       }
-      
+
       .mat-form-field-subscript-wrapper {
         position: relative;
         overflow: unset;
@@ -225,7 +234,7 @@ label {
     padding: 0px !important;
     border: none !important;
 
-    .mat-form-field-wrapper {      
+    .mat-form-field-wrapper {
       .mat-form-field-flex {
         padding: 0px 5px 0px 10px !important;
 
@@ -237,6 +246,7 @@ label {
           .mat-select-value {
             line-height: normal;
           }
+
           .mat-select-arrow-wrapper {
             transform: none;
           }
