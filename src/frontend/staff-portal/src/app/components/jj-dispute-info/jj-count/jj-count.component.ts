@@ -44,6 +44,7 @@ export class JJCountComponent implements OnInit, OnChanges {
     appearInCourt: [null],
     requestReduction: [null],
     requestTimeToPay: [null],
+    latestPlea: [null],
     lesserOrGreaterAmount: [null],
     includesSurcharge: [null],
     revisedDueDate: [null],

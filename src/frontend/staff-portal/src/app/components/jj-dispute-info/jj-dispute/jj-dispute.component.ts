@@ -421,6 +421,7 @@ export class JJDisputeComponent implements OnInit {
         jjDisputedCount.appearInCourt = updatedJJDisputedCount.appearInCourt;
         jjDisputedCount.requestReduction = updatedJJDisputedCount.requestReduction;
         jjDisputedCount.requestTimeToPay = updatedJJDisputedCount.requestTimeToPay;
+        jjDisputedCount.latestPlea = updatedJJDisputedCount.latestPlea;
         jjDisputedCount.lesserOrGreaterAmount = updatedJJDisputedCount.lesserOrGreaterAmount;
         jjDisputedCount.includesSurcharge = updatedJJDisputedCount.includesSurcharge;
         jjDisputedCount.revisedDueDate = updatedJJDisputedCount.revisedDueDate;

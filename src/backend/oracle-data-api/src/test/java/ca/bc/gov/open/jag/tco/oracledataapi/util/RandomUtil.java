@@ -26,6 +26,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
@@ -214,6 +215,16 @@ public class RandomUtil {
 		dispute.setViolationDate(randomDate(DateUtils.addDays(new Date(), -30), new Date())); // random date in the last 30 days
 		dispute.setAddressLine1("123 Boogie Woogie Avenue");
 		return dispute;
+	}
+	
+	public static JJDisputedCount createJJDisputedCount(long id) {
+		JJDisputedCount jjDisputedCount = new JJDisputedCount();
+		jjDisputedCount.setId(Long.valueOf(id));
+		jjDisputedCount.setCount(1);
+		jjDisputedCount.setAppearInCourt(randomYN());
+		jjDisputedCount.setRequestReduction(randomYN());
+		jjDisputedCount.setRequestTimeToPay(randomYN());
+		return jjDisputedCount;
 	}
 
 	public static EmailHistory createEmailHistory() {

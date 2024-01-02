@@ -308,7 +308,7 @@
   </section>
 
   <!-- JJ Latest Change Plea -->
-  <section [formGroup]="form" *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance"
+  <section [formGroup]="form" *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(isSSEditMode && jjDisputedCount)"
     style="padding: 0 0.2rem;">
     <br>
     <div class="row">
@@ -343,6 +343,26 @@
     <br>
     <hr style="margin: 0 0 0 0" />
   </section>
+  <br/>
+
+  <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && (isSSEditMode && jjDisputedCount)">
+    <form [formGroup]="countForm">
+      <!-- Change Plea -->
+      <div class="row">
+        <label class="col-4">{{ "label.change_plea" | translate }}</label>
+        <div class="col-8">
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="latestPlea">
+              <mat-option [value]=""></mat-option>
+              <mat-option [value]="LatestPlea.G">{{ "pleaType.guilty" | translate }}</mat-option>
+              <mat-option [value]="LatestPlea.N">{{ "pleaType.not_guilty" | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </section>
+
   <!-- JJ RoP for Court Appearance -->
   <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance && !isSSEditMode"
     style="padding: 0 0.2rem;">
