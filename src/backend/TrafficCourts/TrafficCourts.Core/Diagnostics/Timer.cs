@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Diagnostics.Latency;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 
 namespace TrafficCourts.Diagnostics;
