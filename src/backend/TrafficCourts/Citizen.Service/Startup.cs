@@ -30,6 +30,8 @@ public static class Startup
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        builder.Services.AddSingleton(TimeProvider.System);
+
         // this assembly, used in a couple locations below for registering things
         Assembly assembly = Assembly.GetExecutingAssembly();
 
