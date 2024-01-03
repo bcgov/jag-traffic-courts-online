@@ -66,9 +66,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
     })
 
     this.driversLicenceProvinceFormControl.valueChanges.subscribe(province => {
-      if (province != null) {
-        this.onDLProvinceChange(province);
-      }
+      this.onDLProvinceChange(province);
     })
   }
 
@@ -167,11 +165,18 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onDLProvinceChange(province: ProvinceCodeValue) {
     setTimeout(() => {
       let form = this.form as NoticeOfDisputeFormGroup;
-      form.controls.drivers_licence_province.setValue(province.provAbbreviationCd);
-      form.controls.drivers_licence_country_id.setValue(province.ctryId);
-      form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
 
-      if (province.provId === this.bc.provId) {
+      if (province === null) {
+        form.controls.drivers_licence_province.setValue(null);
+        form.controls.drivers_licence_country_id.setValue(null);
+        form.controls.drivers_licence_province_seq_no.setValue(null);
+      } else {
+        form.controls.drivers_licence_province.setValue(province.provAbbreviationCd);
+        form.controls.drivers_licence_country_id.setValue(province.ctryId);
+        form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
+      }
+      
+      if (province != null && province.provId === this.bc.provId) {
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(9)]);
         form.controls.drivers_licence_number.addValidators([Validators.minLength(7)]);
       } else {
