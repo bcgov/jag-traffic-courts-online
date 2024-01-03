@@ -31,7 +31,7 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
-        }, meters: new string[] { "MassTransit", "ComsClient", "WorkflowService" });
+        }, meters: ["MassTransit", "ComsClient", OracleDataApiOperationMetrics.MeterName]);
 
         builder.Services.AddControllers();
 
@@ -49,11 +49,7 @@ public static class Startup
 
         builder.Services.AddOracleDataApiClient(builder.Configuration);
 
-        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>(services =>
-        {
-            var meterFactory = services.GetRequiredService<IMeterFactory>();
-            return new OracleDataApiOperationMetrics(meterFactory, "WorkflowService");
-        });
+        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>();
 
         builder.Services.Decorate<IOracleDataApiClient, TimedOracleDataApiClient>();
 

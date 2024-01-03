@@ -2,7 +2,6 @@ using MassTransit;
 using Microsoft.OpenApi.Models;
 using NodaTime;
 using OpenTelemetry.Trace;
-using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common;
@@ -31,7 +30,7 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        }, meters: new string[] { "MassTransit", "ComsClient", "StaffService" });
+        }, meters: ["MassTransit", "ComsClient", OracleDataApiOperationMetrics.MeterName]);
 
         builder.AddRedis();
 
@@ -41,11 +40,7 @@ public static class Startup
             .AddHttpMessageHandler<UserIdentityProviderHandler>();
 
         // register instance for tracking metrics to the Oracle Data API
-        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>(services =>
-        {
-            var meterFactory = services.GetRequiredService<IMeterFactory>();
-            return new OracleDataApiOperationMetrics(meterFactory, "StaffService");
-        });
+        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>();
 
         // decorate will replace injected instances of IOracleDataApiClient with the TimedOracleDataApiClient
         // except for the TimedOracleDataApiClient type

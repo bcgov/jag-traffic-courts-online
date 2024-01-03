@@ -8,7 +8,6 @@ namespace TrafficCourts.Diagnostics;
 /// </summary>
 public abstract class OperationMetrics : IOperationMetrics
 {
-    private readonly Meter _meter;
     private readonly Timer _timer;
 
     /// <summary>
@@ -24,15 +23,14 @@ public abstract class OperationMetrics : IOperationMetrics
     /// <exception cref="ArgumentException">
     /// <paramref name="meterName"/>, <paramref name="name"/> or <paramref name="description"/> is empty or whitespace.
     /// </exception>
-    protected OperationMetrics(IMeterFactory factory, string meterName, string name, string description)
+    protected OperationMetrics(IMeterFactory factory, string name, string description)
     {
         ArgumentNullException.ThrowIfNull(factory);
-        ArgumentException.ThrowIfNullOrWhiteSpace(meterName);
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(description);
 
-        _meter = factory.Create(new MeterOptions(meterName));
-        _timer = new Timer(_meter, $"{name}.operation.duration", "ms", $"Elapsed time spent executing a {description} operation");
+        Meter meter = factory.Create(name);
+        _timer = new Timer(meter, $"{name}.operation.duration", "ms", $"Elapsed time spent executing a {description} operation");
     }
 
     /// <summary>
