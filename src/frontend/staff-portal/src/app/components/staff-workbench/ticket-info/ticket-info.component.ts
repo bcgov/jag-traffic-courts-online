@@ -128,7 +128,6 @@ export class TicketInfoComponent implements OnInit {
         issuedTs: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({
           description: [null],
-          actOrRegulationNameCode: [null],
           subparagraph: [null],
           section: [null],
           subsection: [null],
@@ -138,7 +137,6 @@ export class TicketInfoComponent implements OnInit {
         }),
         violationTicketCount2: this.formBuilder.group({
           description: [null],
-          actOrRegulationNameCode: [null],
           subparagraph: [null],
           section: [null],
           subsection: [null],
@@ -148,7 +146,6 @@ export class TicketInfoComponent implements OnInit {
         }),
         violationTicketCount3: this.formBuilder.group({
           description: [null],
-          actOrRegulationNameCode: [null],
           subparagraph: [null],
           section: [null],
           subsection: [null],
@@ -702,19 +699,17 @@ export class TicketInfoComponent implements OnInit {
     let countForm = this.form.get('violationTicket').get('violationTicketCount' + countNo.toString());
     let parts = fullDescription.split(" "); // act/code fullsection description
 
-    // lookup legal statute from part[1] which should be in legal paragraph form
+    // lookup legal statute from part[0] which should be in legal paragraph form
     if (parts && parts.length > 1) {
-      let foundStatute = this.lookupsService.statutes?.filter(x => x.code === parts[1] && x.actCode === parts[0]).shift();
+      let foundStatute = this.lookupsService.statutes?.find(x => x.code === parts[0]);
       if (foundStatute) {
-        countForm.get('actOrRegulationNameCode').setValue(foundStatute.actCode);
         countForm.get('section').setValue(foundStatute.sectionText);
         countForm.get('subsection').setValue(foundStatute.subsectionText);
         countForm.get('paragraph').setValue(foundStatute.paragraphText);
         countForm.get('subparagraph').setValue(foundStatute.subparagraphText);
         countForm.get('description').setValue(foundStatute.shortDescriptionText);
-        countForm.get('fullDescription').setValue(`${foundStatute.actCode} ${foundStatute.code} ${foundStatute.shortDescriptionText}`);
+        countForm.get('fullDescription').setValue(`${foundStatute.code} ${foundStatute.shortDescriptionText}`);
       } else {
-        countForm.get('actOrRegulationNameCode').setValue(undefined);
         countForm.get('section').setValue(undefined);
         countForm.get('subsection').setValue(undefined);
         countForm.get('paragraph').setValue(undefined);
@@ -788,14 +783,11 @@ export class TicketInfoComponent implements OnInit {
           countForm
             .get('fullDescription')
             .setValue(fullDesc);
-          countForm.get('actOrRegulationNameCode').setValue(violationTicketCount.actOrRegulationNameCode);
           countForm.get('description').setValue(violationTicketCount.description);
 
           // lookup legal statute
-          let foundStatute = this.lookupsService.statutes?.filter(x => {
-            return x.code === this.getSectionText(violationTicketCount)
-                && x.actCode === violationTicketCount.actOrRegulationNameCode;
-          }).shift();
+          const sectionCode = this.getSectionText(violationTicketCount);
+          let foundStatute = this.lookupsService.statutes?.find(x => x.code === sectionCode); 
           if (foundStatute) {
             countForm.get('section').setValue(foundStatute.sectionText);
             countForm.get('subsection').setValue(foundStatute.subsectionText);
@@ -861,8 +853,8 @@ export class TicketInfoComponent implements OnInit {
   private getSectionText(vtc: ViolationTicketCount) : string {
     let sectionText = vtc.section ?? "";
     sectionText += vtc.subsection ? '(' + vtc.subsection + ')' : "";
-    sectionText += vtc.paragraph ? + '(' + vtc.paragraph + ')' : "";
-    sectionText += vtc.subparagraph ? + '(' + vtc.subparagraph + ')' : "";
+    sectionText += vtc.paragraph ? '(' + vtc.paragraph + ')' : "";
+    sectionText += vtc.subparagraph ? '(' + vtc.subparagraph + ')' : "";
     return sectionText;
   }
 }
