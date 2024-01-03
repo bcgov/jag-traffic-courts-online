@@ -18,6 +18,8 @@ public static class Startup
         // this assembly, used in a couple locations below for registering things
         Assembly assembly = Assembly.GetExecutingAssembly();
 
+        builder.Services.AddSingleton(TimeProvider.System);
+
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger);
 
