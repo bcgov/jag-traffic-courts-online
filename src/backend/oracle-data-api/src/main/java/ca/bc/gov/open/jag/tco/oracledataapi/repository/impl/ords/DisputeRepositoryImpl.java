@@ -36,6 +36,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.ViolationTicket
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.DateUtil;
 import net.logstash.logback.argument.StructuredArguments;
+import net.logstash.logback.util.StringUtils;
 
 @ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = true)
 @Qualifier("disputeRepository")
@@ -106,7 +107,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 						dispute.getDisputeId(),
 						dispute.getNoticeOfDisputeGuid(),
 						dispute.getStatus(),
-						dispute.getEmailAddressVerified()))
+						StringUtils.isBlank(dispute.getEmailAddress()) ? Boolean.TRUE : dispute.getEmailAddressVerified()))
 				.collect(Collectors.toList());
 
 		return disputeResults;
@@ -124,7 +125,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 						dispute.getDisputeId(),
 						dispute.getNoticeOfDisputeGuid(),
 						dispute.getStatus(),
-						dispute.getEmailAddressVerified()))
+						StringUtils.isBlank(dispute.getEmailAddress()) ? Boolean.TRUE : dispute.getEmailAddressVerified()))
 				.collect(Collectors.toList());
 
 		return disputeResults;

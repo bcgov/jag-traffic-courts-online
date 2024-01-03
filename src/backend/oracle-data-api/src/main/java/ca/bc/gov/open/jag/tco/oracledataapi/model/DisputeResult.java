@@ -26,6 +26,13 @@ public class DisputeResult {
 
 	private Boolean isEmailAddressVerified = Boolean.FALSE;
 
+	/**
+	 * 
+	 * @param disputeId
+	 * @param noticeOfDisputeGuid
+	 * @param disputeStatus
+	 * @param isEmailAddressVerified TRUE if there is no email address or if the email address has been successfully verified, FALSE otherwise.
+	 */
 	public DisputeResult(Long disputeId, String noticeOfDisputeGuid, DisputeStatus disputeStatus, Boolean isEmailAddressVerified) {
 		this.disputeId = disputeId;
 		this.noticeOfDisputeGuid = noticeOfDisputeGuid;
