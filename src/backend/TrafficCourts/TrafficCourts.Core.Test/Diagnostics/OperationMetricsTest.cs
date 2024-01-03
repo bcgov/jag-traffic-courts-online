@@ -7,16 +7,23 @@ namespace TrafficCourts.Core.Test.Diagnostics;
 
 public class OperationMetricsTest
 {
+    private readonly string _meterName;
+
+    public OperationMetricsTest()
+    {
+        _meterName = Guid.NewGuid().ToString();
+    }
+
     [Fact]
     public void should_create_meter()
     {
         var factory = new TestMeterFactory();
 
-        new TestOperationMetrics(factory, "x", "y");
+        new TestOperationMetrics(factory, _meterName, "x", "y");
 
         // assert meter is created
         var meter = Assert.Single(factory.Meters);
-        Assert.Equal("x", meter.Name);
+        Assert.Equal(_meterName, meter.Name);
     }
 
     [Fact]
@@ -24,7 +31,7 @@ public class OperationMetricsTest
     {
         var factory = new TestMeterFactory();
 
-        var sut = new TestOperationMetrics(factory, "x", "y");
+        var sut = new TestOperationMetrics(factory, _meterName, "x", "y");
 
         // act
         var actual = sut.BeginOperation();
@@ -40,7 +47,7 @@ public class OperationMetricsTest
     {
         var factory = new TestMeterFactory();
 
-        var sut = new TestOperationMetrics(factory, "x", "y");
+        var sut = new TestOperationMetrics(factory, _meterName, "x", "y");
 
         // act
         var actual = sut.BeginOperation();
@@ -55,7 +62,7 @@ public class OperationMetricsTest
     public void operation_should_record_operation_duration()
     {
         var meterFactory = new TestMeterFactory();
-        var sut = new TestOperationMetrics(meterFactory, "x", "y");
+        var sut = new TestOperationMetrics(meterFactory, _meterName, "x", "y");
 
         // act
         using (var operation = sut.BeginOperation())
@@ -79,7 +86,7 @@ public class OperationMetricsTest
     public void operation_with_error_should_record_operation_error()
     {
         var meterFactory = new TestMeterFactory();
-        var sut = new TestOperationMetrics(meterFactory, "x", "y");
+        var sut = new TestOperationMetrics(meterFactory, _meterName, "x", "y");
 
         // act
         using (var operation = sut.BeginOperation())
@@ -107,8 +114,8 @@ public class OperationMetricsTest
     {
         private readonly MetricCollector<double> _measurements;
 
-        public TestOperationMetrics(IMeterFactory meterFactory, string name, string description) :
-            base(meterFactory, name, description)
+        public TestOperationMetrics(IMeterFactory meterFactory, string meterName, string name, string description) :
+            base(meterFactory, meterName, name, description)
         {
             var factory = (TestMeterFactory)meterFactory;
             _measurements = new MetricCollector<double>(factory.Meters[0], "x.operation.duration");

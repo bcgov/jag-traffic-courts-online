@@ -6,8 +6,9 @@ namespace TrafficCourts.Diagnostics;
 /// <summary>
 /// Provides base class for creating timed operation metics.
 /// </summary>
-public abstract class OperationMetrics : IOperationMetrics
+public abstract class OperationMetrics : IOperationMetrics, IDisposable
 {
+    private readonly Meter _meter;
     private readonly Timer _timer;
 
     /// <summary>
@@ -23,14 +24,15 @@ public abstract class OperationMetrics : IOperationMetrics
     /// <exception cref="ArgumentException">
     /// <paramref name="meterName"/>, <paramref name="name"/> or <paramref name="description"/> is empty or whitespace.
     /// </exception>
-    protected OperationMetrics(IMeterFactory factory, string name, string description)
+    protected OperationMetrics(IMeterFactory factory, string meterName, string name, string description)
     {
         ArgumentNullException.ThrowIfNull(factory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(meterName);
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(description);
 
-        Meter meter = factory.Create(name);
-        _timer = new Timer(meter, $"{name}.operation.duration", "ms", $"Elapsed time spent executing a {description} operation");
+        _meter = factory.Create(meterName);
+        _timer = new Timer(_meter, $"{name}.operation.duration", "ms", $"Elapsed time spent executing a {description} operation");
     }
 
     /// <summary>
@@ -56,5 +58,10 @@ public abstract class OperationMetrics : IOperationMetrics
         }
 
         return _timer.Start("operation", operation);
+    }
+
+    public void Dispose()
+    {
+        _meter.Dispose();
     }
 }
