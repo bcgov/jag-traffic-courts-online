@@ -64,7 +64,7 @@ export class ContactInfoComponent implements OnInit {
   public ngOnInit() {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
-      homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
+      homePhoneNumber: [null, [Validators.maxLength(20)]], // Optional
       emailAddress: [null, [Validators.email, Validators.maxLength(100)]],
       contactTypeCd: [null, [Validators.required]],
       contactSurnameNm: [null, [Validators.maxLength(30)]],
@@ -81,8 +81,8 @@ export class ContactInfoComponent implements OnInit {
       addressCountryId: [null, [Validators.required]],
       rejectedReason: [null, Validators.maxLength(256)], // Optional
       postalCode: [null, [Validators.required]],
-      driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
-      driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
+      driversLicenceNumber: [null], // Optional
+      driversLicenceProvince: [null, [Validators.maxLength(30)]], // Optional
       driversLicenceProvinceProvId: [null],
       driversLicenceIssuedCountryId: [null],
       driversLicenceIssuedProvinceSeqNo: [null],
@@ -106,8 +106,7 @@ export class ContactInfoComponent implements OnInit {
       if (ctryId === this.canada.ctryId || ctryId === this.usa.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
-        this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceIssuedProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('homePhoneNumber').addValidators([FormControlValidators.phone]);
       } else this.form.get('addressProvince').addValidators([Validators.required]);
 
       if (ctryId == this.canada.ctryId) {
@@ -131,18 +130,21 @@ export class ContactInfoComponent implements OnInit {
   public onDLProvinceChange(provId: number) {
     setTimeout(() => {
       let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
-      if (!provFound) return;
-      this.form.get("driversLicenceProvince").setValue(provFound.provNm);
-      this.form.get("driversLicenceIssuedCountryId").setValue(provFound.ctryId);
-      this.form.get("driversLicenceIssuedProvinceSeqNo").setValue(provFound.provSeqNo);
-      if (provFound.provAbbreviationCd === this.bc.provAbbreviationCd) {
-        this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
-        this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
-      } else {
+      if (provId === null || !provFound) {
+        this.form.get('driversLicenceProvince').setValue(null);
+        this.form.get('driversLicenceIssuedCountryId').setValue(null);
+        this.form.get('driversLicenceIssuedProvinceSeqNo').setValue(null);
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
-      }
-      if (provFound.ctryId == this.usa.ctryId || provFound.ctryId == this.canada.ctryId) {
-        this.form.get('driversLicenceNumber').addValidators([Validators.required]);
+      } else {
+        this.form.get("driversLicenceProvince").setValue(provFound.provNm);
+        this.form.get("driversLicenceIssuedCountryId").setValue(provFound.ctryId);
+        this.form.get("driversLicenceIssuedProvinceSeqNo").setValue(provFound.provSeqNo);
+        if (provFound.provAbbreviationCd === this.bc.provAbbreviationCd) {
+          this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
+          this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
+        } else {
+          this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
+        }
       }
       this.form.get('driversLicenceNumber').updateValueAndValidity();
     }, 5)
@@ -357,8 +359,7 @@ export class ContactInfoComponent implements OnInit {
       if (this.form.get('addressCountryId').value === this.canada.ctryId || this.form.get('addressCountryId').value === this.usa.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
-        this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceIssuedProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('homePhoneNumber').addValidators([FormControlValidators.phone]);
       }
 
       if (this.form.get('addressCountryId').value == this.canada.ctryId) {
