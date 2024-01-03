@@ -270,13 +270,13 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
     [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Cancellation has been requested, refresh access token aborted")]
     public partial void LogCancellationRequested();
 
-    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "Sending OIDC access token request to server")]
+    [LoggerMessage(EventId = 5, Level = LogLevel.Debug, Message = "Sending OIDC access token request to server")]
     public partial void LogRequestingAccessToken();
 
-    [LoggerMessage(EventId = 6, Level = LogLevel.Information, Message = "Could not deserialize OIDC token, returning null")]
+    [LoggerMessage(EventId = 6, Level = LogLevel.Warning, Message = "Could not deserialize OIDC token, returning null")]
     public partial void LogTokenDeserializationError();
 
-    [LoggerMessage(EventId = 7, Level = LogLevel.Information, Message = "Access token request failed with {StatusCode}, returning null")]
+    [LoggerMessage(EventId = 7, Level = LogLevel.Warning, Message = "Access token request failed with {StatusCode}, returning null")]
     public partial void LogNotSuccessStatusCode(HttpStatusCode statusCode);
 
     [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Schedule token refresh in {Duration}")]
