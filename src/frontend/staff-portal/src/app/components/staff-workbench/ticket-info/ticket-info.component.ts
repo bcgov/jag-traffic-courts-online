@@ -190,6 +190,11 @@ export class TicketInfoComponent implements OnInit {
     this.form.updateValueAndValidity();
   }
 
+  public onFieldChange() {
+    // Force the Save button to reevaluate validity.
+    this.form.updateValueAndValidity();
+  }
+
   public onCountryChange(ctryId: number) {
 
     setTimeout(() => {
@@ -353,6 +358,8 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('driversLicenceNumber').addValidators([Validators.required]);
       }
       this.form.get('driversLicenceNumber').updateValueAndValidity();
+
+      this.onFieldChange();
     }, 5)
   }
   onKeyPressNumbers(event: any, BCOnly: boolean) {
@@ -851,13 +858,13 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('violationTicket').updateValueAndValidity();
         
         // TCVP-2554 make a static variable to indicate if the TicketInformation section is editable or not.
-        this.isTicketInformationReadOnly = this.lastUpdatedDispute.status === this.DispStatus.Validated;        
+        this.isTicketInformationReadOnly = this.lastUpdatedDispute.status === this.DispStatus.Validated;
       }, (error: any) => {
         this.retrieving = false;
         if (error.status == 409) this.conflict = true;
       });
   }
-   
+
   /**
    * Returns the full section text from a ViolationTicketCount, ie 44(3)(a)(iii)
    * @param vtc 

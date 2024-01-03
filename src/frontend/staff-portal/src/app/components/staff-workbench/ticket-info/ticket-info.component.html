@@ -420,8 +420,8 @@
                   <!-- Notice of Dispute surname -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Disputant surname</mat-label>
-                      <input matInput formControlName="disputantSurname" />
+                      <mat-label>{{ "label.disputant_surname" | translate }}</mat-label>
+                      <input matInput formControlName="disputantSurname" (change)="onFieldChange()" />
                       <mat-error *ngIf="form.controls.disputantSurname.hasError('required')">{{ "error.required" |
                         translate }}</mat-error>
                       <mat-error *ngIf="form.controls.disputantSurname.hasError('maxlength')">{{ "error.max_length" |
@@ -432,8 +432,8 @@
                   <!-- Notice of dispute given names -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Disputant given name(s)</mat-label>
-                      <input matInput formControlName="disputantGivenNames" />
+                      <mat-label>{{ "label.disputant_given_names" | translate }}</mat-label>
+                      <input matInput formControlName="disputantGivenNames" (change)="onFieldChange()" />
                       <mat-error *ngIf="form.controls.disputantGivenNames.hasError('required')">{{ "error.required" |
                         translate }}</mat-error>
                       <mat-error *ngIf="form.controls.disputantGivenNames.hasError('maxlength')">{{ "error.max_length" |
@@ -443,10 +443,10 @@
                 </div>
                 <section>
                   <div class="row">
-                    <h4>Who are we contacting?</h4>
+                    <h4>{{ "label.who_contacting" | translate }}</h4>
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label>Contact Type</mat-label>
+                        <mat-label>{{ "label.contact_type" | translate }}</mat-label>
                         <mat-select formControlName="contactTypeCd"
                           (selectionChange)="onSelectContactType($event.value)">
                           <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
@@ -458,8 +458,8 @@
                     </div>
                     <div class="col-md-6" *ngIf="form.get('contactTypeCd').value === ContactType.Lawyer">
                       <mat-form-field class="w-100">
-                        <mat-label>Name of law firm</mat-label>
-                        <input matInput formControlName="contactLawFirmNm" />
+                        <mat-label>{{ "label.name_of_law_firm" | translate }}</mat-label>
+                        <input matInput formControlName="contactLawFirmNm" (change)="onFieldChange()" />
                         <mat-error *ngIf="form.controls.contactLawFirmNm.hasError('required')">{{ "error.required" |
                           translate }}</mat-error>
                         <mat-error *ngIf="form.controls.contactLawFirmNm.hasError('maxlength')">{{ "error.max_length" |
@@ -473,8 +473,8 @@
                     <!--Contact surname -->
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label>Contact Surname</mat-label>
-                        <input matInput formControlName="contactSurnameNm" />
+                        <mat-label>{{ "label.contact_surname" | translate }}</mat-label>
+                        <input matInput formControlName="contactSurnameNm" (change)="onFieldChange()" />
                         <mat-error *ngIf="form.controls.contactSurnameNm.hasError('required')">{{ "error.required" |
                           translate }}</mat-error>
                         <mat-error *ngIf="form.controls.contactSurnameNm.hasError('maxlength')">{{ "error.max_length" |
@@ -485,8 +485,8 @@
                     <!-- Contact given names -->
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label>Contact Given name(s)</mat-label>
-                        <input matInput formControlName="contactGivenNames" />
+                        <mat-label>{{ "label.contact_given_names" | translate }}</mat-label>
+                        <input matInput formControlName="contactGivenNames" (change)="onFieldChange()" />
                         <mat-error *ngIf="form.controls.contactGivenNames.hasError('required')">{{ "error.required" |
                           translate }}</mat-error>
                         <mat-error *ngIf="form.controls.contactGivenNames.hasError('maxlength')">{{ "error.max_length" |
@@ -499,8 +499,8 @@
                     <!-- Notice of dispute mailing address -->
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label>Mailing address</mat-label>
-                        <input matInput formControlName="address" />
+                        <mat-label>{{ "label.mailing_address" | translate }}</mat-label>
+                        <input matInput formControlName="address" (change)="onFieldChange()"/>
                         <mat-error *ngIf="form.controls.address.hasError('required')">{{ "error.required" | translate
                           }}</mat-error>
                         <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate
@@ -511,7 +511,7 @@
                     <!-- Notice of dispute Country -->
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label>Country</mat-label>
+                        <mat-label>{{ "label.country" | translate }}</mat-label>
                         <mat-select formControlName="addressCountryId"
                           (selectionChange)="onCountryChange($event.value)">
                           <mat-option [value]="canada.ctryId">{{ canada.ctryLongNm }}</mat-option>
@@ -529,8 +529,8 @@
                     <!-- Notice of dispute City -->
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label>City</mat-label>
-                        <input matInput formControlName="addressCity" />
+                        <mat-label>{{ "label.city" | translate }}</mat-label>
+                        <input matInput formControlName="addressCity" (change)="onFieldChange()"/>
                         <mat-error *ngIf="form.controls.addressCity.hasError('required')">{{ "error.required" |
                           translate }}</mat-error>
                         <mat-error *ngIf="form.controls.addressCity.hasError('maxlength')">{{ "error.max_length" |
@@ -541,10 +541,10 @@
                     <!-- Notice of dispute province/state -->
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label *ngIf="form.get('addressCountryId').value===canada.ctryId">Province</mat-label>
-                        <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">State</mat-label>
+                        <mat-label *ngIf="form.get('addressCountryId').value===canada.ctryId">{{ "label.province" | translate }}</mat-label>
+                        <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">{{ "label.state" | translate }}</mat-label>
                         <mat-select formControlName="addressProvinceProvId"
-                          (selectionChange)="onAddressProvinceChange($event.value)"
+                          (selectionChange)="onAddressProvinceChange($event.value)" (change)="onFieldChange()"
                           *ngIf="form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId">
                           <div *ngIf="form.get('addressCountryId').value === canada.ctryId">
                             <mat-option [value]="bc.provId">{{bc.provNm }}</mat-option>
@@ -559,8 +559,8 @@
                         </mat-select>
                         <mat-label
                           *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId">
-                          Province/State</mat-label>
-                        <input matInput formControlName="addressProvince"
+                          {{ "label.province_state" | translate }}</mat-label>
+                        <input matInput formControlName="addressProvince" (change)="onFieldChange()"
                           *ngIf="form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId" />
                         <mat-error
                           *ngIf="form.controls.addressProvince.hasError('required') || form.controls.addressProvinceProvId.hasError('required')">{{
@@ -577,25 +577,24 @@
                   <!-- Notice of dispute postal code -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label *ngIf="form.get('addressCountryId').value ===canada.ctryId">Postal code</mat-label>
-                      <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
+                      <mat-label *ngIf="form.get('addressCountryId').value ===canada.ctryId">{{ "label.postal_code" | translate }}</mat-label>
+                      <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6" (change)="onFieldChange()"
                         formControlName="postalCode" [showMaskTyped]="true"
                         *ngIf="form.get('addressCountryId').value===canada.ctryId" />
                       <mat-label *ngIf="form.get('addressCountryId').value===usa.ctryId">Zip Code</mat-label>
-                      <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
+                      <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()" (change)="onFieldChange()"
                         formControlName="postalCode" [showMaskTyped]="true"
                         *ngIf="form.get('addressCountryId').value===usa.ctryId" />
                       <mat-label
                         *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value!==canada.ctryId">
-                        Postal/Zip Code</mat-label>
-                      <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
+                        {{ "label.postal_zip" | translate }}</mat-label>
+                      <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()" (change)="onFieldChange()"
                         formControlName="postalCode"
                         *ngIf="form.get('addressCountryId').value!==usa.ctryId && form.get('addressCountryId').value !== canada.ctryId" />
-                      <mat-error *ngIf="form.get('postalCode').hasError('required')">{{ "error.required" | translate
-                        }}</mat-error>
+                      <mat-error *ngIf="form.get('postalCode').hasError('required')">{{ "error.required" | translate }}</mat-error>
                       <mat-error
-                        *ngIf="form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')">Must
-                        be a valid postal/zip code
+                        *ngIf="form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')">
+                        {{ "error.postal_zip" | translate }}
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -604,16 +603,15 @@
                   <!--- Notice of dispute phone number -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Phone number</mat-label>
-                      <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000"
+                      <mat-label>{{ "label.phone_number" | translate }}</mat-label>
+                      <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000" (change)="onFieldChange()"
                         *ngIf="form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId"
                         [showMaskTyped]="true" />
-                      <input matInput formControlName="homePhoneNumber" mask="00000000000000000000"
+                      <input matInput formControlName="homePhoneNumber" mask="00000000000000000000" (change)="onFieldChange()"
                         *ngIf="form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId" />
-                      <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('required')">{{"error.required" |
-                        translate}}
+                      <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('required')">{{"error.required" | translate}}
                       </mat-error>
-                      <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('phone')">Must be a valid phone number
+                      <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('phone')">{{ "error.phone_number" | translate }}
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -621,14 +619,12 @@
                   <!-- Notice of dispute email address -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Email address</mat-label>
-                      <input matInput formControlName="emailAddress" autocomplete="off" />
+                      <mat-label>{{ "label.email_address" | translate }}</mat-label>
+                      <input matInput formControlName="emailAddress" autocomplete="off" (change)="onFieldChange()"/>
                       <mat-hint
                         *ngIf="lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress"
                         style="color:red">
-                        The contact email address has not been verified by the disputant. To opt them out of email
-                        communications, set the email address to blank and Save. Alternatively you can resend the email
-                        verification to the disputant.
+                        {{ "warning.unverified_email" | translate }}
                       </mat-hint>
                       <mat-error *ngIf="form.get('emailAddress').hasError('email')">{{"error.email_address" |
                         translate }}</mat-error>
@@ -642,7 +638,7 @@
                   <!-- Notice of dispute drivers licence province -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>Prov/State of DL</mat-label>
+                      <mat-label>{{ "label.dl_province" | translate }}</mat-label>
                       <mat-select formControlName="driversLicenceProvinceProvId"
                         (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
                         <mat-option [value]="bc.provId">{{bc.provNm}}</mat-option>
@@ -657,9 +653,9 @@
                   <!-- Notice of dispute drivers licence number -->
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
-                      <mat-label>DL number</mat-label>
+                      <mat-label>{{ "label.dl_number" | translate }}</mat-label>
                       <input matInput formControlName="driversLicenceNumber"
-                        (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
+                        (keypress)="($event.charCode >= 48 && $event.charCode < 58)" (change)="onFieldChange()" minlength="7" maxlength="9"
                         *ngIf="form.get('driversLicenceProvinceProvId').value === bc.provId" />
                       <input matInput formControlName="driversLicenceNumber" maxlength="20"
                         *ngIf="form.get('driversLicenceProvinceProvId').value !== bc.provId" />
@@ -668,7 +664,7 @@
                       <mat-error *ngIf="
                            form.get('driversLicenceNumber')?.errors?.minlength ||
                            form.get('driversLicenceNumber')?.errors?.maxlength">
-                        Must be a valid BC driver's licence number of seven to nine digits
+                        {{ "error.dl_number" | translate }}
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -677,7 +673,7 @@
                   <button class="large" mat-flat-button type="button" color="primary"
                     (click)="resendEmailVerification()"
                     *ngIf="lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress">
-                    Resend Email Verify
+                    {{ "label.resend_email_verify" | translate}}
                   </button>
                   <button class="large" mat-flat-button type="submit" color="primary"
                     [disabled]="!enableNoticeOfDisputeSave()">
