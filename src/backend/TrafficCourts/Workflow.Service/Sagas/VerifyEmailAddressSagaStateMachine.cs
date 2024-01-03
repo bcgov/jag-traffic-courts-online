@@ -1,15 +1,14 @@
-﻿using MassTransit;
-using NodaTime;
+using MassTransit;
 using System.Diagnostics;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
 
 namespace TrafficCourts.Workflow.Service.Sagas;
 
-public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmailAddressState>
+public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmailAddressState>
 {
     private readonly ILogger<VerifyEmailAddressStateMachine> _logger;
-    private readonly IClock _clock;
+    private readonly TimeProvider _clock;
 
     #region States
     /// <summary>
@@ -39,7 +38,7 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
     #endregion
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public VerifyEmailAddressStateMachine(IClock clock, ILogger<VerifyEmailAddressStateMachine> logger)
+    public VerifyEmailAddressStateMachine(TimeProvider clock, ILogger<VerifyEmailAddressStateMachine> logger)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
@@ -47,11 +46,21 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
 
         InstanceState(x => x.CurrentState);
 
-        Event(() => RequestEmailVerification, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
+        Event(() => NoticeOfDisputeSubmitted, x =>
+        {
+            x.CorrelateById(context => context.Message.NoticeOfDisputeGuid);
+            x.InsertOnInitial = true;
+        });
+
+        Event(() => RequestEmailVerification, x =>
+        {
+            x.CorrelateById(context => context.Message.NoticeOfDisputeGuid);
+            x.InsertOnInitial = true;
+        });
+
         Event(() => ResendEmailVerificationEmail, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
         Event(() => SendEmailVerificationFailed, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
         Event(() => EmailVerificationSuccessful, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
-        Event(() => NoticeOfDisputeSubmitted, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
 
         Event(() => CheckEmailVerificationToken, x =>
         {
@@ -64,6 +73,11 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
         });
 
         Initially(
+            // NoticeOfDisputeSubmitted may occur before the RequestEmailVerification event is raised.
+            When(NoticeOfDisputeSubmitted)
+                .Then(context => _logger.LogDebug("Notice of dispute submitted and requires email verification"))
+                .Then(CaptureDisputeId)
+                .TransitionTo(Active),
             When(RequestEmailVerification)
                 .Then(context => _logger.LogDebug("Email verification started"))
                 .Then(CreateToken)
@@ -95,6 +109,12 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
         SetCompletedWhenFinalized();
     }
 
+    private void CaptureDisputeId(BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context)
+    {
+        var state = context.Saga;
+        state.DisputeId = context.Message.DisputeId;
+    }
+
     private void CreateToken(BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
     {
         var state = context.Saga;
@@ -117,6 +137,9 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
             }
         }
     }
+
+
+
 
     /// <summary>
     /// Recreates the email verification token if the email address has changed since the validation
@@ -158,7 +181,7 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
     private async Task CheckToken(BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context)
     {
         // save the start time cause the time on both messages below should be the same
-        DateTimeOffset now = _clock.GetCurrentInstant().ToDateTimeOffset();
+        DateTimeOffset now = _clock.GetUtcNow();
 
         var state = context.Saga;
 
@@ -217,7 +240,7 @@ public class VerifyEmailAddressStateMachine : MassTransitStateMachine<VerifyEmai
     {
         await context.RespondAsync(new CheckEmailVerificationTokenResponse
         {
-            CheckedAt = _clock.GetCurrentInstant().ToDateTimeOffset(),
+            CheckedAt = _clock.GetUtcNow(),
             Status = status
         });
     }

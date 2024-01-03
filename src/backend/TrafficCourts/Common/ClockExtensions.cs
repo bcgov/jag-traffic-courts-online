@@ -1,5 +1,4 @@
-﻿using NodaTime;
-
+﻿
 namespace TrafficCourts.Common;
 
 /// <summary>
@@ -10,26 +9,12 @@ public static class ClockExtensions
     /// <summary>
     /// America/Vancouver <see cref="https://nodatime.org/TimeZones"/>
     /// </summary>
-    private static readonly DateTimeZone _vancouver = DateTimeZoneProviders.Tzdb["America/Vancouver"];
-
-    /// <summary>
-    /// Gets the current date and time in pacific time zone.
-    /// </summary>
-    /// <param name="clock"></param>
-    /// <returns></returns>
-    public static DateTimeOffset GetCurrentPacificTime(this IClock clock)
-    {
-        ArgumentNullException.ThrowIfNull(clock);
-        Instant now = clock.GetCurrentInstant();
-        DateTimeOffset pacificTime = now.InZone(_vancouver).ToDateTimeOffset();
-        return pacificTime;
-    }
+    private static readonly TimeZoneInfo _vancouver = TimeZoneInfo.FindSystemTimeZoneById("America/Vancouver");
 
     public static DateTimeOffset GetCurrentPacificTime(this TimeProvider clock)
     {
         ArgumentNullException.ThrowIfNull(clock);
-        Instant now = Instant.FromDateTimeOffset(clock.GetUtcNow());
-        DateTimeOffset pacificTime = now.InZone(_vancouver).ToDateTimeOffset();
+        DateTimeOffset pacificTime = TimeZoneInfo.ConvertTime(clock.GetUtcNow(), _vancouver);
         return pacificTime;
     }
 }

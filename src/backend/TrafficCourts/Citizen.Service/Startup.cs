@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using NodaTime;
 using OpenTelemetry.Trace;
 using Serilog;
 using System.Configuration;
@@ -103,8 +102,6 @@ public static class Startup
         builder.Services.AddHashids(builder.Configuration);
 
         builder.Services.AddEmailVerificationTokens();
-
-        builder.Services.AddSingleton<IClock>(SystemClock.Instance);
 
         builder.Services.AddRecyclableMemoryStreams();
         

@@ -1,14 +1,11 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 using Npgsql;
-using System.Diagnostics.Metrics;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
 using TrafficCourts.Common.OpenAPIs.VirusScan;
 using TrafficCourts.Messaging;
@@ -37,7 +34,6 @@ public static class Startup
 
         AddSwagger(builder, assembly, logger);
 
-        builder.Services.AddSingleton<IClock>(SystemClock.Instance);
         builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetRequiredSection(EmailConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<SmtpConfiguration>(builder.Configuration.GetRequiredSection(SmtpConfiguration.Section));
 
@@ -48,10 +44,6 @@ public static class Startup
         builder.Services.AddTransient<IVerificationEmailTemplate, VerificationEmailTemplate>();
 
         builder.Services.AddOracleDataApiClient(builder.Configuration);
-
-        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>();
-
-        builder.Services.Decorate<IOracleDataApiClient, TimedOracleDataApiClient>();
 
         builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
 

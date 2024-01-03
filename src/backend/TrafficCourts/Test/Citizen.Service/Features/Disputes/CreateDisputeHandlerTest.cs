@@ -9,10 +9,9 @@ using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
 using AutoMapper;
-using NodaTime;
-using NodaTime.Testing;
 using HashidsNet;
 using TrafficCourts.Coms.Client;
+using Microsoft.Extensions.Time.Testing;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
 {
@@ -28,7 +27,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var objectManagementService = Mock.Of<IObjectManagementService>();
             var memoryStreamManager = Mock.Of<IMemoryStreamManager>();
             var mapper = Mock.Of<IMapper>();
-            var clock = Mock.Of<IClock>();
+            var clock = Mock.Of<TimeProvider>();
             var hashids = Mock.Of<IHashids>();
 
             Assert.Throws<ArgumentNullException>("bus", () => new Create.Handler(null!, redisCacheService, objectManagementService, memoryStreamManager, mapper, clock, hashids, _loggerMock.Object));
@@ -50,7 +49,10 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var memoryStreamManager = new Mock<IMemoryStreamManager>();
             var mockAutoMapper = new Mock<IMapper>();
             var mockHashids = new Mock<IHashids>();
-            FakeClock clock = new FakeClock(Instant.FromDateTimeUtc(DateTime.UtcNow), Duration.FromSeconds(1));
+            FakeTimeProvider clock = new FakeTimeProvider(DateTime.UtcNow)
+            {
+                AutoAdvanceAmount = TimeSpan.FromSeconds(1)
+            };
 
             mockAutoMapper.Setup(_ => _.Map<SubmitNoticeOfDispute>(It.IsAny<NoticeOfDispute>())).Returns(new SubmitNoticeOfDispute());
 

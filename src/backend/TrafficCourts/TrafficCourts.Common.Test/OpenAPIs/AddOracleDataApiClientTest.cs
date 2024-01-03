@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Reflection;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
+using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
 using Xunit;
 
 namespace TrafficCourts.Common.Test.OpenAPIs
@@ -41,7 +42,13 @@ namespace TrafficCourts.Common.Test.OpenAPIs
 
         private HttpClient? GetHttpClientFrom(IOracleDataApiClient client)
         {
-            FieldInfo? field = typeof(OracleDataApiClient)
+            FieldInfo? field = typeof(TimedOracleDataApiClient)
+                .GetField("_inner", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.NotNull(field);
+
+            client = (field!.GetValue(client) as IOracleDataApiClient)!;
+
+            field = typeof(OracleDataApiClient)
                 .GetField("_httpClient", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Assert.NotNull(field);

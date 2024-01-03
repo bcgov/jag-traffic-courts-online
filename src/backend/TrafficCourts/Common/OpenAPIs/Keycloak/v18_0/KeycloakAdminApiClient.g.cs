@@ -6897,10 +6897,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: ""
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -6915,7 +6916,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -6992,6 +6995,7 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: ""
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -7004,7 +7008,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7078,6 +7084,7 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -7091,7 +7098,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7175,6 +7184,7 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -7188,7 +7198,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7261,6 +7273,7 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -7274,7 +7287,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7344,53 +7359,53 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/admin-events"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("admin-events");
+                    urlBuilder_.Append("/admin-events");
             urlBuilder_.Append('?');
             if (operationTypes != null)
             {
-                foreach (var item_ in operationTypes) { urlBuilder_.Append(System.Uri.EscapeDataString("operationTypes") + "=").Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append("&"); }
+                foreach (var item_ in operationTypes) { urlBuilder_.Append(System.Uri.EscapeDataString("operationTypes")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append('&'); }
             }
             if (authRealm != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("authRealm") + "=").Append(System.Uri.EscapeDataString(ConvertToString(authRealm, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("authRealm")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(authRealm, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (authClient != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("authClient") + "=").Append(System.Uri.EscapeDataString(ConvertToString(authClient, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("authClient")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(authClient, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (authUser != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("authUser") + "=").Append(System.Uri.EscapeDataString(ConvertToString(authUser, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("authUser")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(authUser, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (authIpAddress != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("authIpAddress") + "=").Append(System.Uri.EscapeDataString(ConvertToString(authIpAddress, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("authIpAddress")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(authIpAddress, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (resourcePath != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("resourcePath") + "=").Append(System.Uri.EscapeDataString(ConvertToString(resourcePath, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("resourcePath")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(resourcePath, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (dateFrom != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("dateFrom") + "=").Append(System.Uri.EscapeDataString(ConvertToString(dateFrom, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("dateFrom")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(dateFrom, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (dateTo != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("dateTo") + "=").Append(System.Uri.EscapeDataString(ConvertToString(dateTo, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("dateTo")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(dateTo, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (resourceTypes != null)
             {
-                foreach (var item_ in resourceTypes) { urlBuilder_.Append(System.Uri.EscapeDataString("resourceTypes") + "=").Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append("&"); }
+                foreach (var item_ in resourceTypes) { urlBuilder_.Append(System.Uri.EscapeDataString("resourceTypes")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append('&'); }
             }
             urlBuilder_.Length--;
 
@@ -7405,7 +7420,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7483,9 +7500,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/admin-events"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("admin-events");
+                    urlBuilder_.Append("/admin-events");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -7498,7 +7515,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7575,13 +7594,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/attack-detection/brute-force/users"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("attack-detection");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("brute-force");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
+                    urlBuilder_.Append("/attack-detection/brute-force/users");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -7594,7 +7609,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7667,14 +7684,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/attack-detection/brute-force/users/{userId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("attack-detection");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("brute-force");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/attack-detection/brute-force/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -7688,7 +7700,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7769,14 +7783,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/attack-detection/brute-force/users/{userId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("attack-detection");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("brute-force");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/attack-detection/brute-force/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -7790,7 +7799,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7866,11 +7877,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/authenticator-providers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authenticator-providers");
+                    urlBuilder_.Append("/authentication/authenticator-providers");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -7883,7 +7892,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -7964,11 +7975,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/client-authenticator-providers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-authenticator-providers");
+                    urlBuilder_.Append("/authentication/client-authenticator-providers");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -7981,7 +7990,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8059,11 +8070,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/config"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
+                    urlBuilder_.Append("/authentication/config");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -8076,7 +8085,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8151,12 +8162,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/config-description/{providerId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config-description");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/config-description/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(providerId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -8170,7 +8178,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8250,12 +8260,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/config/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/config/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -8269,7 +8276,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8348,12 +8357,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/config/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/config/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -8367,7 +8373,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8445,12 +8453,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/config/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/config/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -8464,7 +8469,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8537,11 +8544,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/executions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
+                    urlBuilder_.Append("/authentication/executions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -8554,7 +8559,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8628,12 +8635,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/executions/{executionId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/executions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(executionId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -8647,7 +8651,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8719,12 +8725,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/executions/{executionId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/executions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(executionId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -8738,7 +8741,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8816,15 +8821,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/executions/{executionId}/config"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/executions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(executionId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
+                    urlBuilder_.Append("/config");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -8837,7 +8838,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -8917,16 +8920,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/executions/{executionId}/config/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/executions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(executionId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/config/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -8940,7 +8938,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9020,15 +9020,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/executions/{executionId}/lower-priority"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/executions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(executionId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("lower-priority");
+                    urlBuilder_.Append("/lower-priority");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9041,7 +9037,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9116,15 +9114,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/executions/{executionId}/raise-priority"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/executions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(executionId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("raise-priority");
+                    urlBuilder_.Append("/raise-priority");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9137,7 +9131,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9213,11 +9209,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
+                    urlBuilder_.Append("/authentication/flows");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9230,7 +9224,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9308,11 +9304,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
+                    urlBuilder_.Append("/authentication/flows");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9325,7 +9319,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9407,15 +9403,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{flowAlias}/copy"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(flowAlias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("copy");
+                    urlBuilder_.Append("/copy");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9428,7 +9420,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9502,15 +9496,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{flowAlias}/executions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(flowAlias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
+                    urlBuilder_.Append("/executions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9523,7 +9513,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9601,15 +9593,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{flowAlias}/executions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(flowAlias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
+                    urlBuilder_.Append("/executions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9622,7 +9610,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9700,17 +9690,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{flowAlias}/executions/execution"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(flowAlias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("execution");
+                    urlBuilder_.Append("/executions/execution");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9723,7 +9707,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9801,17 +9787,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{flowAlias}/executions/flow"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(flowAlias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("executions");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flow");
+                    urlBuilder_.Append("/executions/flow");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -9824,7 +9804,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -9899,12 +9881,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -9918,7 +9897,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10001,12 +9982,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -10020,7 +9998,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10094,12 +10074,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/flows/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("flows");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/flows/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -10113,7 +10090,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10189,11 +10168,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/form-action-providers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("form-action-providers");
+                    urlBuilder_.Append("/authentication/form-action-providers");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -10206,7 +10183,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10287,11 +10266,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/form-providers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("form-providers");
+                    urlBuilder_.Append("/authentication/form-providers");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -10304,7 +10281,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10381,11 +10360,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/per-client-config-description"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("per-client-config-description");
+                    urlBuilder_.Append("/authentication/per-client-config-description");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -10398,7 +10375,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10476,11 +10455,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/register-required-action"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("register-required-action");
+                    urlBuilder_.Append("/authentication/register-required-action");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -10493,7 +10470,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10569,11 +10548,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/required-actions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("required-actions");
+                    urlBuilder_.Append("/authentication/required-actions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -10586,7 +10563,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10666,12 +10645,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/required-actions/{alias}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("required-actions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/required-actions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -10685,7 +10661,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10768,12 +10746,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/required-actions/{alias}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("required-actions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/required-actions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -10787,7 +10762,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10861,12 +10838,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/required-actions/{alias}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("required-actions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/required-actions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -10880,7 +10854,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -10955,15 +10931,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/required-actions/{alias}/lower-priority"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("required-actions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/required-actions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("lower-priority");
+                    urlBuilder_.Append("/lower-priority");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -10976,7 +10948,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11051,15 +11025,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/required-actions/{alias}/raise-priority"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("required-actions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/authentication/required-actions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("raise-priority");
+                    urlBuilder_.Append("/raise-priority");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11072,7 +11042,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11148,11 +11120,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/authentication/unregistered-required-actions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("authentication");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("unregistered-required-actions");
+                    urlBuilder_.Append("/authentication/unregistered-required-actions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11165,7 +11135,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11244,9 +11216,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clear-keys-cache"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clear-keys-cache");
+                    urlBuilder_.Append("/clear-keys-cache");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11259,7 +11231,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11333,9 +11307,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clear-realm-cache"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clear-realm-cache");
+                    urlBuilder_.Append("/clear-realm-cache");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11348,7 +11322,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11422,9 +11398,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clear-user-cache"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clear-user-cache");
+                    urlBuilder_.Append("/clear-user-cache");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11437,7 +11413,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11511,9 +11489,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-description-converter"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-description-converter");
+                    urlBuilder_.Append("/client-description-converter");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11526,7 +11504,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11601,11 +11581,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-policies/policies"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-policies");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("policies");
+                    urlBuilder_.Append("/client-policies/policies");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11618,7 +11596,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11696,11 +11676,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-policies/policies"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-policies");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("policies");
+                    urlBuilder_.Append("/client-policies/policies");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11713,7 +11691,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11783,15 +11763,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-policies/profiles"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-policies");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("profiles");
+                    urlBuilder_.Append("/client-policies/profiles");
             urlBuilder_.Append('?');
             if (include_global_profiles != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("include-global-profiles") + "=").Append(System.Uri.EscapeDataString(ConvertToString(include_global_profiles, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("include-global-profiles")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(include_global_profiles, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -11806,7 +11784,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11884,11 +11864,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-policies/profiles"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-policies");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("profiles");
+                    urlBuilder_.Append("/client-policies/profiles");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11901,7 +11879,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -11971,11 +11951,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-registration-policy/providers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-registration-policy");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("providers");
+                    urlBuilder_.Append("/client-registration-policy/providers");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -11988,7 +11966,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12069,9 +12049,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
+                    urlBuilder_.Append("/client-scopes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -12084,7 +12064,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12166,9 +12148,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
+                    urlBuilder_.Append("/client-scopes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -12181,7 +12163,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12259,10 +12243,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -12276,7 +12259,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12351,10 +12336,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -12368,7 +12352,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12449,10 +12435,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -12466,7 +12451,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12548,15 +12535,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/protocol-mappers/add-models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("add-models");
+                    urlBuilder_.Append("/protocol-mappers/add-models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -12569,7 +12552,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12647,15 +12632,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/protocol-mappers/models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
+                    urlBuilder_.Append("/protocol-mappers/models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -12668,7 +12649,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12743,15 +12726,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/protocol-mappers/models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
+                    urlBuilder_.Append("/protocol-mappers/models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -12764,7 +12743,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12847,16 +12828,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/protocol-mappers/protocol/{protocol}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/protocol/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(protocol, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -12870,7 +12846,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -12950,13 +12928,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
+                    urlBuilder_.Append("/scope-mappings");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -12969,7 +12945,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13056,16 +13034,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -13079,7 +13052,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13165,16 +13140,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -13188,7 +13158,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13269,16 +13241,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -13292,7 +13259,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13374,19 +13343,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/clients/{client}/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -13399,7 +13362,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13488,23 +13453,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/clients/{client}/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -13519,7 +13478,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13599,15 +13560,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -13620,7 +13577,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13703,15 +13662,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -13724,7 +13679,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13802,15 +13759,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -13823,7 +13776,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -13898,17 +13853,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/realm/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/scope-mappings/realm/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -13921,7 +13870,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14011,21 +13962,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id}/scope-mappings/realm/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/scope-mappings/realm/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -14040,7 +13985,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14125,16 +14072,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -14148,7 +14090,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14236,16 +14180,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -14259,7 +14198,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14338,16 +14279,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-scopes/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -14361,7 +14297,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14437,9 +14375,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-session-stats"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-session-stats");
+                    urlBuilder_.Append("/client-session-stats");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -14452,7 +14390,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14533,9 +14473,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
+                    urlBuilder_.Append("/client-templates");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -14548,7 +14488,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14630,9 +14572,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
+                    urlBuilder_.Append("/client-templates");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -14645,7 +14587,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14723,10 +14667,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -14740,7 +14683,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14815,10 +14760,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -14832,7 +14776,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -14913,10 +14859,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -14930,7 +14875,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15012,15 +14959,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/protocol-mappers/add-models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("add-models");
+                    urlBuilder_.Append("/protocol-mappers/add-models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -15033,7 +14976,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15111,15 +15056,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/protocol-mappers/models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
+                    urlBuilder_.Append("/protocol-mappers/models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -15132,7 +15073,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15207,15 +15150,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/protocol-mappers/models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
+                    urlBuilder_.Append("/protocol-mappers/models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -15228,7 +15167,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15311,16 +15252,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/protocol-mappers/protocol/{protocol}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/protocol/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(protocol, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -15334,7 +15270,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15414,13 +15352,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
+                    urlBuilder_.Append("/scope-mappings");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -15433,7 +15369,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15520,16 +15458,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -15543,7 +15476,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15629,16 +15564,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -15652,7 +15582,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15733,16 +15665,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -15756,7 +15683,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15838,19 +15767,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/clients/{client}/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -15863,7 +15786,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -15952,23 +15877,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/clients/{client}/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -15983,7 +15902,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16063,15 +15984,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -16084,7 +16001,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16167,15 +16086,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -16188,7 +16103,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16266,15 +16183,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -16287,7 +16200,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16362,17 +16277,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/realm/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/scope-mappings/realm/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -16385,7 +16294,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16475,21 +16386,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id}/scope-mappings/realm/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/scope-mappings/realm/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -16504,7 +16409,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16589,16 +16496,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -16612,7 +16514,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16700,16 +16604,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -16723,7 +16622,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16802,16 +16703,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/client-templates/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-templates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/client-templates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -16825,7 +16721,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -16895,33 +16793,33 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
+                    urlBuilder_.Append("/clients");
             urlBuilder_.Append('?');
             if (clientId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("clientId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(clientId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("clientId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(clientId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (viewableOnly != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("viewableOnly") + "=").Append(System.Uri.EscapeDataString(ConvertToString(viewableOnly, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("viewableOnly")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(viewableOnly, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (q != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("q") + "=").Append(System.Uri.EscapeDataString(ConvertToString(q, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("q")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(q, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -16936,7 +16834,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17018,9 +16918,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
+                    urlBuilder_.Append("/clients");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -17033,7 +16933,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17107,9 +17009,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients-initial-access"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients-initial-access");
+                    urlBuilder_.Append("/clients-initial-access");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -17122,7 +17024,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17197,9 +17101,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients-initial-access"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients-initial-access");
+                    urlBuilder_.Append("/clients-initial-access");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -17212,7 +17116,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17289,10 +17195,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients-initial-access/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients-initial-access");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients-initial-access/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -17306,7 +17211,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17382,10 +17289,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -17399,7 +17305,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17472,10 +17380,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -17489,7 +17396,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17570,10 +17479,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -17587,7 +17495,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17663,14 +17573,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/certificates/{attr}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("certificates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/certificates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(attr, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -17684,7 +17591,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17769,17 +17678,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/certificates/{attr}/download"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("certificates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/certificates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(attr, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("download");
+                    urlBuilder_.Append("/download");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -17792,7 +17697,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17872,17 +17779,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/certificates/{attr}/generate"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("certificates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/certificates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(attr, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("generate");
+                    urlBuilder_.Append("/generate");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -17895,7 +17798,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -17986,17 +17891,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/certificates/{attr}/generate-and-download"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("certificates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/certificates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(attr, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("generate-and-download");
+                    urlBuilder_.Append("/generate-and-download");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18009,7 +17910,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18091,17 +17994,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/certificates/{attr}/upload"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("certificates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/certificates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(attr, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("upload");
+                    urlBuilder_.Append("/upload");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18114,7 +18013,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18198,17 +18099,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/certificates/{attr}/upload-certificate"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("certificates");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/certificates/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(attr, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("upload-certificate");
+                    urlBuilder_.Append("/upload-certificate");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18221,7 +18118,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18300,13 +18199,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/client-secret"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-secret");
+                    urlBuilder_.Append("/client-secret");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18319,7 +18216,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18397,13 +18296,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/client-secret"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-secret");
+                    urlBuilder_.Append("/client-secret");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18416,7 +18313,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18493,15 +18392,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/client-secret/rotated"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-secret");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("rotated");
+                    urlBuilder_.Append("/client-secret/rotated");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18514,7 +18409,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18587,15 +18484,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/client-secret/rotated"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("client-secret");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("rotated");
+                    urlBuilder_.Append("/client-secret/rotated");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18608,7 +18501,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18686,13 +18581,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/default-client-scopes"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-client-scopes");
+                    urlBuilder_.Append("/default-client-scopes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -18705,7 +18598,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18786,14 +18681,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/default-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -18807,7 +18699,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18882,14 +18776,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/default-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -18903,7 +18794,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -18976,23 +18869,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/evaluate-scopes/generate-example-access-token"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("evaluate-scopes");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("generate-example-access-token");
+                    urlBuilder_.Append("/evaluate-scopes/generate-example-access-token");
             urlBuilder_.Append('?');
             if (scope != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("scope") + "=").Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("scope")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (userId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("userId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("userId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -19007,7 +18896,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19085,23 +18976,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/evaluate-scopes/generate-example-id-token"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("evaluate-scopes");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("generate-example-id-token");
+                    urlBuilder_.Append("/evaluate-scopes/generate-example-id-token");
             urlBuilder_.Append('?');
             if (scope != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("scope") + "=").Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("scope")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (userId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("userId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("userId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -19116,7 +19003,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19194,23 +19083,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/evaluate-scopes/generate-example-userinfo"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("evaluate-scopes");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("generate-example-userinfo");
+                    urlBuilder_.Append("/evaluate-scopes/generate-example-userinfo");
             urlBuilder_.Append('?');
             if (scope != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("scope") + "=").Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("scope")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (userId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("userId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("userId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -19225,7 +19110,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19305,19 +19192,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/evaluate-scopes/protocol-mappers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("evaluate-scopes");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
+                    urlBuilder_.Append("/evaluate-scopes/protocol-mappers");
             urlBuilder_.Append('?');
             if (scope != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("scope") + "=").Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("scope")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -19332,7 +19215,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19419,23 +19304,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/evaluate-scopes/scope-mappings/{roleContainerId}/granted"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("evaluate-scopes");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/evaluate-scopes/scope-mappings/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(roleContainerId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("granted");
+                    urlBuilder_.Append("/granted");
             urlBuilder_.Append('?');
             if (scope != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("scope") + "=").Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("scope")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -19450,7 +19329,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19533,23 +19414,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/evaluate-scopes/scope-mappings/{roleContainerId}/not-granted"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("evaluate-scopes");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/evaluate-scopes/scope-mappings/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(roleContainerId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("not-granted");
+                    urlBuilder_.Append("/not-granted");
             urlBuilder_.Append('?');
             if (scope != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("scope") + "=").Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("scope")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(scope, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -19564,7 +19439,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19644,16 +19521,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/installation/providers/{providerId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("installation");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("providers");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/installation/providers/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(providerId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -19667,7 +19539,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19740,15 +19614,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -19761,7 +19631,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19843,15 +19715,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -19864,7 +19732,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -19951,13 +19821,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/nodes"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("nodes");
+                    urlBuilder_.Append("/nodes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -19970,7 +19838,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20045,14 +19915,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/nodes/{node}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("nodes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/nodes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(node, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -20066,7 +19933,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20151,13 +20020,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/offline-session-count"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("offline-session-count");
+                    urlBuilder_.Append("/offline-session-count");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -20170,7 +20037,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20256,21 +20125,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/offline-sessions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("offline-sessions");
+                    urlBuilder_.Append("/offline-sessions");
             urlBuilder_.Append('?');
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -20285,7 +20152,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20363,13 +20232,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/optional-client-scopes"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("optional-client-scopes");
+                    urlBuilder_.Append("/optional-client-scopes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -20382,7 +20249,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20463,14 +20332,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/optional-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("optional-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/optional-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -20484,7 +20350,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20559,14 +20427,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/optional-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("optional-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/optional-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -20580,7 +20445,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20660,15 +20527,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/protocol-mappers/add-models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("add-models");
+                    urlBuilder_.Append("/protocol-mappers/add-models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -20681,7 +20544,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20757,15 +20622,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/protocol-mappers/models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
+                    urlBuilder_.Append("/protocol-mappers/models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -20778,7 +20639,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20851,15 +20714,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/protocol-mappers/models"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
+                    urlBuilder_.Append("/protocol-mappers/models");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -20872,7 +20731,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -20953,16 +20814,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/protocol-mappers/protocol/{protocol}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/protocol/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(protocol, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -20976,7 +20832,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21061,13 +20919,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/push-revocation"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("push-revocation");
+                    urlBuilder_.Append("/push-revocation");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -21080,7 +20936,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21159,13 +21017,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/registration-access-token"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("registration-access-token");
+                    urlBuilder_.Append("/registration-access-token");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -21178,7 +21034,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21256,29 +21114,27 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
+                    urlBuilder_.Append("/roles");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -21293,7 +21149,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21374,13 +21232,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
+                    urlBuilder_.Append("/roles");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -21393,7 +21249,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21471,14 +21329,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -21492,7 +21347,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21574,14 +21431,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -21595,7 +21449,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21676,14 +21532,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -21697,7 +21550,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21778,17 +21633,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -21801,7 +21652,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21879,17 +21732,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -21902,7 +21751,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -21988,17 +21839,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -22011,7 +21858,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22092,20 +21941,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/composites/clients/{clientUuid}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/composites/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientUuid, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -22119,7 +21961,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22202,19 +22046,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/composites/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/composites/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -22227,7 +22065,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22308,29 +22148,25 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/groups"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
+                    urlBuilder_.Append("/groups");
             urlBuilder_.Append('?');
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -22345,7 +22181,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22426,19 +22264,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -22451,7 +22283,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22536,19 +22370,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -22561,7 +22389,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22648,25 +22478,21 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/roles/{role-name}/users"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
+                    urlBuilder_.Append("/users");
             urlBuilder_.Append('?');
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -22681,7 +22507,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22759,13 +22587,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
+                    urlBuilder_.Append("/scope-mappings");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -22778,7 +22604,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22863,16 +22691,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -22886,7 +22709,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -22970,16 +22795,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -22993,7 +22813,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23072,16 +22894,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -23095,7 +22912,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23175,19 +22994,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/clients/{client}/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -23200,7 +23013,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23287,23 +23102,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/clients/{client}/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/scope-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -23318,7 +23127,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23396,15 +23207,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -23417,7 +23224,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23498,15 +23307,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -23519,7 +23324,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23595,15 +23402,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/scope-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -23616,7 +23419,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23689,17 +23494,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/realm/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/scope-mappings/realm/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -23712,7 +23511,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23800,21 +23601,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/scope-mappings/realm/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scope-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/scope-mappings/realm/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -23829,7 +23624,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -23907,13 +23704,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/service-account-user"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("service-account-user");
+                    urlBuilder_.Append("/service-account-user");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -23926,7 +23721,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24016,13 +23813,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/session-count"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("session-count");
+                    urlBuilder_.Append("/session-count");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -24035,7 +23830,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24117,13 +23914,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/test-nodes-available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("test-nodes-available");
+                    urlBuilder_.Append("/test-nodes-available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -24136,7 +23931,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24222,21 +24019,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id}/user-sessions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("user-sessions");
+                    urlBuilder_.Append("/user-sessions");
             urlBuilder_.Append('?');
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -24251,7 +24046,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24334,16 +24131,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -24357,7 +24149,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24443,16 +24237,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -24466,7 +24255,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24543,16 +24334,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/clients/{id1}/protocol-mappers/models/{id2}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id1, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("protocol-mappers");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("models");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/protocol-mappers/models/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id2, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -24566,7 +24352,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24636,21 +24424,21 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/components"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("components");
+                    urlBuilder_.Append("/components");
             urlBuilder_.Append('?');
             if (parent != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("parent") + "=").Append(System.Uri.EscapeDataString(ConvertToString(parent, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("parent")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(parent, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (type != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("type") + "=").Append(System.Uri.EscapeDataString(ConvertToString(type, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("type")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(type, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (name != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("name") + "=").Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -24665,7 +24453,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24743,9 +24533,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/components"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("components");
+                    urlBuilder_.Append("/components");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -24758,7 +24548,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24831,10 +24623,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/components/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("components");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/components/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -24848,7 +24639,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -24929,10 +24722,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/components/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("components");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/components/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -24946,7 +24738,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25018,10 +24812,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/components/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("components");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/components/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -25035,7 +24828,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25108,17 +24903,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/components/{id}/sub-component-types"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("components");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/components/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("sub-component-types");
+                    urlBuilder_.Append("/sub-component-types");
             urlBuilder_.Append('?');
             if (type != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("type") + "=").Append(System.Uri.EscapeDataString(ConvertToString(type, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("type")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(type, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -25133,7 +24926,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25208,9 +25003,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/credential-registrators"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("credential-registrators");
+                    urlBuilder_.Append("/credential-registrators");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -25223,7 +25018,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25298,9 +25095,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-default-client-scopes"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-default-client-scopes");
+                    urlBuilder_.Append("/default-default-client-scopes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -25313,7 +25110,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25391,10 +25190,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-default-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-default-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-default-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -25408,7 +25206,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25480,10 +25280,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-default-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-default-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-default-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -25497,7 +25296,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25567,9 +25368,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-groups"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-groups");
+                    urlBuilder_.Append("/default-groups");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -25582,7 +25383,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25660,10 +25463,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-groups/{groupId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(groupId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -25677,7 +25479,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25749,10 +25553,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-groups/{groupId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(groupId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -25766,7 +25569,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25836,9 +25641,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-optional-client-scopes"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-optional-client-scopes");
+                    urlBuilder_.Append("/default-optional-client-scopes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -25851,7 +25656,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -25929,10 +25736,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-optional-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-optional-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-optional-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -25946,7 +25752,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26018,10 +25826,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/default-optional-client-scopes/{clientScopeId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("default-optional-client-scopes");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/default-optional-client-scopes/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientScopeId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -26035,7 +25842,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26105,41 +25914,41 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/events"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("events");
+                    urlBuilder_.Append("/events");
             urlBuilder_.Append('?');
             if (type != null)
             {
-                foreach (var item_ in type) { urlBuilder_.Append(System.Uri.EscapeDataString("type") + "=").Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append("&"); }
+                foreach (var item_ in type) { urlBuilder_.Append(System.Uri.EscapeDataString("type")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append('&'); }
             }
             if (client != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("client") + "=").Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("client")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (user != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("user") + "=").Append(System.Uri.EscapeDataString(ConvertToString(user, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("user")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(user, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (dateFrom != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("dateFrom") + "=").Append(System.Uri.EscapeDataString(ConvertToString(dateFrom, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("dateFrom")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(dateFrom, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (dateTo != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("dateTo") + "=").Append(System.Uri.EscapeDataString(ConvertToString(dateTo, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("dateTo")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(dateTo, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (ipAddress != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("ipAddress") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ipAddress, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("ipAddress")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(ipAddress, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -26154,7 +25963,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26232,9 +26043,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/events"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("events");
+                    urlBuilder_.Append("/events");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -26247,7 +26058,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26321,11 +26134,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/events/config"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("events");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
+                    urlBuilder_.Append("/events/config");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -26338,7 +26149,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26420,11 +26233,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/events/config"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("events");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("config");
+                    urlBuilder_.Append("/events/config");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -26437,7 +26248,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26510,10 +26323,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/group-by-path/{path}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("group-by-path");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/group-by-path/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(path, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -26527,7 +26339,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26602,25 +26416,25 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
+                    urlBuilder_.Append("/groups");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -26635,7 +26449,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26715,9 +26531,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
+                    urlBuilder_.Append("/groups");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -26730,7 +26546,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26801,10 +26619,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -26818,7 +26635,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26899,10 +26718,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -26916,7 +26734,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -26988,10 +26808,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -27005,7 +26824,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27083,13 +26904,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/children"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("children");
+                    urlBuilder_.Append("/children");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -27102,7 +26921,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27175,15 +26996,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -27196,7 +27013,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27278,15 +27097,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -27299,7 +27114,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27387,25 +27204,23 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/members"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("members");
+                    urlBuilder_.Append("/members");
             urlBuilder_.Append('?');
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -27420,7 +27235,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27498,13 +27315,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
+                    urlBuilder_.Append("/role-mappings");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -27517,7 +27332,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27598,16 +27415,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -27621,7 +27433,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27705,16 +27519,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -27728,7 +27537,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27807,16 +27618,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -27830,7 +27636,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -27906,19 +27714,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/clients/{client}/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -27931,7 +27733,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28018,23 +27822,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/clients/{client}/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -28049,7 +27847,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28127,15 +27927,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/role-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -28148,7 +27944,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28229,15 +28027,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/role-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -28250,7 +28044,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28326,15 +28122,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/role-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -28347,7 +28139,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28420,17 +28214,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/realm/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/role-mappings/realm/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -28443,7 +28231,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28527,21 +28317,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/{id}/role-mappings/realm/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/role-mappings/realm/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -28556,7 +28340,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28631,19 +28417,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/groups/count"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("count");
+                    urlBuilder_.Append("/groups/count");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (top != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("top") + "=").Append(System.Uri.EscapeDataString(ConvertToString(top, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("top")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(top, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -28658,7 +28442,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28737,11 +28523,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/import-config"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("import-config");
+                    urlBuilder_.Append("/identity-provider/import-config");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -28754,7 +28538,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28829,11 +28615,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
+                    urlBuilder_.Append("/identity-provider/instances");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -28846,7 +28630,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -28924,11 +28710,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
+                    urlBuilder_.Append("/identity-provider/instances");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -28941,7 +28725,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29014,12 +28800,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -29033,7 +28816,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29110,12 +28895,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -29129,7 +28911,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29205,12 +28989,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -29224,7 +29005,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29298,19 +29081,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/export"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("export");
+                    urlBuilder_.Append("/export");
             urlBuilder_.Append('?');
             if (format != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("format") + "=").Append(System.Uri.EscapeDataString(ConvertToString(format, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("format")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(format, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -29325,7 +29104,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29398,17 +29179,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -29421,7 +29196,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29503,17 +29280,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -29526,7 +29297,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29605,15 +29378,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/mapper-types"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("mapper-types");
+                    urlBuilder_.Append("/mapper-types");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -29626,7 +29395,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29701,15 +29472,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/mappers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("mappers");
+                    urlBuilder_.Append("/mappers");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -29722,7 +29489,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29803,15 +29572,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/mappers"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("mappers");
+                    urlBuilder_.Append("/mappers");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -29824,7 +29589,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -29900,16 +29667,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/mappers/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("mappers");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/mappers/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -29923,7 +29685,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30007,16 +29771,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/mappers/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("mappers");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/mappers/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -30030,7 +29789,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30105,16 +29866,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/instances/{alias}/mappers/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("instances");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/instances/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(alias, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("mappers");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/mappers/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -30128,7 +29884,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30202,12 +29960,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/identity-provider/providers/{provider_id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("identity-provider");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("providers");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/identity-provider/providers/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(provider_id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -30221,7 +29976,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30291,9 +30048,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/keys"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("keys");
+                    urlBuilder_.Append("/keys");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -30306,7 +30063,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30384,9 +30143,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/ldap-server-capabilities"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("ldap-server-capabilities");
+                    urlBuilder_.Append("/ldap-server-capabilities");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -30399,7 +30158,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30471,9 +30232,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/localization"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("localization");
+                    urlBuilder_.Append("/localization");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -30486,7 +30247,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30569,10 +30332,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/localization/{locale}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("localization");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/localization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(locale, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -30586,7 +30348,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30660,10 +30424,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/localization/{locale}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("localization");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/localization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(locale, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -30677,7 +30440,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30752,10 +30517,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/localization/{locale}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("localization");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/localization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(locale, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -30769,7 +30533,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30854,10 +30620,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/localization/{locale}/{key}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("localization");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/localization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(locale, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('/');
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(key, System.Globalization.CultureInfo.InvariantCulture)));
@@ -30873,7 +30638,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -30950,10 +30717,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/localization/{locale}/{key}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("localization");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/localization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(locale, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('/');
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(key, System.Globalization.CultureInfo.InvariantCulture)));
@@ -30969,7 +30735,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31047,10 +30815,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/localization/{locale}/{key}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("localization");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/localization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(locale, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('/');
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(key, System.Globalization.CultureInfo.InvariantCulture)));
@@ -31066,7 +30833,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31145,9 +30914,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/logout-all"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("logout-all");
+                    urlBuilder_.Append("/logout-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -31160,7 +30929,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31236,17 +31007,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/partial-export"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("partial-export");
+                    urlBuilder_.Append("/partial-export");
             urlBuilder_.Append('?');
             if (exportGroupsAndRoles != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("exportGroupsAndRoles") + "=").Append(System.Uri.EscapeDataString(ConvertToString(exportGroupsAndRoles, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("exportGroupsAndRoles")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(exportGroupsAndRoles, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (exportClients != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("exportClients") + "=").Append(System.Uri.EscapeDataString(ConvertToString(exportClients, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("exportClients")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(exportClients, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -31261,7 +31032,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31339,9 +31112,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/partialImport"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("partialImport");
+                    urlBuilder_.Append("/partialImport");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -31354,7 +31127,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31428,9 +31203,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/push-revocation"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("push-revocation");
+                    urlBuilder_.Append("/push-revocation");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -31443,7 +31218,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31513,25 +31290,25 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
+                    urlBuilder_.Append("/roles");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -31546,7 +31323,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31624,9 +31403,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
+                    urlBuilder_.Append("/roles");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -31639,7 +31418,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31714,10 +31495,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -31731,7 +31511,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31810,10 +31592,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -31827,7 +31608,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31905,10 +31688,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -31922,7 +31704,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -31998,13 +31782,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -32017,7 +31799,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32090,25 +31874,23 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -32123,7 +31905,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32204,13 +31988,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -32223,7 +32005,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32299,16 +32083,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}/composites/clients/{clientUuid}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/composites/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientUuid, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -32322,7 +32101,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32400,15 +32181,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}/composites/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/composites/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -32421,7 +32198,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32499,15 +32278,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -32520,7 +32295,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32602,15 +32379,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles-by-id/{role-id}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles-by-id");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles-by-id/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -32623,7 +32396,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32703,10 +32478,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -32720,7 +32494,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32799,10 +32575,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -32816,7 +32591,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32894,10 +32671,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -32911,7 +32687,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -32989,13 +32767,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -33008,7 +32784,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33083,13 +32861,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -33102,7 +32878,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33185,13 +32963,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/composites"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
+                    urlBuilder_.Append("/composites");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -33204,7 +32980,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33282,16 +33060,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/composites/clients/{clientUuid}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/composites/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientUuid, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -33305,7 +33078,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33385,15 +33160,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/composites/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composites");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/composites/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -33406,7 +33177,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33484,25 +33257,23 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/groups"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
+                    urlBuilder_.Append("/groups");
             urlBuilder_.Append('?');
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -33517,7 +33288,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33595,15 +33368,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -33616,7 +33385,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33698,15 +33469,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/management/permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("management");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("permissions");
+                    urlBuilder_.Append("/management/permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -33719,7 +33486,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33803,21 +33572,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/roles/{role-name}/users"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("roles");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/roles/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(role_name, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
+                    urlBuilder_.Append("/users");
             urlBuilder_.Append('?');
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -33832,7 +33599,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33911,10 +33680,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/sessions/{session}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("sessions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/sessions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(session, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -33928,7 +33696,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -33998,9 +33768,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/testLDAPConnection"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("testLDAPConnection");
+                    urlBuilder_.Append("/testLDAPConnection");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -34013,7 +33783,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34083,9 +33855,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/testSMTPConnection"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("testSMTPConnection");
+                    urlBuilder_.Append("/testSMTPConnection");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -34098,7 +33870,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34175,13 +33949,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/user-storage/{id}/name"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("user-storage");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/user-storage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("name");
+                    urlBuilder_.Append("/name");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -34194,7 +33966,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34272,13 +34046,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/user-storage/{id}/remove-imported-users"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("user-storage");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/user-storage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("remove-imported-users");
+                    urlBuilder_.Append("/remove-imported-users");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -34291,7 +34063,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34369,17 +34143,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/user-storage/{id}/sync"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("user-storage");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/user-storage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("sync");
+                    urlBuilder_.Append("/sync");
             urlBuilder_.Append('?');
             if (action != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("action") + "=").Append(System.Uri.EscapeDataString(ConvertToString(action, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("action")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(action, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -34394,7 +34166,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34472,13 +34246,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/user-storage/{id}/unlink-users"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("user-storage");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/user-storage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("unlink-users");
+                    urlBuilder_.Append("/unlink-users");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -34491,7 +34263,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34572,21 +34346,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/user-storage/{parentId}/mappers/{id}/sync"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("user-storage");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/user-storage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(parentId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("mappers");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/mappers/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("sync");
+                    urlBuilder_.Append("/sync");
             urlBuilder_.Append('?');
             if (direction != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("direction") + "=").Append(System.Uri.EscapeDataString(ConvertToString(direction, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("direction")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(direction, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -34601,7 +34371,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34683,9 +34455,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
+                    urlBuilder_.Append("/users");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -34698,7 +34470,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34768,65 +34542,65 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
+                    urlBuilder_.Append("/users");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (lastName != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("lastName") + "=").Append(System.Uri.EscapeDataString(ConvertToString(lastName, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("lastName")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(lastName, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (firstName != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("firstName") + "=").Append(System.Uri.EscapeDataString(ConvertToString(firstName, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("firstName")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(firstName, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (email != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("email") + "=").Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("email")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (username != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("username") + "=").Append(System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("username")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (emailVerified != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("emailVerified") + "=").Append(System.Uri.EscapeDataString(ConvertToString(emailVerified, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("emailVerified")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(emailVerified, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (idpAlias != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("idpAlias") + "=").Append(System.Uri.EscapeDataString(ConvertToString(idpAlias, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("idpAlias")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(idpAlias, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (idpUserId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("idpUserId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(idpUserId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("idpUserId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(idpUserId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (enabled != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("enabled") + "=").Append(System.Uri.EscapeDataString(ConvertToString(enabled, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("enabled")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(enabled, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (exact != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("exact") + "=").Append(System.Uri.EscapeDataString(ConvertToString(exact, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("exact")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(exact, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (q != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("q") + "=").Append(System.Uri.EscapeDataString(ConvertToString(q, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("q")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(q, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -34841,7 +34615,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -34916,9 +34692,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users-management-permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users-management-permissions");
+                    urlBuilder_.Append("/users-management-permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -34931,7 +34707,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35010,9 +34788,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users-management-permissions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users-management-permissions");
+                    urlBuilder_.Append("/users-management-permissions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -35025,7 +34803,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35106,10 +34886,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -35123,7 +34902,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35196,10 +34977,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -35213,7 +34993,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35292,10 +35074,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -35309,7 +35090,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35384,13 +35167,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/configured-user-storage-credential-types"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("configured-user-storage-credential-types");
+                    urlBuilder_.Append("/configured-user-storage-credential-types");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -35403,7 +35184,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35481,13 +35264,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/consents"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("consents");
+                    urlBuilder_.Append("/consents");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -35500,7 +35281,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35582,14 +35365,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/consents/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("consents");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/consents/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -35603,7 +35383,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35676,13 +35458,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/credentials"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("credentials");
+                    urlBuilder_.Append("/credentials");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -35695,7 +35475,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35779,14 +35561,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/credentials/{credentialId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("credentials");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/credentials/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(credentialId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -35800,7 +35579,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35883,18 +35664,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/credentials/{credentialId}/moveAfter/{newPreviousCredentialId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("credentials");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/credentials/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(credentialId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("moveAfter");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/moveAfter/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(newPreviousCredentialId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -35908,7 +35684,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -35986,17 +35764,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/credentials/{credentialId}/moveToFirst"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("credentials");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/credentials/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(credentialId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("moveToFirst");
+                    urlBuilder_.Append("/moveToFirst");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -36009,7 +35783,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36089,17 +35865,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/credentials/{credentialId}/userLabel"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("credentials");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/credentials/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(credentialId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("userLabel");
+                    urlBuilder_.Append("/userLabel");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -36112,7 +35884,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36188,13 +35962,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/disable-credential-types"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("disable-credential-types");
+                    urlBuilder_.Append("/disable-credential-types");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -36207,7 +35979,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36299,25 +36073,23 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/execute-actions-email"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("execute-actions-email");
+                    urlBuilder_.Append("/execute-actions-email");
             urlBuilder_.Append('?');
             if (oIDCLoginProtocol_REDIRECT_URI_PARAM != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.REDIRECT_URI_PARAM") + "=").Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_REDIRECT_URI_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.REDIRECT_URI_PARAM")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_REDIRECT_URI_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (oIDCLoginProtocol_CLIENT_ID_PARAM != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.CLIENT_ID_PARAM") + "=").Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_CLIENT_ID_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.CLIENT_ID_PARAM")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_CLIENT_ID_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (lifespan != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("lifespan") + "=").Append(System.Uri.EscapeDataString(ConvertToString(lifespan, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("lifespan")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(lifespan, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -36332,7 +36104,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36405,13 +36179,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/federated-identity"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("federated-identity");
+                    urlBuilder_.Append("/federated-identity");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -36424,7 +36196,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36510,14 +36284,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/federated-identity/{provider}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("federated-identity");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/federated-identity/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(provider, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -36531,7 +36302,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36608,14 +36381,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/federated-identity/{provider}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("federated-identity");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/federated-identity/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(provider, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -36629,7 +36399,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36702,29 +36474,27 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/groups"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
+                    urlBuilder_.Append("/groups");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (first != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("first") + "=").Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("first")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(first, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (max != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("max") + "=").Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("max")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(max, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -36739,7 +36509,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36819,14 +36591,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/groups/{groupId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(groupId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -36840,7 +36609,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -36916,14 +36687,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/groups/{groupId}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/groups/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(groupId, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -36937,7 +36705,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37010,19 +36780,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/groups/count"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("groups");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("count");
+                    urlBuilder_.Append("/groups/count");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -37037,7 +36803,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37116,13 +36884,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/impersonation"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("impersonation");
+                    urlBuilder_.Append("/impersonation");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -37135,7 +36901,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37221,13 +36989,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/logout"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("logout");
+                    urlBuilder_.Append("/logout");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -37240,7 +37006,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37316,14 +37084,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/offline-sessions/{clientUuid}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("offline-sessions");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/offline-sessions/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clientUuid, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -37337,7 +37102,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37418,13 +37185,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/reset-password"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("reset-password");
+                    urlBuilder_.Append("/reset-password");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -37437,7 +37202,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37524,21 +37291,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/reset-password-email"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("reset-password-email");
+                    urlBuilder_.Append("/reset-password-email");
             urlBuilder_.Append('?');
             if (oIDCLoginProtocol_REDIRECT_URI_PARAM != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.REDIRECT_URI_PARAM") + "=").Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_REDIRECT_URI_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.REDIRECT_URI_PARAM")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_REDIRECT_URI_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (oIDCLoginProtocol_CLIENT_ID_PARAM != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.CLIENT_ID_PARAM") + "=").Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_CLIENT_ID_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.CLIENT_ID_PARAM")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_CLIENT_ID_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -37553,7 +37318,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37626,13 +37393,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
+                    urlBuilder_.Append("/role-mappings");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -37645,7 +37410,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37726,16 +37493,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -37749,7 +37511,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37833,16 +37597,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -37856,7 +37615,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -37935,16 +37696,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/clients/{client}"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -37958,7 +37714,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38034,19 +37792,13 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/clients/{client}/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -38059,7 +37811,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38146,23 +37900,17 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/clients/{client}/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clients");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/role-mappings/clients/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(client, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -38177,7 +37925,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38255,15 +38005,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/role-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -38276,7 +38022,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38357,15 +38105,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/role-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -38378,7 +38122,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38454,15 +38200,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/realm"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
+                    urlBuilder_.Append("/role-mappings/realm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -38475,7 +38217,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38548,17 +38292,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/realm/available"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("available");
+                    urlBuilder_.Append("/role-mappings/realm/available");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -38571,7 +38309,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38655,21 +38395,15 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/role-mappings/realm/composite"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("role-mappings");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("realm");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("composite");
+                    urlBuilder_.Append("/role-mappings/realm/composite");
             urlBuilder_.Append('?');
             if (briefRepresentation != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation") + "=").Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("briefRepresentation")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(briefRepresentation, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -38684,7 +38418,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38774,21 +38510,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/send-verify-email"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("send-verify-email");
+                    urlBuilder_.Append("/send-verify-email");
             urlBuilder_.Append('?');
             if (oIDCLoginProtocol_REDIRECT_URI_PARAM != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.REDIRECT_URI_PARAM") + "=").Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_REDIRECT_URI_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.REDIRECT_URI_PARAM")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_REDIRECT_URI_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (oIDCLoginProtocol_CLIENT_ID_PARAM != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.CLIENT_ID_PARAM") + "=").Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_CLIENT_ID_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("OIDCLoginProtocol.CLIENT_ID_PARAM")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(oIDCLoginProtocol_CLIENT_ID_PARAM, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -38803,7 +38537,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38876,13 +38612,11 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/{id}/sessions"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
+                    urlBuilder_.Append("/users/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("sessions");
+                    urlBuilder_.Append("/sessions");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -38895,7 +38629,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -38970,39 +38706,37 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/count"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("count");
+                    urlBuilder_.Append("/users/count");
             urlBuilder_.Append('?');
             if (search != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("search")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (lastName != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("lastName") + "=").Append(System.Uri.EscapeDataString(ConvertToString(lastName, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("lastName")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(lastName, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (firstName != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("firstName") + "=").Append(System.Uri.EscapeDataString(ConvertToString(firstName, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("firstName")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(firstName, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (email != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("email") + "=").Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("email")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (emailVerified != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("emailVerified") + "=").Append(System.Uri.EscapeDataString(ConvertToString(emailVerified, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("emailVerified")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(emailVerified, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (username != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("username") + "=").Append(System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("username")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (enabled != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("enabled") + "=").Append(System.Uri.EscapeDataString(ConvertToString(enabled, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("enabled")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(enabled, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -39017,7 +38751,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -39092,11 +38828,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/profile"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("profile");
+                    urlBuilder_.Append("/users/profile");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -39109,7 +38843,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -39187,11 +38923,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
+                    // Operation Path: "{realm}/users/profile"
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(realm, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("users");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("profile");
+                    urlBuilder_.Append("/users/profile");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -39204,7 +38938,9 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -39330,10 +39066,19 @@ namespace TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0
             {
                 return System.Convert.ToBase64String((byte[]) value);
             }
+            else if (value is string[])
+            {
+                return string.Join(",", (string[])value);
+            }
             else if (value.GetType().IsArray)
             {
-                var array = System.Linq.Enumerable.OfType<object>((System.Array) value);
-                return string.Join(",", System.Linq.Enumerable.Select(array, o => ConvertToString(o, cultureInfo)));
+                var valueArray = (System.Array)value;
+                var valueTextArray = new string[valueArray.Length];
+                for (var i = 0; i < valueArray.Length; i++)
+                {
+                    valueTextArray[i] = ConvertToString(valueArray.GetValue(i), cultureInfo);
+                }
+                return string.Join(",", valueTextArray);
             }
 
             var result = System.Convert.ToString(value, cultureInfo);

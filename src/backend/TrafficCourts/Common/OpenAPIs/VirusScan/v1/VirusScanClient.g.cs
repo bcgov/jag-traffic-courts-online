@@ -149,11 +149,8 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("v1");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clamav");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("ping");
+                    // Operation Path: "v1/clamav/ping"
+                    urlBuilder_.Append("v1/clamav/ping");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -166,7 +163,9 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -256,11 +255,8 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("v1");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clamav");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("scan");
+                    // Operation Path: "v1/clamav/scan"
+                    urlBuilder_.Append("v1/clamav/scan");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -273,7 +269,9 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -363,11 +361,8 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("v1");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("clamav");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("version");
+                    // Operation Path: "v1/clamav/version"
+                    urlBuilder_.Append("v1/clamav/version");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -380,7 +375,9 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -514,10 +511,19 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
             {
                 return System.Convert.ToBase64String((byte[]) value);
             }
+            else if (value is string[])
+            {
+                return string.Join(",", (string[])value);
+            }
             else if (value.GetType().IsArray)
             {
-                var array = System.Linq.Enumerable.OfType<object>((System.Array) value);
-                return string.Join(",", System.Linq.Enumerable.Select(array, o => ConvertToString(o, cultureInfo)));
+                var valueArray = (System.Array)value;
+                var valueTextArray = new string[valueArray.Length];
+                for (var i = 0; i < valueArray.Length; i++)
+                {
+                    valueTextArray[i] = ConvertToString(valueArray.GetValue(i), cultureInfo);
+                }
+                return string.Join(",", valueTextArray);
             }
 
             var result = System.Convert.ToString(value, cultureInfo);
@@ -536,13 +542,9 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("version")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string Version { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("definition")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public VirusDefinitionVersion Definition { get; set; }
 
     }
@@ -552,28 +554,18 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("type")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string Type { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("title")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string Title { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public int? Status { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("detail")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string Detail { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("instance")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string Instance { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
@@ -595,8 +587,6 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("version")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string Version { get; set; }
 
         /// <summary>
@@ -604,8 +594,6 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("date")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public System.DateTimeOffset Date { get; set; }
 
     }
@@ -615,8 +603,6 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         public VirusScanStatus Status { get; set; }
 
@@ -625,8 +611,6 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("error")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string Error { get; set; }
 
         /// <summary>
@@ -634,8 +618,6 @@ namespace TrafficCourts.Common.OpenAPIs.VirusScan.V1
         /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("virusName")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public string VirusName { get; set; }
 
     }

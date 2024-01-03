@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NodaTime;
 using NSubstitute;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
@@ -69,7 +68,7 @@ public class SagaTest
         var emailSenderService = Substitute.For<IEmailSenderService>();
         var oracleDataApiService = Substitute.For<IOracleDataApiService>();
 
-        services.AddSingleton<IClock>(SystemClock.Instance);
+        services.AddSingleton<TimeProvider>(TimeProvider.System);
         services.AddSingleton(verificationEmailTemplate);
         services.AddSingleton(emailSenderService);
         services.AddSingleton(oracleDataApiService);
