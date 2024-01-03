@@ -87,7 +87,12 @@
       <div class="flex-2-col info">
         <h4>Useful links</h4>
 
-        <mat-expansion-panel class="pt-0">
+        <button mat-button class="link-button pt-0 pb-3" [routerLink]="['/dispute/find']">
+          {{ "label.manage_update_dispute" | translate }}
+        </button>
+        <mat-divider class="divider"></mat-divider>
+
+        <mat-expansion-panel class="pt-1 pb-1">
           <mat-expansion-panel-header>
             <mat-panel-title> RoadSafetyBC </mat-panel-title>
           </mat-expansion-panel-header>
@@ -105,7 +110,7 @@
           </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel>
+        <mat-expansion-panel class="pt-1 pb-1">
           <mat-expansion-panel-header>
             <mat-panel-title>
               Insurance Corporation of BC (ICBC)
@@ -122,7 +127,7 @@
           </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel>
+        <mat-expansion-panel class="pt-1 pb-1">
           <mat-expansion-panel-header>
             <mat-panel-title> Provincial Court of BC </mat-panel-title>
           </mat-expansion-panel-header>
@@ -140,7 +145,7 @@
           </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel>
+        <mat-expansion-panel class="pt-1 pb-1">
           <mat-expansion-panel-header>
             <mat-panel-title> Courthouse Services of BC </mat-panel-title>
           </mat-expansion-panel-header>
@@ -155,12 +160,7 @@
               </a>
             </div>
           </div>
-        </mat-expansion-panel>
-
-        <button mat-button class="link-button" [routerLink]="['/dispute/find']">
-          Manage or update my dispute
-        </button>
-        <mat-divider class="divider"></mat-divider>
+        </mat-expansion-panel>        
       </div>
     </div>
   </section>

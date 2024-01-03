@@ -155,7 +155,8 @@
     "for_vehicle": "pour Véhicule",
     "offence_amount": "Montant de l'Infraction",
     "amount_due": "Montant Dû",
-    "status": "Statut"
+    "status": "Statut",
+    "manage_update_dispute": "Gérer/Mettre à Jour un Litige"
   },
   "submit_confirmation": {
     "heading": "Soumettre un Litige",

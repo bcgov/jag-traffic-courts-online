@@ -156,7 +156,8 @@
     "for_vehicle": "for Vehicle",
     "offence_amount": "Offence Amount",
     "amount_due": "Amount Due",
-    "status": "Status"
+    "status": "Status",
+    "manage_update_dispute": "Manage or update my dispute"
   },
   "submit_confirmation": {
     "heading": "Submit request",
