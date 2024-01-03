@@ -36,7 +36,7 @@ public class NoticeOfDispute : Dispute
     /// Detachment Location
     /// </summary>
     [JsonPropertyName("detachment_location")]
-    public string? DetachmentLocation { get; set; } = null!;
+    public string? DetachmentLocation { get; set; }
 
     /// <summary>
     /// Is court appearance less than 14 days
@@ -48,5 +48,5 @@ public class NoticeOfDispute : Dispute
     /// Violation Ticket
     /// </summary>
     [JsonPropertyName("violation_ticket")]
-    public Models.Tickets.ViolationTicket? ViolationTicket { get; set; } = null!;
+    public Models.Tickets.ViolationTicket? ViolationTicket { get; set; }
 }

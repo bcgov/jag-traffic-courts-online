@@ -27,7 +27,7 @@ public class Mapper
         target.IssuingLocation = dispute.ViolationTicket.CourtLocation;
 
         // If DL Province is out of province, do not send drivers licence
-        if (dispute.DriversLicenceIssuedProvinceSeqNo == 1 && dispute.DriversLicenceIssuedCountryId == 1)
+        if (dispute.DriversLicenceNumber is not null && dispute.DriversLicenceIssuedProvinceSeqNo == 1 && dispute.DriversLicenceIssuedCountryId == 1)
             target.DriversLicence = dispute.DriversLicenceNumber;
         else target.DriversLicence = "";
 

@@ -14,35 +14,35 @@ public class DisputantContactInformation
     /// </summary>
     [JsonPropertyName("email_address")]
     [MaxLength(100)]
-    public string? EmailAddress { get; set; } = null!;
+    public string? EmailAddress { get; set; }
 
     /// <summary>
     /// The first given name or corporate name continued.
     /// </summary>
     [JsonPropertyName("disputant_given_name1")]
     [MaxLength(30)]
-    public string? DisputantGivenName1 { get; set; } = null!;
+    public string? DisputantGivenName1 { get; set; }
 
     /// <summary>
     /// The second given name
     /// </summary>
     [JsonPropertyName("disputant_given_name2")]
     [MaxLength(30)]
-    public string? DisputantGivenName2 { get; set; } = null!;
+    public string? DisputantGivenName2 { get; set; }
 
     /// <summary>
     /// The third given name 
     /// </summary>
     [JsonPropertyName("disputant_given_name3")]
     [MaxLength(30)]
-    public string? DisputantGivenName3 { get; set; } = null!;
+    public string? DisputantGivenName3 { get; set; }
 
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
     [JsonPropertyName("disputant_surname")]
     [MaxLength(30)]
-    public string? DisputantSurname { get; set; } = null!;
+    public string? DisputantSurname { get; set; }
 
     /// <summary>
     /// Contact Law Firm Name
@@ -89,35 +89,35 @@ public class DisputantContactInformation
     /// </summary>
     [JsonPropertyName("address_line1")]
     [MaxLength(100)]
-    public string? AddressLine1 { get; set; } = null!;
+    public string? AddressLine1 { get; set; }
 
     /// <summary>
     /// The mailing address of the disputant.
     /// </summary>
     [JsonPropertyName("address_line2")]
     [MaxLength(100)]
-    public string? AddressLine2 { get; set; } = null!;
+    public string? AddressLine2 { get; set; }
 
     /// <summary>
     /// The mailing address of the disputant.
     /// </summary>
     [JsonPropertyName("address_line3")]
     [MaxLength(100)]
-    public string? AddressLine3 { get; set; } = null!;
+    public string? AddressLine3 { get; set; }
 
     /// <summary>
     /// The mailing address city of the disputant.
     /// </summary>
     [JsonPropertyName("address_city")]
     [MaxLength(30)]
-    public string? AddressCity { get; set; } = null!;
+    public string? AddressCity { get; set; }
 
     /// <summary>
     /// The mailing address province of the disputant.
     /// </summary>
     [JsonPropertyName("address_province")]
     [MaxLength(30)]
-    public string? AddressProvince { get; set; } = null!;
+    public string? AddressProvince { get; set; }
 
     /// <summary>
     /// The mailing address province's country code of the disputant.
@@ -142,13 +142,13 @@ public class DisputantContactInformation
     /// </summary>
     [JsonPropertyName("postal_code")]
     [MaxLength(10)]
-    public string? PostalCode { get; set; } = null!;
+    public string? PostalCode { get; set; }
 
     /// <summary>
     /// The disputant's home phone number.
     /// </summary>
     [JsonPropertyName("home_phone_number")]
     [MaxLength(20)]
-    public string? HomePhoneNumber { get; set; } = null!;
+    public string? HomePhoneNumber { get; set; }
 }
 

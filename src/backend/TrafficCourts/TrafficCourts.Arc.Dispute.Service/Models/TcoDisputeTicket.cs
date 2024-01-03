@@ -33,7 +33,6 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         public string IssuingLocation { get; set; } = String.Empty;
         
         [JsonProperty("drivers_licence")]
-        [JsonRequired]
         public string DriversLicence { get; set; } = String.Empty;
         
         [JsonProperty("ticket_counts")]
