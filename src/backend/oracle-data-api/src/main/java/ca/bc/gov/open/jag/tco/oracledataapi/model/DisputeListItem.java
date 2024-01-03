@@ -89,7 +89,6 @@ public class DisputeListItem {
 
 	/**
 	 * Indicates whether the disputant's email address is verified or not.
-	 * This should always be in UTC date (ISO 8601) format
 	 */
 	@Column
 	private Boolean emailAddressVerified = Boolean.FALSE;
