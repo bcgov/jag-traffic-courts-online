@@ -1,16 +1,15 @@
+using AutoMapper;
+using HashidsNet;
 using MassTransit;
 using MediatR;
+using System.Diagnostics;
+using System.Text.Json;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Services;
-using TrafficCourts.Messaging.MessageContracts;
-using AutoMapper;
-using System.Diagnostics;
-using NodaTime;
-using HashidsNet;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
-using TrafficCourts.Common.Models;
-using System.Text.Json;
+using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
@@ -55,7 +54,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             private readonly IBus _bus;
             private readonly IRedisCacheService _redisCacheService;
             private readonly IMapper _mapper;
-            private readonly IClock _clock;
+            private readonly TimeProvider _clock;
             private readonly IHashids _hashids;
             private readonly IObjectManagementService _objectManagementService;
             private readonly IMemoryStreamManager _memoryStreamManager;
@@ -77,8 +76,8 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 IRedisCacheService redisCacheService,
                 IObjectManagementService objectManagementService,
                 IMemoryStreamManager memoryStreamManager,
-                IMapper mapper, 
-                IClock clock,
+                IMapper mapper,
+                TimeProvider clock,
                 IHashids hashids,
                 ILogger<Handler> logger)
             {
@@ -168,7 +167,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                         : DisputeAppearanceLessThan14DaysYn.N;
 
                     submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeId;
-                    submitNoticeOfDispute.SubmittedTs = _clock.GetCurrentInstant().ToDateTimeUtc();
+                    submitNoticeOfDispute.SubmittedTs = _clock.GetUtcNow().DateTime;
 
                     if (violationTicket != null)
                     {

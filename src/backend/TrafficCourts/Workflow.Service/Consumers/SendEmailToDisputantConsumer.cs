@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using NodaTime;
 using TrafficCourts.Common.Features.Mail;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -13,11 +12,11 @@ namespace TrafficCourts.Workflow.Service.Consumers;
 public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
 {
     private readonly IEmailSenderService _emailSenderService;
-    private readonly IClock _clock;
+    private readonly TimeProvider _clock;
     private readonly ILogger<SendEmailToDisputantConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
 
-    public SendEmailToDisputantConsumer(IEmailSenderService emailSenderService, IClock clock, ILogger<SendEmailToDisputantConsumer> logger, IOracleDataApiService oracleDataApiService)
+    public SendEmailToDisputantConsumer(IEmailSenderService emailSenderService, TimeProvider clock, ILogger<SendEmailToDisputantConsumer> logger, IOracleDataApiService oracleDataApiService)
     {
         _emailSenderService = emailSenderService ?? throw new ArgumentNullException(nameof(emailSenderService));
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
@@ -50,7 +49,7 @@ public class SendEmailToDisputantConsumer : IConsumer<SendDisputantEmail>
                 ? SendEmailResult.Filtered 
                 : await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
 
-            var now = _clock.GetCurrentInstant().ToDateTimeOffset();
+            var now = _clock.GetUtcNow();
 
             // Do not log outgoing email if no dispute found since requires dispute id
             if (result == SendEmailResult.Success && dispute is not null)

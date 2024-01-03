@@ -633,17 +633,11 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Append('?');
-            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -657,7 +651,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -778,20 +774,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/review"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("review");
+                    urlBuilder_.Append("/review");
             urlBuilder_.Append('?');
-            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Append(System.Uri.EscapeDataString("recalled") + "=").Append(System.Uri.EscapeDataString(ConvertToString(recalled, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+            urlBuilder_.Append(System.Uri.EscapeDataString("recalled")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(recalled, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -805,7 +794,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -917,21 +908,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/requirecourthearing"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("requirecourthearing");
+                    urlBuilder_.Append("/requirecourthearing");
             urlBuilder_.Append('?');
             if (remark != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("remark") + "=").Append(System.Uri.EscapeDataString(ConvertToString(remark, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("remark")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(remark, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -946,7 +930,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -1058,17 +1044,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/confirm"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("confirm");
+                    urlBuilder_.Append("/confirm");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -1081,7 +1060,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -1196,19 +1177,12 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/conclude"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("conclude");
+                    urlBuilder_.Append("/conclude");
             urlBuilder_.Append('?');
-            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -1222,7 +1196,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -1343,19 +1319,12 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/cascade"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("cascade");
+                    urlBuilder_.Append("/cascade");
             urlBuilder_.Append('?');
-            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -1369,7 +1338,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -1484,19 +1455,12 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/cancel"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("cancel");
+                    urlBuilder_.Append("/cancel");
             urlBuilder_.Append('?');
-            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -1510,7 +1474,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -1627,22 +1593,15 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/accept"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("accept");
+                    urlBuilder_.Append("/accept");
             urlBuilder_.Append('?');
-            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             if (partId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("partId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(partId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("partId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(partId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -1657,7 +1616,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -1768,20 +1729,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("assign");
+                    // Operation Path: "api/v1.0/jj/dispute/assign"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/assign");
             urlBuilder_.Append('?');
-            foreach (var item_ in ticketNumbers) { urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumbers") + "=").Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append("&"); }
+            foreach (var item_ in ticketNumbers) { urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumbers")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append('&'); }
             if (jjUsername != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("jjUsername") + "=").Append(System.Uri.EscapeDataString(ConvertToString(jjUsername, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("jjUsername")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(jjUsername, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -1796,7 +1750,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -1909,12 +1865,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -1928,7 +1880,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -2048,12 +2002,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -2067,7 +2017,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -2174,15 +2126,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}/validate"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("validate");
+                    urlBuilder_.Append("/validate");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -2195,7 +2142,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -2317,15 +2266,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}/submit"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("submit");
+                    urlBuilder_.Append("/submit");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -2338,7 +2282,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -2466,15 +2412,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}/reject"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("reject");
+                    urlBuilder_.Append("/reject");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -2487,7 +2428,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -2610,17 +2553,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}/email/verify"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("email");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("verify");
+                    urlBuilder_.Append("/email/verify");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -2633,7 +2569,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -2744,21 +2682,14 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}/email/reset"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("email");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("reset");
+                    urlBuilder_.Append("/email/reset");
             urlBuilder_.Append('?');
             if (email != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("email") + "=").Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("email")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(email, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -2773,7 +2704,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -2891,15 +2824,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}/cancel"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("cancel");
+                    urlBuilder_.Append("/cancel");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -2912,7 +2840,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3041,17 +2971,11 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("updateRequest");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/updateRequest/{id}"
+                    urlBuilder_.Append("api/v1.0/dispute/updateRequest/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Append('?');
-            urlBuilder_.Append(System.Uri.EscapeDataString("disputeUpdateRequestStatus") + "=").Append(System.Uri.EscapeDataString(ConvertToString(disputeUpdateRequestStatus, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("disputeUpdateRequestStatus")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(disputeUpdateRequestStatus, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -3065,7 +2989,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3180,11 +3106,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("fileHistory");
+                    // Operation Path: "api/v1.0/fileHistory"
+                    urlBuilder_.Append("api/v1.0/fileHistory");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -3197,7 +3120,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3312,11 +3237,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("emailHistory");
+                    // Operation Path: "api/v1.0/emailHistory"
+                    urlBuilder_.Append("api/v1.0/emailHistory");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -3329,7 +3251,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3438,11 +3362,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
+                    // Operation Path: "api/v1.0/dispute"
+                    urlBuilder_.Append("api/v1.0/dispute");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -3455,7 +3376,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3575,15 +3498,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{guid}/updateRequest"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("updateRequest");
+                    urlBuilder_.Append("/updateRequest");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -3596,7 +3514,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3702,21 +3622,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("disputes");
+                    // Operation Path: "api/v1.0/jj/disputes"
+                    urlBuilder_.Append("api/v1.0/jj/disputes");
             urlBuilder_.Append('?');
             if (jjAssignedTo != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("jjAssignedTo") + "=").Append(System.Uri.EscapeDataString(ConvertToString(jjAssignedTo, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("jjAssignedTo")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(jjAssignedTo, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (ticketNumber != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -3731,7 +3646,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3841,14 +3758,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/{ticketNumber}/{assignVTC}"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('/');
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(assignVTC, System.Globalization.CultureInfo.InvariantCulture)));
@@ -3864,7 +3775,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -3972,16 +3885,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("ticketImage");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/jj/dispute/ticketImage/{ticketNumber}/{documentType}"
+                    urlBuilder_.Append("api/v1.0/jj/dispute/ticketImage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('/');
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(documentType, System.Globalization.CultureInfo.InvariantCulture)));
@@ -3997,7 +3902,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -4104,12 +4011,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("fileHistory");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/fileHistory/{ticketNumber}"
+                    urlBuilder_.Append("api/v1.0/fileHistory/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -4123,7 +4026,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -4230,12 +4135,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("emailHistory");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/emailHistory/{ticketNumber}"
+                    urlBuilder_.Append("api/v1.0/emailHistory/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -4249,7 +4150,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -4361,19 +4264,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("disputes");
+                    // Operation Path: "api/v1.0/disputes"
+                    urlBuilder_.Append("api/v1.0/disputes");
             urlBuilder_.Append('?');
             if (newerThan != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("newerThan") + "=").Append(System.Uri.EscapeDataString(newerThan.Value.ToString("s", System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("newerThan")).Append('=').Append(System.Uri.EscapeDataString(newerThan.Value.ToString("s", System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (excludeStatus != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("excludeStatus") + "=").Append(System.Uri.EscapeDataString(ConvertToString(excludeStatus, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("excludeStatus")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(excludeStatus, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -4388,7 +4288,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -4501,13 +4403,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("disputes");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("unassign");
+                    // Operation Path: "api/v1.0/disputes/unassign"
+                    urlBuilder_.Append("api/v1.0/disputes/unassign");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -4520,7 +4417,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -4623,12 +4522,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/{id}/{isAssign}"
+                    urlBuilder_.Append("api/v1.0/dispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append('/');
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(isAssign, System.Globalization.CultureInfo.InvariantCulture)));
@@ -4644,7 +4539,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -4756,21 +4653,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("updateRequests");
+                    // Operation Path: "api/v1.0/dispute/updateRequests"
+                    urlBuilder_.Append("api/v1.0/dispute/updateRequests");
             urlBuilder_.Append('?');
             if (id != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("id") + "=").Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("id")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (status != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("status") + "=").Append(System.Uri.EscapeDataString(ConvertToString(status, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("status")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(status, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -4785,7 +4677,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -4899,25 +4793,20 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("status");
+                    // Operation Path: "api/v1.0/dispute/status"
+                    urlBuilder_.Append("api/v1.0/dispute/status");
             urlBuilder_.Append('?');
             if (ticketNumber != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (issuedTime != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("issuedTime") + "=").Append(System.Uri.EscapeDataString(ConvertToString(issuedTime, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("issuedTime")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(issuedTime, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (noticeOfDisputeGuid != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("noticeOfDisputeGuid") + "=").Append(System.Uri.EscapeDataString(ConvertToString(noticeOfDisputeGuid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("noticeOfDisputeGuid")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(noticeOfDisputeGuid, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -4932,7 +4821,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -5045,14 +4936,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("noticeOfDispute");
-                    urlBuilder_.Append('/');
+                    // Operation Path: "api/v1.0/dispute/noticeOfDispute/{id}"
+                    urlBuilder_.Append("api/v1.0/dispute/noticeOfDispute/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -5066,7 +4951,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -5179,13 +5066,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("codetable");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("refresh");
+                    // Operation Path: "api/v1.0/codetable/refresh"
+                    urlBuilder_.Append("api/v1.0/codetable/refresh");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -5198,7 +5080,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -5304,21 +5188,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    urlBuilder_.Append("api");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("v1.0");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("jj");
-                    urlBuilder_.Append('/');
-                    urlBuilder_.Append("dispute");
+                    // Operation Path: "api/v1.0/jj/dispute"
+                    urlBuilder_.Append("api/v1.0/jj/dispute");
             urlBuilder_.Append('?');
             if (jjDisputeId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("jjDisputeId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(jjDisputeId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("jjDisputeId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(jjDisputeId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             if (ticketNumber != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
             }
             urlBuilder_.Length--;
 
@@ -5333,7 +5212,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                     var disposeResponse_ = true;
                     try
                     {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
                         if (response_.Content != null && response_.Content.Headers != null)
                         {
                             foreach (var item_ in response_.Content.Headers)
@@ -5499,10 +5380,19 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
             {
                 return System.Convert.ToBase64String((byte[]) value);
             }
+            else if (value is string[])
+            {
+                return string.Join(",", (string[])value);
+            }
             else if (value.GetType().IsArray)
             {
-                var array = System.Linq.Enumerable.OfType<object>((System.Array) value);
-                return string.Join(",", System.Linq.Enumerable.Select(array, o => ConvertToString(o, cultureInfo)));
+                var valueArray = (System.Array)value;
+                var valueTextArray = new string[valueArray.Length];
+                for (var i = 0; i < valueArray.Length; i++)
+                {
+                    valueTextArray[i] = ConvertToString(valueArray.GetValue(i), cultureInfo);
+                }
+                return string.Join(",", valueTextArray);
             }
 
             var result = System.Convert.ToString(value, cultureInfo);

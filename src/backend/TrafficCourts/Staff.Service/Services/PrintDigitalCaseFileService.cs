@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.FileProviders;
-using NodaTime;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Features.Lookups;
@@ -14,7 +13,6 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     private readonly IJJDisputeService _disputeService;
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
-    private readonly IDateTimeZoneProvider _timeZoneProvider;
     private readonly IDocumentGenerationService _documentGeneration;
     private readonly ILogger<PrintDigitalCaseFileService> _logger;
 
@@ -22,14 +20,12 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         IJJDisputeService disputeService,
         IOracleDataApiClient oracleDataApi,
         IProvinceLookupService provinceLookupService,
-        IDateTimeZoneProvider timeZoneProvider, 
         IDocumentGenerationService documentGeneration,
         ILogger<PrintDigitalCaseFileService> logger)
     {
         _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
-        _timeZoneProvider = timeZoneProvider ?? throw new ArgumentNullException(nameof(timeZoneProvider));
         _documentGeneration = documentGeneration ?? throw new ArgumentNullException(nameof(documentGeneration));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -100,8 +96,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // Time Zone from the browser is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.
         // https://tc39.es/ecma402/#sec-properties-of-intl-datetimeformat-instances
 
-        // get the user's time zone 
-        DateTimeZone? timeZone = _timeZoneProvider[timeZoneId]; // can throw DateTimeZoneNotFoundException.
+        // get the user's time zone
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
         var dispute = await _disputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
         Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);

@@ -1,6 +1,5 @@
 using MassTransit;
 using Microsoft.OpenApi.Models;
-using NodaTime;
 using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -36,15 +35,9 @@ public static class Startup
 
         builder.Services.AddTransient<UserIdentityProviderHandler>();
         builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddOracleDataApiClient(builder.Configuration)
             .AddHttpMessageHandler<UserIdentityProviderHandler>();
-
-        // register instance for tracking metrics to the Oracle Data API
-        builder.Services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>();
-
-        // decorate will replace injected instances of IOracleDataApiClient with the TimedOracleDataApiClient
-        // except for the TimedOracleDataApiClient type
-        builder.Services.Decorate<IOracleDataApiClient, TimedOracleDataApiClient>();
 
         builder.Services.AddRecyclableMemoryStreams();
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
@@ -86,7 +79,6 @@ public static class Startup
         // Add CDOGS (Common Document Generation Service) Client
         builder.Services.AddDocumentGenerationService("CDOGS");
         builder.Services.AddTransient<IPrintDigitalCaseFileService, PrintDigitalCaseFileService>();
-        builder.Services.AddSingleton<IDateTimeZoneProvider>(DateTimeZoneProviders.Tzdb);
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
+using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -15,16 +16,8 @@ public static class OracleDataApiExtensions
     /// <exception cref="ArgumentNullException"></exception>
     public static IHttpClientBuilder AddOracleDataApiClient(this IServiceCollection services, IConfiguration configuration)
     {
-        if (services is null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
-
-        if (configuration is null)
-        {
-            throw new ArgumentNullException(nameof(configuration));
-        }
-
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
 
         services.ConfigureValidatableSetting<OracleDataApiConfiguration>(configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
         IHttpClientBuilder builder = services.AddHttpClient<IOracleDataApiClient, OracleDataApiClient>((services, client) =>
@@ -32,6 +25,13 @@ public static class OracleDataApiExtensions
             var configuration = services.GetRequiredService<OracleDataApiConfiguration>();
             client.BaseAddress = new Uri(configuration.BaseUrl);
         });
+
+        // register instance for tracking metrics to the Oracle Data API
+        services.AddSingleton<IOracleDataApiOperationMetrics, OracleDataApiOperationMetrics>();
+
+        // decorate will replace injected instances of IOracleDataApiClient with the TimedOracleDataApiClient
+        // except for the TimedOracleDataApiClient type
+        services.Decorate<IOracleDataApiClient, TimedOracleDataApiClient>();
 
         return builder;
     }

@@ -6,7 +6,7 @@ namespace TrafficCourts.Core.Http;
 
 public class OidcConfidentialClientConfiguration
 {
-    private string _cacheKey;
+    private string? _cacheKey;
 
     public string ClientId { get; set; } = string.Empty;
     public string ClientSecret { get; set; } = string.Empty;
