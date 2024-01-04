@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label>Surname or Corporate Name</mat-label>
+          <mat-label>{{ "label.surname_corporate_name" | translate }}</mat-label>
           <input matInput formControlName="disputant_surname" />
           <mat-error *ngIf="form.controls.disputant_surname.hasError('required')">{{ "error.required" | translate
             }}</mat-error>
@@ -32,7 +32,7 @@
           <mat-select formControlName="contact_type" (selectionChange)="onSelectContactType($event.value)">
             <mat-option [value]="ContactType.Individual">Individual on the ticket</mat-option>
             <mat-option [value]="ContactType.Lawyer">Lawyer</mat-option>
-            <mat-option [value]="ContactType.Other">Agent or Other</mat-option>
+            <mat-option [value]="ContactType.Other">{{ "label.agent_or_other" | translate }}</mat-option>
           </mat-select>
           <mat-error>{{ "error.required" | translate }}</mat-error>
         </mat-form-field>
@@ -53,7 +53,7 @@
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer surname</mat-label>
-          <mat-label *ngIf="form.value.contact_type === ContactType.Other">Agent or Other surname</mat-label>
+          <mat-label *ngIf="form.value.contact_type === ContactType.Other">{{ "label.agent_surname" | translate }}</mat-label>
           <input matInput formControlName="contact_surname" />
           <mat-error *ngIf="form.controls.contact_surname.hasError('maxlength')">{{ "error.max_length" | translate
             }}30</mat-error>
@@ -64,7 +64,7 @@
       <div class="col-md-6">
         <mat-form-field class="w-100">
           <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer given name(s)</mat-label>
-          <mat-label *ngIf="form.value.contact_type === ContactType.Other">Agent or Other given name(s)</mat-label>
+          <mat-label *ngIf="form.value.contact_type === ContactType.Other">{{ "label.agent_name" | translate }}</mat-label>
           <input matInput formControlName="contact_given_names" />
           <mat-error *ngIf="form.controls.contact_given_names.hasError('maxlength')">{{ "error.max_length" | translate
             }}30 each name</mat-error>
@@ -90,7 +90,7 @@
           <mat-form-field class="w-100">
             <mat-label *ngIf="form.value.contact_type === ContactType.Individual">Mailing address</mat-label>
             <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer mailing address</mat-label>
-            <mat-label *ngIf="form.value.contact_type === ContactType.Other">Agent or Other mailing address</mat-label>
+            <mat-label *ngIf="form.value.contact_type === ContactType.Other">{{ "label.agent_address" | translate }}</mat-label>
             <input matInput formControlName="address" />
             <mat-error *ngIf="form.controls.address.hasError('required')">{{ "error.required" | translate }}</mat-error>
             <mat-error *ngIf="form.controls.address.hasError('maxlength')">{{ "error.max_length" | translate }}100 per
@@ -176,9 +176,9 @@
     <div class="row">
       <div class="col-md-6">
         <mat-form-field class="w-100">
-          <mat-label *ngIf="form.value.contact_type === ContactType.Individual">Email address (click below to be contacted by regular mail)</mat-label>
-          <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer email address (click below to be contacted by regular mail)</mat-label>
-          <mat-label *ngIf="form.value.contact_type === ContactType.Other">Agent or Other email address (click below to be contacted by regular mail)</mat-label>
+          <mat-label *ngIf="form.value.contact_type === ContactType.Individual">{{ "label.email_address" | translate }}</mat-label>
+          <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">{{ "label.lawyer_email_address" | translate }}</mat-label>
+          <mat-label *ngIf="form.value.contact_type === ContactType.Other">{{ "label.agent_email" | translate }}</mat-label>
           <input matInput formControlName="email_address" autocomplete="off" />
           <mat-error *ngIf="form.controls.email_address.hasError('required')">{{"error.required" |
             translate}}</mat-error>
@@ -192,7 +192,7 @@
         <mat-form-field class="w-100">
           <mat-label *ngIf="form.value.contact_type === ContactType.Individual">Phone number</mat-label>
           <mat-label *ngIf="form.value.contact_type === ContactType.Lawyer">Lawyer phone number</mat-label>
-          <mat-label *ngIf="form.value.contact_type === ContactType.Other">Agent or Other phone number</mat-label>
+          <mat-label *ngIf="form.value.contact_type === ContactType.Other">{{ "label.agent_phone" | translate }}</mat-label>
           <input *ngIf="isCA || isUSA" matInput formControlName="home_phone_number" mask="(000) 000-0000"
             [showMaskTyped]="true" />
           <input *ngIf="!isCA && !isUSA" matInput formControlName="home_phone_number" mask="00000000000000000000" />
