@@ -19,7 +19,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -35,7 +35,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -51,7 +51,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task AssignJJDisputesToJJAsync(System.Collections.Generic.IEnumerable<string> ticketNumbers, string jjUsername)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -67,7 +67,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task AssignJJDisputesToJJAsync(System.Collections.Generic.IEnumerable<string> ticketNumbers, string jjUsername, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -83,7 +83,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> CancelDisputeAsync(long id, string body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -99,7 +99,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> CancelDisputeAsync(long id, string body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -115,7 +115,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> CancelJJDisputeAsync(string ticketNumber, bool checkVTCAssigned)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -131,7 +131,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> CancelJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -147,7 +147,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task CodeTableRefreshAsync()
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -163,7 +163,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task CodeTableRefreshAsync(System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -179,7 +179,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> ConcludeJJDisputeAsync(string ticketNumber, bool checkVTCAssigned)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -195,7 +195,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> ConcludeJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -211,7 +211,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> ConfirmJJDisputeAsync(string ticketNumber)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -227,7 +227,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> ConfirmJJDisputeAsync(string ticketNumber, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -243,7 +243,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task DeleteDisputeAsync(long id)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -259,7 +259,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task DeleteDisputeAsync(long id, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -275,7 +275,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task DeleteJJDisputeAsync(long? jjDisputeId, string ticketNumber)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -291,7 +291,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task DeleteJJDisputeAsync(long? jjDisputeId, string ticketNumber, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -307,7 +307,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -323,7 +323,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -339,7 +339,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeListItem>> GetAllDisputesAsync(System.DateTimeOffset? newerThan, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ExcludeStatus? excludeStatus)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -355,7 +355,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeListItem>> GetAllDisputesAsync(System.DateTimeOffset? newerThan, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ExcludeStatus? excludeStatus, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -371,7 +371,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> GetDisputeAsync(long id, bool isAssign)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -387,7 +387,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> GetDisputeAsync(long id, bool isAssign, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -403,7 +403,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> GetDisputeByNoticeOfDisputeGuidAsync(string id)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -419,7 +419,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> GetDisputeByNoticeOfDisputeGuidAsync(string id, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -435,7 +435,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long? id, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Status? status)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -451,7 +451,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long? id, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Status? status, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -467,7 +467,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.EmailHistory>> GetEmailHistoryByTicketNumberAsync(string ticketNumber)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -483,7 +483,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.EmailHistory>> GetEmailHistoryByTicketNumberAsync(string ticketNumber, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -499,7 +499,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -515,7 +515,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.FileHistory>> GetFileHistoryByTicketNumberAsync(string ticketNumber, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -531,7 +531,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -547,7 +547,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> GetJJDisputeAsync(string ticketNumber, bool assignVTC, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -563,7 +563,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -579,7 +579,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -595,7 +595,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.TicketImageDataJustinDocument> GetTicketImageDataAsync(string ticketNumber, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DocumentType documentType)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -611,7 +611,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.TicketImageDataJustinDocument> GetTicketImageDataAsync(string ticketNumber, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DocumentType documentType, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -627,7 +627,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> InsertEmailHistoryAsync(TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.EmailHistory body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -643,7 +643,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> InsertEmailHistoryAsync(TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.EmailHistory body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -659,7 +659,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> InsertFileHistoryAsync(TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.FileHistory body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -675,7 +675,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> InsertFileHistoryAsync(TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.FileHistory body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -691,7 +691,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> RejectDisputeAsync(long id, string body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -707,7 +707,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> RejectDisputeAsync(long id, string body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -723,7 +723,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string remark)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -739,7 +739,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> RequireCourtHearingJJDisputeAsync(string ticketNumber, string remark, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -755,7 +755,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> ResetDisputeEmailAsync(long id, string email)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -771,7 +771,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> ResetDisputeEmailAsync(long id, string email, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -787,7 +787,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> ReviewJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, bool recalled, string body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -803,7 +803,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> ReviewJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, bool recalled, string body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -819,7 +819,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> SaveDisputeAsync(TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -835,7 +835,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> SaveDisputeAsync(TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -851,7 +851,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> SaveDisputeUpdateRequestAsync(string guid, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -867,7 +867,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<long> SaveDisputeUpdateRequestAsync(string guid, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -883,7 +883,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> SubmitDisputeAsync(long id)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -899,7 +899,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> SubmitDisputeAsync(long id, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -915,7 +915,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task UnassignDisputesAsync()
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -931,7 +931,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task UnassignDisputesAsync(System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -947,7 +947,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> UpdateDisputeAsync(long id, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -963,7 +963,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> UpdateDisputeAsync(long id, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -979,7 +979,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long id, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequestStatus disputeUpdateRequestStatus)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -995,7 +995,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest> UpdateDisputeUpdateRequestStatusAsync(long id, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequestStatus disputeUpdateRequestStatus, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1011,7 +1011,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> UpdateJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1027,7 +1027,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> UpdateJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1043,7 +1043,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute body)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1059,7 +1059,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDispute body, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1075,7 +1075,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> ValidateDisputeAsync(long id)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1091,7 +1091,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.Dispute> ValidateDisputeAsync(long id, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1107,7 +1107,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task VerifyDisputeEmailAsync(long id)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
@@ -1123,7 +1123,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
 
         public async global::System.Threading.Tasks.Task VerifyDisputeEmailAsync(long id, System.Threading.CancellationToken cancellationToken)
         {
-            var operation = _metrics.BeginOperation();
+            using var operation = _metrics.BeginOperation();
 
             try
             {
