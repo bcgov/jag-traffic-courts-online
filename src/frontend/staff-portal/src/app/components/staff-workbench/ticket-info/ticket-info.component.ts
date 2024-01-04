@@ -15,6 +15,7 @@ import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dia
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TicketImageDialogComponent } from '@shared/dialogs/ticket-image-dialog/ticket-image-dialog.component';
 import { ViolationTicketService, OCRMessageToDisplay } from 'app/services/violation-ticket.service';
+import { StringUtils } from '@core/utils/string-utils.class';
 
 @Component({
   selector: 'app-ticket-info',
@@ -127,6 +128,7 @@ export class TicketInfoComponent implements OnInit {
         driversLicenceCountry: [null],
         issuedTs: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({
+          actOrRegulationNameCode: [null],
           description: [null],
           subparagraph: [null],
           section: [null],
@@ -136,6 +138,7 @@ export class TicketInfoComponent implements OnInit {
           ticketedAmount: [null, [FormControlValidators.currency]]
         }),
         violationTicketCount2: this.formBuilder.group({
+          actOrRegulationNameCode: [null],
           description: [null],
           subparagraph: [null],
           section: [null],
@@ -145,6 +148,7 @@ export class TicketInfoComponent implements OnInit {
           ticketedAmount: [null, [FormControlValidators.currency]]
         }),
         violationTicketCount3: this.formBuilder.group({
+          actOrRegulationNameCode: [null],
           description: [null],
           subparagraph: [null],
           section: [null],
@@ -240,7 +244,7 @@ export class TicketInfoComponent implements OnInit {
   // return a filtered list of statutes
   public filterStatutes(val: string): Statute[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
-    return this.lookupsService.statutes?.filter(option => option.__statuteString.indexOf(val) >= 0);
+    return this.lookupsService.statutes?.filter(option => (option.__statuteString || "").toUpperCase().indexOf((val || "").toUpperCase()) >= 0);
   }
 
   // is the statute valid? on the form
@@ -701,15 +705,17 @@ export class TicketInfoComponent implements OnInit {
 
     // lookup legal statute from part[0] which should be in legal paragraph form
     if (parts && parts.length > 1) {
-      let foundStatute = this.lookupsService.statutes?.find(x => x.code === parts[0]);
+      let foundStatute = this.lookupsService.statutes?.find(x => StringUtils.nullSafeCompare(x.actCode, parts[0]) && StringUtils.nullSafeCompare(x.code, parts[1]));
       if (foundStatute) {
+        countForm.get('actOrRegulationNameCode').setValue(foundStatute.actCode);
         countForm.get('section').setValue(foundStatute.sectionText);
         countForm.get('subsection').setValue(foundStatute.subsectionText);
         countForm.get('paragraph').setValue(foundStatute.paragraphText);
         countForm.get('subparagraph').setValue(foundStatute.subparagraphText);
         countForm.get('description').setValue(foundStatute.shortDescriptionText);
-        countForm.get('fullDescription').setValue(`${foundStatute.code} ${foundStatute.shortDescriptionText}`);
+        countForm.get('fullDescription').setValue(`${foundStatute.actCode} ${foundStatute.code} ${foundStatute.shortDescriptionText}`);
       } else {
+        countForm.get('actOrRegulationNameCode').setValue(undefined);
         countForm.get('section').setValue(undefined);
         countForm.get('subsection').setValue(undefined);
         countForm.get('paragraph').setValue(undefined);
@@ -739,7 +745,9 @@ export class TicketInfoComponent implements OnInit {
         // If disputant surname is filled in, then this is not the first time this ticket has been opened, only call setFieldsFromJSON the first time
         if (response.violationTicket.disputantSurname) {
           this.initialDisputeValues = response;
-        } else this.initialDisputeValues = this.setFieldsFromJSON(response);
+        } else {
+          this.initialDisputeValues = this.setFieldsFromJSON(response);
+        }
 
         // set court agency id if possible
         let courtFound = this.lookupsService.courthouseAgencies.filter(x => x.name === this.initialDisputeValues.violationTicket.courtLocation);
@@ -786,9 +794,14 @@ export class TicketInfoComponent implements OnInit {
           countForm.get('description').setValue(violationTicketCount.description);
 
           // lookup legal statute
+          let actCode = violationTicketCount.actOrRegulationNameCode;
+          if (!actCode) {
+            actCode = violationTicketCount.isAct === ViolationTicketCountIsAct.Y ? "MVA" : "MVR";
+          }
           const sectionCode = this.getSectionText(violationTicketCount);
-          let foundStatute = this.lookupsService.statutes?.find(x => x.code === sectionCode); 
+          let foundStatute = this.lookupsService.statutes?.find(x => StringUtils.nullSafeCompare(x.actCode, actCode) && StringUtils.nullSafeCompare(x.code, sectionCode)); 
           if (foundStatute) {
+            countForm.get('actOrRegulationNameCode').setValue(foundStatute.actCode);
             countForm.get('section').setValue(foundStatute.sectionText);
             countForm.get('subsection').setValue(foundStatute.subsectionText);
             countForm.get('paragraph').setValue(foundStatute.paragraphText);

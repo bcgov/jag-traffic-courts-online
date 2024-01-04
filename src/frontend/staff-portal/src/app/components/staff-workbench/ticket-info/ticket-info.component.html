@@ -192,7 +192,7 @@
                         <div class="col-lg-8">
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.section')}">
-                            <mat-label>Sect/Desc </mat-label>
+                            <mat-label>{{ "label.act_sect_desc" | translate}}</mat-label>
                             <input matInput formControlName="fullDescription" [matAutocomplete]="auto"
                               (keyup)="onFullDescription1Keyup()" (change)="onChangeCount(1, $event.target.value)"
                               [matTooltip]="form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value"
@@ -232,7 +232,7 @@
                         <div class="col-lg-8">
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.section')}">
-                            <mat-label>Sect/Desc </mat-label>
+                            <mat-label>{{ "label.act_sect_desc" | translate}}</mat-label>
                             <input matInput formControlName="fullDescription" [matAutocomplete]="auto2"
                               [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value"
                               (change)="onChangeCount(2, $event.target.value)" (keyup)="onFullDescription2Keyup()"
@@ -272,7 +272,7 @@
                         <div class="col-lg-8">
                           <mat-form-field class="w-100"
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.section')}">
-                            <mat-label>Sect/Desc </mat-label>
+                            <mat-label>{{ "label.act_sect_desc" | translate}}</mat-label>
                             <input matInput formControlName="fullDescription" [matAutocomplete]="auto3"
                               [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value"
                               (change)="onChangeCount(3, $event.target.value)" (keyup)="onFullDescription3Keyup()"
