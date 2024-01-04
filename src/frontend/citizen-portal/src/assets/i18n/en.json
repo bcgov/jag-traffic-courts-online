@@ -157,7 +157,17 @@
     "offence_amount": "Offence Amount",
     "amount_due": "Amount Due",
     "status": "Status",
-    "manage_update_dispute": "Manage or update my dispute"
+    "manage_update_dispute": "Manage or update my dispute",
+    "surname_corporate_name": "Surname or Corporate Name",
+    "start_ticket_dispute": "Start a ticket dispute",
+    "agent_or_other": "Agent or Other",
+    "agent_surname": "Agent or Other surname",
+    "agent_name": "Agent or Other given name(s)",
+    "agent_address": "Agent or Other mailing address",
+    "agent_phone": "Agent or Other phone number",
+    "agent_email": "Agent or Other email address (click below to be contacted by regular mail)",
+    "email_address": "Email address (click below to be contacted by regular mail)",
+    "lawyer_email_address": "Lawyer email address (click below to be contacted by regular mail)"
   },
   "submit_confirmation": {
     "heading": "Submit request",

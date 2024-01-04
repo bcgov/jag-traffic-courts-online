@@ -27,7 +27,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   // Form essentials
   countryFormControl: FormControl<CountryCodeValue> = new FormControl(null, [Validators.required]);
   provinceFormControl: FormControl<ProvinceCodeValue> = new FormControl(null, [Validators.required]);
-  driversLicenceProvinceFormControl: FormControl<ProvinceCodeValue> = new FormControl(null, [Validators.required]);
+  driversLicenceProvinceFormControl: FormControl<ProvinceCodeValue> = new FormControl(null, null);
   optOut: boolean = false;
 
   // Form related
@@ -126,7 +126,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       if (this.isCA || this.isUSA) { // canada or usa validators
         this.form.controls.address_province_seq_no.addValidators([Validators.required]);
         this.form.controls.postal_code.addValidators([Validators.required]);
-        this.form.controls.home_phone_number.addValidators([Validators.required, FormControlValidators.phone]);
+        this.form.controls.home_phone_number.addValidators([FormControlValidators.phone]);
 
         if (this.isCA) { // pick BC by default if Canada selected
           this.form.controls.address_province.setValue(this.bc.provNm);
@@ -148,11 +148,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
         form.controls.drivers_licence_province.setValidators([Validators.maxLength(30)]);
 
-        if (this.isCA || this.isUSA) { // canada or usa validators
-          form.controls.drivers_licence_number.addValidators([Validators.required]);
-          form.controls.drivers_licence_province_seq_no.addValidators([Validators.required]);
-        }
-
         form.controls.drivers_licence_number.updateValueAndValidity();
         form.controls.drivers_licence_province.updateValueAndValidity();
       }
@@ -170,20 +165,24 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onDLProvinceChange(province: ProvinceCodeValue) {
     setTimeout(() => {
       let form = this.form as NoticeOfDisputeFormGroup;
-      form.controls.drivers_licence_province.setValue(province.provAbbreviationCd);
-      form.controls.drivers_licence_country_id.setValue(province.ctryId);
-      form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
 
-      if (province.provId === this.bc.provId) {
+      if (province === null) {
+        form.controls.drivers_licence_province.setValue(null);
+        form.controls.drivers_licence_country_id.setValue(null);
+        form.controls.drivers_licence_province_seq_no.setValue(null);
+      } else {
+        form.controls.drivers_licence_province.setValue(province.provAbbreviationCd);
+        form.controls.drivers_licence_country_id.setValue(province.ctryId);
+        form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
+      }
+      
+      if (province != null && province.provId === this.bc.provId) {
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(9)]);
         form.controls.drivers_licence_number.addValidators([Validators.minLength(7)]);
       } else {
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
       }
 
-      if (province.ctryId === this.canada.ctryId || province.ctryId === this.usa.ctryId) {
-        form.controls.drivers_licence_number.addValidators([Validators.required]);
-      }
       form.controls.drivers_licence_number.updateValueAndValidity();
     }, 0)
   }

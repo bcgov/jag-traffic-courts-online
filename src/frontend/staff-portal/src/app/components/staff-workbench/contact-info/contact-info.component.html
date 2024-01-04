@@ -334,12 +334,12 @@
                     <mat-label>Prov/State of DL</mat-label>
                     <mat-select formControlName="driversLicenceProvinceProvId"
                       (selectionChange)="onDLProvinceChange($event.value)">
+                      <mat-option [value]="null"></mat-option>
                       <mat-option [value]="bc.provId">{{bc.provNm}}</mat-option>
                       <mat-option *ngFor="let province of provinces" [value]="province.provId">{{ province.provNm }}
                       </mat-option>
                       <mat-option *ngFor="let state of states" [value]="state.provId">{{ state.provNm }}</mat-option>
                     </mat-select>
-                    <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
 
@@ -352,8 +352,6 @@
                       *ngIf="form.get('driversLicenceProvinceProvId').value === bc.provId" />
                     <input matInput formControlName="driversLicenceNumber" maxlength="20"
                       *ngIf="form.get('driversLicenceProvinceProvId').value !== bc.provId" />
-                    <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
-                      translate }}</mat-error>
                     <mat-error *ngIf="
                          form.get('driversLicenceNumber')?.errors?.minlength ||
                          form.get('driversLicenceNumber').hasError('maxlength')">

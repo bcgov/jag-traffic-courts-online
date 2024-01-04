@@ -16,7 +16,7 @@ public class Dispute : DisputantContactInformation
     /// </summary>
     [JsonPropertyName("ticket_number")]
     [MaxLength(12)]
-    public string? TicketNumber { get; set; } = null!;
+    public string TicketNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// The date and time the violation ticket was issue. Time must only be hours and minutes.
@@ -35,13 +35,13 @@ public class Dispute : DisputantContactInformation
     /// The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
     /// </summary>
     [JsonPropertyName("drivers_licence_number")]
-    public string DriversLicenceNumber { get; set; } = null!;
+    public string? DriversLicenceNumber { get; set; }
 
     /// <summary>
     /// The province or state the drivers licence was issued by.
     /// </summary>
     [JsonPropertyName("drivers_licence_province")]
-    public string DriversLicenceProvince { get; set; } = null!;
+    public string? DriversLicenceProvince { get; set; }
 
     /// <summary>
     /// The province sequence number of the drivers licence was issued by.
@@ -71,49 +71,49 @@ public class Dispute : DisputantContactInformation
     /// Name of the law firm that will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("law_firm_name")]
-    public string? LawFirmName { get; set; } = String.Empty;
+    public string? LawFirmName { get; set; }
 
     /// <summary>
     /// Surname of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("lawyer_surname")]
-    public string? LawyerSurname { get; set; } = String.Empty;
+    public string? LawyerSurname { get; set; }
 
     /// <summary>
     /// Given Name 1 of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("lawyer_given_name1")]
-    public string? LawyerGivenName1 { get; set; } = String.Empty;
+    public string? LawyerGivenName1 { get; set; }
 
     /// <summary>
     /// Given Name 2 of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("lawyer_given_name2")]
-    public string? LawyerGivenName2 { get; set; } = String.Empty;
+    public string? LawyerGivenName2 { get; set; }
 
     /// <summary>
     /// Given Name 3 of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("lawyer_given_name3")]
-    public string? LawyerGivenName3 { get; set; } = String.Empty;
+    public string? LawyerGivenName3 { get; set; }
 
     /// <summary>
     /// Email address of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("lawyer_email")]
-    public string? LawyerEmail { get; set; } = String.Empty;
+    public string? LawyerEmail { get; set; }
 
     /// <summary>
     /// Address of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("lawyer_address")]
-    public string? LawyerAddress { get; set; } = String.Empty;
+    public string? LawyerAddress { get; set; }
 
     /// <summary>
     /// Address of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     [JsonPropertyName("lawyer_phone_number")]
-    public string? LawyerPhoneNumber { get; set; } = String.Empty;
+    public string? LawyerPhoneNumber { get; set; }
 
     /// <summary>
     /// Request Court Appearance

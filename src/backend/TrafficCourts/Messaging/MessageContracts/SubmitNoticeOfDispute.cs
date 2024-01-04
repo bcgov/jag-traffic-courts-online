@@ -17,7 +17,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The violation ticket number.
     /// </summary>
-    public string? TicketNumber { get; set; } = null!;
+    public string TicketNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// The date and time the violation ticket was issue. Time must only be hours and minutes.
@@ -32,47 +32,47 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
-    public string ContactSurnameNm { get; set; } = null!;
+    public string? ContactSurnameNm { get; set; }
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string ContactGiven1Nm { get; set; } = null!;
+    public string? ContactGiven1Nm { get; set; }
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string ContactGiven2Nm { get; set; } = null!;
+    public string? ContactGiven2Nm { get; set; }
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string ContactGiven3Nm { get; set; } = null!;
+    public string? ContactGiven3Nm { get; set; }
 
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
-    public string DisputantSurname { get; set; } = null!;
+    public string? DisputantSurname { get; set; }
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string DisputantGivenName1 { get; set; } = null!;
+    public string? DisputantGivenName1 { get; set; }
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string DisputantGivenName2 { get; set; } = null!;
+    public string? DisputantGivenName2 { get; set; }
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string DisputantGivenName3 { get; set; } = null!;
+    public string? DisputantGivenName3 { get; set; }
 
     /// <summary>
     /// Contact Law Firm Name.
     /// </summary>
-    public string ContactLawFirmNm { get; set; } = null!;
+    public string? ContactLawFirmNm { get; set; }
 
     /// <summary>
     /// Contact Type.
@@ -87,12 +87,12 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
     /// </summary>
-    public string DriversLicenceNumber { get; set; } = null!;
+    public string? DriversLicenceNumber { get; set; }
 
     /// <summary>
     /// The province or state the drivers licence was issued by.
     /// </summary>
-    public string DriversLicenceProvince { get; set; } = null!;
+    public string? DriversLicenceProvince { get; set; }
 
     /// <summary>
     /// The province sequence number of the drivers licence was issued by.
@@ -107,26 +107,26 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The mailing address line one of the disputant.
     /// </summary>
-    public string AddressLine1 { get; set; } = null!;
+    public string? AddressLine1 { get; set; }
 
     /// <summary>
     /// The mailing address line two of the disputant.
     /// </summary>
-    public string AddressLine2 { get; set; } = null!;
+    public string? AddressLine2 { get; set; }
     /// <summary>
     /// The mailing address line three of the disputant.
     /// </summary>
-    public string AddressLine3 { get; set; } = null!;
+    public string? AddressLine3 { get; set; }
 
     /// <summary>
     /// The mailing address city of the disputant.
     /// </summary>
-    public string AddressCity { get; set; } = null!;
+    public string? AddressCity { get; set; }
 
     /// <summary>
     /// The mailing address province of the disputant.
     /// </summary>
-    public string AddressProvince { get; set; } = null!;
+    public string? AddressProvince { get; set; }
 
     /// <summary>
     /// The mailing address province's country code of the disputant.
@@ -146,12 +146,12 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The mailing address postal code or zip code of the disputant.
     /// </summary>
-    public string PostalCode { get; set; } = null!;
+    public string? PostalCode { get; set; }
 
     /// <summary>
     /// The disputant's home phone number.
     /// </summary>
-    public string HomePhoneNumber { get; set; } = null!;
+    public string? HomePhoneNumber { get; set; }
 
     /// <summary>
     /// The disputant's work phone number.
@@ -161,7 +161,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The disputant's email address.
     /// </summary>
-    public string EmailAddress { get; set; } = null!;
+    public string? EmailAddress { get; set; }
 
     /// <summary>
     /// The disputant intends to be represented by a lawyer at the hearing.

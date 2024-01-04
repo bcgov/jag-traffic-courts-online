@@ -6,12 +6,6 @@
   <mat-step [completed]="form.valid">
     <ng-template matStepLabel>Contact information</ng-template>
     <app-page>
-      <app-page-header>
-        <ng-container subHeader>
-          All fields are required.
-        </ng-container>
-      </app-page-header>
-
       <app-disputant-form [form]="form" [mode]="mode"></app-disputant-form>
 
       <app-stepper-footer [disableSave]="!form.valid" (save)="disputeStepper.next()" (back)="onStepCancel()"

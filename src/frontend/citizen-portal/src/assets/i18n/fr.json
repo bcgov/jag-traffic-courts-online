@@ -156,7 +156,17 @@
     "offence_amount": "Montant de l'Infraction",
     "amount_due": "Montant Dû",
     "status": "Statut",
-    "manage_update_dispute": "Gérer/Mettre à Jour un Litige"
+    "manage_update_dispute": "Gérer/Mettre à Jour un Litige",
+    "surname_corporate_name": "Nom de Famille ou Nom de la Société",
+    "start_ticket_dispute": "Démarrer un litige concernant un ticket",
+    "agent_or_other": "Agent ou Autre",
+    "agent_surname": "Agent ou Autre Nom de Famille",
+    "agent_name": "Agent ou Autre Prénoms",
+    "agent_address": "Agent ou Autre adresse postale",
+    "agent_phone": "Agent ou Autre numéro de téléphone",
+    "agent_email": "Agent ou Autre adresse e-mail (cliquez ci-dessous pour être contacté par courrier ordinaire)",
+    "email_address": "Adresse e-mail (cliquez ci-dessous pour être contacté par courrier ordinaire)",
+    "lawyer_email_address": "Adresse e-mail de l'avocat (cliquez ci-dessous pour être contacté par courrier ordinaire)"
   },
   "submit_confirmation": {
     "heading": "Soumettre un Litige",
