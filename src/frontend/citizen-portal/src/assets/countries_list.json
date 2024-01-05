@@ -13,6 +13,10 @@
             "ctryLongNm": "Algeria"
         },
         {
+            "ctryId": "190",
+            "ctryLongNm": "American Samoa"
+        },
+        {
             "ctryId": "65",
             "ctryLongNm": "Andora"
         },
@@ -215,6 +219,10 @@
         {
             "ctryId": "18",
             "ctryLongNm": "Ethiopia"
+        },
+        {
+            "ctryId": "191",
+            "ctryLongNm": "Federated States of Micronesia"
         },
         {
             "ctryId": "181",
@@ -433,6 +441,10 @@
             "ctryLongNm": "Marshal Isle"
         },
         {
+            "ctryId": "192",
+            "ctryLongNm": "Marshall Islands"
+        },
+        {
             "ctryId": "151",
             "ctryLongNm": "Martinique"
         },
@@ -489,6 +501,10 @@
             "ctryLongNm": "Nigeria"
         },
         {
+            "ctryId": "193",
+            "ctryLongNm": "Norther Marianals"
+        },
+        {
             "ctryId": "173",
             "ctryLongNm": "Norway"
         },
@@ -499,6 +515,10 @@
         {
             "ctryId": "136",
             "ctryLongNm": "Pakistan"
+        },
+        {
+            "ctryId": "194",
+            "ctryLongNm": "Palau"
         },
         {
             "ctryId": "89",
@@ -715,6 +735,10 @@
         {
             "ctryId": "111",
             "ctryLongNm": "Vietnam"
+        },
+        {
+            "ctryId": "195",
+            "ctryLongNm": "Virgin Islands"
         },
         {
             "ctryId": "166",
