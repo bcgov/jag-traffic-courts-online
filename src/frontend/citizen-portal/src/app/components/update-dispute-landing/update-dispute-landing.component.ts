@@ -43,6 +43,9 @@ export class UpdateDisputeLandingComponent implements OnInit {
             else this.isEditable.next(true); // otherwise allow editing
 
             this.isEmailVerified = dispute?.is_email_verified ? true : false;
+            if (!this.isEmailVerified) {
+              this.disputeService.openDisputantEmailNotVerifiedDialog();
+            }
           }
         })
       }

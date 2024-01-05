@@ -144,7 +144,7 @@ export class DisputeService {
     const data: DialogOptions = {
       titleKey: "Warning",
       actionType: "warn",
-      messageKey: "Dispute email address is not yet verified",
+      messageKey: "Email address is not yet verified",
       actionTextKey: "Close",
       cancelHide: true
     };
