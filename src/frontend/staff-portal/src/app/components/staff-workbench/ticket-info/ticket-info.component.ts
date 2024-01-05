@@ -404,7 +404,6 @@ export class TicketInfoComponent implements OnInit {
     putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
     for (let i = 1; i <= 3; i++) {
       // stuff 3 violation ticket counts in putDispute
-      let fullDescription = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value;
       let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
       violationTicketCount.countNo = i;
       violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
@@ -856,7 +855,7 @@ export class TicketInfoComponent implements OnInit {
           this.form.controls.violationTicket.disable();
         }
         this.form.get('violationTicket').updateValueAndValidity();
-        
+
         // TCVP-2554 make a static variable to indicate if the TicketInformation section is editable or not.
         this.isTicketInformationReadOnly = this.lastUpdatedDispute.status === this.DispStatus.Validated;
       }, (error: any) => {
@@ -870,7 +869,7 @@ export class TicketInfoComponent implements OnInit {
    * @param vtc 
    * @returns 
    */
-  private getSectionText(vtc: ViolationTicketCount) : string {
+  private getSectionText(vtc: ViolationTicketCount): string {
     let sectionText = vtc.section ?? "";
     sectionText += vtc.subsection ? '(' + vtc.subsection + ')' : "";
     sectionText += vtc.paragraph ? '(' + vtc.paragraph + ')' : "";

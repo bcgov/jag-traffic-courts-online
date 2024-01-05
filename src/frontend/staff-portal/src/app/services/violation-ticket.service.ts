@@ -1,18 +1,11 @@
-import { LoggerService } from '@core/services/logger.service';
 import { Injectable } from '@angular/core';
 import { ViolationTicket, OcrViolationTicket, Field, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
 import { ConfigService } from '@config/config.service';
 
-export interface IViolationTicketService {
-  getAllOCRMessages(ocrViolationTicket: OcrViolationTicket);
-  setViolationTicketFromJSON(ocrViolationTicket: OcrViolationTicket, violationTicket: ViolationTicket): ViolationTicket;
-  getLegalParagraphing(violationTicketCount: ViolationTicketCount);
-}
-
 @Injectable({
   providedIn: 'root',
 })
-export class ViolationTicketService implements IViolationTicketService {
+export class ViolationTicketService {
   public ocrMapping: mappingOCR[] = [
     { key: "ticket_number", heading: "Ticket Number" },
     { key: "violation_date", heading: "Date" },
@@ -22,7 +15,7 @@ export class ViolationTicketService implements IViolationTicketService {
     { key: "drivers_licence_province", heading: "Prov/State of DL" },
     { key: "drivers_licence_number", heading: "DL Number" },
   ];
-  public count1OcrMapping: mappingOCR[] = [
+    public count1OcrMapping: mappingOCR[] = [
     { key: "counts.count_no_1.section", heading: "Act/Sect/Desc" },
     { key: "counts.count_no_1.ticketed_amount", heading: "Fine" }
   ];
@@ -34,7 +27,7 @@ export class ViolationTicketService implements IViolationTicketService {
     { key: "counts.count_no_3.section", heading: "Act/Sect/Desc" },
     { key: "counts.count_no_3.ticketed_amount", heading: "Fine" },
   ];
-  public ocrMessages: OCRMessageToDisplay[] = [];
+public ocrMessages: OCRMessageToDisplay[] = [];
   public count1OcrMessages: OCRMessageToDisplay[] = [];
   public count2OcrMessages: OCRMessageToDisplay[] = [];
   public count3OcrMessages: OCRMessageToDisplay[] = []
@@ -42,7 +35,6 @@ export class ViolationTicketService implements IViolationTicketService {
   public IsRegulation = ViolationTicketCountIsRegulation;
 
   constructor(
-    private logger: LoggerService,
     private config: ConfigService
   ) {
   }
@@ -65,16 +57,16 @@ export class ViolationTicketService implements IViolationTicketService {
   // return all OCR messages for a ticket
   public getAllOCRMessages(ocrViolationTicket: OcrViolationTicket) {
     // build list of messages
-    this.ocrMessages = this.ocrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.ocrMapping));
+    this.ocrMessages = this.ocrMapping.map(ocrField => this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.ocrMapping));
 
     // build list of count 1 messages
-    this.count1OcrMessages = this.count1OcrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count1OcrMapping));
+    this.count1OcrMessages = this.count1OcrMapping.map(ocrField => this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count1OcrMapping));
 
     // build list of count 2 messages
-    this.count2OcrMessages = this.count2OcrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count2OcrMapping));
+    this.count2OcrMessages = this.count2OcrMapping.map(ocrField => this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count2OcrMapping));
 
     // build list of count 3 messages
-    this.count3OcrMessages = this.count3OcrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count3OcrMapping));
+    this.count3OcrMessages = this.count3OcrMapping.map(ocrField => this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count3OcrMapping));
   }
 
   // return OCR error for a single field
@@ -106,7 +98,7 @@ export class ViolationTicketService implements IViolationTicketService {
 
       // set up ticket count 1
       if (ocrViolationTicket.fields["counts.count_no_1.description"]) {
-        const foundViolationTicketCount1 : ViolationTicketCount[] = violationTicket.violationTicketCounts.filter(x => x.countNo == 1);
+        const foundViolationTicketCount1: ViolationTicketCount[] = violationTicket.violationTicketCounts.filter(x => x.countNo == 1);
         if (foundViolationTicketCount1.length > 0) {
           if (!foundViolationTicketCount1[0].description) foundViolationTicketCount1[0].description = ocrViolationTicket.fields["counts.count_no_1.description"].value;
           if (!foundViolationTicketCount1[0].actOrRegulationNameCode) foundViolationTicketCount1[0].actOrRegulationNameCode = ocrViolationTicket.fields["counts.count_no_1.act_or_regulation_name_code"]?.value;
@@ -153,12 +145,12 @@ export class ViolationTicketService implements IViolationTicketService {
       } else {
         let violationTicketCount = {
           countNo: 2,
-            description: null,
-            actOrRegulationNameCode: null,
-            section: null,
-            ticketedAmount: 0,
-            isAct: this.IsAct.N,
-            isRegulation: this.IsRegulation.N
+          description: null,
+          actOrRegulationNameCode: null,
+          section: null,
+          ticketedAmount: 0,
+          isAct: this.IsAct.N,
+          isRegulation: this.IsRegulation.N
         }
         violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
       }
@@ -188,12 +180,12 @@ export class ViolationTicketService implements IViolationTicketService {
       } else {
         let violationTicketCount = {
           countNo: 3,
-            description: null,
-            actOrRegulationNameCode: null,
-            section: null,
-            ticketedAmount: 0,
-            isAct: this.IsAct.N,
-            isRegulation: this.IsRegulation.N
+          description: null,
+          actOrRegulationNameCode: null,
+          section: null,
+          ticketedAmount: 0,
+          isAct: this.IsAct.N,
+          isRegulation: this.IsRegulation.N
         }
         violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
       }
@@ -202,8 +194,8 @@ export class ViolationTicketService implements IViolationTicketService {
     return violationTicket;
   }
 
-  // Copied from citizen portal
-  // TODO : use this in function - setViolationTicketFromJSON
+    // Copied from citizen portal
+// TODO : use this in function - setViolationTicketFromJSON
   private getValue(field: Field): any {
     let result;
     let value = field.value;
