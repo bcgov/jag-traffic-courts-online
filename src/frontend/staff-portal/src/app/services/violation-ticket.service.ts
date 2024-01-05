@@ -50,8 +50,12 @@ export class ViolationTicketService implements IViolationTicketService {
   // act section(subsection)(paragraph)(subparagraph)
   public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
     if (!violationTicketCount) return "";
-    let ticketDesc = (violationTicketCount.actOrRegulationNameCode ? violationTicketCount.actOrRegulationNameCode + " " : ""); // For VT2 images, this is always blank.
-    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + violationTicketCount.section;
+
+    let ticketDesc = violationTicketCount.actOrRegulationNameCode;
+    if (!ticketDesc) {
+      ticketDesc = (violationTicketCount.isAct === this.IsAct.Y) ? "MVA" : "MVR";
+    }
+    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + " " + violationTicketCount.section;
     if (violationTicketCount.subsection && violationTicketCount.subsection.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.subsection + ")";
     if (violationTicketCount.paragraph && violationTicketCount.paragraph.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.paragraph + ")";
     if (violationTicketCount.subparagraph && violationTicketCount.subparagraph.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.subparagraph + ")";

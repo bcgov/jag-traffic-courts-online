@@ -97,7 +97,7 @@ export class LookupsService implements ILookupsService {
   }
 
   public getStatuteString(statute: Statute): string {
-    return `${statute.code} ${statute.descriptionText}`;
+    return `${statute.actCode} ${statute.code} ${statute.descriptionText}`;
   }
 
   /**

@@ -141,6 +141,7 @@
   },
   "label": {
     "abatement": "Abattement",
+    "act_sect_desc": "Acte/Secte/Desc",
     "amount_due": "Montant Dû",
     "appearInCourt": "Pour ce compte, j'aimerais",
     "back": "Reculer",

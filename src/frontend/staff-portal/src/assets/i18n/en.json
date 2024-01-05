@@ -142,6 +142,7 @@
   },
   "label": {
     "abatement": "Abatement",
+    "act_sect_desc": "Act/Sect/Desc",
     "amount_due": "Amount Due",
     "appearInCourt": "For this count I would like to",
     "back": "Back",
