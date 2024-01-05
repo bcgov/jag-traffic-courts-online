@@ -24,9 +24,7 @@
         <app-alert type="info" icon="info">
           <ng-container class="alert-content" #alertContent>
             <strong>Did you know? </strong><br>
-            You can make a dispute request by attending a court hearing in person, or you may plead guilty and supply
-            written reasons requesting a fine reduction and/or time to pay without having to attend a
-            court hearing.
+            {{ "stepper.count.did_you_know_desc" | translate }}
           </ng-container>
         </app-alert>
       </div>
@@ -43,13 +41,12 @@
       </div>
       <mat-radio-button [value]="RequestCourtAppearance.N">
         <span class="wrap-mat-radio-label">
-          I agree I committed these offences and would like to plead guilty and request a fine reduction and/or time to
-          pay and supply written reasons to a judicial justice to review.
+          {{ "stepper.count.agree_offence_committed" | translate }}
         </span>
       </mat-radio-button>
       <div>
-        <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> to
-          attend a court hearing</span> <span
+        <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> my dispute heard at an in-person court hearing</span>
+        <span
           matTooltip="Dispute any count or plead guilty and ask for a fine reduction or more time to pay for any count."
           #tooltip3="matTooltip">
           <mat-icon>info</mat-icon>
@@ -142,13 +139,11 @@
                   </label>
                   <mat-checkbox [checked]="count?.form.value.request_reduction === RequestReduction.Y ? true:false"
                     (change)="count?.form.controls.request_reduction.setValue($event.checked ? RequestReduction.Y: RequestReduction.N)"
-                    color="primary" class="w-100"> I would like
-                    to plead guilty and request a fine reduction on this count.</mat-checkbox>
+                    color="primary" class="w-100"> {{ "stepper.count.request_reduction" | translate }} </mat-checkbox>
                   <p> and/or</p>
                   <mat-checkbox [checked]="count?.form.value.request_time_to_pay === RequestTimeToPay.Y ? true:false"
                     (change)="count?.form.controls.request_time_to_pay.setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
-                    color="primary" class="w-100"> I would
-                    like to plead guilty and request time to pay on this count.</mat-checkbox>
+                    color="primary" class="w-100"> {{ "stepper.count.request_more_time" | translate }} </mat-checkbox>
                 </div>
 
                 <div *ngIf="count?.form.value.__skip === false"

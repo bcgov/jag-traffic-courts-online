@@ -79,7 +79,9 @@
       "sub_heading_2": "Examen et Mesures à Prendre",
       "desc_of_offence": "Description de l'Infraction",
       "offence_amount": "Montant de l'Infraction",
+      "agree_offence_committed": "Je reconnais avoir commis cette ou ces infractions et je souhaite demander une réduction de l'amende et/ou un délai de paiement en fournissant des motifs écrits au tribunal pour examen.",
       "amount_due": "Montant Dû",
+      "did_you_know_desc": "Vous pouvez faire entendre votre litige par le tribunal en personne, ou si vous reconnaissez avoir commis l'infraction, vous pouvez fournir des raisons écrites demandant une réduction de l'amende et/ou un délai de paiement sans avoir à assister à une audience du tribunal. Vous pouvez choisir d’utiliser l’option des motifs écrits jusqu’à 5 jours ouvrables avant la date de votre audience.",
       "discount_if_paid_by": "Remise sur les Billets (si payée par",
       "dispute_yes_no": "Je voudrais contester cette infraction",
       "for_this_offence": "Pour cette infraction",
@@ -89,8 +91,10 @@
       "offence_agreement_3": "Contester l'accusation",
       "requests": "Quelles demandes aimeriez-vous faire?",
       "requestReduction": "Je demande une réduction du montant du ticket: et/ou",
+      "request_reduction": "Je voudrais demander une réduction d'amende à ce titre.",
       "requestReductionReasonLabel": "Quelles sont vos raisons pour une réduction du (des) montant(s) du billet?",
       "requestMoreTime": "Je demande du temps pour payer le montant du ticket",
+      "request_more_time": "Je voudrais demander un délai pour payer à ce sujet.",
       "requestMoreTimeReasonLabel": "Quelles sont vos raisons pour lesquelles vous avez besoin de plus de temps pour payer le (s) montant (s) du billet?"
     },
     "additional": {
