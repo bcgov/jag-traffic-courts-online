@@ -5,7 +5,7 @@ import { DisputeService, FileMetadata } from 'app/services/dispute.service';
 import { NoticeOfDispute } from 'app/services/notice-of-dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { DisputeStore } from 'app/store';
-import { filter, map, Observable, take } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-update-dispute',
@@ -15,6 +15,7 @@ import { filter, map, Observable, take } from 'rxjs';
 })
 
 export class UpdateDisputeComponent implements OnInit {
+  isLoaded$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   mode: DisputeFormMode = DisputeFormMode.UPDATE;
   noticeOfDispute: NoticeOfDispute;
   ticketType: string;
@@ -33,6 +34,7 @@ export class UpdateDisputeComponent implements OnInit {
         this.store.select(DisputeStore.Selectors.NoticeOfDispute).pipe(filter(i => !!i)).subscribe(noticeOfDispute => {
           this.noticeOfDispute = noticeOfDispute;
           this.ticketType = this.violationTicketService.getTicketType(this.noticeOfDispute);
+          this.isLoaded$.next(true);
         })
         this.fileData$ = this.store.select(DisputeStore.Selectors.FileData).pipe(
           map(i => {
