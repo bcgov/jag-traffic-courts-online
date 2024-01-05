@@ -20,6 +20,11 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
 
     #region Events
     /// <summary>
+    /// Raised when the initial notice of dispute is submitted.
+    /// </summary>
+    public Event<SubmitNoticeOfDispute> SubmitNoticeOfDispute { get; private set; }
+
+    /// <summary>
     /// Raised when sending email verification is requested, will create a new token if required and request
     /// an email to be set to the disputant.
     /// </summary>
@@ -46,18 +51,10 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
 
         InstanceState(x => x.CurrentState);
 
-        Event(() => NoticeOfDisputeSubmitted, x =>
-        {
-            x.CorrelateById(context => context.Message.NoticeOfDisputeGuid);
-            x.InsertOnInitial = true;
-        });
-
-        Event(() => RequestEmailVerification, x =>
-        {
-            x.CorrelateById(context => context.Message.NoticeOfDisputeGuid);
-            x.InsertOnInitial = true;
-        });
-
+        // map the message properties to message correlation id
+        Event(() => SubmitNoticeOfDispute, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
+        Event(() => NoticeOfDisputeSubmitted, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
+        Event(() => RequestEmailVerification, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
         Event(() => ResendEmailVerificationEmail, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
         Event(() => SendEmailVerificationFailed, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
         Event(() => EmailVerificationSuccessful, x => x.CorrelateById(context => context.Message.NoticeOfDisputeGuid));
@@ -67,52 +64,40 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
             x.CorrelateById(context => context.Message.NoticeOfDisputeGuid);
             x.OnMissingInstance(m => m.ExecuteAsync(context =>
             {
-                _logger.LogInformation("Count not find an instance for {NoticeOfDisputeGuid}", context.Message.NoticeOfDisputeGuid);
+                LogNotFound(context);
                 return SendResponse(context, CheckEmailVerificationTokenStatus.NotFound);
             }));
         });
 
         Initially(
-            // NoticeOfDisputeSubmitted may occur before the RequestEmailVerification event is raised.
-            When(NoticeOfDisputeSubmitted)
-                .Then(context => _logger.LogDebug("Notice of dispute submitted and requires email verification"))
-                .Then(CaptureDisputeId)
-                .TransitionTo(Active),
-            When(RequestEmailVerification)
-                .Then(context => _logger.LogDebug("Email verification started"))
-                .Then(CreateToken)
-                .ThenAsync(SendVerificationEmail)
+            // when ever a new notice of dispute is requested to be submitted, create the instance
+            When(SubmitNoticeOfDispute)
+                .Then(Log)
                 .TransitionTo(Active));
 
         During(Active,
-            When(ResendEmailVerificationEmail)
-                .Then(context => _logger.LogDebug("Resend email verification"))
-                .ThenAsync(SendVerificationEmail),
             When(RequestEmailVerification)
-                .Then(context => _logger.LogDebug("Email verification restarted"))
+                .Then(Log)
                 .Then(RecreateTokenIfRequired)
                 .ThenAsync(SendVerificationEmail),
+            When(ResendEmailVerificationEmail)
+                .Then(Log)
+                .ThenAsync(SendVerificationEmail),
             When(SendEmailVerificationFailed)
-                .Then(context => _logger.LogInformation("Send email verification failed {Reason}", context.Message.Reason)),
+                .Then(Log),
             When(CheckEmailVerificationToken)
-                .Then(context => _logger.LogDebug("Checking verification token"))
+                .Then(Log)
                 .ThenAsync(CheckToken),
             When(NoticeOfDisputeSubmitted)
-                .Then(context => _logger.LogDebug("Notice of dispute submitted and requires email verification"))
+                .Then(Log)
                 .ThenAsync(HandleNoticeOfDisputeSubmitted),
             When(EmailVerificationSuccessful)
-                .Then(context => _logger.LogDebug("Email verification completed"))
+                .Then(Log)
         );
 
         // TODO: determine events that should finalize and delete this instance
 
         SetCompletedWhenFinalized();
-    }
-
-    private void CaptureDisputeId(BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context)
-    {
-        var state = context.Saga;
-        state.DisputeId = context.Message.DisputeId;
     }
 
     private void CreateToken(BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
@@ -132,14 +117,10 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
             else if (state.DisputeId != context.Message.DisputeId)
             {
                 // dont allow changing of the dispute id
-                _logger.LogWarning("Cannot change dispute id, current = {DisputeId}, requested = {RequestedDisputeId}. Dispute id will not be changed",
-                    state.DisputeId, context.Message.DisputeId);
+                LogInvalidDisputeId(context);
             }
         }
     }
-
-
-
 
     /// <summary>
     /// Recreates the email verification token if the email address has changed since the validation
@@ -178,6 +159,7 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
             Token = state.Token
         }, context.CancellationToken);
     }
+
     private async Task CheckToken(BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context)
     {
         // save the start time cause the time on both messages below should be the same
@@ -232,7 +214,7 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
             EmailAddress = state.EmailAddress,
             VerifiedAt = state.VerifiedAt.Value,
             IsUpdateEmailVerification = state.IsUpdateEmailVerification
-        }, context.CancellationToken);
+        }, context.CancellationToken).ConfigureAwait(false); ;
 
     }
 
@@ -242,7 +224,7 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         {
             CheckedAt = _clock.GetUtcNow(),
             Status = status
-        });
+        }).ConfigureAwait(false);
     }
 
     private async Task SendResponse(BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context, bool valid, DateTimeOffset when)
@@ -251,6 +233,96 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         {
             CheckedAt = when,
             Status = valid ? CheckEmailVerificationTokenStatus.Valid : CheckEmailVerificationTokenStatus.Invalid
-        });
+        }).ConfigureAwait(false);
+    }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Notice of dispute is being submitted")]
+    private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Email verification started")]
+    private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Resend email verification")]
+    private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, ResendEmailVerificationEmail> context);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Checking verification token")] 
+    private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Notice of dispute submitted and requires email verification")]
+    private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Email verification completed")]
+    private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, EmailVerificationSuccessful> context);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Send email verification failed")]
+    private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SendEmailVerificationFailed> context);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Count not find saga instance")]
+    private partial void LogNotFound([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] ConsumeContext<CheckEmailVerificationTokenRequest> context);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Cannot change dispute id")]
+    private partial void LogInvalidDisputeId([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context);
+
+
+    internal static class TagProvider
+    {
+        public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context)
+        {
+            collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+        }
+
+        public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
+        {
+            var state = context.Saga;
+            var message = context.Message;
+
+            collector.Add(nameof(message.NoticeOfDisputeGuid), message.NoticeOfDisputeGuid);
+
+            if (message.DisputeId is not null)
+            {
+                if (state.DisputeId is null)
+                {
+                    collector.Add(nameof(message.DisputeId), message.DisputeId);
+                }
+                else if (state.DisputeId != message.DisputeId)
+                {
+                    // cant change the dispute id
+                    collector.Add(nameof(state.DisputeId), state.DisputeId);
+                    collector.Add("RequestedDisputeId", message.DisputeId);
+                }
+            }
+        }
+
+        public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context)
+        {
+            collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+        }
+
+        public static void RecordTags(ITagCollector collector, ConsumeContext<CheckEmailVerificationTokenRequest> context)
+        {
+            collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+        }
+
+        public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, EmailVerificationSuccessful> context)
+        {
+            collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+        }
+
+        public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, ResendEmailVerificationEmail> context)
+        {
+            collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+        }
+
+        public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context)
+        {
+            collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+            collector.Add(nameof(context.Message.DisputeId), context.Message.DisputeId);
+        }
+
+        public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, SendEmailVerificationFailed> context)
+        {
+            collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+            collector.Add(nameof(context.Message.Reason), context.Message.Reason);
+        }
     }
 }

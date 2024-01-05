@@ -101,14 +101,14 @@ public static class LoggingExtensions
     public static async Task PublishWithLog<TMessage>(this IBus bus, ILogger logger, TMessage message, CancellationToken cancellationToken)
         where TMessage : class
     {
-        await bus.Publish(message, cancellationToken);
+        await bus.Publish(message, cancellationToken).ConfigureAwait(false);
         logger.LogDebug("Published message of type {MessageType}", typeof(TMessage).FullName);
     }
 
     public static async Task PublishWithLog<TMessage>(this ConsumeContext context, ILogger logger, TMessage message, CancellationToken cancellationToken)
         where TMessage : class
     {
-        await context.Publish(message, cancellationToken);
+        await context.Publish(message, cancellationToken).ConfigureAwait(false);
         logger.LogDebug("Published message of type {MessageType}", typeof(TMessage).FullName);
     }
 
