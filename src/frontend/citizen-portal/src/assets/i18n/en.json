@@ -80,7 +80,9 @@
       "sub_heading_2": "Review and Action",
       "desc_of_offence": "Description of Offence",
       "offence_amount": "Offence Amount",
+      "agree_offence_committed": "I agree I committed this offence(s) and would like to request a fine reduction and/or time to pay by supplying written reasons to the court for review.",
       "amount_due": "Amount Due",
+      "did_you_know_desc": "You can have your dispute heard by the court in person, or if you agree you committed the offence, you may supply written reasons requesting a fine reduction and/or time to pay without having to attend a court hearing. You can choose to use the written reasons option up to 5 business days before your hearing date.",
       "discount_if_paid_by": "Ticket Discount (if paid by",
       "dispute_yes_no": "I would like to dispute this offence",
       "for_this_offence": "Regarding Count",
@@ -90,8 +92,10 @@
       "offence_agreement_3": "Dispute the charge",
       "requests": "Which requests would you like to make?",
       "requestReduction": "I request a reduction of the ticketed amount",
+      "request_reduction": "I would like to request a fine reduction on this count.",
       "requestReductionReasonLabel": "Please enter your reasons for why you are requesting a fine reduction.",
       "requestMoreTime": "I request time to pay the ticketed amount",
+      "request_more_time": "I would like to request time to pay on this count.",
       "requestMoreTimeReasonLabel": "Please enter your reasons for why you are requesting more time to pay."
     },
     "additional": {
