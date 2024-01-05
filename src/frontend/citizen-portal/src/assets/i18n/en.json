@@ -99,17 +99,23 @@
       "what_to_do": "what would you like to do?"
     },
     "additional": {
+      "description": "The following additional information is requested and may be changed at any time. This information is used to schedule enough time for the court hearing and changes to the information may cause delays.",
       "heading": "Additional Information",
-      "interpreter": "I require a speaking interpreter at the hearing",
+      "interpreter_required": "I require a language interpreter at the hearing.",
       "interpreter_language": "Interpreter Language",
-      "lawyer": "I intend to be represented at the hearing by a lawyer",
+      "interpreter_language_desc": "If you don’t see your language listed, please contact your nearest court registry.",
+      "lawyer_note": "If you want a lawyer to represent you at your hearing, it is recommended that you consult with them as soon as possible so they can ensure their availability for a hearing date and provide you with advice.",
       "no_lawyer": "I do NOT intend to be represented at the hearing by a lawyer",
       "no_interpreter": "I do NOT require a speaking interpreter at the hearing",
       "no_witness": "I do NOT intend to call a witness",
       "note": "If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable.",
+      "represented_by_lawyer": "I intend to be represented by a lawyer or agent in court.",
+      "represented_by_lawyer_desc": "Enter lawyer contact details below.",
       "requests": "Please indicate if the following apply",
       "sub_heading": "The following questions apply to ALL counts on this ticket that are currently under dispute. If any of these are required for any count in the dispute, please select them.",
-      "witness": "I intend to call a witness"
+      "witness": "I intend to call a witness",
+      "witness_note1": "If you are calling witnesses please keep the following information in mind:",
+      "witness_note2": "You are responsible for ensuring they are aware of the hearing date. If necessary, you may change the number of witnesses who attend the court hearing."
     },
     "overview": {
       "address_information": "Address",

@@ -198,14 +198,13 @@
     </app-stepper-footer>
   </mat-step>
 
-  <!-- aditional -->
+  <!-- Aditional Information -->
   <mat-step [completed]="isAdditionalFormValid()">
-    <ng-template matStepLabel>Additional information</ng-template>
+    <ng-template matStepLabel>{{ "stepper.additional.heading" | translate }}</ng-template>
     <app-page>
       <app-page-header>
         <ng-container subHeader class="subheader-desc">
-          The following additional information is required and will apply to all counts on this ticket made with
-          that selection.
+          {{ "stepper.additional.description" | translate }}
         </ng-container>
       </app-page-header>
 
@@ -267,10 +266,10 @@
               <mat-checkbox class="me-4 mb-2" color="primary"
                 [checked]="additionalForm.value.represented_by_lawyer === RepresentedByLawyer.Y ? true:false"
                 (change)="onChangeRepresentedByLawyer($event)">
-                I intend to be represented by a lawyer in court.
+                {{ "stepper.additional.represented_by_lawyer" | translate }}
                 <span *ngIf="additionalForm.value.represented_by_lawyer === RepresentedByLawyer.Y"
                   style="font-weight: lighter;">
-                  Enter lawyer contact details below.
+                  {{ "stepper.additional.represented_by_lawyer_desc" | translate }}
                 </span>
               </mat-checkbox>
             </div>
@@ -344,7 +343,7 @@
               <mat-checkbox class="me-4 mb-2" color="primary"
                 [checked]="additionalForm.value.interpreter_required === InterpreterRequired.Y ? true:false"
                 (change)="onChangeInterpreterRequired($event)">
-                I require a language interpreter at the hearing.
+                {{ "stepper.additional.interpreter_required" | translate }}
               </mat-checkbox>
               <mat-error *ngIf="additionalForm.controls.interpreter_required.hasError('requiredIfTrue')">
                 {{ 'error.required' | translate }}
@@ -367,6 +366,7 @@
                   {{ "error.required" | translate }}
                 </mat-error>
               </mat-form-field>
+              <div class="interpreter_language_note">{{ "stepper.additional.interpreter_language_desc" | translate }}</div>
             </div>
           </div>
 
@@ -400,22 +400,14 @@
           <div class="col" *ngIf="additionalForm.value.__witness_present">
             <app-alert type="warning" icon="warning">
               <ng-container #alertContent class="alert-content">
-                <strong>If you are calling a witness please keep the following information in mind:</strong><br />
-                If the disputant or the disputant’s agent does not attend the court hearing, the court will treat
-                the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded
-                against the record of the disputant.
+                <strong>{{ "stepper.additional.witness_note1" | translate }}</strong><br/>{{ "stepper.additional.witness_note2" | translate }}
               </ng-container>
             </app-alert>
           </div>
           <div class="col" *ngIf="additionalForm.value.represented_by_lawyer === RepresentedByLawyer.Y">
             <app-alert type="warning" icon="warning">
               <ng-container #alertContent class="alert-content">
-                <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to
-                  submitting your Notice of Dispute. The lawyer’s schedule will have to be considered when a date
-                  is set for your hearing and many lawyers are not available on short notice. If you hire a lawyer 
-                  after submitting your dispute, please update your dispute information online.<br /> If you hire a
-                  lawyer they will generally give the Violation Ticket Center dates when they are available for
-                  your hearing.</strong>
+                <strong>{{ "stepper.additional.lawyer_note" | translate }}</strong>                  
               </ng-container>
             </app-alert>
           </div>
@@ -428,26 +420,7 @@
               </ng-container>
             </app-alert>
           </div>
-          <div class="col" *ngIf="additionalForm.value.__witness_present">
-            <app-alert type="warning" icon="warning">
-              <ng-container #alertContent class="alert-content">
-                <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing
-                  date and know the expectations of attending court.</strong>
-              </ng-container>
-            </app-alert>
-          </div>
         </section>
-
-        <div class="row">
-          <div class="col">
-            <app-alert type="info" icon="info">
-              <ng-container class="alert-content" #alertContent>
-                <strong>Important Notice </strong><br>
-                Certain Motor Vehicle Act offences have a minimum fine and cannot be reduced.
-              </ng-container>
-            </app-alert>
-          </div>
-        </div>
 
         <div class="alert alert-upload" *ngIf="mode === DisputeFormMode.UPDATE && fileData$">
           <div class="row">
