@@ -74,7 +74,6 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   maxWitnesses = 99;
 
   // Summary
-  declared = false;
   disableSave = false;
 
   // Upload
@@ -440,18 +439,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   onSubmitClicked() {
-    if (!this.declared) {
-      const data: DialogOptions = {
-        titleKey: "Warning",
-        actionType: "warn",
-        messageKey: `You must complete the declaration and tick the box before you can submit your dispute`,
-        actionTextKey: "Close",
-        cancelHide: true
-      };
-      this.dialog.open(ConfirmDialogComponent, { data });
-    } else {
-      this.submitDispute();
-    }
+    this.submitDispute();
   }
 
   private submitDispute() {

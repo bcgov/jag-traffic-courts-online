@@ -473,7 +473,7 @@
 
   <!-- summary -->
   <mat-step>
-    <ng-template matStepLabel>Ticket request overview</ng-template>
+    <ng-template matStepLabel>{{ "stepper.overview.heading" | translate }}</ng-template>
     <app-page *ngIf="noticeOfDispute">
       <app-page-header>
         <ng-container subHeader>
@@ -497,12 +497,6 @@
             <strong>You must complete the declaration and tick the box before you can submit your dispute</strong>
           </ng-container>
         </app-alert>
-      </div>
-
-      <div class="row">
-        <div class="col col-6 col-lg-8"></div>
-        <mat-checkbox [(ngModel)]="declared" color="primary" class="declared col col-6 col-lg-4">I declare all of the information
-          above is correct to the best of my knowledge.</mat-checkbox>
       </div>
 
       <app-stepper-footer [disableSave]="disableSave" (save)="onSubmitClicked()" (back)="disputeStepper.previous()"
