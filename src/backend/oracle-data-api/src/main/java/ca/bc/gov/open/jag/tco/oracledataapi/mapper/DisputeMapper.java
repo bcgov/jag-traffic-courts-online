@@ -96,6 +96,8 @@ public abstract class DisputeMapper extends BaseMapper {
 	@Mapping(source = "dispute.disputantOcrIssuesTxt", target = "disputantOcrIssues")
 	@Mapping(source = "dispute.systemDetectOcrIssuesYn", target = "systemDetectedOcrIssues")
 	@Mapping(source = "dispute.ocrTicketJsonFilenameTxt", target = "ocrTicketFilename")
+	@Mapping(source = "dispute.signatoryTypeCd", target = "signatoryType")
+	@Mapping(source = "dispute.signatoryNameTxt", target = "signatoryName")
 	// Map violation ticket data from ORDS to Oracle Data API violation ticket model
 	@Mapping(source = "entUserId", target = "violationTicket.createdBy")
 	@Mapping(source = "entDtm", target = "violationTicket.createdTs")
