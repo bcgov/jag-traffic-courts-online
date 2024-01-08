@@ -108,7 +108,7 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         // always save the ticket number
         state.TicketNumber = context.Message.TicketNumber;
 
-        // cant send email address, if one is not supplied
+        // cant send email address, if one is not supplied, they may have opted out of email communications
         if (string.IsNullOrEmpty(context.Message.EmailAddress))
         {
             LogNoEmailAddress(context);
@@ -116,14 +116,6 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         }
 
         state.EmailAddress = context.Message.EmailAddress;
-
-        bool optOutOfEmail = false; // TODO allow user opt out
-
-        if (optOutOfEmail)
-        {
-            LogOptOutOfEmail(context);
-            return;
-        }
 
         state.IsUpdateEmailVerification = false;
         state.Token = Guid.NewGuid();
@@ -255,11 +247,8 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         }).ConfigureAwait(false);
     }
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "No email associated with dispute, will not send email verification")]
+    [LoggerMessage(Level = LogLevel.Debug, Message = "No email associated with dispute. The disputant may have opted out of email communications, will not send email verification")]
     private partial void LogNoEmailAddress([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context);
-
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Disputant has opted out of email communications, will not send email verification")]
-    private partial void LogOptOutOfEmail([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Notice of dispute is being submitted")]
     private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context);
