@@ -500,6 +500,18 @@ public class Dispute extends Auditable<String> {
 	@Schema(maxLength = 100, nullable = true)
 	private String ocrTicketFilename;
 	
+	/**
+	 * Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.
+	 */
+	@Schema(description = "Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.", maxLength = 1, nullable = true)
+	private SignatoryType signatoryType;
+	
+	/**
+	 * Name of the person who signed the dispute.
+	 */
+	@Schema(description = "Name of the person who signed the dispute.", maxLength = 100, nullable = true)
+	private String signatoryName;
+	
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
 	@Schema(nullable = true)

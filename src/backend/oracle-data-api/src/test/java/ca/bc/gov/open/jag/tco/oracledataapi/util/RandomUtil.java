@@ -28,6 +28,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.SignatoryType;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
@@ -422,7 +423,8 @@ public class RandomUtil {
 		dispute.setViolationTicket(createViolationTicket(dispute));
 		dispute.setWitnessNo(Integer.valueOf(randomNumeric(3)));
 		dispute.setWorkPhoneNumber(randomNumeric(20));
-
+		dispute.setSignatoryType(SignatoryType.D);
+		dispute.setSignatoryName(randomAlphabetic(100));
 		// 36 character field
 		assertTrue(dispute.getNoticeOfDisputeGuid().length() == 36);
 

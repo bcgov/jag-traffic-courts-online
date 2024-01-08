@@ -1050,6 +1050,12 @@ components:
         representedByLawyerYn:
           type: string
           format: nullable
+        signatoryNameTxt:
+          type: string
+          format: nullable
+        signatoryTypeCd:
+          type: string
+          format: nullable
         submittedDt:
           type: string
           format: date-time

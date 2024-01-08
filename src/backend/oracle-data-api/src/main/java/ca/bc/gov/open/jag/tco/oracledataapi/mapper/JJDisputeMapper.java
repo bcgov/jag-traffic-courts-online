@@ -68,6 +68,8 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "occamDisputeId", target = "occamDisputeId")
 	@Mapping(source = "occamViolationTicketUpldId", target = "occamViolationTicketUpldId")
 	@Mapping(source = "offenceLocationTxt", target = "offenceLocation")
+	@Mapping(source = "signatoryNameTxt", target = "signatoryName")
+	@Mapping(source = "signatoryTypeCd", target = "signatoryType")
 	@Mapping(source = "submittedDt", target = "submittedTs")
 	@Mapping(source = "ticketNumberTxt", target = "ticketNumber")
 	@Mapping(source = "timeToPayReasonTxt", target = "timeToPayReason")
@@ -134,6 +136,8 @@ public abstract class JJDisputeMapper extends BaseMapper {
 	@Mapping(source = "appearInCourt", target = "requestCourtAppearanceYn")
 	@Mapping(source = "remarks", target = "disputeRemarks")
 	@Mapping(source = "status", target = "disputeStatusTypeCd", qualifiedByName="mapShortNamedEnum")
+	@Mapping(target = "signatoryNameTxt", ignore = true) // ignore back reference mapping
+	@Mapping(target = "signatoryTypeCd", ignore = true) // ignore back reference mapping
 	@Mapping(source = "submittedTs", target = "submittedDt")
 	@Mapping(source = "ticketNumber", target = "ticketNumberTxt")
 	@Mapping(source = "timeToPayReason", target = "timeToPayReasonTxt")
