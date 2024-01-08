@@ -96,6 +96,8 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputantOcrIssuesTxt", source = "disputantOcrIssues")
 	@Mapping(target = "dispute.systemDetectOcrIssuesYn", source = "systemDetectedOcrIssues")
 	@Mapping(target = "dispute.ocrTicketJsonFilenameTxt", source = "ocrTicketFilename")
+	@Mapping(target = "dispute.signatoryTypeCd", source = "signatoryType")
+	@Mapping(target = "dispute.signatoryNameTxt", source = "signatoryName")
 	// If these IDs are passed as null, then the actual string value of the field such as (drvLicIssuedIntlProvTxt) will be saved based on the logic in the database
 	@Mapping(target = "dispute.drvLicIssuedCtryId", source = "driversLicenceIssuedCountryId")
 	@Mapping(target = "dispute.drvLicIssuedProvSeqNo", source = "driversLicenceIssuedProvinceSeqNo")
