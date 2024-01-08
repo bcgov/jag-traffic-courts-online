@@ -401,6 +401,18 @@ public class JJDispute extends Auditable<String> {
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private JJDisputeAttendanceType disputantAttendanceType;
+	
+	/**
+	 * Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.
+	 */
+	@Schema(description = "Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.", maxLength = 1, nullable = true)
+	private SignatoryType signatoryType;
+	
+	/**
+	 * Name of the person who signed the dispute.
+	 */
+	@Schema(description = "Name of the person who signed the dispute.", maxLength = 100, nullable = true)
+	private String signatoryName;
 
 	/**
 	 * All the remarks for this jj dispute that are for internal use of JJs.
