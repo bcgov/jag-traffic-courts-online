@@ -17,10 +17,10 @@ public class VerifyEmailAddressState : SagaStateMachineInstance
     public Guid NoticeOfDisputeGuid => CorrelationId;
 
     [MaxLength(100)]
-    public string EmailAddress { get; set; } = string.Empty;
+    public string? EmailAddress { get; set; } = string.Empty;
 
     [MaxLength(50)]
-    public string TicketNumber { get; set; } = string.Empty;
+    public string? TicketNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// The token to validate.

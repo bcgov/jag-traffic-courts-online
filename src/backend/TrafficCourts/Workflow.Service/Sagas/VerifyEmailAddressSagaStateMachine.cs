@@ -73,6 +73,7 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
             // when ever a new notice of dispute is requested to be submitted, create the instance
             When(SubmitNoticeOfDispute)
                 .Then(Log)
+                .Then(CreateTokenAndSendVerificationEmail)
                 .TransitionTo(Active));
 
         During(Active,
@@ -100,11 +101,42 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         SetCompletedWhenFinalized();
     }
 
+    private async void CreateTokenAndSendVerificationEmail(BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context)
+    {
+        var state = context.Saga;
+
+        // always save the ticket number
+        state.TicketNumber = context.Message.TicketNumber;
+
+        // cant send email address, if one is not supplied
+        if (string.IsNullOrEmpty(context.Message.EmailAddress))
+        {
+            LogNoEmailAddress(context);
+            return;
+        }
+
+        state.EmailAddress = context.Message.EmailAddress;
+
+        bool optOutOfEmail = false; // TODO allow user opt out
+
+        if (optOutOfEmail)
+        {
+            LogOptOutOfEmail(context);
+            return;
+        }
+
+        state.IsUpdateEmailVerification = false;
+        state.Token = Guid.NewGuid();
+
+        // TCVP-1529 Saving a dispute should send a verification email to the Disputant.
+        await SendVerificationEmail(context);
+    }
+
     private void CreateToken(BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
     {
         var state = context.Saga;
-        state.EmailAddress = context.Message.EmailAddress;
         state.TicketNumber = context.Message.TicketNumber;
+        state.EmailAddress = context.Message.EmailAddress;
         state.IsUpdateEmailVerification = context.Message.IsUpdateEmailVerification;
         state.Token = Guid.NewGuid();
 
@@ -134,20 +166,7 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         }
     }
 
-    private async Task SendVerificationEmail(BehaviorContext<VerifyEmailAddressState, RequestEmailVerification> context)
-    {
-        var state = context.Saga;
-
-        await context.PublishWithLog(_logger, new SendEmailVerificationEmail
-        {
-            NoticeOfDisputeGuid = state.NoticeOfDisputeGuid,
-            EmailAddress = state.EmailAddress,
-            TicketNumber = state.TicketNumber,
-            Token = state.Token
-        }, context.CancellationToken);
-    }
-
-    private async Task SendVerificationEmail(BehaviorContext<VerifyEmailAddressState, ResendEmailVerificationEmail> context)
+    private async Task SendVerificationEmail<TMessage>(BehaviorContext<VerifyEmailAddressState, TMessage> context) where TMessage : class
     {
         var state = context.Saga;
 
@@ -235,6 +254,12 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
             Status = valid ? CheckEmailVerificationTokenStatus.Valid : CheckEmailVerificationTokenStatus.Invalid
         }).ConfigureAwait(false);
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "No email associated with dispute, will not send email verification")]
+    private partial void LogNoEmailAddress([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Disputant has opted out of email communications, will not send email verification")]
+    private partial void LogOptOutOfEmail([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Notice of dispute is being submitted")]
     private partial void Log([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] BehaviorContext<VerifyEmailAddressState, SubmitNoticeOfDispute> context);
