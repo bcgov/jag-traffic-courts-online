@@ -11,6 +11,7 @@ import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { TicketInformationDialogComponent } from '@shared/dialogs/ticket-information-dialog/ticket-information-dialog.component';
 
 @Component({
   selector: 'app-find-ticket',
@@ -24,7 +25,7 @@ export class FindTicketComponent implements OnInit {
   dialogRef: MatDialogRef<WaitForOcrDialogComponent>;
   analyzingTicket: boolean = false;
   notFound = false;
-  toolTipData = 'If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca. You must include your Given Name, Surname and Violation Ticket Number.';
+  toolTipData = 'If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca and include your Given Name, Surname and Violation Ticket Number.';  
   configuration = new Configuration();
 
   constructor(
@@ -90,8 +91,8 @@ export class FindTicketComponent implements OnInit {
     const data: DialogOptions = {
       titleKey: "Upload Ticket",
       actionType: "primary",
-      messageKey: `If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca.
-      You must include your Given Name, Surname and Violation Ticket Number. `,
+      messageKey: `If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca
+      and include your Given Name, Surname and Violation Ticket Number. `,
       actionTextKey: "Close",
       cancelHide: true
     };
@@ -102,5 +103,9 @@ export class FindTicketComponent implements OnInit {
     this.dialog.open(ImageRequirementsDialogComponent, {
       width: '600px',
     });
+  }
+
+  onViewTicketInformation() {
+    return this.dialog.open(TicketInformationDialogComponent, {});
   }
 }

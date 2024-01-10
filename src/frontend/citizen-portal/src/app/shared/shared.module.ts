@@ -37,6 +37,7 @@ import { ImageTicketNotFoundDialogComponent } from './dialogs/image-ticket-not-f
 import { DisputeStatusDialogComponent } from './dialogs/dispute-status-dialog/dispute-status-dialog.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TicketInformationDialogComponent } from './dialogs/ticket-information-dialog/ticket-information-dialog.component';
 
 @NgModule({
     declarations: [
@@ -68,6 +69,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         ResolutionFooterComponent,
         ResolutionHeaderComponent,
         AddressAutocompleteComponent,
+        TicketInformationDialogComponent
     ],
     imports: [
         CommonModule,

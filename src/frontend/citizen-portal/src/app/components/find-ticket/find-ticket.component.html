@@ -1,8 +1,15 @@
 <app-page>
   <app-page-header>
-    <ng-container header>Start a Traffic Ticket Dispute</ng-container>
+    <ng-container header>{{ "label.start_ticket_dispute" | translate }}</ng-container>
     <ng-container subHeader>
-      Enter your ticket number.
+      {{ "label.enter_ticket_information" | translate }} 
+      <a class="view-link" (click)="onViewTicketInformation()">
+        <mat-icon class="tool-tip">info</mat-icon>
+      </a><br>
+      <a class="view-link" (click)="onViewTicketExample()">
+        <img class="me-2" src="/assets/ticket-example-icon.svg" />
+        <span class="view-link-text">{{ "label.view_ticket_examples" | translate }}</span>
+      </a>
     </ng-container>
   </app-page-header>
 
@@ -10,8 +17,8 @@
     <div class="col">
       <app-alert type="danger" icon="error">
         <ng-container #alertContent class="alert-content">
-          <strong>Ticket not found.</strong>
-          <p>Please take photo or upload image.</p>
+          <strong>{{ "label.ticket_not_found" | translate }}</strong>
+          <p>{{ "label.take_photo_upload_image" | translate }}</p>
         </ng-container>
       </app-alert>
     </div>
@@ -44,15 +51,7 @@
           <span class="view-link-text">View image requirements</span>
         </a>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <a class="view-link" (click)="onViewTicketExample()">
-          <img class="me-2" src="/assets/ticket-example-icon.svg" />
-          <span class="view-link-text">View ticket examples</span>
-        </a>
-      </div>
-    </div>
+    </div>    
     <div class="or-separator">
       <hr><span>OR</span>
       <hr>
@@ -145,13 +144,7 @@
             <img class="me-2" src="/assets/image-requirements-icon.svg" />
             <span class="view-link-text">View image requirements</span>
           </a>
-        </div>
-        <div class="col">
-          <a class="view-link" (click)="onViewTicketExample()">
-            <img class="me-2" src="/assets/ticket-example-icon.svg" />
-            <span class="view-link-text">View ticket examples</span>
-          </a>
-        </div>
+        </div>        
       </div>
     </div>
   </div>

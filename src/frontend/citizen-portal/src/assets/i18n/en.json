@@ -164,9 +164,12 @@
     "agent_surname": "Agent or Other surname",
     "amount_due": "Amount Due",
     "back": "Back",
+    "close": "Close",
+    "contact": "Contact",
     "count_number": "Count #",
     "desc_of_offence": "Description of Offence",
     "email_address": "Email address (click below to be contacted by regular mail)",
+    "enter_ticket_information": "Enter your ticket information",
     "find_another_ticket": "Find Another Ticket",
     "for_vehicle": "for Vehicle",
     "initiate_dispute": "Initiate Dispute",
@@ -180,6 +183,9 @@
     "start_ticket_dispute": "Start a ticket dispute",
     "status": "Status",
     "surname_corporate_name": "Surname or Corporate Name",
+    "take_photo_upload_image": "Please take photo or upload image.",
+    "ticket_not_found": "Ticket not found.",
+    "view_ticket_examples": "View ticket examples",
     "violation_ticket_number": "Violation Ticket Number",
     "violation_ticket_number_hint": "A Violation Ticket Number is 2 letters and 8 numbers",
     "violation_time": "Violation Time"
@@ -210,5 +216,28 @@
     "confirm": "Yes, create ticket",
     "heading": "Create your traffic ticket",
     "message": "Are you sure the information is correct and you want to create this ticket?"
+  },
+  "find_ticket":{
+    "understand_ticket": "Understand your ticket",
+    "understand_ticket_text_1": "Use our",
+    "understand_ticket_text_2": "self-guided tool",
+    "understand_ticket_text_3": "to explore your ticket options.",
+    "information": "Your information is collected by Court Services Branch under sections 26(c) of the Freedom of Information and Protection of Privacy Act for the purpose of verifying your identity when you access your dispute using Traffic Court Online. Should you have any questions about the collection of your personal information, please contact:"
+  },
+  "support":{
+    "looking_support": "Looking for more support?",
+    "support_text": "Please note emails will be processed and responded to Monday - Friday (excluding statutory holidays) from 9:00 AM to 4:00 PM."
+  },
+  "wait_ocr_dialog":{
+    "reading_ticket": "Reading ticket...",
+    "text_1": "Please wait this could take around a minute...",
+    "text_2": "If you do not get a result, please contact support at"
+  },
+  "ticket_information_dialog": {
+    "text_1": "If you do not get a ticket search result",
+    "text_2": "If you have a handwritten ticket that starts with an A, you need to create your online ticket. Upload an image of your ticket to start. Follow the prompts.",
+    "text_3": "If you have an Intersection Safety Camera or eTicket and you do not get a result with the information on your ticket, contact support at",
+    "text_4": "If you lost your ticket",
+    "text_5": "If you have lost your physical ticket, call the police detachment you received the ticket from (for intersection camera tickets call the Intersection Safety Camera Program), to get a copy of your ticket."
   }
 }
