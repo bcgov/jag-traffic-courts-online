@@ -189,6 +189,16 @@ export class AuthService {
   checkRole(role: string): boolean {
     return this.keycloak.isUserInRole(role, this.site);
   }
+  
+  /**
+   * Check if the user has any of the specified roles.
+   *
+   * @param {string[]} roles - An array of roles to check.
+   * @return {boolean} - true if the user has any of the specified roles, false otherwise.
+   */
+  checkRoles(roles: string[]): boolean {
+    return roles.some(role => this.keycloak.isUserInRole(role, this.site));
+  }
 
   getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {
     return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
