@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatLegacyDialog as MatDialog, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { NgxMaterialLegacyModule as NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.legacy.module';
 
 import { TicketInformationDialogComponent } from './ticket-information-dialog.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('TicketInformationDialogComponent', () => {
   let component: TicketInformationDialogComponent;
@@ -9,6 +11,7 @@ describe('TicketInformationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [NgxMaterialModule, TranslateModule.forRoot()],
       declarations: [TicketInformationDialogComponent],
       providers: [
         {
