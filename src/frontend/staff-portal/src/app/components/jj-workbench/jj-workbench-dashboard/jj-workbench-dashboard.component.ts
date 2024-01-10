@@ -8,6 +8,7 @@ import { AppState } from 'app/store';
 import { Store } from '@ngrx/store';
 import * as JJDisputeStore from "app/store/jj-dispute";
 import { BusyService } from '@core/services/busy.service';
+import { UserGroup } from '@shared/enums/user-group.enum';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -22,9 +23,13 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   showDispute: boolean = false;
   tabSelected = new FormControl(0);
   jjPage: string = "WR Assignments";
-  jjAdminRole: boolean = false;
   jjDisputeInfo: JJDispute;
   isInfoEditable: boolean = false;
+
+  hasAssignmentsPermission: boolean = false;
+  hasWRInboxPermission: boolean = false;
+  hasHearingInboxPermission: boolean = false;
+  hasDCFPermission: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -38,7 +43,12 @@ export class JjWorkbenchDashboardComponent implements OnInit {
     this.busyService.busy$.subscribe(i => this.busy = i);
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
-        this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
+        
+        // TCVP-1981 - only show tabs to users with permissions
+        this.hasAssignmentsPermission = this.authService.checkRoles([UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF]);
+        this.hasWRInboxPermission = this.authService.checkRoles([UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF]);
+        this.hasHearingInboxPermission = this.authService.checkRoles([UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF]);
+        this.hasDCFPermission = this.authService.checkRoles([UserGroup.ADMIN_JUDICIAL_JUSTICE, UserGroup.JUDICIAL_JUSTICE, UserGroup.SUPPORT_STAFF]);
       }
     })
     this.data$ = this.store.select(state => state.jjDispute.data).pipe(filter(i => !!i));
