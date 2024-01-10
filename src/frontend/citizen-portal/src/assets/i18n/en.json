@@ -128,6 +128,7 @@
       "certify": "I certify that all information provided is true and complete. I understand it is an offence under the law to knowingly provide false or misleading information.",
       "count": "Count",
       "count_information": "Count Information",
+      "count_information_notguilty_text": "I want my dispute heard at an in-person court hearing. I do not agree I committed this offence(s), but if found guilty, I may request a fine reduction and/or time to pay.",
       "disputant_information": "Disputant Information",
       "heading": "Ticket Dispute Request Overview",
       "note_detail": "Once it has been submitted, it cannot be updated.",
@@ -218,11 +219,11 @@
     "message": "Are you sure the information is correct and you want to create this ticket?"
   },
   "find_ticket":{
+    "information": "Your information is collected by Court Services Branch under sections 26(c) of the Freedom of Information and Protection of Privacy Act for the purpose of verifying your identity when you access your dispute using Traffic Court Online. Should you have any questions about the collection of your personal information, please contact:",
     "understand_ticket": "Understand your ticket",
     "understand_ticket_text_1": "Use our",
     "understand_ticket_text_2": "self-guided tool",
-    "understand_ticket_text_3": "to explore your ticket options.",
-    "information": "Your information is collected by Court Services Branch under sections 26(c) of the Freedom of Information and Protection of Privacy Act for the purpose of verifying your identity when you access your dispute using Traffic Court Online. Should you have any questions about the collection of your personal information, please contact:"
+    "understand_ticket_text_3": "to explore your ticket options."    
   },
   "support":{
     "looking_support": "Looking for more support?",

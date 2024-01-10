@@ -128,6 +128,7 @@
       "certify": "Je certifie que toutes les informations fournies sont véridiques et complètes. Je comprends que le fait de fournir sciemment des informations fausses ou trompeuses constitue une infraction à la loi.",
       "count": "Infraction",
       "count_information": "Information sur l'Infraction",
+      "count_information_notguilty_text": "Je veux que mon litige soit entendu lors d’une audience judiciaire en personne. Je ne reconnais pas avoir commis cette ou ces infractions, mais si je suis reconnu coupable, je peux demander une réduction de l'amende et/ou un délai de paiement.",
       "disputant_information": "Informations sur le Litige",
       "heading": "Aperçu des demandes de contestation de ticket",
       "note_detail": "Une fois soumis, il ne peut pas être mis à jour.",
@@ -218,11 +219,11 @@
     "message": "Etes-vous sûr que les informations sont correctes et souhaitez-vous créer ce ticket ?"
   },
   "find_ticket":{
+    "information": "Vos informations sont collectées par la Direction des services judiciaires en vertu de l'article 26 (c) de la Loi sur l'accès à l'information et la protection de la vie privée dans le but de vérifier votre identité lorsque vous accédez à votre litige en utilisant Traffic Court Online. Si vous avez des questions concernant la collecte de vos informations personnelles, veuillez contacter :",
     "understand_ticket": "Comprendre votre billet",
     "understand_ticket_text_1": "Utilisez notre",
     "understand_ticket_text_2": "outil autoguidé",
-    "understand_ticket_text_3": "pour explorer vos options de billets.",
-    "information": "Vos informations sont collectées par la Direction des services judiciaires en vertu de l'article 26 (c) de la Loi sur l'accès à l'information et la protection de la vie privée dans le but de vérifier votre identité lorsque vous accédez à votre litige en utilisant Traffic Court Online. Si vous avez des questions concernant la collecte de vos informations personnelles, veuillez contacter :"
+    "understand_ticket_text_3": "pour explorer vos options de billets."    
   },
   "support":{
     "looking_support": "Vous cherchez plus de soutien?",
