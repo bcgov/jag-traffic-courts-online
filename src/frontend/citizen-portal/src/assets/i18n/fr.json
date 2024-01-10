@@ -182,7 +182,13 @@
     "surname_corporate_name": "Nom de Famille ou Nom de la Société",
     "violation_ticket_number": "Numéro de Ticket de Violation",
     "violation_ticket_number_hint": "Un numéro de ticket de violation est composé de 2 lettres et 8 chiffres",
-    "violation_time": "Temps de Biolation"
+    "violation_time": "Temps de Biolation",
+    "enter_ticket_information": "Entrez vos informations de billet",
+    "view_ticket_examples": "Voir des exemples de billets",
+    "ticket_not_found": "Billet non trouvé.",
+    "take_photo_upload_image": "Veuillez prendre une photo ou télécharger une image.",
+    "contact": "Contacter",
+    "close": "Fermer"
   },
   "submit_confirmation": {
     "cancel": "Annuler",
@@ -210,5 +216,28 @@
     "confirm": "Oui, créer un ticket",
     "heading": "Créez votre ticket de circulation",
     "message": "Etes-vous sûr que les informations sont correctes et souhaitez-vous créer ce ticket ?"
+  },
+  "find_ticket":{
+    "understand_ticket": "Comprendre votre billet",
+    "understand_ticket_text_1": "Utilisez notre",
+    "understand_ticket_text_2": "outil autoguidé",
+    "understand_ticket_text_3": "pour explorer vos options de billets.",
+    "information": "Vos informations sont collectées par la Direction des services judiciaires en vertu de l'article 26 (c) de la Loi sur l'accès à l'information et la protection de la vie privée dans le but de vérifier votre identité lorsque vous accédez à votre litige en utilisant Traffic Court Online. Si vous avez des questions concernant la collecte de vos informations personnelles, veuillez contacter :"
+  },
+  "support":{
+    "looking_support": "Vous cherchez plus de soutien?",
+    "support_text": "Veuillez noter que les courriels seront traités et répondus du lundi au vendredi (sauf les jours fériés) de 9h00 à 16h00."
+  },
+  "wait_ocr_dialog":{
+    "reading_ticket": "Billet de lecture...",
+    "text_1": "Veuillez patienter, cela peut prendre environ une minute...",
+    "text_2": "Si vous n'obtenez pas de résultat, veuillez contacter le support au"
+  },
+  "ticket_information_dialog": {
+    "text_1": "Si vous n'obtenez pas de résultat de recherche de ticket",
+    "text_2": "Si vous disposez d’un ticket manuscrit commençant par un A, vous devez créer votre ticket en ligne. Téléchargez une image de votre billet pour commencer. Suivez les instructions.",
+    "text_3": "Si vous disposez d'un radar aux intersections ou d'un billet électronique et que vous n'obtenez aucun résultat avec les informations figurant sur votre billet, contactez l'assistance au",
+    "text_4": "Si vous avez perdu votre billet",
+    "text_5": "Si vous avez perdu votre ticket physique, appelez le détachement de police auprès duquel vous avez reçu le ticket (pour les tickets de caméra aux intersections, appelez le programme de radars aux intersections) pour obtenir une copie de votre ticket."
   }
 }
