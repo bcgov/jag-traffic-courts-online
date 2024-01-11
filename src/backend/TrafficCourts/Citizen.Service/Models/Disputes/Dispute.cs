@@ -146,6 +146,18 @@ public class Dispute : DisputantContactInformation
     public string? FineReductionReason { get; set; }
 
     /// <summary>
+    /// Name of the person who signed the dispute.
+    /// </summary>
+    [JsonPropertyName("signatory_name")]
+    public string? SignatoryName { get; set; }
+
+    /// <summary>
+    /// Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.
+    /// </summary>
+    [JsonPropertyName("signatory_type")]
+    public DisputeSignatoryType? SignatoryType { get; set; }
+
+    /// <summary>
     /// The reason that disputant declares for requesting more time to pay the amount on the violation ticket.
     /// </summary>
     [JsonPropertyName("time_to_pay_reason")]

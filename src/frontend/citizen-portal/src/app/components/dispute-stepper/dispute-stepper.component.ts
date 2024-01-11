@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy, Input, Output, EventEmitter, ElementRef } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { MatLegacyCheckboxChange as MatCheckboxChange } from "@angular/material/legacy-checkbox";
 import { MatLegacyDialog as MatDialog } from "@angular/material/legacy-dialog";
@@ -12,7 +12,7 @@ import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
-import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, DisputeInterpreterRequired, DisputeContactTypeCd } from "app/api";
+import { ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, Language, ViolationTicketCount, DisputeRequestCourtAppearanceYn, DisputeInterpreterRequired, DisputeContactTypeCd, DisputeSignatoryType } from "app/api";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { NoticeOfDisputeService, NoticeOfDispute, NoticeOfDisputeFormGroup, CountsActions, DisputeCount, Count, DisputeCountFormGroup } from "app/services/notice-of-dispute.service";
 import { LookupsService } from "app/services/lookups.service";
@@ -55,6 +55,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   RequestTimeToPay = DisputeCountRequestTimeToPay;
   RequestReduction = DisputeCountRequestReduction;
   InterpreterRequired = DisputeInterpreterRequired;
+  SignatoryType = DisputeSignatoryType;
 
   form: NoticeOfDisputeFormGroup;
   requestCourtAppearanceFormControl: FormControl<DisputeRequestCourtAppearanceYn> = new FormControl(null, [Validators.required]);
@@ -63,6 +64,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   legalRepresentationForm: NoticeOfDisputeFormGroup;
   noticeOfDispute: NoticeOfDispute;
   matcher = new FormErrorStateMatcher();
+
+  // Form for Dispuntant/Agent Signature Panel
+  signatureBoxForm = new FormGroup({
+    signatory_type: new FormControl<DisputeSignatoryType>(null, [Validators.required]),
+    disputant_signatory_name: new FormControl(null, [Validators.maxLength(100), Validators.required]),
+    agent_signatory_name: new FormControl(null, [Validators.maxLength(100), Validators.required]),
+  });
 
   // TODO: use ViewChild to detect instead of hardcode
   countStepIndex: number = 1;
@@ -202,6 +210,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.legalRepresentationForm.reset();
     }
 
+    var signatoryName = null;
+    if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.D) {
+      signatoryName = this.signatureBoxForm.get('disputant_signatory_name');
+    } else if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.A) {
+      signatoryName = this.signatureBoxForm.get('agent_signatory_name');
+    }
+
     let fileData: FileMetadata[] = [];
     this.fileData$?.subscribe(i => { fileData = i; })
     this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.ticket, {
@@ -209,6 +224,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       ...this.additionalForm?.value,
       ...this.legalRepresentationForm?.value,
       request_court_appearance: this.requestCourtAppearanceFormControl.value,
+      signatory_name: signatoryName?.value,
+      signatory_type: this.signatureBoxForm?.value.signatory_type,
       dispute_counts: this.counts.map(i => i.form.value),
       file_data: fileData
     });
@@ -243,12 +260,21 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.Y) {
           valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
         } else if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N) {
-          valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
+          valid = valid && (this.mode === this.DisputeFormMode.UPDATE || this.isSignatureFormValid) && 
+          ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
         }
         allCountsValid = allCountsValid && (valid || countForm.value.__skip);
       }
     });
     return allCountsValid && (this.mode === this.DisputeFormMode.UPDATE || !this.isAllCountsSkipped);
+  }
+
+  private get isSignatureFormValid(): boolean {
+    if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.D) {
+      return this.signatureBoxForm?.get('disputant_signatory_name')?.valid;
+    } else if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.A) {
+      return this.signatureBoxForm?.get('agent_signatory_name')?.valid;
+    }
   }
 
   isAdditionalFormValid(): boolean {
@@ -260,13 +286,26 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   }
 
   onChangeRequestCourtAppearance(value: DisputeRequestCourtAppearanceYn) {
-    this.noticeOfDispute.request_court_appearance = value;
-    this.counts.forEach(count => {
-      count.form.controls.plea_cd.setValue(null);
-      count.form.controls.request_reduction.setValue(this.RequestReduction.N);
-      count.form.controls.request_time_to_pay.setValue(this.RequestTimeToPay.N);
-      count.form.controls.__skip.setValue(false);
-    })
+    if (typeof value !== "undefined") {
+      this.noticeOfDispute.request_court_appearance = value;
+      this.counts.forEach(count => {
+        count.form.controls.plea_cd.setValue(null);
+        count.form.controls.request_reduction.setValue(this.RequestReduction.N);
+        count.form.controls.request_time_to_pay.setValue(this.RequestTimeToPay.N);
+        count.form.controls.__skip.setValue(false);
+      })
+      if (value === this.RequestCourtAppearance.Y) {
+        this.signatureBoxForm.controls.signatory_type.setValue(null);
+        this.signatureBoxForm.controls.disputant_signatory_name.setValue(null);
+        this.signatureBoxForm.controls.agent_signatory_name.setValue(null);
+        this.signatureBoxForm.controls.signatory_type.clearValidators();
+        this.signatureBoxForm.controls.disputant_signatory_name.clearValidators();
+        this.signatureBoxForm.controls.agent_signatory_name.clearValidators();
+        this.signatureBoxForm.controls.signatory_type.updateValueAndValidity();
+        this.signatureBoxForm.controls.disputant_signatory_name.updateValueAndValidity();
+        this.signatureBoxForm.controls.agent_signatory_name.updateValueAndValidity();
+      }
+    }
   }
 
   onChangeRepresentedByLawyer(event: MatCheckboxChange) {
@@ -312,6 +351,30 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.additionalForm.controls.witness_no.clearValidators();
       this.additionalForm.controls.witness_no.updateValueAndValidity();
     }
+  }
+
+  /**
+   * Handles the change of the signature type.
+   *
+   * @param {DisputeSignatoryType} value - The new value of the signature type.
+   */
+  onChangeSignatureType(value: DisputeSignatoryType) {
+    if (value === this.SignatoryType.D) {
+      this.signatureBoxForm.controls.disputant_signatory_name.setValidators([Validators.maxLength(100), Validators.required]);
+      this.signatureBoxForm.controls.agent_signatory_name.setValue(null);
+      this.signatureBoxForm.controls.agent_signatory_name.clearValidators();
+      this.signatureBoxForm.controls.agent_signatory_name.disable();
+      this.signatureBoxForm.controls.disputant_signatory_name.enable();
+    } else if (value === this.SignatoryType.A) {
+      this.signatureBoxForm.controls.agent_signatory_name.setValidators([Validators.maxLength(100), Validators.required]);
+      this.signatureBoxForm.controls.disputant_signatory_name.setValue(null);
+      this.signatureBoxForm.controls.disputant_signatory_name.clearValidators();
+      this.signatureBoxForm.controls.disputant_signatory_name.disable();
+      this.signatureBoxForm.controls.agent_signatory_name.enable();
+    }
+
+    this.signatureBoxForm.controls.agent_signatory_name.updateValueAndValidity();
+    this.signatureBoxForm.controls.disputant_signatory_name.updateValueAndValidity();
   }
 
   getToolTipDEata(data) {

@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using System.Text.Json.Serialization;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Messaging.MessageContracts;
 
@@ -267,6 +268,16 @@ public class SubmitNoticeOfDispute
     /// The description of the issue with OCR ticket if the citizen has detected any.
     /// </summary>
     public string? DisputantOcrIssues { get; set; }
+
+    /// <summary>
+    /// Name of the person who signed the dispute.
+    /// </summary>
+    public string? SignatoryName { get; set; }
+
+    /// <summary>
+    /// Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.
+    /// </summary>
+    public DisputeSignatoryType? SignatoryType { get; set; }
 
     /// <summary>
     /// Violation Ticket details
