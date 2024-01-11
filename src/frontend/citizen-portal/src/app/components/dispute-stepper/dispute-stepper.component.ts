@@ -260,12 +260,13 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.Y) {
           valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
         } else if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N) {
-          valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
+          valid = valid && (this.mode === this.DisputeFormMode.UPDATE || this.isSignatureFormValid) && 
+          ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
         }
         allCountsValid = allCountsValid && (valid || countForm.value.__skip);
       }
     });
-    return allCountsValid && (this.mode === this.DisputeFormMode.UPDATE || !this.isAllCountsSkipped) && (this.mode === this.DisputeFormMode.UPDATE || this.isSignatureFormValid);
+    return allCountsValid && (this.mode === this.DisputeFormMode.UPDATE || !this.isAllCountsSkipped);
   }
 
   private get isSignatureFormValid(): boolean {
