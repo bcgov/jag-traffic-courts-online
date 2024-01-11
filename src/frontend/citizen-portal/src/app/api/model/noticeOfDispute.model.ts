@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
+import { DisputeSignatoryType } from './disputeSignatoryType.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
@@ -184,6 +185,11 @@ export interface NoticeOfDispute {
      * The reason that disputant declares for requesting a fine reduction.
      */
     fine_reduction_reason?: string | null;
+    /**
+     * Name of the person who signed the dispute.
+     */
+    signatory_name?: string | null;
+    signatory_type?: DisputeSignatoryType;
     /**
      * The reason that disputant declares for requesting more time to pay the amount on the violation ticket.
      */

@@ -11,6 +11,7 @@ export * from './disputeDisputantDetectedOcrIssues.model';
 export * from './disputeInterpreterRequired.model';
 export * from './disputeRepresentedByLawyer.model';
 export * from './disputeRequestCourtAppearanceYn.model';
+export * from './disputeSignatoryType.model';
 export * from './disputeStatus.model';
 export * from './disputeSystemDetectedOcrIssues.model';
 export * from './field.model';
