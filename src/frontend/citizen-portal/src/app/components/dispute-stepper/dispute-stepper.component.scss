@@ -110,6 +110,20 @@ hr {
   width: 200px !important;
 }
 
+.signature-box {
+  margin: 5px 15px;
+}
+
+.custom-column {
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.custom-row {
+  margin-top: 10px;
+}
+
 ::ng-deep {
   .alert-info-text-color .alert-warning {
     color: rgb(255, 136, 0) !important;
