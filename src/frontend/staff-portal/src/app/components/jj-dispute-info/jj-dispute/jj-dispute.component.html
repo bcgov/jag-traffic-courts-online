@@ -467,7 +467,7 @@
           </span>
         </ng-container>
         <!-- Signature Panel -->
-        <h4>{{ "label.signature" | translate }}</h4>
+        <h4 *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">{{ "label.signature" | translate }}</h4>
         <div class="container signature-box" *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">
           <div class="row justify-content-start custom-row">
             <div class="col-2 custom-column">
