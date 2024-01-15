@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { DisputeContactTypeCd } from './disputeContactTypeCd.model';
+import { DisputeSignatoryType } from './disputeSignatoryType.model';
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
 import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
 import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
@@ -91,6 +92,8 @@ export interface Dispute {
     disputantOcrIssues?: string | null;
     systemDetectedOcrIssues?: DisputeSystemDetectedOcrIssues;
     ocrTicketFilename?: string | null;
+    signatoryType?: DisputeSignatoryType;
+    signatoryName?: string | null;
     violationTicket?: ViolationTicket;
     disputeCounts?: Array<DisputeCount> | null;
     additionalProperties?: { [key: string]: any; } | null;

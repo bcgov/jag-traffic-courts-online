@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JJDisputeSignatoryType } from './jJDisputeSignatoryType.model';
 import { JJDisputeRemark } from './jJDisputeRemark.model';
 import { JJDisputeNoticeOfHearingYn } from './jJDisputeNoticeOfHearingYn.model';
 import { JJDisputeDisputantAttendanceType } from './jJDisputeDisputantAttendanceType.model';
@@ -92,6 +93,8 @@ export interface JJDispute {
     interpreterLanguageCd?: string | null;
     witnessNo?: number | null;
     disputantAttendanceType?: JJDisputeDisputantAttendanceType;
+    signatoryType?: JJDisputeSignatoryType;
+    signatoryName?: string | null;
     remarks?: Array<JJDisputeRemark> | null;
     jjDisputedCounts?: Array<JJDisputedCount> | null;
     jjDisputeCourtAppearanceRoPs?: Array<JJDisputeCourtAppearanceRoP> | null;

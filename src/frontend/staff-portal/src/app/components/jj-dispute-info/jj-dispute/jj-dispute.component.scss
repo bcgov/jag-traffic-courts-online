@@ -169,6 +169,17 @@ label {
   }
 }
 
+.signature-box {
+  display: inline-block;
+  margin-bottom: 0.9375rem;
+}
+
+.custom-column {
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
 // FIXME: ng-deep applies global styles, not component-specific styles. But these styles should be global anyway. Move to main scss.
 ::ng-deep {
   .heading-hr {

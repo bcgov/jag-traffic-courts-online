@@ -466,6 +466,27 @@
             <h3>Written Reasons</h3>
           </span>
         </ng-container>
+        <!-- Signature Panel -->
+        <h4 *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">{{ "label.signature" | translate }}</h4>
+        <div class="container signature-box" *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">
+          <div class="row justify-content-start custom-row">
+            <div class="col-2 custom-column">
+              <strong>{{ "label.signatory_option_1" | translate }}</strong>
+            </div>
+            <div class="col-4 custom-column">
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">{{ lastUpdatedJJDispute.signatoryName }}</span>
+            </div>
+          </div>
+          <div class="row justify-content-start">
+            <div class="col-2 custom-column">
+              <strong>{{ "label.signatory_option_2" | translate }}</strong>
+            </div>
+            <div class="col-4 custom-column">
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">{{ lastUpdatedJJDispute.signatoryName }}</span>
+            </div>
+          </div>
+        </div>
+        <!-- Signature Panel End -->
         <div>
           <h4><b>Fine Reduction</b>
             <span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
