@@ -101,7 +101,14 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
                     if (field.Type is not null && field.Type.Equals("SelectionMark"))
                     {
                         // Special case, SelectionMarks. These, it would seem, never populate the ValueData.Text property - always null. We need to extract the value of the field via other means.
-                        field.Value = Enum.GetName(extractedField.Value.AsSelectionMarkState())?.ToLower();
+                        try {
+                            field.Value = Enum.GetName(extractedField.Value.AsSelectionMarkState())?.ToLower();
+                        }
+                        catch (Exception)
+                        {
+                            // Could not parse as a SelectionMarkState. When the confidence is so low, there is no valueSelectionMark attribute, so assume "unselected".
+                            field.Value = "unselected";
+                        }
                     }
                     else 
                     {
