@@ -41,7 +41,7 @@ public ocrMessages: OCRMessageToDisplay[] = [];
 
   // act section(subsection)(paragraph)(subparagraph)
   public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
-    if (!violationTicketCount) return "";
+    if (!violationTicketCount || !violationTicketCount.section) return "";
 
     let ticketDesc = violationTicketCount.actOrRegulationNameCode;
     if (!ticketDesc) {
