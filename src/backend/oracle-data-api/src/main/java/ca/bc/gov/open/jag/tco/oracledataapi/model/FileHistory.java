@@ -44,13 +44,20 @@ public class FileHistory extends Auditable<String> {
 	@Schema(nullable = false)
 	@NotNull
 	private AuditLogEntryType auditLogEntryType;
-
+	
 	/**
 	 * description
 	 */
 	@Column(length = 500)
 	@Schema(nullable = true)
 	private String description;
+
+	/**
+	 * VTC staff's comment in Ticket Validation
+	 */
+	@Column(length = 500)
+	@Schema(description = "VTC staff's comment in Ticket Validation", nullable = true)
+	private String comment;
 	
 	/**
 	 * Action By User

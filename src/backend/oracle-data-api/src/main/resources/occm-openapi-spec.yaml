@@ -1333,6 +1333,9 @@ components:
           type: string
         actionByApplicationUser:
           type: string
+        commentTxt:
+          type: string
+          format: nullable
       allOf:
         - $ref: '#/components/schemas/AuditBase'
     OutgoingEmail:
