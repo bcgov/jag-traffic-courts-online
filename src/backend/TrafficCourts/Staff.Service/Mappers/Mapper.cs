@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Xml.Linq;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 
@@ -134,10 +135,17 @@ public class Mapper
 
     public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser)
     {
+        return ToFileHistoryWithNoticeOfDisputeId(noticeOfDisputeId, auditLogEntryType, actionByApplicationUser, null!);
+    }
+
+        public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser, string comment)
+    {
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
         fileHistoryRecord.AuditLogEntryType = auditLogEntryType;
         fileHistoryRecord.ActionByApplicationUser = actionByApplicationUser;
+        // TCVP-2457 - Only allow Staff File Remark type audit log entry to be saved with comments.
+        fileHistoryRecord.Comment = auditLogEntryType == FileHistoryAuditLogEntryType.FRMK ? comment : null;
         return fileHistoryRecord;
     }
 

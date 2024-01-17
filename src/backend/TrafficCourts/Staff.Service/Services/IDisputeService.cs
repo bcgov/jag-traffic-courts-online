@@ -30,11 +30,13 @@ public interface IDisputeService
 
     /// <summary>Updates the properties of a particular Dispute record based on the given values.</summary>
     /// <param name="id">Unique identifier of a Dispute record to modify.</param>
+    /// <param name="user"></param>
+    /// <param name="staffComment">VTC staff's comment for saving or updating a dispute in Ticket Validation</param>
     /// <param name="dispute">A modified version of the Dispute record to save.</param>    
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The modified Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> UpdateDisputeAsync(long id, Dispute dispute, System.Threading.CancellationToken cancellationToken);
+    Task<Dispute> UpdateDisputeAsync(long id, ClaimsPrincipal user, string staffComment, Dispute dispute, System.Threading.CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to VALIDATED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to validate.</param>
