@@ -138,13 +138,13 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, CancellationToken.None);
+        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -162,13 +162,13 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, CancellationToken.None);
+        IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);
@@ -187,13 +187,13 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         long updatedId = 2;
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.UpdateDisputeAsync(updatedId, dispute, CancellationToken.None);
+        IActionResult? result = await disputeController.UpdateDisputeAsync(updatedId, dispute, "test comment", CancellationToken.None);
 
         // Assert
         var notFoundResult = Assert.IsType<HttpError>(result);
