@@ -5617,7 +5617,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.
         /// </summary>
         [Newtonsoft.Json.JsonProperty("signatoryType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(1)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public JJDisputeSignatoryType? SignatoryType { get; set; }
 
@@ -6180,7 +6179,6 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.
         /// </summary>
         [Newtonsoft.Json.JsonProperty("signatoryType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(1)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DisputeSignatoryType? SignatoryType { get; set; }
 
@@ -6525,6 +6523,12 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
+
+        /// <summary>
+        /// VTC staff's comment in Ticket Validation
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("comment", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Comment { get; set; }
 
         [Newtonsoft.Json.JsonProperty("actionByApplicationUser", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ActionByApplicationUser { get; set; }
@@ -7739,59 +7743,62 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [System.Runtime.Serialization.EnumMember(Value = @"FUPS")]
         FUPS = 32,
 
+        [System.Runtime.Serialization.EnumMember(Value = @"FRMK")]
+        FRMK = 33,
+
         [System.Runtime.Serialization.EnumMember(Value = @"INIT")]
-        INIT = 33,
+        INIT = 34,
 
         [System.Runtime.Serialization.EnumMember(Value = @"JASG")]
-        JASG = 34,
+        JASG = 35,
 
         [System.Runtime.Serialization.EnumMember(Value = @"JCNF")]
-        JCNF = 35,
+        JCNF = 36,
 
         [System.Runtime.Serialization.EnumMember(Value = @"JDIV")]
-        JDIV = 36,
+        JDIV = 37,
 
         [System.Runtime.Serialization.EnumMember(Value = @"JPRG")]
-        JPRG = 37,
+        JPRG = 38,
 
         [System.Runtime.Serialization.EnumMember(Value = @"OCNT")]
-        OCNT = 38,
+        OCNT = 39,
 
         [System.Runtime.Serialization.EnumMember(Value = @"RCLD")]
-        RCLD = 39,
+        RCLD = 40,
 
         [System.Runtime.Serialization.EnumMember(Value = @"RECN")]
-        RECN = 40,
+        RECN = 41,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SADM")]
-        SADM = 41,
+        SADM = 42,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SCAN")]
-        SCAN = 42,
+        SCAN = 43,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SPRC")]
-        SPRC = 43,
+        SPRC = 44,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SREJ")]
-        SREJ = 44,
+        SREJ = 45,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SUB")]
-        SUB = 45,
+        SUB = 46,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SUPL")]
-        SUPL = 46,
+        SUPL = 47,
 
         [System.Runtime.Serialization.EnumMember(Value = @"SVAL")]
-        SVAL = 47,
+        SVAL = 48,
 
         [System.Runtime.Serialization.EnumMember(Value = @"URSR")]
-        URSR = 48,
+        URSR = 49,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VREV")]
-        VREV = 49,
+        VREV = 50,
 
         [System.Runtime.Serialization.EnumMember(Value = @"VSUB")]
-        VSUB = 50,
+        VSUB = 51,
 
     }
 

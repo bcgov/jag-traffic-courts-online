@@ -125,6 +125,7 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
     /// <param name="dispute"></param>
+    /// <param name="staffComment">VTC staff's comment for saving or updating a dispute in Ticket Validation</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -143,14 +144,19 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
-    public async Task<IActionResult> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateDisputeAsync(long disputeId, 
+        Dispute dispute,
+        [Required]
+        [StringLength(500, ErrorMessage = "Staff comment cannot exceed 500 characters.")]
+        string staffComment, 
+        CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute in oracle-data-api");
 
         try
         {
-            await _disputeService.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
-            return Ok(dispute);
+            Dispute updatedDispute = await _disputeService.UpdateDisputeAsync(disputeId, User, staffComment, dispute, cancellationToken);
+            return Ok(updatedDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {

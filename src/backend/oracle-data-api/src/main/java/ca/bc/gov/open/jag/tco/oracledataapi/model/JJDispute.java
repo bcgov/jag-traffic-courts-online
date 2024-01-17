@@ -405,7 +405,7 @@ public class JJDispute extends Auditable<String> {
 	/**
 	 * Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.
 	 */
-	@Schema(description = "Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.", maxLength = 1, nullable = true)
+	@Schema(description = "Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.", nullable = true)
 	private SignatoryType signatoryType;
 	
 	/**

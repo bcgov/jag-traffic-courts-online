@@ -1892,7 +1892,6 @@
             "enum": [ "UNKNOWN", "WRITTEN_REASONS", "VIDEO_CONFERENCE", "TELEPHONE_CONFERENCE", "MSTEAMS_AUDIO", "MSTEAMS_VIDEO", "IN_PERSON" ]
           },
           "signatoryType": {
-            "maxLength": 1,
             "type": "string",
             "description": "Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.",
             "nullable": true,
@@ -2538,7 +2537,6 @@
             "nullable": true
           },
           "signatoryType": {
-            "maxLength": 1,
             "type": "string",
             "description": "Signatory Type. Can be either 'D' for Disputant or 'A' for Agent.",
             "nullable": true,
@@ -2902,10 +2900,15 @@
           },
           "auditLogEntryType": {
             "type": "string",
-            "enum": [ "UNKNOWN", "ARFL", "CAIN", "CAWT", "CCAN", "CCON", "CCWR", "CLEG", "CUEM", "CUEV", "CUIN", "CULG", "CUPD", "CUWR", "CUWT", "DURA", "DURR", "EMCA", "EMCF", "EMCR", "EMDC", "EMFD", "EMPR", "EMRJ", "EMRV", "EMST", "EMUP", "EMVF", "ESUR", "FDLD", "FDLS", "FUPD", "FUPS", "INIT", "JASG", "JCNF", "JDIV", "JPRG", "OCNT", "RCLD", "RECN", "SADM", "SCAN", "SPRC", "SREJ", "SUB", "SUPL", "SVAL", "URSR", "VREV", "VSUB" ]
+            "enum": [ "UNKNOWN", "ARFL", "CAIN", "CAWT", "CCAN", "CCON", "CCWR", "CLEG", "CUEM", "CUEV", "CUIN", "CULG", "CUPD", "CUWR", "CUWT", "DURA", "DURR", "EMCA", "EMCF", "EMCR", "EMDC", "EMFD", "EMPR", "EMRJ", "EMRV", "EMST", "EMUP", "EMVF", "ESUR", "FDLD", "FDLS", "FUPD", "FUPS", "FRMK", "INIT", "JASG", "JCNF", "JDIV", "JPRG", "OCNT", "RCLD", "RECN", "SADM", "SCAN", "SPRC", "SREJ", "SUB", "SUPL", "SVAL", "URSR", "VREV", "VSUB" ]
           },
           "description": {
             "type": "string",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "description": "VTC staff's comment in Ticket Validation",
             "nullable": true
           },
           "actionByApplicationUser": {

@@ -103,6 +103,9 @@ public enum AuditLogEntryType {
 
 	/** File was uploaded by staff **/
 	FUPS,
+	
+	/** VTC staff has added a file remark for saving or updating a dispute in Ticket Validation **/
+	FRMK,
 
 	/** Citizen/user submits their ticket resolution request / notice of dispute via TCO **/
 	INIT,
