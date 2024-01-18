@@ -5,6 +5,4 @@ metadata:
 data:
   bootstrap.sql: |
     \c keycloakdb;
-    SET ROLE keycloak;
-    CREATE SCHEMA keycloak;
-    ALTER USER keycloak SET SEARCH_PATH = 'keycloak';
+    GRANT ALL ON SCHEMA public to keycloak;

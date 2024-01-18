@@ -130,7 +130,7 @@ instances:
       resources:
         requests:
           storage: 1Gi
-      #storageClassName: "netapp-block-standard"
+      storageClassName: "netapp-block-standard"
     resources:
       requests:
         cpu: 1m
@@ -311,8 +311,8 @@ pgBackRestConfig:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 1Gi
-        #storageClassName: "netapp-file-backup"
+            storage: 5Gi
+        storageClassName: "netapp-file-backup"
   # this stuff is for the "pgbackrest" container (the only non-init container) in the "postgres-crunchy-repo-host" pod
   repoHost:
     resources:

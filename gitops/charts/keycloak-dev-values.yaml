@@ -281,7 +281,7 @@ extraContainerPorts: []
 ## @param podSecurityContext.fsGroup Set Keycloak pod's Security Context fsGroup
 ##
 podSecurityContext:
-  enabled: false
+  enabled: true
   fsGroup: 1001
 ## Keycloak containers' Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
@@ -917,7 +917,7 @@ keycloakConfigCli:
   ## @param keycloakConfigCli.podSecurityContext.fsGroup Set keycloak-config-cli pod's Security Context fsGroup
   ##
   podSecurityContext:
-    enabled: true
+    enabled: false
     fsGroup: 1001
   ## @param keycloakConfigCli.backoffLimit Number of retries before considering a Job as failed
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/job/#pod-backoff-failure-policy
@@ -1046,15 +1046,15 @@ postgresql:
 externalDatabase:
   host: ""
   port: 5432
-  user: ""
-  database: "postgres"
+  user: bn_keycloak
+  database: bitnami_keycloak
   password: ""
-  existingSecret: "postgres-keycloak-pguser-postgres"
+  existingSecret: "postgres-dev-pguser-keycloak"
   existingSecretHostKey: "host"
   existingSecretPortKey: "port"
   existingSecretUserKey: "user"
-  #existingSecretDatabaseKey: "dbname"
-  existingSecretPasswordKey: "password"
+  existingSecretDatabaseKey: "dbname"
+  existingSecretPasswordKey: ""
 
 ## @section Keycloak Cache parameters
 

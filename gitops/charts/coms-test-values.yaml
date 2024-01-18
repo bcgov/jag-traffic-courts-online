@@ -1,0 +1,187 @@
+# Default values for common-object-management-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## @param replicaCount Number of replicas to deploy
+##
+replicaCount: 1
+
+## Image Version
+## @param image.repository Image repository
+## @param image.pullPolicy Image pull policy
+## @param image.tag Image tag (immutable tags are recommended)
+image:
+  repository: docker.io/bcgovimages/common-object-management-service
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.4.2"
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "common-object-management-service"
+
+## @section Database parameters
+
+## Postgres Database configuration
+##
+## If database.existingSecret keys are set, the value from the secret will be used otherwise the
+## other value will be used.
+##
+## @param database.host Database host
+## @param database.port Database port number
+## @param database.database Database name
+## @param database.user Non-root username
+## @param database.password Password for the non-root username
+## @param database.existingSecret Name of an existing secret resource containing the database credentials
+## @param database.existingSecretHostKey Name of an existing secret key containing the database host name
+## @param database.existingSecretPortKey Name of an existing secret key containing the database port
+## @param database.existingSecretUserKey Name of an existing secret key containing the database user
+## @param database.existingSecretDatabaseKey Name of an existing secret key containing the database name
+## @param database.existingSecretPasswordKey Name of an existing secret key containing the database credentials
+##
+database:
+  host: ""
+  port: ""
+  database: ""
+  username: ""
+  password: ""
+  existingSecret: "postgres-app-pguser-coms"
+  existingSecretHostKey: "host"
+  existingSecretPortKey: "port"
+  existingSecretDatabaseKey: "dbname"
+  existingSecretUserKey: "user"
+  existingSecretPasswordKey: "password"
+
+## @section Basic Authentication configuration
+##
+## If basicAuth.existingSecret keys are set, the value from the secret will be used otherwise the
+## other value will be used.
+##
+## @param basicAuth.enabled Switch to enable or disable basic authentication
+## @param basicAuth.user Username
+## @param basicAuth.password Password for the username
+## @param basicAuth.existingSecret Name of an existing secret resource containing the basic authentication credentials
+## @param basicAuth.existingSecretUserKey Name of an existing secret key containing the username
+## @param basicAuth.existingSecretPasswordKey Name of an existing secret key containing the username credentials
+##
+basicAuth:
+  enabled: true
+  username: ""
+  password: ""
+  existingSecret: "common-object-management-service-basicauth"
+  existingSecretUserKey: "username"
+  existingSecretPasswordKey: "password"
+
+## @section Object Storage S3 configuration
+##
+## If basicAuth.existingSecret keys are set, the value from the secret will be used otherwise the
+## other value will be used.
+##
+## @param objectStorage.enabled Switch to enable or disable basic authentication
+## @param objectStorage.username Username
+## @param objectStorage.password Password for the username
+## @param objectStorage.bucket
+## @param objectStorage.endpoint
+## @param objectStorage.key 
+## @param objectStorage.tempExpiresIn
+## @param objectStorage.existingSecret
+## @param objectStorage.existingSecretUserKey
+## @param objectStorage.existingSecretPasswordKey
+## @param objectStorage.existingSecretBucketKey
+## @param objectStorage.existingSecretEndpointKey
+##
+objectStorage:
+  username:  ""
+  password:  ""
+  bucket:  ""
+  endpoint:  ""
+  key: "/"
+  tempExpiresIn: 300
+  existingSecret: "common-object-management-service-objectstorage"
+  existingSecretUserKey: "username"
+  existingSecretPasswordKey: "password"
+  existingSecretBucketKey: "bucket"
+  existingSecretEndpointKey: "endpoint"
+
+bodyLimit: "30mb"
+logLevel: "http"
+
+node:
+  env: production
+
+podAnnotations: {}
+
+## Pods' SecurityContext
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+podSecurityContext: {}
+  # fsGroup: 2000
+
+## Containers' Security Context
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+serviceAccount:
+  create: false
+  name: ""
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+## Autoscaling configuration
+## @param autoscaling.enabled Enable autoscaling
+## @param autoscaling.minReplicas Minimum number of replicas
+## @param autoscaling.maxReplicas Maximum number of replicas
+## @param autoscaling.targetCPU Target CPU utilization percentage
+## @param autoscaling.targetMemory Target Memory utilization percentage
+##
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPU: ""
+  targetMemory: ""
+
+## Pod Disruption Budget configuration
+## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+##
+pdb:
+  ## @param pdb.create Enable/disable a Pod Disruption Budget creation
+  ##
+  create: false
+  ## @param pdb.minAvailable Minimum number/percentage of pods that should remain scheduled
+  ##
+  minAvailable: 1
+  ## @param pdb.maxUnavailable Maximum number/percentage of pods that may be made unavailable
+  ##
+  maxUnavailable: ""
+
+## @param nodeSelector Node labels for pod assignment
+## ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
+
+## @param tolerations Tolerations for pod assignment
+## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+##
+tolerations: []
+
+## @param affinity Affinity for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+##
+affinity: {}
