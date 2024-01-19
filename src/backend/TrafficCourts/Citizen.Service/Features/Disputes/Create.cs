@@ -167,7 +167,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                         : DisputeAppearanceLessThan14DaysYn.N;
 
                     submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeId;
-                    submitNoticeOfDispute.SubmittedTs = _clock.GetUtcNow().DateTime;
+                    submitNoticeOfDispute.SubmittedTs = _clock.GetUtcNow().UtcDateTime;
 
                     if (violationTicket != null)
                     {
