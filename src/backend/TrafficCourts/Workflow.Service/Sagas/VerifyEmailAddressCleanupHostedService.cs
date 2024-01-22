@@ -24,6 +24,10 @@ public partial class VerifyEmailAddressCleanupHostedService : IHostedService
     {
         Starting();
 
+        // oracle data api can take a couple of minutes to startup, so delay this processing
+        // otherwise the consumer will get connection errors
+        await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
+
         try
         {
             var messages = await _context
