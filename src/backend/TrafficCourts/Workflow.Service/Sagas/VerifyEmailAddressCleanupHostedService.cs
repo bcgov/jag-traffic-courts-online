@@ -1,10 +1,12 @@
-﻿
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Workflow.Service.Sagas;
 
+/// <summary>
+/// Temporary hosted service to re-raise the EmailVerificationSuccessful for all the verified email addresses.
+/// </summary>
 public partial class VerifyEmailAddressCleanupHostedService : IHostedService
 {
     private readonly VerifyEmailAddressStateDbContext _context;
@@ -24,23 +26,24 @@ public partial class VerifyEmailAddressCleanupHostedService : IHostedService
 
         try
         {
-            var states = await _context
+            var messages = await _context
                 .Set<VerifyEmailAddressState>()
                 .AsNoTracking()
                 .Where(_ => _.VerifiedAt != null && _.TicketNumber != null && _.EmailAddress != null)
                 .OrderBy(_ => _.VerifiedAt)
+                .Select(_ => new EmailVerificationSuccessful
+                {
+                    NoticeOfDisputeGuid = _.NoticeOfDisputeGuid,
+                    TicketNumber = _.TicketNumber!,
+                    EmailAddress = _.EmailAddress!,
+                    VerifiedAt = _.VerifiedAt!.Value,
+                    IsUpdateEmailVerification = _.IsUpdateEmailVerification
+                })
                 .ToListAsync(cancellationToken);
 
-            foreach (var state in states)
+            foreach (var message in messages)
             {
-                await _bus.Publish(new EmailVerificationSuccessful
-                {
-                    NoticeOfDisputeGuid = state.NoticeOfDisputeGuid,
-                    TicketNumber = state.TicketNumber!,
-                    EmailAddress = state.EmailAddress!,
-                    VerifiedAt = state.VerifiedAt!.Value,
-                    IsUpdateEmailVerification = state.IsUpdateEmailVerification
-                }, cancellationToken);
+                await _bus.Publish(message, cancellationToken);
             }
         }
         catch (Exception exception)
