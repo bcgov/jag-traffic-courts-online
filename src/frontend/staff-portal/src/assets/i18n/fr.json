@@ -141,6 +141,7 @@
   },
   "label": {
     "abatement": "Abattement",
+    "accident_btn": "ACCIDENT",
     "act_sect_desc": "Acte/Secte/Desc",
     "amount_due": "Montant Dû",
     "appearInCourt": "Pour ce compte, j'aimerais",
@@ -186,6 +187,7 @@
     "legal_counsel_given_name_3": "Conseiller juridique Prénom 3",
     "legal_counsel_surname": "Nom du conseiller juridique",
     "mailing_address": "Adresse Postale",
+    "multiple_officers_btn": "PLUSIEURS OFFICIERS",
     "name_of_law_firm": "Nom du cabinet",
     "offence_amount": "Montant de l'Infraction",
     "other": "Autre",

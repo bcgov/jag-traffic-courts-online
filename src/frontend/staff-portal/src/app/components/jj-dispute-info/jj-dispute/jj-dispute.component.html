@@ -61,10 +61,10 @@
               - {{ lastUpdatedJJDispute.occamDisputantName }} </b></h1>
         </span>
         <span style="float:right">
-          <span *ngIf="jjDisputeInfo.multipleOfficersYn===MultipleOfficers.Y"><button mat-rounded-button color="warn"
-              disabled="true">MUTLIPLE OFFICERS</button></span>
-          <span *ngIf="jjDisputeInfo.accidentYn===Accident.Y"><button mat-rounded-button color="primary"
-              disabled="true">ACCIDENT</button></span>
+          <span *ngIf="jjDisputeInfo.multipleOfficersYn===MultipleOfficers.Y"><button class="mo-btn"
+              disabled="true">{{ "label.multiple_officers_btn" | translate }}</button></span>
+          <span *ngIf="jjDisputeInfo.accidentYn===Accident.Y"><button class="accident-btn"
+              disabled="true">{{ "label.accident_btn" | translate }}</button></span>
           <span class="ticket-number">Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }}</span>
         </span>
       </div> <br /><br />
