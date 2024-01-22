@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { ConfigService } from "@config/config.service";
 import { LoggerService } from "@core/services/logger.service";
 import { ToastService } from "@core/services/toast.service";
+import { WindowRefService } from "@core/services/window-ref.service";
 import { FormControlValidators } from "@core/validators/form-control.validators";
 import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
@@ -91,7 +92,8 @@ export class NoticeOfDisputeService {
     private fb: FormBuilder,
     private toastService: ToastService,
     private configService: ConfigService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private window: WindowRefService
   ) {
   }
 
@@ -187,18 +189,23 @@ export class NoticeOfDisputeService {
       .subscribe((action: boolean) => {
         if (action) {
           const data: DialogOptions = {
-            titleKey: "Warning",
-            actionType: "warn",
-            messageKey: `Submitting dispute. Please don't click Submit button again`,
-            actionTextKey: "Close",
-            cancelHide: true
+            titleKey: "Processing...",
+            actionType: "primary",
+            messageKey: `If you do not get a result, please contact support at Courts.TCO@gov.bc.ca.`,
+            actionHide: true,
+            cancelHide: true,
+            icon: null
           };
           let dialogRef = this.dialog.open(ConfirmDialogComponent, { data, disableClose: true });
+          dialogRef.afterClosed().subscribe(() => {
+            this.window.nativeWindow.scrollTo(0,0);
+          });
 
           input.dispute_counts = input.dispute_counts.filter(i => i.plea_cd);
           return this.disputesService.apiDisputesCreatePost(input)
             .subscribe(res => {
-              dialogRef.close();
+              // TCVP-2703 close after at least a couple seconds have passed to ensure user had a chance to read the dialog.
+              this.window.nativeWindow.setTimeout(() => dialogRef.close(), 2000);
               this._noticeOfDispute.next(input);
               if (input.email_address) {
                 this.router.navigate([AppRoutes.EMAILVERIFICATIONREQUIRED], {
