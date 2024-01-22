@@ -13,32 +13,38 @@ namespace TrafficCourts.Workflow.Service.Consumers;
 /// Consumer for a EmailReceivedVerification (produced when a Disputant confirms their email address).
 /// This Consumer simply updates the Disputant record for the given email verification token, setting the EmailVerification flag to true.
 /// </summary>
-public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSuccessful>
+public partial class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSuccessful>
 {
     private readonly ILogger<SetEmailVerifiedOnDisputeInDatabase> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IConfirmationEmailTemplate _confirmationEmailTemplate;
     private readonly IDisputantEmailUpdateSuccessfulTemplate _emailUpdateSuccessfulTemplate;
 
-    public SetEmailVerifiedOnDisputeInDatabase(ILogger<SetEmailVerifiedOnDisputeInDatabase> logger, IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate, IDisputantEmailUpdateSuccessfulTemplate updateRequestReceivedTemplate)
+    public SetEmailVerifiedOnDisputeInDatabase(IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate, IDisputantEmailUpdateSuccessfulTemplate updateRequestReceivedTemplate, ILogger<SetEmailVerifiedOnDisputeInDatabase> logger)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _confirmationEmailTemplate = confirmationEmailTemplate ?? throw new ArgumentNullException(nameof(confirmationEmailTemplate));
         _emailUpdateSuccessfulTemplate = updateRequestReceivedTemplate ?? throw new ArgumentNullException(nameof(updateRequestReceivedTemplate));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task Consume(ConsumeContext<EmailVerificationSuccessful> context)
     {
-        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid);
-
         var message = context.Message;
         try
         {
             Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(message.NoticeOfDisputeGuid, context.CancellationToken);
             if (dispute is null)
             {
-                _logger.LogInformation("Dispute not found");
+                // TODO: how do we handle if the dispute has not been created in the database yet? 
+                LogDisputeNotFound(context);
+                return;
+            }
+
+            // message could be send again, if the database already says it is verified, then we are done.
+            if (dispute.EmailAddressVerified)
+            {
+                LogEmailAddressAlreadyVerified(context);
                 return;
             }
 
@@ -95,8 +101,24 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "Failed to validate Disputant email.");
+            LogErrorProcessingVerification(ex, context);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            LogErrorProcessingVerification(ex, context);
             throw;
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Dispute not found")]
+    private partial void LogDisputeNotFound([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] ConsumeContext<EmailVerificationSuccessful> context);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Email address already verified")]
+    private partial void LogEmailAddressAlreadyVerified([TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] ConsumeContext<EmailVerificationSuccessful> context);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Error while processing email verfied message")]
+    private partial void LogErrorProcessingVerification(Exception ex, [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)] ConsumeContext<EmailVerificationSuccessful> context);
 }
+
+

@@ -67,8 +67,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
                         EmailAddress = message.EmailAddress,
                         IsUpdateEmailVerification = true,
                         NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
-                        TicketNumber = dispute.TicketNumber,
-                        DisputeId = dispute.DisputeId
+                        TicketNumber = dispute.TicketNumber
                     }, context.CancellationToken);
                 }
                 PublishFileHistoryLog(dispute, FileHistoryAuditLogEntryType.CUEM, context);

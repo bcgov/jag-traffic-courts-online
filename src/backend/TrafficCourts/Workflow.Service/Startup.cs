@@ -25,6 +25,9 @@ public static class Startup
 
         builder.Services.AddSingleton(TimeProvider.System);
 
+        // this could be temporary
+        builder.Services.AddHostedService<VerifyEmailAddressCleanupHostedService>();
+
         // Add services to the container.
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
