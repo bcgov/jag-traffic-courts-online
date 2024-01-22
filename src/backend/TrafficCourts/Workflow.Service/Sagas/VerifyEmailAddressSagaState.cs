@@ -38,6 +38,7 @@ public class VerifyEmailAddressState : SagaStateMachineInstance
     /// Have we been notified that the notice of dispute has been submitted?
     /// </summary>
     /// <remarks>Maps to occam_disputes.dispute_id</remarks>
+    [Obsolete]
     public long? DisputeId { get; set; }
 
     /// <summary>

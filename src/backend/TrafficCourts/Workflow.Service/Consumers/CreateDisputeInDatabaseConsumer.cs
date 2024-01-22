@@ -43,7 +43,6 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                     await context.PublishWithLog(_logger, new NoticeOfDisputeSubmitted
                     {
-                        DisputeId = disputeId,
                         NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
                     }, cancellationToken);
                 }

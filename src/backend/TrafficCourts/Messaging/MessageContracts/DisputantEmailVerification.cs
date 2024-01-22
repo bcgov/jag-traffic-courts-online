@@ -52,7 +52,6 @@ public abstract class EmailVerificationMessage
 
 public class EmailVerificationSuccessful : EmailVerificationMessage
 {
-    public long DisputeId { get; set; }
     public DateTimeOffset VerifiedAt { get; set; }
 }
 
@@ -61,7 +60,8 @@ public class EmailVerificationSuccessful : EmailVerificationMessage
 /// </summary>
 public class NoticeOfDisputeSubmitted
 {
-    public long DisputeId { get; set; }
+    [Obsolete($"Rely on {nameof(NoticeOfDisputeGuid)} only")]
+    public long? DisputeId { get; set; }
     public Guid NoticeOfDisputeGuid { get; set; }
     public string EmailAddress { get; set; } = string.Empty;
 }
@@ -77,6 +77,7 @@ public class RequestEmailVerification : EmailVerificationMessage
     /// it will be set when re-requesting for email 
     /// validation.
     /// </summary>
+    [Obsolete($"Rely on {nameof(NoticeOfDisputeGuid)} only")]
     public long? DisputeId { get; set; }
 }
 

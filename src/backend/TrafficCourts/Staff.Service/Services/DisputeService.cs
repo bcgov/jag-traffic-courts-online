@@ -285,7 +285,6 @@ public class DisputeService : IDisputeService
 
         var message = new RequestEmailVerification { 
             NoticeOfDisputeGuid = new Guid(dispute.NoticeOfDisputeGuid),
-            DisputeId = dispute.DisputeId,
             TicketNumber = dispute.TicketNumber,
             EmailAddress = dispute.EmailAddress,
             IsUpdateEmailVerification = true

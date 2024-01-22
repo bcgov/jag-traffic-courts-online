@@ -38,6 +38,7 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
             Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(message.NoticeOfDisputeGuid, context.CancellationToken);
             if (dispute is null)
             {
+                // TODO: how do we handle if the dispute has not been created in the database yet?
                 _logger.LogInformation("Dispute not found");
                 return;
             }

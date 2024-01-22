@@ -131,19 +131,6 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         state.EmailAddress = context.Message.EmailAddress;
         state.IsUpdateEmailVerification = context.Message.IsUpdateEmailVerification;
         state.Token = Guid.NewGuid();
-
-        if (context.Message.DisputeId is not null)
-        {
-            if (state.DisputeId is null)
-            {
-                state.DisputeId = context.Message.DisputeId;
-            }
-            else if (state.DisputeId != context.Message.DisputeId)
-            {
-                // dont allow changing of the dispute id
-                LogInvalidDisputeId(context);
-            }
-        }
     }
 
     /// <summary>
@@ -190,27 +177,18 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         // respond the request to check the token
         await SendResponse(context, true, now);
 
-        // only send EmailVerificationSuccessful after we have
-        // confirmation the Notice of dispute has been submitted
-        if (state.DisputeId is not null)
-        {
-            await PublishEmailVerificationSuccessful(context, state.DisputeId.Value);
-        }
+        await PublishEmailVerificationSuccessful(context);
     }
 
     private async Task HandleNoticeOfDisputeSubmitted(BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context)
     {
-        var state = context.Saga;
-
-        state.DisputeId = context.Message.DisputeId;
-
-        if (state.Verified)
+        if (context.Saga.Verified)
         {
-            await PublishEmailVerificationSuccessful(context, state.DisputeId.Value);
+            await PublishEmailVerificationSuccessful(context);
         }
     }
 
-    private async Task PublishEmailVerificationSuccessful<TMessage>(BehaviorContext<VerifyEmailAddressState, TMessage> context, long disputeId) where TMessage : class
+    private async Task PublishEmailVerificationSuccessful<TMessage>(BehaviorContext<VerifyEmailAddressState, TMessage> context) where TMessage : class
     {
         var state = context.Saga;
 
@@ -219,13 +197,12 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
 
         await context.PublishWithLog(_logger, new EmailVerificationSuccessful
         {
-            DisputeId = disputeId,
             NoticeOfDisputeGuid = state.NoticeOfDisputeGuid,
             TicketNumber = state.TicketNumber,
             EmailAddress = state.EmailAddress,
             VerifiedAt = state.VerifiedAt.Value,
             IsUpdateEmailVerification = state.IsUpdateEmailVerification
-        }, context.CancellationToken).ConfigureAwait(false); ;
+        }, context.CancellationToken).ConfigureAwait(false);
 
     }
 
@@ -291,20 +268,6 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
             var message = context.Message;
 
             collector.Add(nameof(message.NoticeOfDisputeGuid), message.NoticeOfDisputeGuid);
-
-            if (message.DisputeId is not null)
-            {
-                if (state.DisputeId is null)
-                {
-                    collector.Add(nameof(message.DisputeId), message.DisputeId);
-                }
-                else if (state.DisputeId != message.DisputeId)
-                {
-                    // cant change the dispute id
-                    collector.Add(nameof(state.DisputeId), state.DisputeId);
-                    collector.Add("RequestedDisputeId", message.DisputeId);
-                }
-            }
         }
 
         public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, CheckEmailVerificationTokenRequest> context)
@@ -330,7 +293,6 @@ public partial class VerifyEmailAddressStateMachine : MassTransitStateMachine<Ve
         public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, NoticeOfDisputeSubmitted> context)
         {
             collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
-            collector.Add(nameof(context.Message.DisputeId), context.Message.DisputeId);
         }
 
         public static void RecordTags(ITagCollector collector, BehaviorContext<VerifyEmailAddressState, SendEmailVerificationFailed> context)

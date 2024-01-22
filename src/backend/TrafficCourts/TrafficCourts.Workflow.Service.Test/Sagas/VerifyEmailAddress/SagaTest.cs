@@ -38,7 +38,6 @@ public class SagaTest
 
         await bus.Publish<RequestEmailVerification>(new RequestEmailVerification
         {
-            DisputeId = 0,
             EmailAddress = "philbolduc@gmail.com",
             TicketNumber = "AA12345678",
             NoticeOfDisputeGuid = Guid.NewGuid(),
