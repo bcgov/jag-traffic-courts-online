@@ -180,6 +180,20 @@ label {
   border-color: rgba(0, 0, 0, 0.12);
 }
 
+.mo-btn {
+  background: #5a9dff73;
+  border: 2px solid #0d6efd;
+  border-radius: 0.781rem;
+  margin-right: 1rem;
+}
+
+.accident-btn {
+  background: #dc354566;
+  border: 2px solid #dc3545;
+  border-radius: 0.781rem;
+  margin-right: 1rem;
+}
+
 // FIXME: ng-deep applies global styles, not component-specific styles. But these styles should be global anyway. Move to main scss.
 ::ng-deep {
   .heading-hr {

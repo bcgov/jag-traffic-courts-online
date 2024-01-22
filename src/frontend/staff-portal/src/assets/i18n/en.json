@@ -142,6 +142,7 @@
   },
   "label": {
     "abatement": "Abatement",
+    "accident_btn": "ACCIDENT",
     "act_sect_desc": "Act/Sect/Desc",
     "amount_due": "Amount Due",
     "appearInCourt": "For this count I would like to",
@@ -187,6 +188,7 @@
     "legal_counsel_given_name_3": "Legal Counsel Given Name 3",
     "legal_counsel_surname": "Legal Counsel Surname",
     "mailing_address": "Mailing Address",
+    "multiple_officers_btn": "MULTIPLE OFFICERS",
     "name_of_law_firm": "Name of Law Firm",
     "offence_amount": "Offence Amount",
     "other": "Other",
