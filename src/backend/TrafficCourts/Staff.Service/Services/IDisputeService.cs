@@ -36,7 +36,7 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The modified Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> UpdateDisputeAsync(long id, ClaimsPrincipal user, string staffComment, Dispute dispute, System.Threading.CancellationToken cancellationToken);
+    Task<Dispute> UpdateDisputeAsync(long id, ClaimsPrincipal user, string? staffComment, Dispute dispute, System.Threading.CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to VALIDATED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to validate.</param>

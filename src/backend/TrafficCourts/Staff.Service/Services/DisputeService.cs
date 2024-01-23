@@ -152,7 +152,7 @@ public class DisputeService : IDisputeService
     }
 
 
-    public async Task<Dispute> UpdateDisputeAsync(long disputeId, ClaimsPrincipal user, string staffComment, Dispute dispute, CancellationToken cancellationToken)
+    public async Task<Dispute> UpdateDisputeAsync(long disputeId, ClaimsPrincipal user, string? staffComment, Dispute dispute, CancellationToken cancellationToken)
     {
         Dispute updatedDispute = await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
 
@@ -161,7 +161,7 @@ public class DisputeService : IDisputeService
             updatedDispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.FRMK, // VTC staff has added a file remark for saving or updating a dispute in Ticket Validation
             GetUserName(user),
-            staffComment);
+            staffComment!);
 
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 

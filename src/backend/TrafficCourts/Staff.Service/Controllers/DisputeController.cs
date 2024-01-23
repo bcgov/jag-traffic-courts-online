@@ -146,9 +146,8 @@ public class DisputeController : StaffControllerBase<DisputeController>
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
     public async Task<IActionResult> UpdateDisputeAsync(long disputeId, 
         Dispute dispute,
-        [Required]
         [StringLength(500, ErrorMessage = "Staff comment cannot exceed 500 characters.")]
-        string staffComment, 
+        string? staffComment, 
         CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute in oracle-data-api");
