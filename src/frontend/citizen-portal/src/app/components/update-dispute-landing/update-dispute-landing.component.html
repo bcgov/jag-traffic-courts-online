@@ -23,7 +23,7 @@
       <div fxFlex="32">
         <div class="option">
           <button type="button" mat-flat-button color="primary" class="large" (click)="goToUpdateDispute()" 
-              [disabled]="!isEmailVerified" title="{{ isEmailVerified ? '' : 'Email address not yet verified' }}">
+              [disabled]="isEmailVerified === false" title="{{ isEmailVerified ? '' : 'Email address not yet verified' }}">
             <h2><b>Change Dispute</b></h2>
           </button>
           <div>Change your contact information, plea or court options, or upload additional supporting documents to

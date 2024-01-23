@@ -24,14 +24,15 @@ public class DisputeResult {
 	@Schema(nullable = true)
 	private JJDisputeHearingType jjDisputeHearingType;
 
-	private Boolean isEmailAddressVerified = Boolean.FALSE;
+	@Schema(nullable = true, description = "Null if there is no email address, true if the email address has been successfully verified, false otherwise.")
+	private Boolean isEmailAddressVerified;
 
 	/**
 	 * 
 	 * @param disputeId
 	 * @param noticeOfDisputeGuid
 	 * @param disputeStatus
-	 * @param isEmailAddressVerified TRUE if there is no email address or if the email address has been successfully verified, FALSE otherwise.
+	 * @param isEmailAddressVerified <code>NULL</code> if there is no email address, <code>TRUE</code> if the email address has been successfully verified, <code>FALSE</code> otherwise.
 	 */
 	public DisputeResult(Long disputeId, String noticeOfDisputeGuid, DisputeStatus disputeStatus, Boolean isEmailAddressVerified) {
 		this.disputeId = disputeId;

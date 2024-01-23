@@ -373,7 +373,7 @@ public class DisputeService {
 						dispute.getDisputeId(),
 						dispute.getNoticeOfDisputeGuid(),
 						dispute.getStatus(),
-						StringUtils.isBlank(dispute.getEmailAddress()) ? Boolean.TRUE : dispute.getEmailAddressVerified()));
+						StringUtils.isBlank(dispute.getEmailAddress()) ? null : dispute.getEmailAddressVerified()));
 				ticketNumber = dispute.getTicketNumber();
 				issuedTime = dispute.getIssuedTs();
 			}

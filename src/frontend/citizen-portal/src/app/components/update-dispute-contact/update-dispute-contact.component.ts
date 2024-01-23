@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { DisputeFormMode } from '@shared/enums/dispute-form-mode';
 import { DisputeService } from 'app/services/dispute.service';
@@ -17,14 +18,18 @@ export class UpdateDisputeContactComponent implements OnInit {
   form: DisputantContactInformationFormGroup;
 
   private state: DisputeStore.State;
+  public preferEmail: boolean = true;
 
   constructor(
     private disputeService: DisputeService,
     private store: Store,
+    private route: ActivatedRoute
   ) {
   }
 
   ngOnInit(): void {
+    this.preferEmail = this.route.snapshot.queryParamMap.get('preferEmail') === 'true' ? true : false;
+    
     this.disputeService.checkStoredDispute().subscribe(found => {
       if (found) {
         this.form = this.disputeService.getDisputantForm();
