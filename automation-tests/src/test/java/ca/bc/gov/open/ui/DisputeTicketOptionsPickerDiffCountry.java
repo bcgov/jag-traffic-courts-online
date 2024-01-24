@@ -13,6 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+import static ca.bc.gov.open.cto.TicketInfo.TICKET_EMAIL;
 public class DisputeTicketOptionsPickerDiffCountry {
 
 	private WebDriver driver;
@@ -44,17 +46,20 @@ public class DisputeTicketOptionsPickerDiffCountry {
 		element.sendKeys("Test");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
 		element.sendKeys("User");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-		element.sendKeys("9999 Oak Street");
 		Thread.sleep(1000);
+
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-value-1")));
 		jse.executeScript("scroll(0, 450);");
+		Thread.sleep(1000);
 		element.click();
+
 		Thread.sleep(1000);
 		element = driverWait
 				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-1 > .mat-option-text")));
 		element.click();
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
+		element.sendKeys("9999 Oak Street");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
 		element.sendKeys("Chicago");
 		Thread.sleep(1000);
@@ -70,7 +75,7 @@ public class DisputeTicketOptionsPickerDiffCountry {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element.sendKeys(TICKET_EMAIL);
 
 		JavascriptExecutor jse2 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-value-5")));

@@ -32,17 +32,20 @@ public class SubmitToStaffWorkbenchReject {
 	public void test() throws Exception {
 		driver = CustomWebDriverManager.getDriver();
 		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
 
 		SubmitToStaffWorkbench dispute = new SubmitToStaffWorkbench();
 		dispute.test();
+
+		rejectRequest(driverWait, driver);
+	}
+
+	public void rejectRequest(WebDriverWait driverWait, WebDriver driver) throws Exception {
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Reject ')]")))
 				.click();
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+		WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'Please enter ')]/following-sibling::*//textarea")));
 		element.sendKeys("Test Rejection of ticket");
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
@@ -50,11 +53,26 @@ public class SubmitToStaffWorkbenchReject {
 						.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Send rejection notification ')]")))
 				.click();
 
-		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions.presenceOfElementLocated(
-				By.xpath("//*[contains(text(), '" + DisputeTicketOptionsPickerByMail.getUser() + "')]")));
+		Thread.sleep(1000);
 
-		new WebDriverWait(driver, Duration.ofSeconds(20))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'REJECTED')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(30))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//mat-select")))
+				.click();
+
+		Thread.sleep(1000);
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//span[contains(text(), 'REJECTED')]")))
+				.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(50))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td/span[contains(text(), 'REJECTED')]")));
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + DisputeTicketOptionsPickerByMail.getUser() + "')]")));
 
 	}
 

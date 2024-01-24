@@ -1,7 +1,7 @@
 package ca.bc.gov.open.ui;
 
-import java.time.Duration;
-
+import ca.bc.gov.open.cto.CommonUtils;
+import ca.bc.gov.open.cto.CustomWebDriverManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -12,15 +12,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import ca.bc.gov.open.cto.CommonUtils;
-import ca.bc.gov.open.cto.CustomWebDriverManager;
+import java.time.Duration;
+
+import static ca.bc.gov.open.cto.TicketInfo.*;
 
 public class SubmitToStaffWorkbench {
 
 	private WebDriver driver;
 	private String user;
-	private static String bceidUSERNAME = System.getenv("USERNAME_BCEID");
-	private static String bceidPASSWORD = System.getenv("PASSWORD_BCEID");
+	private static String appUSERNAME = System.getenv("USERNAME_APP");
+	private static String appPASSWORD = System.getenv("PASSWORD_APP");
 
 	@After
 	public void tearDown() {
@@ -37,8 +38,6 @@ public class SubmitToStaffWorkbench {
 	public void test() throws Exception {
 		driver = CustomWebDriverManager.getDriver();
 		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
 
 		DisputeTicketOptionsPickerByMail dispute = new DisputeTicketOptionsPickerByMail();
 		dispute.test();
@@ -46,10 +45,14 @@ public class SubmitToStaffWorkbench {
 		CommonUtils.loginStaffWorkbench();
 
 		SubmitToStaffWorkbench loginStaff = new SubmitToStaffWorkbench();
-		loginStaff.loginToStaffWorkbench(element, driverWait, driver);
+		loginStaff.loginToStaffWorkbenchWithUser(driverWait, driver, appUSERNAME);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("ticketNumber")));
-		element.sendKeys("EZ02005201");
+		validateTicketOnStaffWOrkbench(driverWait, driver);
+	}
+
+	public void validateTicketOnStaffWOrkbench(WebDriverWait driverWait, WebDriver driver) throws Exception {
+		WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("ticketNumber")));
+		element.sendKeys(E_TICKET_NUMBER);
 
 		// Click first entry and verify the new created user is present
 
@@ -60,17 +63,25 @@ public class SubmitToStaffWorkbench {
 		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions.presenceOfElementLocated(
 				By.xpath("//*[contains(text(), '" + DisputeTicketOptionsPickerByMail.getUser() + "')]")));
 
+		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//a[contains(text(), '" + E_TICKET_NUMBER + "')]")));
+
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"/html/body/app-root/div/app-staff-workbench-dashboard/app-page/div/div[3]/app-busy-overlay/div/div/div/app-ticket-inbox/div/table/tbody/tr[1]/td[3]/span/a")));
+				"//a[contains(text(), '" + E_TICKET_NUMBER + "')]")));
 		element.click();
 
 		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.presenceOfElementLocated(
-				By.xpath("//*[contains(text(), 'FAIL TO COMPLETE POST-TRIP INSPECTION REPORT AT FINAL STOPS')]")));
+				By.xpath("//*[contains(text(), '" + E_TICKET_COUNT_1 + "')]")));
 		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '$138.00')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"//*[contains(text(), 'I do not want to attend a court hearing and want to supply written reasons.')]")));
-
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '$" + E_TICKET_AMOUNT_1 + ".00')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[contains(text(), '" + E_TICKET_COUNT_2 + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '$" + E_TICKET_AMOUNT_2 + ".00')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[contains(text(), '" + E_TICKET_COUNT_3 + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '$" + E_TICKET_AMOUNT_3 + ".00')]")));
 	}
 
 	public String getUser() {
@@ -81,24 +92,34 @@ public class SubmitToStaffWorkbench {
 		this.user = user;
 	}
 
-	public void loginToStaffWorkbench(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+	public void loginToStaffWorkbench(WebDriverWait driverWait, WebDriver driver) throws Exception {
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'IDIR')]"))).click();
-		// Clcik Cancel on popup
-		/*
-		 * new WebDriverWait(driver, Duration.ofSeconds(10))
-		 * .until(ExpectedConditions.presenceOfElementLocated(By.
-		 * xpath("//*[contains(text(), 'Cancel')]"))).click();
-		 */
+		Thread.sleep(1000);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("user")));
-		element.sendKeys(bceidUSERNAME);
+		WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("username")));
+		element.sendKeys(appUSERNAME);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("password")));
-		element.sendKeys(bceidPASSWORD);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("btnSubmit")));
+		element.sendKeys(appPASSWORD);
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("login")));
 		element.click();
 
+		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[contains(text(), 'Sign out')]")));
+	}
+
+	public void loginToStaffWorkbenchWithUser(WebDriverWait driverWait, WebDriver driver, String appUSERNAME) throws Exception {
+
+		Thread.sleep(1000);
+
+		WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("username")));
+		element.sendKeys(appUSERNAME);
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("password")));
+		element.sendKeys(appPASSWORD);
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("login")));
+		element.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[contains(text(), 'Sign out')]")));
 	}
 
 }

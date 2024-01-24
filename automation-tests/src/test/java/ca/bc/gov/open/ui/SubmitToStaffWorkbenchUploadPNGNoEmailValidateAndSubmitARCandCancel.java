@@ -1,7 +1,6 @@
 package ca.bc.gov.open.ui;
 
 import java.time.Duration;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -14,7 +13,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
-import junit.framework.Assert;
+
+import static ca.bc.gov.open.cto.ApiClient.generateImageTicket;
+import static ca.bc.gov.open.cto.TicketInfo.*;
 
 public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndSubmitARCandCancel {
 
@@ -39,6 +40,8 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndSubmitARCandCancel
 		WebElement element = CustomWebDriverManager.getElement();
 		CustomWebDriverManager.getElements();
 
+		generateImageTicket();
+
 		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
 		upload.uploadPNG(element, driverWait, driver);
 
@@ -54,7 +57,7 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndSubmitARCandCancel
 		CommonUtils.loginStaffWorkbench();
 
 		SubmitToStaffWorkbench loginStaff = new SubmitToStaffWorkbench();
-		loginStaff.loginToStaffWorkbench(element, driverWait, driver);
+		loginStaff.loginToStaffWorkbench(driverWait, driver);
 
 		SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject checkEditStaffTCO = new SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject();
 		checkEditStaffTCO.staffWorkCheckAndEdit(element, driverWait, driver);
@@ -65,50 +68,75 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndSubmitARCandCancel
 						.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Approve and submit to ARC ')]")))
 				.click();
 
+		Thread.sleep(3000);
+
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions
 						.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Approve and send request ')]")))
 				.click();
 
-		new WebDriverWait(driver, Duration.ofSeconds(50))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Kent')]")));
+		Thread.sleep(3000);
 
-		List<WebElement> searchTextBoxes = driver.findElements(
-				By.xpath("//*[@id=\"mat-tab-content-1-0\"]/div/app-ticket-inbox/div[2]/table/tbody/tr[1]/td[6]/span"));
-		for (WebElement searchTextBox : searchTextBoxes) {
-			String typeValue = searchTextBox.getText();
-			String expectTitle = "PROCESSING";
-			System.out.println("Value of type attribute: " + typeValue);
-			Assert.assertEquals(expectTitle, typeValue);
-		}
-
-		new WebDriverWait(driver, Duration.ofSeconds(50))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-						"//*[@id=\"mat-tab-content-1-0\"]/div/app-ticket-inbox/div[2]/table/tbody/tr[1]/td[3]/span/a")))
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//mat-select")))
 				.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//span[contains(text(), 'PROCESSING')]")))
+				.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(50))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td/span[contains(text(), 'PROCESSING')]")));
+
+//		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("ticketNumber")));
+//		element.sendKeys(TICKET_NUMBER);
+
+		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
+
+		new WebDriverWait(driver, Duration.ofSeconds(30))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+						"//a[contains(text(), '" + TICKET_NUMBER + "')]")))
+				.click();
+
 		new WebDriverWait(driver, Duration.ofSeconds(50))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Cancel ')]")))
 				.click();
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-58")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'Please enter ')]/following-sibling::*//textarea")));
 		element.sendKeys("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.");
 
 		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions
 				.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Send cancellation notification ')]")))
 				.click();
-		//Enter ticket no
-		
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("searchInput")));
-		element.sendKeys("AN00893391");
+		Thread.sleep(1000);
 
-		new WebDriverWait(driver, Duration.ofSeconds(50)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket Validation')]")));
-		
-		
-		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email Address Not Verified')]")));
-		
-		
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//mat-select")))
+				.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//span[contains(text(), 'CANCELLED')]")))
+				.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(50))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td/span[contains(text(), 'CANCELLED')]")));
+
+		//check if should be unassigned
+//		new WebDriverWait(driver, Duration.ofSeconds(50))
+//				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Unassigned')]")));
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions
+						.presenceOfElementLocated(By.xpath("//*[contains(text(), '" +	TICKET_NUMBER + "')]")))
+				.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(50))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'CANCELLED')]")));
 	}
 
 }

@@ -15,6 +15,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+import static ca.bc.gov.open.cto.TicketInfo.*;
+
 public class ManageOrUpdateTrafficDispute {
 
 	private WebDriver driver;
@@ -37,24 +40,27 @@ public class ManageOrUpdateTrafficDispute {
 		WebElement element = CustomWebDriverManager.getElement();
 		CustomWebDriverManager.getElements();
 
+		SubmitToStaffWorkbench dispute = new SubmitToStaffWorkbench();
+		dispute.test();
+
 		CommonUtils.login();
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Manage or update my traffic dispute ')]")));
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Manage or update my dispute')]")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
 
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
-		element.sendKeys("EZ02005201");
+		element.sendKeys(E_TICKET_NUMBER);
 
 		element = driverWait
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'HH')]")));
-		element.sendKeys("09");
+		element.sendKeys(E_TICKET_TIME_HOURS);
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'MM')]")))
-				.sendKeys("109");
+				.sendKeys(E_TICKET_TIME_MINUTES);
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
 				.click();
@@ -64,12 +70,17 @@ public class ManageOrUpdateTrafficDispute {
 		// Scroll down till the bottom of the page
 		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 		System.out.println("Scroll down till the bottom of the page");
-		Thread.sleep(1000);
-		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-button-wrapper > strong")));
-		element.click();
-		System.out.println("Start dispute ticket");
 
+		driverWait.until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'What would you like to do?')]")));
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//b[contains(text(), 'Check Status')]")))
+				.click();
+
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(text(), 'Submitted')]")));
 	}
 
 }

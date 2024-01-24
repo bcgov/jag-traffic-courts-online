@@ -14,6 +14,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateImageTicket;
+import static ca.bc.gov.open.cto.TicketInfo.TICKET_EMAIL;
 public class DisputeTicketUploadPNGIncorectRetriveData {
 
 	private WebDriver driver;
@@ -36,12 +38,14 @@ public class DisputeTicketUploadPNGIncorectRetriveData {
 		WebElement element = CustomWebDriverManager.getElement();
 		CustomWebDriverManager.getElements();
 
+		generateImageTicket();
+
 		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
 		upload.uploadPNG(element, driverWait, driver);
 
 		// Tick there are differences box
 
-		new WebDriverWait(driver, Duration.ofSeconds(20)).until(
+		new WebDriverWait(driver, Duration.ofSeconds(100)).until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket details')]")));
 		JavascriptExecutor js6 = (JavascriptExecutor) driver;
 		element = driverWait
@@ -79,7 +83,7 @@ public class DisputeTicketUploadPNGIncorectRetriveData {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("V8X1G3");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element.sendKeys(TICKET_EMAIL);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
 		element.sendKeys("9999999999");
 
@@ -92,7 +96,13 @@ public class DisputeTicketUploadPNGIncorectRetriveData {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
 		jse33.executeScript("arguments[0].click();", element);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
+		Thread.sleep(1000);
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
+		element.sendKeys(
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
@@ -105,24 +115,23 @@ public class DisputeTicketUploadPNGIncorectRetriveData {
 
 		// This will scroll the web page till end.
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-		Thread.sleep(1000);
-		// Tick i declare
-		JavascriptExecutor js11 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-3")));
-		js11.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
+
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Please review and ensure details are correct before submission. You may update your dispute online up to 5 business days prior to a set Hearing Date.')]")));
+
+		System.out.println("Click Submit button");
+
 		Thread.sleep(1000);
 		JavascriptExecutor js7 = (JavascriptExecutor) driver;
 		element = driverWait.until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Submit request')]")));
+
 		js7.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		element.click();
 
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
 		popup.popupSubmitWindow(element, driverWait, driver);
-
 	}
 
 }

@@ -16,13 +16,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.*;
+import static ca.bc.gov.open.cto.TicketInfo.*;
+
 public class DisputeTicketUploadPNG {
 
 	private WebDriver driver;
 
 	
 	  @After public void tearDown() { driver.close(); driver.quit(); }
-	  
+
 	  @AfterClass public static void afterClass() { CustomWebDriverManager.instance =
 	  null; }
 	 
@@ -34,32 +37,21 @@ public class DisputeTicketUploadPNG {
 		WebElement element = CustomWebDriverManager.getElement();
 		CustomWebDriverManager.getElements();
 
+		generateImageTicket();
+
 		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
 		upload.uploadPNG(element, driverWait, driver);
 
-		new WebDriverWait(driver, Duration.ofSeconds(60)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket details')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AC00000150')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Oct 20, 2023')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Bubley')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'BC')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '15:23')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Michael')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '1234567')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Excessive Speeding')]")));
-		System.out.println("File uploaded properly");
+		validateImageTicket(driver);
 
+		submitPNGticket(driverWait, driver);
+
+	}
+
+	public void submitPNGticket(WebDriverWait driverWait, WebDriver driver) throws Exception {
 		Thread.sleep(1000);
 		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
+		WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
 				By.xpath("//*[contains(text(), ' Save information and create online ticket ')]")));
 		js.executeScript("arguments[0].click();", element);
 
@@ -82,9 +74,11 @@ public class DisputeTicketUploadPNG {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
 		element.sendKeys("V8X1G3");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element.sendKeys(TICKET_EMAIL);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
+		element.sendKeys("999999999");
 		Thread.sleep(1000);
 		
 		DisputeTicketUploadPNG review = new DisputeTicketUploadPNG();
@@ -96,7 +90,13 @@ public class DisputeTicketUploadPNG {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
 		jse33.executeScript("arguments[0].click();", element);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
+		Thread.sleep(1000);
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
+		element.sendKeys(
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
@@ -107,11 +107,15 @@ public class DisputeTicketUploadPNG {
 		Thread.sleep(1000);
 
 		JavascriptExecutor jse31 = (JavascriptExecutor) driver;
+
 		// Click Next
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-3")));
-		jse31.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
+//		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-3")));
+//		jse31.executeScript("arguments[0].scrollIntoView();", element);
+//		Thread.sleep(1000);
+//		element.click();
+
+		element = driverWait.until(
+				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Please review and ensure details are correct before submission. You may update your dispute online up to 5 business days prior to a set Hearing Date.')]")));
 
 		System.out.println("Click Submit button");
 		Thread.sleep(1000);
@@ -139,10 +143,12 @@ public class DisputeTicketUploadPNG {
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Dispute your ticket ')]")))
 				.click();
 
+		Thread.sleep(1000);
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Traffic Ticket ')]")))
 				.click();
 
+		Thread.sleep(1000);
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Upload ticket image ')]")));
 
@@ -173,11 +179,19 @@ public class DisputeTicketUploadPNG {
 		} else {
 			System.out.println("Text: " + a + " is not present. ");
 		}
-		Thread.sleep(1000);
+		Thread.sleep(3000);
 		// Select rdo button
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-2")));
 		element.click();
 		System.out.println("RDO selected");
+
+		// select disputant
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-5")));
+		element.click();
+		System.out.println("Disputant selected");
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='disputant_signatory_name']")));
+		element.sendKeys(IMAGE_TICKET_NAME);
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
@@ -219,6 +233,40 @@ public class DisputeTicketUploadPNG {
 		} else {
 			System.out.println("Text: " + c + " is not present. ");
 		}
+
+	}
+
+	public void validateImageTicket(WebDriver driver) throws Exception {
+
+		new WebDriverWait(driver, Duration.ofSeconds(120)).until(
+				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket details')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(60))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + TICKET_NUMBER + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(60))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + TICKET_DATE_M_D_Y + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_SURNAME + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_PROVINCE + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_TIME_HOURS + ":" + IMAGE_TICKET_TIME_MINUTES + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Given name(s)')]/following-sibling::*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Province / State of DL')]/following-sibling::*[contains(text(), '" + IMAGE_TICKET_STATE_OF_DL + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'licence number')]/following-sibling::*[contains(text(), '" + IMAGE_TICKET_DL_NUMBER + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_COUNT_1 + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_COUNT_2 + "')]")));
+		new WebDriverWait(driver, Duration.ofSeconds(10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_COUNT_3 + "')]")));
+
+		System.out.println("File uploaded properly");
 
 	}
 }

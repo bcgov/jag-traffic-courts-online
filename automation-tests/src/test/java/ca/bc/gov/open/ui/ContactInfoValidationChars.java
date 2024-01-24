@@ -2,6 +2,7 @@ package ca.bc.gov.open.ui;
 
 import java.time.Duration;
 
+import ca.bc.gov.open.cto.CommonMethods;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
+
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
 
 public class ContactInfoValidationChars {
 
@@ -44,8 +47,8 @@ public class ContactInfoValidationChars {
 		Thread.sleep(1000);
 
 		// Required
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
-		element.click();
+		CommonMethods.clickOnElementByXpath(driver,driverWait, "//input[@id='mat-input-2']");
+
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
 		element.click();
 

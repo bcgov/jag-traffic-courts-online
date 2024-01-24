@@ -15,6 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+
 public class ContactINfoLawyerValidationChars {
 	
 	private WebDriver driver;

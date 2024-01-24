@@ -1,7 +1,6 @@
 package ca.bc.gov.open.ui;
 
 import java.time.Duration;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,205 +14,270 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
-import junit.framework.Assert;
+
+import static ca.bc.gov.open.cto.ApiClient.generateImageTicket;
+import static ca.bc.gov.open.cto.TicketInfo.*;
 
 public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
 
-	private WebDriver driver;
+    private WebDriver driver;
 
-	/*
-	 * @After public void tearDown() { driver.close(); driver.quit(); }
-	 * 
-	 * @AfterClass public static void afterClass() { CustomWebDriverManager.instance =
-	 * null; }
-	 */
+    @After
+    public void tearDown() {
+        driver.close();
+        driver.quit();
+    }
 
-	@SuppressWarnings("deprecation")
-	@Test
-	public void test() throws Exception {
-		driver = CustomWebDriverManager.getDriver();
-		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
+    @AfterClass
+    public static void afterClass() {
+        CustomWebDriverManager.instance =
+                null;
+    }
 
-		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
-		upload.uploadPNG(element, driverWait, driver);
 
-		SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject submit = new SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject();
-		submit.submitPNG(element, driverWait, driver);
+    @SuppressWarnings("deprecation")
+    @Test
+    public void test() throws Exception {
+        driver = CustomWebDriverManager.getDriver();
+        WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
+        WebElement element = CustomWebDriverManager.getElement();
+        CustomWebDriverManager.getElements();
 
-		// Switch to pop-up window
-		DisputeTicketOptionsPickerByMail popupWindowHandle = new DisputeTicketOptionsPickerByMail();
-		popupWindowHandle.popup(element, driverWait, driver);
+        generateImageTicket();
 
-		// Switch to Staff Workbench
+        DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
+        upload.uploadPNG(element, driverWait, driver);
 
-		CommonUtils.loginStaffWorkbench();
+        SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject submit = new SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject();
+        submit.submitPNG(element, driverWait, driver);
 
-		SubmitToStaffWorkbench loginStaff = new SubmitToStaffWorkbench();
-		loginStaff.loginToStaffWorkbench(element, driverWait, driver);
+        // Switch to Staff Workbench\
+        CommonUtils.loginStaffWorkbench();
 
-		SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject checkEditStaffTCO = new SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject();
-		checkEditStaffTCO.staffWorkCheckAndEdit(element, driverWait, driver);
+        SubmitToStaffWorkbench loginStaff = new SubmitToStaffWorkbench();
+        loginStaff.loginToStaffWorkbench(driverWait, driver);
 
-		Thread.sleep(5000);
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Reject ')]")))
-				.click();
+        SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject checkEditStaffTCO = new SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject();
+        checkEditStaffTCO.staffWorkCheckAndEdit(element, driverWait, driver);
 
-		// Reject reason
-		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-29")));
-		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium.");
+        Thread.sleep(3000);
+        staffRejectImageTicket(driverWait, driver);
+    }
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions
-						.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Send rejection notification ')]")))
-				.click();
+public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) throws Exception {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Reject ')]")))
+                .click();
+        Thread.sleep(1000);
 
-		new WebDriverWait(driver, Duration.ofSeconds(50))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Kent')]")));
+        WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'Please enter ')]/following-sibling::*//textarea")));
+        element.sendKeys(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium.");
 
-		List<WebElement> searchTextBoxes = driver.findElements(
-				By.xpath("//*[@id=\"mat-tab-content-1-0\"]/div/app-ticket-inbox/div[2]/table/tbody/tr[1]/td[6]/span"));
-		for (WebElement searchTextBox : searchTextBoxes) {
-			String typeValue = searchTextBox.getText();
-			String expectTitle = "REJECTED";
-			System.out.println("Value of type attribute: " + typeValue);
-			Assert.assertEquals(expectTitle, typeValue);
-		}
-	}
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//*[contains(text(), ' Send rejection notification ')]")))
+                .click();
 
-	public void submitPNG(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
-		
-		new WebDriverWait(driver, Duration.ofSeconds(50))
-		.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Save information and create online ticket ')]")));
+        Thread.sleep(3000);
 
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
-				By.xpath("//*[contains(text(), ' Save information and create online ticket ')]")));
-		js.executeScript("arguments[0].click();", element);
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//mat-select")))
+                .click();
 
-		Thread.sleep(1000);
-		// Start Traffic ticket dispute request
-		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		// Scroll down till the bottom of the page
-		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		System.out.println("Scroll down till the bottom of the page");
-		Thread.sleep(1000);
-		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-button-wrapper > strong")));
-		element.click();
-		System.out.println("Start dispute ticket");
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//span[contains(text(), 'REJECTED')]")))
+                .click();
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-		element.sendKeys("3220 Qadra");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-		element.sendKeys("Victoria");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
-		element.sendKeys("V8X1G3");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
-		element.sendKeys("9999999999");
+        new WebDriverWait(driver, Duration.ofSeconds(50))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td/span[contains(text(), 'REJECTED')]")));
 
-		Thread.sleep(1000);
-		JavascriptExecutor js2 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
-		Thread.sleep(1000);
-		js2.executeScript("arguments[0].click();", element);
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions
+                        .presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_SURNAME + "')]")))
+                .click();
 
-		DisputeTicketUploadPNG review = new DisputeTicketUploadPNG();
-		review.review(element, driverWait, driver);
+    }
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
+    public void submitPNG(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
-		element.sendKeys(
-				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
-		// Click Next
-		JavascriptExecutor js5 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
-		js5.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
+        new WebDriverWait(driver, Duration.ofSeconds(200))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Save information and create online ticket ')]")));
 
-		JavascriptExecutor jse3 = (JavascriptExecutor) driver;
-		// Click Next
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-3")));
-		jse3.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[contains(text(), ' Save information and create online ticket ')]")));
+        js.executeScript("arguments[0].click();", element);
 
-		System.out.println("Click Submit button");
-		Thread.sleep(1000);
-		JavascriptExecutor js7 = (JavascriptExecutor) driver;
-		element = driverWait.until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Submit request')]")));
-		js7.executeScript("arguments[0].scrollIntoView();", element);
-		Thread.sleep(1000);
-		element.click();
+        Thread.sleep(1000);
+        // Start Traffic ticket dispute request
+        JavascriptExecutor js1 = (JavascriptExecutor) driver;
+        // Scroll down till the bottom of the page
+        js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+        System.out.println("Scroll down till the bottom of the page");
+        Thread.sleep(1000);
+        element = driverWait
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-button-wrapper > strong")));
+        element.click();
+        System.out.println("Start dispute ticket");
 
-	}
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
+        element.sendKeys("3220 Qadra");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
+        element.sendKeys("Victoria");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
+        element.sendKeys("V8X1G3");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
+        element.sendKeys(TICKET_EMAIL);
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
+        element.sendKeys("9999999999");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
+        element.sendKeys("999999999");
 
-	public void staffWorkCheckAndEdit(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+        Thread.sleep(1000);
+        JavascriptExecutor js2 = (JavascriptExecutor) driver;
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("searchInput")));
-		element.sendKeys("AN00893391");
-		
-		// Click first entry and verify the new created user is present
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-6")));
+        element.click();
 
-		new WebDriverWait(driver, Duration.ofSeconds(50))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AN00893391')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(50))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Kent')]")));
+        Thread.sleep(1000);
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-6-panel")));
+        element.click();
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-				.xpath("//*[@id=\"mat-tab-content-0-0\"]/div/app-ticket-inbox/div[2]/table/tbody/tr[1]/td[3]/span/a")));
-		element.click();
+        Thread.sleep(1000);
+        element = driverWait
+                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
+        Thread.sleep(1000);
+        js2.executeScript("arguments[0].click();", element);
 
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Invalid statute selection.')]")));
+        DisputeTicketUploadPNG review = new DisputeTicketUploadPNG();
+        review.review(element, driverWait, driver);
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Pass on right')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Registration and Licence')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Municipal Powers')]")));
+        Thread.sleep(1000);
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
 
-		// Edit Red Flags
+        Thread.sleep(1000);
+        js.executeScript("arguments[0].click();", element);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
-		element.clear();
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
-		element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
-		
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
-		element.clear();
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
-		element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Additional information')]")));
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-17")));
-		element.clear();
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-17")));
-		element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
-		
-		Thread.sleep(1000);
-		driver.findElement(By.xpath("//html")).click();
+        Thread.sleep(1000);
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Save ')]")))
-				.click();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
+        element.sendKeys(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Validate ')]")))
-				.click();
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' None ')]")));
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+        element.sendKeys(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
-	}
 
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+        Thread.sleep(1000);
+        js.executeScript("arguments[0].click();", element);
+
+
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Please review and ensure details are correct before submission. You may update your dispute online up to 5 business days prior to a set Hearing Date.')]")));
+
+        // Click Next
+//        JavascriptExecutor js5 = (JavascriptExecutor) driver;
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//strong[contains(text(),'Submit request')]")));
+//        js5.executeScript("arguments[0].click();", element);
+
+        Thread.sleep(1000);
+        System.out.println("Click Submit button");
+
+        Thread.sleep(1000);
+        JavascriptExecutor js7 = (JavascriptExecutor) driver;
+        element = driverWait.until(
+                ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Submit request')]")));
+
+        js7.executeScript("arguments[0].scrollIntoView();", element);
+        Thread.sleep(2000);
+        element.click();
+
+        DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
+        popup.popupSubmitWindow(element, driverWait, driver);
+
+
+    }
+
+    public void staffWorkCheckAndEdit(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("ticketNumber")));
+        element.sendKeys(TICKET_NUMBER);
+
+        Thread.sleep(1000);
+
+        // Click first entry and verify the new created user is present
+        new WebDriverWait(driver, Duration.ofSeconds(60))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + TICKET_NUMBER + "')]")));
+        new WebDriverWait(driver, Duration.ofSeconds(60))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
+
+        Thread.sleep(1000);
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+                .xpath("//a[contains(text(), '" +  TICKET_NUMBER + "')]")));
+        element.click();
+
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'Invalid statute selection.')]")));
+
+        Thread.sleep(1000);
+        // Edit Red Flags
+
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+        element.clear();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+//        element.sendKeys("Excessive Speeding");
+
+        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//                .xpath("//span[contains(text(), 'Excessive Speeding')]")));
+//        element.click();
+
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+        element.clear();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+//
+//        element.sendKeys("Driving Without Licence");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//                .xpath("//span[contains(text(), 'Driving Without Licence')]")));
+//        element.click();
+
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
+        element.clear();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
+        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+
+//        element.sendKeys("Driving With Burned Out Break Lights");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//                .xpath("//span[contains(text(), 'Driving With Burned Out Break Lights')]")));
+//        element.click();
+
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//html")).click();
+
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//html")).click();
+
+
+        Thread.sleep(1000);
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Save ')]")))
+                .click();
+
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Validate ')]")))
+                .click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' None ')]")));
+    }
 }

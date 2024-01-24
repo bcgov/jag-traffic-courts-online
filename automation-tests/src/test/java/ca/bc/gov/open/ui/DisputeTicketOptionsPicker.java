@@ -19,6 +19,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+import static ca.bc.gov.open.cto.CommonMethods.*;
+import static ca.bc.gov.open.cto.TicketInfo.*;
+
 public class DisputeTicketOptionsPicker {
 
 	private WebDriver driver;
@@ -77,6 +81,8 @@ public class DisputeTicketOptionsPicker {
 
 	public void startDisputeTicket(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
+		generateMockETicket();
+
 		Thread.sleep(1000);
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("scroll(0, 450);");
@@ -84,26 +90,34 @@ public class DisputeTicketOptionsPicker {
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Dispute your ticket ')]")))
 				.click();
+		Thread.sleep(1000);
 
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
 				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Traffic Ticket ')]")))
 				.click();
+		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
-		element.sendKeys("EZ02005201");
+		element.sendKeys(E_TICKET_NUMBER);
 
 		element = driverWait
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'HH')]")));
-		element.sendKeys("09");
+		element.sendKeys(E_TICKET_TIME_HOURS);
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'MM')]")))
-				.sendKeys("09");
+				.sendKeys(E_TICKET_TIME_MINUTES);
 
-		System.out.println("Ticket found");
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
-				.click();
-		Thread.sleep(1000);
+//
+//		System.out.println("Ticket found");
+//		new WebDriverWait(driver, Duration.ofSeconds(10))
+//				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
+//				.click();
+
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")));
+		js.executeScript("arguments[0].click();", element);
+
 		// Start Traffic ticket dispute request
 		JavascriptExecutor js1 = (JavascriptExecutor) driver;
 		// Scroll down till the bottom of the page
@@ -142,23 +156,16 @@ public class DisputeTicketOptionsPicker {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-2")));
 		element.click();
 		System.out.println("RDO selected");
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("#mat-checkbox-4 .mat-checkbox-inner-container")));
-		Thread.sleep(1000);
-		js.executeScript("arguments[0].click();", element);
 
-		System.out.println("I would like to plead guilty and request time to pay on this count.- selected");
+		pleadGuilty1stCountAttendCourt(driver,driverWait);
 
-		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		// Scroll down till the bottom of the page
-		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		System.out.println("Scroll down till the bottom of the page");
-		JavascriptExecutor js2 = (JavascriptExecutor) driver;
-		Thread.sleep(1000);
-		// Click Next
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
-		js2.executeScript("arguments[0].click();", element);
+		skip2ndCount(driver,driverWait);
+
+		skip3rdCount(driver,driverWait);
+
+		scrollToBottom(driver,driverWait);
+
+		clickOnNextButton(driver,driverWait);
 
 		String c = "Additional information";
 		// identify elements with text()
@@ -202,7 +209,7 @@ public class DisputeTicketOptionsPicker {
 
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"//*[contains(text(),'I declare all of the information above is correct to the best of my knowledge.')]")));
+				"//*[contains(text(),'Please review and ensure details are correct before submission. You may update your dispute online up to 5 business days prior to a set Hearing Date')]")));
 		js15.executeScript("arguments[0].click();", element);
 
 		System.out.println("Tick declare box checked");
@@ -227,18 +234,24 @@ public class DisputeTicketOptionsPicker {
 			subWindowHandler = iterator.next();
 		}
 		driver.switchTo().window(subWindowHandler); // switch to popup window
-
+		Thread.sleep(1000);
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(
-				By.xpath("//*[@id=\"mat-dialog-1\"]/app-confirm-dialog/mat-dialog-actions/button[2]/span[1]")));
+						By.xpath("//*/app-confirm-dialog/mat-dialog-actions/button[2]/span[1]")));
 		js.executeScript("arguments[0].click();", element);
 		System.out.println("Submit in pop-up clicked");
 
-		driver.switchTo().window(parentWindowHandler); // switch back to parent window
-		Thread.sleep(1000);
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
-		System.out.println("Email verification required is present on page");
+		new WebDriverWait(driver, Duration.ofSeconds(60))
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket request sent successfully')]")));
+
+		// commented out until issue will be fixed
+		// https://justice.gov.bc.ca/jira/browse/TCVP-2608
+
+//		driver.switchTo().window(parentWindowHandler); // switch back to parent window
+//		Thread.sleep(1000);
+//		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+//				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
+//		System.out.println("Email verification required is present on page");
 
 	}
 
@@ -261,7 +274,7 @@ public class DisputeTicketOptionsPicker {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
 		element.sendKeys("V8X1G3");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element.sendKeys(TICKET_EMAIL);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));

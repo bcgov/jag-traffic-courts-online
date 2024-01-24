@@ -15,6 +15,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+import static ca.bc.gov.open.cto.CommonMethods.*;
+import static ca.bc.gov.open.cto.CommonMethods.scrollToBottom;
+
 public class DisputeTicketAttendCourtHearing {
 
 	private WebDriver driver;
@@ -46,32 +50,21 @@ public class DisputeTicketAttendCourtHearing {
 		persInfo.addressInput(element, driverWait, driver);
 
 		Thread.sleep(1000);
-		// Click Next
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
-		js.executeScript("arguments[0].click();", element);
-		System.out.println("Click Next");
-		System.out.println("Count review 1");
-		Thread.sleep(1000);
-		// Select rdo button attend court hearing
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-3")));
-		element.click();
-		Thread.sleep(1000);
-		JavascriptExecutor jse1 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-5 .mat-radio-outer-circle")));
-		jse1.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
-		JavascriptExecutor jse2 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-radio-6 .mat-radio-outer-circle")));
-		jse2.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
 
-		JavascriptExecutor jse22 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
-		jse22.executeScript("arguments[0].click();", element);
-		Thread.sleep(1000);
+		clickOnNextButton(driver, driverWait);
+
+		selectAttendCourtHearingRBO(driver,driverWait);
+
+		agreeCommitedOffence1stCountAttendCourt(driver,driverWait);
+
+		skip2ndCount(driver,driverWait);
+
+		skip3rdCount(driver,driverWait);
+
+		scrollToBottom(driver,driverWait);
+
+		clickOnNextButton(driver,driverWait);
+
 		String a = "Additional information";
 		// identify elements with text()
 		List<WebElement> l = driver.findElements(By.xpath("//*[contains(text(),'Additional information')]"));
@@ -83,7 +76,7 @@ public class DisputeTicketAttendCourtHearing {
 		}
 		JavascriptExecutor jse21 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(
-				By.xpath("//*[contains(text(), ' I intend to be represented by a lawyer in court. ')]")));
+				By.xpath("//*[contains(text(), 'I intend to be represented by a lawyer')]")));
 		jse21.executeScript("arguments[0].click();", element);
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
@@ -107,10 +100,11 @@ public class DisputeTicketAttendCourtHearing {
 		JavascriptExecutor jse61 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("mat-select-value-9")));
 		jse61.executeScript("arguments[0].click();", element);
-		element = driverWait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#mat-option-267 > .mat-option-text")));
-		element.click();
-		Thread.sleep(1000);
+
+		clickOnElementByXpath(driver, driverWait, "//span[contains(text(), 'English')]");
+
+
+			Thread.sleep(1000);
 		// Additional Info with lawyer, interpreter and witness
 		JavascriptExecutor jse62 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions
@@ -124,13 +118,13 @@ public class DisputeTicketAttendCourtHearing {
 
 		// Check text
 		new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"//*[contains(text(), 'If you are calling a witness please keep the following information in mind:')]")));
+				"//*[contains(text(), 'If you are calling witnesses please keep the following information in mind:')]")));
 
 		new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"//*[contains(text(), 'If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your Notice')]")));
+				"//*[contains(text(), 'If you want a lawyer to represent you at your hearing, it is recommended that you consult with them as soon as possible so they can ensure their availability for a hearing date and provide you with advice.')]")));
 
 		new WebDriverWait(driver, Duration.ofSeconds(60)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-				"//*[contains(text(), 'If you bring a witness, you are responsible for ensuring they are aware of the hearing date and know')]")));
+				"//*[contains(text(), 'The court also provides visual language interpreters (American Sign Language) and CART (Communication Access Realtime Translation - captioning services) for any court proceeding.')]")));
 
 		JavascriptExecutor jse7 = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));

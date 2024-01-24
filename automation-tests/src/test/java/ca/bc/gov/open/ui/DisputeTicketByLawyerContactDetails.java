@@ -13,6 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+import static ca.bc.gov.open.cto.TicketInfo.TICKET_EMAIL;
 public class DisputeTicketByLawyerContactDetails {
 
 	private WebDriver driver;
@@ -67,7 +69,7 @@ public class DisputeTicketByLawyerContactDetails {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
 		element.sendKeys("V8x1g6");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element.sendKeys(TICKET_EMAIL);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));

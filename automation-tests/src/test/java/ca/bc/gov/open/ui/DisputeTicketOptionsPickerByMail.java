@@ -19,6 +19,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+
 public class DisputeTicketOptionsPickerByMail {
 
 	private WebDriver driver;
@@ -76,9 +78,6 @@ public class DisputeTicketOptionsPickerByMail {
 	}
 
 	public void addressInput(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
-
-		// String user;
-
 		user = Calendar.getInstance().getTimeInMillis() + "Test";
 
 		System.out.println("New created user is: " + user);
@@ -121,8 +120,8 @@ public class DisputeTicketOptionsPickerByMail {
 
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"mat-dialog-1\"]/app-confirm-dialog/mat-dialog-actions/button[2]/span[1]")));
-		js.executeScript("arguments[0].click();", element);
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*/mat-dialog-actions/button[2]/span[1]")));
+				js.executeScript("arguments[0].click();", element);
 		System.out.println("Submit in pop-up clicked");
 		System.out.println("Submit in pop-up clicked");
 		driver.switchTo().window(parentWindowHandler); // switch back to parent window

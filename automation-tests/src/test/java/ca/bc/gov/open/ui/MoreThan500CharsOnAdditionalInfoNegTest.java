@@ -14,6 +14,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
+import static ca.bc.gov.open.cto.ApiClient.generateImageTicket;
+import static ca.bc.gov.open.cto.TicketInfo.*;
+
 public class MoreThan500CharsOnAdditionalInfoNegTest {
 
 	private WebDriver driver;
@@ -36,28 +39,12 @@ public class MoreThan500CharsOnAdditionalInfoNegTest {
 		WebElement element = CustomWebDriverManager.getElement();
 		CustomWebDriverManager.getElements();
 
+		generateImageTicket();
+
 		DisputeTicketUploadPNG upload = new DisputeTicketUploadPNG();
 		upload.uploadPNG(element, driverWait, driver);
 
-		new WebDriverWait(driver, Duration.ofSeconds(60)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket details')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'AC00000150')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Oct 20, 2023')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Bubley')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'BC')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '15:23')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Michael')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '1234567')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Excessive Speeding')]")));
-		System.out.println("File uploaded properly");
+		upload.validateImageTicket(driver);
 
 		Thread.sleep(1000);
 		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -84,7 +71,7 @@ public class MoreThan500CharsOnAdditionalInfoNegTest {
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
 		element.sendKeys("V8X1G3");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("claudiu.vlasceanu@nttdata.com");
+		element.sendKeys(TICKET_EMAIL);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
 
@@ -103,6 +90,8 @@ public class MoreThan500CharsOnAdditionalInfoNegTest {
 		Thread.sleep(1000);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//html")));
 		element.click();
+		Thread.sleep(1000);
+
 		new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 500')]")));
 
