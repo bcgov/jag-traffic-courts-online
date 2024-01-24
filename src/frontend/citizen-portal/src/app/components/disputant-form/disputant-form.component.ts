@@ -20,6 +20,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   @Input() isMobile: boolean;
   @Input() mode: DisputeFormMode;
   @Input() form: NoticeOfDisputeFormGroup | DisputantContactInformationFormGroup;
+  @Input() preferEmail: boolean;
   @ViewChild(AddressAutocompleteComponent) private addressAutocomplete: AddressAutocompleteComponent;
 
   DisputeFormMode = DisputeFormMode;
@@ -96,7 +97,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
 
-    if (!form.value.email_address && (this.mode === this.DisputeFormMode.UPDATE || this.mode === this.DisputeFormMode.UPDATEDISPUTANT)) {
+    if (!this.preferEmail) {
       this.form.controls.email_address.disable();
       this.optOut = true;
     }

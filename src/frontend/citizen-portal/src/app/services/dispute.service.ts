@@ -165,9 +165,9 @@ export class DisputeService {
     });
   }
 
-  goToUpdateDisputeContact(params: QueryParamsForSearch): void {
+  goToUpdateDisputeContact(params: QueryParamsForSearch, preferEmail: boolean): void {
     this.router.navigate([AppRoutes.disputePath(AppRoutes.UPDATE_DISPUTE_CONTACT)], {
-      queryParams: params,
+      queryParams: { ...params, preferEmail: preferEmail },
     })
   }
 
