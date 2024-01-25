@@ -126,7 +126,7 @@ public partial class OidcConfidentialClient : IOidcConfidentialClient
         string cacheKey,
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
         Token token,
-        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordExpiresAtTag), OmitReferenceName = true)]
         DateTimeOffset expiresAt);
 
     [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "No token is available")]
