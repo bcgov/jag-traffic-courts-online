@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using AutoMapper;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading;
@@ -21,6 +22,7 @@ public class DisputeUpdateRequestConsumerTest
     private readonly Mock<IOracleDataApiService> _oracleDataApiService;
     private readonly Mock<ConsumeContext<DisputeUpdateRequest>> _context;
     private readonly DisputeUpdateRequestConsumer _consumer;
+    private readonly Mock<IMapper> _mockMapper;
 
     public DisputeUpdateRequestConsumerTest()
     {
@@ -37,6 +39,7 @@ public class DisputeUpdateRequestConsumerTest
         };
         _updateRequest = new();
         _mockLogger = new();
+        _mockMapper = new();
         _oracleDataApiService = new();
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
         _oracleDataApiService.Setup(_ => _.GetDisputeByNoticeOfDisputeGuidAsync(_message.NoticeOfDisputeGuid, It.IsAny<CancellationToken>())).Returns(Task.FromResult(_dispute));
@@ -46,7 +49,7 @@ public class DisputeUpdateRequestConsumerTest
         _context = new();
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
-        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputeUpdateRequestReceivedTemplate());
+        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputeUpdateRequestReceivedTemplate(), _mockMapper.Object);
     }
 
     [Fact]
