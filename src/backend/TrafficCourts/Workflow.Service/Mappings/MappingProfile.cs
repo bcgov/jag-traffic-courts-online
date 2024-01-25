@@ -1,4 +1,5 @@
 using AutoMapper;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Workflow.Service.Mappings;
 
@@ -27,10 +28,21 @@ public class MessageContractToDisputeMappingProfile : Profile
             .ForMember(dest => dest.DriversLicenceProvinceSeqNo, opt => opt.MapFrom(src => src.DriversLicenceIssuedProvinceSeqNo));
 
         CreateMap<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount, Messaging.MessageContracts.DisputeCount>();
-        
+
         CreateMap<Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicket, Messaging.MessageContracts.ViolationTicket>()
             .ForMember(dest => dest.ViolationTicketCounts, opt => opt.MapFrom(src => src.ViolationTicketCounts));
 
         CreateMap<DateOnly, DateTime>();
+
+        CreateMap<Dispute, Messaging.MessageContracts.DisputeUpdateRequest>()
+            .ForMember(dest => dest.RepresentedByLawyer, opt => opt.MapFrom(src => src.RepresentedByLawyer == DisputeRepresentedByLawyer.Y ? true : false))
+            .ForMember(dest => dest.InterpreterRequired, opt => opt.MapFrom(src => src.InterpreterRequired == DisputeInterpreterRequired.Y ? true : false))
+            .ForMember(dest => dest.DriversLicenceNumber, opt => opt.MapFrom(src => src.DriversLicenceNumber))
+            .ForMember(dest => dest.DriversLicenceIssuedCountryId, opt => opt.MapFrom(src => src.DriversLicenceIssuedCountryId))
+            .ForMember(dest => dest.DriversLicenceIssuedProvinceSeqNo, opt => opt.MapFrom(src => src.DriversLicenceIssuedProvinceSeqNo))
+            .ForMember(dest => dest.DriversLicenceProvince, opt => opt.MapFrom(src => src.DriversLicenceProvince))
+            .ForMember(dest => dest.RequestCourtAppearance, opt => opt.MapFrom(src => src.RequestCourtAppearanceYn))
+            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts))
+            .ForMember(dest => dest.ContactType, opt => opt.MapFrom(src => src.ContactTypeCd));
     }
 }

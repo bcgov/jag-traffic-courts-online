@@ -52,6 +52,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -72,16 +82,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "An invalid JJ Dispute status is provided. Update failed.",
             "content": {
@@ -92,12 +92,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -150,6 +150,16 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -170,16 +180,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A JJDispute status can only be set to REVIEW if status is CONFIRMED and the remark must be <= 256 characters OR if the status ACCEPTED, CONFIRMED or CONCLUDED and DCF's current hearing date = today's date. Update failed.",
             "content": {
@@ -190,12 +190,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated JJDispute record returned.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -231,6 +231,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -251,16 +261,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A JJDispute status can only be set to REQUIRE_COURT_HEARING iff status is one of the following: NEW, IN_PROGRESS, REVIEW, REQUIRE_COURT_HEARING and the remark must be <= 256 characters. Update failed.",
             "content": {
@@ -271,12 +271,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated JJDispute record returned.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -302,6 +302,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -322,16 +332,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A JJDispute status can only be set to CONFIRMED iff status is one of the following: REVIEW, NEW, HEARING_SCHEDULED, IN_PROGRESS, CONFIRMED. Update failed.",
             "content": {
@@ -342,12 +342,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated JJDispute record returned.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -381,6 +381,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -401,16 +411,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -421,12 +421,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated JJDispute record returned.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -470,6 +470,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -490,16 +500,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "An invalid JJ Dispute status is provided. Update failed.",
             "content": {
@@ -510,12 +510,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -549,6 +549,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -569,16 +579,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -589,12 +589,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated JJDispute record returned.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -637,6 +637,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -657,16 +667,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
             "content": {
@@ -677,12 +677,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated JJDispute record returned.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -719,6 +719,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok"
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -739,16 +742,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -759,8 +752,15 @@
               }
             }
           },
-          "200": {
-            "description": "Ok"
+          "500": {
+            "description": "Internal server error occured.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -794,6 +794,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -806,16 +816,6 @@
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
@@ -844,12 +844,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -874,6 +874,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Dispute record deleted."
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -894,16 +897,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. Delete failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -914,8 +907,15 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Dispute record deleted."
+          "500": {
+            "description": "Internal Server Error. Delete failed.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -939,6 +939,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Updated Dispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -959,16 +969,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
             "content": {
@@ -979,8 +979,8 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated Dispute record returned.",
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
             "content": {
               "*/*": {
                 "schema": {
@@ -989,12 +989,12 @@
               }
             }
           },
-          "409": {
-            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -1021,6 +1021,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Updated Dispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -1041,16 +1051,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
             "content": {
@@ -1061,8 +1061,8 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated Dispute record returned.",
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1071,12 +1071,12 @@
               }
             }
           },
-          "409": {
-            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -1115,6 +1115,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok. Updated Dispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -1135,16 +1145,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
             "content": {
@@ -1155,8 +1155,8 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated Dispute record returned.",
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1165,12 +1165,12 @@
               }
             }
           },
-          "409": {
-            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -1198,6 +1198,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Email verified."
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1218,16 +1221,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1238,8 +1231,15 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Email verified."
+          "500": {
+            "description": "Internal server error occured.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -1275,6 +1275,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Email reset.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "If the email address is > 100 characters",
             "content": {
@@ -1295,16 +1305,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1315,12 +1315,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Email reset.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -1359,6 +1359,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok. Updated Dispute record returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -1379,16 +1389,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
             "content": {
@@ -1399,8 +1399,8 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Updated Dispute record returned.",
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
             "content": {
               "*/*": {
                 "schema": {
@@ -1409,12 +1409,12 @@
               }
             }
           },
-          "409": {
-            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -1458,6 +1458,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. DisputeUpdateRequest updated.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DisputeUpdateRequest"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1478,16 +1488,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. Save failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1498,12 +1498,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. DisputeUpdateRequest updated.",
+          "500": {
+            "description": "Internal Server Error. Save failed.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/DisputeUpdateRequest"
+                  "type": "object"
                 }
               }
             }
@@ -1529,6 +1529,17 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -1549,16 +1560,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1569,13 +1570,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int64"
+                  "type": "object"
                 }
               }
             }
@@ -1601,6 +1601,17 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -1621,16 +1632,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1641,13 +1642,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int64"
+                  "type": "object"
                 }
               }
             }
@@ -1672,6 +1672,17 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1692,16 +1703,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1712,13 +1713,12 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int64"
+                  "type": "object"
                 }
               }
             }
@@ -1755,6 +1755,17 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "Ok. DisputeUpdateRequest record saved.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1775,16 +1786,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. Save failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1795,13 +1796,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. DisputeUpdateRequest record saved.",
+          "500": {
+            "description": "Internal Server Error. Save failed.",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int64"
+                  "type": "object"
                 }
               }
             }
@@ -1838,6 +1838,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JJDispute"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1858,16 +1871,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1878,15 +1881,12 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/JJDispute"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -1920,6 +1920,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1940,16 +1950,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -1960,12 +1960,12 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/JJDispute"
+                  "type": "object"
                 }
               }
             }
@@ -2003,6 +2003,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketImageDataJustinDocument"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2023,16 +2033,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2043,12 +2043,12 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/TicketImageDataJustinDocument"
+                  "type": "object"
                 }
               }
             }
@@ -2074,6 +2074,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileHistory"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2094,16 +2107,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2114,15 +2117,12 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FileHistory"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -2148,6 +2148,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EmailHistory"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2168,16 +2181,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2188,15 +2191,12 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EmailHistory"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -2244,6 +2244,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Disputes are returned.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DisputeListItem"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -2264,16 +2277,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. Getting disputes failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2284,15 +2287,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Disputes are returned.",
+          "500": {
+            "description": "Internal Server Error. Getting disputes failed.",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DisputeListItem"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -2309,6 +2309,9 @@
         "description": "A Dispute can be assigned to a specific user that \"locks\" the record for others. This endpoing manually triggers the Unassign Dispute job that clears the assignment of all Disputes that were assigned for more than 1 hour.",
         "operationId": "unassignDisputes",
         "responses": {
+          "200": {
+            "description": "Ok. Dispute record unassigned."
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2329,16 +2332,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. Unassigned failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2349,8 +2342,15 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Dispute record unassigned."
+          "500": {
+            "description": "Internal Server Error. Unassigned failed.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -2381,6 +2381,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2401,16 +2411,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2421,12 +2421,12 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -2470,6 +2470,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. DisputeUpdateRequest record saved.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DisputeUpdateRequest"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2490,16 +2503,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. retrieve update requests failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2510,15 +2513,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. DisputeUpdateRequest record saved.",
+          "500": {
+            "description": "Internal Server Error. retrieve update requests failed.",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DisputeUpdateRequest"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -2566,6 +2566,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DisputeResult"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request, check parameters.",
             "content": {
@@ -2586,16 +2599,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. Search failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2606,15 +2609,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok.",
+          "500": {
+            "description": "Internal Server Error. Search failed.",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DisputeResult"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -2641,6 +2641,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. Dispute retrieved.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2661,16 +2671,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error occured.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2681,12 +2681,12 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. Dispute retrieved.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Dispute"
+                  "type": "object"
                 }
               }
             }
@@ -2703,6 +2703,9 @@
         "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
         "operationId": "codeTableRefresh",
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -2723,16 +2726,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2743,8 +2736,15 @@
               }
             }
           },
-          "200": {
-            "description": "OK"
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -2780,6 +2780,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Ok. JJ Dispute record deleted."
+          },
           "400": {
             "description": "Bad Request.",
             "content": {
@@ -2800,16 +2803,6 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error. Delete failed.",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
           "405": {
             "description": "Method Not Allowed",
             "content": {
@@ -2820,8 +2813,15 @@
               }
             }
           },
-          "200": {
-            "description": "Ok. JJ Dispute record deleted."
+          "500": {
+            "description": "Internal Server Error. Delete failed.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -4332,9 +4332,22 @@
             ]
           },
           "updateJson": {
-            "maxLength": 1000,
+            "maxLength": 4000,
             "minLength": 3,
             "type": "string"
+          },
+          "currentJson": {
+            "maxLength": 4000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Current state of the Disputant's contact information in JSON format",
+            "nullable": true
+          },
+          "statusUpdateTs": {
+            "type": "string",
+            "description": "Date and time the status was last updated",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },

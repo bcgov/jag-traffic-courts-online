@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using AutoMapper;
+using MassTransit;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -15,15 +16,18 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
     private readonly ILogger<DisputeUpdateRequestConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IDisputeUpdateRequestReceivedTemplate _updateRequestReceivedTemplate;
+    private readonly IMapper _mapper;
 
     public DisputeUpdateRequestConsumer(
         ILogger<DisputeUpdateRequestConsumer> logger,
         IOracleDataApiService oracleDataApiService,
-        IDisputeUpdateRequestReceivedTemplate updateRequestReceivedTemplate)
+        IDisputeUpdateRequestReceivedTemplate updateRequestReceivedTemplate,
+        IMapper mapper)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestReceivedTemplate = updateRequestReceivedTemplate ?? throw new ArgumentNullException(nameof(updateRequestReceivedTemplate));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     public async Task Consume(ConsumeContext<DisputeUpdateRequest> context)
@@ -38,11 +42,15 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             return;
         }
 
+        // TCVP-2497 Map current state of the dispute fields to DisputeUpdateRequest type in order to save as CurrentJson for comparison with UpdateJson.
+        DisputeUpdateRequest currentDispute = _mapper.Map<DisputeUpdateRequest>(dispute);
+
         Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest disputeUpdateRequest = new()
         {
             UpdateType = DisputeUpdateRequestUpdateType.UNKNOWN,
             Status = DisputeUpdateRequestStatus2.PENDING,
-            UpdateJson = JsonConvert.SerializeObject(message, new StringEnumConverter())
+            UpdateJson = JsonConvert.SerializeObject(message, new StringEnumConverter()),
+            CurrentJson = JsonConvert.SerializeObject(currentDispute, new StringEnumConverter())
         };
 
         if (message.EmailAddress is not null)
