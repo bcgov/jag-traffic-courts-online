@@ -309,7 +309,7 @@ export class ContactInfoComponent implements OnInit {
   putDispute(dispute: Dispute): void {
     this.logger.log('ContactInfoComponent::putDispute', dispute);
 
-    this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: Dispute) => {
+    this.disputeService.putDispute(dispute.disputeId, null, dispute).subscribe((response: Dispute) => {
       this.logger.info(
         'ContactInfoComponent::putDispute response',
         response

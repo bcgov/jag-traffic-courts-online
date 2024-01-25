@@ -413,19 +413,7 @@ export class TicketInfoComponent implements OnInit {
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
     this.lastUpdatedDispute = putDispute;
 
-    // no need to pass back byte array with image
-    let tempDispute = putDispute;
-    tempDispute.violationTicket.violationTicketImage = null;
-
-    this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
-      this.logger.info(
-        'TicketInfoComponent::putDispute response',
-        response
-      );
-    });
-
-    // markAsUntouched form group
-    this.form.get('violationTicket').markAsUntouched();
+    this.putDispute(putDispute);
   }
 
   public onSubmitNoticeOfDispute(): void {
@@ -456,36 +444,7 @@ export class TicketInfoComponent implements OnInit {
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
     this.lastUpdatedDispute = putDispute;
 
-    // no need to pass back byte array with image
-    let tempDispute = putDispute;
-    tempDispute.violationTicket.violationTicketImage = null;
-
-    this.disputeService.putDispute(tempDispute.disputeId, tempDispute).subscribe((response: Dispute) => {
-      this.logger.info(
-        'TicketInfoComponent::putDispute response',
-        response
-      );
-
-      // markAsUntouched notice of dispute fields
-      this.form.get('disputantSurname').markAsUntouched();
-      this.form.get('disputantGivenNames').markAsUntouched();
-      this.form.get('driversLicenceNumber').markAsUntouched();
-      this.form.get('driversLicenceProvince').markAsUntouched();
-      this.form.get('driversLicenceCountryId').markAsUntouched();
-      this.form.get('driversLicenceProvinceSeqNo').markAsUntouched();
-      this.form.get('driversLicenceProvinceProvId').markAsUntouched();
-      this.form.get('homePhoneNumber').markAsUntouched();
-      this.form.get('emailAddress').markAsUntouched();
-      this.form.get('address').markAsUntouched();
-      this.form.get('addressCity').markAsUntouched();
-      this.form.get('addressProvince').markAsUntouched();
-      this.form.get('addressProvinceSeqNo').markAsUntouched();
-      this.form.get('addressProvinceCountryId').markAsUntouched();
-      this.form.get('addressProvinceProvId').markAsUntouched();
-      this.form.get('addressCountryId').markAsUntouched();
-      this.form.get('postalCode').markAsUntouched();
-      this.form.get('rejectedReason').markAsUntouched();
-    });
+    this.putDispute(putDispute);
   }
 
   // decompose string into subparagraph, section, subsection, paragraph
@@ -568,19 +527,58 @@ export class TicketInfoComponent implements OnInit {
   }
 
   // put dispute by id
-  putDispute(dispute: Dispute): void {
+  putDispute(dispute: Dispute, isSubmittingNoticeOfDispute: boolean = false): void {
     this.logger.log('TicketInfoComponent::putDispute', dispute);
 
     // no need to pass back byte array with image
     let tempDispute = dispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.disputeService.putDispute(dispute.disputeId, tempDispute).subscribe((response: Dispute) => {
-      this.logger.info(
-        'TicketInfoComponent::putDispute response',
-        response
-      );
-    });
+    const data: DialogOptions = {
+      titleKey: "Enter File History Comment",
+      messageKey: "Please describe the changes you made to the dispute.",
+      actionTextKey: "Save",
+      actionType: "primary",
+      cancelTextKey: "Go back",
+      icon: "error_outline"
+    };
+
+    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+      .subscribe((action?: any) => {
+        if (action?.output?.response) {
+          this.disputeService.putDispute(dispute.disputeId, action?.output?.response, tempDispute).subscribe((response: Dispute) => {
+            this.logger.info(
+              'TicketInfoComponent::putDispute response',
+              response
+            );
+          });
+
+          if (!isSubmittingNoticeOfDispute) {
+            // markAsUntouched form group
+            this.form.get('violationTicket').markAsUntouched();
+          } else {
+            // markAsUntouched notice of dispute fields
+            this.form.get('disputantSurname').markAsUntouched();
+            this.form.get('disputantGivenNames').markAsUntouched();
+            this.form.get('driversLicenceNumber').markAsUntouched();
+            this.form.get('driversLicenceProvince').markAsUntouched();
+            this.form.get('driversLicenceCountryId').markAsUntouched();
+            this.form.get('driversLicenceProvinceSeqNo').markAsUntouched();
+            this.form.get('driversLicenceProvinceProvId').markAsUntouched();
+            this.form.get('homePhoneNumber').markAsUntouched();
+            this.form.get('emailAddress').markAsUntouched();
+            this.form.get('address').markAsUntouched();
+            this.form.get('addressCity').markAsUntouched();
+            this.form.get('addressProvince').markAsUntouched();
+            this.form.get('addressProvinceSeqNo').markAsUntouched();
+            this.form.get('addressProvinceCountryId').markAsUntouched();
+            this.form.get('addressProvinceProvId').markAsUntouched();
+            this.form.get('addressCountryId').markAsUntouched();
+            this.form.get('postalCode').markAsUntouched();
+            this.form.get('rejectedReason').markAsUntouched();
+          }
+        }
+      });
   }
 
   // use violationTicket Service
@@ -805,7 +803,7 @@ export class TicketInfoComponent implements OnInit {
             actCode = violationTicketCount.isAct === ViolationTicketCountIsAct.Y ? "MVA" : "MVR";
           }
           const sectionCode = this.getSectionText(violationTicketCount);
-          let foundStatute = this.lookupsService.statutes?.find(x => StringUtils.nullSafeCompare(x.actCode, actCode) && StringUtils.nullSafeCompare(x.code, sectionCode)); 
+          let foundStatute = this.lookupsService.statutes?.find(x => StringUtils.nullSafeCompare(x.actCode, actCode) && StringUtils.nullSafeCompare(x.code, sectionCode));
           if (foundStatute) {
             countForm.get('actOrRegulationNameCode').setValue(foundStatute.actCode);
             countForm.get('section').setValue(foundStatute.sectionText);

@@ -5,7 +5,6 @@ import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWit
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
-import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
@@ -28,8 +27,7 @@ export class DisputeService implements IDisputeService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private disputeApiService: DisputeApiService,
-    private datePipe: DatePipe
+    private disputeApiService: DisputeApiService
   ) {
     this._disputes = new BehaviorSubject<Dispute[]>(null);
   }
@@ -178,15 +176,14 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
-
+  public putDispute(disputeId: number, staffComment?: string, dispute?: Dispute): Observable<Dispute> {
     dispute.disputantBirthdate = "2001-01-01"; // TODO: remove this after disputant birthdate gone from schema
     dispute = this.splitDisputantGivenNames(dispute);
     dispute = this.splitContactGivenNames(dispute);
     dispute = this.splitLawyerNames(dispute);
     dispute = this.splitAddressLines(dispute);
-    //  dispute.violationTicket =
-    return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
+
+    return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, staffComment, dispute)
       .pipe(
         map((response: Dispute) => {
           this.logger.info('DisputeService::putDispute', response)
@@ -211,7 +208,6 @@ export class DisputeService implements IDisputeService {
      * @param disputeId
      */
   public cancelDispute(disputeId: number, cancelledReason: string): Observable<Dispute> {
-
     return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId, cancelledReason)
       .pipe(
         map((response: any) => {
