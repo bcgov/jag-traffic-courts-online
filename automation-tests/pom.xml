@@ -119,6 +119,13 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<executions>
 					<execution>
@@ -137,7 +144,7 @@
 						</manifest>
 					</archive>
 					<descriptors>
-						<descriptor>src/main/assembly/test-jar-with-dependencies.xml</descriptor>
+						<descriptor>assembly/test-jar-with-dependencies.xml</descriptor>
 					</descriptors>
 				</configuration>
 				<executions>
