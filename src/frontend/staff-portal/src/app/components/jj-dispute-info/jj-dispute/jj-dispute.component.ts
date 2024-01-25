@@ -15,7 +15,6 @@ import { DocumentService } from 'app/api/api/document.service';
 import { DisputeLockService } from 'app/api/api/disputeLock.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
-import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -124,7 +123,6 @@ export class JJDisputeComponent implements OnInit {
     private config: ConfigService,
     private documentService: DocumentService,
     private historyRecordService: HistoryRecordService,
-    private datePipe: CustomDatePipe,
     private disputeLockService: DisputeLockService,
   ) {
     this.authService.jjList$.subscribe(result => {
