@@ -10,7 +10,7 @@ public class VirusScanApiConfigurationTest
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void VirusScanApiConfiguration_validates_BaseUrl_is_required(string uri)
+    public void VirusScanApiConfiguration_validates_BaseUrl_is_required(string? uri)
     {
         VirusScanApiConfiguration sut = new()
         {

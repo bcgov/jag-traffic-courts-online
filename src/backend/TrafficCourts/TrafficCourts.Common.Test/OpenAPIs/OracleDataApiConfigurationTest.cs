@@ -10,7 +10,7 @@ namespace TrafficCourts.Common.Test.OpenAPIs
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void OracleDataApiConfiguration_validates_BaseUrl_is_required(string uri)
+        public void OracleDataApiConfiguration_validates_BaseUrl_is_required(string? uri)
         {
             OracleDataApiConfiguration sut = new()
             {
