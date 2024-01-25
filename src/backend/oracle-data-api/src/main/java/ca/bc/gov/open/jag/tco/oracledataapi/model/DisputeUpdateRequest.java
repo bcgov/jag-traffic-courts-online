@@ -1,10 +1,14 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -28,20 +32,26 @@ public class DisputeUpdateRequest extends Auditable<String> {
 	@Column
 	private Long disputeId;
 
-	@Column(length = 3)
 	@Schema(nullable = false)
 	@NotNull
 	private DisputeUpdateRequestStatus status;
 
-	@Column(length = 3)
 	@Schema(nullable = false)
 	@NotNull
 	private DisputeUpdateRequestType updateType;
 
-	@Column(length = 1000)
 	@Schema(nullable = false)
-	@Size(min = 3, max = 1000)
+	@Size(min = 3, max = 4000)
 	@NotNull
 	private String updateJson;
+	
+
+	@Schema(description = "Current state of the Disputant's contact information in JSON format", maxLength = 4000, nullable = true)
+	@Size(max = 4000)
+	private String currentJson;
+	
+	@Schema(description = "Date and time the status was last updated", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date statusUpdateTs;
 
 }
