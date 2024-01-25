@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
 using TrafficCourts.Core.Http;
 using TrafficCourts.Core.Http.Models;
 
@@ -149,6 +150,8 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         // flag in the job's state that access token updated
         DateTimeOffset expiresAt = state.TokenUpdated(token);
 
+        LogGotToken(token, expiresAt);
+
         _cache.SaveToken(_configuration, token, expiresAt);
         
         ScheduleRefresh(token);
@@ -183,7 +186,6 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
                 return null;
             }
 
-            LogGotToken(new { token.AccessToken, token.ExpiresIn } );
             return token;
         }
         else
@@ -255,11 +257,13 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         }
     }
 
-    [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Got token {Token}")]
-    public partial void LogGotToken(object token);
-
-    //[LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Access token will be cached using cache key {CacheKey}")]
-    //public partial void LogUsingCacheKey(object cacheKey);
+    [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Got token")]
+    public partial void LogGotToken(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        Token token,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        DateTimeOffset expiresAt
+    );
 
     [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Service started")]
     public partial void LogStarted();
@@ -287,5 +291,4 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
 
     [LoggerMessage(EventId = 10, Level = LogLevel.Warning, Message = "Requested scheduled token refresh was less than or equal to zero, it was {Duration}")]
     public partial void LogRefreshScheduledLessThanOrEqualToZero(TimeSpan duration);
-
 }

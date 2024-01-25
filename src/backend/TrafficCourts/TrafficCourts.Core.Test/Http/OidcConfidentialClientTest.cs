@@ -21,8 +21,7 @@ public class OidcConfidentialClientTest
 
         var logger = NullLogger<OidcConfidentialClient>.Instance;
 
-
-        var sut = new OidcConfidentialClient(configuration, cache, logger);
+        var sut = new OidcConfidentialClient(configuration, cache, TimeProvider.System, logger);
 
         var token = await sut.RequestAccessTokenAsync(CancellationToken.None);
     }

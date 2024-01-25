@@ -4,7 +4,7 @@ using TrafficCourts.Http;
 
 namespace TrafficCourts.Core.Http;
 
-public class OidcConfidentialClientDelegatingHandler : DelegatingHandler
+public partial class OidcConfidentialClientDelegatingHandler : DelegatingHandler
 {
     private readonly OidcConfidentialClientConfiguration _configuration;
     private readonly ITokenCache _cache;
@@ -23,7 +23,7 @@ public class OidcConfidentialClientDelegatingHandler : DelegatingHandler
 
         if (accessToken is null)
         {
-            _logger.GetAccessTokenFailed();
+            LogGetAccessTokenFailed();
 
             // could not load access token, bail early without calling real service
             var response = new HttpResponseMessage()
@@ -41,13 +41,15 @@ public class OidcConfidentialClientDelegatingHandler : DelegatingHandler
 
     private string? GetAccessTokenAsync()
     {
+        LogGetAccessTokenFromCache();
+
         var token = _cache.GetToken(_configuration);
         return token?.AccessToken;
     }
-}
 
-public static partial class DelegatingHandlerLog
-{
-    [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Unable to get access token for service")]
-    public static partial void GetAccessTokenFailed(this ILogger logger);
+    [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Unable to get access token for service, returning Unauthorized error")]
+    public partial void LogGetAccessTokenFailed();
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Debug, Message = "Getting access token from cache")]
+    public partial void LogGetAccessTokenFromCache();
 }

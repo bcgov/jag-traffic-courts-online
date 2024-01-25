@@ -1,22 +1,26 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using TrafficCourts.Core.Http.Models;
+using TrafficCourts.Http;
 
 namespace TrafficCourts.Core.Http;
 
-public class OidcConfidentialClient : IOidcConfidentialClient
+public partial class OidcConfidentialClient : IOidcConfidentialClient
 {
     private readonly OidcConfidentialClientConfiguration _configuration;
     private readonly IMemoryCache _memoryCache;
+    private readonly TimeProvider _clock;
     private readonly ILogger<OidcConfidentialClient> _logger;
 
-    public OidcConfidentialClient(OidcConfidentialClientConfiguration configuration, IMemoryCache memoryCache, ILogger<OidcConfidentialClient> logger)
+    public OidcConfidentialClient(OidcConfidentialClientConfiguration configuration, IMemoryCache memoryCache, TimeProvider clock, ILogger<OidcConfidentialClient> logger)
     {
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        _memoryCache = memoryCache;
+        _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+        _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -26,15 +30,27 @@ public class OidcConfidentialClient : IOidcConfidentialClient
 
         if (_memoryCache.TryGetValue<Token>(key, out var token))
         {
-            return token;
+            if (token is not null)
+            {
+                LogGotTokenFromCache(key, token);
+                return token;
+            }
         }
 
-        DateTimeOffset now = DateTimeOffset.UtcNow;
+        // token was not available in the cache, we need to request a new one
+
+        DateTimeOffset now = _clock.GetUtcNow();
         token = await GetTokenAsync(cancellationToken);
 
         if (token is not null)
         {
-            _memoryCache.Set(key, token, now.AddSeconds(token.ExpiresIn - 10));
+            var expiresAt = now.AddSeconds(token.ExpiresIn - 10);
+            _memoryCache.Set(key, token, expiresAt);
+            LogGotNewToken(key, token, expiresAt);
+        }
+        else
+        {
+            LogNoTokenAvailable();
         }
 
         return token;
@@ -42,7 +58,7 @@ public class OidcConfidentialClient : IOidcConfidentialClient
 
     private async Task<Token?> GetTokenAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Requesting access token");
+        LogRequestingNewToken();
 
         var data = new Dictionary<string, string>
         {
@@ -56,7 +72,6 @@ public class OidcConfidentialClient : IOidcConfidentialClient
         var request = new HttpRequestMessage(HttpMethod.Post, _configuration.TokenEndpoint) { Content = content };
         request.Headers.Add("Accept", "application/json");
 
-        _logger.LogDebug("Sending OIDC access token request to server");
         using HttpClient httpClient = new HttpClient(); // tODO: use HttpClientFactory
         var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
@@ -65,7 +80,7 @@ public class OidcConfidentialClient : IOidcConfidentialClient
             Token? token = await response.Content.ReadFromJsonAsync(SerializerContext.Default.Token, cancellationToken);
             if (token is null)
             {
-                _logger.LogInformation("Could not deserialize OIDC token, returning null");
+                LogTokenDeserializationError();
                 // should probably throw?
                 return null;
             }
@@ -74,8 +89,8 @@ public class OidcConfidentialClient : IOidcConfidentialClient
         }
         else
         {
+            LogTokenRequestNotSuccessStatusCode(response.StatusCode);
             // should probably throw?
-            _logger.LogInformation("Access token request failed with {StatusCode}, returning null", response.StatusCode);
             return null;
         }
 
@@ -97,4 +112,34 @@ public class OidcConfidentialClient : IOidcConfidentialClient
 
         return hashString;
     }
+
+    [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Got token from cache")]
+    public partial void LogGotTokenFromCache(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCacheKeyTag), OmitReferenceName = true)]
+        string cacheKey,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        Token token);
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Trace, Message = "Got new token")]
+    public partial void LogGotNewToken(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCacheKeyTag), OmitReferenceName = true)]
+        string cacheKey,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        Token token,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        DateTimeOffset expiresAt);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "No token is available")]
+    public partial void LogNoTokenAvailable();
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Debug, Message = "Requesting new access token")]
+    public partial void LogRequestingNewToken();
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Information, Message = "Could not deserialize OIDC token, returning null")]
+    public partial void LogTokenDeserializationError();
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Information, Message = "Access token request failed, returning null")]
+    public partial void LogTokenRequestNotSuccessStatusCode(
+        HttpStatusCode statusCode);
+
 }
