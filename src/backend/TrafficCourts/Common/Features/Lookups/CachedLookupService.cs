@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace TrafficCourts.Common.Features.Lookups
@@ -88,7 +89,8 @@ namespace TrafficCourts.Common.Features.Lookups
 
             try
             {
-                string json = value; // implicit operator allows RedisValue to string conversion
+                Debug.Assert(((string?)value) != null);
+                string json = value!; // implicit operator allows RedisValue to string conversion, we know it will not be null based on check above
                 T[]? values = JsonSerializer.Deserialize<T[]>(json, _jsonSerializerOptions);
                 if (values is null)
                 {

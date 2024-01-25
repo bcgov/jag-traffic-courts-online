@@ -21,7 +21,7 @@ public class HashidsExtensionsTest
     [InlineData("\t")]
     [InlineData("\n")]
     [InlineData("\r")]
-    public void null_or_whitespace_returns_null(string value)
+    public void null_or_whitespace_returns_null(string? value)
     {
         // create strict mock cause we do not expect any methods to be called
         var mockIHashids = new Mock<IHashids>(MockBehavior.Strict);

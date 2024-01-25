@@ -10,12 +10,12 @@
 	<ItemGroup>
 		<PackageReference Include="Hashids.net" Version="1.7.0" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="8.0.0">
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="8.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
@@ -24,11 +24,11 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
-		<PackageReference Include="NSwag.ApiDescription.Client" Version="14.0.0">
+		<PackageReference Include="NSwag.ApiDescription.Client" Version="14.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="NSwag.MSBuild" Version="14.0.0">
+		<PackageReference Include="NSwag.MSBuild" Version="14.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -39,10 +39,10 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.0" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.7.0" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="0.5.0-beta.2" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.5.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
 		<PackageReference Include="Scrutor" Version="4.2.2" />
 		<PackageReference Include="Serilog" Version="3.1.1" />
-		<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
 		<PackageReference Include="Serilog.Enrichers.Context" Version="4.6.5" />
 		<PackageReference Include="Serilog.Enrichers.Environment" Version="2.3.0" />
 		<PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
