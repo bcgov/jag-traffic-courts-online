@@ -65,7 +65,7 @@ export class JJDisputeComponent implements OnInit {
     contactSurname: [null, Validators.maxLength(30)],
     contactGivenName1: [null, Validators.maxLength(30)],
     contactGivenName2: [null, Validators.maxLength(30)],
-    contactGivenName3: [null, Validators.maxLength(30)]  
+    contactGivenName3: [null, Validators.maxLength(30)]
   });
   courtOptionsForm: FormGroup = this.formBuilder.group({
     lawyerGivenName1: [null, Validators.maxLength(30)],
@@ -179,13 +179,13 @@ export class JJDisputeComponent implements OnInit {
         if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = 'N';
 
         // if (!this.isViewOnly) {
-          this.lastUpdatedJJDispute.mostRecentCourtAppearance.adjudicator = this.jjIDIR;
-          this.lastUpdatedJJDispute.mostRecentCourtAppearance["adjudicatorName"] = this.jjName; // force to add property
-          this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
-          if (this.lastUpdatedJJDispute.jjAssignedTo != this.jjIDIR) {
-            this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
-            this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
-          }
+        this.lastUpdatedJJDispute.mostRecentCourtAppearance.adjudicator = this.jjIDIR;
+        this.lastUpdatedJJDispute.mostRecentCourtAppearance["adjudicatorName"] = this.jjName; // force to add property
+        this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
+        if (this.lastUpdatedJJDispute.jjAssignedTo != this.jjIDIR) {
+          this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
+          this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.jjIDIR).subscribe(response => { }); // assign JJ who opened it
+        }
         // }
         this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.mostRecentCourtAppearance);
         this.determineIfConcludeOrCancel();
@@ -195,17 +195,17 @@ export class JJDisputeComponent implements OnInit {
       this.contactInformationForm.patchValue(this.lastUpdatedJJDispute);
       this.courtOptionsForm.patchValue(this.lastUpdatedJJDispute);
 
-      if(this.jjIDIR===this.lastUpdatedJJDispute.lockedBy){
+      if (this.jjIDIR === this.lastUpdatedJJDispute.lockedBy) {
         this.startTimer(this.lastUpdatedJJDispute.lockExpiresAtUtc, this.lastUpdatedJJDispute.lockId);
       }
-      
+
       this.isNoAppEnabled = this.RoPApp.N === this.lastUpdatedJJDispute.mostRecentCourtAppearance.appCd;
     });
   }
 
   goTo(id: string) {
     let element: ElementRef;
-    switch(id) {
+    switch (id) {
       case "disputeDetails":
         element = this.disputeDetailsAnchor;
         break;
@@ -219,7 +219,7 @@ export class JJDisputeComponent implements OnInit {
         element = this.fileRemarksAnchor;
         break;
     }
-    element?.nativeElement.scrollIntoView({behavior: 'smooth'});
+    element?.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
   onConfirm(): void {
@@ -327,7 +327,7 @@ export class JJDisputeComponent implements OnInit {
     this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.courtOptionsForm.value };
     this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
 
-    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {      
+    this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {
       this.isSSEditMode = false;
 
       // refresh JJDispute data
@@ -340,7 +340,7 @@ export class JJDisputeComponent implements OnInit {
    */
   onSupportStaffCancel(): void {
     this.isSSEditMode = false;
-    
+
     // refresh JJDispute data
     this.getJJDispute();
   }
@@ -437,7 +437,7 @@ export class JJDisputeComponent implements OnInit {
         jjDisputedCount.jjDisputedCountRoP.dismissed = updatedJJDisputedCount.jjDisputedCountRoP.dismissed;
         jjDisputedCount.jjDisputedCountRoP.forWantOfProsecution = updatedJJDisputedCount.jjDisputedCountRoP.forWantOfProsecution;
         jjDisputedCount.jjDisputedCountRoP.withdrawn = updatedJJDisputedCount.jjDisputedCountRoP.withdrawn;
-        jjDisputedCount.jjDisputedCountRoP.abatement = updatedJJDisputedCount.jjDisputedCountRoP.abatement;        
+        jjDisputedCount.jjDisputedCountRoP.abatement = updatedJJDisputedCount.jjDisputedCountRoP.abatement;
         jjDisputedCount.jjDisputedCountRoP.stayOfProceedingsBy = updatedJJDisputedCount.jjDisputedCountRoP.stayOfProceedingsBy;
         jjDisputedCount.jjDisputedCountRoP.other = updatedJJDisputedCount.jjDisputedCountRoP.other;
       }
@@ -554,9 +554,11 @@ export class JJDisputeComponent implements OnInit {
   onPrint() {
     this.jjDisputeService.apiJjTicketNumberPrintGet(this.lastUpdatedJJDispute.ticketNumber).subscribe(result => {
       if (result != null) {
-        var url = URL.createObjectURL(result);
+        var url = URL.createObjectURL(new Blob(result, { type: "application/pdf" }));
         window.open(url);
-      } else alert("File contents not found");
+      } else {
+        alert("File contents not found");
+      }
     });
   }
 
@@ -571,25 +573,25 @@ export class JJDisputeComponent implements OnInit {
    */
 
   // to start the timer
-  startTimer(timerValue: string, lockId: string){
+  startTimer(timerValue: string, lockId: string) {
     var start = new Date();
     var end = new Date(timerValue);
     var milliseconds = end.getTime() - start.getTime();
-    var value = milliseconds > 10000 ? (milliseconds-10000) : 0;
-    setTimeout(()=>{
+    var value = milliseconds > 10000 ? (milliseconds - 10000) : 0;
+    setTimeout(() => {
       this.refreshLock(lockId);
     }, value);
   }
 
   // to refresh the lock
-  refreshLock(lockId: string){
+  refreshLock(lockId: string) {
     this.disputeLockService.apiDisputelockLockIdPut(lockId).subscribe(response => {
       this.startTimer(response, lockId);
     });
   }
 
   // to release the lock
-  releaseLock(lockId: string){
-     this.disputeLockService.apiDisputelockLockIdDelete(lockId).subscribe(response => {});
-  }  
+  releaseLock(lockId: string) {
+    this.disputeLockService.apiDisputelockLockIdDelete(lockId).subscribe(response => { });
+  }
 }
