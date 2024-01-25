@@ -22,7 +22,7 @@ internal static partial class TagProvider
         }
     }
 
-    public static void RecordTags(ITagCollector collector, DateTimeOffset expiresAt)
+    public static void RecordExpiresAtTag(ITagCollector collector, DateTimeOffset expiresAt)
     {
         collector.Add("ExpiresAt", expiresAt);
     }
@@ -35,8 +35,13 @@ internal static partial class TagProvider
         }
     }
 
-    public static void RecordTags(ITagCollector collector, HttpStatusCode httpStatus)
+    public static void RecordHttpStatusCodeTag(ITagCollector collector, HttpStatusCode httpStatus)
     {
         collector.Add("HttpStatusCode", httpStatus);
+    }
+
+    public static void RecordDurationTag(ITagCollector collector, TimeSpan duration)
+    {
+        collector.Add("Duration", duration);
     }
 }

@@ -257,11 +257,11 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         }
     }
 
-    [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Got token")]
+    [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Obtained new token from OIDC server")]
     public partial void LogGotToken(
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
         Token token,
-        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordExpiresAtTag), OmitReferenceName = true)]
         DateTimeOffset expiresAt
     );
 
@@ -280,15 +280,21 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
     [LoggerMessage(EventId = 6, Level = LogLevel.Warning, Message = "Could not deserialize OIDC token, returning null")]
     public partial void LogTokenDeserializationError();
 
-    [LoggerMessage(EventId = 7, Level = LogLevel.Warning, Message = "Access token request failed with {StatusCode}, returning null")]
-    public partial void LogNotSuccessStatusCode(HttpStatusCode statusCode);
+    [LoggerMessage(EventId = 7, Level = LogLevel.Warning, Message = "Access token request failed, returning null")]
+    public partial void LogNotSuccessStatusCode(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordHttpStatusCodeTag), OmitReferenceName = true)]
+        HttpStatusCode statusCode);
 
     [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Schedule token refresh in {Duration}")]
-    public partial void LogRefreshScheduled(TimeSpan duration);
+    public partial void LogRefreshScheduled(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordDurationTag), OmitReferenceName = true)]
+        TimeSpan duration);
 
     [LoggerMessage(EventId = 9, Level = LogLevel.Error, Message = "Error occurred while getting access token")]
     public partial void LogRefreshAccessTokenFailed(Exception exception);
 
-    [LoggerMessage(EventId = 10, Level = LogLevel.Warning, Message = "Requested scheduled token refresh was less than or equal to zero, it was {Duration}")]
-    public partial void LogRefreshScheduledLessThanOrEqualToZero(TimeSpan duration);
+    [LoggerMessage(EventId = 10, Level = LogLevel.Warning, Message = "Requested scheduled token refresh was less than or equal to zero")]
+    public partial void LogRefreshScheduledLessThanOrEqualToZero(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordDurationTag), OmitReferenceName = true)]
+        TimeSpan duration);
 }

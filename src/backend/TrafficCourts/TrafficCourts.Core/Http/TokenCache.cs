@@ -67,6 +67,10 @@ public partial class TokenCache : ITokenCache
     [LoggerMessage(EventId = 3, Level = LogLevel.Debug, Message = "Token is already expired, not adding to cache. The current time is {Now} and the token expired at {ExpiresAtUtc}")]
     public partial void LogTokenExpired(DateTimeOffset now, DateTimeOffset expiresAtUtc);
 
-    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Caching token using cache key {CacheKey} until {ExpiresAtUtc}")]
-    public partial void LogCachingToken(string cacheKey, DateTimeOffset expiresAtUtc);
+    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, Message = "Caching token")]
+    public partial void LogCachingToken(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordCacheKeyTag), OmitReferenceName = true)]
+        string cacheKey,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordExpiresAtTag), OmitReferenceName = true)]
+        DateTimeOffset expiresAtUtc);
 }
