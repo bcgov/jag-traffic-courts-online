@@ -586,6 +586,18 @@
           </div>
         </mat-expansion-panel>
 
+        <span #disputantUpdates></span>
+        <mat-expansion-panel [expanded]="true" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span style="color: black;"><b>{{ "label.disputant_updates" | translate }}</b></span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <app-jj-dispute-updates [disputeId]="lastUpdatedJJDispute.occamDisputeId"></app-jj-dispute-updates>
+          </div>
+        </mat-expansion-panel>
+
         <span #fileRemarks></span>
         <mat-expansion-panel [expanded]="true" id="file-remarks" hideToggle>
           <mat-expansion-panel-header>

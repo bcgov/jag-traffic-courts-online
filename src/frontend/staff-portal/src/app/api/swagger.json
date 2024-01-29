@@ -4487,6 +4487,39 @@
           }
         }
       }
+    },
+    "/api/lookup/country": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of countries.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Country"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request lacks valid authentication credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4517,6 +4550,20 @@
             "items": {
               "$ref": "#/components/schemas/Point"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Country": {
+        "type": "object",
+        "properties": {
+          "ctryId": {
+            "type": "string",
+            "nullable": true
+          },
+          "ctryLongNm": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -5277,9 +5324,20 @@
             "$ref": "#/components/schemas/DisputeUpdateRequestUpdateType"
           },
           "updateJson": {
-            "maxLength": 1000,
+            "maxLength": 4000,
             "minLength": 3,
             "type": "string"
+          },
+          "currentJson": {
+            "maxLength": 4000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "statusUpdateTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "additionalProperties": {
             "type": "object",

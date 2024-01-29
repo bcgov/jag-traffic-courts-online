@@ -23,6 +23,8 @@ export interface DisputeUpdateRequest {
     status: DisputeUpdateRequestStatus2;
     updateType: DisputeUpdateRequestUpdateType;
     updateJson: string;
+    currentJson?: string | null;
+    statusUpdateTs?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

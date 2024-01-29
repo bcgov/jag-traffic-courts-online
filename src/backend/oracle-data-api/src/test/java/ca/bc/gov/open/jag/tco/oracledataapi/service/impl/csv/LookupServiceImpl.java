@@ -14,6 +14,7 @@ import com.opencsv.CSVReaderBuilder;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Agency;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Country;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Province;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;
@@ -101,5 +102,24 @@ public class LookupServiceImpl extends BaseLookupService {
 			return new ArrayList<Province>();
 		}
 		return provinces;
+	}
+	
+	@Override
+	public List<Country> getCountries() throws ApiException {
+		List<Country> countries = new ArrayList<Country>();
+		try (InputStream stream = getClass().getClassLoader().getResourceAsStream("data/countries.csv");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			for (String[] row : new CSVReaderBuilder(reader).withSkipLines(1).build()) {
+				Country country = new Country();
+				country.setCtryId(row.length > 0 ? row[0]: null);
+				country.setCtryLongNm(row.length > 1 ? row[1] : null);
+				countries.add(country);
+			}
+		}
+		catch (Exception e) {
+			log.error("Could not read countries.csv", e);
+			return new ArrayList<Country>();
+		}
+		return countries;
 	}
 }
