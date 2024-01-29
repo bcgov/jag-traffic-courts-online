@@ -7,11 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Agency;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Country;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Province;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
 import io.swagger.v3.core.util.Json;
 
@@ -23,6 +24,7 @@ public abstract class BaseLookupService implements LookupService {
 	private static final String LANGUAGES = "Languages";
 	private static final String AGENCIES = "Agencies";
 	private static final String PROVINCES = "Provinces";
+	private static final String COUNTRIES = "Countries";
 
 	@Autowired
 	private RedisTemplate<String, String> redis;
@@ -48,6 +50,10 @@ public abstract class BaseLookupService implements LookupService {
 			log.debug(" refreshing Provinces...");
 			redis.opsForValue().set(PROVINCES, Json.pretty(getProvinces()));
 
+			// replace the Countries key with a new json-serialized version of the countries list.
+			log.debug(" refreshing Counties...");
+			redis.opsForValue().set(COUNTRIES, Json.pretty(getCountries()));
+			
 			log.debug("Code tables in redis refreshed.");
 		} catch (Exception e) {
 			log.error("Could not update code tables in redis", e);
@@ -65,5 +71,8 @@ public abstract class BaseLookupService implements LookupService {
 	
 	@Override
 	public abstract List<Province> getProvinces() throws ApiException;
+	
+	@Override
+	public abstract List<Country> getCountries() throws ApiException;
 
 }

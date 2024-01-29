@@ -67,4 +67,19 @@ public static partial class Extensions
 
         return services;
     }
+
+    /// <summary>
+    /// Adds country lookup. Callers must ensure Redis is registered.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddCountryLookup(this IServiceCollection services)
+    {
+        services.AddTransient<ICountryLookupService, CountryLookupService>();
+        services.AddMemoryCache();
+
+        services.AddTransient<IRequestHandler<CountryLookup.Request, CountryLookup.Response>, CountryLookup.Handler>();
+
+        return services;
+    }
 }

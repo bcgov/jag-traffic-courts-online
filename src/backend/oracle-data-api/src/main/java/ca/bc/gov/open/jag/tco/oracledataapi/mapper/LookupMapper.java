@@ -6,6 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Province;
+import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Country;
+
 /**
  * Maps from ORDS lookup tables to OracleDataAPI
  */
@@ -40,10 +43,16 @@ public interface LookupMapper {
 	ca.bc.gov.open.jag.tco.oracledataapi.model.Agency convertAgency(ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Agency agency);
 	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Agency> convertAgencies(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Agency> cthList);
 	
-	/** Map from ORDS Province to OracleDAtaAPI Province */
+	/** Map from ORDS Province to OracleDataAPI Province */
 	@Mapping(source = "ctryId", target = "ctryId")
 	@Mapping(source = "provSeqNo", target = "provSeqNo")
 	@Mapping(source = "provNm", target = "provNm")
 	@Mapping(source = "provAbbreviationCd", target = "provAbbreviationCd")
 	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Province> convertProvinces(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Province> provinces);
+	
+	/** Map from ORDS Country to OracleDataAPI Country */
+	@Mapping(source = "ctryId", target = "ctryId")
+	@Mapping(source = "ctryLongNm", target = "ctryLongNm")
+	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Country> convertCountries(List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Country> countries);
+
 }
