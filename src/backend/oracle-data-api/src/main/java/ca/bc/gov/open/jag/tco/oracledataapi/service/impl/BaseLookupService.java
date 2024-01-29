@@ -51,7 +51,7 @@ public abstract class BaseLookupService implements LookupService {
 			redis.opsForValue().set(PROVINCES, Json.pretty(getProvinces()));
 
 			// replace the Countries key with a new json-serialized version of the countries list.
-			log.debug(" refreshing Counties...");
+			log.debug(" refreshing Countries...");
 			redis.opsForValue().set(COUNTRIES, Json.pretty(getCountries()));
 			
 			log.debug("Code tables in redis refreshed.");

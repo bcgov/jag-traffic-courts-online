@@ -117,7 +117,7 @@ public class LookupServiceImpl extends BaseLookupService {
 			}
 		}
 		catch (Exception e) {
-			log.error("Could not read provinces.csv", e);
+			log.error("Could not read countries.csv", e);
 			return new ArrayList<Country>();
 		}
 		return countries;
