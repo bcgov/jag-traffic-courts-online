@@ -1,18 +1,18 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: ords-proxy
+  name: ords
   namespace: 0198bb-dev
   labels:
     app.kubernetes.io/instance: traffic-court-online
-    app.kubernetes.io/name: ords-proxy
+    app.kubernetes.io/name: ords
   annotations:
     openshift.io/host.generated: 'true'
     # replace with developer's ip address list, see TCVP-1682
     # haproxy.router.openshift.io/ip_whitelist: 127.0.0.1 
     haproxy.router.openshift.io/disable_cookies: "true"
 spec:
-  host: ords-proxy-0198bb-dev.apps.silver.devops.gov.bc.ca
+  host: ords-0198bb-dev.apps.silver.devops.gov.bc.ca
   to:
     kind: Service
     name: ords-proxy
