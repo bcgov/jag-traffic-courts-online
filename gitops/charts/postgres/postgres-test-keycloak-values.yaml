@@ -299,12 +299,13 @@ pgBackRestConfig:
   repos:
   - name: repo1
     schedules:
-      # Full backup weekly on Sunday at 1am and 
-      # Differential backups daily at 1am on every day except Sunday,
-      # Incremental backups every hour
-      full: "0 1 * * 0"
-      differential: "0 1 * * 1-6"
-      incremental: "0 * * * *"
+      # Full backup weekly on Sunday at 1am or 2am (9am UTC) and 
+      # Differential backups daily at 1am or 2am (9am UTC) on every day except Sunday,
+      # Incremental backups every hour except for 9am UTC
+      # be sure to configure these not to run at the same time
+      full: "0 9 * * 0"
+      differential: "0 9 * * 1-6"
+      incremental: "0 0-8,10-23 * * *"
     volume:
       volumeClaimSpec:
         accessModes:
