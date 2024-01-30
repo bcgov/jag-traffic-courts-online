@@ -86,24 +86,3 @@ spec:
   selector:
     app.kubernetes.io/instance: traffic-court-online
     app.kubernetes.io/name: ords-proxy
----
-kind: Route
-apiVersion: route.openshift.io/v1
-metadata:
-  name: ords
-  labels:
-    app.kubernetes.io/instance: traffic-court-online
-    app.kubernetes.io/name: ords-proxy
-  annotations:
-    openshift.io/host.generated: 'true'
-    # replace with developer's ip address list, see TCVP-1682
-    # haproxy.router.openshift.io/ip_whitelist: 127.0.0.1 
-    haproxy.router.openshift.io/disable_cookies: "true"
-spec:
-  to:
-    kind: Service
-    name: ords-proxy
-    weight: 100
-  port:
-    targetPort: http
-  wildcardPolicy: None
