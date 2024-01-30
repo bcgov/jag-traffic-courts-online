@@ -1,9 +1,9 @@
 package ca.bc.gov.open.ui.roles;
 
 import ca.bc.gov.open.cto.CustomWebDriverManager;
-import ca.bc.gov.open.ui.DisputeTicketUploadPNG;
-import ca.bc.gov.open.ui.SubmitToStaffWorkbench;
-import ca.bc.gov.open.ui.SubmitToStaffWorkbenchReject;
+import ca.bc.gov.open.ui.imageTickets.DisputeTicketUploadPNG;
+import ca.bc.gov.open.ui.eTickets.SubmitToStaffWorkbench;
+import ca.bc.gov.open.ui.eTickets.SubmitToStaffWorkbenchReject;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;

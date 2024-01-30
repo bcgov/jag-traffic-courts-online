@@ -1,10 +1,13 @@
 package ca.bc.gov.open.ui;
 
+import ca.bc.gov.open.ui.eTickets.DummyTest;
+import ca.bc.gov.open.ui.eTickets.SubmitToStaffWorkbenchReject;
+import ca.bc.gov.open.ui.imageTickets.SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndSubmitARCandCancel;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-public class JUnitRunner {
+public class TestRunner {
 	public static void main(String[] args) {
 		Result result;
 
@@ -35,6 +38,7 @@ public class JUnitRunner {
 
 						case "eticket":
 							if (value) {
+//								result = JUnitCore.runClasses(DummyTest.class);
 								result = JUnitCore.runClasses(SubmitToStaffWorkbenchReject.class);
 								printResults(result, "SubmitToStaffWorkbenchReject");
 								if (!result.wasSuccessful()) {
@@ -45,7 +49,7 @@ public class JUnitRunner {
 							}
 							break;
 
-						case "regression":
+						case "fullRegression":
 							if (value) {
 								result = JUnitCore.runClasses(SubmitToStaffWorkbenchReject.class);
 								printResults(result, "SubmitToStaffWorkbenchReject");
@@ -53,7 +57,43 @@ public class JUnitRunner {
 									genericResponse = false;
 								}
 							} else {
-								System.out.println("Regression skipped");
+								System.out.println("Full Regression skipped");
+							}
+							break;
+
+						case "allEtickets":
+							if (value) {
+								result = JUnitCore.runClasses(TestSuiteETickets.class);
+								printResults(result, "ETickets");
+								if (!result.wasSuccessful()) {
+									genericResponse = false;
+								}
+							} else {
+								System.out.println("allEtickets skipped");
+							}
+							break;
+
+						case "allImageTickets":
+							if (value) {
+								result = JUnitCore.runClasses(TestSuiteImageTickets.class);
+								printResults(result, "Image Tickets");
+								if (!result.wasSuccessful()) {
+									genericResponse = false;
+								}
+							} else {
+								System.out.println("allImageTickets skipped");
+							}
+							break;
+
+						case "rolesTests":
+							if (value) {
+								result = JUnitCore.runClasses(TestSuiteRolesTests.class);
+								printResults(result, "Roles Tests");
+								if (!result.wasSuccessful()) {
+									genericResponse = false;
+								}
+							} else {
+								System.out.println("rolesTests skipped");
 							}
 							break;
 					}

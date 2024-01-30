@@ -1,0 +1,68 @@
+# This is the workflow that creates a new automation test api image and push to Openshift image stream which in turn triggers the deployment
+
+name: AutomationTest - Build Image and Run Autotests on Workflow Dispatch
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+        app:
+            description: 'App Name (tco)'
+            required: true
+            default: AutomationTests
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build-run-autotests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04
+    env:
+      USERNAME_APP: ${{ secrets.USERNAME_APP }}
+      PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      # Set up JDK build environment
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      #### This step is only needed for GHA local runner, act:
+      # https://github.com/nektos/act
+      - name: Install curl (for nektos/act local CI testing)
+        run: apt-get update && apt-get install build-essential curl pkg-config openssl -y
+      - name: Download Maven
+        run: |
+          curl https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip -o maven.zip
+          apt-get update
+          apt-get -y install unzip
+          unzip -d /usr/share maven.zip
+          rm maven.zip
+          ln -s /usr/share/apache-maven-3.9.6/bin/mvn /usr/bin/mvn
+          echo "M2_HOME=/usr/share/apache-maven-3.9.6" | tee -a /etc/environment
+      ####
+
+      - name: Install Selenium
+        run: |
+          curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+          apt-get update && \
+          apt-get install -y google-chrome-stable
+
+      # Runs build steps
+      - name: Maven Package
+        working-directory: automation-tests
+        run: mvn -ntp clean package
+
+
+      - name: Running
+        working-directory: automation-tests/target
+        run: java -Xss2048k -jar TrafficCourtVirtualization-0.0.1-SNAPSHOT-test-jar-with-dependencies.jar eticket=true

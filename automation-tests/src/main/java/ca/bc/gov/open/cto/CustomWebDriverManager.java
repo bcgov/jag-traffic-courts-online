@@ -54,6 +54,17 @@ public class CustomWebDriverManager {
 		if (Config.SELECTED_DRIVER.equals(Constants.CHROME_DRIVER)) {
 
 			ChromeOptions options = getChromeOptions();
+			options.addArguments("--disable-notifications"); //disables 3rd party notifications
+			options.addArguments("--disable-extensions"); //disables 3rd party extensions
+			options.addArguments("--no-sandbox");
+			options.addArguments("--headless");
+			options.addArguments("--window-size=1920,1080");
+			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("--verbose");
+			options.addArguments("--remote-allow-origins=*");
+			options.addArguments("--ignore-ssl-errors=yes");
+			options.addArguments("--ignore-certificate-errors");
+			options.addArguments("--disable-dev-shm-usage");
 			WebDriverManager.chromedriver().setup();
 			WebDriver driver = new ChromeDriver(options);
 			driver.manage().window().maximize();
@@ -62,7 +73,7 @@ public class CustomWebDriverManager {
 		} else if (Config.SELECTED_DRIVER.equals(Constants.FIREFOX_DRIVER)) {
 
 			FirefoxOptions options = new FirefoxOptions();
-//			options.addArguments("--headless");
+			options.addArguments("--headless");
 			WebDriverManager.firefoxdriver().setup();
 			WebDriver driver = new FirefoxDriver(options);
 			driver.manage().window().maximize();

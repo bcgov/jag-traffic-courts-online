@@ -1,4 +1,4 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
@@ -15,7 +15,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
 import static ca.bc.gov.open.cto.CommonMethods.*;
 
 public class AdditionalInfoValidation {

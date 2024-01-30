@@ -1,4 +1,4 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,9 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
-import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
 import static ca.bc.gov.open.cto.TicketInfo.TICKET_EMAIL;
-public class DisputeTicketByOtherContactDetails {
+public class DisputeTicketOptionsPickerDiffCountryFormat {
 
 	private WebDriver driver;
 
@@ -46,29 +45,26 @@ public class DisputeTicketByOtherContactDetails {
 		element.sendKeys("Test");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
 		element.sendKeys("User");
-		// Select Lawyer
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-value-1")));
-		Thread.sleep(1000);
-		js.executeScript("arguments[0].click();", element);
-		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-2 > .mat-option-text")));
-		Thread.sleep(1000);
-		js1.executeScript("arguments[0].click();", element);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys("Test Agent");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
-		element.sendKeys("Surname Agent");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-		element.sendKeys("3220 Qadra");
+		element.sendKeys("Großherzog-Karl-Strasse 6");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-		element.sendKeys("Victoria");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
-		element.sendKeys("V8x1g6");
+		element.sendKeys("Villingen-Schwenningen");
+		Thread.sleep(1000);
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-2")));
+		jse.executeScript("arguments[0].scrollIntoView();", element);
+		Thread.sleep(1000);
+		element.click();
+		element = driverWait.until(
+				ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-62 > .mat-option-text")));
+		element.click();
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
+		element.sendKeys("Baden-Württemberg");
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
+		element.sendKeys("78050");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
 		element.sendKeys(TICKET_EMAIL);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
 		element.sendKeys("999 999 1234");
@@ -77,7 +73,7 @@ public class DisputeTicketByOtherContactDetails {
 		review.reviewProcess(element, driverWait, driver);
 
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(text(), 'Count 1')]/..//*[contains(text(),'fine reduction')]/../../../..//input")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 		// Click Next

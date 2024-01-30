@@ -1,4 +1,4 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
@@ -59,6 +59,8 @@ public class SubmitToStaffWorkbench {
 		setUser(DisputeTicketOptionsPickerByMail.getUser());
 
 		System.out.println("Name to be checked in Staff Workbench: " + DisputeTicketOptionsPickerByMail.getUser());
+
+		Thread.sleep(1000);
 
 		new WebDriverWait(driver, Duration.ofSeconds(50)).until(ExpectedConditions.presenceOfElementLocated(
 				By.xpath("//*[contains(text(), '" + DisputeTicketOptionsPickerByMail.getUser() + "')]")));

@@ -1,4 +1,4 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import java.time.Duration;
 import java.util.Calendar;
@@ -157,6 +157,14 @@ public class DisputeTicketOptionsPicker {
 		element.click();
 		System.out.println("RDO selected");
 
+		// select disputant
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-radio-5")));
+		element.click();
+		System.out.println("Disputant selected");
+
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='disputant_signatory_name']")));
+		element.sendKeys(IMAGE_TICKET_NAME);
+
 		pleadGuilty1stCountAttendCourt(driver,driverWait);
 
 		skip2ndCount(driver,driverWait);
@@ -167,9 +175,10 @@ public class DisputeTicketOptionsPicker {
 
 		clickOnNextButton(driver,driverWait);
 
-		String c = "Additional information";
+		String c = "Additional information block information is opened";
 		// identify elements with text()
-		List<WebElement> m = driver.findElements(By.xpath("//*[contains(text(),'Additional information')]"));
+//		List<WebElement> m = driver.findElements(By.xpath("//*[contains(text(),'Additional information')]"));
+		List<WebElement> m = driver.findElements(By.xpath("//*[contains(text(),'The following additional information is requested and may be changed at any time. This information is used to schedule enough time for the court hearing and changes to the information may cause delays')]"));
 		// verify list size
 		if (m.size() > 0) {
 			System.out.println("Text: " + c + " is present. ");
@@ -182,7 +191,7 @@ public class DisputeTicketOptionsPicker {
 	public void additionalInfo(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(text(), 'Count 1')]/..//*[contains(text(),'fine reduction')]/../../../..//input")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 		// Click Next
@@ -196,7 +205,8 @@ public class DisputeTicketOptionsPicker {
 
 		String d = "Ticket request overview";
 		// identify elements with text()
-		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Ticket request overview')]"));
+//		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Ticket request overview')]"));
+		List<WebElement> n = driver.findElements(By.xpath("//*[contains(text(),'Review the information for each count to ensure details are correct')]"));
 		// verify list size
 		if (n.size() > 0) {
 			System.out.println("Text: " + d + " is present. ");
@@ -208,11 +218,9 @@ public class DisputeTicketOptionsPicker {
 		// Scroll down till the bottom of the page
 
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+		driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
 				"//*[contains(text(),'Please review and ensure details are correct before submission. You may update your dispute online up to 5 business days prior to a set Hearing Date')]")));
-		js15.executeScript("arguments[0].click();", element);
 
-		System.out.println("Tick declare box checked");
 		System.out.println("Click Submit button");
 		Thread.sleep(1000);
 		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -242,16 +250,13 @@ public class DisputeTicketOptionsPicker {
 		System.out.println("Submit in pop-up clicked");
 
 		new WebDriverWait(driver, Duration.ofSeconds(60))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Ticket request sent successfully')]")));
+				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Request details')]")));
 
 		// commented out until issue will be fixed
 		// https://justice.gov.bc.ca/jira/browse/TCVP-2608
 
 //		driver.switchTo().window(parentWindowHandler); // switch back to parent window
 //		Thread.sleep(1000);
-//		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-//				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
-//		System.out.println("Email verification required is present on page");
 
 	}
 

@@ -140,11 +140,11 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ca.bc.gov.open.ui.JUnitRunner</mainClass>
+							<mainClass>ca.bc.gov.open.ui.TestRunner</mainClass>
 						</manifest>
 					</archive>
 					<descriptors>
-						<descriptor>assembly/test-jar-with-dependencies.xml</descriptor>
+						<descriptor>src/assembly/test-jar-with-dependencies.xml</descriptor>
 					</descriptors>
 				</configuration>
 				<executions>

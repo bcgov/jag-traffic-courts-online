@@ -1,4 +1,4 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import java.time.Duration;
 
@@ -14,8 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
-
-import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
 
 public class ContactInfoValidationChars {
 

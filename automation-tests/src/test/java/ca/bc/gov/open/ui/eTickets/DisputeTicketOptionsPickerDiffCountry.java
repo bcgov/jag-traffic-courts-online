@@ -1,4 +1,4 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,7 +13,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
-import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
 import static ca.bc.gov.open.cto.TicketInfo.TICKET_EMAIL;
 public class DisputeTicketOptionsPickerDiffCountry {
 
@@ -99,7 +98,7 @@ public class DisputeTicketOptionsPickerDiffCountry {
 		review.reviewProcess(element, driverWait, driver);
 
 		Thread.sleep(1000);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(text(), 'Count 1')]/..//*[contains(text(),'fine reduction')]/../../../..//input")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, ven");
 		// Click Next

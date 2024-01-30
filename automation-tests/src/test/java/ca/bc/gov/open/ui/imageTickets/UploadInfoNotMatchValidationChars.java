@@ -1,7 +1,8 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.imageTickets;
 
 import java.time.Duration;
 
+import ca.bc.gov.open.ui.imageTickets.DisputeTicketUploadPNG;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;

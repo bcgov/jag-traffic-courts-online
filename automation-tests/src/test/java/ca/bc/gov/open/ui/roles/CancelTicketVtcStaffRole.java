@@ -2,9 +2,9 @@ package ca.bc.gov.open.ui.roles;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
-import ca.bc.gov.open.ui.DisputeTicketOptionsPickerByMail;
-import ca.bc.gov.open.ui.SubmitToStaffWorkbench;
-import ca.bc.gov.open.ui.SubmitToStaffWorkbenchCancel;
+import ca.bc.gov.open.ui.eTickets.DisputeTicketOptionsPickerByMail;
+import ca.bc.gov.open.ui.eTickets.SubmitToStaffWorkbench;
+import ca.bc.gov.open.ui.eTickets.SubmitToStaffWorkbenchCancel;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;

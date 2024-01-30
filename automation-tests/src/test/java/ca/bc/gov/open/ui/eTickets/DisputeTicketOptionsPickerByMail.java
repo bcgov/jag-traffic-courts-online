@@ -1,9 +1,8 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import java.time.Duration;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -18,8 +17,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
-
-import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
 
 public class DisputeTicketOptionsPickerByMail {
 
@@ -101,7 +98,8 @@ public class DisputeTicketOptionsPickerByMail {
 		element = driverWait
 				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
 		Thread.sleep(1000);
-		js.executeScript("arguments[0].click();", element);
+//		is clicked by default, checking with Colm
+//		js.executeScript("arguments[0].click();", element);
 
 	}
 

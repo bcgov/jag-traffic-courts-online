@@ -1,4 +1,4 @@
-package ca.bc.gov.open.ui;
+package ca.bc.gov.open.ui.eTickets;
 
 import java.time.Duration;
 import java.util.List;
@@ -15,7 +15,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
-import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
 import static ca.bc.gov.open.cto.CommonMethods.*;
 import static ca.bc.gov.open.cto.CommonMethods.scrollToBottom;
 
@@ -151,6 +150,10 @@ public class DisputeTicketAttendCourtHearing {
 
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
 		popup.popupSubmitWindow(element, driverWait, driver);
+
+		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
+		System.out.println("Email verification required is present on page");
 
 	}
 

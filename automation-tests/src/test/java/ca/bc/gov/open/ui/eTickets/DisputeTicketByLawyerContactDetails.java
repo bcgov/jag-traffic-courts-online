@@ -1,6 +1,4 @@
-package ca.bc.gov.open.ui;
-
-import java.time.Duration;
+package ca.bc.gov.open.ui.eTickets;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,10 +13,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 
-import static ca.bc.gov.open.cto.ApiClient.generateMockETicket;
+import java.time.Duration;
 
-public class ContactINfoLawyerValidationChars {
-	
+import static ca.bc.gov.open.cto.TicketInfo.TICKET_EMAIL;
+public class DisputeTicketByLawyerContactDetails {
+
 	private WebDriver driver;
 
 	@After
@@ -40,52 +39,71 @@ public class ContactINfoLawyerValidationChars {
 		CustomWebDriverManager.getElements();
 
 		CommonUtils.login();
-		
+
 		DisputeTicketOptionsPicker disputeTicketExisting = new DisputeTicketOptionsPicker();
 		disputeTicketExisting.startDisputeTicket(element, driverWait, driver);
-		
+
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-2")));
 		element.sendKeys("Test");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-3")));
 		element.sendKeys("User");
-		//Select Lawyer
+		// Select Lawyer
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-value-1")));
 		Thread.sleep(1000);
 		js.executeScript("arguments[0].click();", element);
 		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-1 > .mat-option-text")));
+		element = driverWait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#mat-option-1 > .mat-option-text")));
 		Thread.sleep(1000);
-		//500 chars
 		js1.executeScript("arguments[0].click();", element);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-10")));
-		element.sendKeys("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
+		element.sendKeys("Test Ltd");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-11")));
 		element.sendKeys("Surname Lawyer");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-12")));
 		element.sendKeys("Lawyer GivenName");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-		element.sendKeys("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede.");
+		element.sendKeys("3220 Qadra");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-		element.sendKeys("Lorem ipsum dolor sit amet, con");
+		element.sendKeys("Victoria");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
 		element.sendKeys("V8x1g6");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@nttdata.com");
+		element.sendKeys(TICKET_EMAIL);
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
 		element.sendKeys("9999999999");
 		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
 		element.sendKeys("999 999 1234");
-		
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 100 per line')]")));
+
+		DisputeTicketOptionsPicker review = new DisputeTicketOptionsPicker();
+		review.reviewProcess(element, driverWait, driver);
+
+		DisputeTicketByLawyerContactDetails lawyerOther = new DisputeTicketByLawyerContactDetails();
+		lawyerOther.additionalInfoLawyerOther(element, driverWait, driver);
+
+		DisputeTicketOptionsPicker overview = new DisputeTicketOptionsPicker();
+		overview.ticketRequestOverview(element, driverWait, driver);
+
+		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
+		popup.popupSubmitWindow(element, driverWait, driver);
 
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 30')]")));
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Must be a valid email address')]")));
-		
-		
+				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Email verification required')]")));
+		System.out.println("Email verification required is present on page");
+	}
+
+	public void additionalInfoLawyerOther(WebElement element, WebDriverWait driverWait, WebDriver driver)
+			throws Exception {
+
+		Thread.sleep(1000);
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(text(), 'Count 1')]/..//*[contains(text(),'fine reduction')]/../../../..//input")));
+		element.sendKeys(
+				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
+		// Click Next
+		JavascriptExecutor js5 = (JavascriptExecutor) driver;
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+		js5.executeScript("arguments[0].click();", element);
 	}
 
 }
