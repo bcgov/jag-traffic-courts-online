@@ -97,7 +97,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.driversLicenceProvinceFormControl.setValue(this.bc);
     }
 
-    if (!this.preferEmail) {
+    if (this.preferEmail !== true) {
       this.form.controls.email_address.disable();
       this.optOut = true;
     }
