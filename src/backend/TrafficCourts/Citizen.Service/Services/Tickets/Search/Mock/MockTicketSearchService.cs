@@ -1,7 +1,10 @@
-﻿using FlatFiles;
+﻿using Azure.Core.Serialization;
+using FlatFiles;
 using FlatFiles.TypeMapping;
 using Microsoft.Extensions.Caching.Memory;
 using System.Globalization;
+using System.Linq.Expressions;
+using System.Reflection;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 using TrafficCourts.Common;
 
@@ -124,22 +127,57 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
         private IDelimitedTypeMapper<Invoice> GetTypeMapper()
         {
             IDelimitedTypeMapper<Invoice> mapper = DelimitedTypeMapper.Define<Invoice>();
-            mapper.Property(_ => _.InvoiceNumber).ColumnName("invoice_number");
-            mapper.Property(_ => _.PbcRefNumber).ColumnName("pbc_ref_number");
-            mapper.Property(_ => _.PartyNumber).ColumnName("party_number");
-            mapper.Property(_ => _.PartyName).ColumnName("party_name");
-            mapper.Property(_ => _.AccountNumber).ColumnName("account_number");
-            mapper.Property(_ => _.SiteNumber).ColumnName("site_number");
-            mapper.Property(_ => _.InvoiceType).ColumnName("cust_trx_type");
-            mapper.Property(_ => _.ViolationDateTime).ColumnName("term_due_date");
-            mapper.Property(_ => _.TicketedAmount).ColumnName("total");
-            mapper.Property(_ => _.AmountDue).ColumnName("amount_due");
-            mapper.Property(_ => _.OffenceDescription).ColumnName("attribute1");
-            mapper.Property(_ => _.VehicleDescription).ColumnName("attribute2");
-            mapper.Property(_ => _.ViolationDate).ColumnName("attribute3");
-            mapper.Property(_ => _.DiscountAmount).ColumnName("attribute4");
+
+            // map all the property to column matching the JsonPropertyNameAttribute on them
+            mapper.JsonProperty(_ => _.InvoiceNumber);
+            mapper.JsonProperty(_ => _.PbcRefNumber);
+            mapper.JsonProperty(_ => _.PartyNumber);
+            mapper.JsonProperty(_ => _.PartyName);
+            mapper.JsonProperty(_ => _.AccountNumber);
+            mapper.JsonProperty(_ => _.SiteNumber);
+            mapper.JsonProperty(_ => _.InvoiceType);
+            mapper.JsonProperty(_ => _.ViolationDateTime);
+            mapper.JsonProperty(_ => _.TicketedAmount);
+            mapper.JsonProperty(_ => _.AmountDue);
+            mapper.JsonProperty(_ => _.OffenceDescription);
+            mapper.JsonProperty(_ => _.VehicleDescription);
+            mapper.JsonProperty(_ => _.ViolationDate);
+            mapper.JsonProperty(_ => _.DiscountAmount);
+            mapper.JsonProperty(_ => _.FormNumber);
+            mapper.JsonProperty(_ => _.Act);
+            mapper.JsonProperty(_ => _.Section);
 
             return mapper;
         }
+    }
+}
+
+public static class Extensions
+{
+    /// <summary>
+    /// Maps the property to the associated JsonPropertyNameAttribute property name.
+    /// </summary>
+    public static void JsonProperty<TEntity>(this IDelimitedTypeMapper<TEntity> mapper, Expression<Func<TEntity, string?>> accessor)
+    {
+        string columnName = GetColumnName(accessor);
+        mapper.Property(accessor).ColumnName(columnName);
+    }
+
+    /// <summary>
+    /// Maps the property to the associated JsonPropertyNameAttribute property name.
+    /// </summary>
+    public static void JsonProperty<TEntity>(this IDelimitedTypeMapper<TEntity> mapper, Expression<Func<TEntity, decimal>> accessor)
+    {
+        string columnName = GetColumnName(accessor);
+        mapper.Property(accessor).ColumnName(columnName);
+    }
+
+    private static string GetColumnName<TEntity,TProperty>(Expression<Func<TEntity, TProperty>> accessor)
+    {
+        var memberExpression = (MemberExpression)accessor.Body;
+        var jsonPropertyName = memberExpression.Member.GetCustomAttribute<System.Text.Json.Serialization.JsonPropertyNameAttribute>(false);
+
+        string columnName = jsonPropertyName?.Name ?? memberExpression.Member.Name;
+        return columnName;
     }
 }

@@ -42,7 +42,7 @@ public class TicketSearchService : ITicketSearchService
             {
                 _logger.LogDebug("Found violation ticket with {Count} counts", invoices.Count);
 
-                var reply = AssemblyViolationTicket(ticketNumber, issuedTime, invoices);
+                var reply = AssembleViolationTicket(ticketNumber, issuedTime, invoices);
 
                 _logger.LogDebug("Search complete");
 
@@ -66,7 +66,7 @@ public class TicketSearchService : ITicketSearchService
         }
     }
 
-    private Models.Tickets.ViolationTicket AssemblyViolationTicket(string ticketNumber, TimeOnly issuedTime, List<Invoice> invoices)
+    private Models.Tickets.ViolationTicket AssembleViolationTicket(string ticketNumber, TimeOnly issuedTime, List<Invoice> invoices)
     {
         Debug.Assert(invoices.Count != 0);
 
@@ -85,7 +85,7 @@ public class TicketSearchService : ITicketSearchService
             var issuedTs = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);
             
             // TCVP-2560 all ISC tickets that always start with the letter 'S' and have a violation date before April 9, 2024 (VT1) are ineligible for TCO
-            if (ticketNumber.ToUpper().StartsWith("S") && issuedTs < _validVT2TicketEffectiveDate)
+            if (ticketNumber.StartsWith("S", StringComparison.OrdinalIgnoreCase) && issuedTs < _validVT2TicketEffectiveDate)
             {
                 _logger.LogInformation("Ticket found is not a valid VT2 type");
                 throw new InvalidTicketVersionException(issuedTs);
@@ -103,6 +103,9 @@ public class TicketSearchService : ITicketSearchService
 
             count.Description = invoice.OffenceDescription;
             count.TicketedAmount = invoice.TicketedAmount;
+
+            count.ActOrRegulationNameCode = invoice.Act;
+            count.Section = invoice.Section;
 
             ticket.Counts.Add(count);
         }
