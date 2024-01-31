@@ -672,7 +672,7 @@ export class JJService {
             localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
         }
 
-        let localVarHttpHeaderAcceptSelected: string | undefined = '*/*';
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [

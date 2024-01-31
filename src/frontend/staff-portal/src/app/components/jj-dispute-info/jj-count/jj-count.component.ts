@@ -5,7 +5,6 @@ import { JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesS
 import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LookupsService, Statute } from 'app/services/lookups.service';
 import { CustomDatePipe } from '@shared/pipes/custom-date.pipe';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-jj-count',
@@ -136,7 +135,7 @@ export class JJCountComponent implements OnInit, OnChanges {
 
   private initFormData(): void {
     // initialize if no value
-    if (this.jjDisputedCount) {
+    if (this.jjDisputedCount && this.form) {
       if (this.jjDisputedCount.totalFineAmount != null) {
         this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
       } else {

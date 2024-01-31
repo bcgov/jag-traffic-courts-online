@@ -397,22 +397,22 @@ export class JJDisputeService {
   }
 
   public apiJjTicketNumberPrintGet(ticketNumber: string, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
-    return this.jjApiService.apiJjTicketNumberPrintGet(ticketNumber, timeZone, "response")
-      .pipe(
-        map((response: any) => {
-          this.logger.info('jj-DisputeService::apiJjTicketNumberPrintGet', response)
-          return response;
+    return this.http
+    .get(`/api/jj/${ticketNumber}/print?timeZone=${timeZone}`, {
+      observe: 'response',
+      responseType: 'blob',
+      context: new HttpContext(),
+      withCredentials: true,
+      headers: new HttpHeaders(
+        {
+          'Authorization': 'Bearer ' + this.authService.token,
+          'Accept': '*/*',
+          'Access-Control-Allow-Origin': ''
         }),
-        catchError((error: any) => {
-          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
-          this.toastService.openErrorToast(errorMsg);
-          this.logger.error(
-            'jj-DisputeService::apiJjTicketNumberPrintGet error has occurred: ',
-            error
-          );
-          throw error;
-        })
-      );
+    }).pipe(
+      map((result: HttpResponse<Blob>) => {
+        return result.body;
+      }));
   }
 }
 
