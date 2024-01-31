@@ -1168,8 +1168,7 @@ public class JJController : StaffControllerBase<JJController>
         try
         {
             RenderedReport report = await _printService.PrintDigitalCaseFileAsync(ticketNumber, timeZone, cancellationToken);
-            // Report will be a pdf, but by using application/octet-stream, it is easier for the browser to open in a new tab
-            return File(report.Content, "application/octet-stream", report.ReportName);
+            return File(report.Content, "application/pdf", report.ReportName);
         }
         catch (Exception e)
         {

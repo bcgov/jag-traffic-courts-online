@@ -553,8 +553,8 @@ export class JJDisputeComponent implements OnInit {
 
   onPrint() {
     this.jjDisputeService.apiJjTicketNumberPrintGet(this.lastUpdatedJJDispute.ticketNumber).subscribe(result => {
-      if (result != null) {
-        var url = URL.createObjectURL(new Blob(result, { type: "application/pdf" }));
+      if (result) {
+        var url = URL.createObjectURL(result);
         window.open(url);
       } else {
         alert("File contents not found");
