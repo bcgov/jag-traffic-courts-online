@@ -79,7 +79,8 @@ export class JJDisputeComponent implements OnInit {
   });
   courtAppearanceForm: FormGroup = this.formBuilder.group({
     appCd: [null],
-    room: [{ value: null, disabled: true }],
+    room: [null],
+    duration: [null],
     reason: [null],
     noAppTs: [null],
     _noAppTs: [null],
@@ -179,7 +180,6 @@ export class JJDisputeComponent implements OnInit {
         if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = 'N';
 
         // if (!this.isViewOnly) {
-        this.lastUpdatedJJDispute.mostRecentCourtAppearance.adjudicator = this.jjIDIR;
         this.lastUpdatedJJDispute.mostRecentCourtAppearance["adjudicatorName"] = this.jjName; // force to add property
         this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
         if (this.lastUpdatedJJDispute.jjAssignedTo != this.jjIDIR) {
