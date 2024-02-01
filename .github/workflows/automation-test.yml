@@ -3,14 +3,21 @@
 name: AutomationTest - Build Image and Run Autotests on Workflow Dispatch
 
 # Controls when the workflow will run
+#on:
+#  # Allows you to run this workflow manually from the Actions tab
+#  workflow_dispatch:
+#    inputs:
+#        app:
+#            description: 'App Name (tco)'
+#            required: true
+#            default: AutomationTests
+
 on:
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-    inputs:
-        app:
-            description: 'App Name (tco)'
-            required: true
-            default: AutomationTests
+  push:
+    branches: [Automation-Tests-Update]
+    paths:
+      - 'automation-tests/**'
+      - '.github/workflows/automation-test.yml'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
