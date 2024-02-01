@@ -21,6 +21,7 @@ using TrafficCourts.Messaging.Models;
 using DisputantContactInformation = TrafficCourts.Citizen.Service.Models.Disputes.DisputantContactInformation;
 using Dispute = TrafficCourts.Citizen.Service.Models.Disputes.Dispute;
 using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
+using SearchRequest = TrafficCourts.Citizen.Service.Features.Tickets.Search.Request;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -201,10 +202,10 @@ public class DisputesController : ControllerBase
     public async Task<IActionResult> SearchDisputeAsync(
             [FromQuery]
             [Required]
-            [RegularExpression(Search.Request.TicketNumberRegex, ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")] string ticketNumber,
+            [RegularExpression(SearchRequest.TicketNumberRegex, ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")] string ticketNumber,
             [FromQuery]
             [Required]
-            [RegularExpression(Search.Request.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
+            [RegularExpression(SearchRequest.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
             CancellationToken cancellationToken)
     {
         try

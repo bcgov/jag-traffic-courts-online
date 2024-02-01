@@ -54,7 +54,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Common
         [JsonPropertyName("act")]
         public string? Act { get; set; }
 
-        [JsonPropertyName("sectionNumber")]
+        [JsonPropertyName("section_number")]
         public string? Section { get; set; }
     }
 }

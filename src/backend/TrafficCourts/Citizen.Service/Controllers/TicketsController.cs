@@ -7,6 +7,11 @@ using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
+using TrafficCourts.Citizen.Service.Features.Tickets.Search;
+
+using SearchRequest = TrafficCourts.Citizen.Service.Features.Tickets.Search.Request;
+using SearchResponse = TrafficCourts.Citizen.Service.Features.Tickets.Search.Response;
+
 namespace TrafficCourts.Citizen.Service.Controllers
 {
     [ApiController]
@@ -43,16 +48,16 @@ namespace TrafficCourts.Citizen.Service.Controllers
         public async Task<IActionResult> SearchAsync(
             [FromQuery]
             [Required]
-            [RegularExpression(Search.Request.TicketNumberRegex, ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")] string ticketNumber,
+            [RegularExpression(SearchRequest.TicketNumberRegex, ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")] string ticketNumber,
             [FromQuery]
             [Required]
-            [RegularExpression(Search.Request.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
+            [RegularExpression(SearchRequest.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
             CancellationToken cancellationToken)
         {
-            Search.Request request = new(ticketNumber, time);
-            Search.Response response = await _mediator.Send(request, cancellationToken);
+            SearchRequest request = new(ticketNumber, time);
+            SearchResponse response = await _mediator.Send(request, cancellationToken);
 
-            if (response == Search.Response.Empty)
+            if (response == SearchResponse.Empty)
             {
                 return NotFound();
             }

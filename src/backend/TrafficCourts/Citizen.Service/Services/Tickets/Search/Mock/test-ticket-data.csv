@@ -1,4 +1,4 @@
-﻿invoice_number,pbc_ref_number,party_number,party_name,account_number,site_number,cust_trx_type,term_due_date,total,amount_due,attribute1,attribute2,attribute3,attribute4,evt_form_number,act,sectionNumber
+﻿invoice_number,pbc_ref_number,party_number,party_name,account_number,site_number,cust_trx_type,term_due_date,total,amount_due,attribute1,attribute2,attribute3,attribute4,evt_form_number,act,section_number
 EA020004601,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,139,139,Speed against area sign,,2022-05-08,n/a,,,
 EA020004602,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,109,109,Permit passenger without seatbelt,,2022-02-08,n/a,,,
 EA020004603,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,368,368,Using electronic device while driving,,2022-05-08,n/a,,,
