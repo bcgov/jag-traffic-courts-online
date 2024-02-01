@@ -13,6 +13,9 @@ using MassTransit;
 using System.Collections.Generic;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 
+using SearchRequest = TrafficCourts.Citizen.Service.Features.Tickets.Search.Request;
+using SearchResponse = TrafficCourts.Citizen.Service.Features.Tickets.Search.Response;
+
 namespace TrafficCourts.Test.Citizen.Service.Controllers;
 
 public class TicketsControllerTests
@@ -178,10 +181,10 @@ public class TicketsControllerTests
         string time = "12:15";
         TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket violationTicket = new TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket();
         violationTicket.TicketNumber = ticketNumber;
-        Search.Response response = new(violationTicket);
+        SearchResponse response = new(violationTicket);
 
         mockMediator
-            .Setup(_ => _.Send<Search.Response>(It.IsAny<Search.Request>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.Send<SearchResponse>(It.IsAny<SearchRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
 
         mockTicketSearchService
@@ -209,10 +212,10 @@ public class TicketsControllerTests
         string time = "12:15";
         TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket violationTicket = new TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket();
         violationTicket.TicketNumber = ticketNumber;
-        Search.Response response = new(violationTicket);
+        SearchResponse response = new(violationTicket);
 
         mockMediator
-            .Setup(_ => _.Send<Search.Response>(It.IsAny<Search.Request>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.Send<SearchResponse>(It.IsAny<SearchRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
 
         mockTicketSearchService
@@ -242,12 +245,12 @@ public class TicketsControllerTests
         string time = "12:15";
         TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket violationTicket = new TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket();
         violationTicket.TicketNumber = ticketNumber;
-        Search.Response response = new(violationTicket);
+        SearchResponse response = new(violationTicket);
 
         DisputeSearchFailedException exception = new DisputeSearchFailedException(ticketNumber);
 
         mockMediator
-            .Setup(_ => _.Send<Search.Response>(It.IsAny<Search.Request>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.Send<SearchResponse>(It.IsAny<SearchRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
 
         mockTicketSearchService

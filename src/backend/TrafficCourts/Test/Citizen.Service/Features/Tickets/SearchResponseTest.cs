@@ -1,7 +1,7 @@
 ﻿using System;
-using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using Xunit;
+using SearchResponse = TrafficCourts.Citizen.Service.Features.Tickets.Search.Response;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {
@@ -13,8 +13,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Exception? exception = null;
             ViolationTicket? violationTicket = null;
 
-            Assert.Throws<ArgumentNullException>("ticket", () => new Search.Response(violationTicket!));
-            Assert.Throws<ArgumentNullException>("exception", () => new Search.Response(exception!));
+            Assert.Throws<ArgumentNullException>("ticket", () => new SearchResponse(violationTicket!));
+            Assert.Throws<ArgumentNullException>("exception", () => new SearchResponse(exception!));
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         {
             ViolationTicket violationTicket = new ();
 
-            var actual = new Search.Response(violationTicket);
+            var actual = new SearchResponse(violationTicket);
 
             Assert.True(actual.Result.IsT0);
             Assert.False(actual.Result.IsT1);
@@ -34,7 +34,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         {
             Exception exception = new();
 
-            var actual = new Search.Response(exception);
+            var actual = new SearchResponse(exception);
 
             Assert.True(actual.Result.IsT1);
             Assert.False(actual.Result.IsT0);
@@ -44,7 +44,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         [Fact]
         public void empty_response()
         {
-            var actual = Search.Response.Empty;
+            var actual = SearchResponse.Empty;
 
             Assert.NotNull(actual);
             // Result is a value type

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using TrafficCourts.Citizen.Service.Features.Tickets;
 using Xunit;
+
+using TrafficCourts.Citizen.Service.Features.Tickets.Search;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {
@@ -21,7 +22,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
                     var hour = random.Next(0, 24);
                     var minute = random.Next(0, 60);
 
-                    var actual = new Search.Request(ticketNumber, $"{hour:d2}:{minute:d2}");
+                    var actual = new Request(ticketNumber, $"{hour:d2}:{minute:d2}");
                     Assert.Equal(ticketNumber, actual.TicketNumber);
                     Assert.Equal(hour, actual.Hour);
                     Assert.Equal(minute, actual.Minute);
@@ -39,7 +40,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         public void create_request_requires_ticket_number_that_starts_with_2_uppercase_letters_and_eight_or_more_numbers(string ticketNumber, string useCase)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
-            Assert.Throws<ArgumentException>("ticketNumber", () => new Search.Request(ticketNumber, "00:00"));
+            Assert.Throws<ArgumentException>("ticketNumber", () => new Request(ticketNumber, "00:00"));
         }
 
 
@@ -50,14 +51,14 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         {
             // lpad to length 2
             string time = expected.ToString(@"HH\:mm");
-            var actual = new Search.Request("AA00000000", time);
+            var actual = new Request("AA00000000", time);
 
             Assert.Equal(expected.Hour, actual.Hour);
             Assert.Equal(expected.Minute, actual.Minute);
 
             // no padding
             time = $"{expected.Hour}:{expected.Minute}";
-            actual = new Search.Request("AA00000000", time);
+            actual = new Request("AA00000000", time);
 
             Assert.Equal(expected.Hour, actual.Hour);
             Assert.Equal(expected.Minute, actual.Minute);
@@ -68,7 +69,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         public void create_request_with_hour_minute_and_second_throws_ArgumentException(TimeOnly expected)
         {
             string time = expected.ToString(@"HH\:mm:ss");
-            Assert.Throws<ArgumentException>("time", () => new Search.Request("AA00000000", time));
+            Assert.Throws<ArgumentException>("time", () => new Request("AA00000000", time));
         }
 
 
@@ -76,7 +77,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         [MemberData(nameof(EachTimeOfDay))]
         public void create_request_with_missing_colon_throws_ArgumentException(TimeOnly time)
         {
-            Assert.Throws<ArgumentException>("time", () => new Search.Request("AA00000000", $"{time.Hour:d2}{time.Minute:d2}"));
+            Assert.Throws<ArgumentException>("time", () => new Request("AA00000000", $"{time.Hour:d2}{time.Minute:d2}"));
         }
 
         [Theory]
@@ -90,7 +91,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
 #pragma warning restore IDE1006 // Naming Styles
         {
-            Assert.Throws<ArgumentException>("time", () => new Search.Request("AA00000000", $"{hour:d2}:{minute:d2}"));
+            Assert.Throws<ArgumentException>("time", () => new Request("AA00000000", $"{hour:d2}:{minute:d2}"));
         }
 
 
