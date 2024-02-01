@@ -50,5 +50,11 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Common
 
         [JsonPropertyName("evt_form_number")]
         public string? FormNumber { get; set; }
+
+        [JsonPropertyName("act")]
+        public string? Act { get; set; }
+
+        [JsonPropertyName("section_number")]
+        public string? Section { get; set; }
     }
 }
