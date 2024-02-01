@@ -14,10 +14,10 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains a single job called "build-run-autotests"
   build-run-autotests:
     # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
+    runs-on: [self-hosted]
     env:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
