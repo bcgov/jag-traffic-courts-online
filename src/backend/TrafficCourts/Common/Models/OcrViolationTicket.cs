@@ -149,6 +149,10 @@ public class Field
     private static readonly string _dateRegex = @"^\s*(\d{2}|\d{4})\D*(\d{1,2})\D*(\d{1,2})\s*$";
     private static readonly string _timeRegex = @"^\s*(\d{1,2})\s*:?\s*(\d{1,2})\s*$";
     private static readonly string _currencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
+    public static readonly string _mva = "MVA";
+    public static readonly string _mvar = "MVAR";
+    public static readonly string _selected = "selected";
+    public static readonly string _unselected = "unselected";
 
     public Field() { }
 

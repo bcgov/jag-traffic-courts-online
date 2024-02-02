@@ -1,7 +1,9 @@
+using Moq;
 using System;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
+using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using Xunit;
 
@@ -59,9 +61,11 @@ public class DateOfServiceLT30RuleTest
         violationTicket.TicketVersion = ViolationTicketVersion.VT2;
         violationTicket.Fields.Add(OcrViolationTicket.ViolationDate, new Field(violationDateStr));
         violationTicket.Fields.Add(OcrViolationTicket.DateOfService, new Field(dateOfServiceStr));
-        
+        var _statuteLookupService = new Mock<IStatuteLookupService>();
+        FormRecognizerValidator formRecognizerValidator = new FormRecognizerValidator(_statuteLookupService.Object);
+
         // When
-        FormRecognizerValidator.Sanitize(violationTicket);
+        formRecognizerValidator.Sanitize(violationTicket);
 
         // Then
         Assert.Equal(violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd"), expectedVDStr);

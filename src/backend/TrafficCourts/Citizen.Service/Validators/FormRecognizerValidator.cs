@@ -2,6 +2,7 @@ using TrafficCourts.Citizen.Service.Validators.Rules;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using System.Text.RegularExpressions;
+using TrafficCourts.Common.Models;
 
 namespace TrafficCourts.Citizen.Service.Validators;
 
@@ -18,7 +19,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         _lookupService = lookupService;
     }
 
-    public void SanitizeViolationTicket(OcrViolationTicket violationTicket) {
+    public void SanitizeViolationTicket(OcrViolationTicket violationTicket)
+    {
         Sanitize(violationTicket);
     }
 
@@ -42,7 +44,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     /// Cleans up the scanned data from a poor OCR scan.
     /// </summary>
     /// <param name="violationTicket"></param>
-    public static void Sanitize(OcrViolationTicket violationTicket)
+    public void Sanitize(OcrViolationTicket violationTicket)
     {
         // TODO: Use TryGetValue to avoid numerous trips back and forth into the dictionary
         // It can happen that if adjacent text fields has content too close to the common dividing line, the OCR tool can misread both fields thinking one is blank and the other starts with the blank field's text.
@@ -94,14 +96,16 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             GetActRegsFromDescription(descKey, actRegsKey);
 
             // Sanitize Section. It can happen that if the section text is too close to the ticket amount, the text can have a trailing $ symbol (which is meant for the amount field)
-            if (violationTicket.Fields.ContainsKey(sectionKey)) {
+            if (violationTicket.Fields.ContainsKey(sectionKey))
+            {
                 string sectionValue = violationTicket.Fields[sectionKey].Value ?? "";
 
                 // remove all whitespace characters
                 string newValue = Regex.Replace(sectionValue, @"\s", "");
 
                 int index = newValue.IndexOf("$");
-                if (index > 0) {
+                if (index > 0)
+                {
                     newValue = newValue.Substring(0, index);
                 }
 
@@ -177,18 +181,22 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
 
         // ViolationDate and DateOfService are usually the same day. If either is misread/null, try using the other date value.
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationDate) && violationTicket.Fields.ContainsKey(OcrViolationTicket.DateOfService)) {
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationDate) && violationTicket.Fields.ContainsKey(OcrViolationTicket.DateOfService))
+        {
             if (violationTicket.Fields[OcrViolationTicket.ViolationDate].Value is null
-                && violationTicket.Fields[OcrViolationTicket.DateOfService].Value is not null) {
+                && violationTicket.Fields[OcrViolationTicket.DateOfService].Value is not null)
+            {
                 violationTicket.Fields[OcrViolationTicket.ViolationDate].Value = violationTicket.Fields[OcrViolationTicket.DateOfService].Value;
             }
             if (violationTicket.Fields[OcrViolationTicket.DateOfService].Value is null
-                && violationTicket.Fields[OcrViolationTicket.ViolationDate].Value is not null) {
+                && violationTicket.Fields[OcrViolationTicket.ViolationDate].Value is not null)
+            {
                 violationTicket.Fields[OcrViolationTicket.DateOfService].Value = violationTicket.Fields[OcrViolationTicket.ViolationDate].Value;
             }
         }
 
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationTime)) {
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.ViolationTime))
+        {
             // remove trailing colon (:) character
             // It can happen that the hour portion actually contains the entire HH:MM time and the time portion is blank
             // In this scenario when the time is built up from the individual components, we end up with HH:MM:
@@ -203,15 +211,64 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
 
         // Sanitize driver's licence number (sometimes contains spaces - should be digits only)
-        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceNumber)) {
+        if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceNumber))
+        {
             string? value = violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value;
-            if (value is not null) {
+            if (value is not null)
+            {
                 // replace all non digits with null
-                string newValue = Regex.Replace(value, @"\D", ""); 
+                string newValue = Regex.Replace(value, @"\D", "");
                 violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value = newValue;
             }
         }
 
+        // TCVP-2706 - It appears the Form Recognizer does a poor job at recognizing checkboxes.
+        // Instead, use the counts to lookup statutes and if they are valid, replace MVA/MVAR Did Commit checkbox selections with identified Statute act codes.
+        SanitizeDidCommit(violationTicket);
+    }
+
+    // A function to sanitize the OcrViolationTicket and set the isMVA and isMVAR checkboxes based on the validity of the MVA and MVAR Statutes referenced in the section text for the 3 counts.
+    private async void SanitizeDidCommit(OcrViolationTicket violationTicket)
+    {
+        // If the section text for any of the 3 counts references a valid MVA Statute, the isMVA checkbox should be selected
+        if (violationTicket.Fields.TryGetValue(OcrViolationTicket.OffenceIsMVA, out Field? isMVA)) {
+            isMVA.Value = (
+                await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mva)
+                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mva)
+                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mva)) 
+                ? Field._selected : Field._unselected;
+        }
+        
+        // If the section text for any of the 3 counts references a valid MVAR Statute, the isMVAR checkbox should be selected
+        if (violationTicket.Fields.TryGetValue(OcrViolationTicket.OffenceIsMVAR, out Field? isMVAR)) {
+            isMVAR.Value = (
+                await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mvar)
+                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mvar)
+                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mvar)) 
+                ? Field._selected : Field._unselected;
+        }
+    }
+
+    /// <summary>
+    /// Returns true if the given sectionKey exists in the Statutes table and references the given act.
+    /// </summary>
+    /// <param name="violationTicket"></param>
+    /// <param name="sectionKey"></param>
+    /// <param name="actCode"></param>
+    /// <returns></returns>
+    private async Task<bool> IsStatuteValidAsync(OcrViolationTicket violationTicket, string sectionKey, string actCode)
+    {
+        if (violationTicket.Fields.TryGetValue(sectionKey, out Field? field))
+        {
+            string? sectionText = field?.Value?.Trim();
+            if (!String.IsNullOrEmpty(sectionText))
+            {
+                sectionText = Regex.Replace(sectionText, @"^\$$", ""); // remove $ if it's the only character.
+                Statute? statute = await _lookupService.GetBySectionAsync(sectionText);
+                return statute?.ActCode == actCode;
+            }
+        }
+        return false;
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
@@ -227,7 +284,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new VersionVT1DisallowedRule(new Field(), violationTicket));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], _ticketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], _violationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
-        if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion)) {
+        if (ViolationTicketVersion.VT1.Equals(violationTicket.TicketVersion))
+        {
             // The Act/Regs is only applicable for the old VT1 images
             rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count1ActRegs], 1));
             rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count2ActRegs], 2));
@@ -236,7 +294,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new DateOfServiceLT30Rule(violationTicket.Fields[OcrViolationTicket.DateOfService]));
 
         // LRAFED-2650 Only tickets that have MVA or MVAR checked are permitted.
-        if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion)) {
+        if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion))
+        {
             rules.Add(new DidCommitIsMVA(violationTicket.Fields[OcrViolationTicket.OffenceIsMVA], violationTicket));
         }
 
