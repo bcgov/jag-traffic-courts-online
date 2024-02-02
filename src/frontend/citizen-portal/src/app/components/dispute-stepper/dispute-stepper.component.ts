@@ -23,6 +23,7 @@ import { Store } from "@ngrx/store";
 import { DisputeService, FileMetadata } from "app/services/dispute.service";
 import { AppConfigService } from "app/services/app-config.service";
 import { FileUtilsService } from "@shared/services/file-utils.service";
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: "app-dispute-stepper",
@@ -123,9 +124,15 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.defaultLanguage = this.translateService.getDefaultLang();
     this.adjournmentFormLink = this.appConfigService.adjournmentFormLink;
 
-    this.lookups.languages$.subscribe(languages => {
+    this.lookups.languages$.pipe(
+      map(languages => languages ? languages.filter(lang => lang.code !== 'UNK') : []), // remove UNK and check for null
+      map(filteredLanguages => [
+        ...filteredLanguages,
+        { code: 'OTH', description: 'Other' } // add OTH
+      ])
+    ).subscribe(languages => {
       this.languages = languages;
-    })
+    });
   }
 
   ngOnInit(): void {
