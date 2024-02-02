@@ -55,9 +55,9 @@ jobs:
 #        run: cd automation-tests &&
 #             mvn verify
 
-      # Add a step to install unzip
-      - name: Install zip
-        uses: montudor/action-zip@v1
+#      # Add a step to install unzip
+#      - name: Install zip
+#        uses: montudor/action-zip@v1
 
       # Setup Chrome for testing
       - name: Setup Chrome
