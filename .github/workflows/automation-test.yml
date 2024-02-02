@@ -56,8 +56,8 @@ jobs:
 #             mvn verify
 
       # Add a step to install unzip
-      - name: Install unzip
-        run: apt-get update && apt-get install -y unzip
+      - name: Install zip
+        uses: montudor/action-zip@v1
 
       # Setup Chrome for testing
       - name: Setup Chrome
