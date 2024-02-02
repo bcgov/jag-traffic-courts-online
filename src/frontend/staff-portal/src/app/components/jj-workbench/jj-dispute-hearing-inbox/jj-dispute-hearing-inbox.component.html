@@ -81,7 +81,7 @@
         DATE / TIME
       </th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.mostRecentCourtAppearance?.appearanceTs | date: "MM/dd/YYYY HH:mm" }}</span>
+        <span>{{ element.mostRecentCourtAppearance?.appearanceTs | date: "MM/dd/YYYY HH:mm" : "UTC" }}</span>
       </td>
     </ng-container>
 
