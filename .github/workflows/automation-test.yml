@@ -19,20 +19,20 @@ on:
       - 'automation-tests/**'
       - '.github/workflows/automation-test.yml'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build-run-autotests"
   build-run-autotests:
     # The type of runner that the job will run on
-    runs-on: [ self-hosted ]
+    runs-on: self-hosted
     env:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
 
-  strategy:
-    matrix:
-      maven: [ '3.8.8', '3.9.5' ]
+    strategy:
+      matrix:
+        maven: [ '3.8.8', '3.9.5' ]
 
+    # Define Maven version to test in the job name
     name: Maven ${{ matrix.maven }} sample
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -48,16 +48,20 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
+      # Setup Maven Action with specified Java and Maven versions
       - name: Setup Maven Action
         uses: s4u/setup-maven-action@< version >
         with:
           java-version: 17
           maven-version: ${{ matrix.maven }}
+
+      # Display Maven version in the logs
       - run: mvn -V
 
-      #Setup chrome
+      # Setup Chrome for testing
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
+      # Display Chrome version in the logs
       - run: chrome --version
 
       # Runs build steps
@@ -65,7 +69,7 @@ jobs:
         working-directory: automation-tests
         run: mvn -ntp clean package
 
-
+      # Run the application
       - name: Running
         working-directory: automation-tests/target
         run: java -Xss2048k -jar TrafficCourtVirtualization-0.0.1-SNAPSHOT-test-jar-with-dependencies.jar eticket=true
