@@ -29,6 +29,12 @@ jobs:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
 
+  strategy:
+    matrix:
+      maven: [ '3.8.8', '3.9.5' ]
+
+    name: Maven ${{ matrix.maven }} sample
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -42,27 +48,39 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      #### This step is only needed for GHA local runner, act:
-      # https://github.com/nektos/act
-      - name: Install curl (for nektos/act local CI testing)
-        run: apt-get update && apt-get install build-essential curl pkg-config openssl -y
-      - name: Download Maven
-        run: |
-          curl https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip -o maven.zip
-          apt-get update
-          apt-get -y install unzip
-          unzip -d /usr/share maven.zip
-          rm maven.zip
-          ln -s /usr/share/apache-maven-3.9.6/bin/mvn /usr/bin/mvn
-          echo "M2_HOME=/usr/share/apache-maven-3.9.6" | tee -a /etc/environment
-      ####
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@< version >
+        with:
+          java-version: 17
+          maven-version: ${{ matrix.maven }}
+      - run: mvn -V
 
-      - name: Install Selenium
-        run: |
-          curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
-          apt-get update && \
-          apt-get install -y google-chrome-stable
+#      #### This step is only needed for GHA local runner, act:
+#      # https://github.com/nektos/act
+#      - name: Install curl (for nektos/act local CI testing)
+#        run: apt-get update && apt-get install build-essential curl pkg-config openssl -y
+#      - name: Download Maven
+#        run: |
+#          curl https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip -o maven.zip
+#          apt-get update
+#          apt-get -y install unzip
+#          unzip -d /usr/share maven.zip
+#          rm maven.zip
+#          ln -s /usr/share/apache-maven-3.9.6/bin/mvn /usr/bin/mvn
+#          echo "M2_HOME=/usr/share/apache-maven-3.9.6" | tee -a /etc/environment
+#      ####
+#
+#      - name: Install Selenium
+#        run: |
+#          curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+#          apt-get update && \
+#          apt-get install -y google-chrome-stable
+
+    #Setup chrome
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 120
 
       # Runs build steps
       - name: Maven Package
