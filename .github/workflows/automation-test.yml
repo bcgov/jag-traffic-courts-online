@@ -45,20 +45,19 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      # Setup Maven Action with specified Java and Maven versions
-      - name: Setup Maven Action
-        uses: s4u/setup-maven-action@v1.2.1
-        with:
-         java-version: 17
-         maven-version: 3.8.1
-      - name: Build with Maven
+#      # Setup Maven Action with specified Java and Maven versions
+#      - name: Setup Maven Action
+#        uses: s4u/setup-maven-action@v1.2.1
+#        with:
+#         java-version: 17
+#         maven-version: 3.8.1
+#      - name: Build with Maven
 #        run: cd automation-tests &&
 #             mvn verify
 
       # Add a step to install unzip
       - name: Install unzip
         run: apt-get update && apt-get install -y unzip
-
 
       # Setup Chrome for testing
       - name: Setup Chrome
