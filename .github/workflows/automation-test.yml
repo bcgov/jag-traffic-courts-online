@@ -14,7 +14,7 @@ name: AutomationTest - Build Image and Run Autotests on Workflow Dispatch
 
 on:
   push:
-    branches: [Automation-Tests-Update]
+    branches: [ Automation-Tests-Update ]
     paths:
       - 'automation-tests/**'
       - '.github/workflows/automation-test.yml'
@@ -24,7 +24,7 @@ jobs:
   # This workflow contains a single job called "build-run-autotests"
   build-run-autotests:
     # The type of runner that the job will run on
-    runs-on: [self-hosted]
+    runs-on: [ self-hosted ]
     env:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
@@ -55,33 +55,10 @@ jobs:
           maven-version: ${{ matrix.maven }}
       - run: mvn -V
 
-#      #### This step is only needed for GHA local runner, act:
-#      # https://github.com/nektos/act
-#      - name: Install curl (for nektos/act local CI testing)
-#        run: apt-get update && apt-get install build-essential curl pkg-config openssl -y
-#      - name: Download Maven
-#        run: |
-#          curl https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip -o maven.zip
-#          apt-get update
-#          apt-get -y install unzip
-#          unzip -d /usr/share maven.zip
-#          rm maven.zip
-#          ln -s /usr/share/apache-maven-3.9.6/bin/mvn /usr/bin/mvn
-#          echo "M2_HOME=/usr/share/apache-maven-3.9.6" | tee -a /etc/environment
-#      ####
-#
-#      - name: Install Selenium
-#        run: |
-#          curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-#          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
-#          apt-get update && \
-#          apt-get install -y google-chrome-stable
-
-    #Setup chrome
+      #Setup chrome
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 120
+      - run: chrome --version
 
       # Runs build steps
       - name: Maven Package
@@ -92,3 +69,26 @@ jobs:
       - name: Running
         working-directory: automation-tests/target
         run: java -Xss2048k -jar TrafficCourtVirtualization-0.0.1-SNAPSHOT-test-jar-with-dependencies.jar eticket=true
+
+
+        #      #### This step is only needed for GHA local runner, act:
+        #      # https://github.com/nektos/act
+        #      - name: Install curl (for nektos/act local CI testing)
+        #        run: apt-get update && apt-get install build-essential curl pkg-config openssl -y
+        #      - name: Download Maven
+        #        run: |
+        #          curl https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip -o maven.zip
+        #          apt-get update
+        #          apt-get -y install unzip
+        #          unzip -d /usr/share maven.zip
+        #          rm maven.zip
+        #          ln -s /usr/share/apache-maven-3.9.6/bin/mvn /usr/bin/mvn
+        #          echo "M2_HOME=/usr/share/apache-maven-3.9.6" | tee -a /etc/environment
+        #      ####
+        #
+        #      - name: Install Selenium
+        #        run: |
+        #          curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+        #          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+        #          apt-get update && \
+        #          apt-get install -y google-chrome-stable
