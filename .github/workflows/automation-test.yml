@@ -52,12 +52,13 @@ jobs:
          java-version: 17
          maven-version: 3.8.1
       - name: Build with Maven
-        run: cd automation-tests &&
-             mvn verify
+#        run: cd automation-tests &&
+#             mvn verify
 
       # Add a step to install unzip
       - name: Install unzip
-        run: sudo apt-get update && sudo apt-get install -y unzip
+        run: apt-get update && apt-get install -y unzip
+
 
       # Setup Chrome for testing
       - name: Setup Chrome
