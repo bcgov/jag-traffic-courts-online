@@ -28,10 +28,10 @@ jobs:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
 
-    strategy:
-      matrix:
-        maven: [ '3.5.4', '3.6.3', '3.8.2' ]
-        java: [ '8', '11', '17' ]
+#    strategy:
+#      matrix:
+#        maven: [ '3.5.4', '3.6.3', '3.8.2' ]
+#        java: [ '8', '11', '17' ]
 
     # Define Maven version to test in the job name
     name: Maven ${{ matrix.maven }} sample
