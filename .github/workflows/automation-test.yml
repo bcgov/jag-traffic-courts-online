@@ -78,6 +78,7 @@ jobs:
 #          apt-get install -y google-chrome-stable
 
     #Setup chrome
+      - name: Setup Chrome
       - uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: 120
