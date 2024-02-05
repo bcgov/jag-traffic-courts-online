@@ -2,16 +2,20 @@
 using System.Diagnostics;
 using System.Globalization;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search;
 
 public class TicketSearchService : ITicketSearchService
 {
+    private const string _mva = "MVA";
+    private const string _mvar = "MVAR";
     private readonly IBus _bus;
     private readonly ITicketInvoiceSearchService _invoiceSearchService;
     private readonly ILogger<TicketSearchService> _logger;
     private static readonly DateTime _validVT2TicketEffectiveDate = new(2024, 4, 9);
+    
 
     public TicketSearchService(IBus bus, ITicketInvoiceSearchService invoiceSearchService, ILogger<TicketSearchService> logger)
     {
@@ -36,7 +40,9 @@ public class TicketSearchService : ITicketSearchService
 
             // call the ticket service
             IEnumerable<Invoice>? response = await _invoiceSearchService.SearchAsync(ticketNumber, issuedTime, cancellationToken);
-            var invoices = response.ToList();
+
+            // TCVP-2651 Filter results to only MVA/MVAR violation tickets
+            var invoices = response.Where(_ => _.Act == _mva || _.Act == _mvar).ToList();
 
             if (invoices.Count != 0)
             {
@@ -106,6 +112,8 @@ public class TicketSearchService : ITicketSearchService
 
             count.ActOrRegulationNameCode = invoice.Act;
             count.Section = invoice.Section;
+            count.IsAct = invoice.Act == _mva ? ViolationTicketCountIsAct.Y : ViolationTicketCountIsAct.N;
+            count.IsRegulation = invoice.Act == _mvar ? ViolationTicketCountIsRegulation.Y : ViolationTicketCountIsRegulation.N;
 
             ticket.Counts.Add(count);
         }
