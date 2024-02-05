@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using Moq;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
+using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using Xunit;
 
@@ -50,9 +52,11 @@ public class CountActRegMustBeMVATest
         violationTicket.Fields.Add(OcrViolationTicket.Count1ActRegs, actRegField);
         violationTicket.Fields.Add(OcrViolationTicket.Count1Section, sectionField);
         CountActRegMustBeMVA rule = new(actRegField, 1);
+        var _statuteLookupService = new Mock<IStatuteLookupService>();
+        FormRecognizerValidator formRecognizerValidator = new FormRecognizerValidator(_statuteLookupService.Object);
 
         // When
-        FormRecognizerValidator.Sanitize(violationTicket);
+        formRecognizerValidator.Sanitize(violationTicket);
         await rule.RunAsync();
 
         // Then.
