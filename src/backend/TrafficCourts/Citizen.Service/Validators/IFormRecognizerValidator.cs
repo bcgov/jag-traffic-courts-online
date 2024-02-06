@@ -10,7 +10,7 @@ public interface IFormRecognizerValidator
     /// </summary>
     /// <param name="violationTicket"></param>
     /// <returns></returns>
-    public void SanitizeViolationTicket(OcrViolationTicket violationTicket);
+    public Task SanitizeViolationTicketAsync(OcrViolationTicket violationTicket);
 
     /// <summary>
     ///    Validates the Violation Ticket, updating the global and field-specific confidence scores and validation results.

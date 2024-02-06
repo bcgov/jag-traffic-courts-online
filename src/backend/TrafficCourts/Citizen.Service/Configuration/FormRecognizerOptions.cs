@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RabbitMQ.Client;
+using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Configuration.Validation;
 using TrafficCourts.Configuration.Validation;
 
@@ -27,6 +28,16 @@ public class FormRecognizerOptions : IValidatable
     /// </summary>
     [Required]
     public Uri? Endpoint { get; set; }
+
+    /// <summary>
+    /// If an OCR scan job hasn't started by this time, cancel the request.
+    /// </summary>
+    public double? InitialTimeout { get; set; } = 60;
+    
+    /// <summary>
+    /// If an OCR scan job hasn't completed by this time, cancel the request.
+    /// </summary>
+    public double? TotalTimeout { get; set; } = 120;
 
     /// <summary>
     /// Azure FormRecognizer ModelId, the name of the model used to perform OCR processing.

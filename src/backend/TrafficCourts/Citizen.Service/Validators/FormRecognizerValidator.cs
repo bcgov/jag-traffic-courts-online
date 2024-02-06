@@ -12,16 +12,18 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     private static readonly string _ticketTitleRegex = @"^VIOLATION TICKET$";
     private static readonly string _violationTicketNumberRegex = @"^A[A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
     private readonly IStatuteLookupService _lookupService;
+    private readonly ILogger<FormRecognizerValidator> _logger;
 
-    public FormRecognizerValidator(IStatuteLookupService lookupService)
+    public FormRecognizerValidator(IStatuteLookupService lookupService, ILogger<FormRecognizerValidator> logger)
     {
         ArgumentNullException.ThrowIfNull(lookupService);
         _lookupService = lookupService;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public void SanitizeViolationTicket(OcrViolationTicket violationTicket)
+    public async Task SanitizeViolationTicketAsync(OcrViolationTicket violationTicket)
     {
-        Sanitize(violationTicket);
+        await SanitizeAsync(violationTicket);
     }
 
     public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket)
@@ -44,7 +46,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     /// Cleans up the scanned data from a poor OCR scan.
     /// </summary>
     /// <param name="violationTicket"></param>
-    public void Sanitize(OcrViolationTicket violationTicket)
+    public async Task SanitizeAsync(OcrViolationTicket violationTicket)
     {
         // TODO: Use TryGetValue to avoid numerous trips back and forth into the dictionary
         // It can happen that if adjacent text fields has content too close to the common dividing line, the OCR tool can misread both fields thinking one is blank and the other starts with the blank field's text.
@@ -224,11 +226,16 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
         // TCVP-2706 - It appears the Form Recognizer does a poor job at recognizing checkboxes.
         // Instead, use the counts to lookup statutes and if they are valid, replace MVA/MVAR Did Commit checkbox selections with identified Statute act codes.
-        SanitizeDidCommit(violationTicket);
+        await SanitizeDidCommitAsyc(violationTicket);
+
+        violationTicket.Fields.TryGetValue(OcrViolationTicket.OffenceIsMVA, out Field? isMVA);
+        _logger.LogTrace($"isMVA is: {isMVA?.Value}");
+        violationTicket.Fields.TryGetValue(OcrViolationTicket.OffenceIsMVAR, out Field? isMVAR);
+        _logger.LogTrace($"isMVAR is: {isMVAR?.Value}");
     }
 
     // A function to sanitize the OcrViolationTicket and set the isMVA and isMVAR checkboxes based on the validity of the MVA and MVAR Statutes referenced in the section text for the 3 counts.
-    private async void SanitizeDidCommit(OcrViolationTicket violationTicket)
+    private async Task SanitizeDidCommitAsyc(OcrViolationTicket violationTicket)
     {
         // If the section text for any of the 3 counts references a valid MVA Statute, the isMVA checkbox should be selected
         if (violationTicket.Fields.TryGetValue(OcrViolationTicket.OffenceIsMVA, out Field? isMVA)) {
@@ -237,6 +244,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mva)
                 || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mva)) 
                 ? Field._selected : Field._unselected;
+                
+            _logger.LogTrace($"isMVA should be: {isMVA.Value}");
         }
         
         // If the section text for any of the 3 counts references a valid MVAR Statute, the isMVAR checkbox should be selected
@@ -246,6 +255,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mvar)
                 || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mvar)) 
                 ? Field._selected : Field._unselected;
+
+            _logger.LogTrace($"isMVAR should be: {isMVAR.Value}");
         }
     }
 
@@ -265,7 +276,20 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             {
                 sectionText = Regex.Replace(sectionText, @"^\$$", ""); // remove $ if it's the only character.
                 Statute? statute = await _lookupService.GetBySectionAsync(sectionText);
-                return statute?.ActCode == actCode;
+                if (statute is null) {
+                    _logger.LogTrace($"Statute not found: {sectionText}");
+                    return false;
+                }
+                else {
+                    bool matchesAct = statute?.ActCode == actCode;
+                    if (!matchesAct) {
+                        _logger.LogTrace($"Statute {sectionText} does not match act code {actCode}");
+                    }
+                    else {
+                        _logger.LogTrace($"Statute found: {actCode} {sectionText}");
+                    }
+                    return matchesAct;
+                }
             }
         }
         return false;
