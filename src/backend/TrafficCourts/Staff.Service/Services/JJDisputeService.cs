@@ -60,20 +60,8 @@ public class JJDisputeService : IJJDisputeService
         // Populate the statute description of each count of the JJDispute
         foreach (var count in dispute.JjDisputedCounts)
         {
-            // Find statute by count's statute ID since the ID is stored in the Description field of the JJDisputedCount
-            Statute? statute = await _lookupService.GetByIdAsync(count.Description);
-            if (statute is not null)
-            {
-                string statuteDescription = string.Format("{0} {1} {2}",
-                              statute.ActCode, statute.Code, statute.ShortDescriptionText);
-
-                // Set the full description back to the JJDisputedCount as part of the JJDispute to be returned
-                count.Description = statuteDescription;
-            }
-            else
-            {
-                _logger.LogWarning("Failed to return Statute based on the provided {statuteId}", count.Description);
-            }
+            // Set the full description back to the JJDisputedCount as part of the JJDispute to be returned
+            count.Description = await GetStatuteDescriptionAsync(count);
         }
 
         return dispute;
@@ -102,6 +90,13 @@ public class JJDisputeService : IJJDisputeService
     public async Task<JJDispute> SubmitAdminResolutionAsync(long disputeId, bool checkVTC, JJDispute jjDispute, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(jjDispute.TicketNumber, checkVTC, jjDispute, cancellationToken);
+
+        // Populate the statute description of each count of the JJDispute
+        foreach (var count in dispute.JjDisputedCounts)
+        {
+            // Set the full description back to the JJDisputedCount as part of the JJDispute to be returned
+            count.Description = await GetStatuteDescriptionAsync(count);
+        }
 
         if (dispute.Status == JJDisputeStatus.IN_PROGRESS)
         {
@@ -282,6 +277,28 @@ public class JJDisputeService : IJJDisputeService
             {
                 target.Add(file);
             }
+        }
+    }
+
+    /// <summary>
+    /// Returns the statute description of the given count
+    /// </summary>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    private async Task<string> GetStatuteDescriptionAsync(JJDisputedCount count)
+    {
+        // Find statute by count's statute ID since the ID is stored in the Description field of the JJDisputedCount
+        Statute? statute = await _lookupService.GetByIdAsync(count.Description);
+        if (statute is not null)
+        {
+            string statuteDescription = string.Format("{0} {1} {2}",
+                          statute.ActCode, statute.Code, statute.ShortDescriptionText);
+            return statuteDescription;
+        }
+        else
+        {
+            _logger.LogWarning("Failed to return Statute based on the provided {statuteId}", count.Description);
+            return string.Empty;
         }
     }
 }
