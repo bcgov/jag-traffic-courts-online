@@ -27,6 +27,11 @@ public class FormRecognizerOptions : IValidatable
     /// </summary>
     [Required]
     public Uri? Endpoint { get; set; }
+    
+    /// <summary>
+    /// If an OCR scan job hasn't completed by this time, cancel the request.
+    /// </summary>
+    public double? Timeout { get; set; } = 120.0;
 
     /// <summary>
     /// Azure FormRecognizer ModelId, the name of the model used to perform OCR processing.
