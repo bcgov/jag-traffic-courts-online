@@ -136,7 +136,7 @@ export class JJCountComponent implements OnInit, OnChanges {
   private initFormData(): void {
     // initialize if no value
     if (this.jjDisputedCount && this.form) {
-      if (this.jjDisputedCount.totalFineAmount != null) {
+      if (this.jjDisputedCount.totalFineAmount != null && this.jjDisputedCount.totalFineAmount > 0) {
         this.surcharge = this.jjDisputedCount.totalFineAmount / 1.15 * 0.15;
       } else {
         this.jjDisputedCount.totalFineAmount = this.jjDisputedCount.ticketedFineAmount;
@@ -160,6 +160,8 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate);
+      // Make sure the date hint label is shown if there is a revised date/time
+      this.showDateHint = this.timeToPay === "yes";
 
       if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance) {
         // Finding
@@ -418,7 +420,13 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.lesserOrGreaterAmount = Math.round(this.form.get('lesserOrGreaterAmount').value / 1.15);
       this.surcharge = Math.round(0.15 * this.lesserOrGreaterAmount);
     } else {
-      this.form.get('totalFineAmount').setValue(Math.round(this.form.get('lesserOrGreaterAmount').value * 1.15));
+      const lesserOrGreaterAmountValue = this.form.get('lesserOrGreaterAmount').value;
+      if (lesserOrGreaterAmountValue !== null && lesserOrGreaterAmountValue > 0) {
+        var newTotalFineAmount = Math.round(lesserOrGreaterAmountValue * 1.15)
+        this.form.get('totalFineAmount').setValue(newTotalFineAmount);
+      } else {
+        this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.totalFineAmount);
+      }
       this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
       this.surcharge = Math.round(this.form.get('lesserOrGreaterAmount').value * 0.15);
     }
