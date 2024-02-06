@@ -362,6 +362,7 @@ export class TicketInfoComponent implements OnInit {
       this.onFieldChange();
     }, 5)
   }
+
   onKeyPressNumbers(event: any, BCOnly: boolean) {
     var charCode = (event.which) ? event.which : event.keyCode;
     // Only Numbers 0-9
@@ -444,7 +445,7 @@ export class TicketInfoComponent implements OnInit {
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
     this.lastUpdatedDispute = putDispute;
 
-    this.putDispute(putDispute);
+    this.putDispute(putDispute, true);
   }
 
   // decompose string into subparagraph, section, subsection, paragraph
@@ -551,32 +552,32 @@ export class TicketInfoComponent implements OnInit {
               'TicketInfoComponent::putDispute response',
               response
             );
-          });
 
-          if (!isSubmittingNoticeOfDispute) {
-            // markAsUntouched form group
-            this.form.get('violationTicket').markAsUntouched();
-          } else {
-            // markAsUntouched notice of dispute fields
-            this.form.get('disputantSurname').markAsUntouched();
-            this.form.get('disputantGivenNames').markAsUntouched();
-            this.form.get('driversLicenceNumber').markAsUntouched();
-            this.form.get('driversLicenceProvince').markAsUntouched();
-            this.form.get('driversLicenceCountryId').markAsUntouched();
-            this.form.get('driversLicenceProvinceSeqNo').markAsUntouched();
-            this.form.get('driversLicenceProvinceProvId').markAsUntouched();
-            this.form.get('homePhoneNumber').markAsUntouched();
-            this.form.get('emailAddress').markAsUntouched();
-            this.form.get('address').markAsUntouched();
-            this.form.get('addressCity').markAsUntouched();
-            this.form.get('addressProvince').markAsUntouched();
-            this.form.get('addressProvinceSeqNo').markAsUntouched();
-            this.form.get('addressProvinceCountryId').markAsUntouched();
-            this.form.get('addressProvinceProvId').markAsUntouched();
-            this.form.get('addressCountryId').markAsUntouched();
-            this.form.get('postalCode').markAsUntouched();
-            this.form.get('rejectedReason').markAsUntouched();
-          }
+            if (!isSubmittingNoticeOfDispute) {
+              // markAsUntouched form group
+              this.form.get('violationTicket').markAsUntouched();
+            } else {
+              // markAsUntouched notice of dispute fields
+              this.form.get('disputantSurname').markAsUntouched();
+              this.form.get('disputantGivenNames').markAsUntouched();
+              this.form.get('driversLicenceNumber').markAsUntouched();
+              this.form.get('driversLicenceProvince').markAsUntouched();
+              this.form.get('driversLicenceCountryId').markAsUntouched();
+              this.form.get('driversLicenceProvinceSeqNo').markAsUntouched();
+              this.form.get('driversLicenceProvinceProvId').markAsUntouched();
+              this.form.get('homePhoneNumber').markAsUntouched();
+              this.form.get('emailAddress').markAsUntouched();
+              this.form.get('address').markAsUntouched();
+              this.form.get('addressCity').markAsUntouched();
+              this.form.get('addressProvince').markAsUntouched();
+              this.form.get('addressProvinceSeqNo').markAsUntouched();
+              this.form.get('addressProvinceCountryId').markAsUntouched();
+              this.form.get('addressProvinceProvId').markAsUntouched();
+              this.form.get('addressCountryId').markAsUntouched();
+              this.form.get('postalCode').markAsUntouched();
+              this.form.get('rejectedReason').markAsUntouched();
+            }
+          });
         }
       });
   }
