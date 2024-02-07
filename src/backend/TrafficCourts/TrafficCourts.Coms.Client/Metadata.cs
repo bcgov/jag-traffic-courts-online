@@ -2,8 +2,8 @@
 
 internal static class Metadata
 {
-    private const string Id = "id";
-    private const string Name = "name";
+    private const string Id = "coms-id";
+    private const string Name = "coms-name";
     private static readonly StringComparer _comparer= StringComparer.OrdinalIgnoreCase;
 
     public static bool IsInternal(string key)
