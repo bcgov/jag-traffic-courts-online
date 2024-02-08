@@ -206,7 +206,7 @@ p {
   }
 
   input.mat-input-element:enabled {
-    background-color: #ffffff !important;
+    background-color: #fffee6 !important;
   }
 
   textarea.mat-input-element {
@@ -219,10 +219,7 @@ p {
   }
 
   textarea.mat-input-element:enabled{
-    background-color: #ffffff !important;
-    line-height: normal;
-    margin: 0px;
-    padding: 0px;
+    background-color: #fffee6 !important;    
   }
 
   .mat-input-element:disabled {
@@ -234,6 +231,22 @@ p {
     .mat-checkbox {
       padding-left: 0.75rem;
     }
+  }
+
+  // Need to remove the following css once the design standards are in place.
+  mat-form-field[appearance="outline"]{
+
+    textarea.mat-input-element:enabled{
+      background-color: #ffffff !important;
+      line-height: normal;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    input.mat-input-element:enabled{
+      background-color: #ffffff !important;
+    }
+
   }
 }
 

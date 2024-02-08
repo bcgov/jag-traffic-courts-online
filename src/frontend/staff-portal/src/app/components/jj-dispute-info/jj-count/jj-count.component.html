@@ -397,7 +397,7 @@
           other offence</span>
       </div>
       <div *ngIf="!jjDisputedCount"><span class="section-grid-header">&nbsp;<br /></span></div>
-      <div style="width:100%; margin-left: 20px">
+      <div style="width:90%; margin-left: 20px">
         <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
           formControlName="lesserDescription" [matAutocomplete]="auto" (keyup)="onLesserDescriptionKeyup()"
           [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
