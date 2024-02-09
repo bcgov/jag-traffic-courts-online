@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -53,10 +54,11 @@ public class CountActRegMustBeMVATest
         violationTicket.Fields.Add(OcrViolationTicket.Count1Section, sectionField);
         CountActRegMustBeMVA rule = new(actRegField, 1);
         var _statuteLookupService = new Mock<IStatuteLookupService>();
-        FormRecognizerValidator formRecognizerValidator = new FormRecognizerValidator(_statuteLookupService.Object);
+        var _logger = new Mock<ILogger<FormRecognizerValidator>>();
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
         // When
-        formRecognizerValidator.Sanitize(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket);
         await rule.RunAsync();
 
         // Then.

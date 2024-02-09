@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ public class DateOfServiceLT30RuleTest
     [InlineData("2021 11 02", "2021 11 03", "2021-11-02", "2021-11-03")]
     [InlineData("2021 02", "2021 11 03", "2021-11-03", "2021-11-03")] // Violation Date is not a valid date => null
     [InlineData("2021 11 02", "2021 03", "2021-11-02", "2021-11-02")] // Date of Service is not a valid date => null
-    public void TestSanitizeDates(string violationDateStr, string dateOfServiceStr, string expectedVDStr, string expectedDoStr) {
+    public async void TestSanitizeDates(string violationDateStr, string dateOfServiceStr, string expectedVDStr, string expectedDoStr) {
         // ViolationDate and DateOfService are usually the same day. If either is misread/null, use the other date value.
 
         // Given
@@ -61,11 +62,12 @@ public class DateOfServiceLT30RuleTest
         violationTicket.TicketVersion = ViolationTicketVersion.VT2;
         violationTicket.Fields.Add(OcrViolationTicket.ViolationDate, new Field(violationDateStr));
         violationTicket.Fields.Add(OcrViolationTicket.DateOfService, new Field(dateOfServiceStr));
-        var _statuteLookupService = new Mock<IStatuteLookupService>();
-        FormRecognizerValidator formRecognizerValidator = new FormRecognizerValidator(_statuteLookupService.Object);
+        var _statuteLookupService = new Mock<IStatuteLookupService>();        
+        var _logger = new Mock<ILogger<FormRecognizerValidator>>();
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
         // When
-        formRecognizerValidator.Sanitize(violationTicket);
+        await formRecognizerValidator.SanitizeAsync(violationTicket);
 
         // Then
         Assert.Equal(violationTicket.Fields[OcrViolationTicket.ViolationDate].GetDate()?.ToString("yyyy-MM-dd"), expectedVDStr);

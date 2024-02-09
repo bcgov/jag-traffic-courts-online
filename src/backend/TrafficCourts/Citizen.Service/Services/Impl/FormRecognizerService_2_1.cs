@@ -2,6 +2,8 @@ using Azure;
 using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.Models;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
@@ -16,6 +18,7 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
     private readonly string _apiKey;
     private readonly Uri _endpoint;
     private readonly string _modelId;
+    private readonly double _timeout;
 
     public FormRecognizerService_2_1(FormRecognizerOptions options, ILogger<FormRecognizerService_2_1> logger)
     {
@@ -23,7 +26,10 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
         _apiKey = options.ApiKey ?? throw new ArgumentException($"{nameof(options.ApiKey)} is required");
         _endpoint = options.Endpoint ?? throw new ArgumentException($"{nameof(options.Endpoint)} is required");
         _modelId = options.ModelId ?? throw new ArgumentException($"{nameof(options.ModelId)} is required");
+        _timeout = options.Timeout ?? throw new ArgumentException($"{nameof(options.Timeout)} is required");
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+        _logger.LogInformation($"Form Recognizer Timeout set to {_timeout} seconds");
     }
 
     public async Task<OcrViolationTicket> AnalyzeImageAsync(MemoryStream stream, CancellationToken cancellationToken)
@@ -36,7 +42,7 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
         AzureKeyCredential credential = new(_apiKey);
         FormRecognizerClient formRecognizerClient = new(_endpoint, credential);
 
-        Response<RecognizedFormCollection> response =  await RecognizeCustomFormsAsync(formRecognizerClient, _modelId, stream, null, cancellationToken);
+        Response<RecognizedFormCollection> response = await RecognizeCustomFormsAsync(formRecognizerClient, _modelId, stream, null, cancellationToken);
 
         return Map(response.Value);
     }
@@ -44,26 +50,49 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
 
     private async Task<Response<RecognizedFormCollection>> RecognizeCustomFormsAsync(FormRecognizerClient client, string modelId, Stream form, RecognizeCustomFormsOptions? options, CancellationToken cancellationToken)
     {
+        var stopwatch = new Stopwatch(); // Used to measure the elapsed time
+        stopwatch.Start();
+
         using var operation = Instrumentation.FormRecognizer.BeginOperation("2.1", "RecognizeForms");
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_timeout)); // Set a total timeout
+        var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token);
 
         try
         {
-            // FIXME: Sometimes Form Recognizer (FR) doesn't even bother to start an analyze request
-            //  - the request will be stored in the underlying \shared filesystem, but FR won't start processing the request for some reason.
-            //  - the request will sit on the filesystem with the status of NotStarted in an output.json file corresponding with the analyze id.
-            //  - it's unclear why this happens, but the result is that the below statement will appear to hang forever and never return, 
-            //      but in reality the request is repeatedly polled to see if the request is done and FR always returns NotStarted (there is no current timeout).
-            // The WaitForCompletionAsync() should be rewritten so that in such cases if the request hasn't started processing in 10s or so, cancel the request so it doesn't hang here forever. 
-            Task<RecognizeCustomFormsOperation> recognizeOperation = client.StartRecognizeCustomFormsAsync(modelId, form, options, cancellationToken);
-            Response<RecognizedFormCollection> response = await recognizeOperation.WaitForCompletionAsync(cancellationToken)
-                .ConfigureAwait(false);
+            RecognizeCustomFormsOperation operationResult = await client.StartRecognizeCustomFormsAsync(modelId, form, options, linkedCts.Token);
+            Response<RecognizedFormCollection> response = await operationResult.WaitForCompletionAsync(linkedCts.Token).ConfigureAwait(false);
             return response;
         }
-        catch (Exception exception)
+        catch (TimeoutException e)
         {
-            Instrumentation.FormRecognizer.EndOperation(operation, exception);
-            _logger.LogError(exception, "Form Recognizer operation failed");
+            Instrumentation.FormRecognizer.EndOperation(operation, e);
+            int elapsedSeconds = (int)Math.Round(stopwatch.Elapsed.TotalSeconds);
+            throw new TimeoutException($"Form Recognizer job timed out after {elapsedSeconds} seconds.", e);
+        }
+        catch (OperationCanceledException e)
+        {
+            Instrumentation.FormRecognizer.EndOperation(operation, e);
+            int elapsedSeconds = (int)Math.Round(stopwatch.Elapsed.TotalSeconds);
+            throw new TimeoutException($"Form Recognizer job timed out after {elapsedSeconds} seconds.", e);
+        }
+        catch (Exception e) when (e.Message.StartsWith("Timeout", StringComparison.OrdinalIgnoreCase) && e.Message.Contains("Internal server error"))
+        {
+            // Sometimes the text "Internal server error" is buried in the exception message, but starts with a misleading "Timeout ...".
+            // The root cause is not a timeout, but a Form Recognizer server error. So we wrap the exception to make it more clear of the actual cause.
+            Instrumentation.FormRecognizer.EndOperation(operation, e);
+            int elapsedSeconds = (int)Math.Round(stopwatch.Elapsed.TotalSeconds);
+            throw new Exception($"Form Recognizer internal server error after {elapsedSeconds} seconds, likely concurrent/locked file access of shared resources. Job was cancelled.", e);
+        }
+        catch (Exception e)
+        {            
+            Instrumentation.FormRecognizer.EndOperation(operation, e);
+            _logger.LogError(e, "Form Recognizer operation failed");
             throw;
+        }
+        finally
+        {
+            stopwatch.Stop();
+            linkedCts.Dispose();
         }
     }
 
@@ -77,12 +106,14 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
         if (result.Count > 0)
         {
             violationTicket.GlobalConfidence = result[0].FormTypeConfidence ?? 0f;
-            Dictionary<string, string> fieldLabels = new ();
-            if (OcrViolationTicket.ViolationTicketVersion1 == result[0].FormType) {
+            Dictionary<string, string> fieldLabels = new();
+            if (OcrViolationTicket.ViolationTicketVersion1 == result[0].FormType)
+            {
                 violationTicket.TicketVersion = ViolationTicketVersion.VT1;
                 fieldLabels = IFormRecognizerService.FieldLabels_2022_04;
             }
-            else if (OcrViolationTicket.ViolationTicketVersion2 == result[0].FormType) {
+            else if (OcrViolationTicket.ViolationTicketVersion2 == result[0].FormType)
+            {
                 violationTicket.TicketVersion = ViolationTicketVersion.VT2;
                 fieldLabels = IFormRecognizerService.FieldLabels_2023_09;
             }
@@ -101,7 +132,8 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
                     if (field.Type is not null && field.Type.Equals("SelectionMark"))
                     {
                         // Special case, SelectionMarks. These, it would seem, never populate the ValueData.Text property - always null. We need to extract the value of the field via other means.
-                        try {
+                        try
+                        {
                             field.Value = Enum.GetName(extractedField.Value.AsSelectionMarkState())?.ToLower();
                         }
                         catch (Exception)
@@ -110,7 +142,7 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
                             field.Value = "unselected";
                         }
                     }
-                    else 
+                    else
                     {
                         field.Value = extractedField.ValueData?.Text;
                     }
@@ -132,7 +164,8 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
             }
 
             // For VT2, ViolationDate is multiple fields and need to be merged together.
-            if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion)) {
+            if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion))
+            {
                 Field violationDateYYYY = violationTicket.Fields[OcrViolationTicket.ViolationDateYYYY];
                 Field violationDateMM = violationTicket.Fields[OcrViolationTicket.ViolationDateMM];
                 Field violationDateDD = violationTicket.Fields[OcrViolationTicket.ViolationDateDD];
@@ -154,7 +187,8 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
             }
 
             // For VT2, ViolationTime is multiple fields and need to be merged together.
-            if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion)) {
+            if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion))
+            {
                 Field violationTimeHH = violationTicket.Fields[OcrViolationTicket.ViolationTimeHH];
                 Field violationTimeMM = violationTicket.Fields[OcrViolationTicket.ViolationTimeMM];
 
@@ -184,4 +218,5 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
         }
         return null;
     }
+
 }

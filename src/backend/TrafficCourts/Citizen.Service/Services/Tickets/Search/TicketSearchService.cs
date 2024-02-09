@@ -129,6 +129,8 @@ public class TicketSearchService : ITicketSearchService
 
         var searchResponse = response.Message;
 
+        // FIXME: possible bug here. If there is a network error or some other backend database error, IsNotFound defaults to false and so this
+        // code block will always execute.
         if (!searchResponse.IsNotFound)
         {
             _logger.LogDebug("Found a dispute for the given ticket number: {ticketNumber}, returning bad request", ticketNumber);

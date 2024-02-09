@@ -85,7 +85,7 @@ public static class AnalyseHandler
 
             if (request.Sanitize) {
                 // Perform basic cleanup from a bad OCR scan.
-                _formRecognizerValidator.SanitizeViolationTicket(violationTicket);
+                await _formRecognizerValidator.SanitizeViolationTicketAsync(violationTicket);
             }
 
             if (request.Validate) {
