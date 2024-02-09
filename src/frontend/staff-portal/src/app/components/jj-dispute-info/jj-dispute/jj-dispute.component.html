@@ -325,7 +325,7 @@
           </span>
         </ng-container>
         <form [formGroup]="courtAppearanceForm" novalidate>
-          <div style="display: grid; grid-template-columns: 11% 6% 6% 11% 6% 11% 11% 11% 10% 10% 7%">
+          <div style="display: grid">
             <span class="section-grid-cell">
               <p class="section-grid-header">Appearance Date/Time</p>
               <p class="section-grid-text">
@@ -358,7 +358,7 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">No APP</p>
-              <p class="section-grid-text" style="white-space: nowrap;">
+              <p class="section-grid-text">
                 <span *ngIf="((isViewOnly && !isSSEditMode) || !isNoAppEnabled) && courtAppearanceForm.value.noAppTs">
                   {{ courtAppearanceForm?.value.noAppTs | date: "yyyy-MM-dd HH:mm" }}
                 </span>
