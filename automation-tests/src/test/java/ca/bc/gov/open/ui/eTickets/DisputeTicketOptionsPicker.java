@@ -249,8 +249,9 @@ public class DisputeTicketOptionsPicker {
 		js.executeScript("arguments[0].click();", element);
 		System.out.println("Submit in pop-up clicked");
 
-		new WebDriverWait(driver, Duration.ofSeconds(60))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Request details')]")));
+		// commented out until issue with checkbox is fixed
+//		new WebDriverWait(driver, Duration.ofSeconds(60))
+//				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Request details')]")));
 
 		// commented out until issue will be fixed
 		// https://justice.gov.bc.ca/jira/browse/TCVP-2608

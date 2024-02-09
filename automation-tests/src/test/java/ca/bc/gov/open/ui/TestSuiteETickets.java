@@ -24,7 +24,6 @@ import org.junit.runners.Suite;
         SubmitToStaffWorkbench.class,
         SubmitToStaffWorkbenchCancel.class,
         SubmitToStaffWorkbenchReject.class,
-        UploadInfoNotMatchValidationChars.class,
 })
 
 

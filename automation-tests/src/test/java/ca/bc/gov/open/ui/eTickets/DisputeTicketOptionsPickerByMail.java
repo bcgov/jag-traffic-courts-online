@@ -98,8 +98,7 @@ public class DisputeTicketOptionsPickerByMail {
 		element = driverWait
 				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
 		Thread.sleep(1000);
-//		is clicked by default, checking with Colm
-//		js.executeScript("arguments[0].click();", element);
+		js.executeScript("arguments[0].click();", element);
 
 	}
 

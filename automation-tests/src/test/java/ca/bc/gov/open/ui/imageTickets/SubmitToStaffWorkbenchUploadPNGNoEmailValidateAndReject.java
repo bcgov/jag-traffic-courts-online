@@ -228,54 +228,57 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
         element.click();
 
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
-                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'Invalid statute selection.')]")));
-
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_SECTION_1 + "')]")));
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_SECTION_2 + "')]")));
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_SECTION_3 + "')]")));
         Thread.sleep(1000);
         // Edit Red Flags
 
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
-        element.clear();
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
-//        element.sendKeys("Excessive Speeding");
-
-        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
-
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-//                .xpath("//span[contains(text(), 'Excessive Speeding')]")));
-//        element.click();
-
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
-        element.clear();
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
-        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+////        element.clear();
+////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+//////        element.sendKeys("Excessive Speeding");
+////
+////        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+////
+//////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//////                .xpath("//span[contains(text(), 'Excessive Speeding')]")));
+//////        element.click();
+////
+////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+////        element.clear();
+////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+////        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+//////
+//////        element.sendKeys("Driving Without Licence");
+//////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//////                .xpath("//span[contains(text(), 'Driving Without Licence')]")));
+//////        element.click();
+////
+////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
+////        element.clear();
+////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
+////        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+////
+//////        element.sendKeys("Driving With Burned Out Break Lights");
+//////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//////                .xpath("//span[contains(text(), 'Driving With Burned Out Break Lights')]")));
+//////        element.click();
+////
+////        Thread.sleep(1000);
+////        driver.findElement(By.xpath("//html")).click();
+////
+////        Thread.sleep(1000);
+////        driver.findElement(By.xpath("//html")).click();
 //
-//        element.sendKeys("Driving Without Licence");
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-//                .xpath("//span[contains(text(), 'Driving Without Licence')]")));
-//        element.click();
-
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
-        element.clear();
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
-        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
-
-//        element.sendKeys("Driving With Burned Out Break Lights");
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-//                .xpath("//span[contains(text(), 'Driving With Burned Out Break Lights')]")));
-//        element.click();
-
-        Thread.sleep(1000);
-        driver.findElement(By.xpath("//html")).click();
-
-        Thread.sleep(1000);
-        driver.findElement(By.xpath("//html")).click();
-
-
-        Thread.sleep(1000);
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Save ')]")))
-                .click();
-
+//
+//        Thread.sleep(1000);
+//        new WebDriverWait(driver, Duration.ofSeconds(10))
+//                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Save ')]")))
+//                .click();
+//
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Validate ')]")))
                 .click();

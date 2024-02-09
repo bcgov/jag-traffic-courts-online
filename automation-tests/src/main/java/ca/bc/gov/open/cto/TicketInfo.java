@@ -18,6 +18,12 @@ public class TicketInfo {
 	public static String 			E_TICKET_COUNT_1			= "Speed Against Area Sign";
 	public static String 			E_TICKET_COUNT_2 			= "Permit Passenger Without Seatbelt";
 	public static String 			E_TICKET_COUNT_3			= "Using Electronic Device While Driving";
+	public static String 			E_TICKET_ACT_1				= "MVA";
+	public static String 			E_TICKET_ACT_2 				= "MVA";
+	public static String 			E_TICKET_ACT_3				= "MVA";
+	public static String 			E_TICKET_SECTION_1			= "146(5)";
+	public static String 			E_TICKET_SECTION_2 			= "220(6)";
+	public static String 			E_TICKET_SECTION_3			= "214.2(1)";
 	public static String 			E_TICKET_AMOUNT_1			= "139";
 	public static String 			E_TICKET_AMOUNT_2			= "109";
 	public static String 			E_TICKET_AMOUNT_3			= "368";
@@ -30,8 +36,17 @@ public class TicketInfo {
 	public static String 			IMAGE_TICKET_NAME 			= "TestName";
 	public static String 			IMAGE_TICKET_SURNAME 		= RANDOM_NUMBER + " Surname";
 	public static String 			IMAGE_TICKET_COUNT_1		= "Excessive Speeding";
-	public static String 			IMAGE_TICKET_COUNT_2 		= "Driving Without Licence";
-	public static String 			IMAGE_TICKET_COUNT_3		= "Driving With Burned Out Break Lights";
+	public static String 			IMAGE_TICKET_COUNT_2 		= "Drive Without Licence";
+	public static String 			IMAGE_TICKET_COUNT_3		= "Slow Driving";
+	public static String 			IMAGE_TICKET_ACT_1			= "MVA";
+	public static String 			IMAGE_TICKET_ACT_2 			= "MVA";
+	public static String 			IMAGE_TICKET_ACT_3			= "MVA";
+	public static String 			IMAGE_TICKET_SECTION_1		= "148(1)";
+	public static String 			IMAGE_TICKET_SECTION_2 		= "24(1)";
+	public static String 			IMAGE_TICKET_SECTION_3		= "145(1)";
+	public static String 			IMAGE_TICKET_PAY_AMOUNT_1	= "368";
+	public static String 			IMAGE_TICKET_PAY_AMOUNT_2 	= "276";
+	public static String 			IMAGE_TICKET_PAY_AMOUNT_3	= "121";
 
 	public static String getFormattedYesterdayDateMDY() {
 		// Get yesterday's date
