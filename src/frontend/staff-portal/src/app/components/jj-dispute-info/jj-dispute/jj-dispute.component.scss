@@ -72,6 +72,7 @@ label {
 .section-grid-cell {
   border: 1px solid black;
   padding: 5px 5px 0px 5px;
+  overflow: auto;
 }
 
 .section-grid-cell-noshow {
@@ -206,7 +207,6 @@ label {
   }
 
   .mat-form-field.datetime-picker {
-    width: 200px !important;
     margin-right: 0px;
     vertical-align: top;
 
