@@ -46,6 +46,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return report;
     }
 
+
     private async Task<RenderedReport> RenderReportAsync(DigitalCaseFile digitalCaseFile, CancellationToken cancellationToken)
     {
         // get the template
@@ -90,7 +91,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     /// <summary>
     /// Fetches the <see cref="DigitalCaseFile"/> based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
-    private async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
+    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
     {
         // JavaScript: Intl.DateTimeFormat().resolvedOptions().timeZone
         // Time Zone from the browser is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.
@@ -114,16 +115,20 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.GivenNames = ConcatenateWithSpaces(dispute.OccamDisputantGiven1Nm, dispute.OccamDisputantGiven2Nm, dispute.OccamDisputantGiven3Nm);
         ticket.OffenceLocation = dispute.OffenceLocation;
         ticket.PoliceDetachment = dispute.PoliceDetachment;
-        ticket.IssuedDate = ToDateTime(dispute.IssuedTs); // DateTimeOffset > DateTime
-        ticket.SubmittedDate = ToDateTime(dispute.SubmittedTs); // DateTimeOffset > DateTime
-        ticket.IcbcReceivedDate = ToDateTime(dispute.IcbcReceivedDate); // DateTimeOffset > DateTime
+        ticket.Issued = new FormattedDateTime(dispute.IssuedTs); 
+        ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
+        ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
         ticket.CourtHouse = dispute.CourthouseLocation;
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
-        contact.Surname = dispute.ContactSurname;
+        contact.Surname = dispute.ContactSurname ?? ticket.Surname;
         contact.GivenNames = ConcatenateWithSpaces(dispute.ContactGivenName1, dispute.ContactGivenName2, dispute.ContactGivenName3);
+        if (string.IsNullOrEmpty(contact.GivenNames))
+        {
+            contact.GivenNames = ticket.GivenNames;
+        }
         contact.Address = FormatAddress(dispute);
         contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
         contact.DriversLicence.Number = dispute.DriversLicenceNumber;
@@ -145,7 +150,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the court appearance history
         var appearanceHistory = digitalCaseFile.AppearanceHistory;
-        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs)
+        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs.Where(_ => _ != currentAppearance))
         {
             // TODO: how do we know the current appearance vs historical ones?
             appearanceHistory.Add(SetFields(new Appearance(), rop));
@@ -158,19 +163,24 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the counts
         var counts = digitalCaseFile.Counts;
-        foreach (var disputedCount in dispute.JjDisputedCounts.OrderBy(_ => _.Count))
+        for (int i = 1; i <= 3; i++)
         {
-            counts.Add(new OffenseCount
+            var offenseCount = new OffenseCount();
+
+            var disputedCount = dispute.JjDisputedCounts.FirstOrDefault(_ => _.Count == i);
+            if (disputedCount is not null)
             {
-                Count = disputedCount.Count,
-                Date = ToDateTime(dispute.IssuedTs),
-                Plea = ToString(disputedCount.Plea),
-                Description = disputedCount.Description,
-                Due = ToDateTime(disputedCount.DueDate),
-                Fine = disputedCount.TicketedFineAmount != null ? (decimal)disputedCount.TicketedFineAmount : 0m,
-                RequestFineReduction = ToString(disputedCount.RequestReduction),
-                RequestTimeToPay = ToString(disputedCount.RequestTimeToPay),
-            });
+                offenseCount.Count = disputedCount.Count.ToString();
+                offenseCount.Offense = new FormattedDateOnly(dispute.IssuedTs);
+                offenseCount.Plea = ToString(disputedCount.Plea);
+                offenseCount.Description = disputedCount.Description;
+                offenseCount.Due = new FormattedDateOnly(disputedCount.DueDate);
+                offenseCount.Fine = (decimal?)(disputedCount.TicketedFineAmount);
+                offenseCount.RequestFineReduction = ToString(disputedCount.RequestReduction);
+                offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
+            }
+
+            counts.Add(offenseCount);
         }
 
         // set justin documents
@@ -198,7 +208,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         {
             history.Add(new FileHistoryEvent
             {
-                Date = h.CreatedTs.DateTime,
+                When = new FormattedDateTime(h.CreatedTs),
                 Description = h.Description,
                 Type = h.AuditLogEntryType.ToString(),
                 Username = h.ActionByApplicationUser,
@@ -211,7 +221,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         {
             remarks.Add(new FileRemark
             {
-                Date = ToDateTime(remark.RemarksMadeTs),
+                When = new FormattedDateTime(remark.RemarksMadeTs),
                 Username = remark.UserFullName,
                 Note = remark.Note,
             });
@@ -220,15 +230,13 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return digitalCaseFile;
     }
 
-
-
     private Appearance SetFields(Appearance appearance, JJDisputeCourtAppearanceRoP appearanceRop)
     {
-        appearance.Date = ToDateTime(appearanceRop.AppearanceTs);
+        appearance.When = new FormattedDateTime(appearanceRop.AppearanceTs);
         appearance.Room = appearanceRop.Room;
         appearance.Reason = appearanceRop.Reason;
         appearance.App = ToString(appearanceRop.AppCd);
-        appearance.NoApp = ToDateTime(appearanceRop.NoAppTs);
+        appearance.NoApp = new FormattedDateTime(appearanceRop.NoAppTs);
         appearance.DefenseCouncil = appearanceRop.DefenceCounsel;
         appearance.DefenseAtt = ToString(appearanceRop.DattCd);
         appearance.Crown = ToString(appearanceRop.Crown);
@@ -316,6 +324,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         return string.Empty;
     }
+
     private string ToString(JJDisputeElectronicTicketYn? value)
     {
         if (value is not null && value != JJDisputeElectronicTicketYn.UNKNOWN)
@@ -325,6 +334,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         return string.Empty;
     }
+
     private string ToString(JJDisputeCourtAppearanceRoPJjSeized? value)
     {
         if (value is not null && value != JJDisputeCourtAppearanceRoPJjSeized.UNKNOWN)
@@ -344,6 +354,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         return string.Empty;
     }
+
     private string ToString(JJDisputeCourtAppearanceRoPDattCd? value)
     {
         if (value is not null && value != JJDisputeCourtAppearanceRoPDattCd.UNKNOWN)
@@ -381,8 +392,6 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         return string.Empty;
     }
-
-    private DateTime? ToDateTime(DateTimeOffset? value) => value?.DateTime;
 
     private string FormatAddress(JJDispute dispute)
     {

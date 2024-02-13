@@ -207,7 +207,7 @@ public class PrintTest : CommonDocumentGenerationServiceTest
 
         for (int i = 0; i < file.Counts.Count; i++)
         {
-            file.Counts[i].Count = i + 1; // fix up the count numbers
+            file.Counts[i].Count = (i + 1).ToString(); // fix up the count numbers
         }
 
         return file;
