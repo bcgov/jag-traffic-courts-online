@@ -7,8 +7,7 @@
   </button>
 </div>
 <mat-dialog-content>
-  <mat-stepper class="status-stepper" labelPosition="bottom" [linear]="true" [disableRipple]="true"
-    [selectedIndex]="selectedStep">
+  <mat-stepper class="status-stepper" labelPosition="bottom" [linear]="true" [disableRipple]="true">
     <mat-step *ngFor="let step of steps;" [completed]="step.isCompleted" editable="false">
       <ng-template matStepLabel>{{ step.type }}</ng-template>
     </mat-step>
