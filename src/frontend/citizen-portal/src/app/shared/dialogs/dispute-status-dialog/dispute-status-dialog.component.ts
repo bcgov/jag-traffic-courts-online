@@ -41,28 +41,13 @@ export class DisputeStatusDialogComponent {
           break;
         }
         case StatusStepType.SCHEDULED: {
-          step.isCompleted = this.checkScheduledCompleted();
-          if (!this.checkCancelled() && !this.checkConcluded() && this.dispute?.hearing_type === JJDisputeHearingType.CourtAppearance) this.steps.push(step);
+          step.isCompleted = this.dispute?.hearing_type === JJDisputeHearingType.CourtAppearance && this.checkScheduledCompleted();
+          if (this.dispute?.hearing_type === JJDisputeHearingType.CourtAppearance) this.steps.push(step);
           break;
         }
-        case StatusStepType.CONFIRMED: {
-          step.isCompleted = this.checkConfirmedCompleted();
-          if (!this.checkCancelled() && !this.checkConcluded()) this.steps.push(step);
-          break;
-        }
-        case StatusStepType.CANCELLED: {
-          step.isCompleted = this.checkCancelled();
-          if (step.isCompleted) this.steps.push(step);
-          break;
-          }
-        case StatusStepType.REJECTED: {
-          step.isCompleted = this.checkRejected();
-          if (step.isCompleted) this.steps.push(step);
-          break;
-          }
         case StatusStepType.CONCLUDED: {
           step.isCompleted = this.checkConcluded();
-          if (step.isCompleted) this.steps.push(step);
+          this.steps.push(step);
           break;
         }
       }
@@ -71,17 +56,18 @@ export class DisputeStatusDialogComponent {
   }
 
   private checkProcessingCompleted(): boolean {
-    if (this.checkScheduledCompleted()) return true;
+    if (this.dispute?.hearing_type === JJDisputeHearingType.CourtAppearance && this.checkScheduledCompleted()) return true;
     else {
-      let statuses: DisputeStatus[] = [DisputeStatus.Processing, DisputeStatus.Rejected];
-      if (statuses.indexOf(this.dispute?.dispute_status) > -1) {
+      let jjStatuses: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.Confirmed, JJDisputeStatus.Review, JJDisputeStatus.InProgress];
+      let statuses: DisputeStatus[] = [DisputeStatus.Processing];
+      if (jjStatuses.indexOf(this.dispute?.jjdispute_status) > -1 || statuses.indexOf(this.dispute?.dispute_status) > -1) {
         return true;
       } else return false;
     }
   }
 
   private checkScheduledCompleted(): boolean {
-    if (this.checkConfirmedCompleted()) return true;
+    if (this.checkConcluded()) return true;
     else {
       let jjStatuses: JJDisputeStatus[] = [
         JJDisputeStatus.HearingScheduled,
@@ -89,16 +75,12 @@ export class DisputeStatusDialogComponent {
         JJDisputeStatus.RequireCourtHearing,
         JJDisputeStatus.RequireMoreInfo,
         JJDisputeStatus.Review,
+        JJDisputeStatus.Confirmed
       ];
       if (jjStatuses.indexOf(this.dispute?.jjdispute_status) > -1) {
         return true;
       } else return false;
     }
-  }
-
-  private checkConfirmedCompleted(): boolean {
-    if (this.checkRejected() || this.dispute?.jjdispute_status === JJDisputeStatus.Confirmed) return true;
-    else return false;
   }
 
   private checkCancelled(): boolean {
@@ -114,6 +96,9 @@ export class DisputeStatusDialogComponent {
   private checkConcluded(): boolean {
     if ([JJDisputeStatus.Concluded].indexOf(this.dispute?.jjdispute_status) > -1) return true;
     else if ([DisputeStatus.Concluded].indexOf(this.dispute?.dispute_status) > -1) return true;
+    else if ([JJDisputeStatus.Accepted].indexOf(this.dispute?.jjdispute_status) > -1) return true;
+    else if (this.checkCancelled()) return true;
+    else if (this.checkRejected()) return true;
     else return false;
   }
 }

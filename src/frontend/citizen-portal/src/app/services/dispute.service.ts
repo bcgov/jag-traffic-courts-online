@@ -187,10 +187,9 @@ export enum StatusStepType {
   SUBMITTED = "Submitted",
   PROCESSING = "Processing",
   SCHEDULED = "Hearing Scheduled",
-  CONFIRMED = "Decision Made",
   CANCELLED = "Cancelled",
   REJECTED = "Rejected",
-  CONCLUDED = "Concluded"
+  CONCLUDED = "Decision Made"
 }
 
 export interface FileMetadata extends FileMetadataBase {
