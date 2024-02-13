@@ -1,0 +1,142 @@
+{
+    "hearing": false,
+    "ticket": {
+        "number": "AS00000162",
+        "surname": "Evans",
+        "givenNames": "Maya",
+        "address": "",
+        "issued": {
+            "time": "14:43",
+            "datetime": "01/30/2024 14:43",
+            "date": "01/30/2024"
+        },
+        "submitted": {
+            "date": "02/02/2024"
+        },
+        "courtHouse": null,
+        "icbcReceived": {
+            "date": "02/02/2024"
+        },
+        "policeDetachment": "Victoria Police Department",
+        "offenceLocation": null,
+        "courtAgenyId": "8807.0007"
+    },
+    "contact": {
+        "surname": "Evans",
+        "givenNames": "Maya",
+        "address": "",
+        "driversLicence": {
+            "province": "",
+            "number": "1234567"
+        },
+        "email": "sylvia.restall@gov.bc.ca"
+    },
+    "courtOptions": {
+        "counsel": {
+            "name": "",
+            "firm": null
+        },
+        "witnessCount": 0,
+        "interpreter": null,
+        "attendanceType": ""
+    },
+    "appearance": {
+        "when": {
+            "time": "09:30",
+            "datetime": "02/02/2024 09:30",
+            "date": "02/02/2024"
+        },
+        "reason": "DFW",
+        "room": "VTC",
+        "app": "",
+        "noApp": {
+            "time": "",
+            "datetime": "",
+            "date": ""
+        },
+        "clerk": "",
+        "defenseCouncil": null,
+        "defenseAtt": "",
+        "crown": "",
+        "seized": "N",
+        "judicialJustice": "Tsttco10, Esther",
+        "comments": null
+    },
+    "pastAppearances": [
+        {
+            "when": {
+                "time": "09:30",
+                "datetime": "02/02/2024 09:30",
+                "date": "02/02/2024"
+            },
+            "reason": "DFW",
+            "room": "VTC",
+            "app": "",
+            "noApp": {
+                "time": "",
+                "datetime": "",
+                "date": ""
+            },
+            "clerk": "",
+            "defenseCouncil": null,
+            "defenseAtt": "",
+            "crown": "",
+            "seized": "N",
+            "judicialJustice": "Tsttco10, Esther",
+            "comments": null
+        }
+    ],
+    "writtenReasons": {
+        "fineReduction": "Have no money",
+        "timeToPay": "Short on money"
+    },
+    "counts": [
+        {
+            "count": "1",
+            "offense": {
+                "date": "01/30/2024"
+            },
+            "plea": "Guilty",
+            "description": "",
+            "due": {
+                "date": "02/29/2024"
+            },
+            "fine": 140.0,
+            "requestFineReduction": "Yes",
+            "requestTimeToPay": "Yes"
+        },
+        {
+            "count": "",
+            "offense": {
+                "date": ""
+            },
+            "plea": "",
+            "description": "",
+            "due": {
+                "date": ""
+            },
+            "fine": null,
+            "requestFineReduction": "",
+            "requestTimeToPay": ""
+        },
+        {
+            "count": "3",
+            "offense": {
+                "date": "01/30/2024"
+            },
+            "plea": "Guilty",
+            "description": "",
+            "due": {
+                "date": "02/29/2024"
+            },
+            "fine": 175.0,
+            "requestFineReduction": "Yes",
+            "requestTimeToPay": "No"
+        }
+    ],
+    "isElectronicTicket": "N",
+    "hasNoticeOfHearing": "N",
+    "documents": [],
+    "history": [],
+    "remarks": []
+}
