@@ -98,7 +98,7 @@ export class DisputeStatusDialogComponent {
     else if ([DisputeStatus.Concluded].indexOf(this.dispute?.dispute_status) > -1) return true;
     else if ([JJDisputeStatus.Accepted].indexOf(this.dispute?.jjdispute_status) > -1) return true;
     else if (this.checkCancelled()) return true;
-    else if (this.checkCancelled()) return true;
+    else if (this.checkRejected()) return true;
     else return false;
   }
 }
