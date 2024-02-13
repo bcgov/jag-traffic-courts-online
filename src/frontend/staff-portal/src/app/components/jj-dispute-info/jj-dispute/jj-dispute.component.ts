@@ -180,7 +180,7 @@ export class JJDisputeComponent implements OnInit {
         if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = 'N';
 
         // if (!this.isViewOnly) {
-        this.lastUpdatedJJDispute.mostRecentCourtAppearance["adjudicatorName"] = this.jjName; // force to add property
+        this.lastUpdatedJJDispute.mostRecentCourtAppearance.adjudicator = this.jjName; // Temporarily force to show the name of the JJ who opened the dipsute in the Court Appearance grid.
         this.lastUpdatedJJDispute.jjAssignedToName = this.jjName;
         if (this.lastUpdatedJJDispute.jjAssignedTo != this.jjIDIR) {
           this.lastUpdatedJJDispute.jjAssignedTo = this.jjIDIR;
