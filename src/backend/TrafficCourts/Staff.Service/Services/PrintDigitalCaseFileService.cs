@@ -150,7 +150,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the court appearance history
         var appearanceHistory = digitalCaseFile.AppearanceHistory;
-        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs)
+        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs.Where(_ => _ != currentAppearance))
         {
             // TODO: how do we know the current appearance vs historical ones?
             appearanceHistory.Add(SetFields(new Appearance(), rop));
