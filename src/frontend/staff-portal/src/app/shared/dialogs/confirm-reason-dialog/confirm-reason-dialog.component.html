@@ -6,10 +6,8 @@
 <mat-dialog-content>
   <p *ngIf="options.messageKey">{{ options.messageKey | translate }}</p>
   <ng-template appDialogContent></ng-template>
-  <mat-form-field style="width:100%">
-    <textarea matInput maxlength="256"
-       [formControl]="reasonForm.get('reason')">
-    </textarea>
+  <mat-form-field class="custom-form-field">
+    <textarea matInput maxlength="256" style="min-height: 20vh;" [formControl]="reasonForm.get('reason')"></textarea>
     <mat-error *ngIf="reasonForm.get('reason').hasError('required')">{{ "error.required" | translate
     }}</mat-error>
   </mat-form-field>
