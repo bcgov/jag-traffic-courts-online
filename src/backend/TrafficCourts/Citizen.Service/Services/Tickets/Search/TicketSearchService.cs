@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
+using TrafficCourts.Common;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 
@@ -111,7 +112,17 @@ public class TicketSearchService : ITicketSearchService
             count.TicketedAmount = invoice.TicketedAmount;
 
             count.ActOrRegulationNameCode = invoice.Act;
-            count.Section = invoice.Section;
+
+            if (string.IsNullOrEmpty(invoice.Section) || !LegalSection.TryParse(invoice.Section, out LegalSection? legalSection))
+            {
+                legalSection = new(); // force all spaces
+            }
+            
+            count.Section = legalSection.Section;
+            count.Subsection = legalSection.Subsection;
+            count.Paragraph = legalSection.Paragraph;
+            count.Subparagraph = legalSection.Subparagrah;
+
             count.IsAct = invoice.Act == _mva ? ViolationTicketCountIsAct.Y : ViolationTicketCountIsAct.N;
             count.IsRegulation = invoice.Act == _mvar ? ViolationTicketCountIsRegulation.Y : ViolationTicketCountIsRegulation.N;
 

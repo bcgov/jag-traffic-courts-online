@@ -1,4 +1,6 @@
-﻿namespace TrafficCourts.Common
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TrafficCourts.Common
 {
     /// <summary>
     /// Represents a Legistics Paragraphing.
@@ -10,10 +12,12 @@
     /// </remarks>
     public class LegalSection
     {
-        public string Section { get; private set; } = String.Empty;
-        public string Subsection { get; private set; } = String.Empty;
-        public string Paragraph { get; private set; } = String.Empty;
-        public string Subparagrah { get; private set; } = String.Empty;
+        public string Section { get; private set; } = string.Empty;
+        public string Subsection { get; private set; } = string.Empty;
+        public string Paragraph { get; private set; } = string.Empty;
+        public string Subparagrah { get; private set; } = string.Empty;
+
+        private static readonly string[] _separator = ["(", ")"];
 
         public override string ToString()
         {
@@ -35,7 +39,7 @@
             }
             else
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
 
@@ -46,7 +50,7 @@
         /// <param name="legalSection">Will be not null </param>
         /// <exception cref="System.ArgumentNullException"><paramref name="s"/> is null</exception>
         /// <returns><c>true</c> if <paramref name="s"/>s was parsed successfully; otherwise, false.</returns>
-        public static bool TryParse(string s, out LegalSection? legalSection)
+        public static bool TryParse(string s, [NotNullWhen(true)] out LegalSection? legalSection)
         {
             ArgumentNullException.ThrowIfNull(s);
 
@@ -56,13 +60,15 @@
             {
                 if (char.IsDigit(s[0]))
                 {
-                    var parts = s.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    var parts = s.Split(_separator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
                     // have to have at least a Section
                     if (parts.Length >= 1)
                     {
-                        LegalSection result = new();
-                        result.Section = parts[0];
+                        LegalSection result = new()
+                        {
+                            Section = parts[0]
+                        };
 
                         if (parts.Length >= 2)
                         {
