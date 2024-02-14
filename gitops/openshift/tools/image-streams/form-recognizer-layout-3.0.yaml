@@ -1,0 +1,19 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: form-recognizer-layout-3.0
+  namespace: 0198bb-tools
+  labels:
+    usage: runtime-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: '2022-08-31'
+      from:
+        kind: DockerImage
+        name: 'mcr.microsoft.com/azure-cognitive-services/form-recognizer/layout-3.0:2022-08-31'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
