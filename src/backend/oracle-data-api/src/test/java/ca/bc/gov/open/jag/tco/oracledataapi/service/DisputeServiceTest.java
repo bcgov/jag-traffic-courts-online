@@ -3,15 +3,18 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 
 public class DisputeServiceTest extends BaseTestSuite {
+	
+	@Autowired
+	private DisputeService disputeService;
 
     @Test
     public void testReplaceProvinceValuesWithNA() {
-        DisputeService disputeService = new DisputeService();
         Dispute dispute = new Dispute();
 
         dispute.setAddressProvince(null);
@@ -25,7 +28,6 @@ public class DisputeServiceTest extends BaseTestSuite {
 
     @Test
     public void testReplaceNAValuesWithEmpty() {
-        DisputeService disputeService = new DisputeService();
         Dispute dispute = new Dispute();
 
         dispute.setAddressProvince("N/A");
