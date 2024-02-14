@@ -205,7 +205,7 @@ public class DisputeService {
 		return updatedDispute;
 	}
 	
-	private void replaceProvinceValuesWithNA(Dispute disputeToUpdate) {
+	protected void replaceProvinceValuesWithNA(Dispute disputeToUpdate) {
 	    if (disputeToUpdate.getAddressProvinceCountryId() == null && disputeToUpdate.getAddressProvinceSeqNo() == null && StringUtils.isBlank(disputeToUpdate.getAddressProvince())) {
 	        disputeToUpdate.setAddressProvince(NA);
 	    }
@@ -215,7 +215,7 @@ public class DisputeService {
 	    }
 	}
 	
-	private void replaceNAValuesWithEmpty(Dispute disputeToUpdate) {
+	protected void replaceNAValuesWithEmpty(Dispute disputeToUpdate) {
 	    if (NA.equals(disputeToUpdate.getAddressProvince())) {
 	        disputeToUpdate.setAddressProvince("");
 	    }
