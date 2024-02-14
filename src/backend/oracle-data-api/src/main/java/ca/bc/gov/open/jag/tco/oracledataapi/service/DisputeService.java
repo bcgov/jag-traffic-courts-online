@@ -49,6 +49,8 @@ public class DisputeService {
 
 	@Autowired
 	private DisputeUpdateRequestRepository disputeUpdateRequestRepository;
+	
+	private static final String NA = "N/A";
 
 	/**
 	 * Retrieves all {@link DisputeListItem} records
@@ -83,7 +85,12 @@ public class DisputeService {
 	 * @return
 	 */
 	public Dispute getDisputeById(Long id) {
-		return disputeRepository.findById(id).orElseThrow();
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+		
+		// TCVP-2748 - Replace NA values with empty strings
+		replaceNAValuesWithEmpty(dispute);
+		
+		return dispute;
 	}
 
 	/**
@@ -143,6 +150,10 @@ public class DisputeService {
 		}
 
 		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts", "violationTicket");
+		
+		// TCVP-2748 Replace null province values with NA if specific province IDs are null since db check constraints expect values if IDs are null for provinces
+		replaceProvinceValuesWithNA(disputeToUpdate);
+		
 		// Copy all new dispute counts data to be saved from the request to disputeCountsToUpdate ignoring the disputeCountId, creation audit fields
 		if (dispute.getDisputeCounts() != null && disputeCountsToUpdate != null) {
 			if (dispute.getDisputeCounts().size() == disputeCountsToUpdate.size()) {
@@ -192,6 +203,26 @@ public class DisputeService {
 		Dispute updatedDispute = disputeRepository.update(disputeToUpdate);
 
 		return updatedDispute;
+	}
+	
+	protected void replaceProvinceValuesWithNA(Dispute disputeToUpdate) {
+	    if (disputeToUpdate.getAddressProvinceCountryId() == null && disputeToUpdate.getAddressProvinceSeqNo() == null && StringUtils.isBlank(disputeToUpdate.getAddressProvince())) {
+	        disputeToUpdate.setAddressProvince(NA);
+	    }
+	    
+	    if (disputeToUpdate.getDriversLicenceIssuedProvinceSeqNo() == null && StringUtils.isBlank(disputeToUpdate.getDriversLicenceProvince())) {
+	        disputeToUpdate.setDriversLicenceProvince(NA);
+	    }
+	}
+	
+	protected void replaceNAValuesWithEmpty(Dispute disputeToUpdate) {
+	    if (NA.equals(disputeToUpdate.getAddressProvince())) {
+	        disputeToUpdate.setAddressProvince("");
+	    }
+	    
+	    if (NA.equals(disputeToUpdate.getDriversLicenceProvince())) {
+	        disputeToUpdate.setDriversLicenceProvince("");
+	    }
 	}
 
 	/**
@@ -356,7 +387,12 @@ public class DisputeService {
 		if (findByNoticeOfDisputeGuid.size() > 1) {
 			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeGuid: {}", StructuredArguments.value("noticeOfDisputeGuid", noticeOfDisputeGuid));
 		}
-		return findByNoticeOfDisputeGuid.get(0);
+		
+		Dispute dispute = findByNoticeOfDisputeGuid.get(0);
+		// TCVP-2748 - Replace NA values with empty strings
+		replaceNAValuesWithEmpty(dispute);
+		
+		return dispute;
 	}
 
 	/**
