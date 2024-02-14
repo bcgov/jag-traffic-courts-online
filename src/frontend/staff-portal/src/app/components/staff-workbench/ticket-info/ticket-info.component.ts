@@ -96,7 +96,7 @@ export class TicketInfoComponent implements OnInit {
     });
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
-      homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
+      homePhoneNumber: [null, [Validators.maxLength(20)]],
       emailAddress: [null, [Validators.email, Validators.maxLength(100)]],
       disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
       disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
@@ -107,7 +107,7 @@ export class TicketInfoComponent implements OnInit {
       addressCountryId: [null, [Validators.required]],
       address: [null, [Validators.required, Validators.maxLength(300)]],
       addressCity: [null, [Validators.required, Validators.maxLength(30)]],
-      addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
+      addressProvince: [null, [Validators.maxLength(30)]],
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
@@ -203,7 +203,7 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('addressProvince').setValue(null);
       this.form.get('addressProvinceSeqNo').setValidators(null);
       this.form.get('addressProvinceSeqNo').setValue(null);
-      this.form.get('addressProvinceCountryId').setValue(ctryId);
+      this.form.get('addressProvinceCountryId').setValue(null);
       this.form.get('addressProvinceProvId').setValue(null);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
@@ -212,8 +212,9 @@ export class TicketInfoComponent implements OnInit {
       if (ctryId === this.canada.ctryId || ctryId == this.usa.ctryId) {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
-        this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
+        this.form.get('homePhoneNumber').addValidators([FormControlValidators.phone]);
         this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
+        this.form.get('addressProvinceCountryId').setValue(ctryId);
       }
 
       if (ctryId == this.canada.ctryId) {
@@ -835,7 +836,7 @@ export class TicketInfoComponent implements OnInit {
         if (this.form.get('addressCountryId').value === this.canada.ctryId || this.form.get('addressCountryId').value === this.usa.ctryId) {
           this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
           this.form.get('postalCode').addValidators([Validators.required]);
-          this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
+          this.form.get('homePhoneNumber').addValidators([FormControlValidators.phone]);
           this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
         }
 

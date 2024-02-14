@@ -248,7 +248,7 @@
                       <input matInput formControlName="addressProvince"
                         *ngIf="form.get('addressCountryId').value !== usa.ctryId && form.get('addressCountryId').value !== canada.ctryId" />
                       <mat-error
-                        *ngIf="form.controls.addressProvinceProvId.hasError('required') || form.controls.addressProvince.hasError('required')">{{
+                        *ngIf="form.controls.addressProvinceProvId.hasError('required')">{{
                         "error.required" | translate }}</mat-error>
                       <mat-error *ngIf="form.controls.addressProvince.hasError('maxlength')">{{ "error.max_length" |
                         translate }}30</mat-error>
@@ -296,9 +296,6 @@
                       [showMaskTyped]="true" />
                     <input matInput formControlName="homePhoneNumber" mask="00000000000000000000"
                       *ngIf="form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId" />
-                    <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('required')">{{"error.required" |
-                      translate}}
-                    </mat-error>
                     <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('phone')">Must be a valid phone number
                     </mat-error>
                   </mat-form-field>

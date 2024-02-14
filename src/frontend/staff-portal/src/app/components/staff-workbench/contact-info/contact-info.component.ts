@@ -74,7 +74,7 @@ export class ContactInfoComponent implements OnInit {
       disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
       address: [null, [Validators.required, Validators.maxLength(300)]],
       addressCity: [null, [Validators.required, Validators.maxLength(30)]],
-      addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
+      addressProvince: [null, [Validators.maxLength(30)]],
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
@@ -107,7 +107,8 @@ export class ContactInfoComponent implements OnInit {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([FormControlValidators.phone]);
-      } else this.form.get('addressProvince').addValidators([Validators.required]);
+        this.form.get('addressProvinceCountryId').setValue(ctryId);
+      }
 
       if (ctryId == this.canada.ctryId) {
         this.form.get('postalCode').addValidators([Validators.minLength(6)]);
