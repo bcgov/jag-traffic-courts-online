@@ -167,11 +167,11 @@ public partial class KeycloakAuthorizationHandler : AuthorizationHandler<Keycloa
     {
         if (result.Failure is not null)
         {
-            LogNotAuthorized(result.Failure, "Request not authenticated", result);
+            LogNotAuthorized(result.Failure, scope, "Request not authenticated", result);
         }
         else
         {
-            LogNotAuthorized("Request not authenticated", result);
+            LogNotAuthorized(scope, "Request not authenticated", result);
         }
     }
 
@@ -190,6 +190,8 @@ public partial class KeycloakAuthorizationHandler : AuthorizationHandler<Keycloa
     [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "Not Authorized")]
     private partial void LogNotAuthorized(
         Exception exception,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        AuthorizationRequirementScope scope,
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordReasonTag), OmitReferenceName = true)]
         string reason,
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
@@ -197,6 +199,8 @@ public partial class KeycloakAuthorizationHandler : AuthorizationHandler<Keycloa
 
     [LoggerMessage(EventId = 3, Level = LogLevel.Information, Message = "Not Authorized")]
     private partial void LogNotAuthorized(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
+        AuthorizationRequirementScope scope,
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordReasonTag), OmitReferenceName = true)]
         string reason,
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTags), OmitReferenceName = true)]
