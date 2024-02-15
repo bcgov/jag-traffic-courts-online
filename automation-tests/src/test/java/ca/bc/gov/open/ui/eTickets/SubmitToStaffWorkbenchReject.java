@@ -67,6 +67,8 @@ public class SubmitToStaffWorkbenchReject {
 						.presenceOfElementLocated(By.xpath("//span[contains(text(), 'REJECTED')]")))
 				.click();
 
+		Thread.sleep(2000);
+
 		new WebDriverWait(driver, Duration.ofSeconds(50))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td/span[contains(text(), 'REJECTED')]")));
 

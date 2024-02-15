@@ -20,7 +20,6 @@ import org.junit.runners.Suite;
         DisputeTicketOptionsPickerDiffCountry.class,
         DisputeTicketOptionsPickerDiffCountryFormat.class,
         ManageOrUpdateTrafficDispute.class,
-        MoreThan500CharsOnAdditionalInfoNegTest.class,
         SubmitToStaffWorkbench.class,
         SubmitToStaffWorkbenchCancel.class,
         SubmitToStaffWorkbenchReject.class,

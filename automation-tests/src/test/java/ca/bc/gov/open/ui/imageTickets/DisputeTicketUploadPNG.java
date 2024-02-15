@@ -127,6 +127,8 @@ public class DisputeTicketUploadPNG {
 		Thread.sleep(1000);
 		element.click();
 
+		Thread.sleep(1000);
+
 		DisputeTicketOptionsPicker popup = new DisputeTicketOptionsPicker();
 		popup.popupSubmitWindow(element, driverWait, driver);
 
