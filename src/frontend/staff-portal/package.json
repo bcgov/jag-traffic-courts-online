@@ -47,7 +47,7 @@
     "colors": "^1.4.0",
     "dotenv": "^10.0.0",
     "keycloak-angular": "^14.1.0",
-    "keycloak-js": "^18.0.0",
+    "keycloak-js": "^22.0.4",
     "lodash": "^4.17.21",
     "luxon": "^3.4.3",
     "ng-busy": "^16.1.1",
