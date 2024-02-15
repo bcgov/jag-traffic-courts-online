@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,15 @@ public class LookupServiceTest extends BaseTestSuite {
 		assertThat(result.size() > 0);
 		assertThat("ALB".equals(result.get(0).getCode()));
 		assertThat("Albanian".equals(result.get(0).getDescription()));
+	}
+	
+	@Test
+	public void testGetLanguagesDoesNotContainUnknown() throws ApiException {
+		var result = service.getLanguages();
+
+		assertThat(result).isNotNull();
+		assertThat(result.size() > 0);
+		assertFalse(result.stream().anyMatch(language -> language.getCode().equals("UNK")));
 	}
 
 	@Test

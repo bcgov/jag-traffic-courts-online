@@ -6,9 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Province;
-import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Country;
-
 /**
  * Maps from ORDS lookup tables to OracleDataAPI
  */
