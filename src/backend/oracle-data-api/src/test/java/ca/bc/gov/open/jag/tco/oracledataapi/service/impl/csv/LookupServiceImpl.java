@@ -53,7 +53,9 @@ public class LookupServiceImpl extends BaseLookupService {
 				Language language = new Language();
 				language.setCode(row.length > 0 ? row[0] : null);
 				language.setDescription(row.length > 1 ? row[1] : null);
-				languages.add(language);
+				if (!"UNK".equalsIgnoreCase(language.getCode())) {
+					languages.add(language);
+				}
 			}
 		}
 		catch (Exception e) {

@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service.impl.ords;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,11 +30,19 @@ public class LookupServiceImpl extends BaseLookupService {
 		List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Statute> statutes = lookupValuesApi.statutesList().getStatuteCodeValues();
 		return LookupMapper.INSTANCE.convertStatutes(statutes);
 	}
-
+	
 	@Override
 	public List<Language> getLanguages() throws ApiException {
-		List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language> languages = lookupValuesApi.languagesList().getLanguageCodeValues();
-		return LookupMapper.INSTANCE.convertLanguages(languages);
+	  List<ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.model.Language> languages = lookupValuesApi.languagesList().getLanguageCodeValues();
+	  
+	  List<Language> convertedLanguages = LookupMapper.INSTANCE.convertLanguages(languages);
+
+	  // TCVP-2694 Filter out the language 'Unknown' with code 'UNK'
+	  convertedLanguages = convertedLanguages.stream()
+	    .filter(language -> !language.getCode().equalsIgnoreCase("UNK"))
+	    .collect(Collectors.toList());
+
+	  return convertedLanguages;
 	}
 	
 	@Override
