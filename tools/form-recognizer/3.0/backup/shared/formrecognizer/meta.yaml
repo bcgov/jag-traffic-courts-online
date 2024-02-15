@@ -1,0 +1,4 @@
+formrecognizer/meta:
+  version: 1
+  collections:
+    formrecognizer: {}

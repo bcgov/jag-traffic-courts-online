@@ -67,7 +67,6 @@ package-lock.json
 /tools/form-recognizer/3.0/files/*
 /tools/form-recognizer/3.0/output/*
 /tools/form-recognizer/3.0/shared/*
-!/tools/form-recognizer/3.0/shared/formrecognizer/meta.yaml
 
 # SFTP file location that contains generated ARC files 
 /sftp-in
