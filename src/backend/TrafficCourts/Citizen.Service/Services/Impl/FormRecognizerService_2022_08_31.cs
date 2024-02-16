@@ -1,5 +1,6 @@
 using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
+using Azure.Core.Pipeline;
 using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -7,16 +8,16 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 namespace TrafficCourts.Citizen.Service.Services;
 
 /// <summary>
-/// This class uses Form Recognizer's DocumentAnalysisClient to access version 2022-06-30-preview of the API.
+/// This class uses Form Recognizer's DocumentAnalysisClient to access version 2022-08-31 of the API.
 /// </summary>
-public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
+public class FormRecognizerService_2022_08_31 : IFormRecognizerService
 {
-    private readonly ILogger<FormRecognizerService_2022_06_30_preview> _logger;
+    private readonly ILogger<FormRecognizerService_2022_08_31> _logger;
     private readonly string _apiKey;
     private readonly Uri _endpoint;
     private readonly string _modelId;
 
-    public FormRecognizerService_2022_06_30_preview(FormRecognizerOptions options, ILogger<FormRecognizerService_2022_06_30_preview> logger)
+    public FormRecognizerService_2022_08_31(FormRecognizerOptions options, ILogger<FormRecognizerService_2022_08_31> logger)
     {
         ArgumentNullException.ThrowIfNull(options);
         _apiKey = options.ApiKey ?? throw new ArgumentException($"{nameof(options.ApiKey)} is required");
@@ -31,9 +32,10 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
 
         using Activity? activity = Diagnostics.Source.StartActivity("Analyze Document");
         activity?.AddBaggage("ModelId", _modelId);
+        DocumentAnalysisClientOptions clientOptions = new(DocumentAnalysisClientOptions.ServiceVersion.V2022_08_31);
 
         AzureKeyCredential credential = new(_apiKey);
-        DocumentAnalysisClient client = new(_endpoint, credential);
+        DocumentAnalysisClient client = new(_endpoint, credential, clientOptions);
 
         var analyzeResult = await AnalyzeDocumentAsync(client, stream, cancellationToken);
 
@@ -43,7 +45,7 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
 
     private async Task<AnalyzeResult> AnalyzeDocumentAsync(DocumentAnalysisClient client, Stream form, CancellationToken cancellationToken)
     {
-        using var operation = Instrumentation.FormRecognizer.BeginOperation("2022_06_30_preview", "RecognizeForms");
+        using var operation = Instrumentation.FormRecognizer.BeginOperation("2022_08_31", "RecognizeForms");
 
         try
         {
@@ -78,12 +80,29 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();
         violationTicket.GlobalConfidence = 0f;
+
+        Dictionary<string, string> fieldLabels = [];
         if (result.Documents is not null && result.Documents.Count > 0)
         {
-            violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
+            AnalyzedDocument document = result.Documents[0];
+            violationTicket.GlobalConfidence = document.Confidence;
+            if (OcrViolationTicket.ViolationTicketVersion1_0 == document.DocumentType)
+            {
+                violationTicket.TicketVersion = ViolationTicketVersion.VT1;
+                fieldLabels = IFormRecognizerService.FieldLabels_VT1;
+            }
+            else if (OcrViolationTicket.ViolationTicketVersion2_0 == document.DocumentType
+                  || OcrViolationTicket.ViolationTicketVersion2_1 == document.DocumentType)
+            {
+                violationTicket.TicketVersion = ViolationTicketVersion.VT2;
+                fieldLabels = IFormRecognizerService.FieldLabels_VT2;
+            }
+            else {
+                throw new Exception($"Unexpected document type: {document.DocumentType}");
+            }
         }
 
-        foreach (var fieldLabel in IFormRecognizerService.FieldLabels_2022_04)
+        foreach (var fieldLabel in fieldLabels)
         {
             Field field = new();
             field.TagName = fieldLabel.Key;
@@ -107,6 +126,49 @@ public class FormRecognizerService_2022_06_30_preview : IFormRecognizerService
             }
 
             violationTicket.Fields.Add(fieldLabel.Value, field);
+        }
+
+        // For VT2, ViolationDate is multiple fields and need to be merged together.
+        if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion))
+        {
+            Field violationDateYYYY = violationTicket.Fields[OcrViolationTicket.ViolationDateYYYY];
+            Field violationDateMM = violationTicket.Fields[OcrViolationTicket.ViolationDateMM];
+            Field violationDateDD = violationTicket.Fields[OcrViolationTicket.ViolationDateDD];
+
+            Field violationDate = new();
+            violationDate.TagName = "Violation Date";
+            violationDate.JsonName = OcrViolationTicket.ViolationDate;
+            violationDate.FieldConfidence = (violationDateYYYY.FieldConfidence + violationDateMM.FieldConfidence + violationDateDD.FieldConfidence) / 3f;
+            violationDate.Type = violationDateYYYY.Type;
+            violationDate.Value = violationDateYYYY.Value + "-" + violationDateMM.Value + "-" + violationDateDD.Value;
+            violationDate.BoundingBoxes.AddRange(violationDateYYYY.BoundingBoxes);
+            violationDate.BoundingBoxes.AddRange(violationDateMM.BoundingBoxes);
+            violationDate.BoundingBoxes.AddRange(violationDateDD.BoundingBoxes);
+            violationTicket.Fields.Add(OcrViolationTicket.ViolationDate, violationDate);
+
+            violationTicket.Fields.Remove(OcrViolationTicket.ViolationDateYYYY);
+            violationTicket.Fields.Remove(OcrViolationTicket.ViolationDateMM);
+            violationTicket.Fields.Remove(OcrViolationTicket.ViolationDateDD);
+        }
+
+        // For VT2, ViolationTime is multiple fields and need to be merged together.
+        if (ViolationTicketVersion.VT2.Equals(violationTicket.TicketVersion))
+        {
+            Field violationTimeHH = violationTicket.Fields[OcrViolationTicket.ViolationTimeHH];
+            Field violationTimeMM = violationTicket.Fields[OcrViolationTicket.ViolationTimeMM];
+
+            Field violationTime = new();
+            violationTime.TagName = "Violation Time";
+            violationTime.JsonName = OcrViolationTicket.ViolationTime;
+            violationTime.FieldConfidence = (violationTimeHH.FieldConfidence + violationTimeMM.FieldConfidence) / 2f;
+            violationTime.Type = violationTimeHH.Type;
+            violationTime.Value = violationTimeHH.Value + ":" + violationTimeMM.Value;
+            violationTime.BoundingBoxes.AddRange(violationTimeHH.BoundingBoxes);
+            violationTime.BoundingBoxes.AddRange(violationTimeMM.BoundingBoxes);
+            violationTicket.Fields.Add(OcrViolationTicket.ViolationTime, violationTime);
+
+            violationTicket.Fields.Remove(OcrViolationTicket.ViolationTimeHH);
+            violationTicket.Fields.Remove(OcrViolationTicket.ViolationTimeMM);
         }
 
         return violationTicket;

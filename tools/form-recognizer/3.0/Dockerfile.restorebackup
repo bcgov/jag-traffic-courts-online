@@ -1,0 +1,8 @@
+FROM alpine:3.19.1
+
+# Copy data from docker context to docker image
+COPY /backup /tmp/backup
+COPY ./restore-backup.sh ./tmp/restore-backup.sh
+
+# Run restore-backup.sh to copy data from the docker image to the shared volumes used by the other Document AI images.
+CMD ["/bin/sh", "-c", "./tmp/restore-backup.sh"]
