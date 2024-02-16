@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Models;
-using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
+using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
@@ -106,10 +106,9 @@ public class JJDisputeServiceTest
 
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
         _keycloakService.Setup(_ => _.UsersByIdirAsync(dispute.JjAssignedTo, CancellationToken.None)).ReturnsAsync(_userReps);
-        _keycloakService.Setup(_ => _.TryGetPartIds(_userRep.Object)).Returns(_expectedPartIds);
 
         // Act
-        string? _actualPartId = await jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None);
+        string? _actualPartId = await jJDisputeService.GetDisputeAssignToPartIdAsync(dispute.TicketNumber, CancellationToken.None);
 
         // Assert
         var expectedPartId = Assert.Single(_expectedPartIds);

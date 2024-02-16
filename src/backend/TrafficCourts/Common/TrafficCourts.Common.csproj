@@ -77,4 +77,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\TrafficCourts.Core\TrafficCourts.Core.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="OpenAPIs\Keycloak\v22_0\template\" />
+	</ItemGroup>
 </Project>

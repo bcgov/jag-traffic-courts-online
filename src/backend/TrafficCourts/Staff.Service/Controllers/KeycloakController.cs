@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TrafficCourts.Common.Errors;
-using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
+using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class KeycloakController : StaffControllerBase<KeycloakController>
+public class KeycloakController : StaffControllerBase
 {
     private readonly IKeycloakService _keycloakService;
+    private readonly ILogger<KeycloakController> _logger;
 
     /// <summary>
     /// Default Constructor
@@ -15,9 +16,10 @@ public class KeycloakController : StaffControllerBase<KeycloakController>
     /// <param name="keycloakService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public KeycloakController(IKeycloakService keycloakService, ILogger<KeycloakController> logger) : base(logger)
+    public KeycloakController(IKeycloakService keycloakService, ILogger<KeycloakController> logger)
     {
         _keycloakService = keycloakService ?? throw new ArgumentNullException(nameof(keycloakService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
