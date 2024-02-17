@@ -16,7 +16,7 @@ public static class KeycloakExtensions
             throw new ArgumentException($"'{nameof(key)}' cannot be null or empty.", nameof(key));
         }
 
-        if (userRepresentation.Attributes.TryGetValue(key, out IList<string>? partIds))
+        if (userRepresentation.Attributes is not null && userRepresentation.Attributes.TryGetValue(key, out IList<string>? partIds))
         {
             return partIds;
         }
