@@ -56,17 +56,17 @@ public static class Startup
         string apiVersion = FormRecognizerOptions.Get(builder.Configuration).ApiVersion ?? String.Empty;
         if (FormRecognizerOptions.v2_1 == apiVersion)
         {
-            // API version 2.1 is the latest version available for deployment to OpenShift
+            // API version 2.1, an older, but working version for deployment to OpenShift 
             builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2_1>();
         }
-        else if (FormRecognizerOptions.v2022_06_30_preview == apiVersion)
+        else if (FormRecognizerOptions.v2022_08_31 == apiVersion)
         {
-            // API version 2022_06_30_preview is the latest version used by Azure cloud services, but this version is not containerizable yet
-            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2022_06_30_preview>();
+            // API version 2022_08_31 is the latest version available for deployment to OpenShift
+            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2022_08_31>();
         }
         else
         {
-            throw new ArgumentException($"Unknown Form Recognizer ApiVersion '{apiVersion}'. Must be one of '2.1' or '2022-06-30-preview'.");
+            throw new ArgumentException($"Unknown Form Recognizer ApiVersion '{apiVersion}'. Must be one of '2.1' or '2022-08-31'.");
         }
 
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();

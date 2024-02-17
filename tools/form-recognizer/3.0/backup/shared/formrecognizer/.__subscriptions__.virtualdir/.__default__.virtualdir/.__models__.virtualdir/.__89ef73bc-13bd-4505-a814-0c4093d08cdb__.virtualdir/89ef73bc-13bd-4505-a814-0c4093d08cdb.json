@@ -1,0 +1,1039 @@
+{
+  "docTypes": {
+    "ViolationTicket_v2.1": {
+      "fieldSchema": {
+        "Label Header": {
+          "type": "string"
+        },
+        "Label Violation Ticket": {
+          "type": "string"
+        },
+        "Label Issued To": {
+          "type": "string"
+        },
+        "Label Surname": {
+          "type": "string"
+        },
+        "Label Given Name": {
+          "type": "string"
+        },
+        "Label Young Person": {
+          "type": "string"
+        },
+        "Label Province": {
+          "type": "string"
+        },
+        "Label Drivers Licence Number": {
+          "type": "string"
+        },
+        "Label Drivers Licence Produced": {
+          "type": "string"
+        },
+        "Label Drivers Licence Expiry": {
+          "type": "string"
+        },
+        "Label Birthdate": {
+          "type": "string"
+        },
+        "Label Address": {
+          "type": "string"
+        },
+        "Label Change of Address": {
+          "type": "string"
+        },
+        "Label City": {
+          "type": "string"
+        },
+        "Label Drivers Licence Province": {
+          "type": "string"
+        },
+        "Label Postal Code": {
+          "type": "string"
+        },
+        "Label Named As": {
+          "type": "string"
+        },
+        "Label Named is Driver": {
+          "type": "string"
+        },
+        "Label Named is Cyclist": {
+          "type": "string"
+        },
+        "Label Named is Owner": {
+          "type": "string"
+        },
+        "Label Named is Pedestrian": {
+          "type": "string"
+        },
+        "Label Named is Passenger": {
+          "type": "string"
+        },
+        "Label Named is Other": {
+          "type": "string"
+        },
+        "Label On or About": {
+          "type": "string"
+        },
+        "Label Violation Date": {
+          "type": "string"
+        },
+        "Label Approximate Time": {
+          "type": "string"
+        },
+        "Label Violation Time": {
+          "type": "string"
+        },
+        "Label Violation on Highway": {
+          "type": "string"
+        },
+        "Label Highway or Location": {
+          "type": "string"
+        },
+        "Label Violation Near Place": {
+          "type": "string"
+        },
+        "Label In the Province of": {
+          "type": "string"
+        },
+        "Label Place City Town": {
+          "type": "string"
+        },
+        "Label Did Commit": {
+          "type": "string"
+        },
+        "Label Offence is MVA": {
+          "type": "string"
+        },
+        "Label Offence is MVAR": {
+          "type": "string"
+        },
+        "Label Offence is CCLA": {
+          "type": "string"
+        },
+        "Label Offence is CTA": {
+          "type": "string"
+        },
+        "Label Offence is LCLA": {
+          "type": "string"
+        },
+        "Label Offence is TCSR": {
+          "type": "string"
+        },
+        "Label Offence is WLA": {
+          "type": "string"
+        },
+        "Label Offence is FVPA": {
+          "type": "string"
+        },
+        "Label Offence is Other": {
+          "type": "string"
+        },
+        "Label Description of Offence": {
+          "type": "string"
+        },
+        "Label Act Section": {
+          "type": "string"
+        },
+        "Label Ticket Amount": {
+          "type": "string"
+        },
+        "Label Count 1 is ACT": {
+          "type": "string"
+        },
+        "Label Count 1 is REG": {
+          "type": "string"
+        },
+        "Label Count 1 Section": {
+          "type": "string"
+        },
+        "Label Count 1 Amount": {
+          "type": "string"
+        },
+        "Label Count 2 is ACT": {
+          "type": "string"
+        },
+        "Label Count 2 is REG": {
+          "type": "string"
+        },
+        "Label Count 2 Section": {
+          "type": "string"
+        },
+        "Label Count 2 Amount": {
+          "type": "string"
+        },
+        "Label Count 3 is ACT": {
+          "type": "string"
+        },
+        "Label Count 3 is REG": {
+          "type": "string"
+        },
+        "Label Count 3 Section": {
+          "type": "string"
+        },
+        "Label Count 3 Amount": {
+          "type": "string"
+        },
+        "Label Surcharge Levy": {
+          "type": "string"
+        },
+        "Label Vehicle Bearing": {
+          "type": "string"
+        },
+        "Label Vehicle Licence Plate Province": {
+          "type": "string"
+        },
+        "Label Vehicle Licence Plate Number": {
+          "type": "string"
+        },
+        "Label Vehicle NSC PUJ": {
+          "type": "string"
+        },
+        "Label Vehicle NSC Number": {
+          "type": "string"
+        },
+        "Label Is Accident": {
+          "type": "string"
+        },
+        "Label Vehicle Registered Owner Name": {
+          "type": "string"
+        },
+        "Label Vehicle Make": {
+          "type": "string"
+        },
+        "Label Vehicle Type": {
+          "type": "string"
+        },
+        "Label Vehicle Year": {
+          "type": "string"
+        },
+        "Label Vehicle Colour": {
+          "type": "string"
+        },
+        "Label Notice of Dispute Address": {
+          "type": "string"
+        },
+        "Label Reverse Ticket": {
+          "type": "string"
+        },
+        "Label Hearing Location": {
+          "type": "string"
+        },
+        "Label Date of Service": {
+          "type": "string"
+        },
+        "Label Enforcement Officer Name": {
+          "type": "string"
+        },
+        "Label Enforcement Officer Number": {
+          "type": "string"
+        },
+        "Label Witnessing Officer Name": {
+          "type": "string"
+        },
+        "Label Witnessing Officer Number": {
+          "type": "string"
+        },
+        "Label Detachment Location": {
+          "type": "string"
+        },
+        "Alleged Offence Label": {
+          "type": "string"
+        },
+        "Violation Ticket Number": {
+          "type": "string"
+        },
+        "Surname": {
+          "type": "string"
+        },
+        "Given Name": {
+          "type": "string"
+        },
+        "Is Young Person": {
+          "type": "string"
+        },
+        "Drivers Licence Province": {
+          "type": "string"
+        },
+        "Drivers Licence Number": {
+          "type": "integer"
+        },
+        "Drivers Licence Produced": {
+          "type": "string"
+        },
+        "Drivers Licence Expiry": {
+          "type": "integer"
+        },
+        "Birthdate": {
+          "type": "date"
+        },
+        "Address": {
+          "type": "string"
+        },
+        "Is Change of Address": {
+          "type": "string"
+        },
+        "City": {
+          "type": "string"
+        },
+        "Province": {
+          "type": "string"
+        },
+        "Postal Code": {
+          "type": "string"
+        },
+        "Named is Driver": {
+          "type": "selectionMark"
+        },
+        "Named is Cyclist": {
+          "type": "selectionMark"
+        },
+        "Named is Owner": {
+          "type": "selectionMark"
+        },
+        "Named is Pedestrian": {
+          "type": "selectionMark"
+        },
+        "Named is Passenger": {
+          "type": "selectionMark"
+        },
+        "Named is Other": {
+          "type": "selectionMark"
+        },
+        "Named is Other Description": {
+          "type": "string"
+        },
+        "Violation Date YYYY": {
+          "type": "number"
+        },
+        "Violation Date MM": {
+          "type": "number"
+        },
+        "Violation Date DD": {
+          "type": "number"
+        },
+        "Violation Time HH": {
+          "type": "number"
+        },
+        "Violation Time MM": {
+          "type": "number"
+        },
+        "Violation on Highway": {
+          "type": "string"
+        },
+        "Violation Near Place": {
+          "type": "string"
+        },
+        "Offence is MVA": {
+          "type": "selectionMark"
+        },
+        "Offence is MVAR": {
+          "type": "selectionMark"
+        },
+        "Offence is CCLA": {
+          "type": "selectionMark"
+        },
+        "Offence is CTA": {
+          "type": "selectionMark"
+        },
+        "Offence is LCLA": {
+          "type": "selectionMark"
+        },
+        "Offence is TCSR": {
+          "type": "selectionMark"
+        },
+        "Offence is WLA": {
+          "type": "selectionMark"
+        },
+        "Offence is FVPA": {
+          "type": "selectionMark"
+        },
+        "Offence is Other": {
+          "type": "selectionMark"
+        },
+        "Offence is Other Description": {
+          "type": "string"
+        },
+        "Count 1 Description": {
+          "type": "string"
+        },
+        "Count 1 is ACT": {
+          "type": "selectionMark"
+        },
+        "Count 1 is REGS": {
+          "type": "selectionMark"
+        },
+        "Count 1 Section": {
+          "type": "string"
+        },
+        "Count 1 Ticket Amount": {
+          "type": "number"
+        },
+        "Count 2 Description": {
+          "type": "string"
+        },
+        "Count 2 is ACT": {
+          "type": "selectionMark"
+        },
+        "Count 2 is REGS": {
+          "type": "selectionMark"
+        },
+        "Count 2 Section": {
+          "type": "string"
+        },
+        "Count 2 Ticket Amount": {
+          "type": "number"
+        },
+        "Count 3 Description": {
+          "type": "string"
+        },
+        "Count 3 is ACT": {
+          "type": "selectionMark"
+        },
+        "Count 3 is REGS": {
+          "type": "selectionMark"
+        },
+        "Count 3 Section": {
+          "type": "string"
+        },
+        "Count 3 Ticket Amount": {
+          "type": "number"
+        },
+        "Vehicle Licence Plate Province": {
+          "type": "string"
+        },
+        "Vehicle Licence Plate Number": {
+          "type": "string"
+        },
+        "Vehicle NSC PUJ": {
+          "type": "number"
+        },
+        "Vehicle NSC Number": {
+          "type": "number"
+        },
+        "Is Accident": {
+          "type": "string"
+        },
+        "Vehicle Registered Owner Name": {
+          "type": "string"
+        },
+        "Vehicle Make": {
+          "type": "string"
+        },
+        "Vehicle Type": {
+          "type": "string"
+        },
+        "Vehicle Year": {
+          "type": "integer"
+        },
+        "Vehicle Colour": {
+          "type": "string"
+        },
+        "Notice of Dispute Address": {
+          "type": "string"
+        },
+        "Hearing Location": {
+          "type": "string"
+        },
+        "Date of Service": {
+          "type": "date"
+        },
+        "Enforcement Officer Number": {
+          "type": "number"
+        },
+        "Witnessing Officer Name": {
+          "type": "string"
+        },
+        "Witnessing Officer Number": {
+          "type": "string"
+        },
+        "Detachment Location": {
+          "type": "string"
+        }
+      },
+      "buildMode": "template",
+      "fieldConfidence": {
+        "Address": 0.947,
+        "Alleged Offence Label": 0.947,
+        "Birthdate": 0.632,
+        "City": 0.995,
+        "Count 1 Description": 0.947,
+        "Count 1 is ACT": 0.995,
+        "Count 1 is REGS": 0.995,
+        "Count 1 Section": 0.842,
+        "Count 1 Ticket Amount": 0.789,
+        "Count 2 Description": 0.947,
+        "Count 2 is ACT": 0.842,
+        "Count 2 is REGS": 0.842,
+        "Count 2 Section": 0.842,
+        "Count 2 Ticket Amount": 0.842,
+        "Count 3 Description": 0.947,
+        "Count 3 is ACT": 0.842,
+        "Count 3 is REGS": 0.842,
+        "Count 3 Section": 0.995,
+        "Count 3 Ticket Amount": 0.995,
+        "Date of Service": 0.947,
+        "Detachment Location": 0.895,
+        "Drivers Licence Expiry": 0.632,
+        "Drivers Licence Number": 0.842,
+        "Drivers Licence Produced": 0.684,
+        "Drivers Licence Province": 0.947,
+        "Enforcement Officer Number": 0.947,
+        "Given Name": 0.995,
+        "Hearing Location": 0.947,
+        "Is Accident": 0.995,
+        "Is Change of Address": 0.995,
+        "Is Young Person": 0.995,
+        "Label Act Section": 0.995,
+        "Label Address": 0.995,
+        "Label Approximate Time": 0.995,
+        "Label Birthdate": 0.895,
+        "Label Change of Address": 0.995,
+        "Label City": 0.995,
+        "Label Count 1 Amount": 0.789,
+        "Label Count 1 is ACT": 0.995,
+        "Label Count 1 is REG": 0.995,
+        "Label Count 1 Section": 0.995,
+        "Label Count 2 Amount": 0.737,
+        "Label Count 2 is ACT": 0.995,
+        "Label Count 2 is REG": 0.947,
+        "Label Count 2 Section": 0.995,
+        "Label Count 3 Amount": 0.995,
+        "Label Count 3 is ACT": 0.995,
+        "Label Count 3 is REG": 0.995,
+        "Label Count 3 Section": 0.995,
+        "Label Date of Service": 0.995,
+        "Label Description of Offence": 0.995,
+        "Label Detachment Location": 0.789,
+        "Label Did Commit": 0.995,
+        "Label Drivers Licence Expiry": 0.632,
+        "Label Drivers Licence Number": 0.842,
+        "Label Drivers Licence Produced": 0.632,
+        "Label Drivers Licence Province": 0.947,
+        "Label Enforcement Officer Name": 0.995,
+        "Label Enforcement Officer Number": 0.995,
+        "Label Given Name": 0.995,
+        "Label Header": 0.995,
+        "Label Hearing Location": 0.995,
+        "Label Highway or Location": 0.995,
+        "Label In the Province of": 0.995,
+        "Label Is Accident": 0.995,
+        "Label Issued To": 0.995,
+        "Label Named As": 0.995,
+        "Label Named is Cyclist": 0.995,
+        "Label Named is Driver": 0.995,
+        "Label Named is Other": 0.995,
+        "Label Named is Owner": 0.995,
+        "Label Named is Passenger": 0.995,
+        "Label Named is Pedestrian": 0.995,
+        "Label Notice of Dispute Address": 0.842,
+        "Label Offence is CCLA": 0.737,
+        "Label Offence is CTA": 0.995,
+        "Label Offence is FVPA": 0.995,
+        "Label Offence is LCLA": 0.995,
+        "Label Offence is MVA": 0.995,
+        "Label Offence is MVAR": 0.995,
+        "Label Offence is Other": 0.947,
+        "Label Offence is TCSR": 0.947,
+        "Label Offence is WLA": 0.995,
+        "Label On or About": 0.995,
+        "Label Place City Town": 0.842,
+        "Label Postal Code": 0.995,
+        "Label Province": 0.737,
+        "Label Reverse Ticket": 0.995,
+        "Label Surcharge Levy": 0.995,
+        "Label Surname": 0.995,
+        "Label Ticket Amount": 0.995,
+        "Label Vehicle Bearing": 0.995,
+        "Label Vehicle Colour": 0.995,
+        "Label Vehicle Licence Plate Number": 0.995,
+        "Label Vehicle Licence Plate Province": 0.789,
+        "Label Vehicle Make": 0.995,
+        "Label Vehicle NSC Number": 0.995,
+        "Label Vehicle NSC PUJ": 0.995,
+        "Label Vehicle Registered Owner Name": 0.995,
+        "Label Vehicle Type": 0.947,
+        "Label Vehicle Year": 0.995,
+        "Label Violation Date": 0.995,
+        "Label Violation Near Place": 0.995,
+        "Label Violation on Highway": 0.995,
+        "Label Violation Ticket": 0.995,
+        "Label Violation Time": 0.995,
+        "Label Witnessing Officer Name": 0.995,
+        "Label Witnessing Officer Number": 0.995,
+        "Label Young Person": 0.995,
+        "Named is Cyclist": 0.995,
+        "Named is Driver": 0.995,
+        "Named is Other": 0.995,
+        "Named is Other Description": 0.947,
+        "Named is Owner": 0.995,
+        "Named is Passenger": 0.995,
+        "Named is Pedestrian": 0.995,
+        "Notice of Dispute Address": 0.995,
+        "Offence is CCLA": 0.995,
+        "Offence is CTA": 0.995,
+        "Offence is FVPA": 0.995,
+        "Offence is LCLA": 0.995,
+        "Offence is MVA": 0.995,
+        "Offence is MVAR": 0.995,
+        "Offence is Other": 0.995,
+        "Offence is Other Description": 0.995,
+        "Offence is TCSR": 0.995,
+        "Offence is WLA": 0.995,
+        "Postal Code": 0.995,
+        "Province": 0.995,
+        "Surname": 0.995,
+        "Vehicle Colour": 0.684,
+        "Vehicle Licence Plate Number": 0.895,
+        "Vehicle Licence Plate Province": 0.995,
+        "Vehicle Make": 0.842,
+        "Vehicle NSC Number": 0.947,
+        "Vehicle NSC PUJ": 0.895,
+        "Vehicle Registered Owner Name": 0.947,
+        "Vehicle Type": 0.684,
+        "Vehicle Year": 0.579,
+        "Violation Date DD": 0.789,
+        "Violation Date MM": 0.579,
+        "Violation Date YYYY": 0.789,
+        "Violation Near Place": 0.947,
+        "Violation on Highway": 0.947,
+        "Violation Ticket Number": 0.995,
+        "Violation Time HH": 0.995,
+        "Violation Time MM": 0.995,
+        "Witnessing Officer Name": 0.789,
+        "Witnessing Officer Number": 0.947
+      }
+    },
+    "ViolationTicket_v1.0": {
+      "fieldSchema": {
+        "Violation Ticket Number": {
+          "type": "string"
+        },
+        "Surname": {
+          "type": "string"
+        },
+        "Given Name": {
+          "type": "string"
+        },
+        "Is Young Person": {
+          "type": "selectionMark"
+        },
+        "Drivers Licence Province": {
+          "type": "string"
+        },
+        "Drivers Licence Number": {
+          "type": "integer"
+        },
+        "Drivers Licence Created": {
+          "type": "integer"
+        },
+        "Drivers Licence Expiry": {
+          "type": "integer"
+        },
+        "Birthdate": {
+          "type": "date"
+        },
+        "Address": {
+          "type": "string"
+        },
+        "Is Change of Address": {
+          "type": "selectionMark"
+        },
+        "City": {
+          "type": "string"
+        },
+        "Province": {
+          "type": "string"
+        },
+        "Postal Code": {
+          "type": "string"
+        },
+        "Named is Driver": {
+          "type": "selectionMark"
+        },
+        "Named is Cyclist": {
+          "type": "selectionMark"
+        },
+        "Named is Owner": {
+          "type": "selectionMark"
+        },
+        "Named is Pedestrian": {
+          "type": "selectionMark"
+        },
+        "Named is Passenger": {
+          "type": "selectionMark"
+        },
+        "Named is Other": {
+          "type": "selectionMark"
+        },
+        "Named is Other Description": {
+          "type": "string"
+        },
+        "Violation Date": {
+          "type": "date"
+        },
+        "Violation Time": {
+          "type": "time"
+        },
+        "Violation on Highway": {
+          "type": "string"
+        },
+        "Violation Near Place": {
+          "type": "string"
+        },
+        "Offence is MVA": {
+          "type": "selectionMark"
+        },
+        "Offence is MCA": {
+          "type": "selectionMark"
+        },
+        "Offence is CTA": {
+          "type": "selectionMark"
+        },
+        "Offence is WLA": {
+          "type": "selectionMark"
+        },
+        "Offence is FAA": {
+          "type": "selectionMark"
+        },
+        "Offence is LCA": {
+          "type": "selectionMark"
+        },
+        "Offence is TCR": {
+          "type": "selectionMark"
+        },
+        "Offence is Other": {
+          "type": "selectionMark"
+        },
+        "Offence is Other Description": {
+          "type": "string"
+        },
+        "Count 1 Description": {
+          "type": "string"
+        },
+        "Count 1 Act/Regs": {
+          "type": "string"
+        },
+        "Count 1 is ACT": {
+          "type": "selectionMark"
+        },
+        "Count 1 is REGS": {
+          "type": "selectionMark"
+        },
+        "Count 1 Section": {
+          "type": "string"
+        },
+        "Count 1 Ticket Amount": {
+          "type": "number"
+        },
+        "Count 2 Description": {
+          "type": "string"
+        },
+        "Count 2 Act/Regs": {
+          "type": "string"
+        },
+        "Count 2 is ACT": {
+          "type": "selectionMark"
+        },
+        "Count 2 is REGS": {
+          "type": "selectionMark"
+        },
+        "Count 2 Section": {
+          "type": "string"
+        },
+        "Count 2 Ticket Amount": {
+          "type": "number"
+        },
+        "Count 3 Description": {
+          "type": "string"
+        },
+        "Count 3 Act/Regs": {
+          "type": "string"
+        },
+        "Count 3 is ACT": {
+          "type": "selectionMark"
+        },
+        "Count 3 is REGS": {
+          "type": "selectionMark"
+        },
+        "Count 3 Section": {
+          "type": "string"
+        },
+        "Count 3 Ticket Amount": {
+          "type": "number"
+        },
+        "Vehicle Licence Plate Province": {
+          "type": "string"
+        },
+        "Vehicle Licence Plate Number": {
+          "type": "string"
+        },
+        "Vehicle NSC PUJ": {
+          "type": "number"
+        },
+        "Vehicle NSC Number": {
+          "type": "number"
+        },
+        "Vehicle Registered Owner Name": {
+          "type": "string"
+        },
+        "Vehicle Make": {
+          "type": "string"
+        },
+        "Vehicle Type": {
+          "type": "string"
+        },
+        "Vehicle Colour": {
+          "type": "string"
+        },
+        "Vehicle Year": {
+          "type": "integer"
+        },
+        "Notice of Dispute Address": {
+          "type": "string"
+        },
+        "Hearing Location": {
+          "type": "string"
+        },
+        "Date of Service": {
+          "type": "date"
+        },
+        "Enforcement Officer Number": {
+          "type": "number"
+        },
+        "Detachment Location": {
+          "type": "string"
+        },
+        "Gender": {
+          "type": "string"
+        },
+        "Detachment Location Label": {
+          "type": "string"
+        },
+        "Hearing Location Label": {
+          "type": "string"
+        },
+        "Header Label": {
+          "type": "string"
+        },
+        "Violation Ticket Label": {
+          "type": "string"
+        },
+        "Issued To Label": {
+          "type": "string"
+        },
+        "Surname Label": {
+          "type": "string"
+        },
+        "Given Name Label": {
+          "type": "string"
+        },
+        "Young Person Label": {
+          "type": "string"
+        },
+        "Province Label": {
+          "type": "string"
+        },
+        "Drivers Licence Number Label": {
+          "type": "string"
+        },
+        "Drivers Licence Created Label": {
+          "type": "string"
+        },
+        "Drivers Licence Expiry Label": {
+          "type": "string"
+        },
+        "Gender Label": {
+          "type": "string"
+        },
+        "Birthdate YYYY Label": {
+          "type": "string"
+        },
+        "Birthdate MM Label": {
+          "type": "string"
+        },
+        "Birthdate DD Label": {
+          "type": "string"
+        },
+        "Address Label": {
+          "type": "string"
+        },
+        "Change of Address Label": {
+          "type": "string"
+        },
+        "City Label": {
+          "type": "string"
+        },
+        "Drivers Licence Province Label": {
+          "type": "string"
+        },
+        "Postal Code Label": {
+          "type": "string"
+        },
+        "Date of Service Label": {
+          "type": "string"
+        },
+        "Violation Date YYYY Label": {
+          "type": "string"
+        },
+        "Violation Date MM Label": {
+          "type": "string"
+        },
+        "Violation Date DD Label": {
+          "type": "string"
+        },
+        "Violation Time Label": {
+          "type": "string"
+        },
+        "Shaded Areas Label": {
+          "type": "string"
+        },
+        "Victim Levy Label": {
+          "type": "string"
+        },
+        "Vehicle Licence Plate Label": {
+          "type": "string"
+        },
+        "Vehicle Licence Plate Province Label": {
+          "type": "string"
+        },
+        "Vehicle Licence Plate Number Label": {
+          "type": "string"
+        },
+        "Count 1 Act Label": {
+          "type": "string"
+        },
+        "Count 2 Act Label": {
+          "type": "string"
+        },
+        "Count 3 Act Label": {
+          "type": "string"
+        },
+        "Count Act/Regs Label": {
+          "type": "string"
+        },
+        "Count 1 Regs Label": {
+          "type": "string"
+        },
+        "Count 2 Regs Label": {
+          "type": "string"
+        },
+        "Count 3 Regs Label": {
+          "type": "string"
+        }
+      },
+      "buildMode": "template",
+      "fieldConfidence": {
+        "Address": 0.995,
+        "Address Label": 0.995,
+        "Birthdate": 0.5,
+        "Birthdate DD Label": 0.995,
+        "Birthdate MM Label": 0.995,
+        "Birthdate YYYY Label": 0.995,
+        "Change of Address Label": 0.995,
+        "City": 0.995,
+        "City Label": 0.995,
+        "Count 1 Act Label": 0.995,
+        "Count 1 Act/Regs": 0.833,
+        "Count 1 Description": 0.667,
+        "Count 1 is ACT": 0.995,
+        "Count 1 is REGS": 0.995,
+        "Count 1 Regs Label": 0.995,
+        "Count 1 Section": 0.917,
+        "Count 1 Ticket Amount": 0.75,
+        "Count 2 Act Label": 0.995,
+        "Count 2 Act/Regs": 0.995,
+        "Count 2 Description": 0.917,
+        "Count 2 is ACT": 0.917,
+        "Count 2 is REGS": 0.917,
+        "Count 2 Regs Label": 0.995,
+        "Count 2 Section": 0.917,
+        "Count 2 Ticket Amount": 0.833,
+        "Count 3 Act Label": 0.995,
+        "Count 3 Act/Regs": 0.917,
+        "Count 3 Description": 0.917,
+        "Count 3 is ACT": 0.917,
+        "Count 3 is REGS": 0.917,
+        "Count 3 Regs Label": 0.995,
+        "Count 3 Section": 0.833,
+        "Count 3 Ticket Amount": 0.667,
+        "Count Act/Regs Label": 0.995,
+        "Date of Service": 0.583,
+        "Date of Service Label": 0.995,
+        "Detachment Location": 0.995,
+        "Detachment Location Label": 0.333,
+        "Drivers Licence Created": 0.75,
+        "Drivers Licence Created Label": 0.917,
+        "Drivers Licence Expiry": 0.833,
+        "Drivers Licence Expiry Label": 0.917,
+        "Drivers Licence Number": 0.917,
+        "Drivers Licence Number Label": 0.995,
+        "Drivers Licence Province": 0.995,
+        "Drivers Licence Province Label": 0.833,
+        "Enforcement Officer Number": 0.995,
+        "Gender": 0.667,
+        "Gender Label": 0.995,
+        "Given Name": 0.995,
+        "Given Name Label": 0.995,
+        "Header Label": 0.995,
+        "Hearing Location": 0.995,
+        "Hearing Location Label": 0.995,
+        "Is Change of Address": 0.995,
+        "Is Young Person": 0.995,
+        "Issued To Label": 0.995,
+        "Named is Cyclist": 0.995,
+        "Named is Driver": 0.995,
+        "Named is Other": 0.995,
+        "Named is Other Description": 0.917,
+        "Named is Owner": 0.995,
+        "Named is Passenger": 0.995,
+        "Named is Pedestrian": 0.995,
+        "Notice of Dispute Address": 0.995,
+        "Offence is CTA": 0.995,
+        "Offence is FAA": 0.995,
+        "Offence is LCA": 0.995,
+        "Offence is MCA": 0.995,
+        "Offence is MVA": 0.995,
+        "Offence is Other": 0.995,
+        "Offence is Other Description": 0.917,
+        "Offence is TCR": 0.995,
+        "Offence is WLA": 0.995,
+        "Postal Code": 0.995,
+        "Postal Code Label": 0.833,
+        "Province": 0.995,
+        "Province Label": 0.995,
+        "Shaded Areas Label": 0.995,
+        "Surname": 0.995,
+        "Surname Label": 0.995,
+        "Vehicle Colour": 0.995,
+        "Vehicle Licence Plate Label": 0.917,
+        "Vehicle Licence Plate Number": 0.667,
+        "Vehicle Licence Plate Number Label": 0.917,
+        "Vehicle Licence Plate Province": 0.75,
+        "Vehicle Licence Plate Province Label": 0.833,
+        "Vehicle Make": 0.995,
+        "Vehicle NSC Number": 0.995,
+        "Vehicle NSC PUJ": 0.75,
+        "Vehicle Registered Owner Name": 0.917,
+        "Vehicle Type": 0.995,
+        "Vehicle Year": 0.917,
+        "Victim Levy Label": 0.995,
+        "Violation Date": 0.75,
+        "Violation Date DD Label": 0.995,
+        "Violation Date MM Label": 0.995,
+        "Violation Date YYYY Label": 0.995,
+        "Violation Near Place": 0.995,
+        "Violation on Highway": 0.995,
+        "Violation Ticket Label": 0.995,
+        "Violation Ticket Number": 0.995,
+        "Violation Time": 0.75,
+        "Violation Time Label": 0.995,
+        "Young Person Label": 0.995
+      }
+    }
+  },
+  "modelId": "ViolationTicket",
+  "createdDateTime": "2024-02-16T20:14:42Z",
+  "expirationDateTime": "2026-02-15T20:14:42Z",
+  "apiVersion": "2022-08-31",
+  "description": "A composite model of v1.0 (VT1) and v2.1 (VT2)"
+}

@@ -8,13 +8,13 @@ public class FormRecognizerOptions : IValidatable
 {
     public const string Section = "FormRecognizer";
     public const string v2_1 = "2.1";
-    public const string v2022_06_30_preview = "2022-06-30-preview";
+    public const string v2022_08_31 = "2022-08-31";
 
     /// <summary>
     /// Azure FormRecognizer API KEY
     /// </summary>
     [Required]
-    public string? ApiVersion { get; set; } = v2022_06_30_preview;
+    public string? ApiVersion { get; set; } = v2022_08_31;
 
     /// <summary>
     /// Azure FormRecognizer API KEY

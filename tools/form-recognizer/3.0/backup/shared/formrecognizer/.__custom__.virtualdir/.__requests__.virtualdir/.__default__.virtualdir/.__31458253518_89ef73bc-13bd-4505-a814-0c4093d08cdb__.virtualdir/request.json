@@ -1,0 +1,15 @@
+{
+  "details": {
+    "modelId": "ViolationTicket",
+    "description": "A composite model of v1.0 (VT1) and v2.1 (VT2)",
+    "componentModels": [
+      {
+        "modelId": "ViolationTicket_v2.1"
+      },
+      {
+        "modelId": "ViolationTicket_v1.0"
+      }
+    ]
+  },
+  "maxCardinality": 100
+}
