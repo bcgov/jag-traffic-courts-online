@@ -107,15 +107,16 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
         {
             violationTicket.GlobalConfidence = result[0].FormTypeConfidence ?? 0f;
             Dictionary<string, string> fieldLabels = new();
-            if (OcrViolationTicket.ViolationTicketVersion1 == result[0].FormType)
+            if (OcrViolationTicket.ViolationTicketVersion1_0 == result[0].FormType)
             {
                 violationTicket.TicketVersion = ViolationTicketVersion.VT1;
-                fieldLabels = IFormRecognizerService.FieldLabels_2022_04;
+                fieldLabels = IFormRecognizerService.FieldLabels_VT1;
             }
-            else if (OcrViolationTicket.ViolationTicketVersion2 == result[0].FormType)
+            else if (OcrViolationTicket.ViolationTicketVersion2_0 == result[0].FormType
+                  || OcrViolationTicket.ViolationTicketVersion2_1 == result[0].FormType)
             {
                 violationTicket.TicketVersion = ViolationTicketVersion.VT2;
-                fieldLabels = IFormRecognizerService.FieldLabels_2023_09;
+                fieldLabels = IFormRecognizerService.FieldLabels_VT2;
             }
             foreach (var fieldLabel in fieldLabels)
             {

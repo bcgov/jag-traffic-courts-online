@@ -7,124 +7,93 @@ services:
   
   citizen-api:
     environment:
-      FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-2.1}
-      FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-http://azure-cognitive-service-proxy:5200}
-      FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-25ebebe0-af8c-470a-ab79-7ec155eec4a8}
-      
-  form-rec-nginx:
-    build:
-      context: ./tools/form-recognizer
-      dockerfile: Dockerfile.proxy
+      FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-2022-08-31}
+      FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-http://azure-cognitive-service-proxy:5000}
+      FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-ViolationTicket}
+
+  form-rec-init:
+    container_name: azure-cognitive-service-init
+    build: 
+      context: ./tools/form-recognizer/3.0/ 
+      dockerfile: Dockerfile.initModels
+    volumes:
+      - type: bind
+        source: ./tools/form-recognizer/3.0/shared
+        target: /shared
+
+  form-rec-proxy:
+    image: nginx:alpine
     container_name: azure-cognitive-service-proxy
     depends_on:
       - form-rec-layout
-      - form-rec-custom-api
-      - form-rec-custom-supervised
+      - form-rec-custom-template
       - form-rec-cron
+    volumes:
+      - ./tools/form-recognizer/3.0/nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "5200:5200"
+      - "5000:5000"
 
   form-rec-cron:
     container_name: azure-cognitive-service-custom-cron
     image: alpine:3.14
     entrypoint: >
       /bin/sh -c "
-      LC_ALL=C find /shared/formrecognizer/.__custom__.virtualdir/.__requests__.virtualdir/.__default__.virtualdir -mmin +60 -delete;
+      LC_ALL=C find /shared/custom/.__default__.virtualdir -mmin +60 -delete;
       LC_ALL=C find /logs -mtime +30 -delete;
       exit 0;
       "
     volumes:
       - type: bind
-        source: ./tools/form-recognizer/shared
+        source: ./tools/form-recognizer/3.0/shared
         target: /shared
       - type: bind
-        source: ./tools/form-recognizer/logs
+        source: ./tools/form-recognizer/3.0/logs
         target: /logs
 
   form-rec-layout:
-    container_name: azure-cognitive-service-custom-layout
-    build:
-      context: ./tools/form-recognizer
-      dockerfile: Dockerfile.layout
+    container_name: azure-cognitive-service-layout
+    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/layout-3.0:2022-08-31
     depends_on:
-      - rabbitmq
+      - form-rec-init
     environment:
       eula: accept
       apikey: ${FORMRECOGNIZER__APIKEY}
       billing: ${FORMRECOGNIZER__BILLING_URL}
       Logging:Console:LogLevel:Default: Information
-      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
-      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
-      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
-      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
       SharedRootFolder: /shared
       Mounts:Shared: /shared
       Mounts:Output: /logs
     volumes:
       - type: bind
-        source: ./tools/form-recognizer/shared
+        source: ./tools/form-recognizer/3.0/shared
         target: /shared
       - type: bind
-        source: ./tools/form-recognizer/logs
+        source: ./tools/form-recognizer/3.0/logs
         target: /logs
     expose:
       - "5000"
 
-  form-rec-custom-api:
-    container_name: azure-cognitive-service-custom-api
-    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-api:2.1-preview
+  form-rec-custom-template:
+    container_name: azure-cognitive-service-custom-template
+    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-template-3.0:2022-08-31
     restart: always
     depends_on:
-      - rabbitmq
       - form-rec-layout
-      - form-rec-custom-supervised
     environment:
+      AzureCognitiveServiceLayoutHost: http://azure-cognitive-service-layout:5000
       eula: accept
       apikey: ${FORMRECOGNIZER__APIKEY}
       billing: ${FORMRECOGNIZER__BILLING_URL}
       Logging:Console:LogLevel:Default: Information
-      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
-      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
-      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
-      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
       SharedRootFolder: /shared
       Mounts:Shared: /shared
       Mounts:Output: /logs
     volumes:
       - type: bind
-        source: ./tools/form-recognizer/shared
+        source: ./tools/form-recognizer/3.0/shared
         target: /shared
       - type: bind
-        source: ./tools/form-recognizer/logs
+        source: ./tools/form-recognizer/3.0/logs
         target: /logs
     expose:
       - "5000"
-
-  form-rec-custom-supervised:
-    container_name: azure-cognitive-service-custom-supervised
-    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-supervised:2.1-preview
-    restart: always
-    depends_on:
-      - rabbitmq
-      - form-rec-layout
-    environment:
-      eula: accept
-      apikey: ${FORMRECOGNIZER__APIKEY}
-      billing: ${FORMRECOGNIZER__BILLING_URL}
-      CustomFormRecognizer:ContainerPhase: All
-      CustomFormRecognizer:LayoutAnalyzeUri: http://azure-cognitive-service-custom-layout:5000/formrecognizer/v2.1/layout/analyze
-      Logging:Console:LogLevel:Default: Information
-      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
-      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
-      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
-      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
-      SharedRootFolder: /shared
-      Mounts:Shared: /shared
-      Mounts:Output: /logs
-    volumes:
-      - type: bind
-        source: ./tools/form-recognizer/shared
-        target: /shared
-      - type: bind
-        source: ./tools/form-recognizer/logs
-        target: /logs
