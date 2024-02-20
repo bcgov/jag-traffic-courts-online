@@ -1,5 +1,6 @@
-﻿using TrafficCourts.Common.Authentication;
-using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
+using TrafficCourts.Common.Authentication;
+using TrafficCourts.Common.OpenAPIs.Keycloak;
+using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -8,8 +9,6 @@ public class KeycloakService : IKeycloakService
     private readonly IKeycloakAdminApiClient _keycloakAdminClient;
     private readonly KeycloakOptions _options;
     private readonly ILogger<KeycloakService> _logger;
-    private const string _attributeIdirId = "idir_username";
-    private const string _attributePartId = "partid";
 
     public KeycloakService(IKeycloakAdminApiClient keycloakAdminApiClient, KeycloakOptions options, ILogger<KeycloakService> logger)
     {
@@ -20,10 +19,12 @@ public class KeycloakService : IKeycloakService
 
     public async Task<ICollection<UserRepresentation>> UsersByGroupAsync(string groupName, CancellationToken cancellationToken)
     {
+        // TODO: add caching of the group lookup, the members could also be cached for a short period of time
+
         string? realm = _options.Realm;
 
         // Find all groups that where the groupName has some sort of match in keycloak.  The Keycloak API will return both admin-vtc-staff and vtc-staff when querying for vtc-staff.
-        ICollection<GroupRepresentation> groupRepresentations = await _keycloakAdminClient.GroupsAll2Async(groupName, null, null, null, realm, cancellationToken);
+        ICollection<GroupRepresentation> groupRepresentations = await _keycloakAdminClient.GroupsAll2Async(groupName, null, null, null, null, null, null, realm, cancellationToken);
 
         // Filter returned list to the exact name we are looking for
         GroupRepresentation? groupRepresentation = groupRepresentations
@@ -37,26 +38,15 @@ public class KeycloakService : IKeycloakService
             return userRepresentations;
         }
 
-        return new List<UserRepresentation>();
+        return [];
     }
 
     public async Task<ICollection<UserRepresentation>> UsersByIdirAsync(string idirUsername, CancellationToken cancellationToken)
     {
         string? realm = _options.Realm;
-        string q = $"{_attributeIdirId}:{idirUsername}";
+        string q = $"{UserAttributes.IdirUsername}:{idirUsername}";
 
-        return await _keycloakAdminClient.UsersAll3Async(null, null, null, null, null, null, null, null, null, null, null, null, null, q, realm, cancellationToken);
-    }
-
-    public ICollection<string> TryGetPartIds(UserRepresentation userRepresentation)
-    {
-        if (userRepresentation.Attributes.TryGetValue(_attributePartId, out ICollection<string>? partIds))
-        {
-            return partIds;
-        }
-        else
-        {
-            return new List<string>();
-        }
+        var users = await _keycloakAdminClient.UsersAll3Async(null, null, null, null, null, null, null, null, null, null, null, null, null, q, realm, cancellationToken);
+        return users;
     }
 }

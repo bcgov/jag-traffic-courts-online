@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -39,12 +40,15 @@ public class DisputeLockControllerTest
         mockService.Setup(x => x.GetLock(It.IsAny<string>(), It.IsAny<string>())).Throws(new LockIsInUseException("username", new Lock()));
         var controller = new DisputeLockController(mockService.Object, mockLogger.Object);
 
+        controller.ControllerContext = new ControllerContext();
+        controller.ControllerContext.HttpContext = new DefaultHttpContext();
+
         // Act
         var result = await controller.GetLock("ticketNumber", "username");
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result.Result);
-        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        var problemDetails = Assert.IsType<LockIsInUseProblemDetails>(objectResult.Value);
         Assert.Equal((int)HttpStatusCode.Conflict, problemDetails.Status);
         string lockedBy = Assert.IsType<string>(problemDetails.Extensions["lockedBy"]);
         Assert.True(lockedBy == "username");

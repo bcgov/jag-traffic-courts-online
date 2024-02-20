@@ -7,18 +7,20 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class DisputeLockController : StaffControllerBase<DisputeLockController>
+public class DisputeLockController : StaffControllerBase
 {
     private readonly IDisputeLockService _disputeLockService;
-    
+    private readonly ILogger<DisputeLockController> _logger;
+
     /// <summary>
     /// Defafult constructor for DisputeLockController
     /// </summary>
     /// <param name="disputeLockService"></param>
     /// <param name="logger"></param>
-    public DisputeLockController(IDisputeLockService disputeLockService, ILogger<DisputeLockController> logger) : base(logger)
+    public DisputeLockController(IDisputeLockService disputeLockService, ILogger<DisputeLockController> logger)
     {
         _disputeLockService = disputeLockService;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -41,21 +43,7 @@ public class DisputeLockController : StaffControllerBase<DisputeLockController>
         catch (LockIsInUseException e)
         {
             _logger.LogInformation(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
             var result = new ObjectResult(problemDetails);
             return Task.FromResult<ActionResult<Lock>>(result);
         }
