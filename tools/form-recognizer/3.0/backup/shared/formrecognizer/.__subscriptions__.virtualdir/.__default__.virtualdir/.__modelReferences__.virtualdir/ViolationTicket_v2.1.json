@@ -1,0 +1,5 @@
+{
+  "publicModelId": "ViolationTicket_v2.1",
+  "internalModelId": "ce5e479f-d301-4ea2-9be7-48a199802052",
+  "description": "VT2 layout trained with generated and real images"
+}

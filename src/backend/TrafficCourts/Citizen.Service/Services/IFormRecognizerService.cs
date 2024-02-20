@@ -9,7 +9,7 @@ public interface IFormRecognizerService
     public Task<OcrViolationTicket> AnalyzeImageAsync(MemoryStream stream, CancellationToken cancellationToken);
 
     // A mapping list of fields extracted from Azure Form Recognizer and their equivalent JSON name from the 2022-04 version of the Violation Ticket image
-    protected readonly static Dictionary<string, string> FieldLabels_2022_04 = new ()
+    protected readonly static Dictionary<string, string> FieldLabels_VT1 = new ()
     {
         { "Violation Ticket Label", OcrViolationTicket.ViolationTicketTitle },
         { "Violation Ticket Number", OcrViolationTicket.ViolationTicketNumber },
@@ -51,7 +51,7 @@ public interface IFormRecognizerService
     };
     
     // A mapping list of fields extracted from Azure Form Recognizer and their equivalent JSON name from the 2023-09 version of the Violation Ticket image
-    protected readonly static Dictionary<string, string> FieldLabels_2023_09 = new ()
+    protected readonly static Dictionary<string, string> FieldLabels_VT2 = new ()
     {
         { "Label Violation Ticket", OcrViolationTicket.ViolationTicketTitle },
         { "Violation Ticket Number", OcrViolationTicket.ViolationTicketNumber },
