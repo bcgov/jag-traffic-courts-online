@@ -86,7 +86,7 @@ export class ViolationTicketService {
   }
 
   searchTicket(params?: QueryParamsForSearch): Observable<ViolationTicket> {
-    this.reset();
+    this.clearCache();
     this.logger.info("ViolationTicketService:: Search for ticket");
     if (!params) {
       params = this.queryParams;
@@ -119,7 +119,7 @@ export class ViolationTicketService {
   }
 
   analyseTicket(ticketFile: File, progressRef: NgProgressRef, dialogRef: MatDialogRef<WaitForOcrDialogComponent>): void {
-    this.reset();
+    this.clearCache();
     this.logger.info("file target", ticketFile);
     // catch if no ticketFile passed in
     if (!ticketFile) {
@@ -351,15 +351,15 @@ export class ViolationTicketService {
   goToFind(): void {
     this.router.navigate([AppRoutes.ticketPath(AppRoutes.FIND)]);
   }
-
-  private reset(): void {
+  
+  clearCache(): void {
     this._inputTicketData.next(null);
     this._ocrTicket.next(null);
     this._ticket.next(null);
   }
 
   private onError(err?: HttpErrorResponse): void {
-    this.reset();
+    this.clearCache();
     if (!err || err.status === 404) {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
