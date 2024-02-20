@@ -95,10 +95,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   searchFilter = function (record: Dispute, filter: string) {
     let searchTerms = JSON.parse(filter);
-    var excludingStatuses = !searchTerms?.status ? [DisputeStatus.Cancelled, DisputeStatus.Processing, DisputeStatus.Rejected] : [];
-    if (excludingStatuses.includes(record?.status)) {
-      return false;
-    }
     return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
       if ("dateSubmittedFrom" === field) {
         return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
