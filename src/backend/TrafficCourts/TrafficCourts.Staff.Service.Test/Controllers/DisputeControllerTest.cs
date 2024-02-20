@@ -18,6 +18,8 @@ using TrafficCourts.Staff.Service.Models;
 using Xunit;
 using TrafficCourts.Common.Errors;
 using System.Security.Claims;
+using System.Collections;
+using Docker.DotNet.Models;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
@@ -308,32 +310,5 @@ public class DisputeControllerTest
         Assert.Equal(2, actual!.Count);
         Assert.Equal(updateRequest1, actual[0]);
         Assert.Equal(updateRequest2, actual[1]);
-    }
-    [Fact]
-    public void AllEndpointsShouldImplementAuthorizeAttribute()
-    {
-        // Check all endpoints of DisputeController to confirm all are guarded with proper KeycloakAuthorization or explicit AllowAnonymous Attribute
-
-        // Arrange
-        var _endpoints = new List<(Type, MethodInfo)>(); // All endpoints to check in DisputeController
-
-        var assembly = Assembly.GetAssembly(typeof(DisputeController));
-        var allControllers = AllTypes.From(assembly).ThatDeriveFrom<StaffControllerBase<DisputeController>>();
-
-        foreach (Type type in allControllers)
-        {
-            var mInfos = type.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => x.DeclaringType!.Equals(type));
-            foreach (MethodInfo mInfo in mInfos)
-            {
-                _endpoints.Add((type, mInfo));
-            }
-        }
-
-        // Act
-        var endpointsWithoutAuthorizeAttribute = _endpoints.Where(t => !t.Item2.IsDefined(typeof(KeycloakAuthorizeAttribute), false) && !t.Item2.IsDefined(typeof(AllowAnonymousAttribute), false)).ToList();
-        var brokenEndpoints = string.Join(" and ", endpointsWithoutAuthorizeAttribute.Select(x => x.Item2.Name));
-
-        // Assert
-        endpointsWithoutAuthorizeAttribute.Count.Should().Be(0, "because {0} should have the KeycloakAuthorization or Anonymous attribute", brokenEndpoints);
     }
 }

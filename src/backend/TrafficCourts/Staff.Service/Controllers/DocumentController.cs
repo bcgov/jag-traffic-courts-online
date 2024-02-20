@@ -9,9 +9,10 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class DocumentController : StaffControllerBase<DocumentController>
+public class DocumentController : StaffControllerBase
 {
     private readonly IStaffDocumentService _documentService;
+    private readonly ILogger<DocumentController> _logger;
 
     /// <summary>
     /// Default Constructor
@@ -19,9 +20,10 @@ public class DocumentController : StaffControllerBase<DocumentController>
     /// <param name="documentService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public DocumentController(IStaffDocumentService documentService, ILogger<DocumentController> logger) : base(logger)
+    public DocumentController(IStaffDocumentService documentService, ILogger<DocumentController> logger) 
     {
         _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>

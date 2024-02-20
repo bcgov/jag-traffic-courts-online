@@ -8,9 +8,10 @@ using TrafficCourts.Staff.Service.Services;
 namespace TrafficCourts.Staff.Service.Controllers;
 
 // implement role authorization by using TCOControllerBase class as in csrs project
-public class FileHistoryController : StaffControllerBase<FileHistoryController>
+public class FileHistoryController : StaffControllerBase
 {
     private readonly IFileHistoryService _fileHistoryService;
+    private readonly ILogger<FileHistoryController> _logger;
 
     /// <summary>
     /// Default Constructor
@@ -18,10 +19,10 @@ public class FileHistoryController : StaffControllerBase<FileHistoryController>
     /// <param name="fileHistoryService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public FileHistoryController(IFileHistoryService fileHistoryService, ILogger<FileHistoryController> logger) : base(logger)
+    public FileHistoryController(IFileHistoryService fileHistoryService, ILogger<FileHistoryController> logger) 
     {
-        ArgumentNullException.ThrowIfNull(fileHistoryService);
-        _fileHistoryService = fileHistoryService;
+        _fileHistoryService = fileHistoryService ?? throw new ArgumentNullException(nameof(fileHistoryService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
