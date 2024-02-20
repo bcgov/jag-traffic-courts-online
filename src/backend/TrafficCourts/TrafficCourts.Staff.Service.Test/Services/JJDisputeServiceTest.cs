@@ -1,13 +1,16 @@
-﻿using MassTransit;
+﻿using AutoFixture;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NSubstitute;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Models;
-using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
+using TrafficCourts.Common.OpenAPIs.Keycloak;
+using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
@@ -83,37 +86,51 @@ public class JJDisputeServiceTest
     }
 
     [Fact]
-    public async Task TestGetPartId()
+    public async Task TestGetDisputeAssignToPartId()
     {
         // Arrange
-        var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
-        var _bus = new Mock<IBus>();
-        var _staffDocumentService = new Mock<IStaffDocumentService>();
-        var _keycloakService = new Mock<IKeycloakService>();
-        var _statuteLookupService = new Mock<IStatuteLookupService>();
-        var _logger = new Mock<ILogger<JJDisputeService>>();
-        var _userReps = new List<UserRepresentation>();
-        var _userRep = new Mock<UserRepresentation>();
-        var _expectedPartIds = new List<string>();
-        JJDisputeService jJDisputeService = new(_oracleDataApiClient.Object, _bus.Object, _staffDocumentService.Object, _keycloakService.Object, _statuteLookupService.Object, _logger.Object);
-        JJDispute dispute = new();
-        dispute.JjAssignedTo = "ckent";
-        dispute.TicketNumber = "AJ201092461";
-        dispute.HearingType = JJDisputeHearingType.WRITTEN_REASONS;
-        _userRep.Object.Username = dispute.JjAssignedTo;
-        _userReps.Add(_userRep.Object);
-        _expectedPartIds.Add("1234.5678");
 
-        _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
-        _keycloakService.Setup(_ => _.UsersByIdirAsync(dispute.JjAssignedTo, CancellationToken.None)).ReturnsAsync(_userReps);
-        _keycloakService.Setup(_ => _.TryGetPartIds(_userRep.Object)).Returns(_expectedPartIds);
+        // create a random dispute
+        Fixture fix = new Fixture();
+        JJDispute dispute = fix.Create<JJDispute>();
+
+        var oracleDataApiClient = Substitute.For<IOracleDataApiClient>();
+
+        oracleDataApiClient
+            .GetJJDisputeAsync(dispute.TicketNumber, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(dispute);
+
+        // create UserRepresentation collection that UsersByIdirAsync will return
+        var expectedPartId = System.Guid.NewGuid().ToString();
+        List<UserRepresentation> representations = [
+            new UserRepresentation()
+                {
+                    Attributes = new Dictionary<string, IList<string>>
+                    {
+                        { UserAttributes.PartId, [expectedPartId] }
+                    }
+                }
+        ];
+
+        var keycloakService = Substitute.For<IKeycloakService>();
+        keycloakService
+            .UsersByIdirAsync(dispute.JjAssignedTo, Arg.Any<CancellationToken>())
+            .Returns(representations);
+
+        // create the subject under test
+        JJDisputeService sut = new JJDisputeService(
+            oracleDataApiClient,
+            Substitute.For<IBus>(),
+            Substitute.For<IStaffDocumentService>(),
+            keycloakService,
+            Substitute.For<IStatuteLookupService>(),
+            Substitute.For<ILogger<JJDisputeService>>());
 
         // Act
-        string? _actualPartId = await jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None);
+        string? actual = await sut.GetDisputeAssignToPartIdAsync(dispute.TicketNumber, CancellationToken.None);
 
         // Assert
-        var expectedPartId = Assert.Single(_expectedPartIds);
-        Assert.Equal(expectedPartId, _actualPartId);
+        Assert.Equal(expectedPartId, actual);
     }
 
     [Fact]

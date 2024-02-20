@@ -13,11 +13,12 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class JJController : StaffControllerBase<JJController>
+public partial class JJController : StaffControllerBase
 {
     private readonly IPrintDigitalCaseFileService _printService;
     private readonly IJJDisputeService _jjDisputeService;
     private readonly IDisputeLockService _disputeLockService;
+    private readonly ILogger<JJController> _logger;
 
     /// <summary>
     /// Default Constructor
@@ -31,11 +32,12 @@ public class JJController : StaffControllerBase<JJController>
         IJJDisputeService jjDisputeService,
         IPrintDigitalCaseFileService printService,
         IDisputeLockService disputeLockService,
-        ILogger<JJController> logger) : base(logger)
+        ILogger<JJController> logger)
     {
-        _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
+        _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(jjDisputeService));
         _printService = printService ?? throw new ArgumentNullException(nameof(printService));
-        _disputeLockService = disputeLockService ?? throw new ArgumentNullException(nameof(DisputeLockService));
+        _disputeLockService = disputeLockService ?? throw new ArgumentNullException(nameof(disputeLockService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -271,11 +273,13 @@ public class JJController : StaffControllerBase<JJController>
     [KeycloakAuthorize(Resources.JJDispute, Scopes.UpdateAdmin)]
     public async Task<IActionResult> UpdateJJDisputeCascadeAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
     {
-        if (jjDispute is null || jjDispute.TicketNumber is null) {
+        if (jjDispute is null || jjDispute.TicketNumber is null)
+        {
             return new HttpError(StatusCodes.Status400BadRequest, "JJDispute missing unique identifier");
         }
 
-        if (ticketNumber != jjDispute.TicketNumber) {
+        if (ticketNumber != jjDispute.TicketNumber)
+        {
             return new HttpError(StatusCodes.Status400BadRequest, "JJDispute ticketNumber mismatch");
         }
 
@@ -308,31 +312,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "API Exception: error submitting JJ Dispute Admin Resolution to oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (Exception e)
         {
@@ -398,31 +387,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "API Exception: error submitting JJ Dispute Admin Resolution to oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (Exception e)
         {
@@ -533,31 +507,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (Exception e)
         {
@@ -620,31 +579,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (Exception e)
         {
@@ -704,31 +648,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (Exception e)
         {
@@ -787,35 +716,28 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
+        }
         catch (PartIdNotFoundException e)
         {
-            return new HttpError(StatusCodes.Status400BadRequest, e.Message);
+            // this occurs if the assigned user does not have an assocated part id setup in keycloak
+            // message will be: The assigned JJ {assignedTo} on ticket {ticketNumber} does not have a partId available
+            return new HttpError(StatusCodes.Status409Conflict, e.Message);
+        }
+        catch (DisputeNotAssignedException exception)
+        {
+            // this occurs if the dispute is not assigned to a JJ
+            // message will be: Ticket {ticketNumber} is not assigned to a JJ
+            return new HttpError(StatusCodes.Status409Conflict, exception.Message);
         }
         catch (Exception e)
         {
@@ -823,6 +745,8 @@ public class JJController : StaffControllerBase<JJController>
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
+
+
 
     /// <summary>
     /// Updates the status of a particular JJDispute record to CONCLUDED.
@@ -868,31 +792,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (PartIdNotFoundException e)
         {
@@ -948,31 +857,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (PartIdNotFoundException e)
         {
@@ -1030,31 +924,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (Exception e)
         {
@@ -1109,31 +988,16 @@ public class JJController : StaffControllerBase<JJController>
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (LockIsInUseException e)
-        {
-            _logger.LogError(e, "JJ Dispute has already been locked by another user");
-            ProblemDetails problemDetails = new();
-            problemDetails.Status = (int)HttpStatusCode.Conflict;
-            problemDetails.Title = e.Source + ": Error Locking JJ Dispute";
-            problemDetails.Instance = HttpContext?.Request?.Path;
-            string? innerExceptionMessage = e.InnerException?.Message;
-            string? lockedBy = e.Username;
-            problemDetails.Extensions.Add("lockedBy", lockedBy ?? string.Empty);
-            if (innerExceptionMessage is not null)
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-            }
-            else
-            {
-                problemDetails.Extensions.Add("errors", new string[] { e.Message });
-            }
-
-            return new ObjectResult(problemDetails);
-        }
         catch (ApiException e)
         {
             _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (LockIsInUseException e)
+        {
+            _logger.LogError(e, "JJ Dispute has already been locked by another user");
+            var problemDetails = new LockIsInUseProblemDetails(HttpContext, e);
+            return new ObjectResult(problemDetails);
         }
         catch (Exception e)
         {

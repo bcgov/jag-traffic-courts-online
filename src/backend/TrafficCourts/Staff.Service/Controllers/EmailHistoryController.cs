@@ -8,20 +8,21 @@ using TrafficCourts.Staff.Service.Services;
 namespace TrafficCourts.Staff.Service.Controllers;
 
 // implement role authorization by using TCOControllerBase class as in csrs project
-public class EmailHistoryController : StaffControllerBase<EmailHistoryController>
+public class EmailHistoryController : StaffControllerBase
 {
-    private readonly IEmailHistoryService _EmailHistoryService;
+    private readonly IEmailHistoryService _emailHistoryService;
+    private readonly ILogger<EmailHistoryController> _logger;
 
     /// <summary>
     /// Default Constructor
     /// </summary>
-    /// <param name="EmailHistoryService"></param>
+    /// <param name="emailHistoryService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public EmailHistoryController(IEmailHistoryService EmailHistoryService, ILogger<EmailHistoryController> logger) : base(logger)
+    public EmailHistoryController(IEmailHistoryService emailHistoryService, ILogger<EmailHistoryController> logger)
     {
-        ArgumentNullException.ThrowIfNull(EmailHistoryService);
-        _EmailHistoryService = EmailHistoryService;
+        _emailHistoryService = emailHistoryService ?? throw new ArgumentNullException(nameof(emailHistoryService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -45,7 +46,7 @@ public class EmailHistoryController : StaffControllerBase<EmailHistoryController
 
         try
         {
-            ICollection<EmailHistory> fileHistories = await _EmailHistoryService.GetEmailHistoryForTicketAsync(ticketNumber, cancellationToken);
+            ICollection<EmailHistory> fileHistories = await _emailHistoryService.GetEmailHistoryForTicketAsync(ticketNumber, cancellationToken);
             return Ok(fileHistories);
         }
         catch (Exception e)

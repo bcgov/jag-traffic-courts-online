@@ -1,9 +1,14 @@
-﻿using MassTransit;
+using MassTransit;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Models;
-using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
+using TrafficCourts.Common.OpenAPIs.Keycloak;
+using TrafficCourts.Common.OpenAPIs.Keycloak.v22_0;
+using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Core.Http.Models;
+using TrafficCourts.Logging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using JJDisputeStatus = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDisputeStatus;
@@ -13,7 +18,7 @@ namespace TrafficCourts.Staff.Service.Services;
 /// <summary>
 /// Summary description for Class1
 /// </summary>
-public class JJDisputeService : IJJDisputeService
+public partial class JJDisputeService : IJJDisputeService
 {
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
@@ -131,6 +136,7 @@ public class JJDisputeService : IJJDisputeService
                 dispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JASG, // Dispute assigned to JJ
                 GetUserName(user));
+
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
         }
     }
@@ -150,6 +156,7 @@ public class JJDisputeService : IJJDisputeService
             dispute.TicketNumber,
             fileHistoryType,
             GetUserName(user));
+
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -165,6 +172,7 @@ public class JJDisputeService : IJJDisputeService
                 dispute.TicketNumber,
                 FileHistoryAuditLogEntryType.JDIV, 
                 GetUserName(user)); // Dispute change of plea required / Divert to court appearance
+
             await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
             return dispute;
@@ -179,10 +187,8 @@ public class JJDisputeService : IJJDisputeService
 
     public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
-        // Get PartId from Keycloak
-        string partId = await GetPartIdAsync(ticketNumber, cancellationToken) ?? "";
-
-        if (string.IsNullOrEmpty(partId)) throw new PartIdNotFoundException(ticketNumber);
+        // Get the assigned JJ's PartId from Keycloak
+        string partId = await GetDisputeAssignToPartIdAsync(ticketNumber, cancellationToken);
 
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, partId, cancellationToken);
 
@@ -190,6 +196,7 @@ public class JJDisputeService : IJJDisputeService
             dispute.TicketNumber, 
             FileHistoryAuditLogEntryType.VSUB, 
             GetUserName(user)); // Dispute approved for resulting by staff
+
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -209,46 +216,6 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
-    /// <summary>
-    /// Attempts to retrieve a PartId from Keycloak via the JJDispute's jjAssignedTo IDIR field
-    /// </summary>
-    /// <param name="ticketNumber">JJDispute to retrieve (to reference jjAssignedTo)</param>
-    /// <param name="cancellationToken">pass through param</param>
-    /// <returns></returns>
-    public async Task<string?> GetPartIdAsync(string ticketNumber, CancellationToken cancellationToken)
-    {
-        // TCVP-2124
-        //  - lookup JJDispute from TCO ORDS
-        //  - using jjDispute.jjAssignedTo, lookup partId from keycloakApi
-        //  - throw error if either jjAssignedTo or partId is null
-        //  - pass partId to _oracleDataApi.AcceptJJDisputeAsync()
-        JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
-        string idirUsername = jjDispute.JjAssignedTo ?? "";
-
-        if (!string.IsNullOrEmpty(idirUsername))
-        {
-            ICollection<UserRepresentation> userRepresentations = await _keycloakService.UsersByIdirAsync(idirUsername, cancellationToken);
-            if (userRepresentations is not null)
-            {
-                foreach (UserRepresentation userRepresentation in userRepresentations)
-                {
-                    ICollection<string> partIds = _keycloakService.TryGetPartIds(userRepresentation);
-                    if (partIds is not null && partIds.Count > 0)
-                    {
-                        if (partIds.Count > 1)
-                        {
-                            _logger.LogWarning("idirUsername has more than one partId");
-                        }
-                        return partIds.First();
-                    }
-                }
-            }
-        }
-
-        _logger.LogDebug("Failed to lookup partId for {ticketNumber}", ticketNumber);
-        return null;
-    }
-
     public async Task<JJDispute> ConfirmJJDisputeAsync(string ticketNumber, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.ConfirmJJDisputeAsync(ticketNumber, cancellationToken);
@@ -262,18 +229,81 @@ public class JJDisputeService : IJJDisputeService
         return dispute;
     }
 
+    /// <summary>
+    /// Attempts to retrieve a PartId from Keycloak via the JJDispute's jjAssignedTo IDIR field
+    /// </summary>
+    /// <param name="ticketNumber">JJDispute to retrieve (to reference jjAssignedTo)</param>
+    /// <param name="cancellationToken">pass through param</param>
+    /// <exception cref="DisputeNotAssignedException">The dispute is not assigned</exception>
+    /// <returns></returns>
+    internal async Task<string> GetDisputeAssignToPartIdAsync(string ticketNumber, CancellationToken cancellationToken)
+    {
+        // TCVP-2124
+        //  - lookup JJDispute from TCO ORDS
+        //  - using jjDispute.jjAssignedTo, lookup partId from keycloakApi
+        //  - throw error if either jjAssignedTo or partId is null
+        //  - pass partId to _oracleDataApi.AcceptJJDisputeAsync()
+        JJDispute jjDispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
+        string? assignedTo = jjDispute.JjAssignedTo;
+
+        if (string.IsNullOrEmpty(assignedTo))
+        {
+            LogNooneIsAssignedToTicket(ticketNumber);
+            throw new DisputeNotAssignedException(ticketNumber);
+        }
+
+        string? partId = null;
+        ICollection<UserRepresentation> userRepresentations = await _keycloakService.UsersByIdirAsync(assignedTo, cancellationToken);
+        if (userRepresentations is not null)
+        {
+            foreach (UserRepresentation userRepresentation in userRepresentations)
+            {
+                IList<string> attributes = userRepresentation.GetAttributeValues(UserAttributes.PartId);
+                if (attributes.Count != 0)
+                {
+                    if (attributes.Count > 1)
+                    {
+                        LogUserAssignedToTicketHasManyPartIds(ticketNumber, assignedTo);
+                    }
+
+                    // use the first one
+                    partId = attributes[0];
+                    break;
+                }
+            }
+
+            if (partId is null)
+            {
+                // user does not have a part id
+                LogUserAssignedToTicketHasNoPartId(ticketNumber, assignedTo);
+            }
+        }
+        else
+        {
+            LogUserAssignedToTicketNotFound(ticketNumber, assignedTo);
+        }
+
+        if (partId is null)
+        {
+            throw new PartIdNotFoundException(ticketNumber, assignedTo);
+        }
+
+        return partId;
+    }
+
     private static string GetUserName(ClaimsPrincipal user)
     {
         return user?.Identity?.Name ?? string.Empty;
     }
-    // ClaimsPrincipal user
 
     private void AddUnique(List<FileMetadata> target, List<FileMetadata> files)
     {
-        foreach (var file in files)
+        HashSet<Guid> existing = new(target.Where(_ => _.FileId.HasValue).Select(_ => _.FileId!.Value));
+
+        foreach (var file in files.Where(_ => _.FileId.HasValue))
         {
             // only add unique files
-            if (!target.Any(_ => _.FileId == file.FileId))
+            if (existing.Add(file.FileId!.Value))
             {
                 target.Add(file);
             }
@@ -301,15 +331,42 @@ public class JJDisputeService : IJJDisputeService
             return string.Empty;
         }
     }
+
+    [LoggerMessage(EventId = 0, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasNoPartId", Message = "User assigned to ticket has no PartId attribute in Keycloak")]
+    private partial void LogUserAssignedToTicketHasNoPartId(
+    [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTicketNumber), OmitReferenceName = true)]
+        string ticketNumber,
+    [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordUsername), OmitReferenceName = true)]
+        string assignedToUserId);
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, EventName = "UserAssignedToTicketNotFound", Message = "User assigned to ticket not found in Keycloak")]
+    private partial void LogUserAssignedToTicketNotFound(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTicketNumber), OmitReferenceName = true)]
+        string ticketNumber,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordUsername), OmitReferenceName = true)]
+        string assignedToUserId);
+
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasManyPartIds", Message = "User assigned to ticket has multiple PartId attributes in Keycloak")]
+    private partial void LogUserAssignedToTicketHasManyPartIds(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTicketNumber), OmitReferenceName = true)]
+        string ticketNumber,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordUsername), OmitReferenceName = true)]
+        string assignedToUserId);
+
+    [LoggerMessage(EventId = 3, Level = LogLevel.Debug, EventName = "NooneIsAssignedToTicket", Message = "Noone is assigned to ticket")]
+    private partial void LogNooneIsAssignedToTicket(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTicketNumber), OmitReferenceName = true)]
+        string ticketNumber);
 }
 
-[Serializable]
 public class PartIdNotFoundException : Exception
 {
-    public PartIdNotFoundException(string ticketNumber) : base($"Failed to retrieve a partId for the given ticket number: {ticketNumber}")
+    public PartIdNotFoundException(string ticketNumber, string assignedTo) : base($"The assigned JJ {assignedTo} on ticket {ticketNumber} does not have a partId available")
     {
         TicketNumber = ticketNumber;
+        AssignedTo = assignedTo;
     }
     
     public string TicketNumber { get; init; }
+    public string AssignedTo { get; init; }
 }
