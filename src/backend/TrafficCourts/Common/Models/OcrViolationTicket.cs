@@ -28,11 +28,13 @@ public class OcrViolationTicket
     /// A Violation Ticket form that was in circulation around 2022.04
     /// </summary>
     public static readonly string ViolationTicketVersion1_0 = "ViolationTicket:ViolationTicket_v1.0";
+    public static readonly string ViolationTicketVersion1_0_beta = "Violation Ticket:Violation Ticket 2022.04";
     
     /// <summary>
     /// A new Violation Ticket form that was in introduced in 2023.09
     /// </summary>
     public static readonly string ViolationTicketVersion2_0 = "ViolationTicket:ViolationTicket_v2.0";
+    public static readonly string ViolationTicketVersion2_0_beta = "Violation Ticket:Violation Ticket 2023.09";
 
     /// <summary>
     /// A new Violation Ticket form that was in introduced in 2023.09, but trained with generated and real ticket images
