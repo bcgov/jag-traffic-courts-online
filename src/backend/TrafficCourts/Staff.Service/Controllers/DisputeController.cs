@@ -9,9 +9,10 @@ using TrafficCourts.Common.Errors;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class DisputeController : StaffControllerBase<DisputeController>
+public class DisputeController : StaffControllerBase
 {
     private readonly IDisputeService _disputeService;
+    private readonly ILogger<DisputeController> _logger;
 
     /// <summary>
     /// Default Constructor
@@ -19,9 +20,10 @@ public class DisputeController : StaffControllerBase<DisputeController>
     /// <param name="disputeService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger) : base(logger)
+    public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger)
     {
         _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>

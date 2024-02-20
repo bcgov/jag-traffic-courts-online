@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
+using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Core.Http;
 using TrafficCourts.Http;

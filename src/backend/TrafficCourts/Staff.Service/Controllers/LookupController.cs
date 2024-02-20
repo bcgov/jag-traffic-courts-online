@@ -6,13 +6,15 @@ using MediatR;
 namespace TrafficCourts.Staff.Service.Controllers;
 
 [Route("api/[controller]/[action]")]
-public class LookupController : StaffControllerBase<LookupController>
+public class LookupController : StaffControllerBase
 {
     private readonly IMediator _mediator;
-    
-    public LookupController(IMediator mediator, ILogger<LookupController> logger) : base(logger)
+    private readonly ILogger<LookupController> _logger;
+
+    public LookupController(IMediator mediator, ILogger<LookupController> logger)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary> 
