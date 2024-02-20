@@ -16,6 +16,7 @@ import { CountsActions, DisputeCount, DisputeCountFormControls, DisputeCountForm
 import { DisputeRequestCourtAppearanceYn, DisputeContactTypeCd, DisputesService, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction, ViolationTicket, ViolationTicketCount, DisputeInterpreterRequired, Configuration, Field, OcrViolationTicket, DisputeSystemDetectedOcrIssues } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable, of } from "rxjs";
+import { ViolationTicketService } from "./violation-ticket.service";
 
 @Injectable({
   providedIn: "root",
@@ -89,6 +90,7 @@ export class NoticeOfDisputeService {
     private dialog: MatDialog,
     private datePipe: DatePipe,
     private disputesService: DisputesService,
+    private violationTicketService: ViolationTicketService,
     private fb: FormBuilder,
     private toastService: ToastService,
     private configService: ConfigService,
@@ -188,6 +190,8 @@ export class NoticeOfDisputeService {
     this.dialog.open(ConfirmDialogComponent, { data, disableClose: true }).afterClosed()
       .subscribe((action: boolean) => {
         if (action) {
+          this.violationTicketService.clearCache();
+
           const data: DialogOptions = {
             titleKey: "Processing...",
             actionType: "primary",
