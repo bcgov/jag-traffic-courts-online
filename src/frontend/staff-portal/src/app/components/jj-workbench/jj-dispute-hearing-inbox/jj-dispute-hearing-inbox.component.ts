@@ -113,11 +113,12 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     let filterFunction = function (record, filter): boolean {
       let searchTerms = JSON.parse(filter);
       let searchDate = new Date(searchTerms.appearanceTs);
+      let recordDate = record.appearanceTs ? new Date(record.appearanceTs) : null;
 
       return (record.jjAssignedTo?.toLocaleLowerCase().indexOf(searchTerms.jjAssignedTo?.toLocaleLowerCase()) > -1 || searchTerms?.jjAssignedTo === '' && !record.jjAssignedto)
-        && ((record.appearanceTs?.getFullYear() === searchDate.getFullYear()
-          && record.appearanceTs?.getMonth() === searchDate.getMonth()
-          && record.appearanceTs?.getDate() === searchDate.getDate()) || !searchTerms.appearanceTs);
+        && ((recordDate?.getFullYear() === searchDate.getFullYear()
+          && recordDate?.getMonth() === searchDate.getMonth()
+          && recordDate?.getDate() === searchDate.getDate()) || !searchTerms.appearanceTs);
     }
 
     return filterFunction;
