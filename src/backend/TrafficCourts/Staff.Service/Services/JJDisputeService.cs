@@ -332,7 +332,7 @@ public partial class JJDisputeService : IJJDisputeService
         }
     }
 
-    [LoggerMessage(EventId = 0, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasNoPartId", Message = "User assigned to ticket have PartId attribute in Keycloak")]
+    [LoggerMessage(EventId = 0, Level = LogLevel.Warning, EventName = "UserAssignedToTicketHasNoPartId", Message = "User assigned to ticket has no PartId attribute in Keycloak")]
     private partial void LogUserAssignedToTicketHasNoPartId(
     [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTicketNumber), OmitReferenceName = true)]
         string ticketNumber,
