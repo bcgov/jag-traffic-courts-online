@@ -314,7 +314,8 @@
     <br>
     <div class="row">
       <div class="col-md-4">
-        <span class="section-grid-header">Plea</span>
+        <span class="section-grid-header">{{ "label.plea" | translate }}</span>
+
       </div>
       <div class="col-md-8" *ngIf="jjDisputedCount">
         <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_content" 
