@@ -90,7 +90,7 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
 
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions
-                        .presenceOfElementLocated(By.xpath("//span[contains(text(), 'REJECTED')]")))
+                        .presenceOfElementLocated(By.xpath("//mat-option//span[contains(text(), 'REJECTED')]")))
                 .click();
 
         new WebDriverWait(driver, Duration.ofSeconds(50))

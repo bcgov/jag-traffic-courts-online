@@ -86,7 +86,7 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndSubmitARCandCancel
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions
-						.presenceOfElementLocated(By.xpath("//span[contains(text(), 'PROCESSING')]")))
+						.presenceOfElementLocated(By.xpath("//mat-option//span[contains(text(), 'PROCESSING')]")))
 				.click();
 
 		new WebDriverWait(driver, Duration.ofSeconds(50))
