@@ -12,6 +12,7 @@ export class TableFiltersComponent implements OnInit {
   @Input() tabIndex: number;
   @Input() tableFilterKeys: TableFilterKeys[] = [];
   @Input() statusFilterOptions: DisputeStatus[] = [];
+  @Input() statusFilterDefaultText: string = "-- select --";
   @Input() courthouseTeamNames: string[] = [];
   @Output() onFilterChanged: EventEmitter<TableFilter> = new EventEmitter();
 
