@@ -10,8 +10,9 @@
       <div style="display: grid; grid-template-columns: auto auto">
         <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.plea" | translate }}</p>
-          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.plea === Plea.G ? 
-            'I agree I committed the offence' : 'I do not agree I committed the offence' ) : '&nbsp;' }}</p>          
+          <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G">{{ 'label.plea_guilty' | translate }}</p>
+          <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G">{{ 'label.plea_not_guilty' | translate }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Offence Date</p>
@@ -30,7 +31,8 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Fine amount</p>
-          <p class="section-grid-text">{{ jjDisputedCount?.ticketedFineAmount |currency:'CAD':'symbol-narrow':'1.0-0' }}
+          <p class="section-grid-text">{{ jjDisputedCount?.ticketedFineAmount | currency:'CAD':'symbol-narrow':'1.0-0'
+            }}
           </p>
         </span>
       </div>
@@ -63,7 +65,8 @@
         <span class="section-grid-cell mr-10px">
           <p class="section-grid-header">Request fine reduction</p>
           <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.requestReduction === RequestReduction.Y">
+          <p class="section-grid-text"
+            *ngIf="!isSSEditMode && jjDisputedCount?.requestReduction === RequestReduction.Y">
             yes</p>
           <p class="section-grid-text"
             *ngIf="!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestReduction !== RequestReduction.Y">
@@ -78,7 +81,8 @@
         <span class="section-grid-cell">
           <p class="section-grid-header">Request time to pay</p>
           <p class="section-grid-text" *ngIf="!isSSEditMode && !jjDisputedCount">&nbsp;</p>
-          <p class="section-grid-text" *ngIf="!isSSEditMode && jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y">
+          <p class="section-grid-text"
+            *ngIf="!isSSEditMode && jjDisputedCount?.requestTimeToPay === RequestTimeToPay.Y">
             yes</p>
           <p class="section-grid-text"
             *ngIf="!isSSEditMode && jjDisputedCount && jjDisputedCount?.requestTimeToPay !== RequestTimeToPay.Y">
@@ -136,7 +140,8 @@
         </span>
         <span class="section-jj-grid-cell">
           <p class="section-grid-header"><span *ngIf="fineReduction==='yes'">Includes surcharge</span></p>
-          <p class="section-grid-header"><span *ngIf="!jjDisputedCount || fineReduction==='no'">&nbsp;<br /><br /></span>
+          <p class="section-grid-header"><span
+              *ngIf="!jjDisputedCount || fineReduction==='no'">&nbsp;<br /><br /></span>
           </p>
           <p class="section-jj-grid-text">
             <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
@@ -160,7 +165,7 @@
           </p>
           <p class="section-jj-grid-text2">
             <span *ngIf="fineReduction==='yes'">&nbsp;+&nbsp;({{ surcharge
-              |currency:'CAD':'symbol-narrow':'1.0-0'}})</span>
+              | currency:'CAD':'symbol-narrow':'1.0-0'}})</span>
             <span *ngIf="fineReduction==='no'"><br /></span>
           </p>
         </span>
@@ -202,7 +207,8 @@
     <br />
   </section>
   <!-- JJ Decision (read only for normal staff - not staff-support) for Written Reasons -->
-  <div *ngIf="(type === 'ticket' || isViewOnly) && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !(isSSEditMode && jjDisputedCount)"
+  <div
+    *ngIf="(type === 'ticket' || isViewOnly) && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !(isSSEditMode && jjDisputedCount)"
     fxLayout="column" style="padding: 0 0.2rem;">
     <h3 style="padding-left: 0.2rem;">JJ decision</h3>
 
@@ -247,9 +253,10 @@
     </mat-label>
     <div class="section-grid-text" style="padding-bottom: 2rem !important;">{{ jjDisputedCount?.comments }}</div>
   </div>
-  
+
   <!-- JJ Decision (admin edit mode for support staff) for Written Reasons -->
-  <section *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && (isSSEditMode && jjDisputedCount)">
+  <section
+    *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && (isSSEditMode && jjDisputedCount)">
     <ng-container subHeader>
       <span class="count-text">
         <h3>{{ "label.jj_decision" | translate }}</h3>
@@ -261,7 +268,7 @@
       <div class="row">
         <label class="col-4">{{ "label.fine_calculation" | translate }}</label>
         <div class="col-8">
-          <mat-form-field appearance="outline">        
+          <mat-form-field appearance="outline">
             <input matInput formControlName="lesserOrGreaterAmount" currencyMask placeholder="Ex. $120.00">
           </mat-form-field>
         </div>
@@ -286,7 +293,8 @@
         <div class="col-8">
           <mat-form-field appearance="outline" class="datetime-picker">
             <!-- FIXME: This appears to be off by 1 day, likely a timezone issue. -->
-            <input matInput formControlName="revisedDueDate" [matDatetimepicker]="ttpPicker" autocomplete="false" placeholder="mm/dd/yyyy"/>
+            <input matInput formControlName="revisedDueDate" [matDatetimepicker]="ttpPicker" autocomplete="false"
+              placeholder="mm/dd/yyyy" />
             <mat-datetimepicker-toggle [for]="ttpPicker" matSuffix></mat-datetimepicker-toggle>
             <mat-datetimepicker #ttpPicker type="date" openOnFocus="true" timeInterval="5"> </mat-datetimepicker>
             <mat-hint>mm/dd/yyyy</mat-hint>
@@ -298,10 +306,11 @@
       <label>{{ "label.remarks" | translate }}</label>
       <div class="row textarea-row">
         <div class="col">
-          <mat-form-field appearance="outline">        
+          <mat-form-field appearance="outline">
             <textarea matInput formControlName="comments" maxlength="4000" rows="8"></textarea>
             <mat-hint>4000 characters</mat-hint>
-            <mat-error *ngIf="countForm.controls.comments.hasError('maxlength')">{{ "error.max_length" | translate }}4000</mat-error>
+            <mat-error *ngIf="countForm.controls.comments.hasError('maxlength')">{{ "error.max_length" | translate
+              }}4000</mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -309,7 +318,8 @@
   </section>
 
   <!-- JJ Latest Change Plea -->
-  <section [formGroup]="form" *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(isSSEditMode && jjDisputedCount)"
+  <section [formGroup]="form"
+    *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(isSSEditMode && jjDisputedCount)"
     style="padding: 0 0.2rem;">
     <br>
     <div class="row">
@@ -318,8 +328,8 @@
 
       </div>
       <div class="col-md-8" *ngIf="jjDisputedCount">
-        <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_content" 
-          style="width:75%; background:#fffee6" >
+        <mat-select class="section-grid-text" formControlName="latestPlea"
+          *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_content" style="width:75%; background:#fffee6">
           <mat-option [value]="LatestPlea.G">Guilty</mat-option>
           <mat-option [value]="LatestPlea.N">Not guilty</mat-option>
         </mat-select>
@@ -335,7 +345,7 @@
       </div>
       <div class="col-md-8" *ngIf="jjDisputedCount">
         <div *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_date_content ">
-          <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text" >
+          <input type="datetime-local" formControlName="latestPleaUpdateTs" class="section-grid-text latest-plea-text">
         </div>
         <ng-template #view_plea_date_content>
           <span class="section-grid-text">{{ jjDisputedCount?.latestPleaUpdateTs | date: "YYYY-MM-dd HH:mm" }}</span>
@@ -345,7 +355,7 @@
     <br>
     <hr style="margin: 0 0 0 0" />
   </section>
-  <br/>
+  <br />
 
   <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && (isSSEditMode && jjDisputedCount)">
     <form [formGroup]="countForm">
@@ -467,7 +477,7 @@
       </form>
     </div>
   </section>
-  
+
   <!-- Final disposition -->
   <section>
     <ng-container subHeader>
@@ -476,7 +486,8 @@
       </span>
     </ng-container>
     <!-- Final disposition input for court appeaances, form for Non Staff Support Edit mode -->
-    <form [formGroup]="form" novalidate *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(jjDisputedCount && isSSEditMode)">
+    <form [formGroup]="form" novalidate
+      *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance && !(jjDisputedCount && isSSEditMode)">
       <!-- Fine amount -->
       <div style="display: grid; grid-template-columns: 33% 33% 33%">
         <ng-container *ngIf="!isViewOnly">
@@ -513,11 +524,13 @@
           </span>
           <span class="section-jj-grid-cell">
             <p class="section-grid-header"><span *ngIf="fineReduction==='yes'">Includes surcharge</span></p>
-            <p class="section-grid-header"><span *ngIf="fineReduction==='no' || !fineReduction">&nbsp;<br /><br /></span>
+            <p class="section-grid-header"><span
+                *ngIf="fineReduction==='no' || !fineReduction">&nbsp;<br /><br /></span>
             </p>
             <p class="section-jj-grid-text">
               <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
-                (change)="updateInclSurcharge($event.value)" *ngIf="fineReduction==='yes'" [disabled]="!jjDisputedCount">
+                (change)="updateInclSurcharge($event.value)" *ngIf="fineReduction==='yes'"
+                [disabled]="!jjDisputedCount">
                 <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
                 <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
               </mat-radio-group>
@@ -728,7 +741,7 @@
         <div class="row">
           <label class="col-4">{{ "label.fine_calculation" | translate }}</label>
           <div class="col-8">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <input matInput formControlName="lesserOrGreaterAmount" currencyMask placeholder="Ex. $120.00">
             </mat-form-field>
           </div>
@@ -753,13 +766,14 @@
           <div class="col-8">
             <mat-form-field appearance="outline" class="datetime-picker">
               <!-- FIXME: This appears to be off by 1 day, likely a timezone issue. -->
-              <input matInput formControlName="revisedDueDate" [matDatetimepicker]="ttpPicker" autocomplete="false" placeholder="mm/dd/yyyy"/>
+              <input matInput formControlName="revisedDueDate" [matDatetimepicker]="ttpPicker" autocomplete="false"
+                placeholder="mm/dd/yyyy" />
               <mat-datetimepicker-toggle [for]="ttpPicker" matSuffix></mat-datetimepicker-toggle>
               <mat-datetimepicker #ttpPicker type="date" openOnFocus="true" timeInterval="5"> </mat-datetimepicker>
               <mat-hint>mm/dd/yyyy</mat-hint>
             </mat-form-field>
           </div>
-        </div>   
+        </div>
       </form>
 
       <form [formGroup]="countRoPForm">
@@ -767,42 +781,45 @@
         <label>{{ "label.ss_probation_duration" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="ssProbationDuration" maxlength="500" rows="3"></textarea>
               <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.ssProbationDuration.hasError('maxlength')">{{ "error.max_length" | translate }}500</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.ssProbationDuration.hasError('maxlength')">{{ "error.max_length" |
+                translate }}500</mat-error>
             </mat-form-field>
           </div>
         </div>
-        
+
         <!-- Suspended Sentence Probation Conditions -->
         <label>{{ "label.ss_probation_conditions" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="3"></textarea>
               <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.ssProbationConditions.hasError('maxlength')">{{ "error.max_length" | translate }}500</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.ssProbationConditions.hasError('maxlength')">{{ "error.max_length"
+                | translate }}500</mat-error>
             </mat-form-field>
           </div>
         </div>
-        
+
         <!-- Jail Duration -->
         <label>{{ "label.jail_duration" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="jailDuration" maxlength="500" rows="3"></textarea>
               <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.jailDuration.hasError('maxlength')">{{ "error.max_length" | translate }}500</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.jailDuration.hasError('maxlength')">{{ "error.max_length" |
+                translate }}500</mat-error>
             </mat-form-field>
           </div>
         </div>
-        
+
         <!-- Jail Intermittent -->
         <div class="row">
           <label class="col-4">{{ "label.jail_intermittent" | translate }}</label>
-          <div class="col-8">    
+          <div class="col-8">
             <mat-checkbox formControlName="_jailIntermittent"></mat-checkbox>
           </div>
         </div>
@@ -811,10 +828,11 @@
         <label>{{ "label.probation_duration" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="probationDuration" maxlength="500" rows="3"></textarea>
               <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.probationDuration.hasError('maxlength')">{{ "error.max_length" | translate }}500</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.probationDuration.hasError('maxlength')">{{ "error.max_length" |
+                translate }}500</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -823,10 +841,11 @@
         <label>{{ "label.probation_conditions" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="probationConditions" maxlength="1000" rows="5"></textarea>
               <mat-hint>1000 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.probationConditions.hasError('maxlength')">{{ "error.max_length" | translate }}1000</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.probationConditions.hasError('maxlength')">{{ "error.max_length" |
+                translate }}1000</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -835,10 +854,11 @@
         <label>{{ "label.driving_prohibition" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="drivingProhibition" maxlength="500" rows="3"></textarea>
               <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.drivingProhibition.hasError('maxlength')">{{ "error.max_length" | translate }}500</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.drivingProhibition.hasError('maxlength')">{{ "error.max_length" |
+                translate }}500</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -847,42 +867,43 @@
         <label>{{ "label.driving_prohibition_mva" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="drivingProhibitionMVASection" maxlength="240" rows="3"></textarea>
               <mat-hint>240 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.drivingProhibitionMVASection.hasError('maxlength')">{{ "error.max_length" | translate }}240</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.drivingProhibitionMVASection.hasError('maxlength')">{{
+                "error.max_length" | translate }}240</mat-error>
             </mat-form-field>
           </div>
         </div>
-        
+
         <!-- Dismissed -->
         <div class="row">
           <label class="col-4">{{ "label.dismissed" | translate }}</label>
-          <div class="col-8">    
+          <div class="col-8">
             <mat-checkbox formControlName="_dismissed"></mat-checkbox>
           </div>
         </div>
-        
+
         <!-- For Want of Prosection -->
         <div class="row">
           <label class="col-4">{{ "label.for_want_of_prosection" | translate }}</label>
-          <div class="col-8">    
+          <div class="col-8">
             <mat-checkbox formControlName="_forWantOfProsecution"></mat-checkbox>
           </div>
         </div>
-        
+
         <!-- Withdrawn -->
         <div class="row">
           <label class="col-4">{{ "label.withdrawn" | translate }}</label>
-          <div class="col-8">    
+          <div class="col-8">
             <mat-checkbox formControlName="_withdrawn"></mat-checkbox>
           </div>
         </div>
-        
+
         <!-- Abatement -->
         <div class="row">
           <label class="col-4">{{ "label.abatement" | translate }}</label>
-          <div class="col-8">    
+          <div class="col-8">
             <mat-checkbox formControlName="_abatement"></mat-checkbox>
           </div>
         </div>
@@ -891,10 +912,11 @@
         <label>{{ "label.stay_of_proceedings" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="stayOfProceedingsBy" maxlength="500" rows="3"></textarea>
               <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.stayOfProceedingsBy.hasError('maxlength')">{{ "error.max_length" | translate }}500</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.stayOfProceedingsBy.hasError('maxlength')">{{ "error.max_length" |
+                translate }}500</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -903,10 +925,11 @@
         <label>{{ "label.other" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="other" maxlength="500" rows="3"></textarea>
               <mat-hint>500 characters</mat-hint>
-              <mat-error *ngIf="countRoPForm.controls.other.hasError('maxlength')">{{ "error.max_length" | translate }}500</mat-error>
+              <mat-error *ngIf="countRoPForm.controls.other.hasError('maxlength')">{{ "error.max_length" | translate
+                }}500</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -917,10 +940,11 @@
         <label>{{ "label.remarks" | translate }}</label>
         <div class="row textarea-row">
           <div class="col">
-            <mat-form-field appearance="outline">        
+            <mat-form-field appearance="outline">
               <textarea matInput formControlName="comments" maxlength="4000" rows="8"></textarea>
               <mat-hint>4000 characters</mat-hint>
-              <mat-error *ngIf="countForm.controls.comments.hasError('maxlength')">{{ "error.max_length" | translate }}4000</mat-error>
+              <mat-error *ngIf="countForm.controls.comments.hasError('maxlength')">{{ "error.max_length" | translate
+                }}4000</mat-error>
             </mat-form-field>
           </div>
         </div>
