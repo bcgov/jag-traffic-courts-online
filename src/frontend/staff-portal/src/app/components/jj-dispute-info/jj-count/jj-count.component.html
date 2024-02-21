@@ -8,14 +8,10 @@
     </ng-container>
     <form>
       <div style="display: grid; grid-template-columns: auto auto">
-        <span class="section-grid-cell">
+        <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">{{ "label.plea" | translate }}</p>
           <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.plea === Plea.G ? 
             'I agree I committed the offence' : 'I do not agree I committed the offence' ) : '&nbsp;' }}</p>          
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">&nbsp;</p>
-          <p class="section-grid-text">&nbsp;</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Offence Date</p>
