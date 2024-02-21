@@ -10,7 +10,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<io.github.bonigarcia.version>5.6.2</io.github.bonigarcia.version>
+		<io.github.bonigarcia.version>5.6.3</io.github.bonigarcia.version>
 		<org.seleniumhq.selenium.version>4.11.0</org.seleniumhq.selenium.version>
 		<com.microsoft.sqlserver.version>6.4.0.jre8</com.microsoft.sqlserver.version>
 		<junit.version>4.13.1</junit.version>

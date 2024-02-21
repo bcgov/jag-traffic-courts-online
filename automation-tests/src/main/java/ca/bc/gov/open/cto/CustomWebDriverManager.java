@@ -99,7 +99,17 @@ public class CustomWebDriverManager {
 
 			EdgeOptions options = new EdgeOptions();
 			// Use the addArguments method for configuring headless
-			// options.addArguments("headless");
+			options.addArguments("--disable-notifications"); //disables 3rd party notifications
+			options.addArguments("--disable-extensions"); //disables 3rd party extensions
+			options.addArguments("--no-sandbox");
+			options.addArguments("--headless");
+			options.addArguments("--window-size=1920,1080");
+			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("--verbose");
+			options.addArguments("--remote-allow-origins=*");
+			options.addArguments("--ignore-ssl-errors=yes");
+			options.addArguments("--ignore-certificate-errors");
+			options.addArguments("--disable-dev-shm-usage");
 			WebDriverManager.iedriver().setup();
 			WebDriver driver = new EdgeDriver(options);
 			driver.manage().window();

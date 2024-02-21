@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 public class Config {
 	
-	public static final String 		SELECTED_DRIVER = Constants.CHROME_DRIVER;
+//	public static final String 		SELECTED_DRIVER = Constants.CHROME_DRIVER;
 	//public static final String 		SELECTED_DRIVER = Constants.FIREFOX_DRIVER;
-	//public static final String 		SELECTED_DRIVER = Constants.EDGE_DRIVER;
+	public static final String 		SELECTED_DRIVER = Constants.EDGE_DRIVER;
 
 	public static final String		ENVIROMENT		= Constants.DEV;
 //	public static final String		ENVIROMENT		= Constants.TST;

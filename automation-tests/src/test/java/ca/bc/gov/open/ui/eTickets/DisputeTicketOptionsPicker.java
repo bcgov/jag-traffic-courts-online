@@ -87,9 +87,10 @@ public class DisputeTicketOptionsPicker {
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("scroll(0, 450);");
 		Thread.sleep(1000);
-		new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-				ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Dispute your ticket ')]")))
-				.click();
+		WebElement element1 = driverWait.until(ExpectedConditions.presenceOfElementLocated(
+				By.xpath("//*[contains(text(), ' Dispute your ticket ')]")));
+		jse.executeScript("arguments[0].click();", element1);
+
 		Thread.sleep(1000);
 
 		new WebDriverWait(driver, Duration.ofSeconds(10)).until(

@@ -1,7 +1,6 @@
 package ca.bc.gov.open.ui.eTickets;
 
-import java.time.Duration;
-
+import ca.bc.gov.open.cto.CustomWebDriverManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -11,7 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import ca.bc.gov.open.cto.CustomWebDriverManager;
+import java.time.Duration;
 
 public class SubmitToStaffWorkbenchReject {
 
@@ -64,10 +63,13 @@ public class SubmitToStaffWorkbenchReject {
 
 		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions
-						.presenceOfElementLocated(By.xpath("//span[contains(text(), 'REJECTED')]")))
+						.presenceOfElementLocated(By.xpath("//mat-option//span[contains(text(), 'REJECTED')]")))
 				.click();
 
-		Thread.sleep(2000);
+//		JavascriptExecutor js = (JavascriptExecutor) driver;
+//		WebElement element1 = driverWait.until(ExpectedConditions.presenceOfElementLocated(
+//				By.xpath("//mat-option/span[contains(text(), 'REJECTED')]")));
+//		js.executeScript("arguments[0].click();", element1);
 
 		new WebDriverWait(driver, Duration.ofSeconds(50))
 				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//td/span[contains(text(), 'REJECTED')]")));
