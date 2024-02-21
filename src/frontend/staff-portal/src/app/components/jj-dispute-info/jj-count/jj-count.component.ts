@@ -150,6 +150,7 @@ export class JJCountComponent implements OnInit, OnChanges {
         this.jjDisputedCount.lesserOrGreaterAmount = null;
         this.jjDisputedCount.totalFineAmount = null;
         this.jjDisputedCount.dueDate = null;
+        this.jjDisputedCount.revisedDueDate = null;
       }
 
       // initialize form, radio buttons
@@ -159,7 +160,6 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
-      this.form.controls.revisedDueDate.setValue(this.jjDisputedCount.revisedDueDate);
       // Make sure the date hint label is shown if there is a revised date/time
       this.showDateHint = this.timeToPay === "yes";
 
