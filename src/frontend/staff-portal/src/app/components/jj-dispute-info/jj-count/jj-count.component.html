@@ -6,11 +6,16 @@
         <h3>Count {{ count }} </h3>
       </span>
     </ng-container>
-    <form [formGroup]="countForm">
+    <form>
       <div style="display: grid; grid-template-columns: auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">{{ "label.plea" | translate }}</p>
-          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.plea === Plea.G ? 'Guilty' : 'Not Guilty' ) : '&nbsp;' }}</p>          
+          <p class="section-grid-text">{{ jjDisputedCount ? (jjDisputedCount.plea === Plea.G ? 
+            'I agree I committed the offence' : 'I do not agree I committed the offence' ) : '&nbsp;' }}</p>          
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-grid-text">&nbsp;</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Offence Date</p>
@@ -313,7 +318,7 @@
     <br>
     <div class="row">
       <div class="col-md-4">
-        <span class="section-grid-header">Change Plea</span>
+        <span class="section-grid-header">Plea</span>
       </div>
       <div class="col-md-8" *ngIf="jjDisputedCount">
         <mat-select class="section-grid-text" formControlName="latestPlea" *ngIf="type !== 'ticket' && !isViewOnly; else view_plea_content" 
