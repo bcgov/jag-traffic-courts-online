@@ -118,12 +118,17 @@
       "no_witness": "I do NOT intend to call a witness",
       "note": "If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable.",
       "represented_by_lawyer": "I intend to be represented by a lawyer or agent in court.",
-      "represented_by_lawyer_desc": "Enter lawyer contact details below.",
+      "represented_by_lawyer_desc": "Enter contact details below.",
       "requests": "Please indicate if the following apply",
       "sub_heading": "The following questions apply to ALL counts on this ticket that are currently under dispute. If any of these are required for any count in the dispute, please select them.",
       "witness": "I intend to call a witness",
       "witness_note1": "If you are calling witnesses please keep the following information in mind:",
-      "witness_note2": "You are responsible for ensuring they are aware of the hearing date. If necessary, you may change the number of witnesses who attend the court hearing."
+      "witness_note2": "You are responsible for ensuring they are aware of the hearing date. If necessary, you may change the number of witnesses who attend the court hearing.",
+      "name_law_agency": "Name of law firm or agency",
+      "full_name_lawyer_agent": "Full name of lawyer or agent",
+      "address_law_agency": "Address of law firm or agency",
+      "lawyer_agent_phone_number": "Lawyer or agent phone number",
+      "lawyer_agent_email": "Lawyer or agent email"
     },
     "overview": {
       "address_information": "Address",
