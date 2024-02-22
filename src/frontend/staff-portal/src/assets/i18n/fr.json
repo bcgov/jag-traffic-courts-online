@@ -202,6 +202,8 @@
     "pay_balance": "Payer le solde du billet de",
     "phone_number": "N° de Telephone",
     "plea": "Plaidoyer",
+    "plea_guilty": "Je suis d'accord, j'ai commis l'infraction",
+    "plea_not_guilty": "Je ne suis pas d'accord, j'ai commis l'infraction",
     "postal_code": "Code Postal",
     "postal_zip": "Code Postal",
     "probation_duration": "Durée de la probation",

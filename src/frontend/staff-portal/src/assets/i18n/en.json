@@ -203,6 +203,8 @@
     "pay_balance": "Pay Ticket Balance of",
     "phone_number": "Phone Number",
     "plea": "Plea",
+    "plea_guilty": "I agree I committed the offence",
+    "plea_not_guilty": "I do not agree I committed the offence",
     "postal_code": "Postal Code",
     "postal_zip": "Postal/Zip Code",
     "probation_duration": "Probation Duration",

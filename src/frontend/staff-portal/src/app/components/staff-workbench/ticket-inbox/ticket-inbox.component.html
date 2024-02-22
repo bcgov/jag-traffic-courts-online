@@ -1,5 +1,5 @@
 <app-table-filters [tabIndex]="tabIndex" [tableFilterKeys]="tableFilterKeys" [statusFilterOptions]="statusFilterOptions"
-  (onFilterChanged)="onApplyFilter($event)">
+  [statusFilterDefaultText]="'NEW & VALIDATED'" (onFilterChanged)="onApplyFilter($event)">
   <ng-container recordCount>
     <div fxFlex fxFlex.gt-md="20">
       <div class="vcenter">
