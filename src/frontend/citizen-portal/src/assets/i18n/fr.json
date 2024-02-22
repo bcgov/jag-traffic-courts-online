@@ -118,12 +118,17 @@
       "no_witness": "Je n'ai PAS l'intention d'appeler un témoin",
       "note": "Si le défendeur ou l'agent du défendeur n'assiste pas à l'audience du tribunal, le tribunal traitera le ticket de violation comme non contesté, la ou les condamnations pour les allégations seront enregistrées contre le dossier du contestant, et le ticket prescrit sera inscrit. montant(s) deviendra immédiatement exigible et payable.",
       "represented_by_lawyer": "J'ai l'intention d'être représenté par un avocat ou un agent devant le tribunal.",
-      "represented_by_lawyer_desc": "Entrez les coordonnées de l’avocat ci-dessous.",
+      "represented_by_lawyer_desc": "Entrez les coordonnées ci-dessous.",
       "requests": "Veuillez indiquer si les conditions suivantes s'appliquent",
       "sub_heading": "Les questions suivantes s'appliquent à TOUTES les infractions pour ce ticket qui sont actuellement en litige. Si l'un de ces éléments est requis pour un décompte dans le litige, veuillez les sélectionner.",
       "witness": "J'ai l'intention d'appeler un témoin",
       "witness_note1": "Si vous appelez des témoins, veuillez garder les informations suivantes à l'esprit :",
-      "witness_note2": "Vous avez la responsabilité de vous assurer qu'ils connaissent la date de l'audience. Si nécessaire, vous pouvez modifier le nombre de témoins présents à l'audience."
+      "witness_note2": "Vous avez la responsabilité de vous assurer qu'ils connaissent la date de l'audience. Si nécessaire, vous pouvez modifier le nombre de témoins présents à l'audience.",
+      "name_law_agency": "Nom du cabinet ou de l'agence d'avocats",
+      "full_name_lawyer_agent": "Nom complet de l'avocat ou de l'agent",
+      "address_law_agency": "Adresse du cabinet ou de l'agence d'avocats",
+      "lawyer_agent_phone_number": "Numéro de téléphone de l'avocat ou de l'agent",
+      "lawyer_agent_email": "Courriel de l'avocat ou de l'agent"
     },
     "overview": {
       "additional_information": "Informations Complémentaires",
