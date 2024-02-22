@@ -1,5 +1,5 @@
 {
   "publicModelId": "ViolationTicket",
-  "internalModelId": "89ef73bc-13bd-4505-a814-0c4093d08cdb",
-  "description": "A composite model of v1.0 (VT1) and v2.1 (VT2)"
+  "internalModelId": "0ada3932-3bea-472b-a1ea-7dd757c7209a",
+  "description": "A composite model of 2022.04 (VT1) and 2023.09 (VT2) models"
 }
