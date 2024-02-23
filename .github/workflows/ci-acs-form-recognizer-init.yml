@@ -1,12 +1,12 @@
 name: Build Form Recognizer Layout Image and Push to Openshift Registry
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
     paths:
-      - 'tools/form-recognizer/**'
-      - '.github/workflows/ci-azure-cognitive-service-layout.yml'
+      - 'tools/form-recognizer/3.0/**'
+      - '.github/workflows/ci-acs-form-recognizer-init.yml'
 jobs:
-  build-azure-custom-layout:
+  build-acs-form-recognizer-init:
     runs-on: ubuntu-20.04
     environment: Development
     steps:
@@ -24,9 +24,11 @@ jobs:
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-          CONTEXT: ./tools/form-recognizer
-          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/form-recognizer-layout
+          CONTEXT: ./tools/form-recognizer/3.0
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/acs-form-recognizer-init
         run: |
           git_sha=$(git rev-parse --short HEAD)
-          docker build --tag ${IMAGE}:${git_sha} -f ${CONTEXT}/Dockerfile.layout ${CONTEXT}
+          docker build --tag ${IMAGE}:${git_sha} -f ${CONTEXT}/Dockerfile.initModels ${CONTEXT}
           docker push ${IMAGE}:${git_sha}
+          docker tag ${IMAGE}:${git_sha} ${IMAGE}:latest
+          docker push ${IMAGE}:latest
