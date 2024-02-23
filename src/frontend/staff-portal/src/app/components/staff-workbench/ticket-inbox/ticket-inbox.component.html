@@ -42,7 +42,7 @@
       <td mat-cell *matCellDef="let element">
         <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
           *ngIf="!element.userAssignedTo || element.userAssignedTo === userProfile.idir"><a
-            (click)="backWorkbench(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
+            (click)="backWorkbench(element)" href="javascript:void(0)">{{ element.ticketNumber }}</a></span>
         <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
           *ngIf="element.userAssignedTo && element.userAssignedTo !== userProfile.idir">{{ element.ticketNumber
           }}</span>
