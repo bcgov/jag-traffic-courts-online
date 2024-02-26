@@ -32,6 +32,9 @@ public interface DisputeRepository {
 
 	/** Fetch all records that match by Dispute.ticketNumber */
 	public List<DisputeResult> findByTicketNumber(String ticketNumber);
+	
+	/** Fetch all records which do not have the specified status and have a matching Dispute.ticketNumber. */
+	public List<DisputeResult> findByStatusNotAndTicketNumber(DisputeStatus excludeStatus, String ticketNumber);
 
 	/** Deletes all entities managed by the repository. */
 	public void deleteAll();

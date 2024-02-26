@@ -107,15 +107,18 @@ public class DisputeController {
 	}
 
 	/**
-	 * GET endpoint that finds Dispute statuses by TicketNumber and IssuedTime.
+	 * GET endpoint that finds Dispute statuses by TicketNumber and IssuedTime, TicketNumber and Excluded Status or noticeOfDisputeGuid if specified.
 	 *
-	 * @param ticketNumber of the Dispute.ticketNumber to search for
-	 * @param issuedTime the time portion of the Dispute.issuedTs field
-	 * @return {@link Dispute}
-	 *
+	 * @param ticketNumber The Dispute.ticketNumber to search for (of the format XX00000000). This is optional.
+	 * @param issuedTime The time portion of the Dispute.issuedTs field to search for (of the format HH:mm). Time is in UTC. This is optional.
+	 * @param noticeOfDisputeGuid The noticeOfDisputeGuid of the Dispute to retrieve. This is optional.
+	 * @param excludeStatus If specified, will retrieve records which do not have the specified status. This is optional.
+	 * @return {@link ResponseEntity<List<DisputeResult>>} A response entity containing a list of DisputeResults and the HTTP status.
+	 * @throws IllegalArgumentException If either no parameters are specified, or if issuedTime is specified without ticketNumber.
+	 * 
 	 * LDAME 2023-03-16 allowed search by ticket number only to be called when submitting to arc
 	 */
-	@Operation(summary = "Finds Dispute statuses by TicketNumber and IssuedTime or noticeOfDisputeGuid if specified.")
+	@Operation(summary = "Finds Dispute statuses by TicketNumber and IssuedTime, TicketNumber and Excluded Status or noticeOfDisputeGuid if specified.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok."),
 		@ApiResponse(responseCode = "400", description = "Bad Request, check parameters."),
@@ -133,7 +136,10 @@ public class DisputeController {
 			Date issuedTime,
 			@RequestParam(required = false)
 			@Parameter(description = "The noticeOfDisputeGuid of the Dispute to retreive.")
-			String noticeOfDisputeGuid) {
+			String noticeOfDisputeGuid,
+			@RequestParam(required = false)
+			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "REJECTED")
+			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes/status?ticketNumber={}&issuedTime={}&noticeOfDisputeGuid={} called",
 				StructuredArguments.value("ticketNumber", ticketNumber),
 				issuedTime == null ? "" : StructuredArguments.value("issuedTime", DateFormatUtils.format(issuedTime, DateUtil.TIME_FORMAT)),
@@ -145,7 +151,7 @@ public class DisputeController {
 		else if (StringUtils.isBlank(ticketNumber) && issuedTime != null) {
 			throw new IllegalArgumentException("If issuedTime is specified, so must be ticketNumber.");
 		}
-		List<DisputeResult> results = disputeService.findDisputeStatuses(ticketNumber, issuedTime, noticeOfDisputeGuid);
+		List<DisputeResult> results = disputeService.findDisputeStatuses(ticketNumber, issuedTime, noticeOfDisputeGuid, excludeStatus);
 		logger.debug("  found {} record(s).", StructuredArguments.value("numberOfRecordsFound", results.size()));
 		return new ResponseEntity<List<DisputeResult>>(results, HttpStatus.OK);
 	}

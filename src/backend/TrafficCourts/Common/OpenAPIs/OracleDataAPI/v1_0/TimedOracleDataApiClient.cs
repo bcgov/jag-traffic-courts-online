@@ -305,13 +305,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
             }
         }
 
-        public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid)
+        public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ExcludeStatus2? excludeStatus)
         {
             using var operation = _metrics.BeginOperation();
 
             try
             {
-                var result = await _inner.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid).ConfigureAwait(false);
+                var result = await _inner.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, excludeStatus).ConfigureAwait(false);
                 return result;
             }
             catch (global::System.Exception exception)
@@ -321,13 +321,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0
             }
         }
 
-        public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, System.Threading.CancellationToken cancellationToken)
+        public async global::System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string issuedTime, string noticeOfDisputeGuid, TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ExcludeStatus2? excludeStatus, System.Threading.CancellationToken cancellationToken)
         {
             using var operation = _metrics.BeginOperation();
 
             try
             {
-                var result = await _inner.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, cancellationToken).ConfigureAwait(false);
+                var result = await _inner.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, excludeStatus, cancellationToken).ConfigureAwait(false);
                 return result;
             }
             catch (global::System.Exception exception)

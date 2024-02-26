@@ -31,10 +31,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
             string? ticketNumber = context.Message.TicketNumber;
             string? issuedTime = context.Message.IssuedTime;
             Guid? noticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid;
+            ExcludeStatus2? excludeStatus = context.Message.ExcludeStatus;
 
             try
             {
-                IList<DisputeResult> searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, context.CancellationToken)
+                IList<DisputeResult> searchResult = await _oracleDataApiService.SearchDisputeAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, excludeStatus, context.CancellationToken)
                     .ConfigureAwait(false);
 
                 if (searchResult.Count == 0)

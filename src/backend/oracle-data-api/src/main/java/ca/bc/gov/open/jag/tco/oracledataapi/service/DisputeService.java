@@ -396,10 +396,19 @@ public class DisputeService {
 	}
 
 	/**
-	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs, or by noticeOfDisputeGuid if specified.
-	 * @param noticeOfDisputeGuid
+	 * This method is used to find all DisputeResult records based on the given parameters. 
+	 * It primarily matches records by Dispute.ticketNumber and the time portion of the Dispute.issuedTs. 
+	 * However, if a noticeOfDisputeGuid is specified, it prioritizes this for the matching.
+	 * If none of these are provided, it will find by ticketNumber only.
+	 * If an excludeStatus is provided, it will find all records excluding the given status.
+	 * 
+	 * @param ticketNumber the ticket number to match
+	 * @param issuedTime the issued time to match
+	 * @param noticeOfDisputeGuid the Guid of the notice of dispute, if this is specified, it will be used for matching
+	 * @param excludeStatus the status to exclude while finding
+	 * @return a list of DisputeResult records that match the given parameters
 	 */
-	public List<DisputeResult> findDisputeStatuses(String ticketNumber, Date issuedTime, String noticeOfDisputeGuid) {
+	public List<DisputeResult> findDisputeStatuses(String ticketNumber, Date issuedTime, String noticeOfDisputeGuid, DisputeStatus excludeStatus) {
 		List<DisputeResult> disputeResults = new ArrayList<DisputeResult>();
 
 		// if noticeOfDisputeGuid is specified, use that
@@ -414,11 +423,12 @@ public class DisputeService {
 				issuedTime = dispute.getIssuedTs();
 			}
 		}
-		// otherwise, find by ticketNumber and time
 		else if (issuedTime != null) {
 			disputeResults.addAll(disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime));
 		}
-
+		else if (excludeStatus != null) {
+			disputeResults.addAll(disputeRepository.findByStatusNotAndTicketNumber(excludeStatus, ticketNumber));
+		}
 		else {
 			disputeResults.addAll(disputeRepository.findByTicketNumber(ticketNumber));
 		}

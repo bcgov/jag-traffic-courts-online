@@ -115,7 +115,14 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<DisputeResult> findByTicketNumber(String ticketNumber) {
-		ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(null, null, ticketNumber, null,
+		return findByStatusNotAndTicketNumber(null, ticketNumber);
+	}
+	
+	@Override
+	public List<DisputeResult> findByStatusNotAndTicketNumber(DisputeStatus excludeStatus, String ticketNumber) {
+		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
+		
+		ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(null, statusShortName, ticketNumber, null,
 				null);
 		List<Dispute> extractedDisputes = extractDisputes(response);
 
