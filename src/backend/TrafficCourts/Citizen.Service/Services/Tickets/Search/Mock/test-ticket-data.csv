@@ -1,4 +1,7 @@
 ﻿invoice_number,pbc_ref_number,party_number,party_name,account_number,site_number,cust_trx_type,term_due_date,total,amount_due,attribute1,attribute2,attribute3,attribute4,evt_form_number,act,section_number
+EA020004601,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,139,139,Speed against area sign,,2022-05-08,n/a,,MVA,146(5)
+EA020004602,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,109,109,Permit passenger without seatbelt,,2022-02-08,n/a,,MVA,220(6)
+EA020004603,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,368,368,Using electronic device while driving,,2022-05-08,n/a,,MVA,214.2(1)
 EA058836243,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-04-09T12:02,173,173,Fail to slow down or move over near stopped official vehicle,,2022-04-09,,,MVA,47.02
 AW201208803,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T16:16,173,173,Fail to slow down or move over near stopped official vehicle,,2022-05-08,,,MVA,47.02
 EA019454402,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T19:44,253,253,Disobey construction signs,,2022-05-08,,,MVA,140
@@ -38,7 +41,6 @@ SG008562631,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T15:58,368,36
 SG008562971,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T15:18,368,368,Speed in municipality if the speed limit is exceeded by 41 km/hr to 60 km/hr,,2022-05-08,,,MVA,146(1)
 SG008522181,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T08:26,368,368,Speed in municipality if the speed limit is exceeded by 41 km/hr to 60 km/hr,,2022-05-08,,,MVA,146(1)
 SG008561271,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-03-23T13:03,368,368,Speed in municipality if the speed limit is exceeded by 41 km/hr to 60 km/hr,,2022-03-23,,,MVA,146(1)
-EA020004601,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,139,139,Speed against area sign,,2022-05-08,n/a,,MVA,146(5)
 EA031485992,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T17:16,109,109,Change lanes without signal,,2022-05-08,,,MVA,151(c)
 AJ201092462,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T13:06,109,109,Change lanes without signal,,2022-05-08,,,MVA,151(c)
 EA021155221,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T11:28,109,109,Slow moving in wrong lane,,2022-05-08,,,MVA,151(g)
@@ -55,10 +57,8 @@ EA022166552,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T11:11,109,10
 EA022166551,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T11:11,138,138,Ride motorcycle without required helmet,,2022-05-08,,,MVA,194(3)
 EA022166553,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T11:11,276,276,Obstruct a peace officer,,2022-05-08,,,MVA,194(9)
 EA056322011,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T18:06,368,368,Use an electronic device while driving in violation of driver's licence restriction,,2022-05-08,,,MVA,214.2(1)
-EA020004603,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,368,368,Using electronic device while driving,,2022-05-08,n/a,,MVA,214.2(1)
 EA058836241,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-04-09T12:02,368,368,Using electronic device while driving,,2022-04-09,,,MVA,214.2(1)
 AW201208801,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T16:16,368,368,Using electronic device while driving,,2022-05-08,,,MVA,214.2(1)
-EA020004602,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T09:54,109,109,Permit passenger without seatbelt,,2022-02-08,n/a,,MVA,220(6)
 EA045589661,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-04-08T12:13,109,109,Fail to display ""L"" sign in violation of driver's licence condition",,2022-04-08,,,MVAR,30.10(2)
 AB210085473,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-05-08T13:06,500,500,Illegal use or possession of driver's licence,,2022-05-08,,,MVA,70(1)(b)
 EA045589662,n/a,n/a,n/a,n/a,n/a,Traffic Violation Ticket,2022-04-08T12:13,109,109,Unnecessary noise,,2022-04-08,,,MVAR,7A.01
