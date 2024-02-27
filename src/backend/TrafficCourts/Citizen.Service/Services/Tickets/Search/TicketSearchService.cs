@@ -139,7 +139,7 @@ public class TicketSearchService : ITicketSearchService
             // Check if a dispute has been submitted before for the given ticket number by verfying any Dispute exists associated to the provided ticket number
             SearchDisputeRequest searchRequest = new() { TicketNumber = ticketNumber, ExcludeStatus = ExcludeStatus2.REJECTED };
             Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
-
+            
             var searchResponse = response.Message;
 
             if (searchResponse == null)
