@@ -1,4 +1,5 @@
 using MassTransit;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Trace;
 using System.Reflection;
@@ -7,12 +8,14 @@ using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis;
+using ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson;
 
 namespace TrafficCourts.Staff.Service;
 
@@ -31,9 +34,10 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        }, meters: ["MassTransit", "ComsClient", OracleDataApiOperationMetrics.MeterName]);
+        },
+        meters: ["MassTransit", "ComsClient", OracleDataApiOperationMetrics.MeterName]);
 
-        builder.AddRedis();
+        AddFusionCache(builder.Services, builder.AddRedis());
 
         builder.Services.AddTransient<UserIdentityProviderHandler>();
         builder.Services.AddHttpContextAccessor();
@@ -57,24 +61,24 @@ public static class Startup
         builder.Services.AddAuthorization(builder.Configuration);
 
         builder.Services.AddKeycloakAdminApiClient(builder.Configuration);
-        builder.Services.AddTransient<IKeycloakService, KeycloakService>();
 
-        // Add DisputeService
-        builder.Services.AddTransient<IDisputeService, DisputeService>();
-        builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
-        builder.Services.AddTransient<IEmailHistoryService, EmailHistoryService>();
-        builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
-        builder.Services.AddTransient<IStaffDocumentService, StaffDocumentService>();
         builder.Services.AddTransient<IDisputeLockService, DisputeLockService>();
+        builder.Services.AddTransient<IDisputeService, DisputeService>();
+        builder.Services.AddTransient<IEmailHistoryService, EmailHistoryService>();
+        builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
+        builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
+        builder.Services.AddTransient<IKeycloakService, KeycloakService>();
+        builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
+        builder.Services.AddTransient<IStaffDocumentService, StaffDocumentService>();
 
         // staff service should not be creating emails, should send messages for workflow
         builder.Services.AddEmailTemplates();
 
-        builder.Services.AddLanguageLookup();
-        builder.Services.AddStatuteLookup();
         builder.Services.AddAgencyLookup();
-        builder.Services.AddProvinceLookup();
         builder.Services.AddCountryLookup();
+        builder.Services.AddLanguageLookup();
+        builder.Services.AddProvinceLookup();
+        builder.Services.AddStatuteLookup();
 
         // Add COMS (Object Management Service) Client
         builder.Services.AddObjectManagementService("COMS");
@@ -86,6 +90,31 @@ public static class Startup
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
         AddSwagger(builder, assembly, logger);
+    }
+
+    private static void AddFusionCache(IServiceCollection services, string redisConnectionString)
+    {
+        services.AddMemoryCache();
+
+        var builder = services.AddFusionCache()
+            .WithDefaultEntryOptions(new FusionCacheEntryOptions
+            {
+                // see https://github.com/ZiggyCreatures/FusionCache/blob/main/docs/StepByStep.md#3-fail-safe-more
+            })
+            .WithCacheKeyPrefix("staff:")
+            .WithSerializer(new FusionCacheSystemTextJsonSerializer());
+            ;
+
+        if (!string.IsNullOrEmpty(redisConnectionString))
+        {
+            // ADD REDIS DISTRIBUTED CACHE SUPPORT
+            builder.WithDistributedCache(
+                new RedisCache(new RedisCacheOptions() { Configuration = redisConnectionString })
+            )
+            .WithBackplane(
+                new RedisBackplane(new RedisBackplaneOptions() { Configuration = redisConnectionString })
+            );
+        }
     }
 
     /// <summary>

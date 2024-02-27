@@ -16,9 +16,103 @@
           {
             "name": "excludeStatus",
             "in": "query",
-            "description": "",
+            "description": "The status to exclude",
             "schema": {
               "$ref": "#/components/schemas/ExcludeStatus"
+            }
+          },
+          {
+            "name": "ticket",
+            "in": "query",
+            "description": "The optional ticket number to search on. The value will be searched using contains.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "surname",
+            "in": "query",
+            "description": "The optional surname to search on. The value will be searched using contains.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "The optional status to find.",
+            "schema": {
+              "$ref": "#/components/schemas/DisputeStatus"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "The optional from date to search. The submitted date will be filtered where greater or equal to this value.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "thru",
+            "in": "query",
+            "description": "The optional thru date to search. The submitted date will be filtered where less than or equal to this value.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "courtHouse",
+            "in": "query",
+            "description": "The optional court house location to search. The value will be searched using contains.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SortDirection"
+              }
+            }
+          },
+          {
+            "name": "DefaultPageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -28,26 +122,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DisputeListItem"
-                  }
+                  "$ref": "#/components/schemas/PagedDisputeListItemCollection"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DisputeListItem"
-                  }
+                  "$ref": "#/components/schemas/PagedDisputeListItemCollection"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DisputeListItem"
-                  }
+                  "$ref": "#/components/schemas/PagedDisputeListItemCollection"
                 }
               }
             }
@@ -6703,6 +6788,64 @@
         },
         "additionalProperties": false
       },
+      "PagedDisputeListItemCollection": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DisputeListItem"
+            },
+            "description": "The paged items.",
+            "nullable": true
+          },
+          "pageNumber": {
+            "type": "integer",
+            "description": "The one-based index of this page.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Them aximum size of a page.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "pageCount": {
+            "type": "integer",
+            "description": "The total number of pages.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "totalItemCount": {
+            "type": "integer",
+            "description": "The total number of items.",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "description": "True if there is a previous page, otherwise false.",
+            "readOnly": true
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "description": "True if there is a next page, otherwise false.",
+            "readOnly": true
+          },
+          "isFirstPage": {
+            "type": "boolean",
+            "description": "True if this is the first page, otherwise false.",
+            "readOnly": true
+          },
+          "isLastPage": {
+            "type": "boolean",
+            "description": "True if this is the last page, otherwise false.",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Point": {
         "type": "object",
         "properties": {
@@ -6788,6 +6931,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "SortDirection": {
+        "enum": [
+          "asc",
+          "desc"
+        ],
+        "type": "string"
       },
       "Statute": {
         "type": "object",

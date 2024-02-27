@@ -13,29 +13,32 @@ using TrafficCourts.Common.Errors;
 using System.Security.Claims;
 using System.Net;
 using TrafficCourts.Coms.Client;
+using NSubstitute;
+using X.PagedList;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
 public class DisputeControllerTest
 {
-    
     [Fact]
     public async void TestGetDisputes200Result()
     {
-        // Mock the IDisputeService to return a couple Disputes, confirm controller returns them.
-
         // Arrange
-        DisputeListItem dispute1 = new();
-        dispute1.DisputeId = 1;
-        DisputeListItem dispute2 = new();
-        dispute2.DisputeId =2;
-        List<DisputeListItem> disputes = new() { dispute1, dispute2 };
-        var disputeService = new Mock<IDisputeService>();
+        var expected = new PagedList<DisputeListItem>(
+            [
+            new DisputeListItem { DisputeId = 1 },
+            new DisputeListItem { DisputeId = 2 }
+            ], 1, new GetAllDisputesParameters().DefaultPageSize);
+
+        // really doesn't matter
+
+        IDisputeService disputeService = Substitute.For<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetAllDisputesAsync(null, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(disputes);
-        var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+            .GetAllDisputesAsync(Arg.Any<GetAllDisputesParameters>(), Arg.Any<CancellationToken>())
+            .Returns(expected);
+
+        var logger = Substitute.For<ILogger<DisputeController>>();
+        DisputeController disputeController = new(disputeService, logger);
 
         // Act
         IActionResult? result = await disputeController.GetDisputesAsync(null, CancellationToken.None);
@@ -43,11 +46,13 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        var actual = okResult.Value as List<DisputeListItem>;
+        var actual = Assert.IsAssignableFrom<IPagedList<DisputeListItem>>(okResult.Value);
         Assert.NotNull(actual);
         Assert.Equal(2, actual!.Count);
-        Assert.Equal(dispute1, actual[0]);
-        Assert.Equal(dispute2, actual[1]);
+        Assert.Equal(1, actual.PageNumber);
+        Assert.Equal(1, actual.PageCount);
+        Assert.Equal(new GetAllDisputesParameters().DefaultPageSize, actual.PageSize);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
