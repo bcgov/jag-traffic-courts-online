@@ -118,8 +118,8 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
             nextTry = (state.Expires.Value - _timeProvider.GetUtcNow());
             if (nextTry <= TimeSpan.Zero)
             {
-                // already expired try again in 15 seconds
-                nextTry = TimeSpan.FromSeconds(15);
+                // already expired try again in 10 seconds
+                nextTry = TimeSpan.FromSeconds(10);
             }
             else if (nextTry > TimeSpan.FromMinutes(1))
             {
@@ -143,7 +143,14 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         Token? token = await GetAccessTokenAsync(_cts.Token);
         if (token is null)
         {
+            state.TokenUpdateFailed();
+
             // couldn't get access? try again right way?
+            TimeSpan tryAgainIn = ComputeNextTry(state);
+
+            LogLevel level = state.IsExpired ? LogLevel.Error : LogLevel.Information;
+            LogTokenUpdateFailed(level, state.FailureCount, tryAgainIn);
+            ScheduleRefresh(tryAgainIn);
             return;
         }
 
@@ -234,6 +241,7 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
     class State
     {
         private readonly TimeProvider _timeProvider;
+        private int _failureCount = 0;
 
         public State(TimeProvider timeProvider)
         {
@@ -245,16 +253,26 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         /// </summary>
         public DateTimeOffset? Expires { get; private set; }
 
+        public bool IsExpired => _timeProvider.GetUtcNow() <= Expires;
+
         /// <summary>
         /// Flag that the token was updated
         /// </summary>
         /// <returns></returns>
         public DateTimeOffset TokenUpdated(Token token) 
         {
+            _failureCount = 0;
             var expires = _timeProvider.GetUtcNow().AddSeconds(token.ExpiresIn);
             Expires = expires;
             return expires;
         }
+
+        public void TokenUpdateFailed()
+        {
+            _failureCount++;
+        }
+
+        public int FailureCount => _failureCount;
     }
 
     [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Obtained new token from OIDC server")]
@@ -285,7 +303,7 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordHttpStatusCodeTag), OmitReferenceName = true)]
         HttpStatusCode statusCode);
 
-    [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Schedule token refresh in {Duration}")]
+    [LoggerMessage(EventId = 8, Level = LogLevel.Debug, Message = "Schedule token refresh")]
     public partial void LogRefreshScheduled(
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordDurationTag), OmitReferenceName = true)]
         TimeSpan duration);
@@ -295,6 +313,14 @@ public abstract partial class TokenRefreshService<TImplementation> : IHostedServ
 
     [LoggerMessage(EventId = 10, Level = LogLevel.Warning, Message = "Requested scheduled token refresh was less than or equal to zero")]
     public partial void LogRefreshScheduledLessThanOrEqualToZero(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordDurationTag), OmitReferenceName = true)]
+        TimeSpan duration);
+
+    [LoggerMessage(EventId = 11, Message = "Failed to refresh token, will try again")]
+    public partial void LogTokenUpdateFailed(
+        LogLevel logLevel,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordFailureCountTag), OmitReferenceName = true)]
+        int failureCount,
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordDurationTag), OmitReferenceName = true)]
         TimeSpan duration);
 }
