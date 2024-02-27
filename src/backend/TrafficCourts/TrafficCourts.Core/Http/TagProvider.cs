@@ -44,4 +44,9 @@ internal static partial class TagProvider
     {
         collector.Add("Duration", duration);
     }
+
+    public static void RecordFailureCountTag(ITagCollector collector, int failureCount)
+    {
+        collector.Add("FailureCount", failureCount);
+    }
 }
