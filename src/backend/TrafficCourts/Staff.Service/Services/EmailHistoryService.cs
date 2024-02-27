@@ -7,11 +7,11 @@ namespace TrafficCourts.Staff.Service.Services;
 /// </summary>
 public class EmailHistoryService : IEmailHistoryService
 {
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
 
 
     public EmailHistoryService(
-        IOracleDataApiClient oracleDataApi,
+        IOracleDataApiService oracleDataApi,
         IHttpContextAccessor httpContextAccessor,
         ILogger<EmailHistoryService> logger)
     {

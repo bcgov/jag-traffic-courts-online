@@ -1,17 +1,18 @@
 ﻿using System.Security.Claims;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Models;
+using X.PagedList;
 
 namespace TrafficCourts.Staff.Service.Services;
 
 public interface IDisputeService
 {
     /// <summary>Returns all the existing disputes from the database with optional exclusion parameter to exclude disputes having specified status from the result.</summary>
-    /// <param name="excludeStatus"></param>
+    /// <param name="parameters"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A collection of Dispute objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
+    Task<IPagedList<DisputeListItem>> GetAllDisputesAsync(GetAllDisputesParameters? parameters = null, CancellationToken cancellationToken = default(CancellationToken));
 
     /// <summary>Saves new dispute in the oracle database.</summary>
     /// <param name="dispute"></param>

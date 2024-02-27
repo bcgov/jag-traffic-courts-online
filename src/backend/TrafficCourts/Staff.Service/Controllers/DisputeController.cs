@@ -8,6 +8,9 @@ using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Common.Errors;
 using System.Net;
 
+using X.PagedList;
+using Microsoft.AspNetCore.Authorization;
+
 namespace TrafficCourts.Staff.Service.Controllers;
 
 public class DisputeController : StaffControllerBase
@@ -30,7 +33,7 @@ public class DisputeController : StaffControllerBase
     /// <summary>
     /// Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.
     /// </summary>
-    /// <param name="excludeStatus"></param>
+    /// <param name="parameters"></param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The Disputes were found.</response>
     /// <response code="401">Request lacks valid authentication credentials.</response>
@@ -38,19 +41,23 @@ public class DisputeController : StaffControllerBase
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
     [HttpGet("disputes")]
-    [ProducesResponseType(typeof(IList<DisputeListItem>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedDisputeListItemCollection), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
-    public async Task<IActionResult> GetDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
+    //[KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetDisputesAsync(GetAllDisputesParameters? parameters = null, CancellationToken cancellationToken = default(CancellationToken))
     {
         _logger.LogDebug("Retrieving all Disputes from oracle-data-api");
 
         try
         {
-            ICollection<DisputeListItem> disputes = await _disputeService.GetAllDisputesAsync(excludeStatus, cancellationToken);
-            return Ok(disputes);
+            IPagedList<DisputeListItem> pagedList = await _disputeService.GetAllDisputesAsync(parameters, cancellationToken);
+
+            PagedDisputeListItemCollection collection = new(pagedList);
+
+            return Ok(collection);
         }
         catch (Exception e)
         {

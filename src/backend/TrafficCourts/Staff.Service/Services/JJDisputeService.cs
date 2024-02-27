@@ -20,14 +20,14 @@ namespace TrafficCourts.Staff.Service.Services;
 /// </summary>
 public partial class JJDisputeService : IJJDisputeService
 {
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
     private readonly IBus _bus;
     private readonly IStaffDocumentService _documentService;
     private readonly IKeycloakService _keycloakService;
     private readonly IStatuteLookupService _lookupService;
     private readonly ILogger<JJDisputeService> _logger;
 
-    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, IStatuteLookupService lookupService, ILogger<JJDisputeService> logger)
+    public JJDisputeService(IOracleDataApiService oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, IStatuteLookupService lookupService, ILogger<JJDisputeService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));

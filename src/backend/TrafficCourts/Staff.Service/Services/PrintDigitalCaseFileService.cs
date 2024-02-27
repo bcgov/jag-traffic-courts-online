@@ -12,14 +12,14 @@ namespace TrafficCourts.Staff.Service.Services;
 public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 {
     private readonly IJJDisputeService _disputeService;
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
     private readonly IDocumentGenerationService _documentGeneration;
     private readonly ILogger<PrintDigitalCaseFileService> _logger;
 
     public PrintDigitalCaseFileService(
         IJJDisputeService disputeService,
-        IOracleDataApiClient oracleDataApi,
+        IOracleDataApiService oracleDataApi,
         IProvinceLookupService provinceLookupService,
         IDocumentGenerationService documentGeneration,
         ILogger<PrintDigitalCaseFileService> logger)

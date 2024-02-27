@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,6 +14,7 @@ using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
 {
@@ -30,6 +32,8 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
                 BaseAddress = configuration.GetValue<System.Uri>("OracleDataApi:BaseAddress")
             });
 
+            IOracleDataApiService oracleDataApiService = new OracleDataApiService(oracleDataApi, Mock.Of<IFusionCache>(), Mock.Of<IMediator>());
+
             var mock = new Mock<IStaffDocumentService>();
             mock.Setup(_ => _.FindFilesAsync(It.IsAny<DocumentProperties>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<FileMetadata>());
@@ -40,7 +44,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
                 .ReturnsAsync(new List<UserRepresentation>());
 
             IJJDisputeService disputeService = new JJDisputeService(
-                oracleDataApi,
+                oracleDataApiService,
                 Mock.Of<IBus>(),
                 mock.Object,
                 Mock.Of<IKeycloakService>(),
@@ -49,7 +53,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
 
             _sut = new PrintDigitalCaseFileService(
                 disputeService,
-                oracleDataApi,
+                oracleDataApiService,
                 Mock.Of<IProvinceLookupService>(),
                 Mock.Of<IDocumentGenerationService>(),
                 Mock.Of<ILogger<PrintDigitalCaseFileService>>());
