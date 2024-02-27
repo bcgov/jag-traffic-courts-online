@@ -26,9 +26,21 @@ public class OffenseCount
     [JsonProperty("fine")]
     public decimal? Fine { get; set; }
 
+    [JsonProperty("appearInCourt")]
+    public string AppearInCourt { get; set; } = string.Empty;
+
     [JsonProperty("requestFineReduction")]
     public string RequestFineReduction { get; set; } = string.Empty;
 
     [JsonProperty("requestTimeToPay")]
     public string RequestTimeToPay { get; set; } = string.Empty;
+
+    [JsonProperty("finding")]
+    public string Finding { get; set; } = string.Empty;
+
+    [JsonProperty("reviseFine")]
+    public bool ReviseFine { get; set; }
+
+    [JsonProperty("lesserOrGreaterAmt")]
+    public decimal? LesserOrGreaterAmount { get; set; }
 }

@@ -52,7 +52,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
         [IntegrationTestFact]
         public async Task Print()
         {
-            Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync("AC09662013", "Pacific Standard Time", CancellationToken.None);
+            Models.DigitalCaseFiles.Print.DigitalCaseFile dcf = await _sut.GetDigitalCaseFileAsync("EA03148599", "Pacific Standard Time", CancellationToken.None);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(dcf);
 
             Assert.True(true);

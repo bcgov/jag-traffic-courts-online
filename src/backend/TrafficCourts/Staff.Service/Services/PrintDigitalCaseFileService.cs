@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Features.Lookups;
@@ -176,8 +177,13 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.Description = disputedCount.Description;
                 offenseCount.Due = new FormattedDateOnly(disputedCount.DueDate);
                 offenseCount.Fine = (decimal?)(disputedCount.TicketedFineAmount);
+                offenseCount.AppearInCourt = ToString(disputedCount.AppearInCourt);
                 offenseCount.RequestFineReduction = ToString(disputedCount.RequestReduction);
                 offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
+                offenseCount.ReviseFine = SetReviseFine(disputedCount);
+                offenseCount.LesserOrGreaterAmount = (decimal?)(disputedCount.LesserOrGreaterAmount);
+                // set jjDisputedCountRoP data
+                offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP.Finding);
             }
 
             counts.Add(offenseCount);
@@ -393,11 +399,37 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return string.Empty;
     }
 
+    private string ToString(JJDisputedCountRoPFinding? value)
+    {
+        if (value is not null && value != JJDisputedCountRoPFinding.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputedCountAppearInCourt? value)
+    {
+        if (value is not null && value != JJDisputedCountAppearInCourt.UNKNOWN)
+        {
+            switch (value)
+            {
+                case JJDisputedCountAppearInCourt.Y: return "I want to appear in court";
+                case JJDisputedCountAppearInCourt.N: return "I do not want to appear in court";
+            }
+        }
+
+        return string.Empty;
+    }
+
     private string FormatAddress(JJDispute dispute)
     {
-        StringBuilder builder = new StringBuilder();
-
-        return builder.ToString();
+        // Filter out null or empty strings before joining
+        var addressParts = new[] { dispute.AddressLine1, dispute.AddressLine2, dispute.AddressLine3, dispute.AddressCity, dispute.AddressProvince, dispute.AddressCountry, dispute.AddressPostalCode };
+        var nonEmptyParts = addressParts.Where(part => !string.IsNullOrEmpty(part));
+        // Concatenates all the address fields by a comma and returns them as a single string
+        return string.Join(", ", nonEmptyParts);
     }
 
     private string ConcatenateWithSpaces(params string[] values)
@@ -424,5 +456,10 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         }
 
         return builder.ToString();
+    }
+
+    private bool SetReviseFine(JJDisputedCount disputedCount)
+    {
+        return !(disputedCount.LesserOrGreaterAmount is null || disputedCount.LesserOrGreaterAmount == 0);
     }
 }
