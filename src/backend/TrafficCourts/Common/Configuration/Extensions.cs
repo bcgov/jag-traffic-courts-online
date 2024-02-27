@@ -23,8 +23,9 @@ public static class Extensions
     /// Adds Redis and provides <see cref="IConnectionMultiplexer"/> in dependency injection.
     /// </summary>
     /// <param name="builder">The builder for the application.</param>
+    /// <returns>The redis connection string</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is null.</exception>
-    public static void AddRedis(this WebApplicationBuilder builder)
+    public static string AddRedis(this WebApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -44,6 +45,8 @@ public static class Extensions
             {
                 options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
             });
+
+            return connectionString;
         }
         else
         {
@@ -157,18 +160,19 @@ public static class Extensions
             .CreateDefault()
             .AddService(activitySource.Name, serviceInstanceId: Environment.MachineName);
 
-        builder.Services.AddOpenTelemetry().WithTracing(builder => 
+        builder.Services.AddOpenTelemetry().WithTracing(tracing => 
         {
-            builder
+            tracing
                 .SetResourceBuilder(resourceBuilder)
                 .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation(options => options.Filter = AspNetCoreRequestFilter)
+                .AddFusionCacheInstrumentation()
                 .AddSource(activitySource.Name)
                 .AddJaegerExporter();
 
             if (configure is not null)
             {
-                configure(builder);
+                configure(tracing);
             }
         });
     }
@@ -193,7 +197,8 @@ public static class Extensions
                 .AddProcessInstrumentation()
                 .AddRuntimeInstrumentation()
                 .AddAspNetCoreInstrumentation()
-                .AddHttpClientInstrumentation();
+                .AddHttpClientInstrumentation()
+                .AddFusionCacheInstrumentation();
 
             if (meters.Length != 0)
             {
