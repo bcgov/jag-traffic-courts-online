@@ -10,7 +10,7 @@ namespace TrafficCourts.Workflow.Service.Services
         Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken);
         Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken);
         Task<Dispute> ResetDisputeEmailAsync(long disputeId, string emailAddress, CancellationToken cancellationToken);
-        Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, CancellationToken cancellationToken);
+        Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, ExcludeStatus2? excludeStatus, CancellationToken cancellationToken);
         Task<Dispute> GetDisputeByIdAsync(long disputeId, bool isAssign, CancellationToken cancellationToken);
         Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken);
         Task<ICollection<JJDispute>> GetJJDisputesAsync(string jjAssignedTo, string ticketNumber, CancellationToken cancellationToken);

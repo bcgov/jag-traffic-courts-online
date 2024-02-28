@@ -1,10 +1,13 @@
-﻿namespace TrafficCourts.Messaging.MessageContracts;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+
+namespace TrafficCourts.Messaging.MessageContracts;
 
 public class SearchDisputeRequest
 {
-    public string? TicketNumber { get; set; } = String.Empty;
-    public string? IssuedTime { get; set; } = String.Empty;
-    public Guid? NoticeOfDisputeGuid { get; set; } = null!;
+    public string? TicketNumber { get; set; }
+    public string? IssuedTime { get; set; }
+    public Guid? NoticeOfDisputeGuid { get; set; }
+    public ExcludeStatus2? ExcludeStatus { get; set; }
 }
 
 public class SearchDisputeResponse

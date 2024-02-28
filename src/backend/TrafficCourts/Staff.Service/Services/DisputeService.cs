@@ -237,7 +237,7 @@ public class DisputeService : IDisputeService
         // Check for other disputes in processing status with same ticket number
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, false, cancellationToken);
         string? issuedTime = dispute.IssuedTs is not null ? dispute.IssuedTs.Value.ToString("HH:mm") : "";
-        ICollection<DisputeResult> disputeResults = await _oracleDataApi.FindDisputeStatusesAsync(dispute.TicketNumber, null, null, cancellationToken);
+        ICollection<DisputeResult> disputeResults = await _oracleDataApi.FindDisputeStatusesAsync(dispute.TicketNumber, null, null, null, cancellationToken);
         disputeResults = disputeResults.Where(x => x.DisputeStatus == DisputeResultDisputeStatus.PROCESSING).ToList();
         if (disputeResults.Count>0)
         {

@@ -70,11 +70,11 @@ public class OracleDataApiService : IOracleDataApiService
         return response;
     }
 
-    public async Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, CancellationToken cancellationToken)
+    public async Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, ExcludeStatus2? excludeStatus, CancellationToken cancellationToken)
     {
         // need to search by ticket number and issue time, or noticeOfDisputeGuid
 
-        if (ticketNumber is null && issuedTime is null && noticeOfDisputeGuid is null)
+        if (ticketNumber is null && issuedTime is null && noticeOfDisputeGuid is null && excludeStatus is null)
         {
             // no values passed for searching
             return Array.Empty<DisputeResult>();
@@ -82,7 +82,7 @@ public class OracleDataApiService : IOracleDataApiService
 
         var noticeOfDisputeId = noticeOfDisputeGuid?.ToString(NoticeOfDisputeGuidFormat);
 
-        var response = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeId, cancellationToken).ConfigureAwait(false);
+        var response = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeId, excludeStatus, cancellationToken).ConfigureAwait(false);
         return new List<DisputeResult>(response);
     }
 

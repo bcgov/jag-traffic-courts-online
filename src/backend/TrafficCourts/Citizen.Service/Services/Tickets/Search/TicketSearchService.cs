@@ -134,28 +134,40 @@ public class TicketSearchService : ITicketSearchService
 
     public async Task<bool> IsDisputeSubmittedBefore(string ticketNumber, CancellationToken cancellationToken)
     {
-        // Check if a dispute has been submitted before for the given ticket number by verfying any Dispute exists associated to the provided ticket number
-        SearchDisputeRequest searchRequest = new() { TicketNumber = ticketNumber };
-        Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
-
-        var searchResponse = response.Message;
-
-        // FIXME: possible bug here. If there is a network error or some other backend database error, IsNotFound defaults to false and so this
-        // code block will always execute.
-        if (!searchResponse.IsNotFound)
+        try
         {
-            _logger.LogDebug("Found a dispute for the given ticket number: {ticketNumber}, returning bad request", ticketNumber);
-            return true;
-        }
+            // Check if a dispute has been submitted before for the given ticket number by verfying any Dispute exists associated to the provided ticket number
+            SearchDisputeRequest searchRequest = new() { TicketNumber = ticketNumber, ExcludeStatus = ExcludeStatus2.REJECTED };
+            Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
+            
+            var searchResponse = response.Message;
 
-        if (searchResponse.IsError)
+            if (searchResponse == null)
+            {
+                _logger.LogError("Search response is null, throwing DisputeSearchFailedException");
+                throw new DisputeSearchFailedException(ticketNumber);
+            }
+
+            if (!searchResponse.IsNotFound)
+            {
+                _logger.LogDebug("Found a dispute for the given ticket number: {ticketNumber}, returning bad request", ticketNumber);
+                return true;
+            }
+
+            if (searchResponse.IsError)
+            {
+                _logger.LogError("Search returned error, throwing DisputeSearchFailedException");
+                throw new DisputeSearchFailedException(ticketNumber);
+            }
+
+            _logger.LogDebug("Dispute not submitted before, returning false");
+            return false;
+        }
+        catch (Exception ex)
         {
-            _logger.LogError("Search returned error, throwing DisputeSearchFailedException");
-            throw new DisputeSearchFailedException(ticketNumber);
+            _logger.LogError(ex, "An error occurred while checking if dispute submitted before");
+            throw;
         }
-
-        _logger.LogDebug("Dispute not submitted before, returning false");
-        return false;
     }
 }
 
