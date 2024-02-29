@@ -182,8 +182,29 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
                 offenseCount.ReviseFine = SetReviseFine(disputedCount);
                 offenseCount.LesserOrGreaterAmount = (decimal?)(disputedCount.LesserOrGreaterAmount);
-                // set jjDisputedCountRoP data
+                offenseCount.IncludesSurcharge = ToString(disputedCount.IncludesSurcharge);
+                offenseCount.TotalFineAmount = (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
+                offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
+                offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
+                offenseCount.FinalDue = disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
+                offenseCount.Surcharge = disputedCount.LesserOrGreaterAmount != null ? (decimal?)(disputedCount.LesserOrGreaterAmount * 0.15) : 0;
+                offenseCount.Comments = disputedCount.Comments;
+                // set jjDisputedCountRoP data for this count
                 offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP.Finding);
+                offenseCount.SsProbationDuration = disputedCount.JjDisputedCountRoP.SsProbationDuration;
+                offenseCount.SsProbationConditions = disputedCount.JjDisputedCountRoP.SsProbationConditions;
+                offenseCount.JailDuration = disputedCount.JjDisputedCountRoP.JailDuration;
+                offenseCount.JailIntermittent = ToString(disputedCount.JjDisputedCountRoP.JailIntermittent);
+                offenseCount.ProbationDuration = disputedCount.JjDisputedCountRoP.ProbationDuration;
+                offenseCount.ProbationConditions = disputedCount.JjDisputedCountRoP.ProbationConditions;
+                offenseCount.DrivingProhibitionDuration = disputedCount.JjDisputedCountRoP.DrivingProhibition;
+                offenseCount.DrivingProhibitionMVA = disputedCount.JjDisputedCountRoP.DrivingProhibitionMVASection;
+                offenseCount.Dismissed = ToString(disputedCount.JjDisputedCountRoP.Dismissed);
+                offenseCount.WantOfProsecution = ToString(disputedCount.JjDisputedCountRoP.ForWantOfProsecution);
+                offenseCount.Withdrawn = ToString(disputedCount.JjDisputedCountRoP.Withdrawn);
+                offenseCount.Abatement = ToString(disputedCount.JjDisputedCountRoP.Abatement);
+                offenseCount.StayOfProceedingsBy = disputedCount.JjDisputedCountRoP.StayOfProceedingsBy;
+                offenseCount.Other = disputedCount.JjDisputedCountRoP.Other;
             }
 
             counts.Add(offenseCount);
@@ -210,7 +231,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // File History searches by ticket number and *could* return files for multiple disputes
         // This is a bug waiting to happen, so we will be more careful
-        foreach (var h in fileHistory.Where(_ => _.DisputeId == dispute.Id))
+        foreach (var h in fileHistory.Where(_ => _.DisputeId == dispute.OccamDisputeId))
         {
             history.Add(new FileHistoryEvent
             {
@@ -423,6 +444,66 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return string.Empty;
     }
 
+    private string ToString(JJDisputedCountIncludesSurcharge? value)
+    {
+        if (value is not null && value != JJDisputedCountIncludesSurcharge.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return JJDisputedCountIncludesSurcharge.N.ToString();
+    }
+
+    private string ToString(JJDisputedCountRoPJailIntermittent? value)
+    {
+        if (value is not null && value != JJDisputedCountRoPJailIntermittent.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputedCountRoPDismissed? value)
+    {
+        if (value is not null && value != JJDisputedCountRoPDismissed.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputedCountRoPForWantOfProsecution? value)
+    {
+        if (value is not null && value != JJDisputedCountRoPForWantOfProsecution.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputedCountRoPWithdrawn? value)
+    {
+        if (value is not null && value != JJDisputedCountRoPWithdrawn.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(JJDisputedCountRoPAbatement? value)
+    {
+        if (value is not null && value != JJDisputedCountRoPAbatement.UNKNOWN)
+        {
+            return value.Value.ToString();
+        }
+
+        return string.Empty;
+    }
+
     private string FormatAddress(JJDispute dispute)
     {
         // Filter out null or empty strings before joining
@@ -461,5 +542,10 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     private bool SetReviseFine(JJDisputedCount disputedCount)
     {
         return !(disputedCount.LesserOrGreaterAmount is null || disputedCount.LesserOrGreaterAmount == 0);
+    }
+
+    private bool IsDueDateRevised(JJDisputedCount disputedCount)
+    {
+        return !(disputedCount.RevisedDueDate is null || disputedCount.RevisedDueDate == disputedCount.DueDate);
     }
 }
