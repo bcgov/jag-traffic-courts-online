@@ -9,29 +9,29 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
     public class MapperTest
     {
         [Theory]
-        [InlineData(1, DisputeCountPleaCode.G)]
-        [InlineData(1, DisputeCountPleaCode.N)]
-        [InlineData(2, DisputeCountPleaCode.G)]
-        [InlineData(2, DisputeCountPleaCode.N)]
-        [InlineData(3, DisputeCountPleaCode.G)]
-        [InlineData(3, DisputeCountPleaCode.N)]
-        public void dispute_approve_maps_disputed_count_and_pleas(int count, DisputeCountPleaCode pleaCode)
+        [MemberData(nameof(GetTestCases))]
+        public void dispute_approve_maps_disputed_count_to_dispute_type(int count, DisputeCountRequestReduction reduction, DisputeCountRequestTimeToPay timeToPay, string disputeType)
         {
             Dispute source = new Dispute()
             {
                 ViolationTicket = new ViolationTicket(),
                 NoticeOfDisputeGuid = Guid.NewGuid().ToString("d"),
-                DisputeCounts = new List<DisputeCount>()
-                {
-                    new DisputeCount { CountNo = count, PleaCode = pleaCode }
-                }
+                DisputeCounts =
+                [
+                    new DisputeCount
+                    {
+                        CountNo = count,
+                        RequestReduction = reduction,
+                        RequestTimeToPay = timeToPay
+                    }
+                ]
             };
 
             var actual = Mapper.ToDisputeApproved(source);
             Assert.NotNull(actual);
 
             var disputeCount = Assert.Single(actual.DisputeCounts);
-            Assert.Equal(pleaCode.ToString(), disputeCount.DisputeType);
+            Assert.Equal(disputeType, disputeCount.DisputeType);
         }
 
         [Fact]
@@ -39,6 +39,29 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
         {
             var actual = Assert.Throws<ArgumentNullException>(() => Mapper.ToDisputeApproved(null!));
             Assert.NotNull(actual);
+        }
+
+
+        public static IEnumerable<object[]> GetTestCases
+        {
+            get
+            {
+                for (int count = 1; count <= 3; count++)
+                {
+                    foreach (var reduction in Enum.GetValues<DisputeCountRequestReduction>())
+                    {
+                        foreach (var timeToPay in Enum.GetValues<DisputeCountRequestTimeToPay>())
+                        {
+                            // if either requesting reduction or time to pay, should map to F otherwise A
+                            string disputeType = (reduction == DisputeCountRequestReduction.Y || timeToPay == DisputeCountRequestTimeToPay.Y)
+                                ? "F"   // find
+                                : "A"; // allegation
+
+                            yield return new object[] { count, reduction, timeToPay, disputeType };
+                        }
+                    }
+                }
+            }
         }
     }
 }

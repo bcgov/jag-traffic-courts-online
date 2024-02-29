@@ -36,13 +36,13 @@ public class Mapper
         target.ViolationTicketCounts = Map(dispute.ViolationTicket.ViolationTicketCounts);
 
         // TODO: Lookup address province seq no and country id and set addressprovince to abbreviation code
-        if (dispute.AddressProvinceSeqNo!= null) target.Province = dispute.AddressProvince;
+        if (dispute.AddressProvinceSeqNo != null) target.Province = dispute.AddressProvince;
         // only need two character code (province may be more than two chars if not USA or Canada)
         else if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
-        else dispute.AddressProvince= null;
+        else dispute.AddressProvince = null;
 
         target.StreetAddress = FormatStreetAddress(dispute);
-        target.City = dispute.AddressCity;        
+        target.City = dispute.AddressCity;
         target.City = dispute.AddressCity;
 
         target.PostalCode = dispute.PostalCode;
@@ -77,14 +77,15 @@ public class Mapper
     {
         if (counts is null)
         {
-            return Array.Empty<DisputedCount>();
+            return [];
         }
 
         var result = counts
+            .OrderBy(_ => _.CountNo)
             .Select(_ => new DisputedCount
             {
                 Count = _.CountNo,
-                DisputeType = _.PleaCode.ToString()
+                DisputeType = _.GetArcDisputeType()  // either F (fine) or A (allegation)
             })
             .ToList();
 
@@ -99,7 +100,7 @@ public class Mapper
             return dispute.AddressLine1;
         }
 
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder buffer = new();
 
         void Append(string? value)
         {
@@ -138,7 +139,7 @@ public class Mapper
         return ToFileHistoryWithNoticeOfDisputeId(noticeOfDisputeId, auditLogEntryType, actionByApplicationUser, null!);
     }
 
-        public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser, string comment)
+    public static SaveFileHistoryRecord ToFileHistoryWithNoticeOfDisputeId(string noticeOfDisputeId, FileHistoryAuditLogEntryType auditLogEntryType, string actionByApplicationUser, string comment)
     {
         SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.NoticeOfDisputeId = noticeOfDisputeId;
