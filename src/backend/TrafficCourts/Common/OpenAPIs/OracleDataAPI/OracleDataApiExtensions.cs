@@ -35,4 +35,15 @@ public static class OracleDataApiExtensions
 
         return builder;
     }
+
+    public static string GetArcDisputeType(this DisputeCount count)
+    {
+        if (count is not null)
+        {
+            if (count.RequestReduction == DisputeCountRequestReduction.Y) return "F"; // fine
+            if (count.RequestTimeToPay == DisputeCountRequestTimeToPay.Y) return "F"; // fine
+        }
+
+        return "A"; // allegation
+    }
 }

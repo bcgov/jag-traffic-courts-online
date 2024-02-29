@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Xml.Linq;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -85,18 +85,11 @@ public class Mapper
             .Select(_ => new DisputedCount
             {
                 Count = _.CountNo,
-                DisputeType = GetDisputeType(_)  // either F (fine) or A (allegation)
+                DisputeType = _.GetArcDisputeType()  // either F (fine) or A (allegation)
             })
             .ToList();
 
         return result;
-    }
-
-    private static string GetDisputeType(Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount count)
-    {
-        if (count.RequestReduction == DisputeCountRequestReduction.Y) return "F"; // fine
-        if (count.RequestTimeToPay == DisputeCountRequestTimeToPay.Y) return "F"; // fine
-        return "A"; // allegation
     }
 
     private static string FormatStreetAddress(Dispute dispute)
