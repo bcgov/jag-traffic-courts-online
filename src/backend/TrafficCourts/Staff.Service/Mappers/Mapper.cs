@@ -77,18 +77,26 @@ public class Mapper
     {
         if (counts is null)
         {
-            return Array.Empty<DisputedCount>();
+            return [];
         }
 
         var result = counts
+            .OrderBy(_ => _.CountNo)
             .Select(_ => new DisputedCount
             {
                 Count = _.CountNo,
-                DisputeType = _.PleaCode.ToString()
+                DisputeType = GetDisputeType(_)  // either F (fine) or A (allegation)
             })
             .ToList();
 
         return result;
+    }
+
+    private static string GetDisputeType(Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount count)
+    {
+        if (count.RequestReduction == DisputeCountRequestReduction.Y) return "F"; // fine
+        if (count.RequestTimeToPay == DisputeCountRequestTimeToPay.Y) return "F"; // fine
+        return "A"; // allegation
     }
 
     private static string FormatStreetAddress(Dispute dispute)
