@@ -2,7 +2,9 @@
 # Seed the shared folders that contain the ocr models
 
 rm -rf /shared/*
-cp -r /tmp/backup/shared/* /shared
+cp -R /tmp/backup/shared/* /shared
 chmod -R 777 /shared
 
+ls -all /shared/formrecognizer
+echo "Successfully copied Form Recognizer models to shared folder"
 exit 0;

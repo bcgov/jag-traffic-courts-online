@@ -4,5 +4,9 @@ FROM alpine:3.19.1
 COPY /backup /tmp/backup
 COPY ./init-models.sh ./tmp/init-models.sh
 
+RUN chmod -R g+w /tmp/backup
+RUN chmod +x ./tmp/init-models.sh 
+
 # Run init-models.sh to copy data from the docker image to the shared volumes used by the other Document AI images.
+#CMD ["/bin/sh", "-c", "tail -f /dev/null"] 
 CMD ["/bin/sh", "-c", "./tmp/init-models.sh"]
