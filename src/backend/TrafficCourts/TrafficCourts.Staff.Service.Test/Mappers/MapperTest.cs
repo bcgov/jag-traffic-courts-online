@@ -10,7 +10,7 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
     {
         [Theory]
         [MemberData(nameof(GetTestCases))]
-        public void dispute_approve_maps_disputed_count_and_plea_to_dispute_type(int count, DisputeCountRequestReduction reduction, DisputeCountRequestTimeToPay timeToPay, string disputeType)
+        public void dispute_approve_maps_disputed_count_to_dispute_type(int count, DisputeCountRequestReduction reduction, DisputeCountRequestTimeToPay timeToPay, string disputeType)
         {
             Dispute source = new Dispute()
             {
