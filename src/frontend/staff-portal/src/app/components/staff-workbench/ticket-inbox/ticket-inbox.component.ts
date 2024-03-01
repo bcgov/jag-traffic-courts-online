@@ -89,7 +89,9 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = this.searchFilter;
-      this.onApplyFilter(this.tableFilterService.tableFilters[this.tabIndex]);
+      let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
+      dataFilter.status = dataFilter.status ?? "";
+      this.onApplyFilter(dataFilter);
     });
   }
 

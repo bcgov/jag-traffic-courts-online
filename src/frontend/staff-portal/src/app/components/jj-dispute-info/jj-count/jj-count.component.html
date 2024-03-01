@@ -9,7 +9,7 @@
     <form>
       <div style="display: grid; grid-template-columns: auto auto">
         <span class="section-grid-cell" style="grid-column: span 2">
-          <p class="section-grid-header">{{ "label.plea" | translate }}</p>
+          <p class="section-grid-header">{{ "label.disputant_statement" | translate }}</p>
           <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
           <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea === Plea.G">{{ 'label.plea_guilty' | translate }}</p>
           <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.plea !== Plea.G">{{ 'label.plea_not_guilty' | translate }}</p>
