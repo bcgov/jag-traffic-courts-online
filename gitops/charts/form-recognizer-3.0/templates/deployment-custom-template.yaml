@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-custom-template
+  labels:
+    {{- include "form-recognizer.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.customTemplate.autoscaling.enabled }}
+  replicas: {{ .Values.customTemplate.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-template
+      app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-template
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-custom-template
+        app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-custom-template
+    spec:
+      containers:
+        - name: azure-form-recognizer-custom-template
+          image: "{{ .Values.customTemplate.image.repository }}:{{ .Values.customTemplate.image.tag }}"
+          imagePullPolicy: {{ .Values.customTemplate.image.pullPolicy }}
+          env:
+            - name: AzureCognitiveServiceLayoutHost
+              value: http://{{ include "form-recognizer.fullname" . }}-layout:5000
+            - name: eula
+              value: accept
+            - name: Logging__Console__LogLevel__Default
+              value: Information
+            - name: SharedRootFolder
+              value: /shared
+            - name: Mounts__Shared
+              value: /shared
+            - name: Mounts__Output
+              value: /logs
+            - name: apikey
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
+                  key: FORMRECOGNIZER__APIKEY
+            - name: billing
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
+                  key: FORMRECOGNIZER__ENDPOINT
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: shared
+              mountPath: /shared
+            - name: logs
+              mountPath: /logs
+      volumes:
+        - name: shared
+          persistentVolumeClaim:
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ include "form-recognizer.fullname" . }}-logs

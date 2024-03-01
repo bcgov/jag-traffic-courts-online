@@ -1,0 +1,35 @@
+apiVersion: v2
+name: acs-form-recognizer
+description: A Helm chart for Kubernetes
+
+# icon is svg version of microsoft logo
+icon: data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgcm9sZT0icHJlc2VudGF0aW9uIiBkYXRhLXNsdWctaWQ9
+  Im1pY3Jvc29mdC1zcXVhcmUiIHZpZXdCb3g9IjAgMCAyNiAyNSIgeG1sbnM9Imh0dHA6Ly93d3cu
+  dzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjU3MDggMC45ODE5MzRIMC45MDc0NzFWMTIu
+  MzY4MkgxMi41NzA4VjAuOTgxOTM0WiIgZmlsbD0iI0YyNTAyMiI+PC9wYXRoPgo8cGF0aCBkPSJN
+  MjUuNDYyNSAwLjk4MTkzNEgxMy43OTkyVjEyLjM2ODJIMjUuNDYyNVYwLjk4MTkzNFoiIGZpbGw9
+  IiM3RkJBMDAiPjwvcGF0aD4KPHBhdGggZD0iTTEyLjU3MDggMTMuNTY0OUgwLjkwNzQ3MVYyNC45
+  NTEySDEyLjU3MDhWMTMuNTY0OVoiIGZpbGw9IiMwMEE0RUYiPjwvcGF0aD4KPHBhdGggZD0iTTI1
+  LjQ2MjkgMTMuNTY0OUgxMy43OTk2VjI0Ljk1MTJIMjUuNDYyOVYxMy41NjQ5WiIgZmlsbD0iI0ZG
+  QjkwMCI+PC9wYXRoPgo8L3N2Zz4K
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "3.0.0"

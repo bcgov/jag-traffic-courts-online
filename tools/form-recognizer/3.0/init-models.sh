@@ -1,6 +1,8 @@
 #!/bin/sh
 # Seed the shared folders that contain the ocr models
 
+echo "Cleaning shared folder"
+
 rm -rf /shared/*
 cp -R /tmp/backup/shared/* /shared
 chmod -R 777 /shared

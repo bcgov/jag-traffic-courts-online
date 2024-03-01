@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-shared
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.shared.size }}
+  {{- if .Values.storage.shared.storageClassName }}
+  storageClassName: {{ .Values.storage.shared.storageClassName }}
+  {{- end }}
+  volumeMode: Filesystem
