@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-layout
+  labels:
+    {{- include "form-recognizer.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.layout.autoscaling.enabled }}
+  replicas: {{ .Values.layout.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-layout
+      app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-layout
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-layout
+        app.kubernetes.io/name: {{ include "form-recognizer.fullname" . }}-layout
+    spec:
+      containers:
+        - name: {{ include "form-recognizer.fullname" . }}-layout
+          env:
+            - name: eula
+              value: accept
+            - name: Logging__Console__LogLevel__Default
+              value: Information
+            - name: SharedRootFolder
+              value: /shared
+            - name: Mounts__Shared
+              value: /shared
+            - name: Mounts__Output
+              value: /logs
+            - name: apikey
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
+                  key: FORMRECOGNIZER__APIKEY
+            - name: billing
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "form-recognizer.fullname" . }}-secrets
+                  key: FORMRECOGNIZER__ENDPOINT
+
+          image: "{{ .Values.layout.image.repository }}:{{ .Values.layout.image.tag }}"
+          imagePullPolicy: {{ .Values.layout.image.pullPolicy }}
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.layout.resources | nindent 12 }}
+          volumeMounts:
+            - name: shared
+              mountPath: /shared
+            - name: logs
+              mountPath: /logs
+      volumes:
+        - name: shared
+          persistentVolumeClaim:
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ include "form-recognizer.fullname" . }}-logs
