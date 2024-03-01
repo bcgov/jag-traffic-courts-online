@@ -4,6 +4,7 @@ using Azure.Core.Pipeline;
 using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Diagnostics;
 
 namespace TrafficCourts.Citizen.Service.Services;
 
@@ -16,6 +17,7 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
     private readonly string _apiKey;
     private readonly Uri _endpoint;
     private readonly string _modelId;
+    private readonly double _timeout;
 
     public FormRecognizerService_2022_08_31(FormRecognizerOptions options, ILogger<FormRecognizerService_2022_08_31> logger)
     {
@@ -23,6 +25,7 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
         _apiKey = options.ApiKey ?? throw new ArgumentException($"{nameof(options.ApiKey)} is required");
         _endpoint = options.Endpoint ?? throw new ArgumentException($"{nameof(options.Endpoint)} is required");
         _modelId = options.ModelId ?? throw new ArgumentException($"{nameof(options.ModelId)} is required");
+        _timeout = options.Timeout ?? throw new ArgumentException($"{nameof(options.Timeout)} is required");
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -45,24 +48,67 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
 
     private async Task<AnalyzeResult> AnalyzeDocumentAsync(DocumentAnalysisClient client, Stream form, CancellationToken cancellationToken)
     {
+        var stopwatch = Stopwatch.StartNew(); // Used to measure the elapsed time
+
         using var operation = Instrumentation.FormRecognizer.BeginOperation("2022_08_31", "RecognizeForms");
+        using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(_timeout));
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+        _logger.LogDebug("Starting form recognition using url: {_endpoint}, modelId: {_modelId}, timeout: {_timeout}", _endpoint, _modelId, _timeout);
 
         try
         {
-            AnalyzeDocumentOperation analyseDocumentOperation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _modelId, form, null, cancellationToken)
-                .ConfigureAwait(false);
-
-            await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken)
-                .ConfigureAwait(false);
-
-            return analyseDocumentOperation.Value;
+            var analyzeOperation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _modelId, form, null, linkedCts.Token).ConfigureAwait(false);
+            var analyzeResult = await analyzeOperation.WaitForCompletionAsync(linkedCts.Token).ConfigureAwait(false);
+            return analyzeResult.Value;
         }
-        catch (Exception exception)
+        catch (TimeoutException e)
         {
-            Instrumentation.FormRecognizer.EndOperation(operation, exception);
-            _logger.LogError(exception, "Form Recognizer operation failed");
-            throw;
+            throw HandleTimeoutException(operation, stopwatch, e);
         }
+        catch (OperationCanceledException e)
+        {
+            throw HandleTimeoutException(operation, stopwatch, e);
+        }
+        catch (Exception e) when (IsInternalServerError(e))
+        {
+            throw HandleInternalServerError(operation, stopwatch, e);
+        }
+        catch (Exception e)
+        {
+            throw HandleOtherException(operation, e);
+        }
+    }
+
+    private bool IsInternalServerError(Exception e)
+    {
+        return e.Message.StartsWith("Timeout", StringComparison.OrdinalIgnoreCase) && e.Message.Contains("Internal server error");
+    }
+
+    private Exception HandleTimeoutException(ITimerOperation operation, Stopwatch stopwatch, Exception e)
+    {
+        Instrumentation.FormRecognizer.EndOperation(operation, e);
+        var elapsedSeconds = (int)Math.Round(stopwatch.Elapsed.TotalSeconds);
+        var message = string.Format("Form Recognizer job timed out after {elapsedSeconds} seconds.", elapsedSeconds);
+        _logger.LogError(message);
+        return new TimeoutException(message, e);
+    }
+
+    private Exception HandleInternalServerError(ITimerOperation operation, Stopwatch stopwatch, Exception e)
+    {
+        // Sometimes the text "Internal server error" is buried in the exception message, but starts with a misleading "Timeout ...".
+        // The root cause is not a timeout, but a Form Recognizer server error. So we wrap the exception to make it more clear of the actual cause.
+        Instrumentation.FormRecognizer.EndOperation(operation, e);
+        var elapsedSeconds = (int)Math.Round(stopwatch.Elapsed.TotalSeconds);
+        var message = string.Format("Form Recognizer internal server error after {elapsedSeconds} seconds, likely concurrent/locked file access of shared resources. Job was cancelled.", elapsedSeconds);
+        _logger.LogError(message);
+        return new Exception(message, e);
+    }
+
+    private Exception HandleOtherException(ITimerOperation operation, Exception e)
+    {
+        Instrumentation.FormRecognizer.EndOperation(operation, e);
+        _logger.LogError(e, "Form Recognizer operation failed");
+        return e;
     }
 
     /// <summary>
@@ -97,7 +143,8 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
                 violationTicket.TicketVersion = ViolationTicketVersion.VT2;
                 fieldLabels = IFormRecognizerService.FieldLabels_VT2;
             }
-            else {
+            else
+            {
                 throw new Exception($"Unexpected document type: {document.DocumentType}");
             }
         }

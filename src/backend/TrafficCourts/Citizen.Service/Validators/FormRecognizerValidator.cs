@@ -114,6 +114,17 @@ public class FormRecognizerValidator : IFormRecognizerValidator
                 violationTicket.Fields[sectionKey].Value = newValue;
             }
         }
+        
+        void SanitizeWhiteSpace(string sectionKey)
+        {
+            if (violationTicket.Fields.TryGetValue(sectionKey, out var field))
+            {
+                var titleValue = field.Value ?? "";
+                field.Value = Regex.Replace(titleValue, @"\s", " "); // replace all whitespace characters with a space
+            }
+        }
+
+        SanitizeWhiteSpace(OcrViolationTicket.ViolationTicketTitle);
 
         SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description);
         SanitizeCount(OcrViolationTicket.Count2Section, OcrViolationTicket.Count2ActRegs, OcrViolationTicket.Count2Description);
