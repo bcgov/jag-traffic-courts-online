@@ -10,7 +10,7 @@ export class TableFilter {
   occamDisputantName?: string;
   team?: string;
   courthouseLocation?: string;
-  status?: DisputeStatus;
+  status?: DisputeStatus | '';
 }
 export type TableFilterKeys = keyof TableFilter;
 export type TableFilterConfigs = {
