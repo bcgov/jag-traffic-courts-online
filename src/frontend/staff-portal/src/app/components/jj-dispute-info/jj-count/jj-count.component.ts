@@ -17,7 +17,7 @@ export class JJCountComponent implements OnInit, OnChanges {
   @Input() type: string;
   @Input() isViewOnly: boolean = false;
   /** Admin Staff Support edit mode */
-  @Input() isSSEditMode: boolean = false; 
+  @Input() isSSEditMode: boolean = false;
   @Input() jjDisputedCount: JJDisputedCount;
   @Output() jjDisputedCountUpdate: EventEmitter<JJDisputedCount> = new EventEmitter<JJDisputedCount>();
 
@@ -160,6 +160,17 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.fineReduction = this.jjDisputedCount ? (this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no") : "";
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
+
+      if (!this.isViewOnly &&
+        (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
+          || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
+        this.form.controls.ticketedFineAmount.setValue(null);
+        this.form.controls.lesserOrGreaterAmount.setValue(null);
+        this.form.controls.totalFineAmount.setValue(null);
+        this.form.controls.dueDate.setValue(null);
+        this.form.controls.revisedDueDate.setValue(null);
+      }
+
       // Make sure the date hint label is shown if there is a revised date/time
       this.showDateHint = this.timeToPay === "yes";
 
@@ -229,9 +240,9 @@ export class JJCountComponent implements OnInit, OnChanges {
       if (this.isViewOnly || !this.jjDisputedCount) {
         this.form.disable();
       }
-      
+
       this.countForm.patchValue(this.jjDisputedCount);
-        
+
       if (this.jjDisputedCount.jjDisputedCountRoP) {
         this.countRoPForm.patchValue(this.jjDisputedCount.jjDisputedCountRoP);
         this.countRoPForm.patchValue({
@@ -265,7 +276,7 @@ export class JJCountComponent implements OnInit, OnChanges {
 
       this.countRoPForm.valueChanges.subscribe(() => {
         this.jjDisputedCount.jjDisputedCountRoP = { ...this.jjDisputedCount.jjDisputedCountRoP, ...this.countRoPForm.value };
-        this.jjDisputedCount.jjDisputedCountRoP.jailIntermittent = this.countRoPForm.value._jailIntermittent ? this.JailIntermittent.Y : this.JailIntermittent.N;        
+        this.jjDisputedCount.jjDisputedCountRoP.jailIntermittent = this.countRoPForm.value._jailIntermittent ? this.JailIntermittent.Y : this.JailIntermittent.N;
         this.jjDisputedCount.jjDisputedCountRoP.dismissed = this.countRoPForm.value._dismissed ? this.Dismissed.Y : this.Dismissed.N;
         this.jjDisputedCount.jjDisputedCountRoP.forWantOfProsecution = this.countRoPForm.value._forWantOfProsecution ? this.ForWantOfProsecution.Y : this.ForWantOfProsecution.N;
         this.jjDisputedCount.jjDisputedCountRoP.withdrawn = this.countRoPForm.value._withdrawn ? this.Withdrawn.Y : this.Withdrawn.N;
@@ -440,14 +451,14 @@ export class JJCountComponent implements OnInit, OnChanges {
   }
 
   //Latest Plea
-  bindLatestPlea(value){
+  bindLatestPlea(value) {
     this.form.controls.latestPlea.setValue(value);
   }
 
-  bindLatestPleaUpdateTs(value){
+  bindLatestPleaUpdateTs(value) {
     this.form.controls.latestPleaUpdateTs.setValue(this.datePipe.transform(new Date(value), "YYYY-MM-dd HH:mm"));
   }
-  
+
 }
 
 
