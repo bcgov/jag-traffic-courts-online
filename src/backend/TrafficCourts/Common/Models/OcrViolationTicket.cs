@@ -27,19 +27,14 @@ public class OcrViolationTicket
     /// <summary>
     /// A Violation Ticket form that was in circulation around 2022.04
     /// </summary>
-    public static readonly string ViolationTicketVersion1_0 = "ViolationTicket:ViolationTicket_v1.0";
-    public static readonly string ViolationTicketVersion1_0_beta = "Violation Ticket:Violation Ticket 2022.04";
+    public static readonly string ViolationTicketVersion1_x = "ViolationTicket:ViolationTicket_v1";
+    public static readonly string ViolationTicketVersion1_beta = "Violation Ticket:Violation Ticket 2022.04";
     
     /// <summary>
     /// A new Violation Ticket form that was in introduced in 2023.09
     /// </summary>
-    public static readonly string ViolationTicketVersion2_0 = "ViolationTicket:ViolationTicket_v2.0";
-    public static readonly string ViolationTicketVersion2_0_beta = "Violation Ticket:Violation Ticket 2023.09";
-
-    /// <summary>
-    /// A new Violation Ticket form that was in introduced in 2023.09, but trained with generated and real ticket images
-    /// </summary>
-    public static readonly string ViolationTicketVersion2_1 = "ViolationTicket:ViolationTicket_v2.1";
+    public static readonly string ViolationTicketVersion2_x = "ViolationTicket:ViolationTicket_v2";
+    public static readonly string ViolationTicketVersion2_beta = "Violation Ticket:Violation Ticket 2023.09";
 
     public static readonly string ViolationTicketTitle = "violationTicketTitle";
     public static readonly string ViolationTicketNumber = "ticket_number";
