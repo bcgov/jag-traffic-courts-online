@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-init
+  labels:
+    {{- include "form-recognizer.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "form-recognizer.fullname" . }}-init
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: {{ include "form-recognizer.fullname" . }}-init
+          image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+          {{- if .Values.init.image.command }}
+          command: {{ .Values.init.image.command }}
+          {{- end }}
+          imagePullPolicy: {{ .Values.init.image.pullPolicy }}
+          volumeMounts:
+            - name: shared
+              mountPath: /shared
+            - name: logs
+              mountPath: /logs
+      volumes:
+        - name: shared
+          persistentVolumeClaim:
+            claimName: {{ include "form-recognizer.fullname" . }}-shared
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ include "form-recognizer.fullname" . }}-logs

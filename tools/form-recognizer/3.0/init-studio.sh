@@ -7,5 +7,4 @@ chmod -R 777 /db
 rm -rf /files/*
 cp -r /tmp/backup/files/* /files
 chmod -R 777 /files
-
 exit 0;
