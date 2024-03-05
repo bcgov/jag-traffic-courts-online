@@ -22,58 +22,25 @@ on:
 jobs:
   # This workflow contains a single job called "build-run-autotests"
   build-run-autotests:
-    # The type of runner that the job will run on
     runs-on: self-hosted
     env:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
-
-
-    # Define Maven version to test in the job name
-    name: Maven ${{ matrix.maven }} sample
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Git Checkout
-        uses: actions/checkout@v4
 
-      # Set up JDK build environment
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 17
-
-#      # Setup Maven Action with specified Java and Maven versions
-#      - name: Setup Maven Action
-#        uses: s4u/setup-maven-action@v1.2.1
-#        with:
-#         java-version: 17
-#         maven-version: 3.8.1
-#      - name: Build with Maven
-#        run: cd automation-tests &&
-#             mvn verify
-
-#      # Add a step to install unzip
-#      - name: Install zip
-#        uses: montudor/action-zip@v1
-
-#      - name: Decompress
-#        uses: TonyBogdanov/zip@1.0
-
-      # Setup Chrome for testing
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-      # Display Chrome version in the logs
-      - run: chrome --version
-
-      # Runs build steps
-      - name: Maven Package
-        working-directory: automation-tests
-        run: mvn -ntp clean package
-
-      # Run the application
-      - name: Running
-        working-directory: automation-tests/target
-        run: java -Xss2048k -jar TrafficCourtVirtualization-0.0.1-SNAPSHOT-test-jar-with-dependencies.jar eticket=true
+     - name: Login to OpenShift
+       uses: docker/login-action@v1
+       with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+            
+     - name: Build and push
+       env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: automation-tests
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/auto-tests
+       run: |
+          docker build --tag ${IMAGE} -f ${CONTEXT}/Dockerfile
+      #    docker push ${IMAGE}
