@@ -27,7 +27,8 @@ jobs:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
     steps:
-
+     - uses: actions/checkout@v2
+     
      - name: Login to OpenShift
        uses: docker/login-action@v1
        with:
