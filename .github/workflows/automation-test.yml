@@ -22,7 +22,7 @@ on:
 jobs:
   # This workflow contains a single job called "build-run-autotests"
   build-run-autotests:
-    runs-on: self-hosted
+    runs-on:  ubuntu-latest
     env:
       USERNAME_APP: ${{ secrets.USERNAME_APP }}
       PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
