@@ -44,4 +44,4 @@ jobs:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/auto-tests
        run: |
           docker build --tag ${IMAGE} -f ${CONTEXT}/Dockerfile ${CONTEXT}
-      #    docker push ${IMAGE}
+          docker push ${IMAGE}
