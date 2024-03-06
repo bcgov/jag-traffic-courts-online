@@ -1,16 +1,9 @@
-﻿using FluentAssertions;
-using FluentAssertions.Types;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
-using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
@@ -18,8 +11,8 @@ using TrafficCourts.Staff.Service.Models;
 using Xunit;
 using TrafficCourts.Common.Errors;
 using System.Security.Claims;
-using System.Collections;
-using Docker.DotNet.Models;
+using System.Net;
+using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
@@ -93,7 +86,7 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
-            .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
+            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
@@ -117,7 +110,7 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
-            .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
+            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
@@ -165,7 +158,7 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
-            .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
+            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
@@ -190,7 +183,7 @@ public class DisputeControllerTest
         long updatedId = 2;
         disputeService
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
-            .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
+            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
@@ -310,5 +303,30 @@ public class DisputeControllerTest
         Assert.Equal(2, actual!.Count);
         Assert.Equal(updateRequest1, actual[0]);
         Assert.Equal(updateRequest2, actual[1]);
+    }
+
+    [Fact]
+    public async void TestGetDisputeThrowsObjectManagementServiceException500Result()
+    {
+        // Arrange
+        Dispute dispute = new();
+        long id = 1;
+        dispute.DisputeId = id;
+        var disputeService = new Mock<IDisputeService>();
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+
+        disputeService
+            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
+            .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
+
+        // Act
+        IActionResult? result = await disputeController.GetDisputeAsync(1, CancellationToken.None);
+
+        // Assert
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        Assert.Equal((int)HttpStatusCode.InternalServerError, problemDetails.Status);
+        Assert.True(problemDetails?.Title?.Contains("Error Invoking COMS"));
     }
 }
