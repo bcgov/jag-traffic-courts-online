@@ -25,7 +25,7 @@ public class DisputeService : IDisputeService
     private readonly IBus _bus;
     private readonly IObjectManagementService _objectManagementService;
     private readonly IProvinceLookupService _provinceLookupService;
-
+    private readonly IStaffDocumentService _documentService;
 
     public DisputeService(
         IOracleDataApiClient oracleDataApi,
@@ -34,7 +34,8 @@ public class DisputeService : IDisputeService
         ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
         IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
         ILogger<DisputeService> logger,
-        IProvinceLookupService provinceLookupService)
+        IProvinceLookupService provinceLookupService,
+        IStaffDocumentService comsService)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
@@ -43,6 +44,7 @@ public class DisputeService : IDisputeService
         _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(rejectedDisputeEmailTemplate));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(_provinceLookupService));
+        _documentService = comsService ?? throw new ArgumentNullException(nameof(_documentService));
     }
 
     public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
@@ -65,6 +67,18 @@ public class DisputeService : IDisputeService
         // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
         // If so, retrieve the image from object storage and return it as well.
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
+
+        List<FileMetadata>? disputeFiles = null;
+
+        // search by notice of dispute guid
+        if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
+        {
+            // create new search properties
+            DocumentProperties properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
+            disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
+        }
+
+        dispute.FileData = disputeFiles;
 
         return dispute;
     }

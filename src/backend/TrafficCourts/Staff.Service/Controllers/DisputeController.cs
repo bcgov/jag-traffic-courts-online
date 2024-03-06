@@ -6,6 +6,7 @@ using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Common.Errors;
+using System.Net;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
@@ -109,6 +110,25 @@ public class DisputeController : StaffControllerBase
             pd.Extensions.Add("errors", e.Message);
 
             return new ObjectResult(pd);
+        }
+        catch (Coms.Client.ObjectManagementServiceException e)
+        {
+            _logger.LogError(e, "Could not return document IDs because of ObjectManagementServiceException");
+            ProblemDetails problemDetails = new();
+            problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+            problemDetails.Title = e.Source + ": Error Invoking COMS";
+            problemDetails.Instance = HttpContext?.Request?.Path;
+            string? innerExceptionMessage = e.InnerException?.Message;
+            if (innerExceptionMessage is not null)
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
+            }
+            else
+            {
+                problemDetails.Extensions.Add("errors", new string[] { e.Message });
+            }
+
+            return new ObjectResult(problemDetails);
         }
         catch (ApiException e)
         {

@@ -51,9 +51,8 @@ public class DocumentController : StaffControllerBase
         [Required]
         IFormFile file,
         [FromHeader]
-        [Required]
         [Range(1, int.MaxValue)]
-        long disputeId,
+        long? disputeId,
         [FromHeader]
         [Required]
         string noticeOfDisputeId,
