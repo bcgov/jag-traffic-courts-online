@@ -17,7 +17,9 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"Angular.ng-template"
+				"Angular.ng-template",
+				"aaron-bond.better-comments",
+				"usernamehw.errorlens"
 			]
 		}
 	},
