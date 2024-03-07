@@ -38,11 +38,17 @@ public class OffenseCount
     [JsonProperty("finding")]
     public string Finding { get; set; } = string.Empty;
 
+    [JsonProperty("lesserDescription")]
+    public string LesserDescription { get; set; } = string.Empty;
+
     [JsonProperty("reviseFine")]
     public bool ReviseFine { get; set; }
 
     [JsonProperty("lesserOrGreaterAmt")]
     public decimal? LesserOrGreaterAmount { get; set; }
+
+    [JsonProperty("roundLesserOrGreaterAmt")]
+    public decimal? RoundLesserOrGreaterAmount { get; set; }
 
     [JsonProperty("includesSurcharge")]
     public string IncludesSurcharge { get; set; } = string.Empty;
