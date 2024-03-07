@@ -128,6 +128,16 @@ export class ViolationTicketService {
       dialogRef.close();
       return;
     }
+
+    // Check for valid file type
+    const validImageTypes = ['image/jpeg', 'image/png'];
+    if(!validImageTypes.includes(ticketFile.type)) {
+      this.logger.error("ViolationTicketService::analyseTicket error has occurred: ", "Not a valid file type.");
+      this.openErrorScenarioOneDialog();
+      dialogRef.close();
+      return;
+    }
+
     // Check if file too small (0) or too large (over 10MB)
     var fileSizeError = this.fileUtilsService.checkFileSize(ticketFile?.size);
     if (fileSizeError !== "") {
