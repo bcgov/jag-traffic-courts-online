@@ -24,8 +24,10 @@ public class Mapper
         target.GivenName3 = dispute.DisputantGivenName3;
         target.TicketIssuanceDate = dispute.IssuedTs?.DateTime;
         target.TicketFileNumber = dispute.TicketNumber;
-        target.IssuingOrganization = dispute.ViolationTicket.DetachmentLocation;
-        target.IssuingLocation = dispute.ViolationTicket.CourtLocation;
+
+        // TCVP-2793 - issuing organziation should always be police (POL) and issuing location is the detachment location
+        target.IssuingOrganization = "POL";
+        target.IssuingLocation = dispute.ViolationTicket.DetachmentLocation;
 
         // If DL Province is out of province, do not send drivers licence
         if (dispute.DriversLicenceNumber is not null && dispute.DriversLicenceIssuedProvinceSeqNo == 1 && dispute.DriversLicenceIssuedCountryId == 1)
@@ -36,15 +38,13 @@ public class Mapper
         target.ViolationTicketCounts = Map(dispute.ViolationTicket.ViolationTicketCounts);
 
         // TODO: Lookup address province seq no and country id and set addressprovince to abbreviation code
-        if (dispute.AddressProvinceSeqNo != null) target.Province = dispute.AddressProvince;
+        if (dispute.AddressProvinceSeqNo is not null) target.Province = dispute.AddressProvince;
         // only need two character code (province may be more than two chars if not USA or Canada)
         else if (dispute.AddressProvince is not null && dispute.AddressProvince.Length > 2) target.Province = dispute.AddressProvince.Substring(0, 2);
         else dispute.AddressProvince = null;
 
         target.StreetAddress = FormatStreetAddress(dispute);
         target.City = dispute.AddressCity;
-        target.City = dispute.AddressCity;
-
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;
 

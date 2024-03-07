@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutoFixture;
+using MassTransit;
+using System;
 using System.Collections.Generic;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Mappers;
@@ -8,26 +10,34 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
 {
     public class MapperTest
     {
+        private readonly Fixture _fixture = new();
+        private readonly Dispute _expected;
+
+        public MapperTest()
+        {
+            // create object we will map.
+            _expected = _fixture.Create<Dispute>();
+
+            // oracle data api NoticeOfDisputeGuid is string, but internally should be a Guid
+            _expected.NoticeOfDisputeGuid = Guid.NewGuid().ToString("d");
+        }
+
         [Theory]
         [MemberData(nameof(GetTestCases))]
         public void dispute_approve_maps_disputed_count_to_dispute_type(int count, DisputeCountRequestReduction reduction, DisputeCountRequestTimeToPay timeToPay, string disputeType)
         {
-            Dispute source = new Dispute()
-            {
-                ViolationTicket = new ViolationTicket(),
-                NoticeOfDisputeGuid = Guid.NewGuid().ToString("d"),
-                DisputeCounts =
-                [
+            Dispute expected = _expected;
+
+            expected.DisputeCounts = [
                     new DisputeCount
                     {
                         CountNo = count,
                         RequestReduction = reduction,
                         RequestTimeToPay = timeToPay
                     }
-                ]
-            };
+                ];
 
-            var actual = Mapper.ToDisputeApproved(source);
+            var actual = Mapper.ToDisputeApproved(expected);
             Assert.NotNull(actual);
 
             var disputeCount = Assert.Single(actual.DisputeCounts);
@@ -35,10 +45,43 @@ namespace TrafficCourts.Staff.Service.Test.Mappers
         }
 
         [Fact]
+        public void maps_issuing_organziation_and_location()
+        {
+            var actual = Mapper.ToDisputeApproved(_expected);
+            Assert.NotNull(actual);
+
+            // TCVP-2793 - issuing organziation should always be police (POL) and issuing location is the detachment location
+            Assert.Equal("POL", actual.IssuingOrganization);
+            Assert.Equal(_expected.ViolationTicket.DetachmentLocation, actual.IssuingLocation);
+        }
+
+        [Fact]
+        public void maps_disputant_name()
+        {
+            var actual = Mapper.ToDisputeApproved(_expected);
+            Assert.NotNull(actual);
+
+            Assert.Equal(_expected.DisputantSurname, actual.Surname);
+            Assert.Equal(_expected.DisputantGivenName1, actual.GivenName1);
+            Assert.Equal(_expected.DisputantGivenName2, actual.GivenName2);
+            Assert.Equal(_expected.DisputantGivenName3, actual.GivenName3);
+        }
+
+        [Fact]
+        public void maps_ticket_number_and_time()
+        {
+            var actual = Mapper.ToDisputeApproved(_expected);
+            Assert.NotNull(actual);
+
+            Assert.Equal(_expected.TicketNumber, actual.TicketFileNumber);
+            Assert.Equal(_expected.IssuedTs, actual.TicketIssuanceDate);
+        }
+
+        [Fact]
         public void ToDisputeApproved_throws_ArgumentNullException()
         {
             var actual = Assert.Throws<ArgumentNullException>(() => Mapper.ToDisputeApproved(null!));
-            Assert.NotNull(actual);
+            Assert.Equal("dispute", actual.ParamName);
         }
 
 
