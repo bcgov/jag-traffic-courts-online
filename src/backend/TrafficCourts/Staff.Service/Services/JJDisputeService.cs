@@ -291,6 +291,42 @@ public partial class JJDisputeService : IJJDisputeService
         return partId;
     }
 
+    public async Task<string?> GetDisputeAssignToDisplayNameAsync(string assignedTo, CancellationToken cancellationToken)
+    {
+        string? displayName = null;
+        ICollection<UserRepresentation> userRepresentations = await _keycloakService.UsersByIdirAsync(assignedTo, cancellationToken);
+        if (userRepresentations is not null)
+        {
+            foreach (UserRepresentation userRepresentation in userRepresentations)
+            {
+                IList<string> attributes = userRepresentation.GetAttributeValues(UserAttributes.DisplayName);
+                if (attributes.Count != 0)
+                {
+                    if (attributes.Count > 1)
+                    {
+                        LogUserAssignedToHasManyDisplayNames(assignedTo);
+                    }
+
+                    // use the first one
+                    displayName = attributes[0];
+                    break;
+                }
+            }
+
+            if (displayName is null)
+            {
+                // user does not have a display name
+                LogUserAssignedToHasNoDisplayName(assignedTo);
+            }
+        }
+        else
+        {
+            LogUserAssignedToNotFound(assignedTo);
+        }
+
+        return displayName;
+    }
+
     private static string GetUserName(ClaimsPrincipal user)
     {
         return user?.Identity?.Name ?? string.Empty;
@@ -357,6 +393,21 @@ public partial class JJDisputeService : IJJDisputeService
     private partial void LogNooneIsAssignedToTicket(
         [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTicketNumber), OmitReferenceName = true)]
         string ticketNumber);
+
+    [LoggerMessage(EventId = 4, Level = LogLevel.Debug, EventName = "UserAssignedToHasManyDisplayNames", Message = "User assigned to ticket has multiple display names in Keycloak")]
+    private partial void LogUserAssignedToHasManyDisplayNames(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordUsername), OmitReferenceName = true)]
+        string assignedToUserId);
+
+    [LoggerMessage(EventId = 5, Level = LogLevel.Warning, EventName = "UserAssignedToHasNoDisplayName", Message = "User assigned to ticket has no display name attribute in Keycloak")]
+    private partial void LogUserAssignedToHasNoDisplayName(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordUsername), OmitReferenceName = true)]
+        string assignedToUserId);
+
+    [LoggerMessage(EventId = 6, Level = LogLevel.Debug, EventName = "UserAssignedToNotFound", Message = "User assigned to ticket not found in Keycloak")]
+    private partial void LogUserAssignedToNotFound(
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordUsername), OmitReferenceName = true)]
+        string assignedToUserId);
 }
 
 public class PartIdNotFoundException : Exception
@@ -368,5 +419,15 @@ public class PartIdNotFoundException : Exception
     }
     
     public string TicketNumber { get; init; }
+    public string AssignedTo { get; init; }
+}
+
+public class DisplayNameNotFoundException : Exception
+{
+    public DisplayNameNotFoundException(string assignedTo) : base($"The assigned JJ {assignedTo} does not have a displayName available")
+    {
+        AssignedTo = assignedTo;
+    }
+
     public string AssignedTo { get; init; }
 }

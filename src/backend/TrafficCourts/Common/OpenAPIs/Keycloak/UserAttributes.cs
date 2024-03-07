@@ -15,5 +15,8 @@ public static class UserAttributes
     /// </summary>
     public const string IdirUsername = "idir_username";
 
-
+    /// <summary>
+    /// The user's display name.
+    /// </summary>
+    public const string DisplayName = "display_name";
 }
