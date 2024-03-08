@@ -17,9 +17,9 @@ citizen-api:
     tag: "1.86.2"
     pullPolicy: Always
   env:
-    "FormRecognizer__ApiVersion": "2.1"
-    "FormRecognizer__ModelId": "f6dc4072-b0b3-4e16-816d-a73ccc1a61d4"
-    "Swagger__Enabled": "true"
+    "FormRecognizer__ApiVersion": "2022-08-31"
+    "FormRecognizer__ModelId": "ViolationTicket"
+    "FormRecognizer__Endpoint": "https://acs-forms-recognizer-0198bb-test.apps.silver.devops.gov.bc.ca/"
     "TicketSearch__SearchType": "RoadSafety"
     "MassTransit__Transport": "RabbitMq"
     "COMS__BASEURL": "http://common-object-management-service:3000"
