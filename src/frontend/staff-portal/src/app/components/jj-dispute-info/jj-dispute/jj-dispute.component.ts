@@ -427,6 +427,7 @@ export class JJDisputeComponent implements OnInit {
         jjDisputedCount.revisedDueDate = updatedJJDisputedCount.revisedDueDate;
         jjDisputedCount.comments = updatedJJDisputedCount.comments;
         jjDisputedCount.jjDisputedCountRoP.finding = updatedJJDisputedCount.jjDisputedCountRoP.finding;
+        jjDisputedCount.jjDisputedCountRoP.lesserDescription = updatedJJDisputedCount.jjDisputedCountRoP.lesserDescription;
         jjDisputedCount.jjDisputedCountRoP.ssProbationDuration = updatedJJDisputedCount.jjDisputedCountRoP.ssProbationDuration;
         jjDisputedCount.jjDisputedCountRoP.ssProbationConditions = updatedJJDisputedCount.jjDisputedCountRoP.ssProbationConditions;
         jjDisputedCount.jjDisputedCountRoP.jailDuration = updatedJJDisputedCount.jjDisputedCountRoP.jailDuration;

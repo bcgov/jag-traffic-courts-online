@@ -120,4 +120,12 @@ public interface IJJDisputeService
     /// <exception cref="ApiException">A server side error occurred.</exception>
     /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
     Task<JJDispute> ConfirmJJDisputeAsync(string ticketNumber, ClaimsPrincipal user, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves the display name for the user with the given IDIR from Keycloak.
+    /// </summary>
+    /// <param name="assignedTo">The user's IDIR</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+    /// <returns>The user's display name</returns>
+    Task<string?> GetDisputeAssignToDisplayNameAsync(string assignedTo, CancellationToken cancellationToken);
 }
