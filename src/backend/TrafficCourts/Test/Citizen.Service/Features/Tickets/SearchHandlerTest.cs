@@ -213,10 +213,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             // Given
             string ticketNumber = "EA00000000";
             string ticketTime = "00:00";
-            Mock<IBus> _bus = new();
-            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
-            Mock<ILogger<TicketSearchService>> _logger = new();
-            TicketSearchService ticketSearchService = CreateTicketSearchService();
+
             Invoice invoice = new() {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
@@ -237,11 +234,12 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
             // When
             _invoiceSearchService
-                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .SearchAsync(Arg.Any<string>(), Arg.Any<TimeOnly>(), Arg.Any<CancellationToken>())
                 .Returns(Task.FromResult(invoices));
-            
+
             // Then
             // Invoice.Act should match MVAR 
+            TicketSearchService ticketSearchService = CreateTicketSearchService();
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
             Assert.NotNull(actual);
             Assert.Equal("EA00000000", actual.TicketNumber);
