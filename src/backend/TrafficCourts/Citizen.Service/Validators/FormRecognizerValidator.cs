@@ -243,24 +243,32 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     // A function to sanitize the OcrViolationTicket and set the isMVA and isMVAR checkboxes based on the validity of the MVA and MVAR Statutes referenced in the section text for the 3 counts.
     private async Task SanitizeDidCommitAsyc(OcrViolationTicket violationTicket)
     {
+        // TCVO-2804 - only attempt to use statutes if the MVA/MVAR checkboxes could not be read.
+
         // If the section text for any of the 3 counts references a valid MVA Statute, the isMVA checkbox should be selected
         if (violationTicket.Fields.TryGetValue(OcrViolationTicket.OffenceIsMVA, out Field? isMVA)) {
-            isMVA.Value = (
-                await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mva)
-                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mva)
-                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mva)) 
-                ? Field._selected : Field._unselected;
+            // If field neither, it couldn't be read successfully, attempt to use statutes instead.
+            if (isMVA.Value != Field._selected && isMVA.Value != Field._unselected) { 
+                isMVA.Value = (
+                    await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mva)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mva)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mva)) 
+                    ? Field._selected : Field._unselected;
+            }
                 
             _logger.LogTrace($"isMVA should be: {isMVA.Value}");
         }
         
         // If the section text for any of the 3 counts references a valid MVAR Statute, the isMVAR checkbox should be selected
         if (violationTicket.Fields.TryGetValue(OcrViolationTicket.OffenceIsMVAR, out Field? isMVAR)) {
-            isMVAR.Value = (
-                await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mvar)
-                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mvar)
-                || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mvar)) 
-                ? Field._selected : Field._unselected;
+            // If field neither, it couldn't be read successfully, attempt to use statutes instead.
+            if (isMVAR.Value != Field._selected && isMVAR.Value != Field._unselected) { 
+                isMVAR.Value = (
+                    await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count1Section, Field._mvar)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count2Section, Field._mvar)
+                    || await IsStatuteValidAsync(violationTicket, OcrViolationTicket.Count3Section, Field._mvar)) 
+                    ? Field._selected : Field._unselected;
+            }
 
             _logger.LogTrace($"isMVAR should be: {isMVAR.Value}");
         }
