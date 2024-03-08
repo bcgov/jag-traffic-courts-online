@@ -102,6 +102,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
         var dispute = await _disputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
+        
         Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
         var fileHistory = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(dispute.TicketNumber, cancellationToken);
 
@@ -145,16 +146,23 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 
         // set the court appearance
         Appearance appearance = digitalCaseFile.Appearance;
-        // TODO: how do we know the current appearance vs historical ones?
-        JJDisputeCourtAppearanceRoP currentAppearance = dispute.JjDisputeCourtAppearanceRoPs.First();
-        SetFields(appearance, currentAppearance);
+        // Get the JJDisputeCourtAppearanceRoP with the most recent AppearanceTs.
+        JJDisputeCourtAppearanceRoP currentAppearance = dispute.JjDisputeCourtAppearanceRoPs.OrderByDescending(a => a.AppearanceTs).First();
+        // get display name of JJ based on their IDIR
+        string? jjDisplayName = string.Empty;
+        if (dispute.JjAssignedTo is not null)
+        {
+            jjDisplayName = await _disputeService.GetDisputeAssignToDisplayNameAsync(dispute.JjAssignedTo, cancellationToken);
+        }  
+
+        SetFields(appearance, currentAppearance, jjDisplayName);
 
         // set the court appearance history
         var appearanceHistory = digitalCaseFile.AppearanceHistory;
-        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs.Where(_ => _ != currentAppearance))
+        foreach (var rop in dispute.JjDisputeCourtAppearanceRoPs.Where(_ => _ != currentAppearance).OrderByDescending(a => a.AppearanceTs))
         {
             // TODO: how do we know the current appearance vs historical ones?
-            appearanceHistory.Add(SetFields(new Appearance(), rop));
+            appearanceHistory.Add(SetFields(new Appearance(), rop, null));
         }
 
         // set written reasons
@@ -182,15 +190,19 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
                 offenseCount.ReviseFine = SetReviseFine(disputedCount);
                 offenseCount.LesserOrGreaterAmount = (decimal?)(disputedCount.LesserOrGreaterAmount);
+                offenseCount.RoundLesserOrGreaterAmount = disputedCount.LesserOrGreaterAmount != null
+                    ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount) : null;
                 offenseCount.IncludesSurcharge = ToString(disputedCount.IncludesSurcharge);
                 offenseCount.TotalFineAmount = (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
                 offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
                 offenseCount.FinalDue = disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
-                offenseCount.Surcharge = disputedCount.LesserOrGreaterAmount != null ? (decimal?)(disputedCount.LesserOrGreaterAmount * 0.15) : 0;
+                offenseCount.Surcharge = disputedCount.LesserOrGreaterAmount != null 
+                    ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount * 0.15M) : 0;
                 offenseCount.Comments = disputedCount.Comments;
                 // set jjDisputedCountRoP data for this count
                 offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP.Finding);
+                offenseCount.LesserDescription = disputedCount.JjDisputedCountRoP.LesserDescription;
                 offenseCount.SsProbationDuration = disputedCount.JjDisputedCountRoP.SsProbationDuration;
                 offenseCount.SsProbationConditions = disputedCount.JjDisputedCountRoP.SsProbationConditions;
                 offenseCount.JailDuration = disputedCount.JjDisputedCountRoP.JailDuration;
@@ -257,18 +269,19 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return digitalCaseFile;
     }
 
-    private Appearance SetFields(Appearance appearance, JJDisputeCourtAppearanceRoP appearanceRop)
+    private Appearance SetFields(Appearance appearance, JJDisputeCourtAppearanceRoP appearanceRop, string? jjDisplayName)
     {
         appearance.When = new FormattedDateTime(appearanceRop.AppearanceTs);
         appearance.Room = appearanceRop.Room;
         appearance.Reason = appearanceRop.Reason;
         appearance.App = ToString(appearanceRop.AppCd);
         appearance.NoApp = new FormattedDateTime(appearanceRop.NoAppTs);
+        appearance.Clerk = appearanceRop.ClerkRecord;
         appearance.DefenseCouncil = appearanceRop.DefenceCounsel;
         appearance.DefenseAtt = ToString(appearanceRop.DattCd);
         appearance.Crown = ToString(appearanceRop.Crown);
         appearance.Seized = ToString(appearanceRop.JjSeized);
-        appearance.JudicialJustice = appearanceRop.Adjudicator;
+        appearance.JudicialJustice = jjDisplayName ?? appearanceRop.Adjudicator;
         appearance.Comments = appearanceRop.Comments;
 
         return appearance;

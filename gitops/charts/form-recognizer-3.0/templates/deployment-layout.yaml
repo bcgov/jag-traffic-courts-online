@@ -5,9 +5,6 @@ metadata:
   labels:
     {{- include "form-recognizer.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.layout.autoscaling.enabled }}
-  replicas: {{ .Values.layout.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/instance: {{ include "form-recognizer.fullname" . }}-layout

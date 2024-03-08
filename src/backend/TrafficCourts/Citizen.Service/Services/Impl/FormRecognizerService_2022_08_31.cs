@@ -132,13 +132,16 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
         {
             AnalyzedDocument document = result.Documents[0];
             violationTicket.GlobalConfidence = document.Confidence;
-            if (OcrViolationTicket.ViolationTicketVersion1_0 == document.DocumentType)
+            if (document.DocumentType is not null 
+                && (OcrViolationTicket.ViolationTicketVersion1_beta == document.DocumentType
+                 || document.DocumentType.StartsWith(OcrViolationTicket.ViolationTicketVersion1_x)))
             {
                 violationTicket.TicketVersion = ViolationTicketVersion.VT1;
                 fieldLabels = IFormRecognizerService.FieldLabels_VT1;
             }
-            else if (OcrViolationTicket.ViolationTicketVersion2_0 == document.DocumentType
-                  || OcrViolationTicket.ViolationTicketVersion2_1 == document.DocumentType)
+            else if (document.DocumentType is not null 
+                && (OcrViolationTicket.ViolationTicketVersion2_beta == document.DocumentType
+                 || document.DocumentType.StartsWith(OcrViolationTicket.ViolationTicketVersion2_x)))
             {
                 violationTicket.TicketVersion = ViolationTicketVersion.VT2;
                 fieldLabels = IFormRecognizerService.FieldLabels_VT2;
