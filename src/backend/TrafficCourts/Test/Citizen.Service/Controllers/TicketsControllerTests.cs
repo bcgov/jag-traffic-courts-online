@@ -15,6 +15,7 @@ using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 
 using SearchRequest = TrafficCourts.Citizen.Service.Features.Tickets.Search.Request;
 using SearchResponse = TrafficCourts.Citizen.Service.Features.Tickets.Search.Response;
+using TrafficCourts.Citizen.Service.Problems.TicketSearch;
 
 namespace TrafficCourts.Test.Citizen.Service.Controllers;
 
@@ -226,10 +227,10 @@ public class TicketsControllerTests
         var result = await ticketController.SearchAsync(ticketNumber, time, CancellationToken.None);
 
         // Assert
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        var errorMsg = Assert.IsType<string>(badRequestResult.Value);
+        var badRequestResult = Assert.IsType<ObjectResult>(result);
+        var problem = Assert.IsType<DuplicateDisputeProblem>(badRequestResult.Value);
         Assert.Equal((int)HttpStatusCode.BadRequest, badRequestResult.StatusCode);
-        Assert.StartsWith("A dispute has already been submitted", errorMsg);
+        Assert.Equal("A dispute can only be submitted once for a violation ticket.", problem.Title);
     }
 
     [Fact]
@@ -262,8 +263,8 @@ public class TicketsControllerTests
 
         // Assert
         var objectResult = Assert.IsType<ObjectResult>(result);
-        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        var problemDetails = Assert.IsType<TicketSearchFailedProblem>(objectResult.Value);
         Assert.Equal(StatusCodes.Status500InternalServerError, problemDetails.Status);
-        Assert.True(problemDetails?.Title?.Contains("Error searching dispute"));
+        Assert.True(problemDetails?.Title?.Contains("Error searching for ticket"));
     }
 }
