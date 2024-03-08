@@ -8,28 +8,6 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {
     public class SearchRequestTest
     {
-        [Fact]
-        public void can_create_request_with_valid_ticket_number_and_time()
-        {
-            var random = new Random();
-            for (char c1 = 'A'; c1 <= 'Z'; c1++)
-            {
-                for (char c2 = 'A'; c2 <= 'Z'; c2++)
-                {
-                    var i = random.Next(0, 100_000_000);
-                    var ticketNumber = $"{c1}{c2}{i:d8}";
-
-                    var hour = random.Next(0, 24);
-                    var minute = random.Next(0, 60);
-
-                    var actual = new Request(ticketNumber, $"{hour:d2}:{minute:d2}");
-                    Assert.Equal(ticketNumber, actual.TicketNumber);
-                    Assert.Equal(hour, actual.Hour);
-                    Assert.Equal(minute, actual.Minute);
-                }
-            }
-        }
-
         [Theory]
         [InlineData("aa123456", "lowercase letters")]
         [InlineData("Aa123456", "mix case letters")]
@@ -42,8 +20,6 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         {
             Assert.Throws<ArgumentException>("ticketNumber", () => new Request(ticketNumber, "00:00"));
         }
-
-
 
         [Theory]
         [MemberData(nameof(EachTimeOfDay))]

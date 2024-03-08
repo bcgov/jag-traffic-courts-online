@@ -42,9 +42,12 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.7.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.0.0-rc9.7" />
     <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
-    <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.27" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+    <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.0.0" />
+    <PackageReference Include="ZiggyCreatures.FusionCache.Backplane.StackExchangeRedis" Version="1.0.0" />
+    <PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

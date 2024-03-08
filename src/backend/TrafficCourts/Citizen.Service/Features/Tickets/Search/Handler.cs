@@ -57,7 +57,7 @@ public class Handler : IRequestHandler<Request, Response>
         catch (InvalidTicketVersionException exception)
         {
             activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
-            _logger.LogError(exception, "Could not return a ticket with invalid violation date and version (VT1)");
+            _logger.LogError(exception, "Could not return a ticket with invalid violation date and version (VT1) {ErrorId}", exception.ErrorId);
             return new Response(exception);
         }
         catch (Exception exception)

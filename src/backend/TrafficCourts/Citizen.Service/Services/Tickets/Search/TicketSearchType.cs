@@ -13,6 +13,12 @@ public enum TicketSearchType
     Mock,
 
     /// <summary>
+    /// Hybrid will use RoadSafety and if that errors out or returns not found
+    /// the Mock will be used.
+    /// </summary>
+    Hybrid,
+
+    /// <summary>
     /// Use Road Safety service
     /// </summary>
     RoadSafety

@@ -1,28 +1,34 @@
 ﻿using MassTransit;
 using System.Diagnostics;
 using System.Globalization;
+using TrafficCourts.Citizen.Service.Caching;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 using TrafficCourts.Common;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Logging;
 using TrafficCourts.Messaging.MessageContracts;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search;
 
-public class TicketSearchService : ITicketSearchService
+public partial class TicketSearchService : ITicketSearchService
 {
-    private const string _mva = "MVA";
-    private const string _mvar = "MVAR";
+    private const string MVA = "MVA";
+    private const string MVAR = "MVAR";
     private readonly IBus _bus;
     private readonly ITicketInvoiceSearchService _invoiceSearchService;
     private readonly ILogger<TicketSearchService> _logger;
     private static readonly DateTime _validVT2TicketEffectiveDate = new(2024, 4, 9);
-    
+    private readonly IFusionCache _cache;
 
-    public TicketSearchService(IBus bus, ITicketInvoiceSearchService invoiceSearchService, ILogger<TicketSearchService> logger)
+
+    public TicketSearchService(IBus bus, ITicketInvoiceSearchService invoiceSearchService, IFusionCacheProvider cacheProvider, ILogger<TicketSearchService> logger)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _invoiceSearchService = invoiceSearchService ?? throw new ArgumentNullException(nameof(invoiceSearchService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+        _cache = cacheProvider.GetCache(Cache.TicketSearch);
     }
 
     public async Task<Models.Tickets.ViolationTicket?> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
@@ -40,10 +46,10 @@ public class TicketSearchService : ITicketSearchService
             _logger.LogDebug("Searching for violation ticket");
 
             // call the ticket service
-            IEnumerable<Invoice>? response = await _invoiceSearchService.SearchAsync(ticketNumber, issuedTime, cancellationToken);
+            IEnumerable<Invoice> response = await SearchInvoicesAsync(ticketNumber, issuedTime, cancellationToken);
 
             // TCVP-2651 Filter results to only MVA/MVAR violation tickets
-            var invoices = response.Where(_ => _.Act == _mva || _.Act == _mvar).ToList();
+            var invoices = response.Where(_ => _.Act == MVA || _.Act == MVAR).ToList();
 
             if (invoices.Count != 0)
             {
@@ -123,8 +129,8 @@ public class TicketSearchService : ITicketSearchService
             count.Paragraph = legalSection.Paragraph;
             count.Subparagraph = legalSection.Subparagrah;
 
-            count.IsAct = invoice.Act == _mva ? ViolationTicketCountIsAct.Y : ViolationTicketCountIsAct.N;
-            count.IsRegulation = invoice.Act == _mvar ? ViolationTicketCountIsRegulation.Y : ViolationTicketCountIsRegulation.N;
+            count.IsAct = invoice.Act == MVA ? ViolationTicketCountIsAct.Y : ViolationTicketCountIsAct.N;
+            count.IsRegulation = invoice.Act == MVAR ? ViolationTicketCountIsRegulation.Y : ViolationTicketCountIsRegulation.N;
 
             ticket.Counts.Add(count);
         }
@@ -134,40 +140,84 @@ public class TicketSearchService : ITicketSearchService
 
     public async Task<bool> IsDisputeSubmittedBefore(string ticketNumber, CancellationToken cancellationToken)
     {
+        // Check if a dispute has been submitted before for the given ticket number by verfying any Dispute exists associated to the provided ticket number
+        SearchDisputeRequest searchRequest = new() { TicketNumber = ticketNumber, ExcludeStatus = ExcludeStatus2.REJECTED };
+
         try
         {
-            // Check if a dispute has been submitted before for the given ticket number by verfying any Dispute exists associated to the provided ticket number
-            SearchDisputeRequest searchRequest = new() { TicketNumber = ticketNumber, ExcludeStatus = ExcludeStatus2.REJECTED };
             Response<SearchDisputeResponse> response = await _bus.Request<SearchDisputeRequest, SearchDisputeResponse>(searchRequest, cancellationToken);
             
             var searchResponse = response.Message;
 
-            if (searchResponse == null)
+            if (searchResponse is null)
             {
-                _logger.LogError("Search response is null, throwing DisputeSearchFailedException");
-                throw new DisputeSearchFailedException(ticketNumber);
+                var exception = new DisputeSearchFailedException(ticketNumber);
+                _logger.LogError("Search response is null, throwing DisputeSearchFailedException {ErrorId}", exception.ErrorId);
+                throw exception;
             }
 
             if (!searchResponse.IsNotFound)
             {
-                _logger.LogDebug("Found a dispute for the given ticket number: {ticketNumber}, returning bad request", ticketNumber);
+                _logger.LogDebug("Found a dispute for the given ticket number: {ticketNumber}", ticketNumber);
                 return true;
             }
 
             if (searchResponse.IsError)
             {
-                _logger.LogError("Search returned error, throwing DisputeSearchFailedException");
-                throw new DisputeSearchFailedException(ticketNumber);
+                var exception = new DisputeSearchFailedException(ticketNumber);
+                _logger.LogError("Search returned error, throwing DisputeSearchFailedException {ErrorId}", exception.ErrorId);
+                throw exception;
             }
 
             _logger.LogDebug("Dispute not submitted before, returning false");
             return false;
         }
+        catch (RequestTimeoutException ex)
+        {
+            var exception = new DisputeSearchFailedException(ticketNumber, ex);
+            LogRequestTimeout(ex, ticketNumber, exception.ErrorId);
+            throw exception;
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while checking if dispute submitted before");
-            throw;
+            var exception = new DisputeSearchFailedException(ticketNumber, ex);
+            _logger.LogError(ex, "An error occurred while checking if dispute has already been submitted {ErrorId}", exception.ErrorId);
+            throw exception;
         }
+    }
+
+    [LoggerMessage(Level = LogLevel.Error, EventName = "RequestTimeout", Message = "An timeout error occurred while checking if dispute has already been submitted")]
+    private partial void LogRequestTimeout(
+        RequestTimeoutException exception,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordTicketNumber), OmitReferenceName = true)]
+        string ticketNumber,
+        [TagProvider(typeof(TagProvider), nameof(TagProvider.RecordErrorId), OmitReferenceName = true)]
+        Guid errorId);
+
+    private async Task<IEnumerable<Invoice>> SearchInvoicesAsync(string ticketNumber, TimeOnly timeOnly, CancellationToken cancellationToken)
+    {
+        var key = $"{ticketNumber}-{timeOnly}";
+
+        // todo determine if this works
+        //await _cache.GetOrSetAsync(
+        //    key,
+        //    ct => _service.SearchAsync(ticketNumber, timeOnly, ct),
+        //    options: null,
+        //    cancellationToken);
+
+        var value = await _cache.GetOrDefaultAsync<List<Invoice>>(key, defaultValue: null, options: null, cancellationToken);
+        if (value is null)
+        {
+            var searchResult = await _invoiceSearchService.SearchAsync(ticketNumber, timeOnly, cancellationToken);
+            value = searchResult?.ToList();
+
+            if (value is not null)
+            {
+                await _cache.SetAsync(key, value, options: null, cancellationToken); // expiration should default on our named cache
+            }
+        }
+
+        return value ?? Enumerable.Empty<Invoice>();
     }
 }
 
@@ -177,19 +227,26 @@ public class InvalidTicketVersionException : Exception
     public InvalidTicketVersionException(DateTime violationDate) : base($"Invalid ticket found with violation date: {violationDate}. The version of the Ticket is not VT2 since its violation date is before April 9, 2024")
     {
         ViolationDate = violationDate;
+        ErrorId = Guid.NewGuid();
     }
 
     public DateTime ViolationDate { get; init; }
+
+    public Guid ErrorId { get; }
 }
 
 [Serializable]
 public class DisputeSearchFailedException : Exception
 {
-    public DisputeSearchFailedException(string ticketNumber) : base($"Dispute search failed. Dispute search response returned an error for: {ticketNumber}.")
+    public DisputeSearchFailedException(string ticketNumber, Exception? innerException = null) 
+        : base($"Dispute search failed. Dispute search response returned an error for: {ticketNumber}.", innerException)
     {
         TicketNumber = ticketNumber;
+        ErrorId = Guid.NewGuid();
     }
 
     public string TicketNumber { get; set; }
+
+    public Guid ErrorId { get; }
 }
 

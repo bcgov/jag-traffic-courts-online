@@ -9,6 +9,11 @@ public static class TagProvider
         collector.Add("TicketNumber", ticketNumber ?? string.Empty);
     }
 
+    public static void RecordErrorId(ITagCollector collector, Guid errorId)
+    {
+        collector.Add("ErrorId", errorId);
+    }
+
     public static void RecordUsername(ITagCollector collector, string username)
     {
         collector.Add("Username", username ?? string.Empty);

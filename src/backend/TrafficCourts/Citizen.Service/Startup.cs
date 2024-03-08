@@ -14,6 +14,12 @@ using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
+using TrafficCourts.Citizen.Service.Caching;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis;
+using TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -44,8 +50,7 @@ public static class Startup
 
         builder.Services.AddHttpContextAccessor();
 
-        // Redis
-        builder.AddRedis();
+        builder.AddCaching();
 
         // configure application 
         builder.Services.UseConfigurationValidation();
@@ -106,7 +111,7 @@ public static class Startup
         builder.Services.AddEmailVerificationTokens();
 
         builder.Services.AddRecyclableMemoryStreams();
-        
+
         builder.Services.AddAutoMapper(assembly); // Registering and Initializing AutoMapper
 
         // Finds and registers all the fluent validators in the assembly
@@ -118,6 +123,53 @@ public static class Startup
             .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
         AddSwagger(builder, assembly, logger);
+    }
+
+    /// <summary>
+    /// Enables redis caching and registers named Fusion Cache instances.
+    /// </summary>
+    /// <param name="builder"></param>
+    private static void AddCaching(this WebApplicationBuilder builder)
+    {
+        // Redis
+        var connectionString = builder.AddRedis();
+
+        builder.Services
+            .AddFusionCache(Cache.TicketSearch)
+            .WithCommonFusionCacheOptions(connectionString);
+    }
+
+    private static IFusionCacheBuilder WithCommonFusionCacheOptions(this IFusionCacheBuilder builder, string connectionString)
+    {
+        // values below come from the step by step guide
+        // https://github.com/ZiggyCreatures/FusionCache/blob/main/docs/StepByStep.md#8-backplane-more
+        builder.WithOptions(options =>
+            {
+                options.DistributedCacheCircuitBreakerDuration = TimeSpan.FromSeconds(2);
+            })
+            .WithDefaultEntryOptions(new FusionCacheEntryOptions
+            {
+                Duration = TimeSpan.FromDays(1),
+                // fail safe
+                IsFailSafeEnabled = true,
+                FailSafeMaxDuration = TimeSpan.FromHours(2),
+                FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
+                // facotry
+                FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
+                FactoryHardTimeout = TimeSpan.FromMilliseconds(1500),
+                // distributed cache
+                DistributedCacheSoftTimeout = TimeSpan.FromSeconds(1),
+                DistributedCacheHardTimeout = TimeSpan.FromSeconds(2),
+                AllowBackgroundDistributedCacheOperations = true,
+
+                JitterMaxDuration = TimeSpan.FromSeconds(2)
+            })
+            .WithSerializer(new FusionCacheSystemTextJsonSerializer())
+            .WithDistributedCache(new RedisCache(new RedisCacheOptions() { Configuration = connectionString }))
+            .WithBackplane(new RedisBackplane(new RedisBackplaneOptions() { Configuration = connectionString }))
+            ;
+
+        return builder;
     }
 
     /// <summary>

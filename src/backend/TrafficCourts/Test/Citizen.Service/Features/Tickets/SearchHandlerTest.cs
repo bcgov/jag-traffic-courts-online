@@ -12,6 +12,9 @@ using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 using Xunit;
 using Xunit.Abstractions;
+using ZiggyCreatures.Caching.Fusion;
+
+using NSubstitute;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {
@@ -27,6 +30,18 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             _output = output;
         }
 
+        private readonly IBus _bus = Substitute.For<IBus>();
+
+        private readonly ITicketInvoiceSearchService _invoiceSearchService = Substitute.For<ITicketInvoiceSearchService>();
+        private readonly IFusionCacheProvider _cacheProvider = Substitute.For<IFusionCacheProvider>();
+        private readonly ILogger<TicketSearchService> _logger = Substitute.For<ILogger<TicketSearchService>>();
+
+        private TicketSearchService CreateTicketSearchService()
+        {
+            TicketSearchService ticketSearchService = new(_bus, _invoiceSearchService, _cacheProvider, _logger);
+            return ticketSearchService;
+        }
+
         [Fact]
         public void constructor_throws_ArgumentNullException_when_passed_null()
         {
@@ -34,7 +49,6 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Assert.Throws<ArgumentNullException>("logger", () => new Handler(_serviceMock.Object, null!, _redisCacheServiceMock.Object));
             Assert.Throws<ArgumentNullException>("redisCacheService", () => new Handler(_serviceMock.Object, _loggerMock.Object, null!));
         }
-
 
         [Fact]
         public async Task search_service_returns_null_empty_response_is_returned()
@@ -121,10 +135,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             // Given
             string ticketNumber = "EA00000000";
             string ticketTime = "00:00";
-            Mock<IBus> _bus = new();
-            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
+            
             Mock<ILogger<TicketSearchService>> _logger = new();
-            TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
             Invoice invoice = new() {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
@@ -145,11 +157,12 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
             // When
             _invoiceSearchService
-                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .SearchAsync(Arg.Any<string>(), Arg.Any<TimeOnly>(), Arg.Any<CancellationToken>())
                 .Returns(Task.FromResult(invoices));
-            
+
             // Then
             // Invoice.Act does not match MVA or MVAR and so results should be null
+            TicketSearchService ticketSearchService = CreateTicketSearchService();
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
             Assert.Null(actual);
         }
@@ -161,10 +174,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             // Given
             string ticketNumber = "EA00000000";
             string ticketTime = "00:00";
-            Mock<IBus> _bus = new();
-            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
-            Mock<ILogger<TicketSearchService>> _logger = new();
-            TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
+
             Invoice invoice = new() {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
@@ -185,11 +195,12 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
             // When
             _invoiceSearchService
-                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .SearchAsync(Arg.Any<string>(), Arg.Any<TimeOnly>(), Arg.Any<CancellationToken>())
                 .Returns(Task.FromResult(invoices));
-            
+
             // Then
             // Invoice.Act should match MVA
+            TicketSearchService ticketSearchService = CreateTicketSearchService();
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
             Assert.NotNull(actual);
             Assert.Equal("EA00000000", actual.TicketNumber);
@@ -205,7 +216,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Mock<IBus> _bus = new();
             Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
             Mock<ILogger<TicketSearchService>> _logger = new();
-            TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
+            TicketSearchService ticketSearchService = CreateTicketSearchService();
             Invoice invoice = new() {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",

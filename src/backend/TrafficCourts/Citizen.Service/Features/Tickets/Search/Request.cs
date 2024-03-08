@@ -10,11 +10,13 @@ public class Request : IRequest<Response>
 
     public string TicketNumber { get; }
 
+    public TimeOnly Time { get; }
+
     /// <summary>
     /// The 24 hour clock
     /// </summary>
-    public int Hour { get; }
-    public int Minute { get; }
+    public int Hour => Time.Hour;
+    public int Minute => Time.Minute;
 
     /// <summary>
     /// 
@@ -45,8 +47,7 @@ public class Request : IRequest<Response>
         }
 
         TicketNumber = ticketNumber;
-        Hour = timeOnly.Hour;
-        Minute = timeOnly.Minute;
+        Time = timeOnly;
     }
 }
 

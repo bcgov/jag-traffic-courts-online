@@ -11,6 +11,7 @@ using TrafficCourts.Citizen.Service.Features.Tickets.Search;
 
 using SearchRequest = TrafficCourts.Citizen.Service.Features.Tickets.Search.Request;
 using SearchResponse = TrafficCourts.Citizen.Service.Features.Tickets.Search.Response;
+using TrafficCourts.Citizen.Service.Problems.TicketSearch;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
@@ -43,8 +44,8 @@ namespace TrafficCourts.Citizen.Service.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(Models.Tickets.ViolationTicket), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(TicketNotFoundProblem), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(TicketSearchFailedProblem), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SearchAsync(
             [FromQuery]
             [Required]
@@ -59,43 +60,47 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
             if (response == SearchResponse.Empty)
             {
-                return NotFound();
+                return new ObjectResult(new TicketNotFoundProblem(ticketNumber, time));
             }
 
-            try
+            // if the response is ok.
+            if (response.Result.IsT0)
             {
-                var check = await _ticketSearchService.IsDisputeSubmittedBefore(ticketNumber, cancellationToken);
-                if (check)
+                try
                 {
-                    return BadRequest($"A dispute has already been submitted for the ticket number: {ticketNumber}. A dispute can only be submitted once for a violation ticket.");
+                    var check = await _ticketSearchService.IsDisputeSubmittedBefore(ticketNumber, cancellationToken);
+                    if (check)
+                    {
+                        Guid errorId = Guid.NewGuid();
+                        _logger.LogInformation("Dispute for ticket already submitted {ErrorId}", errorId);
+                        return ProblemResult(new DuplicateDisputeProblem(ticketNumber, time, errorId));
+                    }
+                }
+                catch (DisputeSearchFailedException e)
+                {
+                    return ProblemResult(new TicketSearchFailedProblem(ticketNumber, time, e.ErrorId));
                 }
             }
-            catch (DisputeSearchFailedException e)
+
+            IActionResult OnViolationTicket(Models.Tickets.ViolationTicket violationTicket) => Ok(violationTicket);
+
+            IActionResult OnException(Exception exception)
             {
-                ProblemDetails problemDetails = new();
-                problemDetails.Status = StatusCodes.Status500InternalServerError;
-                problemDetails.Title = e.Source + ": Error searching dispute for the ticket";
-                problemDetails.Instance = HttpContext?.Request?.Path;
-                string? innerExceptionMessage = e.InnerException?.Message;
-                if (innerExceptionMessage is not null)
-                {
-                    problemDetails.Extensions.Add("errors", new string[] { e.Message, innerExceptionMessage });
-                }
-                else
-                {
-                    problemDetails.Extensions.Add("errors", new string[] { e.Message });
-                }
-
-                return new ObjectResult(problemDetails);
+                Guid errorId = Guid.NewGuid();
+                _logger.LogError(exception, "Error searching for ticket {ErrorId}", errorId);
+                return ProblemResult(new TicketSearchFailedProblem(ticketNumber, time, errorId));
             }
 
-            var result = response.Result.Match<IActionResult>(
-                ticket => Ok(ticket),
-                exception => StatusCode(StatusCodes.Status500InternalServerError),
-                invalidTicketException => StatusCode(StatusCodes.Status400BadRequest));
+            IActionResult OnInvalidTicketVersionException(InvalidTicketVersionException exception)
+            {
+                return ProblemResult(new InvalidTicketVersionProblem(ticketNumber, time, exception));
+            }
 
+            IActionResult result = response.Result.Match(OnViolationTicket, OnException, OnInvalidTicketVersionException);
             return result;
         }
+
+        private IActionResult ProblemResult(ProblemDetails problem) => new ObjectResult(problem) { StatusCode = problem.Status };
 
         /// <summary>
         /// Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.

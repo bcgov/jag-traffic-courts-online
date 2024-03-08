@@ -58,7 +58,7 @@ finally
 void AddMockInvoiceEndpoint(WebApplication application)
 {
     var type = builder.Configuration.GetSection($"TicketSearch:SearchType").Get<TicketSearchType>();
-    if (type == TicketSearchType.Mock)
+    if (type == TicketSearchType.Mock || type == TicketSearchType.Hybrid)
     {
         application.MapPost("/api/invoice", [AllowAnonymous] (Invoice invoice, [FromServices] IMemoryCache cache) =>
         {

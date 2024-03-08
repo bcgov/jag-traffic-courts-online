@@ -29,6 +29,11 @@ namespace TrafficCourts.Citizen.Service
             {
                 UseMockTickets(builder, logger);
             }
+            else if (type == TicketSearchType.Hybrid)
+            {
+                UseHybridTickets(builder, logger);
+
+            }
             else
             {
                 // this could happen if some one adds a new default member before Mock.
@@ -37,10 +42,8 @@ namespace TrafficCourts.Citizen.Service
             }
         }
 
-        private static void UseRsiTickets(WebApplicationBuilder builder, Serilog.ILogger logger)
+        private static void UseRsiTicketsDependencies(WebApplicationBuilder builder)
         {
-            logger.Information("Using RSI ticket search service");
-
             builder.Services
                 .AddRefitClient<IRoadSafetyTicketSearchApi>()
                 .ConfigureHttpClient(ConfigureClient)
@@ -61,19 +64,23 @@ namespace TrafficCourts.Citizen.Service
                 return new RsiTokenRefreshService(factory, "RSI", TimeProvider.System, cache, options, logger);
             });
 
+        }
+        private static void UseRsiTickets(WebApplicationBuilder builder, Serilog.ILogger logger)
+        {
+            logger.Information("Using RSI ticket search service");
+            UseRsiTicketsDependencies(builder);
+
             builder.Services.AddTransient<ITicketInvoiceSearchService, RoadSafetyTicketSearchService>();
         }
 
-        public static void UseMockTickets(WebApplicationBuilder builder, Serilog.ILogger logger)
+        public static void UseMockTicketDependencies(WebApplicationBuilder builder, Serilog.ILogger logger)
         {
-            logger.Information("Using mock ticket search service");
-            builder.Services.AddTransient<ITicketInvoiceSearchService, MockTicketSearchService>();
             builder.Services.AddMemoryCache();
 
             // determine if configured to use a external file or embedded data
             var section = builder.Configuration.GetSection(Section);
             FileMockDataSettings? settings = section.Get<FileMockDataSettings>();
-            
+
             // if a valid data file has been configured, use that, otherwise use the embedded data
             if (!string.IsNullOrEmpty(settings?.MockDataPath))
             {
@@ -86,6 +93,29 @@ namespace TrafficCourts.Citizen.Service
                 logger.Information("Using embedded mock ticket data");
                 builder.Services.AddTransient<IMockDataProvider, EmbeddedMockDataProvider>();
             }
+        }
+
+        public static void UseMockTickets(WebApplicationBuilder builder, Serilog.ILogger logger)
+        {
+            logger.Information("Using mock ticket search service");
+            builder.Services.AddTransient<ITicketInvoiceSearchService, MockTicketSearchService>();
+            UseMockTicketDependencies(builder, logger);
+        }
+
+        public static void UseHybridTickets(WebApplicationBuilder builder, Serilog.ILogger logger)
+        {
+            logger.Information("Using hybrid ticket search service");
+
+            // setup RSI
+            UseRsiTicketsDependencies(builder);
+            builder.Services.AddTransient<RoadSafetyTicketSearchService>();
+
+            // setup mock
+            UseMockTicketDependencies(builder, logger);
+            builder.Services.AddTransient<MockTicketSearchService>();
+
+            // use hybrid search
+            builder.Services.AddTransient<ITicketInvoiceSearchService, HybridMockTicketSearchService>();
         }
 
         private static void ConfigureClient(IServiceProvider serviceProvider, HttpClient client)

@@ -24,7 +24,7 @@ public static class Extensions
     /// </summary>
     /// <param name="builder">The builder for the application.</param>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is null.</exception>
-    public static void AddRedis(this WebApplicationBuilder builder)
+    public static string AddRedis(this WebApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -44,6 +44,8 @@ public static class Extensions
             {
                 options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
             });
+
+            return connectionString;
         }
         else
         {
