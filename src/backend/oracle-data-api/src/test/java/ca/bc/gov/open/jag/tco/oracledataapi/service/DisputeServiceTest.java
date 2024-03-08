@@ -18,6 +18,7 @@ public class DisputeServiceTest extends BaseTestSuite {
         Dispute dispute = new Dispute();
 
         dispute.setAddressProvince(null);
+        dispute.setDriversLicenceIssuedCountryId(73);
         dispute.setDriversLicenceProvince(null);
 
         disputeService.replaceProvinceValuesWithNA(dispute);
