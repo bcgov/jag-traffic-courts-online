@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#
-# This script is after the devcontainer is created
-#
-npm install -g npm
+# Install the Angular CLI autocompletion to the user's profile
+grep -q "Angular" $HOME/.bashrc 2> /dev/null
+if [ $? -ne 0 ]
+then
+  echo "# Load Angular CLI autocompletion." >> $HOME/.bashrc
+  echo "source <(ng completion script)" >> $HOME/.bashrc
+fi
 
-# install angular/cli globally so 'ng' commands work
-# TODO: figure out how to pull the version from package.json
-NG_CLI_ANALYTICS=ci npm install -g @angular/cli@11.0.6
-NG_CLI_ANALYTICS=ci npm install
+yarn install
