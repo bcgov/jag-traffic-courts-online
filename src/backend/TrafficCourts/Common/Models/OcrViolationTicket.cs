@@ -182,7 +182,7 @@ public class Field
 
     public List<BoundingBox> BoundingBoxes { get; set; } = new List<BoundingBox>();
 
-    /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
+    /// <summary>Returns true if the given field's value is ":selected:", false if ":unselected:", otherwise null (unknown) value.</summary> 
     public bool? IsCheckboxSelected()
     {
         if (Value?.Equals(":selected:", StringComparison.OrdinalIgnoreCase) ?? false)

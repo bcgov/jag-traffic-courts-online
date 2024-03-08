@@ -104,8 +104,8 @@ public ocrMessages: OCRMessageToDisplay[] = [];
           if (!foundViolationTicketCount1[0].actOrRegulationNameCode) foundViolationTicketCount1[0].actOrRegulationNameCode = ocrViolationTicket.fields["counts.count_no_1.act_or_regulation_name_code"]?.value;
           if (!foundViolationTicketCount1[0].section) foundViolationTicketCount1[0].section = ocrViolationTicket.fields["counts.count_no_1.section"].value;
           if (!foundViolationTicketCount1[0].ticketedAmount) foundViolationTicketCount1[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value;
-          if (!foundViolationTicketCount1[0].isAct) foundViolationTicketCount1[0].isAct = ocrViolationTicket.fields["counts.count_no_1.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N;
-          if (!foundViolationTicketCount1[0].isRegulation) foundViolationTicketCount1[0].isRegulation = ocrViolationTicket.fields["counts.count_no_1.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
+          if (!foundViolationTicketCount1[0].isAct) foundViolationTicketCount1[0].isAct = ocrViolationTicket.fields["counts.count_no_1.is_act"].value == ":selected:" ? this.IsAct.Y : this.IsAct.N;
+          if (!foundViolationTicketCount1[0].isRegulation) foundViolationTicketCount1[0].isRegulation = ocrViolationTicket.fields["counts.count_no_1.is_regulation"].value == ":selected:" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
           let violationTicketCount = {
             countNo: 1,
@@ -113,8 +113,8 @@ public ocrMessages: OCRMessageToDisplay[] = [];
             actOrRegulationNameCode: ocrViolationTicket.fields["counts.count_no_1.act_or_regulation_name_code"]?.value,
             section: ocrViolationTicket.fields["counts.count_no_1.section"].value,
             ticketedAmount: ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_1.ticketed_amount"].value : undefined,
-            isAct: ocrViolationTicket.fields["counts.count_no_1.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N,
-            isRegulation: ocrViolationTicket.fields["counts.count_no_1.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N
+            isAct: ocrViolationTicket.fields["counts.count_no_1.is_act"].value == ":selected:" ? this.IsAct.Y : this.IsAct.N,
+            isRegulation: ocrViolationTicket.fields["counts.count_no_1.is_regulation"].value == ":selected:" ? this.IsRegulation.Y : this.IsRegulation.N
           } as ViolationTicketCount;
           violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
         }
@@ -128,8 +128,8 @@ public ocrMessages: OCRMessageToDisplay[] = [];
           if (!foundViolationTicketCount2[0].actOrRegulationNameCode) foundViolationTicketCount2[0].actOrRegulationNameCode = ocrViolationTicket.fields["counts.count_no_2.act_or_regulation_name_code"]?.value;
           if (!foundViolationTicketCount2[0].section) foundViolationTicketCount2[0].section = ocrViolationTicket.fields["counts.count_no_2.section"].value;
           if (!foundViolationTicketCount2[0].ticketedAmount) foundViolationTicketCount2[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value;
-          if (!foundViolationTicketCount2[0].isAct) foundViolationTicketCount2[0].isAct = ocrViolationTicket.fields["counts.count_no_2.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N;
-          if (!foundViolationTicketCount2[0].isRegulation) foundViolationTicketCount2[0].isRegulation = ocrViolationTicket.fields["counts.count_no_2.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
+          if (!foundViolationTicketCount2[0].isAct) foundViolationTicketCount2[0].isAct = ocrViolationTicket.fields["counts.count_no_2.is_act"].value == ":selected:" ? this.IsAct.Y : this.IsAct.N;
+          if (!foundViolationTicketCount2[0].isRegulation) foundViolationTicketCount2[0].isRegulation = ocrViolationTicket.fields["counts.count_no_2.is_regulation"].value == ":selected:" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
           let violationTicketCount = {
             countNo: 2,
@@ -137,8 +137,8 @@ public ocrMessages: OCRMessageToDisplay[] = [];
             actOrRegulationNameCode: ocrViolationTicket.fields["counts.count_no_2.act_or_regulation_name_code"]?.value,
             section: ocrViolationTicket.fields["counts.count_no_2.section"].value,
             ticketedAmount: ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_2.ticketed_amount"].value : undefined,
-            isAct: ocrViolationTicket.fields["counts.count_no_2.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N,
-            isRegulation: ocrViolationTicket.fields["counts.count_no_2.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N
+            isAct: ocrViolationTicket.fields["counts.count_no_2.is_act"].value == ":selected:" ? this.IsAct.Y : this.IsAct.N,
+            isRegulation: ocrViolationTicket.fields["counts.count_no_2.is_regulation"].value == ":selected:" ? this.IsRegulation.Y : this.IsRegulation.N
           } as ViolationTicketCount;
           violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
         }
@@ -163,8 +163,8 @@ public ocrMessages: OCRMessageToDisplay[] = [];
           if (!foundViolationTicketCount3[0].actOrRegulationNameCode) foundViolationTicketCount3[0].actOrRegulationNameCode = ocrViolationTicket.fields["counts.count_no_3.act_or_regulation_name_code"]?.value;
           if (!foundViolationTicketCount3[0].section) foundViolationTicketCount3[0].section = ocrViolationTicket.fields["counts.count_no_3.section"].value;
           if (!foundViolationTicketCount3[0].ticketedAmount) foundViolationTicketCount3[0].ticketedAmount = +ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value;
-          if (!foundViolationTicketCount3[0].isAct) foundViolationTicketCount3[0].isAct = ocrViolationTicket.fields["counts.count_no_3.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N;
-          if (!foundViolationTicketCount3[0].isRegulation) foundViolationTicketCount3[0].isRegulation = ocrViolationTicket.fields["counts.count_no_3.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
+          if (!foundViolationTicketCount3[0].isAct) foundViolationTicketCount3[0].isAct = ocrViolationTicket.fields["counts.count_no_3.is_act"].value == ":selected:" ? this.IsAct.Y : this.IsAct.N;
+          if (!foundViolationTicketCount3[0].isRegulation) foundViolationTicketCount3[0].isRegulation = ocrViolationTicket.fields["counts.count_no_3.is_regulation"].value == ":selected:" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
           let violationTicketCount = {
             countNo: 3,
@@ -172,8 +172,8 @@ public ocrMessages: OCRMessageToDisplay[] = [];
             actOrRegulationNameCode: ocrViolationTicket.fields["counts.count_no_3.act_or_regulation_name_code"]?.value,
             section: ocrViolationTicket.fields["counts.count_no_3.section"].value,
             ticketedAmount: ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_no_3.ticketed_amount"].value : undefined,
-            isAct: ocrViolationTicket.fields["counts.count_no_3.is_act"].value == "selected" ? this.IsAct.Y : this.IsAct.N,
-            isRegulation: ocrViolationTicket.fields["counts.count_no_3.is_regulation"].value == "selected" ? this.IsAct.Y : this.IsAct.N
+            isAct: ocrViolationTicket.fields["counts.count_no_3.is_act"].value == ":selected:" ? this.IsAct.Y : this.IsAct.N,
+            isRegulation: ocrViolationTicket.fields["counts.count_no_3.is_regulation"].value == ":selected:" ? this.IsAct.Y : this.IsAct.N
           } as ViolationTicketCount;
           violationTicket.violationTicketCounts = violationTicket.violationTicketCounts.concat(violationTicketCount);
         }
@@ -208,7 +208,7 @@ public ocrMessages: OCRMessageToDisplay[] = [];
           result = parseInt(value.replace(/[^.0-9]/g, "")); // regex replace characters other than numbers
           break;
         case "selectionmark":
-          result = value.toLowerCase() === "selected" ? true : false;
+          result = value.toLowerCase() === ":selected:" ? true : false;
           break;
         case "time":
           result = value.replace(" ", ":");

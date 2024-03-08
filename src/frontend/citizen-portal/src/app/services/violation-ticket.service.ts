@@ -289,7 +289,7 @@ export class ViolationTicketService {
           result = parseInt(value.replace(/[^.0-9]/g, "")); // regex replace characters other than numbers
           break;
         case "selectionmark":
-          result = value.toLowerCase() === "selected" ? true : false;
+          result = value.toLowerCase() === ":selected:" ? true : false;
           break;
         case "time":
           result = value.replace(" ", ":");
