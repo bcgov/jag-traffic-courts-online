@@ -135,7 +135,7 @@ public static class Startup
         var connectionString = builder.AddRedis();
 
         builder.Services
-            .AddFusionCache(Cache.TicketSearch)
+            .AddFusionCache(Cache.TicketSearch.Name)
             .WithCommonFusionCacheOptions(connectionString);
     }
 
@@ -143,13 +143,13 @@ public static class Startup
     {
         // values below come from the step by step guide
         // https://github.com/ZiggyCreatures/FusionCache/blob/main/docs/StepByStep.md#8-backplane-more
+        // note: the cache duration is based on the result set
         builder.WithOptions(options =>
             {
                 options.DistributedCacheCircuitBreakerDuration = TimeSpan.FromSeconds(2);
             })
             .WithDefaultEntryOptions(new FusionCacheEntryOptions
             {
-                Duration = TimeSpan.FromDays(1),
                 // fail safe
                 IsFailSafeEnabled = true,
                 FailSafeMaxDuration = TimeSpan.FromHours(2),

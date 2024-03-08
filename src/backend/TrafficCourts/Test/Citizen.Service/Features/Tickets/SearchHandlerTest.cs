@@ -15,6 +15,7 @@ using Xunit.Abstractions;
 using ZiggyCreatures.Caching.Fusion;
 
 using NSubstitute;
+using TrafficCourts.Citizen.Service.Caching;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {
@@ -34,10 +35,18 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
         private readonly ITicketInvoiceSearchService _invoiceSearchService = Substitute.For<ITicketInvoiceSearchService>();
         private readonly IFusionCacheProvider _cacheProvider = Substitute.For<IFusionCacheProvider>();
+        private readonly IFusionCache _cache = Substitute.For<IFusionCache>();
         private readonly ILogger<TicketSearchService> _logger = Substitute.For<ILogger<TicketSearchService>>();
 
         private TicketSearchService CreateTicketSearchService()
         {
+            // create a cache
+            IFusionCache cache = new FusionCache(new FusionCacheOptions());
+
+            _cacheProvider
+                .GetCache(Cache.TicketSearch.Name)
+                .Returns(cache);
+
             TicketSearchService ticketSearchService = new(_bus, _invoiceSearchService, _cacheProvider, _logger);
             return ticketSearchService;
         }

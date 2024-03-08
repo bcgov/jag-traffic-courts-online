@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Globalization;
 using TrafficCourts.Citizen.Service.Caching;
@@ -28,7 +29,7 @@ public partial class TicketSearchService : ITicketSearchService
         _invoiceSearchService = invoiceSearchService ?? throw new ArgumentNullException(nameof(invoiceSearchService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        _cache = cacheProvider.GetCache(Cache.TicketSearch);
+        _cache = cacheProvider.GetCache(Cache.TicketSearch.Name);
     }
 
     public async Task<Models.Tickets.ViolationTicket?> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
@@ -196,57 +197,32 @@ public partial class TicketSearchService : ITicketSearchService
 
     private async Task<IEnumerable<Invoice>> SearchInvoicesAsync(string ticketNumber, TimeOnly timeOnly, CancellationToken cancellationToken)
     {
-        var key = $"{ticketNumber}-{timeOnly}";
+        var key = Cache.TicketSearch.Key(ticketNumber, timeOnly);
 
-        // todo determine if this works
-        //await _cache.GetOrSetAsync(
-        //    key,
-        //    ct => _service.SearchAsync(ticketNumber, timeOnly, ct),
-        //    options: null,
-        //    cancellationToken);
+        var value = await _cache.GetOrSetAsync<List<Invoice>>(
+            key,
+            SearchAsync,
+            options: null,
+            cancellationToken);
 
-        var value = await _cache.GetOrDefaultAsync<List<Invoice>>(key, defaultValue: null, options: null, cancellationToken);
-        if (value is null)
+        return value;
+
+        // determine the cache duration based on the result
+        // see: https://github.com/ZiggyCreatures/FusionCache/blob/main/docs/AdaptiveCaching.md
+        TimeSpan GetCacheDuration(IList<Invoice> result)
         {
-            var searchResult = await _invoiceSearchService.SearchAsync(ticketNumber, timeOnly, cancellationToken);
-            value = searchResult?.ToList();
-
-            if (value is not null)
-            {
-                await _cache.SetAsync(key, value, options: null, cancellationToken); // expiration should default on our named cache
-            }
+            // wasn't found, cache for 5 minutes, otherwise 1 day - this helps avoid DDoS
+            return result.Count == 0
+                ? TimeSpan.FromMinutes(5)
+                : TimeSpan.FromDays(1);
         }
 
-        return value ?? Enumerable.Empty<Invoice>();
+        // search and set the cache duration based result set
+        async Task<List<Invoice>> SearchAsync(FusionCacheFactoryExecutionContext<List<Invoice>> context, CancellationToken cancellationToken)
+        {
+            IList<Invoice> result = await _invoiceSearchService.SearchAsync(ticketNumber, timeOnly, cancellationToken);
+            context.Options.Duration = GetCacheDuration(result);
+            return result.ToList();
+        }
     }
 }
-
-[Serializable]
-public class InvalidTicketVersionException : Exception
-{
-    public InvalidTicketVersionException(DateTime violationDate) : base($"Invalid ticket found with violation date: {violationDate}. The version of the Ticket is not VT2 since its violation date is before April 9, 2024")
-    {
-        ViolationDate = violationDate;
-        ErrorId = Guid.NewGuid();
-    }
-
-    public DateTime ViolationDate { get; init; }
-
-    public Guid ErrorId { get; }
-}
-
-[Serializable]
-public class DisputeSearchFailedException : Exception
-{
-    public DisputeSearchFailedException(string ticketNumber, Exception? innerException = null) 
-        : base($"Dispute search failed. Dispute search response returned an error for: {ticketNumber}.", innerException)
-    {
-        TicketNumber = ticketNumber;
-        ErrorId = Guid.NewGuid();
-    }
-
-    public string TicketNumber { get; set; }
-
-    public Guid ErrorId { get; }
-}
-

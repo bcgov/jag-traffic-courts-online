@@ -54,7 +54,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
                 }
 
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
-                return Array.Empty<Invoice>();
+                return [];
             }
 
             if (response is not null && response.Items is not null)
@@ -64,7 +64,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
             }
 
             _logger.LogInformation("No invoice numbers returned, returning empty result");
-            return Array.Empty<Invoice>();
+            return [];
         }
 
         private async Task<IEnumerable<Invoice>> GetInvoicesAsync(IEnumerable<Item> items, CancellationToken cancellationToken)
