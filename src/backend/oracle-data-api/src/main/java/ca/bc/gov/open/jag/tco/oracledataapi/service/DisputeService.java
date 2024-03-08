@@ -210,7 +210,7 @@ public class DisputeService {
 	        disputeToUpdate.setAddressProvince(NA);
 	    }
 	    
-	    if (disputeToUpdate.getDriversLicenceIssuedProvinceSeqNo() == null && StringUtils.isBlank(disputeToUpdate.getDriversLicenceProvince())) {
+	    if (disputeToUpdate.getDriversLicenceIssuedCountryId() != null && disputeToUpdate.getDriversLicenceIssuedProvinceSeqNo() == null && StringUtils.isBlank(disputeToUpdate.getDriversLicenceProvince())) {
 	        disputeToUpdate.setDriversLicenceProvince(NA);
 	    }
 	}
