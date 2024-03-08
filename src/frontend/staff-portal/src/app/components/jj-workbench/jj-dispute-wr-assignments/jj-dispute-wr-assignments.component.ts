@@ -9,7 +9,7 @@ import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/
 import { JJDisputeAccidentYn, JJDisputeHearingType } from 'app/api';
 import { AuthService, UserRepresentation } from 'app/services/auth.service';
 import { AppState } from 'app/store';
-import {  Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-jj-dispute-wr-assignments',
@@ -54,15 +54,15 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
       this.jjList = result;
     });
 
-    this.data$ = this.store.select(state => state.jjDispute.data).pipe( filter(i => !!i));
+    this.data$ = this.store.select(state => state.jjDispute.data).pipe(filter(i => !!i));
     this.data$.subscribe(jjDisputes => {
       this.data = jjDisputes.map(jjDispute => { return { ...jjDispute } });
-      this.getAll("A");
+      this.getAll(this.currentTeam);
     })
   }
 
   ngOnInit(): void {
-    this.getAll("A");
+    this.getAll(this.currentTeam);
     // override the default sortData with our custom sort function
     this.dataSource.sortData = this.customSortData('jjAssignedTo');
   }
@@ -197,7 +197,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
         'JJDisputeWRAssignmentsComponent::onBulkAssign response',
         response
       );
-      this.getAll("A");
+      this.getAll(this.currentTeam);
       this.bulkjjAssignedTo = this.valueOfUnassigned;
     });
   }
