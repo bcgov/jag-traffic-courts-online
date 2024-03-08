@@ -2,9 +2,6 @@
 {
     public class DisputeApproved
     {
-        [Obsolete($"Use {nameof(GivenName1)}, {nameof(GivenName2)},  {nameof(GivenName3)} and {nameof(Surname)}")]
-        public string? CitizenName { get; set; }
-
         public string? Surname { get; set; }
         public string? GivenName1 { get; set; }
         public string? GivenName2 { get; set; }
