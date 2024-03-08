@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -231,14 +231,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             // Given
             string ticketNumber = "EA00000000";
             string ticketTime = "00:00";
-<<<<<<< HEAD
 
-=======
-            Mock<IBus> _bus = new();
-            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
-            Mock<ILogger<TicketSearchService>> _logger = new();
-            TicketSearchService ticketSearchService = CreateTicketSearchService();
->>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
             Invoice invoice = new() {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
