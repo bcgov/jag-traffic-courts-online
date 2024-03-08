@@ -135,7 +135,11 @@ public static class Startup
         var connectionString = builder.AddRedis();
 
         builder.Services
+<<<<<<< HEAD
             .AddFusionCache(Cache.TicketSearch.Name)
+=======
+            .AddFusionCache(Cache.TicketSearch)
+>>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
             .WithCommonFusionCacheOptions(connectionString);
     }
 
@@ -143,13 +147,20 @@ public static class Startup
     {
         // values below come from the step by step guide
         // https://github.com/ZiggyCreatures/FusionCache/blob/main/docs/StepByStep.md#8-backplane-more
+<<<<<<< HEAD
         // note: the cache duration is based on the result set
+=======
+>>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
         builder.WithOptions(options =>
             {
                 options.DistributedCacheCircuitBreakerDuration = TimeSpan.FromSeconds(2);
             })
             .WithDefaultEntryOptions(new FusionCacheEntryOptions
             {
+<<<<<<< HEAD
+=======
+                Duration = TimeSpan.FromDays(1),
+>>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
                 // fail safe
                 IsFailSafeEnabled = true,
                 FailSafeMaxDuration = TimeSpan.FromHours(2),

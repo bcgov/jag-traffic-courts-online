@@ -15,7 +15,10 @@ using Xunit.Abstractions;
 using ZiggyCreatures.Caching.Fusion;
 
 using NSubstitute;
+<<<<<<< HEAD
 using TrafficCourts.Citizen.Service.Caching;
+=======
+>>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 {
@@ -35,11 +38,15 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
 
         private readonly ITicketInvoiceSearchService _invoiceSearchService = Substitute.For<ITicketInvoiceSearchService>();
         private readonly IFusionCacheProvider _cacheProvider = Substitute.For<IFusionCacheProvider>();
+<<<<<<< HEAD
         private readonly IFusionCache _cache = Substitute.For<IFusionCache>();
+=======
+>>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
         private readonly ILogger<TicketSearchService> _logger = Substitute.For<ILogger<TicketSearchService>>();
 
         private TicketSearchService CreateTicketSearchService()
         {
+<<<<<<< HEAD
             // create a cache
             IFusionCache cache = new FusionCache(new FusionCacheOptions());
 
@@ -47,6 +54,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
                 .GetCache(Cache.TicketSearch.Name)
                 .Returns(cache);
 
+=======
+>>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
             TicketSearchService ticketSearchService = new(_bus, _invoiceSearchService, _cacheProvider, _logger);
             return ticketSearchService;
         }
@@ -222,7 +231,14 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             // Given
             string ticketNumber = "EA00000000";
             string ticketTime = "00:00";
+<<<<<<< HEAD
 
+=======
+            Mock<IBus> _bus = new();
+            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
+            Mock<ILogger<TicketSearchService>> _logger = new();
+            TicketSearchService ticketSearchService = CreateTicketSearchService();
+>>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
             Invoice invoice = new() {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
