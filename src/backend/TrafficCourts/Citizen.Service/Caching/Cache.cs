@@ -1,6 +1,5 @@
-﻿namespace TrafficCourts.Citizen.Service.Caching;
+namespace TrafficCourts.Citizen.Service.Caching;
 
-<<<<<<< HEAD
 public static class Cache
 {
     /// <summary>
@@ -31,12 +30,4 @@ public static class Cache
             return $"v{version}:{ticketNumber}-{timeOnly.Hour:D2}:{timeOnly.Minute:D2}";
         }
     }
-=======
-public class Cache
-{
-    /// <summary>
-    /// Stores tickets found from the RSI service.
-    /// </summary>
-    public const string TicketSearch = nameof(TicketSearch);
->>>>>>> 445037a74 (Add hybrid ticket search, fix ticket search error responses)
 }
