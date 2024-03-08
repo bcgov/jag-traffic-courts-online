@@ -153,8 +153,8 @@ public class Field
     private static readonly string _currencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
     public static readonly string _mva = "MVA";
     public static readonly string _mvar = "MVAR";
-    public static readonly string _selected = "selected";
-    public static readonly string _unselected = "unselected";
+    public static readonly string _selected = ":selected:";
+    public static readonly string _unselected = ":unselected:";
 
     public Field() { }
 
@@ -185,11 +185,11 @@ public class Field
     /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
     public bool? IsCheckboxSelected()
     {
-        if (Value?.Equals("selected", StringComparison.OrdinalIgnoreCase) ?? false)
+        if (Value?.Equals(":selected:", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return true;
         }
-        if (Value?.Equals("unselected", StringComparison.OrdinalIgnoreCase) ?? false)
+        if (Value?.Equals(":unselected:", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return false;
         }

@@ -15,16 +15,16 @@ public class DidCommitIsMVATest
     {
         // Given
         OcrViolationTicket violationTicket = new();
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVA, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVAR, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsCCLA, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsCTA, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsLCLA, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsTCSR, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsWLA, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsFVPA, new Field("unselected"));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsOther, new Field("unselected"));
-        violationTicket.Fields[name].Value = "selected";
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVA, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVAR, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsCCLA, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsCTA, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsLCLA, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsTCSR, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsWLA, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsFVPA, new Field(":unselected:"));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsOther, new Field(":unselected:"));
+        violationTicket.Fields[name].Value = ":selected:";
         DidCommitIsMVA rule = new(new Field(), violationTicket);
 
         // When
