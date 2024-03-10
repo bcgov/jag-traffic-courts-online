@@ -39,7 +39,6 @@ public static class DisputeListItemExtension
         {
             string value = parameters.TicketNumber.Trim();
             query = query.Where(_ => _.TicketNumber.Contains(value, StringComparison.OrdinalIgnoreCase));
-
         }
 
         if (!string.IsNullOrEmpty(parameters?.Surname))
