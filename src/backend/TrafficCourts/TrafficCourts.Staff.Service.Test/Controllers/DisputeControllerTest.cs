@@ -15,6 +15,7 @@ using System.Net;
 using TrafficCourts.Coms.Client;
 using NSubstitute;
 using X.PagedList;
+using System.Linq;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
@@ -46,13 +47,13 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        var actual = Assert.IsAssignableFrom<IPagedList<DisputeListItem>>(okResult.Value);
+        var actual = Assert.IsAssignableFrom<PagedDisputeListItemCollection>(okResult.Value);
         Assert.NotNull(actual);
-        Assert.Equal(2, actual!.Count);
+        Assert.Equal(2, actual.Items.Count);
+        Assert.Equal(1, actual!.PageCount);
         Assert.Equal(1, actual.PageNumber);
-        Assert.Equal(1, actual.PageCount);
         Assert.Equal(new GetAllDisputesParameters().DefaultPageSize, actual.PageSize);
-        Assert.Equal(expected, actual);
+        Assert.Equal(expected, actual.Items);
     }
 
     [Fact]
