@@ -79,9 +79,9 @@ namespace TrafficCourts.Staff.Service.Services
             await DisputesChangedAsync(cancellationToken);
         }
 
-        public async Task<ICollection<DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, CancellationToken cancellationToken)
+        public async Task<ICollection<DisputeResult>> FindDisputeStatusesAsync(string ticketNumber, string? issuedTime, string? noticeOfDisputeGuid, ExcludeStatus2? excludeStatus, CancellationToken cancellationToken)
         {
-            var result = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, cancellationToken);
+            var result = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeGuid, excludeStatus, cancellationToken);
 
             return result;
         }
