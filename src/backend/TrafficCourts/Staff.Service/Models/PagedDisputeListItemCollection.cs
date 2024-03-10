@@ -1,4 +1,5 @@
 ﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using X.PagedList;
 
 namespace TrafficCourts.Staff.Service.Models
