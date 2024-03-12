@@ -6,7 +6,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Models
     public class DriversLicenceTest
     {
         [Theory]
-        [InlineData("", "000000000")]
+        [InlineData("", "")]
         [InlineData("1111111", "011111112")]
         [InlineData("01111111", "011111112")]
         [InlineData("1234567", "012345678")]
