@@ -94,7 +94,11 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
         this.driversLicenceProvinceFormControl.setValue(foundProvinces);
       }
     } else if (form.controls.drivers_licence_province) { // have control but no value
-      this.driversLicenceProvinceFormControl.setValue(this.bc);
+      if(this.mode !== DisputeFormMode.UPDATE) {
+        this.driversLicenceProvinceFormControl.setValue(this.bc);
+      } else {
+        this.driversLicenceProvinceFormControl.setValue(null);
+      }      
     }
 
     if (this.preferEmail !== undefined && this.preferEmail !== true) {
@@ -147,10 +151,8 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       if (this.mode !== DisputeFormMode.UPDATEDISPUTANT) { // Disputant form do not have drivers licence information
         let form = this.form as NoticeOfDisputeFormGroup;
         form.controls.drivers_licence_number.setValidators([Validators.maxLength(20)]);
-        form.controls.drivers_licence_province.setValidators([Validators.maxLength(30)]);
 
         form.controls.drivers_licence_number.updateValueAndValidity();
-        form.controls.drivers_licence_province.updateValueAndValidity();
       }
     }, 0);
   }
@@ -172,7 +174,6 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
         form.controls.drivers_licence_country_id.setValue(null);
         form.controls.drivers_licence_province_seq_no.setValue(null);
       } else {
-        form.controls.drivers_licence_province.setValue(province.provAbbreviationCd);
         form.controls.drivers_licence_country_id.setValue(province.ctryId);
         form.controls.drivers_licence_province_seq_no.setValue(province.provSeqNo);
       }

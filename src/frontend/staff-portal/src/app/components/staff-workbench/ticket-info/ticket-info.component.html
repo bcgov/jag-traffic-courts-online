@@ -147,6 +147,7 @@
                             [ngClass]="{'underErrThreshold': applyUnderErrThreshold('drivers_licence_province'), 'overErrThreshold': applyOverErrThreshold('drivers_licence_province')}">
                             <mat-label>Prov/State of DL</mat-label>
                             <mat-select formControlName="driversLicenceProvince" (selectionChange)="onViolationTicketDLProvinceChange($event.value)" [readonly]="isTicketInformationReadOnly">
+                              <mat-option [value]=null></mat-option>
                               <mat-option [value]="bc.provAbbreviationCd">{{bc.provNm}}</mat-option>
                               <mat-option *ngFor="let province of provinces" [value]="province.provAbbreviationCd">{{
                                 province.provNm }}
@@ -639,6 +640,7 @@
                       <mat-label>{{ "label.dl_province" | translate }}</mat-label>
                       <mat-select formControlName="driversLicenceProvinceProvId"
                         (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
+                        <mat-option [value]=null></mat-option>
                         <mat-option [value]="bc.provId">{{bc.provNm}}</mat-option>
                         <mat-option *ngFor="let province of provinces" [value]="province.provId">{{ province.provNm }}
                         </mat-option>

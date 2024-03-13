@@ -133,7 +133,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
     this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance); // to be removed
     if (this.mode !== DisputeFormMode.CREATE) {
-      this.previousButtonKey = "cancel";
+      this.previousButtonKey = "Cancel";
       this.store.select(DisputeStore.Selectors.State).subscribe(state => {
         this.state = state;
       })

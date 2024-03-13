@@ -112,8 +112,8 @@ export class TicketInfoComponent implements OnInit {
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
       postalCode: [null, [Validators.required]], // space needs to be added back to the middle for display
-      driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
-      driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
+      driversLicenceNumber: [null, [Validators.minLength(7), Validators.maxLength(9)]],
+      driversLicenceProvince: [null, [Validators.maxLength(30)]],
       driversLicenceProvinceProvId: [null],
       driversLicenceCountryId: [null],
       driversLicenceProvinceSeqNo: [null],
@@ -123,8 +123,8 @@ export class TicketInfoComponent implements OnInit {
         courtLocation: [null, [Validators.required, Validators.maxLength(50)]],
         disputantSurname: [null, [Validators.required, Validators.maxLength(30)]],
         disputantGivenNames: [null, [Validators.required, Validators.maxLength(92)]],
-        disputantDriversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
-        driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
+        disputantDriversLicenceNumber: [null, [Validators.minLength(7), Validators.maxLength(9)]],
+        driversLicenceProvince: [null, [Validators.maxLength(30)]],
         driversLicenceCountry: [null],
         issuedTs: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({
@@ -314,20 +314,23 @@ export class TicketInfoComponent implements OnInit {
   public onViolationTicketDLProvinceChange(provAbbreviationCd: string) {
 
     setTimeout(() => {
-      if (provAbbreviationCd == this.bc.provAbbreviationCd) {
-        this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(9)])
-        this.form.get('violationTicket').get('disputantDriversLicenceNumber').addValidators([Validators.minLength(7)]);
-      } else {
+      if(provAbbreviationCd === null){
+        this.form.get('violationTicket').get('driversLicenceCountry').setValue(null);
+        this.form.get('violationTicket').get('driversLicenceProvince').setValue(null);
         this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(20)]);
-      }
-      if (this.form.get('addressCountryId').value === this.usa.ctryId || this.form.get('addressCountryId').value === this.canada.ctryId) {
-        this.form.get('violationTicket').get('disputantDriversLicenceNumber').addValidators([Validators.required]);
-      }
-      let provFound = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === provAbbreviationCd).shift();
-      if (provFound) {
-        let ctryFound = this.config.countries.filter(x => x.ctryId === provFound.ctryId).shift();
-        this.form.get('violationTicket').get('driversLicenceCountry').setValue(ctryFound.ctryLongNm);
-      }
+      } else{
+        if (provAbbreviationCd == this.bc.provAbbreviationCd) {
+          this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(9)])
+          this.form.get('violationTicket').get('disputantDriversLicenceNumber').addValidators([Validators.minLength(7)]);
+        } else {
+          this.form.get('violationTicket').get('disputantDriversLicenceNumber').setValidators([Validators.maxLength(20)]);
+        }
+        let provFound = this.config.provincesAndStates.filter(x => x.provAbbreviationCd === provAbbreviationCd).shift();
+        if (provFound) {
+          let ctryFound = this.config.countries.filter(x => x.ctryId === provFound.ctryId).shift();
+          this.form.get('violationTicket').get('driversLicenceCountry').setValue(ctryFound.ctryLongNm);
+        }
+      }      
       this.form.get('violationTicket').get('disputantDriversLicenceNumber').updateValueAndValidity();
     }, 5)
   }
@@ -344,22 +347,23 @@ export class TicketInfoComponent implements OnInit {
   // change validators on drivers licence number in notice of dispute when changing province / state
   public onNoticeOfDisputeDLProvinceChange(provId: number) {
     setTimeout(() => {
-      let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
-      if (!provFound) return;
-      this.form.get("driversLicenceProvince").setValue(provFound.provNm);
-      this.form.get("driversLicenceCountryId").setValue(provFound.ctryId);
-      this.form.get("driversLicenceProvinceSeqNo").setValue(provFound.provSeqNo);
-      if (provId === this.bc.provId) {
-        this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
-        this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
-      } else {
+      if(provId === null){
+        this.form.get("driversLicenceProvince").setValue(null);
+        this.form.get("driversLicenceCountryId").setValue(null);
+        this.form.get("driversLicenceProvinceSeqNo").setValue(null);
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
-      }
-      if (provFound.ctryId === this.usa.ctryId || provFound.ctryId == this.canada.ctryId) {
-        this.form.get('driversLicenceNumber').addValidators([Validators.required]);
+      } else{
+        let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
+        this.form.get("driversLicenceCountryId").setValue(provFound.ctryId);
+        this.form.get("driversLicenceProvinceSeqNo").setValue(provFound.provSeqNo);
+        if (provId === this.bc.provId) {
+          this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
+          this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
+        } else {
+          this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
+        }        
       }
       this.form.get('driversLicenceNumber').updateValueAndValidity();
-
       this.onFieldChange();
     }, 5)
   }
@@ -837,7 +841,6 @@ export class TicketInfoComponent implements OnInit {
           this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
           this.form.get('postalCode').addValidators([Validators.required]);
           this.form.get('homePhoneNumber').addValidators([FormControlValidators.phone]);
-          this.form.get('driversLicenceProvinceSeqNo').addValidators([Validators.required]);
         }
 
         if (this.form.get('addressCountryId').value == this.canada.ctryId) {
