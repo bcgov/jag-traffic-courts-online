@@ -95,8 +95,8 @@ ords:
     retry:
       # The maximum number of retry attempts to allow
       count: ${ORDS_API_RETRY_COUNT:3}
-      # The Duration of the fixed delays
-      delay: ${ORDS_API_RETRY_DELAY_SEC:5}
+      # The Duration of the fixed delays in milliseconds
+      delay: ${ORDS_API_RETRY_DELAY_SEC:5000}
     occam:
       url: ${ORDS_API_OCCAM_URL:localhost}
       # Basic auth username for calling ORDS OCCAM
