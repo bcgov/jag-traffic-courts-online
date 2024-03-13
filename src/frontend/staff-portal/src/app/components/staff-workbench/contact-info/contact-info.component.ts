@@ -82,7 +82,6 @@ export class ContactInfoComponent implements OnInit {
       rejectedReason: [null, Validators.maxLength(256)], // Optional
       postalCode: [null, [Validators.required]],
       driversLicenceNumber: [null], // Optional
-      driversLicenceProvince: [null, [Validators.maxLength(30)]], // Optional
       driversLicenceProvinceProvId: [null],
       driversLicenceIssuedCountryId: [null],
       driversLicenceIssuedProvinceSeqNo: [null],
@@ -100,7 +99,6 @@ export class ContactInfoComponent implements OnInit {
       this.form.get('addressProvinceCountryId').setValue(null);
       this.form.get('addressProvinceProvId').setValue(null);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
-      this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
       this.form.get('driversLicenceIssuedProvinceSeqNo').setValidators(null);
 
       if (ctryId === this.canada.ctryId || ctryId === this.usa.ctryId) {
@@ -123,7 +121,6 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceSeqNo").updateValueAndValidity();
       this.form.get("addressProvinceProvId").updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
-      this.form.get('driversLicenceProvince').updateValueAndValidity();
       this.form.get("driversLicenceIssuedProvinceSeqNo").updateValueAndValidity();
     }, 5);
   }
@@ -132,12 +129,10 @@ export class ContactInfoComponent implements OnInit {
     setTimeout(() => {
       let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
       if (provId === null || !provFound) {
-        this.form.get('driversLicenceProvince').setValue(null);
         this.form.get('driversLicenceIssuedCountryId').setValue(null);
         this.form.get('driversLicenceIssuedProvinceSeqNo').setValue(null);
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
       } else {
-        this.form.get("driversLicenceProvince").setValue(provFound.provNm);
         this.form.get("driversLicenceIssuedCountryId").setValue(provFound.ctryId);
         this.form.get("driversLicenceIssuedProvinceSeqNo").setValue(provFound.provSeqNo);
         if (provFound.provAbbreviationCd === this.bc.provAbbreviationCd) {
@@ -354,7 +349,6 @@ export class ContactInfoComponent implements OnInit {
       if (provFound) this.form.get('addressProvinceProvId').setValue(provFound.provId);
       this.form.get('addressProvince').setValidators([Validators.maxLength(30)]);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
-      this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
       this.form.get("driversLicenceIssuedProvinceSeqNo").setValidators(null);
 
       if (this.form.get('addressCountryId').value === this.canada.ctryId || this.form.get('addressCountryId').value === this.usa.ctryId) {
@@ -371,7 +365,6 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceSeqNo").updateValueAndValidity();
       this.form.get("addressProvinceProvId").updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
-      this.form.get('driversLicenceProvince').updateValueAndValidity();
       this.form.get("driversLicenceIssuedProvinceSeqNo").updateValueAndValidity();
     });
   }

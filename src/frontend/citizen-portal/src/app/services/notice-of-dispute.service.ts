@@ -48,8 +48,8 @@ export class NoticeOfDisputeService {
     postal_code: { value: null, options: { validators: [Validators.required] } },
     home_phone_number: { value: null, options: { validators: [FormControlValidators.phone] } },
     email_address: { value: null, options: { validators: [Validators.required, Validators.email, Validators.maxLength(100)] } },
-    drivers_licence_number: { value: null, options: { validators: [Validators.required, Validators.minLength(7), Validators.maxLength(9)] } },
-    drivers_licence_province: { value: null, options: { validators: [Validators.required] } },
+    drivers_licence_number: { value: null, options: { validators: [Validators.minLength(7), Validators.maxLength(9)] } },
+    drivers_licence_province: null,
     drivers_licence_country_id: null,
     drivers_licence_province_seq_no: null
   }
