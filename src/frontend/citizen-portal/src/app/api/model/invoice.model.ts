@@ -27,5 +27,7 @@ export interface Invoice {
     attribute3?: string | null;
     attribute4?: string | null;
     evt_form_number?: string | null;
+    act?: string | null;
+    section_number?: string | null;
 }
 
