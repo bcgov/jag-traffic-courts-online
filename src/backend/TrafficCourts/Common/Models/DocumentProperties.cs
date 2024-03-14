@@ -12,6 +12,7 @@ public class DocumentProperties : FileProperties
         public const string TcoDisputeId = "tco-dispute-id";
         public const string OccamDisputeId = "occam-dispute-id";
         public const string NoticeOfDisputeId = "notice-of-dispute-id";
+        public const string DocumentName = "name";
         public const string DocumentType = "document-type";
         public const string DocumentSource = "document-source";
         public const string StaffReviewStatus = "staff-review-status";
@@ -42,6 +43,11 @@ public class DocumentProperties : FileProperties
     public Guid? NoticeOfDisputeId { get; set; }
 
     /// <summary>
+    /// The name of document.
+    /// </summary>
+    public string? DocumentName { get; set; }
+
+    /// <summary>
     /// The type of document.
     /// </summary>
     public string? DocumentType { get; set; }
@@ -68,6 +74,7 @@ public class DocumentProperties : FileProperties
         ArgumentNullException.ThrowIfNull(tags);
 
         // Common properties
+        DocumentName = GetStringProperty(PropertyName.DocumentName, metadata);
         DocumentSource = GetEnumProperty<DocumentSource>(PropertyName.DocumentSource, metadata);
         DocumentType = GetStringProperty(PropertyName.DocumentType, tags);
 

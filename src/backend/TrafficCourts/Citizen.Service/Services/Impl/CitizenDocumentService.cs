@@ -46,7 +46,13 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         FileSearchResult file = searchResults[0];
 
-        DocumentProperties properties = new DocumentProperties(file.Metadata, file.Tags);
+        DocumentProperties properties = new(file.Metadata, file.Tags);
+        
+        // Citizen Portal should only have access to Citizen documents
+        if (properties.DocumentSource is not null && properties.DocumentSource is not DocumentSource.Citizen) {
+            // Should never happen since this file is not even available in the UI for selection to delete.
+            throw new InvalidDataException("Requested file is not a citizen document");
+        }
 
         if (properties.NoticeOfDisputeId is null)
         {
@@ -75,6 +81,12 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         var properties = new DocumentProperties(file.Metadata, file.Tags);
 
+        // Citizen Portal should only have access to Citizen documents
+        if (properties.DocumentSource is not null && properties.DocumentSource is not DocumentSource.Citizen) {
+            // Should never happen since this file is not even available in the UI for selection.
+            throw new InvalidDataException("Requested file is not a citizen document");
+        }
+
         if (!properties.VirusScanIsClean)
         {
             string scanStatus = properties.VirusScanStatus;
@@ -102,17 +114,21 @@ public class CitizenDocumentService : ICitizenDocumentService
         {
             properties = new DocumentProperties(result.Metadata, result.Tags);
 
-            FileMetadata fileMetadata = new()
-            {
-                FileId = result.Id,
-                FileName = result.FileName,
-                DocumentType = properties.DocumentType,
-                NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
-                VirusScanStatus = properties.VirusScanStatus,
-                DocumentStatus = properties.StaffReviewStatus,
-            };
+            if (properties.DocumentSource is not DocumentSource.Staff) {                
+                FileMetadata fileMetadata = new()
+                {
+                    FileId = result.Id,
+                    //FileName = result.FileName, // this is always null;
+                    FileName = properties.DocumentName,
+                    DocumentType = properties.DocumentType,
+                    DocumentSource = properties.DocumentSource,
+                    NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
+                    VirusScanStatus = properties.VirusScanStatus,
+                    DocumentStatus = properties.StaffReviewStatus,
+                };
 
-            fileData.Add(fileMetadata);
+                fileData.Add(fileMetadata);
+            }
         }
 
         return fileData;

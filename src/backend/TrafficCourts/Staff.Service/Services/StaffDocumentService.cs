@@ -98,8 +98,10 @@ public class StaffDocumentService : IStaffDocumentService
             FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
-                FileName = result.FileName,
+                //FileName = result.FileName, // this is always null;
+                FileName = properties.DocumentName,
                 DocumentType = properties.DocumentType,
+                DocumentSource = properties.DocumentSource,
                 NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
                 VirusScanStatus = properties.VirusScanStatus,
                 DisputeId = properties.TcoDisputeId
