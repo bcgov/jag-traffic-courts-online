@@ -1,7 +1,6 @@
 ﻿using Renci.SshNet;
 using Renci.SshNet.Common;
 using System.Text;
-using TrafficCourts.Common.Configuration.Validation;
 using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Arc.Dispute.Service.Configuration

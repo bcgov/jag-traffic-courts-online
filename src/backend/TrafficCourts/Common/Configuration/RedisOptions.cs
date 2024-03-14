@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using TrafficCourts.Common.Configuration.Validation;
 using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Common.Configuration;

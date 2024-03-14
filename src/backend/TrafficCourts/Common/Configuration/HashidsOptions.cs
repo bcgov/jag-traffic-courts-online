@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using TrafficCourts.Common.Configuration.Validation;
 using TrafficCourts.Configuration.Validation;
 
 namespace TrafficCourts.Common.Configuration;
