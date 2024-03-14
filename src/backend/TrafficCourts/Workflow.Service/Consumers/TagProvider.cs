@@ -11,19 +11,25 @@ internal static partial class TagProvider
     public static void RecordTags(ITagCollector collector, ConsumeContext<EmailVerificationSuccessful> context)
     {
         RecordTags<EmailVerificationSuccessful>(collector, context);
-        collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+        RecordNoticeOfDisputeGuidTag(collector, context.Message.NoticeOfDisputeGuid);
     }
 
+    /// <summary>
+    /// Records the common consume context properties and the Notice Of DisputeGuid.
+    /// </summary>
     public static void RecordTags(ITagCollector collector, ConsumeContext<CheckEmailVerificationTokenRequest> context)
     {
         RecordTags<CheckEmailVerificationTokenRequest>(collector, context);
-        collector.Add(nameof(context.Message.NoticeOfDisputeGuid), context.Message.NoticeOfDisputeGuid);
+        RecordNoticeOfDisputeGuidTag(collector, context.Message.NoticeOfDisputeGuid);
     }
 
+    /// <summary>
+    /// Records the common consume context properties and the ticket number.
+    /// </summary>
     public static void RecordTags(ITagCollector collector, ConsumeContext<DisputeApproved> context)
     {
         RecordTags<DisputeApproved>(collector, context);
-        collector.Add("TicketNumber", context.Message.TicketFileNumber);
+        Logging.TagProvider.RecordTicketNumber(collector, context.Message.TicketFileNumber);
     }
 
     public static void RecordTags(ITagCollector collector, Exception exception)
@@ -54,5 +60,10 @@ internal static partial class TagProvider
 
         collector.Add("MessageType", typeof(T).Name);
         collector.Add("SentTime", context.SentTime);
+    }
+
+    private static void RecordNoticeOfDisputeGuidTag(ITagCollector collector, Guid noticeOfDisputeGuid)
+    {
+        collector.Add("NoticeOfDisputeGuid", noticeOfDisputeGuid);
     }
 }
