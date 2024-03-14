@@ -14,6 +14,7 @@ public static class OracleDataApiExtensions
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     /// <exception cref="ArgumentNullException"></exception>
+    [Obsolete("Use TrafficCourts.OracleDataApi.AddOracleDataApi")]
     public static IHttpClientBuilder AddOracleDataApiClient(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
