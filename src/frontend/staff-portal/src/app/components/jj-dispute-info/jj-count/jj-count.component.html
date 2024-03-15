@@ -957,9 +957,9 @@
             style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Due
             date</span><br />
           <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;">{{
-            jjDisputedCount?.revisedDueDate | date: "yyyy" : "UTC" }}</span><br />
+            form?.controls.revisedDueDate | date: "yyyy" : "UTC" }}</span><br />
           <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{
-            jjDisputedCount?.revisedDueDate | date: "MMM dd" : "UTC" }}</span>
+            form?.controls.revisedDueDate | date: "MMM dd" : "UTC" }}</span>
         </p>
       </span>
       <span class="section-grid-cell">
@@ -969,7 +969,7 @@
           <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px; color: #707070;">incl.
             surcharge</span><br />
           <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{
-            jjDisputedCount?.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
+            form?.controls.totalFineAmount | currency:'CAD':'symbol-narrow':'1.0-0' }}</span>
         </p>
       </span>
     </div>
