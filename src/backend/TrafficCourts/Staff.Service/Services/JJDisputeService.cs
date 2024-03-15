@@ -62,6 +62,11 @@ public partial class JJDisputeService : IJJDisputeService
 
         dispute.FileData = disputeFiles;
 
+        // TCVP-2792 Filter files and exclude citizen-uploaded documents whose status is not ACCEPTED if assignVTC=false (requests coming from the jj workbench have this set to false, staff workbench has it set to true)
+        if (!assignVTC && dispute.FileData is not null) {
+            dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != DocumentSource.Citizen || x.DocumentStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
+        }
+
         // Populate the statute description of each count of the JJDispute
         foreach (var count in dispute.JjDisputedCounts)
         {

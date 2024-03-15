@@ -102,6 +102,7 @@ public class StaffDocumentService : IStaffDocumentService
                 FileName = properties.DocumentName,
                 DocumentType = properties.DocumentType,
                 DocumentSource = properties.DocumentSource,
+                DocumentStatus = properties.StaffReviewStatus,
                 NoticeOfDisputeGuid = properties.NoticeOfDisputeId?.ToString("d"),
                 VirusScanStatus = properties.VirusScanStatus,
                 DisputeId = properties.TcoDisputeId
