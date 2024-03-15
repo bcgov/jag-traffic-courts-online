@@ -20,7 +20,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   disputes: Dispute[] = [];
   dataSource = new MatTableDataSource(this.disputes);
-  
+
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
   statusFilterOptions = [DisputeStatus.New, DisputeStatus.Processing, DisputeStatus.Validated, DisputeStatus.Rejected, DisputeStatus.Cancelled, DisputeStatus.Concluded];
 
@@ -97,7 +97,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   searchFilter = function (record: Dispute, filter: string) {
     let searchTerms = JSON.parse(filter);
-    var excludingStatuses = !searchTerms?.status ? [DisputeStatus.Cancelled, DisputeStatus.Processing, DisputeStatus.Rejected] : [];
+    var excludingStatuses = !searchTerms?.status ? [DisputeStatus.Cancelled, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Concluded] : [];
     if (excludingStatuses.includes(record?.status)) {
       return false;
     }
