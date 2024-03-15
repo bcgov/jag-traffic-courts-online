@@ -190,15 +190,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
                 offenseCount.ReviseFine = SetReviseFine(disputedCount);
                 offenseCount.LesserOrGreaterAmount = (decimal?)(disputedCount.LesserOrGreaterAmount);
-                offenseCount.RoundLesserOrGreaterAmount = disputedCount.LesserOrGreaterAmount != null
-                    ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount) : null;
                 offenseCount.IncludesSurcharge = ToString(disputedCount.IncludesSurcharge);
+                offenseCount.RoundLesserOrGreaterAmount = disputedCount.LesserOrGreaterAmount != null
+                    ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount / (offenseCount.IncludesSurcharge == "Y" ? 1.15M : 1M))
+                    : null;
                 offenseCount.TotalFineAmount = (decimal?)(disputedCount.TotalFineAmount ?? disputedCount.TicketedFineAmount);
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
                 offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
                 offenseCount.FinalDue = disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
-                offenseCount.Surcharge = disputedCount.LesserOrGreaterAmount != null 
-                    ? Math.Round((decimal)disputedCount.LesserOrGreaterAmount * 0.15M) : 0;
+                offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null 
+                    ? Math.Round((decimal)offenseCount.RoundLesserOrGreaterAmount * 0.15M) : 0;
                 offenseCount.Comments = disputedCount.Comments;
                 // set jjDisputedCountRoP data for this count
                 offenseCount.Finding = ToString(disputedCount.JjDisputedCountRoP.Finding);
