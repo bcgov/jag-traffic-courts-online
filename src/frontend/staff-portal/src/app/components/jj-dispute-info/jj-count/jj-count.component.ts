@@ -164,10 +164,8 @@ export class JJCountComponent implements OnInit, OnChanges {
       if (!this.isViewOnly &&
         (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
           || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
-        this.form.controls.ticketedFineAmount.setValue(null);
         this.form.controls.lesserOrGreaterAmount.setValue(null);
         this.form.controls.totalFineAmount.setValue(null);
-        this.form.controls.dueDate.setValue(null);
         this.form.controls.revisedDueDate.setValue(null);
       }
 
