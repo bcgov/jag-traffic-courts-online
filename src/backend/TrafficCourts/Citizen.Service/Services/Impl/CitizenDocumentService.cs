@@ -47,7 +47,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         FileSearchResult file = searchResults[0];
 
         DocumentProperties properties = new(file.Metadata, file.Tags);
-        
+
         // Citizen Portal should only have access to Citizen documents
         if (properties.DocumentSource is not null && properties.DocumentSource is not DocumentSource.Citizen) {
             // Should never happen since this file is not even available in the UI for selection to delete.
@@ -139,7 +139,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         _logger.LogDebug("Saving file through COMS");
 
         properties.DocumentSource = DocumentSource.Citizen;
-        properties.StaffReviewStatus = "pending";
+        properties.StaffReviewStatus = DisputeUpdateRequestStatus.PENDING.ToString();
 
         var metadata = properties.ToMetadata();
         var tags = properties.ToTags();
