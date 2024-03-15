@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
@@ -14,15 +15,18 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
     private readonly ILogger<DisputeUpdateRequestAcceptedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IDisputeUpdateRequestAcceptedTemplate _updateRequestAcceptedTemplate;
+    private readonly IWorkflowDocumentService _documentService;
 
     public DisputeUpdateRequestAcceptedConsumer(
         ILogger<DisputeUpdateRequestAcceptedConsumer> logger,
         IOracleDataApiService oracleDataApiService,
-        IDisputeUpdateRequestAcceptedTemplate updateRequestAcceptedTemplate)
+        IDisputeUpdateRequestAcceptedTemplate updateRequestAcceptedTemplate,
+        IWorkflowDocumentService comsService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
         _updateRequestAcceptedTemplate = updateRequestAcceptedTemplate ?? throw new ArgumentNullException(nameof(updateRequestAcceptedTemplate));
+        _documentService = comsService ?? throw new ArgumentNullException(nameof(comsService));
     }
 
     public async Task Consume(ConsumeContext<DisputeUpdateRequestAccepted> context)
@@ -116,7 +120,22 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                         }
                         break;
                     case DisputeUpdateRequestUpdateType.DISPUTANT_DOCUMENT:
-                        // TODO: update document metadata set StaffReviewStatus to Accepted
+                        // update all documents in this patch to ACCEPTED
+                        if (patch.UploadedDocuments is not null) {
+                            foreach (UploadDocumentRequest uploadDocumentRequest in patch.UploadedDocuments) {
+                                Guid? documentId = uploadDocumentRequest.DocumentId;
+                                if (documentId is not null) {
+                                    // extract current document properties
+                                    Coms.Client.File file = await _documentService.GetFileAsync(documentId.Value, context.CancellationToken);
+
+                                    DocumentProperties properties = new(file.Metadata, file.Tags);
+                                    properties.StaffReviewStatus = DisputeUpdateRequestStatus.ACCEPTED.ToString();
+                                    
+                                    // resave properties with ACCEPTED
+                                    await _documentService.SaveDocumentPropertiesAsync(documentId.Value, properties, context.CancellationToken);
+                                }
+                            }
+                        }
                         break;
                     case DisputeUpdateRequestUpdateType.COUNT:
                         bool updateAnyCount = false;
