@@ -1,0 +1,37 @@
+name: Build Maintenance Site
+
+# This workflow will automatically build the maintenance-site project on the creation of a tag in Github.
+# The build is then pushed to Openshift, tagged with the gitsha, ie. maintenance-site:5adf53
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+            
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./infrastructure/static-site/maintenance
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/maintenance-site
+        run: |
+          git_sha=$(git rev-parse --short HEAD)
+          docker build --tag ${IMAGE}:latest -f ${CONTEXT}/Dockerfile ${CONTEXT}
+          docker push ${IMAGE}:latest
+          docker tag ${IMAGE}:latest ${IMAGE}:${git_sha}
+          docker push ${IMAGE}:${git_sha}

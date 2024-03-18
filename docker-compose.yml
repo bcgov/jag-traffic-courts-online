@@ -472,6 +472,18 @@ services:
     ports:
       - "5125:8080"
       - "5025:5025"
+      
+  #############################################################################################
+  ###                                 Static Maintenance Site                               ###
+  #############################################################################################
+  maintenance-site:
+    container_name: maintenance-site
+    build:
+      context: ./infrastructure/static-site/maintenance
+      dockerfile: ./Dockerfile
+    ports:
+      - "8100:8080"
+
 
 volumes:
   data-clamav:
