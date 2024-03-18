@@ -31,4 +31,13 @@ public interface IWorkflowDocumentService
     /// <returns>COMS File Object</returns>
     /// <exception cref="ObjectManagementServiceException">Unable to return file through COMS</exception>
     Task RemoveFileAsync(Guid fileId, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Sets the tags on the given file. Existing tags will be replaced.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="tags"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task SetTagsAsync(Guid id, IReadOnlyDictionary<string, string> tags, CancellationToken cancellationToken);
 }
