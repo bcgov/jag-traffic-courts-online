@@ -124,11 +124,16 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                         if (patch.UploadedDocuments is not null) {
                             foreach (UploadDocumentRequest uploadDocumentRequest in patch.UploadedDocuments) {
                                 Guid? documentId = uploadDocumentRequest.DocumentId;
-                                if (documentId is not null) {                                    
-                                    Dictionary<string, string> properties = new();
-                                    properties.Add(DocumentProperties.PropertyName.StaffReviewStatus, DisputeUpdateRequestStatus.ACCEPTED.ToString());
-                                    await _documentService.SetTagsAsync(documentId.Value, properties, context.CancellationToken);
-                                }
+                                if (documentId is not null) { 
+                                    // extract current document properties 
+                                    Coms.Client.File file = await _documentService.GetFileAsync(documentId.Value, context.CancellationToken); 
+ 
+                                    DocumentProperties properties = new(file.Metadata, file.Tags); 
+                                    properties.StaffReviewStatus = DisputeUpdateRequestStatus.ACCEPTED.ToString(); 
+                                     
+                                    // resave properties with ACCEPTED 
+                                    await _documentService.SaveDocumentPropertiesAsync(documentId.Value, properties, context.CancellationToken); 
+                                } 
                             }
                         }
                         break;

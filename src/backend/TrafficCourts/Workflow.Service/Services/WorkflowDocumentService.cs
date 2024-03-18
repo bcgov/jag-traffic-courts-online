@@ -49,14 +49,4 @@ public class WorkflowDocumentService : IWorkflowDocumentService
 
         await _objectManagementService.SetTagsAsync(id, tags, cancellationToken);
     }
-
-    public async Task SetTagsAsync(Guid id, IReadOnlyDictionary<string, string> tags, CancellationToken cancellationToken)
-    {
-        if (id == Guid.Empty)
-        {
-            throw new ArgumentException("Cannot replace save document properties on empty object id", nameof(id));
-        }
-
-        await _objectManagementService.SetTagsAsync(id, tags, cancellationToken);
-    }
 }

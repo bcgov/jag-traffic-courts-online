@@ -5,7 +5,7 @@
 /// </summary>
 public class DocumentProperties : FileProperties
 {
-    public static class PropertyName
+    private static class PropertyName
     {
         public const string VirusScanStatus = "virus-scan-status";
         public const string VirusName = "virus-name";
