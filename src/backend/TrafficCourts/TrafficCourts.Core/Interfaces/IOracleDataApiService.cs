@@ -4,6 +4,7 @@ namespace TrafficCourts.Interfaces;
 
 public interface IOracleDataApiService
 {
+    #region IOracleDataApiClient methods
     Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, CancellationToken cancellationToken);
     Task AssignJJDisputesToJJAsync(IEnumerable<string> ticketNumbers, string? jjUsername, CancellationToken cancellationToken);
     Task<Dispute> CancelDisputeAsync(long id, string body, CancellationToken cancellationToken);
@@ -39,5 +40,13 @@ public interface IOracleDataApiService
     Task<JJDispute> UpdateJJDisputeCascadeAsync(string ticketNumber, bool checkVTCAssigned, JJDispute body, CancellationToken cancellationToken);
     Task<Dispute> ValidateDisputeAsync(long id, CancellationToken cancellationToken);
     Task VerifyDisputeEmailAsync(long id, CancellationToken cancellationToken);
+    #endregion
 
+    #region Non Oracle Data API signatures
+    Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory, CancellationToken cancellationToken);
+    Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken);
+    Task<Dispute> GetDisputeByIdAsync(long disputeId, bool isAssign, CancellationToken cancellationToken);
+    Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid noticeOfDisputeGuid, CancellationToken cancellationToken);
+    Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, ExcludeStatus2? excludeStatus, CancellationToken cancellationToken);
+    #endregion
 }

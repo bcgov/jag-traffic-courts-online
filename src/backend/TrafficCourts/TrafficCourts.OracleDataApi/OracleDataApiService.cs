@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using TrafficCourts.Domain.Events;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
@@ -10,6 +11,8 @@ namespace TrafficCourts.OracleDataApi;
 
 internal partial class OracleDataApiService : IOracleDataApiService
 {
+    private const string NoticeOfDisputeGuidFormat = "d";
+
     private readonly Oracle.IOracleDataApiClient _client;
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
@@ -26,6 +29,8 @@ internal partial class OracleDataApiService : IOracleDataApiService
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
+
+    #region IOracleDataApiClient methods
 
     public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTCAssigned, string partId, CancellationToken cancellationToken)
     {
@@ -824,6 +829,89 @@ internal partial class OracleDataApiService : IOracleDataApiService
             throw; // throw the original
         }
     }
+
+    #endregion
+
+    #region  Non Oracle Data API signatures
+
+    public async Task<Dispute> GetDisputeByIdAsync(long disputeId, bool isAssign, CancellationToken cancellationToken)
+    {
+        var response = await GetDisputeAsync(disputeId, isAssign, cancellationToken).ConfigureAwait(false);
+        return response;
+    }
+
+    public async Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid noticeOfDisputeGuid, CancellationToken cancellationToken)
+    {
+        string id = noticeOfDisputeGuid.ToString(NoticeOfDisputeGuidFormat);
+
+        try
+        {
+            Oracle.Dispute? oracle = await _client.GetDisputeByNoticeOfDisputeGuidAsync(id, cancellationToken);
+            
+            Dispute domain = _mapper.Map<Dispute>(oracle);
+
+            return domain;
+        }
+        catch (Oracle.ApiException e) when (e.StatusCode == 404)
+        {
+            return null; // 404 is ok
+        }
+        catch (Exception exception)
+        {
+            var ex = ToOracleDataApiServiceException(exception);
+            if (ex != exception)
+            {
+                throw ex;
+            }
+            throw; // throw the original
+        }
+    }
+
+    public async Task<IList<DisputeResult>> SearchDisputeAsync(string? ticketNumber, string? issuedTime, Guid? noticeOfDisputeGuid, ExcludeStatus2? excludeStatus, CancellationToken cancellationToken)
+    {
+        // need to search by ticket number and issue time, or noticeOfDisputeGuid
+
+        if (ticketNumber is null && issuedTime is null && noticeOfDisputeGuid is null && excludeStatus is null)
+        {
+            return Array.Empty<DisputeResult>(); // no values passed for searching
+        }
+
+        var noticeOfDisputeId = noticeOfDisputeGuid?.ToString(NoticeOfDisputeGuidFormat);
+        Oracle.ExcludeStatus2 exclude = _mapper.Map<Oracle.ExcludeStatus2>(excludeStatus);
+
+        try
+        {
+            ICollection<Oracle.DisputeResult> oracle = await _client.FindDisputeStatusesAsync(ticketNumber, issuedTime, noticeOfDisputeId, exclude, cancellationToken).ConfigureAwait(false);
+
+            ICollection<DisputeResult> domain = _mapper.Map<ICollection<DisputeResult>>(oracle);
+
+            return new List<DisputeResult>(domain);
+        }
+        catch (Exception exception)
+        {
+            var ex = ToOracleDataApiServiceException(exception);
+            if (ex != exception)
+            {
+                throw ex;
+            }
+            throw; // throw the original
+        }
+    }
+
+
+    public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
+    {
+
+        var response = await InsertFileHistoryAsync(fileHistory, cancellationToken).ConfigureAwait(false);
+        return response;
+    }
+
+    public async Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory, CancellationToken cancellationToken)
+    {
+        var response = await InsertEmailHistoryAsync(emailHistory, cancellationToken).ConfigureAwait(false);
+        return response;
+    }
+    #endregion
 
     /// <summary>
     /// Creates the Oracle Data Api Service exception.
