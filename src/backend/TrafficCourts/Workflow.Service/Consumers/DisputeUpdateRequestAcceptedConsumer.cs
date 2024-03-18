@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
@@ -52,6 +53,13 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
 
                 // Get the current Dispute by id
                 Dispute dispute = await _oracleDataApiService.GetDisputeByIdAsync(updateRequest.DisputeId, false, context.CancellationToken);
+
+                // Update signatory fields regardless of update type
+                if (dispute.SignatoryName != patch.SignatoryName || dispute.SignatoryType != patch.SignatoryType)
+                {
+                    dispute.SignatoryName = patch.SignatoryName;
+                    dispute.SignatoryType = patch.SignatoryType;
+                }
 
                 switch (updateRequest.UpdateType)
                 {
@@ -284,6 +292,10 @@ public class UpdateRequest
     public string? FineReductionReason { get; set; }
 
     public string? TimeToPayReason { get; set; }
+
+    public string? SignatoryName { get; set; }
+
+    public DisputeSignatoryType? SignatoryType { get; set; }
 
     public System.Collections.Generic.ICollection<UpdateDisputeCountRequest>? DisputeCounts { get; set; }
 
