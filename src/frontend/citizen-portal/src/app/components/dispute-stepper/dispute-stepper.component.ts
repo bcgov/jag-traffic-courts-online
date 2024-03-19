@@ -131,7 +131,22 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
-    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance); // to be removed
+    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance);    
+    let signatory_type = (<NoticeOfDispute>this.ticket)?.signatory_type;
+    if(signatory_type){
+      this.signatureBoxForm.controls.signatory_type.setValue(signatory_type);
+      let signatory_name = (<NoticeOfDispute>this.ticket)?.signatory_name;
+      if(signatory_type === "D"){
+        this.signatureBoxForm.controls.disputant_signatory_name.setValue(signatory_name);
+        this.signatureBoxForm.controls.agent_signatory_name.disable();
+      } else if(signatory_type === "A"){
+        this.signatureBoxForm.controls.agent_signatory_name.setValue(signatory_name);
+        this.signatureBoxForm.controls.disputant_signatory_name.disable();
+      }
+    } else{
+      this.signatureBoxForm.controls.agent_signatory_name.disable();
+      this.signatureBoxForm.controls.disputant_signatory_name.disable();
+    }
     if (this.mode !== DisputeFormMode.CREATE) {
       this.previousButtonKey = "Cancel";
       this.store.select(DisputeStore.Selectors.State).subscribe(state => {
@@ -260,8 +275,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.Y) {
           valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
         } else if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N) {
-          valid = valid && (this.mode === this.DisputeFormMode.UPDATE || this.isSignatureFormValid) && 
-          ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
+          valid = valid && this.isSignatureFormValid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || 
+          (countForm.value.request_reduction === this.RequestReduction.Y));
         }
         allCountsValid = allCountsValid && (valid || countForm.value.__skip);
       }
