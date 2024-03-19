@@ -1587,7 +1587,6 @@
             "name": "disputeId",
             "in": "header",
             "description": "The TCO dispute id to associate document with.",
-            "required": true,
             "schema": {
               "maximum": 2147483647,
               "minimum": 1,
@@ -4642,7 +4641,10 @@
           "config": {
             "type": "object",
             "additionalProperties": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             },
             "nullable": true
           },
@@ -4657,6 +4659,13 @@
       "Dispute": {
         "type": "object",
         "properties": {
+          "fileData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMetadata"
+            },
+            "nullable": true
+          },
           "createdBy": {
             "type": "string",
             "nullable": true
@@ -5452,6 +5461,13 @@
         "additionalProperties": false,
         "description": "Represents a violation ticket notice of dispute."
       },
+      "DocumentSource": {
+        "enum": [
+          "Citizen",
+          "Staff"
+        ],
+        "type": "string"
+      },
       "DocumentType": {
         "enum": [
           "UNKNOWN",
@@ -5747,6 +5763,9 @@
           "noticeOfDisputeGuid": {
             "type": "string",
             "nullable": true
+          },
+          "documentSource": {
+            "$ref": "#/components/schemas/DocumentSource"
           },
           "documentType": {
             "type": "string",

@@ -29,7 +29,7 @@ export interface CredentialRepresentation {
     algorithm?: string | null;
     digits?: number;
     period?: number;
-    config?: { [key: string]: string; } | null;
+    config?: { [key: string]: Array<string>; } | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 
