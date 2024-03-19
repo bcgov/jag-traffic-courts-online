@@ -21,9 +21,11 @@ public class Field
     }
 
     [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public string? TagName { get; set; }
 
     [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public string? JsonName { get; set; }
 
     public string? Value { get; set; }
