@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace TrafficCourts.Common.Models;
+namespace TrafficCourts.Domain.Models;
 
 [ExcludeFromCodeCoverage]
 public record Agency(
