@@ -49,7 +49,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         DocumentProperties properties = new(file.Metadata, file.Tags);
 
         // Citizen Portal should only have access to Citizen documents
-        if (properties.DocumentSource is not null && properties.DocumentSource is not DocumentSource.Citizen) {
+        if (properties.DocumentSource is not null && properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Citizen) {
             // Should never happen since this file is not even available in the UI for selection to delete.
             throw new InvalidDataException("Requested file is not a citizen document");
         }
@@ -82,7 +82,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         var properties = new DocumentProperties(file.Metadata, file.Tags);
 
         // Citizen Portal should only have access to Citizen documents
-        if (properties.DocumentSource is not null && properties.DocumentSource is not DocumentSource.Citizen) {
+        if (properties.DocumentSource is not null && properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Citizen) {
             // Should never happen since this file is not even available in the UI for selection.
             throw new InvalidDataException("Requested file is not a citizen document");
         }
@@ -97,7 +97,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         return file;
     }
 
-    public async Task<List<FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -108,14 +108,14 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        List<FileMetadata> fileData = new();
+        List<TrafficCourts.Domain.Models.FileMetadata> fileData = new();
 
         foreach (var result in searchResult)
         {
             properties = new DocumentProperties(result.Metadata, result.Tags);
 
-            if (properties.DocumentSource is not DocumentSource.Staff) {                
-                FileMetadata fileMetadata = new()
+            if (properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Staff) {
+                TrafficCourts.Domain.Models.FileMetadata fileMetadata = new()
                 {
                     FileId = result.Id,
                     //FileName = result.FileName, // this is always null;
@@ -138,7 +138,7 @@ public class CitizenDocumentService : ICitizenDocumentService
     {
         _logger.LogDebug("Saving file through COMS");
 
-        properties.DocumentSource = DocumentSource.Citizen;
+        properties.DocumentSource = TrafficCourts.Domain.Models.DocumentSource.Citizen;
         properties.StaffReviewStatus = DisputeUpdateRequestStatus.PENDING.ToString();
 
         var metadata = properties.ToMetadata();

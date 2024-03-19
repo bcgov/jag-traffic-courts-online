@@ -32,7 +32,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
 
             var mock = new Mock<IStaffDocumentService>();
             mock.Setup(_ => _.FindFilesAsync(It.IsAny<DocumentProperties>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<FileMetadata>());
+                .ReturnsAsync(new List<TrafficCourts.Domain.Models.FileMetadata>());
 
             var mockKeycloakService = new Mock<IKeycloakService>();
             // Add setup for the methods within IKeycloakService that are called internally by GetDigitalCaseFileAsync.

@@ -403,7 +403,7 @@ public class DisputesController : ControllerBase
                 var uploadPendingFiles = dispute.FileData.Where(i => !string.IsNullOrEmpty(i.PendingFileStream));
                 request.UploadedDocuments = new List<UploadDocumentRequest>();
                 
-                foreach (FileMetadata fileMetadata in uploadPendingFiles)
+                foreach (TrafficCourts.Domain.Models.FileMetadata fileMetadata in uploadPendingFiles)
                 {
                     if (fileMetadata is null)
                     {
@@ -429,7 +429,7 @@ public class DisputesController : ControllerBase
                 }
 
                 var deletePendingFiles = dispute.FileData.Where(i => i.DeleteRequested == true && i.FileId is not null);
-                foreach (FileMetadata fileMetadata in deletePendingFiles)
+                foreach (var fileMetadata in deletePendingFiles)
                 {
                     // can throw
                     await _documentService.DeleteFileAsync(fileMetadata.FileId!.Value, cancellationToken);

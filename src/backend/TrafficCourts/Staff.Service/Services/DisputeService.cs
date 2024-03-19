@@ -68,7 +68,7 @@ public class DisputeService : IDisputeService
         // If so, retrieve the image from object storage and return it as well.
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
 
-        List<FileMetadata>? disputeFiles = null;
+        List<TrafficCourts.Domain.Models.FileMetadata>? disputeFiles = null;
 
         // search by notice of dispute guid
         if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))

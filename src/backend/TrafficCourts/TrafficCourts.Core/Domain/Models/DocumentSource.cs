@@ -1,4 +1,4 @@
-﻿namespace TrafficCourts.Common.Models;
+﻿namespace TrafficCourts.Domain.Models;
 
 /// <summary>
 /// The kind of document properties, citizen or staff properties.

@@ -24,6 +24,11 @@ public class FileMetadata
     public string? NoticeOfDisputeGuid { get; set; }
 
     /// <summary>
+    /// The source of the document (staff, disputant, etc).
+    /// </summary>
+    public DocumentSource? DocumentSource { get; set; }
+
+    /// <summary>
     /// The document type document-type
     /// </summary>
     public string? DocumentType { get; set; }

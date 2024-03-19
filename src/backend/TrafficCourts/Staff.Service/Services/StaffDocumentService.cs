@@ -79,7 +79,7 @@ public class StaffDocumentService : IStaffDocumentService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task<List<FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -89,13 +89,13 @@ public class StaffDocumentService : IStaffDocumentService
 
         IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        List<FileMetadata> fileData = new();
+        List<TrafficCourts.Domain.Models.FileMetadata> fileData = new();
 
         foreach (var result in searchResult)
         {
             properties = new DocumentProperties(result.Metadata, result.Tags);
 
-            FileMetadata fileMetadata = new()
+            TrafficCourts.Domain.Models.FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
                 //FileName = result.FileName, // this is always null;
@@ -118,7 +118,7 @@ public class StaffDocumentService : IStaffDocumentService
     {
         _logger.LogDebug("Saving file through COMS");
 
-        properties.DocumentSource = DocumentSource.Staff;
+        properties.DocumentSource = TrafficCourts.Domain.Models.DocumentSource.Staff;
 
         // get the tags
         var metadata = properties.ToMetadata();

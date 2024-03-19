@@ -174,5 +174,5 @@ public class Dispute : DisputantContactInformation
     /// </summary>
     /// 
     [JsonPropertyName("file_data")]
-    public List<FileMetadata>? FileData { get; set; }
+    public List<TrafficCourts.Domain.Models.FileMetadata>? FileData { get; set; }
 }

@@ -51,5 +51,5 @@ public interface IStaffDocumentService
     /// <param name="cancellationToken"></param>
     /// <exception cref="ObjectManagementServiceException">There was an error searching files in COMS</exception>
     /// <returns></returns>
-    Task<List<FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken);
+    Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken);
 }

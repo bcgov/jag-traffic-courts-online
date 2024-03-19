@@ -1,4 +1,7 @@
-﻿namespace TrafficCourts.Common.Models;
+﻿using TrafficCourts.Domain.Models;
+
+namespace TrafficCourts.Common.Models;
+
 
 /// <summary>
 /// Contains the common document properties across the staff and citizen portal applications.

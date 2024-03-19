@@ -1,13 +1,12 @@
 using MassTransit;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.Keycloak;
 using TrafficCourts.Common.OpenAPIs.Keycloak.v22_0;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Core.Http.Models;
+//using TrafficCourts.Domain.Models;
 using TrafficCourts.Logging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
@@ -49,14 +48,14 @@ public partial class JJDisputeService : IJJDisputeService
         // Search by dispute id
         DocumentProperties properties = new() { TcoDisputeId = dispute.Id };
 
-        List<FileMetadata> disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
+        List<TrafficCourts.Domain.Models.FileMetadata> disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
 
         // search by notice of dispute guid
         if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
         {
             // create new search properties
             properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
-            List<FileMetadata> files = await _documentService.FindFilesAsync(properties, cancellationToken);
+            List<TrafficCourts.Domain.Models.FileMetadata> files = await _documentService.FindFilesAsync(properties, cancellationToken);
             AddUnique(disputeFiles, files);
         }
 
@@ -64,7 +63,7 @@ public partial class JJDisputeService : IJJDisputeService
 
         // TCVP-2792 Filter files and exclude citizen-uploaded documents whose status is not ACCEPTED if assignVTC=false (requests coming from the jj workbench have this set to false, staff workbench has it set to true)
         if (!assignVTC && dispute.FileData is not null) {
-            dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != DocumentSource.Citizen || x.DocumentStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
+            dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != TrafficCourts.Domain.Models.DocumentSource.Citizen || x.DocumentStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
         }
 
         // Populate the statute description of each count of the JJDispute
@@ -337,7 +336,7 @@ public partial class JJDisputeService : IJJDisputeService
         return user?.Identity?.Name ?? string.Empty;
     }
 
-    private void AddUnique(List<FileMetadata> target, List<FileMetadata> files)
+    private void AddUnique(List<TrafficCourts.Domain.Models.FileMetadata> target, List<TrafficCourts.Domain.Models.FileMetadata> files)
     {
         HashSet<Guid> existing = new(target.Where(_ => _.FileId.HasValue).Select(_ => _.FileId!.Value));
 
