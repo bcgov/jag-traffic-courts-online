@@ -18,7 +18,7 @@ public class OracleDataApiServiceTest
 
     public OracleDataApiServiceTest()
     {
-        // Tests
+        // Tests - these are the tests per method that should be implmented
         //
         // 1. input parameters are mapped from domain to oracle
         // 2. client method is called with correct parameters
@@ -27,6 +27,21 @@ public class OracleDataApiServiceTest
         // 5. returns the output of the mapper
         // 6. if ApiException is thrown, common domain ApiException is thrown with same parameters
         // 7. if any other exception is thrown, the exact same exception is re-thrown
+    }
+
+    [Fact]
+    public void constructor_arguments_should_not_be_null()
+    {
+        void constructor_argument_should_not_be_null(string paramName, Oracle.IOracleDataApiClient client, IMapper mapper, IMediator mediator, ILogger<OracleDataApiService> logger)
+        {
+            var actual = Assert.Throws<ArgumentNullException>(() => new OracleDataApiService(client, mapper, mediator, logger));
+            Assert.Equal(paramName, actual.ParamName);
+        }
+
+        constructor_argument_should_not_be_null("client", null!, _mapper, _mediator, _logger);
+        constructor_argument_should_not_be_null("mapper", _client, null!, _mediator, _logger);
+        constructor_argument_should_not_be_null("mediator", _client, _mapper, null!, _logger);
+        constructor_argument_should_not_be_null("logger", _client, _mapper, _mediator, null!);
     }
 
     [Fact]
@@ -48,10 +63,29 @@ public class OracleDataApiServiceTest
 
         // assert calls were made
         await _client.Received().AcceptJJDisputeAsync(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
-        _mapper.Received().Map<Domain.Models.JJDispute>(oracle);
+
+        AssertMapped<Domain.Models.JJDispute, Oracle.JJDispute>(oracle);
+
+        await AssertEventNotPublished();
 
         // assert service returns the object returned from the mapper
         Assert.Equal(expected, actual);
+    }
+
+    private async Task AssertEventNotPublished()
+    {
+        await _mediator.DidNotReceive().Publish(Arg.Any<object>(), Arg.Any<CancellationToken>());
+    }
+
+    /// <summary>
+    /// Ensures the mapping was called.
+    /// </summary>
+    /// <typeparam name="TDestination"></typeparam>
+    /// <typeparam name="TSource"></typeparam>
+    /// <param name="source"></param>
+    private void AssertMapped<TDestination, TSource>(TSource source)
+    {
+        _mapper.Received().Map<TDestination>(source);
     }
 
     /// <summary>
