@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using TrafficCourts.Domain.Events;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
@@ -901,7 +900,6 @@ internal partial class OracleDataApiService : IOracleDataApiService
 
     public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
     {
-
         var response = await InsertFileHistoryAsync(fileHistory, cancellationToken).ConfigureAwait(false);
         return response;
     }
