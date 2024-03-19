@@ -166,11 +166,11 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
                 field.Type = Enum.GetName(extractedField.FieldType);
                 foreach (BoundingRegion region in extractedField.BoundingRegions)
                 {
-                    Common.OpenAPIs.OracleDataApi.v1_0.BoundingBox boundingBox = new();
-                    boundingBox.Points.Add(new Point(region.BoundingPolygon[0].X, region.BoundingPolygon[0].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingPolygon[1].X, region.BoundingPolygon[1].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingPolygon[2].X, region.BoundingPolygon[2].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingPolygon[3].X, region.BoundingPolygon[3].Y));
+                    Domain.Models.BoundingBox boundingBox = new();
+                    boundingBox.Points.Add(new Domain.Models.Point(region.BoundingPolygon[0].X, region.BoundingPolygon[0].Y));
+                    boundingBox.Points.Add(new Domain.Models.Point(region.BoundingPolygon[1].X, region.BoundingPolygon[1].Y));
+                    boundingBox.Points.Add(new Domain.Models.Point(region.BoundingPolygon[2].X, region.BoundingPolygon[2].Y));
+                    boundingBox.Points.Add(new Domain.Models.Point(region.BoundingPolygon[3].X, region.BoundingPolygon[3].Y));
                     field.BoundingBoxes.Add(boundingBox);
                 }
             }

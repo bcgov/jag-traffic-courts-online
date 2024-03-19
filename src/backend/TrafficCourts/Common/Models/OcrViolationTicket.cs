@@ -180,7 +180,7 @@ public class Field
 
     public string? Type { get; set; }
 
-    public List<BoundingBox> BoundingBoxes { get; set; } = new List<BoundingBox>();
+    public List<Domain.Models.BoundingBox> BoundingBoxes { get; set; } = new List<Domain.Models.BoundingBox>();
 
     /// <summary>Returns true if the given field's value is ":selected:", false if ":unselected:", otherwise null (unknown) value.</summary> 
     public bool? IsCheckboxSelected()
@@ -308,19 +308,3 @@ public class Field
     }
 }
 
-public class BoundingBox
-{
-    public List<Point> Points { get; set; } = new List<Point>();
-}
-
-public class Point
-{
-    public Point(float x, float y)
-    {
-        this.X = x;
-        this.Y = y;
-    }
-
-    public float X { get; set; }
-    public float Y { get; set; }
-}

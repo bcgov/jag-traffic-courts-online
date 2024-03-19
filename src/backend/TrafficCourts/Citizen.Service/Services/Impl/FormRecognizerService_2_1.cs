@@ -155,11 +155,11 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
                     if (valueData is not null)
                     {
                         FieldBoundingBox bb = valueData.BoundingBox;
-                        BoundingBox boundingBox = new();
-                        boundingBox.Points.Add(new Point(bb[0].X, bb[0].Y));
-                        boundingBox.Points.Add(new Point(bb[1].X, bb[1].Y));
-                        boundingBox.Points.Add(new Point(bb[2].X, bb[2].Y));
-                        boundingBox.Points.Add(new Point(bb[3].X, bb[3].Y));
+                        Domain.Models.BoundingBox boundingBox = new();
+                        boundingBox.Points.Add(new Domain.Models.Point(bb[0].X, bb[0].Y));
+                        boundingBox.Points.Add(new Domain.Models.Point(bb[1].X, bb[1].Y));
+                        boundingBox.Points.Add(new Domain.Models.Point(bb[2].X, bb[2].Y));
+                        boundingBox.Points.Add(new Domain.Models.Point(bb[3].X, bb[3].Y));
                         field.BoundingBoxes.Add(boundingBox);
                     }
                 }
