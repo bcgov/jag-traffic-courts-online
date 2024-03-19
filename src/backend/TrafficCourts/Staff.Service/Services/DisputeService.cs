@@ -102,7 +102,7 @@ public class DisputeService : IDisputeService
     /// <param name="dispute"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
+    private async Task<Domain.Models.ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
     {
         Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
         if (file is null)
@@ -113,7 +113,7 @@ public class DisputeService : IDisputeService
         MemoryStream stream = new MemoryStream(); // todo: use memory stream manager
         file.Data.CopyTo(stream);
 
-        return new ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
+        return new Domain.Models.ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
     }
 
 
