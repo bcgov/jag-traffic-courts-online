@@ -543,7 +543,7 @@ export class JJDisputeComponent implements OnInit {
     if (files.length <= 0) return;
 
     // upload to coms
-    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.id, this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0])
+    this.documentService.apiDocumentPost(this.lastUpdatedJJDispute.noticeOfDisputeGuid, this.fileTypeToUpload, files[0], this.lastUpdatedJJDispute.id)
       .subscribe(fileId => {
 
         // add to display of files in DCF
