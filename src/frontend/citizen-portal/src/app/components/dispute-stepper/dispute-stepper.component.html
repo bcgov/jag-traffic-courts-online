@@ -58,8 +58,7 @@
               <strong>{{ "stepper.count.signatory_option_1" | translate }}</strong>
             </div>
             <div class="col-4 custom-column">
-              <input matInput formControlName="disputant_signatory_name" [errorStateMatcher]="matcher"
-                [disabled]="signatureBoxForm.controls.signatory_type.value!=SignatoryType.D">
+              <input matInput formControlName="disputant_signatory_name" [errorStateMatcher]="matcher">
               <mat-error *ngIf="(signatureBoxForm.controls.disputant_signatory_name.dirty
                     || signatureBoxForm.controls.disputant_signatory_name.touched)
                     && signatureBoxForm.controls.disputant_signatory_name.invalid
@@ -79,8 +78,7 @@
               <strong>{{ "stepper.count.signatory_option_2" | translate }}</strong>
             </div>
             <div class="col-4 custom-column">
-              <input matInput formControlName="agent_signatory_name" [errorStateMatcher]="matcher"
-                [disabled]="signatureBoxForm.controls.signatory_type.value!=SignatoryType.A">
+              <input matInput formControlName="agent_signatory_name" [errorStateMatcher]="matcher">
               <mat-error *ngIf="(signatureBoxForm.controls.agent_signatory_name.dirty
                     || signatureBoxForm.controls.agent_signatory_name.touched)
                     && signatureBoxForm.controls.agent_signatory_name.invalid
