@@ -2,7 +2,7 @@ using TrafficCourts.Citizen.Service.Validators.Rules;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using System.Text.RegularExpressions;
-using TrafficCourts.Common.Models;
+using ViolationTicketVersion = TrafficCourts.Domain.Models.ViolationTicketVersion;
 
 namespace TrafficCourts.Citizen.Service.Validators;
 

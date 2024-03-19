@@ -4,19 +4,6 @@ using System.Text.RegularExpressions;
 
 namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
-public enum ViolationTicketVersion {
-    /// <summary>
-    /// Violation Ticket that was originally used 2022-04
-    /// </summary>
-    VT1,
-
-    /// <summary>
-    /// Violation Ticket was was introduced in 2023-09. This new Violation Ticket form contains most of the same
-    /// fields as the VT1, though there are a few new fields and some have been removed.
-    /// </summary>
-    VT2
-}
-
 /// <summary>
 /// A model representation of the extracted OCR results.
 /// </summary>
@@ -88,7 +75,7 @@ public class OcrViolationTicket
     /// <summary>
     /// Gets of sets the version of this ViolationTicket
     /// </summary>
-    public ViolationTicketVersion TicketVersion { get; set; }
+    public Domain.Models.ViolationTicketVersion TicketVersion { get; set; }
 
     /// <summary>
     /// Gets or sets the saved image filename.
@@ -118,7 +105,7 @@ public class OcrViolationTicket
     public bool IsCount1Populated()
     {
         return Fields[Count1Description].IsPopulated()
-            || (ViolationTicketVersion.VT1 == TicketVersion && Fields[Count1ActRegs].IsPopulated())
+            || (Domain.Models.ViolationTicketVersion.VT1 == TicketVersion && Fields[Count1ActRegs].IsPopulated())
             || Fields[Count1Section].IsPopulated()
             || Fields[Count1TicketAmount].IsPopulated();
     }
@@ -129,7 +116,7 @@ public class OcrViolationTicket
     public bool IsCount2Populated()
     {
         return Fields[Count2Description].IsPopulated()
-            || (ViolationTicketVersion.VT1 == TicketVersion && Fields[Count2ActRegs].IsPopulated())
+            || (Domain.Models.ViolationTicketVersion.VT1 == TicketVersion && Fields[Count2ActRegs].IsPopulated())
             || Fields[Count2Section].IsPopulated()
             || Fields[Count2TicketAmount].IsPopulated();
     }
@@ -140,7 +127,7 @@ public class OcrViolationTicket
     public bool IsCount3Populated()
     {
         return Fields[Count3Description].IsPopulated()
-            || (ViolationTicketVersion.VT1 == TicketVersion && Fields[Count3ActRegs].IsPopulated())
+            || (Domain.Models.ViolationTicketVersion.VT1 == TicketVersion && Fields[Count3ActRegs].IsPopulated())
             || Fields[Count3Section].IsPopulated()
             || Fields[Count3TicketAmount].IsPopulated();
     }

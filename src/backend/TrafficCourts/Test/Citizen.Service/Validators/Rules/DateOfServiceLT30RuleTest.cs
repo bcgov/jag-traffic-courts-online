@@ -8,6 +8,8 @@ using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using Xunit;
 
+using ViolationTicketVersion = TrafficCourts.Domain.Models.ViolationTicketVersion;
+
 namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 
 public class DateOfServiceLT30RuleTest
