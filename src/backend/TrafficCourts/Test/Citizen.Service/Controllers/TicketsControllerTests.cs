@@ -1,18 +1,17 @@
-using Xunit;
+using MassTransit;
 using MediatR;
-using Moq;
-using TrafficCourts.Citizen.Service.Features.Tickets;
 using Microsoft.AspNetCore.Http;
-using System.Threading;
-using TrafficCourts.Citizen.Service.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Net;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using MassTransit;
+using Moq;
 using System.Collections.Generic;
+using System.Net;
+using System.Threading;
+using TrafficCourts.Citizen.Service.Controllers;
+using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
-
+using TrafficCourts.Domain.Models;
+using Xunit;
 using SearchRequest = TrafficCourts.Citizen.Service.Features.Tickets.Search.Request;
 using SearchResponse = TrafficCourts.Citizen.Service.Features.Tickets.Search.Response;
 

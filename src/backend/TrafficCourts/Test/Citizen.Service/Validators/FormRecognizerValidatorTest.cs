@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators;
@@ -15,7 +15,7 @@ public class FormRecognizerValidatorTest
         // isMVA should be overwritten to _selected if the section text references a valid MVA Statute
 
         // Given
-        Domain.Models.Statute statute = new Domain.Models.Statute("19590", "MVA", "100", "1", "a", "", "MVA 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
+        Statute statute = new Statute("19590", "MVA", "100", "1", "a", "", "MVA 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
@@ -38,7 +38,7 @@ public class FormRecognizerValidatorTest
         // isMVA should be overwritten to _unselected if the section text is blank or does not reference a valid MVA Statute.
 
         // Given
-        Domain.Models.Statute statute = new Domain.Models.Statute("19590", "MVA", "100", "1", "a", "", "MVA 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
+        Statute statute = new Statute("19590", "MVA", "100", "1", "a", "", "MVA 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
@@ -61,7 +61,7 @@ public class FormRecognizerValidatorTest
         // isMVAR should be overwritten to _selected if the section text references a valid MVA Statute
 
         // Given
-        Domain.Models.Statute statute = new Domain.Models.Statute("19590", "MVAR", "100", "1", "a", "", "MVAR 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
+        Statute statute = new Statute("19590", "MVAR", "100", "1", "a", "", "MVAR 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();
@@ -84,7 +84,7 @@ public class FormRecognizerValidatorTest
         // isMVA should be overwritten to _unselected if the section text is blank or does not reference a valid MVA Statute.
 
         // Given
-        Domain.Models.Statute statute = new Domain.Models.Statute("19590", "MVAR", "100", "1", "a", "", "MVAR 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
+        Statute statute = new Statute("19590", "MVAR", "100", "1", "a", "", "MVAR 100(1)(a)", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         var _statuteLookupService = new Mock<IStatuteLookupService>();
         _statuteLookupService.Setup(x => x.GetBySectionAsync("100(1)(a)")).ReturnsAsync(statute);
         var _logger = new Mock<ILogger<FormRecognizerValidator>>();

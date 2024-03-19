@@ -13,5 +13,5 @@ public partial class ViolationTicket
     /// of the object store image reference in the ocrViolationTicket json property.
     /// </summary>
     public Domain.Models.ViolationTicketImage? ViolationTicketImage { get; set; }
-    public OcrViolationTicket? OcrViolationTicket { get; set;  }
+    public Domain.Models.OcrViolationTicket? OcrViolationTicket { get; set;  }
 }

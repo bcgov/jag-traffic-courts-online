@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Domain.Models;
-using MediatR;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 

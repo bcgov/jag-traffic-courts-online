@@ -3,7 +3,7 @@ using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.Models;
 using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 
 using ViolationTicketVersion = TrafficCourts.Domain.Models.ViolationTicketVersion;
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets;

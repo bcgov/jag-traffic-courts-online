@@ -10,6 +10,8 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 
+using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
+
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
     public static class Create

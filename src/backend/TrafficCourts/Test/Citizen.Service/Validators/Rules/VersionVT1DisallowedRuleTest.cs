@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators.Rules;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
-using ViolationTicketVersion = TrafficCourts.Domain.Models.ViolationTicketVersion;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 
@@ -27,5 +26,4 @@ public class VersionVT1DisallowedRuleTest
         // Then
         Assert.True(violationTicket.GlobalValidationErrors.Count == (expectError ? 1 : 0));
     }
-
 }

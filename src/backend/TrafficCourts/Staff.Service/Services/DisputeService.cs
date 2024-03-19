@@ -10,6 +10,8 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.Models;
 
+using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
+
 namespace TrafficCourts.Staff.Service.Services;
 
 /// <summary>

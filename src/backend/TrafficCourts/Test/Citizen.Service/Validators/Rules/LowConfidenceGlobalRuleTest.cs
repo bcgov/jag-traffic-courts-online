@@ -1,8 +1,8 @@
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
-using static TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.OcrViolationTicket;
+using static TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 

@@ -1,5 +1,4 @@
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using ViolationTicketVersion = TrafficCourts.Domain.Models.ViolationTicketVersion;
+using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;
 
