@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -23,7 +22,7 @@ public interface IStaffDocumentService
     /// <exception cref="TagValueTooLongException"></exception>
     /// <exception cref="TooManyTagsException"></exception>
     /// <exception cref="ObjectManagementServiceException">Other error.</exception>
-    Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken);
+    Task<Guid> SaveFileAsync(IFormFile file, Domain.Models.DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Retrieves a file with data and details through COMS service for the given unique file ID
@@ -51,5 +50,5 @@ public interface IStaffDocumentService
     /// <param name="cancellationToken"></param>
     /// <exception cref="ObjectManagementServiceException">There was an error searching files in COMS</exception>
     /// <returns></returns>
-    Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken);
+    Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(Domain.Models.DocumentProperties properties, CancellationToken cancellationToken);
 }

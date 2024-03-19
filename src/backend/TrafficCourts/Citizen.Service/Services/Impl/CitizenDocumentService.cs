@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
@@ -46,7 +45,7 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         FileSearchResult file = searchResults[0];
 
-        DocumentProperties properties = new(file.Metadata, file.Tags);
+        Domain.Models.DocumentProperties properties = new(file.Metadata, file.Tags);
 
         // Citizen Portal should only have access to Citizen documents
         if (properties.DocumentSource is not null && properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Citizen) {
@@ -79,7 +78,7 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        var properties = new DocumentProperties(file.Metadata, file.Tags);
+        var properties = new Domain.Models.DocumentProperties(file.Metadata, file.Tags);
 
         // Citizen Portal should only have access to Citizen documents
         if (properties.DocumentSource is not null && properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Citizen) {
@@ -97,7 +96,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         return file;
     }
 
-    public async Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<List<Domain.Models.FileMetadata>> FindFilesAsync(Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -112,7 +111,7 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         foreach (var result in searchResult)
         {
-            properties = new DocumentProperties(result.Metadata, result.Tags);
+            properties = new Domain.Models.DocumentProperties(result.Metadata, result.Tags);
 
             if (properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Staff) {
                 TrafficCourts.Domain.Models.FileMetadata fileMetadata = new()
@@ -134,7 +133,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(string base64FileString, string fileName, DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(string base64FileString, string fileName, Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 

@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using System.Security.Claims;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
@@ -35,7 +34,7 @@ public class StaffDocumentService : IStaffDocumentService
 
         Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        var properties = new DocumentProperties(file.Metadata, file.Tags);
+        var properties = new Domain.Models.DocumentProperties(file.Metadata, file.Tags);
 
         if (!properties.VirusScanIsClean)
         {
@@ -64,7 +63,7 @@ public class StaffDocumentService : IStaffDocumentService
 
         FileSearchResult file = searchResults[0];
 
-        var properties = new DocumentProperties(file.Metadata, file.Tags);
+        var properties = new Domain.Models.DocumentProperties(file.Metadata, file.Tags);
 
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
@@ -79,7 +78,7 @@ public class StaffDocumentService : IStaffDocumentService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -93,7 +92,7 @@ public class StaffDocumentService : IStaffDocumentService
 
         foreach (var result in searchResult)
         {
-            properties = new DocumentProperties(result.Metadata, result.Tags);
+            properties = new Domain.Models.DocumentProperties(result.Metadata, result.Tags);
 
             TrafficCourts.Domain.Models.FileMetadata fileMetadata = new()
             {
@@ -114,7 +113,7 @@ public class StaffDocumentService : IStaffDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(IFormFile file, Domain.Models.DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.Keycloak;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;

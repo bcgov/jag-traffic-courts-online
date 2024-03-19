@@ -7,7 +7,6 @@ using System.IO;
 using System.Net;
 using System.Security.Claims;
 using System.Threading;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
@@ -25,7 +24,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(guid);
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -46,7 +45,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataInvalidKeyException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -69,7 +68,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new MetadataTooLongException());
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -92,7 +91,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyEmptyException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -115,7 +114,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new TagKeyTooLongException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -138,7 +137,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new TagValueTooLongException(It.IsAny<string>(), It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -161,7 +160,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new TooManyTagsException(It.IsAny<int>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -184,7 +183,7 @@ public class DocumentControllerTest
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
         comsService
-            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Throws(new ObjectManagementServiceException(It.IsAny<string>()));
         var mockLogger = new Mock<ILogger<DocumentController>>();
         DocumentController sut = new(comsService.Object, mockLogger.Object);
@@ -207,7 +206,7 @@ public class DocumentControllerTest
         Coms.Client.File file = new(fileStream, "testFile");
         var comsService = new Mock<IStaffDocumentService>();
         Guid guid = Guid.NewGuid();
-        DocumentProperties properties = new DocumentProperties { TcoDisputeId = 1 };
+        Domain.Models.DocumentProperties properties = new Domain.Models.DocumentProperties { TcoDisputeId = 1 };
         //file.Metadata.Add("ticket-number", "AO38375804");
         //file.Metadata.Add("virus-scan-status", "clean");
         var filename = file.FileName;

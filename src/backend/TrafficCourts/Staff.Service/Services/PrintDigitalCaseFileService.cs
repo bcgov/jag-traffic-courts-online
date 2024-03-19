@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 

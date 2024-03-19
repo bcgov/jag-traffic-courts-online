@@ -1,5 +1,4 @@
-﻿using TrafficCourts.Common.Models;
-using TrafficCourts.Coms.Client;
+﻿using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Workflow.Service.Services;
 
@@ -34,7 +33,7 @@ public class WorkflowDocumentService : IWorkflowDocumentService
         return;
     }
 
-    public async Task SaveDocumentPropertiesAsync(Guid id, DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task SaveDocumentPropertiesAsync(Guid id, Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
     {
         if (id == Guid.Empty)
         {

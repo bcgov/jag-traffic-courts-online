@@ -1,4 +1,4 @@
-﻿namespace TrafficCourts.Common.Models;
+﻿namespace TrafficCourts.Domain.Models;
 
 /// <summary>
 /// Base class for file properties.

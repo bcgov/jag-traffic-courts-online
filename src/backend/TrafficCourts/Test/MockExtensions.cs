@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
 using TrafficCourts.Workflow.Service.Services;
 
@@ -36,7 +35,7 @@ public static class MockExtensions
     {
         mock.Verify(_ => _.SaveDocumentPropertiesAsync(
             It.IsAny<Guid>(),
-            It.IsAny<DocumentProperties>(),
+            It.IsAny<Domain.Models.DocumentProperties>(),
             It.IsAny<CancellationToken>()), times);
     }
 

@@ -1,12 +1,10 @@
 using MassTransit;
 using System.Security.Claims;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.Keycloak;
 using TrafficCourts.Common.OpenAPIs.Keycloak.v22_0;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-//using TrafficCourts.Domain.Models;
 using TrafficCourts.Logging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
@@ -46,7 +44,7 @@ public partial class JJDisputeService : IJJDisputeService
         JJDispute dispute = await _oracleDataApi.GetJJDisputeAsync(ticketNumber, assignVTC, cancellationToken);
 
         // Search by dispute id
-        DocumentProperties properties = new() { TcoDisputeId = dispute.Id };
+        Domain.Models.DocumentProperties properties = new() { TcoDisputeId = dispute.Id };
 
         List<TrafficCourts.Domain.Models.FileMetadata> disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
 
@@ -54,7 +52,7 @@ public partial class JJDisputeService : IJJDisputeService
         if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
         {
             // create new search properties
-            properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
+            properties = new Domain.Models.DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
             List<TrafficCourts.Domain.Models.FileMetadata> files = await _documentService.FindFilesAsync(properties, cancellationToken);
             AddUnique(disputeFiles, files);
         }

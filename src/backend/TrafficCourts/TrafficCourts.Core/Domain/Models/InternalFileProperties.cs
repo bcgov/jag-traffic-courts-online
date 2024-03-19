@@ -1,4 +1,4 @@
-﻿namespace TrafficCourts.Common.Models;
+﻿namespace TrafficCourts.Domain.Models;
 
 /// <summary>
 /// Interal file properties are for internal files. Internal files
