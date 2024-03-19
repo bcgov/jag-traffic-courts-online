@@ -24,8 +24,8 @@ public class CountSectionRuleTest
     {
         // Given
         var lookupService = new Mock<IStatuteLookupService>();
-        Statute expected = new ("19588", "MVA", "100", "1", "a", "i", "MVA 100(1) ai", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
-        lookupService.Setup(_ => _.GetBySectionAsync("MVA 100(1) ai")).Returns(Task.FromResult((Statute?)expected));
+        Domain.Models.Statute expected = new ("19588", "MVA", "100", "1", "a", "i", "MVA 100(1) ai", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
+        lookupService.Setup(_ => _.GetBySectionAsync("MVA 100(1) ai")).Returns(Task.FromResult((Domain.Models.Statute?)expected));
 
         Field field = new();
         field.TagName = Count1Section;

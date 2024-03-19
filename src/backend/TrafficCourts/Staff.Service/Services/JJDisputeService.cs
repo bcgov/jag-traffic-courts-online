@@ -358,7 +358,7 @@ public partial class JJDisputeService : IJJDisputeService
     private async Task<string> GetStatuteDescriptionAsync(JJDisputedCount count)
     {
         // Find statute by count's statute ID since the ID is stored in the Description field of the JJDisputedCount
-        Statute? statute = await _lookupService.GetByIdAsync(count.Description);
+        TrafficCourts.Domain.Models.Statute? statute = await _lookupService.GetByIdAsync(count.Description);
         if (statute is not null)
         {
             string statuteDescription = string.Format("{0} {1} {2}",

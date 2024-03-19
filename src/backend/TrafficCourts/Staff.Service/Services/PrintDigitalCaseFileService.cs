@@ -78,9 +78,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return stream;
     }
 
-    private async Task<Province?> GetDriversLicenceProvinceAsync(string provinceSeqNo, string countryId)
+    private async Task<Domain.Models.Province?> GetDriversLicenceProvinceAsync(string provinceSeqNo, string countryId)
     {
-        Province? driversLicenceProvince = null;
+        Domain.Models.Province? driversLicenceProvince = null;
         if (provinceSeqNo is not null && countryId is not null)
         {
             driversLicenceProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provinceSeqNo, countryId);
@@ -102,8 +102,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
         var dispute = await _disputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
-        
-        Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
+
+        Domain.Models.Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
         var fileHistory = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(dispute.TicketNumber, cancellationToken);
 
         var digitalCaseFile = new DigitalCaseFile();

@@ -156,7 +156,7 @@ public class JJDisputeServiceTest
         dispute.TicketNumber = "AJ201092461";
         dispute.JjDisputedCounts = counts;
 
-        Statute expected = new("19588", "MVA", "100", "1", "a", "i", "100(1)(a)i", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
+        Domain.Models.Statute expected = new("19588", "MVA", "100", "1", "a", "i", "100(1)(a)i", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
         string expectedDescription = "MVA 100(1)(a)i Fail to stop/police pursuit";
 
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);

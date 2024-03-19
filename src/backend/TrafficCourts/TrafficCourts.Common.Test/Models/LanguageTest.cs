@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.Json;
-using TrafficCourts.Common.Models;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Common.Test.Models;

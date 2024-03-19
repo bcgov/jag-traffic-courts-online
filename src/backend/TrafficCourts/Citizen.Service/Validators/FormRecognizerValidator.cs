@@ -289,7 +289,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             if (!String.IsNullOrEmpty(sectionText))
             {
                 sectionText = Regex.Replace(sectionText, @"^\$$", ""); // remove $ if it's the only character.
-                Statute? statute = await _lookupService.GetBySectionAsync(sectionText);
+                Domain.Models.Statute? statute = await _lookupService.GetBySectionAsync(sectionText);
                 if (statute is null) {
                     _logger.LogTrace($"Statute not found: {sectionText}");
                     return false;
