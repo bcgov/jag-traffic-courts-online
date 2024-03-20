@@ -123,6 +123,10 @@ public class DisputeService {
 				throw new ConstraintViolationException(msg, null);
 			}
 		}
+		
+		// TCVP-2748 Replace null province values with NA if specific province IDs are null since db check constraints expect values if IDs are null for provinces
+		replaceProvinceValuesWithNA(dispute);
+		
 		return disputeRepository.saveAndFlush(dispute);
 	}
 
@@ -212,6 +216,8 @@ public class DisputeService {
 	    
 	    if (disputeToUpdate.getDriversLicenceIssuedCountryId() != null && disputeToUpdate.getDriversLicenceIssuedProvinceSeqNo() == null && StringUtils.isBlank(disputeToUpdate.getDriversLicenceProvince())) {
 	        disputeToUpdate.setDriversLicenceProvince(NA);
+	    } else if (disputeToUpdate.getDriversLicenceIssuedCountryId() == null && disputeToUpdate.getDriversLicenceIssuedProvinceSeqNo() == null && !StringUtils.isBlank(disputeToUpdate.getDriversLicenceProvince())) {
+	    	disputeToUpdate.setDriversLicenceProvince(null);
 	    }
 	}
 	
