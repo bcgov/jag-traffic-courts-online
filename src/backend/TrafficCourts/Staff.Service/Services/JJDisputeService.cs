@@ -4,11 +4,12 @@ using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.Keycloak;
 using TrafficCourts.Common.OpenAPIs.Keycloak.v22_0;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Logging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
-using JJDisputeStatus = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.JJDisputeStatus;
+using JJDisputeStatus = TrafficCourts.Domain.Models.JJDisputeStatus;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -17,14 +18,14 @@ namespace TrafficCourts.Staff.Service.Services;
 /// </summary>
 public partial class JJDisputeService : IJJDisputeService
 {
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
     private readonly IBus _bus;
     private readonly IStaffDocumentService _documentService;
     private readonly IKeycloakService _keycloakService;
     private readonly IStatuteLookupService _lookupService;
     private readonly ILogger<JJDisputeService> _logger;
 
-    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, IStatuteLookupService lookupService, ILogger<JJDisputeService> logger)
+    public JJDisputeService(IOracleDataApiService oracleDataApi, IBus bus, IStaffDocumentService comsService, IKeycloakService keycloakService, IStatuteLookupService lookupService, ILogger<JJDisputeService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));

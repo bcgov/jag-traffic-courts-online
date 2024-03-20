@@ -7,12 +7,12 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using TrafficCourts.Common.Errors;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
-using ApiException = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ApiException;
+using ApiException = TrafficCourts.Exceptions.ApiException;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 

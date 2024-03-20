@@ -2,14 +2,17 @@
 using System.Collections.ObjectModel;
 using System.Security.Claims;
 using System.Text.Json;
+using TrafficCourts.Collections;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.Models;
-
+using TrafficCourts.Staff.Service.Models.Disputes;
+using X.PagedList;
 using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -22,16 +25,18 @@ public class DisputeService : IDisputeService
     private readonly ILogger<DisputeService> _logger;
     private readonly ICancelledDisputeEmailTemplate _cancelledDisputeEmailTemplate;
     private readonly IRejectedDisputeEmailTemplate _rejectedDisputeEmailTemplate;
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
     private readonly IBus _bus;
     private readonly IObjectManagementService _objectManagementService;
+    private readonly IAgencyLookupService _agencyLookupService;
     private readonly IProvinceLookupService _provinceLookupService;
     private readonly IStaffDocumentService _documentService;
 
     public DisputeService(
-        IOracleDataApiClient oracleDataApi,
+        IOracleDataApiService oracleDataApi,
         IBus bus,
         IObjectManagementService objectManagementService,
+        IAgencyLookupService agencyLookupService,
         ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
         IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
         ILogger<DisputeService> logger,
@@ -41,6 +46,7 @@ public class DisputeService : IDisputeService
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
+        _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
         _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(cancelledDisputeEmailTemplate));
         _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(rejectedDisputeEmailTemplate));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -52,6 +58,25 @@ public class DisputeService : IDisputeService
     {
         ICollection<DisputeListItem> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
         return disputes;
+    }
+
+    public async Task<IPagedList<DisputeListItem>> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken)
+    {
+        // apply fitler, sorting and paging
+        var disputes = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
+
+        // apply default sort if none supplied
+        parameters ??= new GetAllDisputesParameters();
+        parameters.SetDefaultSortIfNotSpecified();
+
+        var agencies = await _agencyLookupService.GetListAsync();
+
+        var paged = disputes
+            .Filter(parameters, agencies)
+            .Sort(parameters)
+            .Page(parameters, 25);
+
+        return paged;
     }
 
     public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
@@ -351,9 +376,9 @@ public class DisputeService : IDisputeService
     public async Task<ICollection<DisputeWithUpdates>> GetAllDisputesWithPendingUpdateRequestsAsync(CancellationToken cancellationToken)
     {
         ICollection<DisputeWithUpdates> disputesWithUpdates = new Collection<DisputeWithUpdates>();
-        ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputeUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
+        ICollection<Domain.Models.DisputeUpdateRequest> pendingDisputeUpdateRequests = await _oracleDataApi.GetDisputeUpdateRequestsAsync(null, Status.PENDING, cancellationToken);
 
-        foreach (TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest disputeUpdateRequest in pendingDisputeUpdateRequests)
+        foreach (Domain.Models.DisputeUpdateRequest disputeUpdateRequest in pendingDisputeUpdateRequests)
         {
             DisputeWithUpdates? disputeWithUpdates = new DisputeWithUpdates();
             if (disputesWithUpdates.FirstOrDefault(x => x.DisputeId == disputeUpdateRequest.DisputeId) is null)
@@ -442,7 +467,7 @@ public class DisputeService : IDisputeService
     /// <param name="disputeId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ICollection<TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<ICollection<Domain.Models.DisputeUpdateRequest>> GetDisputeUpdateRequestsAsync(long disputeId, CancellationToken cancellationToken)
     {
         return await _oracleDataApi.GetDisputeUpdateRequestsAsync(disputeId, null, cancellationToken);
     }

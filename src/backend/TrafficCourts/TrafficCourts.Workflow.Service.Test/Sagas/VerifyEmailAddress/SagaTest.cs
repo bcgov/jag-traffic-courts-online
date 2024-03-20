@@ -11,6 +11,7 @@ using Testcontainers.RabbitMq;
 using Testcontainers.Redis;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;

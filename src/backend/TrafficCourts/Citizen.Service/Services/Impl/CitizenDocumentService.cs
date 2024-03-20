@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 

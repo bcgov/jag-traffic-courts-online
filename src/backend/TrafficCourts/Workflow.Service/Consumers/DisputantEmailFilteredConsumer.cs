@@ -1,9 +1,9 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Services;
-using TrafficCourts.Workflow.Service.Mappers;
 using System.Net;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
+using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Workflow.Service.Mappers;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {

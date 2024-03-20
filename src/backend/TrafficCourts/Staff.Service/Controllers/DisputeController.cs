@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using TrafficCourts.Common.Authorization;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Staff.Service.Authentication;
-using TrafficCourts.Staff.Service.Services;
-using TrafficCourts.Staff.Service.Models;
-using TrafficCourts.Common.Errors;
 using System.Net;
+using TrafficCourts.Common.Authorization;
+using TrafficCourts.Common.Errors;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Exceptions;
+using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Models;
+using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 

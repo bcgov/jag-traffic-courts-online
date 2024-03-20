@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -7,11 +8,11 @@ namespace TrafficCourts.Staff.Service.Services;
 /// </summary>
 public class EmailHistoryService : IEmailHistoryService
 {
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
 
 
     public EmailHistoryService(
-        IOracleDataApiClient oracleDataApi,
+        IOracleDataApiService oracleDataApi,
         IHttpContextAccessor httpContextAccessor,
         ILogger<EmailHistoryService> logger)
     {

@@ -1,10 +1,11 @@
 ﻿using MassTransit;
 using TrafficCourts.Common.Features.Mail;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
-using ApiException = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ApiException;
+using ApiException = TrafficCourts.Exceptions.ApiException;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 

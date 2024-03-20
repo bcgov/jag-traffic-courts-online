@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Exceptions;
 using TrafficCourts.Staff.Service.Models;
 
 namespace TrafficCourts.Staff.Service.Services;

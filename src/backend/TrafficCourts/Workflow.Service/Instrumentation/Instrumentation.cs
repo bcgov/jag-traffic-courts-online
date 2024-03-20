@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using TrafficCourts.Diagnostics;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Timer = TrafficCourts.Diagnostics.Timer;
 
 namespace TrafficCourts.Workflow.Service;

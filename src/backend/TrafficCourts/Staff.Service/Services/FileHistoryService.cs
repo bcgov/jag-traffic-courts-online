@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -7,11 +8,11 @@ namespace TrafficCourts.Staff.Service.Services;
 /// </summary>
 public class FileHistoryService : IFileHistoryService
 {
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public FileHistoryService(
-        IOracleDataApiClient oracleDataApi,
+        IOracleDataApiService oracleDataApi,
         IHttpContextAccessor httpContextAccessor,
         ILogger<FileHistoryService> logger)
     {

@@ -7,9 +7,6 @@ using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
-using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
@@ -31,15 +28,17 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        }, meters: ["MassTransit", "ComsClient", OracleDataApiOperationMetrics.MeterName]);
+        }, meters: ["MassTransit", "ComsClient", "OracleDataApi"]);
 
         builder.AddRedis();
 
         builder.Services.AddTransient<UserIdentityProviderHandler>();
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddOracleDataApiClient(builder.Configuration)
-            .AddHttpMessageHandler<UserIdentityProviderHandler>();
+        builder.Services.AddOracleDataApi(builder.Configuration, builder =>
+        {
+            builder.AddHttpMessageHandler<UserIdentityProviderHandler>();
+        });
 
         builder.Services.AddRecyclableMemoryStreams();
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);

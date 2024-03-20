@@ -10,7 +10,7 @@
 //using System.Threading;
 //using System.Threading.Tasks;
 //using TrafficCourts.Common.Features.Mail.Model;
-//using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+//using TrafficCourts.Domain.Models;
 //using TrafficCourts.Workflow.Service.Configuration;
 //using TrafficCourts.Workflow.Service.Services;
 //using Xunit;
