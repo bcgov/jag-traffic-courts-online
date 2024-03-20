@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.OpenAPIs.Keycloak;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
 
@@ -23,7 +24,7 @@ public class JJDisputeServiceTest
     public async Task TestGetPartId_JJAssignedToNull()
     {
         // Arrange
-        var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
+        var _oracleDataApiClient = new Mock<IOracleDataApiService>();
         var _bus = new Mock<IBus>();
         var _staffDocumentService = new Mock<IStaffDocumentService>();
         var _keycloakService = new Mock<IKeycloakService>();
@@ -43,7 +44,7 @@ public class JJDisputeServiceTest
     public async Task TestGetPartId_HearingTypeNull()
     {
         // Arrange
-        var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
+        var _oracleDataApiClient = new Mock<IOracleDataApiService>();
         var _bus = new Mock<IBus>();
         var _staffDocumentService = new Mock<IStaffDocumentService>();
         var _keycloakService = new Mock<IKeycloakService>();
@@ -64,7 +65,7 @@ public class JJDisputeServiceTest
     public async Task TestGetPartId_EmptyKeycloak()
     {
         // Arrange
-        var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
+        var _oracleDataApiClient = new Mock<IOracleDataApiService>();
         var _bus = new Mock<IBus>();
         var _staffDocumentService = new Mock<IStaffDocumentService>();
         var _keycloakService = new Mock<IKeycloakService>();
@@ -93,7 +94,7 @@ public class JJDisputeServiceTest
         Fixture fix = new Fixture();
         JJDispute dispute = fix.Create<JJDispute>();
 
-        var oracleDataApiClient = Substitute.For<IOracleDataApiClient>();
+        var oracleDataApiClient = Substitute.For<IOracleDataApiService>();
 
         oracleDataApiClient
             .GetJJDisputeAsync(dispute.TicketNumber, Arg.Any<bool>(), Arg.Any<CancellationToken>())
@@ -136,7 +137,7 @@ public class JJDisputeServiceTest
     public async Task TestGetStatuteDescription()
     {
         // Arrange
-        var _oracleDataApiClient = new Mock<IOracleDataApiClient>();
+        var _oracleDataApiClient = new Mock<IOracleDataApiService>();
         var _bus = new Mock<IBus>();
         var _staffDocumentService = new Mock<IStaffDocumentService>();
         var _keycloakService = new Mock<IKeycloakService>();

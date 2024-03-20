@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Configuration.Validation;
 
-namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI;
+namespace TrafficCourts.OracleDataApi;
 
 internal class OracleDataApiConfiguration : IValidatable
 {

@@ -41,7 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Cdogs.Client.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Core.Test", "TrafficCourts.Core.Test\TrafficCourts.Core.Test.csproj", "{E49DF83B-4491-41DC-A3E2-4DD59768C336}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.Workflow.Service.Test", "TrafficCourts.Workflow.Service.Test\TrafficCourts.Workflow.Service.Test.csproj", "{A3C93E4F-5A45-4028-9820-20E037FF5F2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Workflow.Service.Test", "TrafficCourts.Workflow.Service.Test\TrafficCourts.Workflow.Service.Test.csproj", "{A3C93E4F-5A45-4028-9820-20E037FF5F2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.OracleDataApi", "TrafficCourts.OracleDataApi\TrafficCourts.OracleDataApi.csproj", "{A571B36D-61F7-44E0-A6FA-7FDCC5485460}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.OracleDataApi.Test", "TrafficCourts.OracleDataApi.Test\TrafficCourts.OracleDataApi.Test.csproj", "{C0059080-9EB3-4503-BD9B-BA24427F3B2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +125,14 @@ Global
 		{A3C93E4F-5A45-4028-9820-20E037FF5F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3C93E4F-5A45-4028-9820-20E037FF5F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3C93E4F-5A45-4028-9820-20E037FF5F2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A571B36D-61F7-44E0-A6FA-7FDCC5485460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A571B36D-61F7-44E0-A6FA-7FDCC5485460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A571B36D-61F7-44E0-A6FA-7FDCC5485460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A571B36D-61F7-44E0-A6FA-7FDCC5485460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0059080-9EB3-4503-BD9B-BA24427F3B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0059080-9EB3-4503-BD9B-BA24427F3B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0059080-9EB3-4503-BD9B-BA24427F3B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0059080-9EB3-4503-BD9B-BA24427F3B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,6 +146,7 @@ Global
 		{38993F0E-A5EF-4682-A3D8-C18B75C5D5E5} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
 		{E49DF83B-4491-41DC-A3E2-4DD59768C336} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
 		{A3C93E4F-5A45-4028-9820-20E037FF5F2F} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
+		{C0059080-9EB3-4503-BD9B-BA24427F3B2C} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F53B0D46-E55D-4CE9-8617-6CD7FD73C49B}

@@ -40,6 +40,7 @@
     <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Client\TrafficCourts.Arc.Dispute.Client.csproj" />
     <ProjectReference Include="..\TrafficCourts.Coms.Client\TrafficCourts.Coms.Client.csproj" />
     <ProjectReference Include="..\TrafficCourts.Core\TrafficCourts.Core.csproj" />
+    <ProjectReference Include="..\TrafficCourts.OracleDataApi\TrafficCourts.OracleDataApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

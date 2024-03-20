@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 using TrafficCourts.Common;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search;

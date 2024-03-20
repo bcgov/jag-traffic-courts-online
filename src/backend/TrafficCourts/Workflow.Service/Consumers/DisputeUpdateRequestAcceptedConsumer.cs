@@ -1,10 +1,11 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
-using DisputeUpdateRequest = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest;
+using DisputeUpdateRequest = TrafficCourts.Domain.Models.DisputeUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 
@@ -137,7 +138,7 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                         break;
                     case DisputeUpdateRequestUpdateType.COUNT:
                         bool updateAnyCount = false;
-                        foreach (Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount disputeCount in dispute.DisputeCounts)
+                        foreach (Domain.Models.DisputeCount disputeCount in dispute.DisputeCounts)
                         {
                             UpdateDisputeCountRequest? patchCount = patch?.DisputeCounts?.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
                             if (patchCount != null)

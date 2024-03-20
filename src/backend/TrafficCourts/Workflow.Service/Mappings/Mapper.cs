@@ -1,4 +1,4 @@
-﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Domain.Models;
 using TrafficCourts.Messaging.MessageContracts;
 namespace TrafficCourts.Workflow.Service.Mappers;
 

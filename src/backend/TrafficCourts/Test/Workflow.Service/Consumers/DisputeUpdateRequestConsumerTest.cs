@@ -5,7 +5,8 @@ using Moq;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
 using Xunit;
@@ -17,7 +18,7 @@ public class DisputeUpdateRequestConsumerTest
 {
     private readonly DisputeUpdateRequest _message;
     private readonly Dispute _dispute;
-    private Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest _updateRequest;
+    private TrafficCourts.Domain.Models.DisputeUpdateRequest _updateRequest;
     private readonly Mock<ILogger<DisputeUpdateRequestConsumer>> _mockLogger;
     private readonly Mock<IOracleDataApiService> _oracleDataApiService;
     private readonly Mock<ConsumeContext<DisputeUpdateRequest>> _context;
@@ -61,7 +62,7 @@ public class DisputeUpdateRequestConsumerTest
         await _consumer.Consume(_context.Object);
 
         // Assert the oracle service was never called.
-        _oracleDataApiService.Verify(m => m.SaveDisputeUpdateRequestAsync(It.IsAny<string>(), It.IsAny<Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+        _oracleDataApiService.Verify(m => m.SaveDisputeUpdateRequestAsync(It.IsAny<string>(), It.IsAny<TrafficCourts.Domain.Models.DisputeUpdateRequest>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -106,7 +107,7 @@ public class DisputeUpdateRequestConsumerTest
 
         // Assert the oracle service was called once, INSERTing an update request of type DISPUTANT_NAME and status PENDING.
         _oracleDataApiService.Verify(m => m.SaveDisputeUpdateRequestAsync(_message.NoticeOfDisputeGuid.ToString(),
-            It.Is<Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>(a =>
+            It.Is<TrafficCourts.Domain.Models.DisputeUpdateRequest>(a =>
                 a.Status == DisputeUpdateRequestStatus2.PENDING &&
                 a.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_NAME
             ), It.IsAny<CancellationToken>()), Times.Once);
@@ -149,7 +150,7 @@ public class DisputeUpdateRequestConsumerTest
 
         // Assert the oracle service was called once, INSERTing an update request of type DISPUTANT_ADDRESS and status PENDING.
         _oracleDataApiService.Verify(m => m.SaveDisputeUpdateRequestAsync(_message.NoticeOfDisputeGuid.ToString(),
-            It.Is<Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>(a =>
+            It.Is<TrafficCourts.Domain.Models.DisputeUpdateRequest>(a =>
                 a.Status == DisputeUpdateRequestStatus2.PENDING &&
                 a.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_ADDRESS
             ), It.IsAny<CancellationToken>()), Times.Once);
@@ -166,7 +167,7 @@ public class DisputeUpdateRequestConsumerTest
 
         // Assert the oracle service was called once, INSERTing an update request of type DISPUTANT_PHONE and status PENDING.
         _oracleDataApiService.Verify(m => m.SaveDisputeUpdateRequestAsync(_message.NoticeOfDisputeGuid.ToString(),
-            It.Is<Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest>(a =>
+            It.Is<TrafficCourts.Domain.Models.DisputeUpdateRequest>(a =>
                 a.Status == DisputeUpdateRequestStatus2.PENDING &&
                 a.UpdateType == DisputeUpdateRequestUpdateType.DISPUTANT_PHONE
             ), It.IsAny<CancellationToken>()), Times.Once);

@@ -1,7 +1,7 @@
 ﻿using TrafficCourts.Citizen.Service.Validators;
 using Xunit;
 using FluentValidation.TestHelper;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using FluentValidation;
 using System.Collections.Generic;
 

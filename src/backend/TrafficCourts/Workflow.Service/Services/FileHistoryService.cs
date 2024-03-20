@@ -1,6 +1,7 @@
 ﻿using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using AutoMapper;
+using TrafficCourts.Interfaces;
 
 namespace TrafficCourts.Workflow.Service.Services
 {

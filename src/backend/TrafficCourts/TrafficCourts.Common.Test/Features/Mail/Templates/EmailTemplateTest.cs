@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using System.Collections.Generic;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Common.Test.Features.Mail.Templates

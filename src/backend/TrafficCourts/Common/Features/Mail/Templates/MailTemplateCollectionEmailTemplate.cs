@@ -1,5 +1,5 @@
 ﻿using TrafficCourts.Common.Features.Mail.Model;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Common.Features.Mail.Templates;
 

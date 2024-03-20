@@ -2,7 +2,8 @@
 using System.Text;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 
 namespace TrafficCourts.Staff.Service.Services;
@@ -10,14 +11,14 @@ namespace TrafficCourts.Staff.Service.Services;
 public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 {
     private readonly IJJDisputeService _disputeService;
-    private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
     private readonly IDocumentGenerationService _documentGeneration;
     private readonly ILogger<PrintDigitalCaseFileService> _logger;
 
     public PrintDigitalCaseFileService(
         IJJDisputeService disputeService,
-        IOracleDataApiClient oracleDataApi,
+        IOracleDataApiService oracleDataApi,
         IProvinceLookupService provinceLookupService,
         IDocumentGenerationService documentGeneration,
         ILogger<PrintDigitalCaseFileService> logger)

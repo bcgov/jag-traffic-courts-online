@@ -6,7 +6,7 @@ using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataAPI.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Common.OpenAPIs.VirusScan;
 using TrafficCourts.Messaging;
 using TrafficCourts.Workflow.Service.Configuration;
@@ -30,7 +30,7 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
-        }, meters: ["MassTransit", "ComsClient", OracleDataApiOperationMetrics.MeterName]);
+        }, meters: ["MassTransit", "ComsClient", "OracleDataApi"]);
 
         builder.Services.AddControllers();
 
@@ -45,9 +45,7 @@ public static class Startup
 
         builder.Services.AddTransient<IVerificationEmailTemplate, VerificationEmailTemplate>();
 
-        builder.Services.AddOracleDataApiClient(builder.Configuration);
-
-        builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
+        builder.Services.AddOracleDataApi(builder.Configuration);
 
         // add the Arc Dispute Client
         builder.Services.AddArcDisputeClient(builder.Configuration, section: "ArcApiConfiguration");

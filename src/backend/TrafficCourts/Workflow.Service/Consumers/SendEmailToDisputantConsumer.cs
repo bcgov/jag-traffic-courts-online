@@ -1,8 +1,10 @@
 ﻿using MassTransit;
 using TrafficCourts.Common.Features.Mail;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Exceptions;
+using TrafficCourts.Interfaces;
 
 namespace TrafficCourts.Workflow.Service.Consumers;
 

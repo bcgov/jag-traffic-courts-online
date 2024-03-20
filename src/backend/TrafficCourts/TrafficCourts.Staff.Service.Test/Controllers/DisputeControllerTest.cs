@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Threading;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Staff.Service.Controllers;
 using TrafficCourts.Staff.Service.Services;
 using TrafficCourts.Staff.Service.Models;
@@ -31,8 +31,10 @@ public class DisputeControllerTest
         dispute2.DisputeId =2;
         List<DisputeListItem> disputes = new() { dispute1, dispute2 };
         var disputeService = new Mock<IDisputeService>();
+
+        ExcludeStatus? excludeStatus = null;
         disputeService
-            .Setup(_ => _.GetAllDisputesAsync(null, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetAllDisputesAsync(excludeStatus, It.IsAny<CancellationToken>()))
             .ReturnsAsync(disputes);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -86,7 +88,7 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
-            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
+            .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
@@ -110,7 +112,7 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
-            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
+            .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
@@ -158,7 +160,7 @@ public class DisputeControllerTest
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
-            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
+            .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
@@ -183,7 +185,7 @@ public class DisputeControllerTest
         long updatedId = 2;
         disputeService
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
-            .Throws(new Common.OpenAPIs.OracleDataApi.v1_0.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
+            .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 

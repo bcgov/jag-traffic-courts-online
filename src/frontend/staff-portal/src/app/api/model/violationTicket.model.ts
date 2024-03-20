@@ -19,8 +19,6 @@ import { ViolationTicketIsChangeOfAddress } from './violationTicketIsChangeOfAdd
 
 
 export interface ViolationTicket { 
-    violationTicketImage?: ViolationTicketImage;
-    ocrViolationTicket?: OcrViolationTicket;
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
@@ -54,5 +52,7 @@ export interface ViolationTicket {
     courtLocation?: string | null;
     violationTicketCounts?: Array<ViolationTicketCount> | null;
     additionalProperties?: { [key: string]: any; } | null;
+    violationTicketImage?: ViolationTicketImage;
+    ocrViolationTicket?: OcrViolationTicket;
 }
 

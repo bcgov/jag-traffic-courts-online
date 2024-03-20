@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MassTransit;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Services;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
@@ -35,7 +35,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 _logger.LogTrace("TRY CREATING DISPUTE: {@Dispute}", dispute);
 
-                var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute, cancellationToken);
+                var disputeId = await _oracleDataApiService.SaveDisputeAsync(dispute, cancellationToken);
 
                 if (disputeId > 0)
                 {

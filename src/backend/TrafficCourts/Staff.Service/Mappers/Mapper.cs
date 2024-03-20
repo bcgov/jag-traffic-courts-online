@@ -1,6 +1,5 @@
 ﻿using System.Text;
-using System.Xml.Linq;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Staff.Service.Mappers;
@@ -51,7 +50,7 @@ public class Mapper
         return target;
     }
 
-    private static IList<Messaging.MessageContracts.ViolationTicketCount> Map(IEnumerable<Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicketCount>? counts)
+    private static IList<Messaging.MessageContracts.ViolationTicketCount> Map(IEnumerable<Domain.Models.ViolationTicketCount>? counts)
     {
         if (counts is null)
         {
@@ -73,7 +72,7 @@ public class Mapper
         return result;
     }
 
-    private static IList<DisputedCount> Map(IEnumerable<Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount>? counts)
+    private static IList<DisputedCount> Map(IEnumerable<Domain.Models.DisputeCount>? counts)
     {
         if (counts is null)
         {
@@ -85,11 +84,22 @@ public class Mapper
             .Select(_ => new DisputedCount
             {
                 Count = _.CountNo,
-                DisputeType = _.GetArcDisputeType()  // either F (fine) or A (allegation)
+                DisputeType = GetArcDisputeType(_)  // either F (fine) or A (allegation)
             })
             .ToList();
 
         return result;
+    }
+
+    private static string GetArcDisputeType(Domain.Models.DisputeCount count)
+    {
+        if (count is not null)
+        {
+            if (count.RequestReduction == DisputeCountRequestReduction.Y) return "F"; // fine
+            if (count.RequestTimeToPay == DisputeCountRequestTimeToPay.Y) return "F"; // fine
+        }
+
+        return "A"; // allegation
     }
 
     private static string FormatStreetAddress(Dispute dispute)

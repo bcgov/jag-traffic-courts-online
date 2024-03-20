@@ -58,12 +58,7 @@
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Update="OpenAPIs\OracleDataAPI\v1_0\OracleDataApi.v1_0.json" JsonLibrary="SystemTextJson" />
-	</ItemGroup>
-
 	<Target Name="NSwag" BeforeTargets="BeforeBuild">
-		<Exec Command="$(NSwagExe_Net80) run OpenAPIs/OracleDataAPI/v1_0/oracle-data-api.nswag" />
 		<Exec Command="$(NSwagExe_Net80) run OpenAPIs/Keycloak/v18_0/keycloak-admin-api.nswag" />
 		<Exec Command="$(NSwagExe_Net80) run OpenAPIs/VirusScan/v1/VirusScan.nswag" />
 	</Target>

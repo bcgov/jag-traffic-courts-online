@@ -1,7 +1,8 @@
 ﻿using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Interfaces;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {

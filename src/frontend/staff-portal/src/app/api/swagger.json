@@ -7089,12 +7089,6 @@
       "ViolationTicket": {
         "type": "object",
         "properties": {
-          "violationTicketImage": {
-            "$ref": "#/components/schemas/ViolationTicketImage"
-          },
-          "ocrViolationTicket": {
-            "$ref": "#/components/schemas/OcrViolationTicket"
-          },
           "createdBy": {
             "type": "string",
             "nullable": true
@@ -7239,6 +7233,12 @@
             "type": "object",
             "additionalProperties": { },
             "nullable": true
+          },
+          "violationTicketImage": {
+            "$ref": "#/components/schemas/ViolationTicketImage"
+          },
+          "ocrViolationTicket": {
+            "$ref": "#/components/schemas/OcrViolationTicket"
           }
         },
         "additionalProperties": false

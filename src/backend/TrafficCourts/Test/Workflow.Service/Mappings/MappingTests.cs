@@ -2,12 +2,12 @@
 using AutoMapper;
 using System;
 using System.Collections.Generic;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Mappings;
 using Xunit;
-using DisputeCount = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount;
-using ViolationTicketCount = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicketCount;
+using DisputeCount = TrafficCourts.Domain.Models.DisputeCount;
+using ViolationTicketCount = TrafficCourts.Domain.Models.ViolationTicketCount;
 
 namespace TrafficCourts.Test.Workflow.Service.Mappings;
 

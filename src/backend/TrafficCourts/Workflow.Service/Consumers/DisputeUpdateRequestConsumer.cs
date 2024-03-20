@@ -4,7 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
+using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
 using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
@@ -45,7 +46,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
         // TCVP-2497 Map current state of the dispute fields to DisputeUpdateRequest type in order to save as CurrentJson for comparison with UpdateJson.
         DisputeUpdateRequest currentDispute = _mapper.Map<DisputeUpdateRequest>(dispute);
 
-        Common.OpenAPIs.OracleDataApi.v1_0.DisputeUpdateRequest disputeUpdateRequest = new()
+        TrafficCourts.Domain.Models.DisputeUpdateRequest disputeUpdateRequest = new()
         {
             UpdateType = DisputeUpdateRequestUpdateType.UNKNOWN,
             Status = DisputeUpdateRequestStatus2.PENDING,
@@ -197,7 +198,7 @@ public class DisputeUpdateRequestConsumer : IConsumer<DisputeUpdateRequest>
             var anyCountUpdated = false;
             foreach(TrafficCourts.Messaging.MessageContracts.DisputeCount disputeCount in message.DisputeCounts)
             {
-                TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.DisputeCount? countFound = dispute?.DisputeCounts.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
+                TrafficCourts.Domain.Models.DisputeCount? countFound = dispute?.DisputeCounts.FirstOrDefault(x => x.CountNo == disputeCount.CountNo);
                 if (countFound != null)
                 {
                     if (disputeCount.PleaCode != countFound.PleaCode || disputeCount.RequestReduction != countFound.RequestReduction || disputeCount.RequestTimeToPay != countFound.RequestTimeToPay) 
