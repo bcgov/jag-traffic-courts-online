@@ -1,8 +1,9 @@
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using System.Text.RegularExpressions;
-using TrafficCourts.Common.Models;
+using TrafficCourts.Domain.Models;
+
+using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Citizen.Service.Validators;
 
@@ -289,7 +290,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             if (!String.IsNullOrEmpty(sectionText))
             {
                 sectionText = Regex.Replace(sectionText, @"^\$$", ""); // remove $ if it's the only character.
-                Statute? statute = await _lookupService.GetBySectionAsync(sectionText);
+                Domain.Models.Statute? statute = await _lookupService.GetBySectionAsync(sectionText);
                 if (statute is null) {
                     _logger.LogTrace($"Statute not found: {sectionText}");
                     return false;

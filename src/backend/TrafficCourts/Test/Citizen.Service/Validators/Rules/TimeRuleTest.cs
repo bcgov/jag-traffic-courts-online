@@ -1,5 +1,5 @@
 using System;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;

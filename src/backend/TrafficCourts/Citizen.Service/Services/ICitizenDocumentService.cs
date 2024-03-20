@@ -1,4 +1,4 @@
-﻿using TrafficCourts.Common.Models;
+﻿using TrafficCourts.Domain.Models;
 using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Citizen.Service.Services;

@@ -6,10 +6,11 @@ using System.Diagnostics;
 using System.Text.Json;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Services;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
+
+using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
@@ -203,10 +204,10 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             /// </summary>
             private async Task<Guid> SaveTicketImageAsync(Guid noticeOfDisputeId, MemoryStream stream, string filename, CancellationToken cancellationToken)
             {
-                InternalFileProperties properties = new InternalFileProperties
+                Domain.Models.InternalFileProperties properties = new Domain.Models.InternalFileProperties
                 { 
                     NoticeOfDisputeId = noticeOfDisputeId, 
-                    DocumentType = InternalFileProperties.DocumentTypes.TicketImage
+                    DocumentType = Domain.Models.InternalFileProperties.DocumentTypes.TicketImage
                 };
 
                 var metadata = properties.ToMetadata();
@@ -226,10 +227,10 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             /// </summary>
             private async Task<Guid> SaveTicketOcrResultAsync(Guid noticeOfDisputeId, OcrViolationTicket violationTicket, CancellationToken cancellationToken)
             {
-                InternalFileProperties properties = new InternalFileProperties
+                Domain.Models.InternalFileProperties properties = new Domain.Models.InternalFileProperties
                 { 
                     NoticeOfDisputeId = noticeOfDisputeId, 
-                    DocumentType = InternalFileProperties.DocumentTypes.OcrResult
+                    DocumentType = Domain.Models.InternalFileProperties.DocumentTypes.OcrResult
                 };
 
                 var metadata = properties.ToMetadata();

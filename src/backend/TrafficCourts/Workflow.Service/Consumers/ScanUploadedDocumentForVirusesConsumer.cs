@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using System.Diagnostics;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.VirusScan.V1;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
@@ -95,9 +94,9 @@ namespace TrafficCourts.Workflow.Service.Consumers
         /// <param name="scanResult"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        private DocumentProperties? GetUpdatedDocumentProperties(VirusScanResult scanResult, Coms.Client.File file)
+        private Domain.Models.DocumentProperties? GetUpdatedDocumentProperties(VirusScanResult scanResult, Coms.Client.File file)
         {
-            var properties = new DocumentProperties(file.Metadata, file.Tags);
+            var properties = new Domain.Models.DocumentProperties(file.Metadata, file.Tags);
 
             if (scanResult.Status == VirusScanStatus.NotInfected)
             {
@@ -125,7 +124,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             return null; // did not update metadata
         }
 
-        private async Task SaveFilePropertiesAsync(Guid id, DocumentProperties properties, CancellationToken cancellationToken)
+        private async Task SaveFilePropertiesAsync(Guid id, Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
         {
             try
             {

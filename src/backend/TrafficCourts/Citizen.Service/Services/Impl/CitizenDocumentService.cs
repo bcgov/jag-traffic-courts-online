@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
@@ -46,10 +45,10 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         FileSearchResult file = searchResults[0];
 
-        DocumentProperties properties = new(file.Metadata, file.Tags);
+        Domain.Models.DocumentProperties properties = new(file.Metadata, file.Tags);
 
         // Citizen Portal should only have access to Citizen documents
-        if (properties.DocumentSource is not null && properties.DocumentSource is not DocumentSource.Citizen) {
+        if (properties.DocumentSource is not null && properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Citizen) {
             // Should never happen since this file is not even available in the UI for selection to delete.
             throw new InvalidDataException("Requested file is not a citizen document");
         }
@@ -79,10 +78,10 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        var properties = new DocumentProperties(file.Metadata, file.Tags);
+        var properties = new Domain.Models.DocumentProperties(file.Metadata, file.Tags);
 
         // Citizen Portal should only have access to Citizen documents
-        if (properties.DocumentSource is not null && properties.DocumentSource is not DocumentSource.Citizen) {
+        if (properties.DocumentSource is not null && properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Citizen) {
             // Should never happen since this file is not even available in the UI for selection.
             throw new InvalidDataException("Requested file is not a citizen document");
         }
@@ -97,7 +96,7 @@ public class CitizenDocumentService : ICitizenDocumentService
         return file;
     }
 
-    public async Task<List<FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<List<Domain.Models.FileMetadata>> FindFilesAsync(Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -108,14 +107,14 @@ public class CitizenDocumentService : ICitizenDocumentService
 
         IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        List<FileMetadata> fileData = new();
+        List<TrafficCourts.Domain.Models.FileMetadata> fileData = new();
 
         foreach (var result in searchResult)
         {
-            properties = new DocumentProperties(result.Metadata, result.Tags);
+            properties = new Domain.Models.DocumentProperties(result.Metadata, result.Tags);
 
-            if (properties.DocumentSource is not DocumentSource.Staff) {                
-                FileMetadata fileMetadata = new()
+            if (properties.DocumentSource is not TrafficCourts.Domain.Models.DocumentSource.Staff) {
+                TrafficCourts.Domain.Models.FileMetadata fileMetadata = new()
                 {
                     FileId = result.Id,
                     //FileName = result.FileName, // this is always null;
@@ -134,11 +133,11 @@ public class CitizenDocumentService : ICitizenDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(string base64FileString, string fileName, DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(string base64FileString, string fileName, Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
-        properties.DocumentSource = DocumentSource.Citizen;
+        properties.DocumentSource = TrafficCourts.Domain.Models.DocumentSource.Citizen;
         properties.StaffReviewStatus = DisputeUpdateRequestStatus.PENDING.ToString();
 
         var metadata = properties.ToMetadata();

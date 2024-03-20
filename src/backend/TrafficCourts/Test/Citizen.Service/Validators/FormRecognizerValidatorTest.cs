@@ -2,8 +2,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.Models;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators;

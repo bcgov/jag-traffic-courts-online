@@ -9,12 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DocumentSource } from './documentSource.model';
 
 
 export interface FileMetadata { 
     fileId?: string | null;
     fileName?: string | null;
     noticeOfDisputeGuid?: string | null;
+    documentSource?: DocumentSource;
     documentType?: string | null;
     virusScanStatus?: string | null;
     documentStatus?: string | null;

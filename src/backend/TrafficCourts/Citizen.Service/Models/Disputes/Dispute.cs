@@ -1,7 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Disputes;
@@ -174,5 +173,5 @@ public class Dispute : DisputantContactInformation
     /// </summary>
     /// 
     [JsonPropertyName("file_data")]
-    public List<FileMetadata>? FileData { get; set; }
+    public List<TrafficCourts.Domain.Models.FileMetadata>? FileData { get; set; }
 }

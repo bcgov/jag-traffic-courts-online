@@ -91,6 +91,7 @@ public class OcrViolationTicket
     /// A list of global reasons why the global Confidence may be low (ie, missing ticket number, not a Violation Ticket, etc.)
     /// </summary>
     [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public List<string> GlobalValidationErrors { get; set; } = new List<string>();
 
     /// <summary>

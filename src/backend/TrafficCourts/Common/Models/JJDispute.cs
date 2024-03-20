@@ -1,4 +1,4 @@
-﻿using TrafficCourts.Common.Models;
+﻿using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 

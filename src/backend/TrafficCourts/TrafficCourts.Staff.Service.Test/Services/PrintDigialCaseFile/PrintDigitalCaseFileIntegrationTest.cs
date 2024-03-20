@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v22_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
@@ -31,8 +30,8 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
             });
 
             var mock = new Mock<IStaffDocumentService>();
-            mock.Setup(_ => _.FindFilesAsync(It.IsAny<DocumentProperties>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<FileMetadata>());
+            mock.Setup(_ => _.FindFilesAsync(It.IsAny<Domain.Models.DocumentProperties>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<TrafficCourts.Domain.Models.FileMetadata>());
 
             var mockKeycloakService = new Mock<IKeycloakService>();
             // Add setup for the methods within IKeycloakService that are called internally by GetDigitalCaseFileAsync.

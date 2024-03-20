@@ -5,9 +5,7 @@ using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-
-using TrafficCourts.Citizen.Service.Features.Tickets.Search;
+using TrafficCourts.Domain.Models;
 
 using SearchRequest = TrafficCourts.Citizen.Service.Features.Tickets.Search.Request;
 using SearchResponse = TrafficCourts.Citizen.Service.Features.Tickets.Search.Response;

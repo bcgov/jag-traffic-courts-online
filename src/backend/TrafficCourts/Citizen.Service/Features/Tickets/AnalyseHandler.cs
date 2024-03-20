@@ -1,7 +1,7 @@
 using MediatR;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets;
 

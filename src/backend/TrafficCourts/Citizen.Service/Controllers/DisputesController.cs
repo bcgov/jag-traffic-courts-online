@@ -8,13 +8,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.CurrentUserInfo;
 using TrafficCourts.Citizen.Service.Features.Disputes;
-using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Models.Disputes;
 using TrafficCourts.Citizen.Service.Models.OAuth;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Features.EmailVerificationToken;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Messaging.Models;
@@ -325,7 +323,7 @@ public class DisputesController : ControllerBase
 
             var result = _mapper.Map<NoticeOfDispute>(response.Message);
 
-            DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid };
+            Domain.Models.DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid };
 
             // can throw
             result.FileData = await _documentService.FindFilesAsync(properties, cancellationToken);
@@ -403,7 +401,7 @@ public class DisputesController : ControllerBase
                 var uploadPendingFiles = dispute.FileData.Where(i => !string.IsNullOrEmpty(i.PendingFileStream));
                 request.UploadedDocuments = new List<UploadDocumentRequest>();
                 
-                foreach (FileMetadata fileMetadata in uploadPendingFiles)
+                foreach (TrafficCourts.Domain.Models.FileMetadata fileMetadata in uploadPendingFiles)
                 {
                     if (fileMetadata is null)
                     {
@@ -418,7 +416,7 @@ public class DisputesController : ControllerBase
                         continue;
                     }
 
-                    DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };
+                    Domain.Models.DocumentProperties properties = new() { NoticeOfDisputeId = noticeOfDisputeGuid, DocumentType = fileMetadata.DocumentType };
 
                     // can throw
                     Guid id = await _documentService.SaveFileAsync(fileMetadata.PendingFileStream!, fileMetadata.FileName, properties, cancellationToken);
@@ -429,7 +427,7 @@ public class DisputesController : ControllerBase
                 }
 
                 var deletePendingFiles = dispute.FileData.Where(i => i.DeleteRequested == true && i.FileId is not null);
-                foreach (FileMetadata fileMetadata in deletePendingFiles)
+                foreach (var fileMetadata in deletePendingFiles)
                 {
                     // can throw
                     await _documentService.DeleteFileAsync(fileMetadata.FileId!.Value, cancellationToken);

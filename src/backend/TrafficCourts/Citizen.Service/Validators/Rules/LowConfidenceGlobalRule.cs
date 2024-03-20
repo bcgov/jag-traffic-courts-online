@@ -1,5 +1,5 @@
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using static TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.OcrViolationTicket;
+using TrafficCourts.Domain.Models;
+using static TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;
 

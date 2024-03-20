@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using TrafficCourts.Common.Models;
+using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Common.Features.Lookups;
 

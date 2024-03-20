@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;
 

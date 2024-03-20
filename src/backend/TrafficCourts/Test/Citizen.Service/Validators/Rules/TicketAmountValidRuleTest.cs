@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Domain.Models;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;

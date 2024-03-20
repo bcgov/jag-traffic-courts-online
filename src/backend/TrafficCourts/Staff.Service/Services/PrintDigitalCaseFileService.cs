@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TrafficCourts.Cdogs.Client;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Models.DigitalCaseFiles.Print;
 
@@ -78,9 +76,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return stream;
     }
 
-    private async Task<Province?> GetDriversLicenceProvinceAsync(string provinceSeqNo, string countryId)
+    private async Task<Domain.Models.Province?> GetDriversLicenceProvinceAsync(string provinceSeqNo, string countryId)
     {
-        Province? driversLicenceProvince = null;
+        Domain.Models.Province? driversLicenceProvince = null;
         if (provinceSeqNo is not null && countryId is not null)
         {
             driversLicenceProvince = await _provinceLookupService.GetByProvSeqNoCtryIdAsync(provinceSeqNo, countryId);
@@ -102,8 +100,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
         var dispute = await _disputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
-        
-        Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
+
+        Domain.Models.Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
         var fileHistory = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(dispute.TicketNumber, cancellationToken);
 
         var digitalCaseFile = new DigitalCaseFile();

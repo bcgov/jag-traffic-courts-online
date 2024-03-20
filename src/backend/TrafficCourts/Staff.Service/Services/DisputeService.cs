@@ -4,12 +4,13 @@ using System.Security.Claims;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.Models;
+
+using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -68,13 +69,13 @@ public class DisputeService : IDisputeService
         // If so, retrieve the image from object storage and return it as well.
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
 
-        List<FileMetadata>? disputeFiles = null;
+        List<TrafficCourts.Domain.Models.FileMetadata>? disputeFiles = null;
 
         // search by notice of dispute guid
         if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
         {
             // create new search properties
-            DocumentProperties properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
+            Domain.Models.DocumentProperties properties = new Domain.Models.DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
             disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
         }
 
@@ -85,7 +86,7 @@ public class DisputeService : IDisputeService
 
     private async Task<OcrViolationTicket?> GetOcrResultsAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
+        Coms.Client.File? file = await GetFileAsync(dispute, Domain.Models.InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
         if (file is null)
         {
             return null;
@@ -102,9 +103,9 @@ public class DisputeService : IDisputeService
     /// <param name="dispute"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
+    private async Task<Domain.Models.ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
+        Coms.Client.File? file = await GetFileAsync(dispute, Domain.Models.InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
         if (file is null)
         {
             return null;
@@ -113,7 +114,7 @@ public class DisputeService : IDisputeService
         MemoryStream stream = new MemoryStream(); // todo: use memory stream manager
         file.Data.CopyTo(stream);
 
-        return new ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
+        return new Domain.Models.ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
     }
 
 
@@ -131,7 +132,7 @@ public class DisputeService : IDisputeService
             return null;
         }
 
-        InternalFileProperties properties = new InternalFileProperties
+        Domain.Models.InternalFileProperties properties = new()
         {
             NoticeOfDisputeId = noticeOfDisputeId,
             DocumentType = documentType

@@ -1,8 +1,6 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.Models;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
@@ -126,9 +124,9 @@ public class DisputeUpdateRequestAcceptedConsumer : IConsumer<DisputeUpdateReque
                                 Guid? documentId = uploadDocumentRequest.DocumentId;
                                 if (documentId is not null) { 
                                     // extract current document properties 
-                                    Coms.Client.File file = await _documentService.GetFileAsync(documentId.Value, context.CancellationToken); 
- 
-                                    DocumentProperties properties = new(file.Metadata, file.Tags); 
+                                    Coms.Client.File file = await _documentService.GetFileAsync(documentId.Value, context.CancellationToken);
+
+                                    Domain.Models.DocumentProperties properties = new(file.Metadata, file.Tags); 
                                     properties.StaffReviewStatus = DisputeUpdateRequestStatus.ACCEPTED.ToString(); 
                                      
                                     // resave properties with ACCEPTED 

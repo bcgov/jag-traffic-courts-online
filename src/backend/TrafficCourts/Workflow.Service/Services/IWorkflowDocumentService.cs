@@ -1,5 +1,4 @@
-﻿using TrafficCourts.Common.Models;
-using TrafficCourts.Coms.Client;
+﻿using TrafficCourts.Coms.Client;
 
 namespace TrafficCourts.Workflow.Service.Services;
 
@@ -21,7 +20,7 @@ public interface IWorkflowDocumentService
     /// <param name="meta"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task SaveDocumentPropertiesAsync(Guid id, DocumentProperties properties, CancellationToken cancellationToken);
+    Task SaveDocumentPropertiesAsync(Guid id, Domain.Models.DocumentProperties properties, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a file with data and details through COMS service for the given unique file ID
