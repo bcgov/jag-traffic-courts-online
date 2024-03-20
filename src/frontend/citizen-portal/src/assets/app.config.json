@@ -1,7 +1,7 @@
 {
   "production": false,
   "environment": "dev",
-  "version": "1.88.2",
+  "version": "1.89.0",
   "useMockServices": false,
   "apiBaseUrl": "/api",
   "features": {
