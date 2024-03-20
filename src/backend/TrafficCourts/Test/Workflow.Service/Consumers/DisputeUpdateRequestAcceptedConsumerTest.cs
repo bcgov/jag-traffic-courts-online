@@ -45,8 +45,8 @@ public class DisputeUpdateRequestAcceptedConsumerTest
         _context = new();
         _context.Setup(_ => _.Message).Returns(_message);
         _context.Setup(_ => _.CancellationToken).Returns(CancellationToken.None);
-
-        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputeUpdateRequestAcceptedTemplate());
+        
+        _consumer = new(_mockLogger.Object, _oracleDataApiService.Object, new DisputeUpdateRequestAcceptedTemplate(), new Mock<IWorkflowDocumentService>().Object);
     }
 
     [Fact]
