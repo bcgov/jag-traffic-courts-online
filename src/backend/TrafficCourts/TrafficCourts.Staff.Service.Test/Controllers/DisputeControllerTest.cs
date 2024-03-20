@@ -31,8 +31,10 @@ public class DisputeControllerTest
         dispute2.DisputeId =2;
         List<DisputeListItem> disputes = new() { dispute1, dispute2 };
         var disputeService = new Mock<IDisputeService>();
+
+        ExcludeStatus? excludeStatus = null;
         disputeService
-            .Setup(_ => _.GetAllDisputesAsync(null, It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetAllDisputesAsync(excludeStatus, It.IsAny<CancellationToken>()))
             .ReturnsAsync(disputes);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
