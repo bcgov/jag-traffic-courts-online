@@ -1,7 +1,7 @@
 <app-page>
   <app-page-header>
     <ng-container header>Do you want to dispute your traffic ticket?</ng-container>
-    <div subHeader>You have the option to dispute your ticket if you:
+    <div subHeader class="sub-header">You have the option to dispute your ticket if you:
       <ul>
         <li>want to request time to pay</li>
         <li>are unable to pay the fine and want to ask the court to reduce the fine amount</li>
@@ -13,8 +13,8 @@
 
   <div fxLayout="row" fxLayoutAlign="space-between">
     <div fxFlex="32">
-      <div style="margin-bottom: 1.2rem;">
-        <button type="button" style="width: 100%; padding: 8px 16px;" mat-flat-button color="primary"
+      <div class="button-container">
+        <button type="button" class="landing-button" mat-flat-button color="primary"
           routerLink="/ticket/find">
           Traffic Ticket
         </button>
@@ -26,8 +26,8 @@
       </div>
     </div>
     <div fxFlex="32">
-      <div style="margin-bottom: 1.2rem;">
-        <a type="button" style="width: 100%; padding: 8px 16px;" mat-stroked-button
+      <div class="button-container">
+        <a type="button" class="landing-button" mat-stroked-button
           href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
           target="_blank" rel="noopener">
           Other Tickets
@@ -41,8 +41,8 @@
       </div>
     </div>
     <div fxFlex="32">
-      <div style="margin-bottom: 1.2rem;">
-        <a type="button" style="width: 100%; padding: 8px 16px;" mat-stroked-button
+      <div class="button-container">
+        <a type="button" class="landing-button" mat-stroked-button
           href="https://understandmyticket.gov.bc.ca/" target="_blank" rel="noopener">
           Not Sure
         </a>
@@ -53,7 +53,7 @@
     </div>
   </div>
 
-  <div class="row mt-4">
+  <div class="row mt-4 mb-4">
     <div class="col-12 col-sm-10 col-md-8 col-lg-5">
       <img class="img-fluid" src="/assets/how to dispute the ticket.png" alt="Dispute Online Example" />
     </div>
