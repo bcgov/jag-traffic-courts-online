@@ -158,14 +158,22 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         // if DL province not populated and DL number starts with two chars take first two chars from DL number
         if (violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceNumber) && violationTicket.Fields.ContainsKey(OcrViolationTicket.DriverLicenceProvince))
         {
-            if (!violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].IsPopulated()) // blank DL province
+            string dlNumber = "";
+
+            if (violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].IsPopulated() 
+                && !violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].IsPopulated()) // blank DL number
             {
-                string dlNumber = violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value ?? "";
-                if (Regex.IsMatch(dlNumber, @"^[a-zA-Z][a-zA-Z]")) // DL number starts with two chars
-                {
-                    violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value = dlNumber.Substring(2, dlNumber.Length - 2).Trim();
-                    violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].Value = dlNumber.Substring(0, 2); // extract first two chars for province code
-                }
+                dlNumber = violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].Value ?? "";
+            }
+            else if (!violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].IsPopulated() // blank DL province
+                && violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].IsPopulated())
+            {
+                dlNumber = violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value ?? "";
+            }
+            if (Regex.IsMatch(dlNumber, @"^[a-zA-Z]{2}\s*\d+")) // DL number starts with two chars followed by digits
+            {
+                violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value = dlNumber.Substring(2, dlNumber.Length - 2).Trim();
+                violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince].Value = dlNumber.Substring(0, 2); // extract first two chars for province code
             }
         }
 
