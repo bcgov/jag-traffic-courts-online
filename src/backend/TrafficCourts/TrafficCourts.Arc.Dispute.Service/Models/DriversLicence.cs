@@ -23,7 +23,8 @@
                 sum += (driversLicence[i] - '0') * _digitWeights[i];
             }
 
-            char checkDigit = Convert.ToChar((sum % 11) + '0');
+            // Calculate the check digit by taking the last digit of the modulus. (TCVP-2829)
+            char checkDigit = Convert.ToChar((sum % 11) % 10 + '0');
 
             return driversLicence + checkDigit;
         }
