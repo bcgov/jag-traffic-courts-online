@@ -15,6 +15,7 @@ import { DocumentService } from 'app/api/api/document.service';
 import { DisputeLockService } from 'app/api/api/disputeLock.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { PrintOptions } from '@shared/models/print-options.model';
+import { UserGroup } from '@shared/enums/user-group.enum';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -141,7 +142,7 @@ export class JJDisputeComponent implements OnInit {
       }
     });
 
-    this.isSupportStaff = this.enableStaffSupport && this.authService.checkRole("support-staff");
+    this.isSupportStaff = this.enableStaffSupport && this.authService.checkRole(UserGroup.SUPPORT_STAFF);
     this.provinces = this.lookupsService.provinces;
     this.languages = this.lookupsService.languages;
   }
@@ -177,7 +178,7 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.interpreterLanguage = this.lookupsService.getLanguageDescription(this.lastUpdatedJJDispute.interpreterLanguageCd);
 
       if (this.lastUpdatedJJDispute?.mostRecentCourtAppearance) {
-        if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = 'N';
+        if (!this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized) this.lastUpdatedJJDispute.mostRecentCourtAppearance.jjSeized = JJDisputeCourtAppearanceRoPJjSeized.N;
 
         // if (!this.isViewOnly) {
         this.lastUpdatedJJDispute.mostRecentCourtAppearance.adjudicator = this.jjName; // Temporarily force to show the name of the JJ who opened the dipsute in the Court Appearance grid.
@@ -322,9 +323,7 @@ export class JJDisputeComponent implements OnInit {
    * Called by support-staff when editing the form (user must have update-admin permissions on the JJDispute resource).
    */
   onSupportStaffSave(): void {
-    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.ticketInformationForm.value };
-    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.contactInformationForm.value };
-    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.courtOptionsForm.value };
+    this.lastUpdatedJJDispute = { ...this.lastUpdatedJJDispute, ...this.ticketInformationForm.value, ...this.contactInformationForm.value, ...this.courtOptionsForm.value };
     this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = { ...this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0], ...this.courtAppearanceForm.value };
 
     this.jjDisputeService.apiJjTicketNumberCascadePut(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe(response => {
