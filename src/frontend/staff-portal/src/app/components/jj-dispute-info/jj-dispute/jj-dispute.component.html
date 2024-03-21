@@ -61,10 +61,10 @@
               - {{ lastUpdatedJJDispute.occamDisputantName }} </b></h1>
         </span>
         <span style="float:right">
-          <span *ngIf="jjDisputeInfo.multipleOfficersYn===MultipleOfficers.Y"><button class="mo-btn"
-              disabled="true">{{ "label.multiple_officers_btn" | translate }}</button></span>
-          <span *ngIf="jjDisputeInfo.accidentYn===Accident.Y"><button class="accident-btn"
-              disabled="true">{{ "label.accident_btn" | translate }}</button></span>
+          <span *ngIf="jjDisputeInfo.multipleOfficersYn===MultipleOfficers.Y"><button class="mo-btn" disabled="true">{{
+              "label.multiple_officers_btn" | translate }}</button></span>
+          <span *ngIf="jjDisputeInfo.accidentYn===Accident.Y"><button class="accident-btn" disabled="true">{{
+              "label.accident_btn" | translate }}</button></span>
           <span class="ticket-number">Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }}</span>
         </span>
       </div> <br /><br />
@@ -129,7 +129,8 @@
             </span>
             <span class="section-grid-cell">
               <p class="section-grid-header">Date Received from ICBC</p>
-              <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" : "UTC" }}</p>
+              <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" : "UTC" }}
+              </p>
             </span>
             <ng-container *ngIf="type !== 'ticket'">
               <span class="section-grid-cell">
@@ -325,7 +326,8 @@
           </span>
         </ng-container>
         <form [formGroup]="courtAppearanceForm" novalidate>
-          <div style="display: grid; grid-template-columns: auto auto auto auto minmax(210px, 1fr) auto auto auto auto auto auto;">
+          <div
+            style="display: grid; grid-template-columns: auto auto auto auto minmax(210px, 1fr) auto auto auto auto auto auto;">
             <span class="section-grid-cell">
               <p class="section-grid-header">Appearance Date/Time</p>
               <p class="section-grid-text">
@@ -474,7 +476,8 @@
               <strong>{{ "label.signatory_option_1" | translate }}</strong>
             </div>
             <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">{{ lastUpdatedJJDispute.signatoryName }}</span>
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.D" style="font-size: small">{{
+                lastUpdatedJJDispute.signatoryName }}</span>
             </div>
           </div>
           <div class="row justify-content-start">
@@ -482,7 +485,8 @@
               <strong>{{ "label.signatory_option_2" | translate }}</strong>
             </div>
             <div class="col-4 custom-column">
-              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">{{ lastUpdatedJJDispute.signatoryName }}</span>
+              <span *ngIf="lastUpdatedJJDispute.signatoryType === SignatoryType.A" style="font-size: small">{{
+                lastUpdatedJJDispute.signatoryName }}</span>
             </div>
           </div>
         </div>
@@ -582,7 +586,8 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div>
-            <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
+            <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"
+              [remarks]="lastUpdatedJJDispute.remarks"></app-jj-file-history>
           </div>
         </mat-expansion-panel>
 
