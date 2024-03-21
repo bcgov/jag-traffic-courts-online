@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 import { FileHistory, EmailHistory, EmailHistorySuccessfullySent, JJDisputeRemark } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, Subscription, forkJoin } from 'rxjs';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { Observable, forkJoin } from 'rxjs';
   templateUrl: './jj-file-history.component.html',
   styleUrls: ['./jj-file-history.component.scss'],
 })
-export class JJFileHistoryComponent implements OnInit {
+export class JJFileHistoryComponent implements OnInit, OnDestroy {
   @Input() ticketNumber: string;
   @Input() remarks: JJDisputeRemark[];
   @ViewChild(MatSort) sort = new MatSort();
@@ -29,31 +29,42 @@ export class JJFileHistoryComponent implements OnInit {
     "eventDescription",
   ]
 
+  subscriptions: Subscription[];
+
   constructor(
     private logger: LoggerService,
     private historyRecordService: HistoryRecordService
   ) {
-    this.historyRecordService.refreshFileHistory.subscribe(ticketNumber => {
+    this.subscriptions.push(this.historyRecordService.refreshFileHistory.subscribe(ticketNumber => {
       this.dataSource = new MatTableDataSource<HistoryRecord>();
       this.getAllHistories();
-    });
+    }));
   }
 
   ngOnInit(): void {
     this.getAllHistories();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    })
+  }
+
   getAllHistories() {
-    let observables = [];
+    let observables: Observable<any>[] = [];
     observables.push(this.historyRecordService.getFileHistories(this.ticketNumber))
     observables.push(this.historyRecordService.getEmailHistories(this.ticketNumber))
-    
-    forkJoin(observables).subscribe((responses: any[]) => {
-      this.logger.info('FileHistoryComponent::getAllHistories', responses);
-      this.fileHistory = <FileHistory[]>responses[0];
-      this.emailHistory = <EmailHistory[]>responses[1];
-      this.setDisplayHistory();
-    })
+
+    this.subscriptions.push(
+      forkJoin(observables).subscribe({
+        next: (responses: any[]) => {
+          this.logger.info('FileHistoryComponent::getAllHistories', responses);
+          this.fileHistory = <FileHistory[]>responses[0];
+          this.emailHistory = <EmailHistory[]>responses[1];
+          this.setDisplayHistory();
+        }
+      }))
   }
 
   setDisplayHistory() {
