@@ -48,6 +48,15 @@ public class RabbitMqHostOptions : IValidatable
 
     public RetryOptions Retry { get; set; } = new RetryOptions();
 
+    /// <summary>
+    /// Should queues be declared as quorum queues
+    /// <see cref="https://www.rabbitmq.com/docs/quorum-queues"/>
+    /// </summary>
+    /// <remarks>
+    /// In production this will be need to be true and must be set before any queue is created.
+    /// </remarks>
+    public bool UseQuorumQueues { get; set; } = false;
+
     public void Validate()
     {
         if (string.IsNullOrEmpty(Host)) throw new SettingsValidationException(Section, nameof(Host), "is required");

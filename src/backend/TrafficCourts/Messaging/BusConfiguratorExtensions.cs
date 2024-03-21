@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.RabbitMqTransport.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
@@ -76,8 +77,11 @@ public static class BusConfiguratorExtensions
         Action<IBusRegistrationConfigurator>? configureBusRegistration,
         Action<IBusFactoryConfigurator>? configureBusFactory)
     {
-        services.ConfigureValidatableSetting<RabbitMqHostOptions>(configuration.GetSection(RabbitMqHostOptions.Section));
-        
+        var section = configuration.GetSection(RabbitMqHostOptions.Section);
+        services.ConfigureValidatableSetting<RabbitMqHostOptions>(section);
+
+        config.AddConfigureEndpointsCallback(ConfigureEndpoints);
+
         configureBusRegistration?.Invoke(config); // add consumers, etc
 
         config.SetKebabCaseEndpointNameFormatter();
@@ -91,6 +95,8 @@ public static class BusConfiguratorExtensions
             configure.SendTopology.ErrorQueueNameFormatter = new ErrorQueueNameFormatter();
             configure.SendTopology.DeadLetterQueueNameFormatter = new DeadLetterQueueNameFormatter();
 
+            configure.SetQuorumQueue();
+
             // enable instrumentation using the built-in .NET Meter class, which can be collected by OpenTelemetry
             configure.UseInstrumentation(serviceName: serviceName);
 
@@ -100,8 +106,11 @@ public static class BusConfiguratorExtensions
                 host.Password(options.Password);
             });
 
-            configure.UseConcurrencyLimit(options.Retry.ConcurrencyLimit);
-            
+            if (options.Retry.ConcurrencyLimit is not null)
+            {
+                configure.UseConcurrencyLimit(options.Retry.ConcurrencyLimit.Value);
+            }
+
             // sets the global message try policy
             configure.UseMessageRetry(r =>
             {
@@ -132,6 +141,24 @@ public static class BusConfiguratorExtensions
             // should we call the user's configuration at the start or end?
             configureBusFactory?.Invoke(configure);
         });
+    }
+
+    private static void ConfigureEndpoints(IRegistrationContext context, string queueName, IReceiveEndpointConfigurator configurator)
+    {
+        var options = context.GetRequiredService<RabbitMqHostOptions>();
+
+        if (configurator is IRabbitMqReceiveEndpointConfigurator rabbitmq)
+        {
+            if (options.UseQuorumQueues)
+            {
+                // see https://masstransit.io/documentation/configuration#configure-endpoints-callback
+                rabbitmq.SetQuorumQueue();
+            }
+
+            // other stuff we want to configure on the endpoints?
+            //rabbitmq.UseMessageRetry(...)
+            //rabbitmq.UseRateLimit(...);
+        }
     }
 
 
