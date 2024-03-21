@@ -1,0 +1,15 @@
+clamav:
+  image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/clamav
+  version: 1.0.5
+
+  resources:
+    # clamav.resources -- The resource requests and limits for the clamav service
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 2048Mi
+
+pdb:
+  create: true
