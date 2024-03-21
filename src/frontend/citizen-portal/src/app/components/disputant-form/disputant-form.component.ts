@@ -92,6 +92,8 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       let foundProvinces = this.provincesAndStates.filter(x => x.provAbbreviationCd === form.value.drivers_licence_province).shift();
       if (foundProvinces) {
         this.driversLicenceProvinceFormControl.setValue(foundProvinces);
+      } else{
+        this.driversLicenceProvinceFormControl.setValue(null);
       }
     } else if (form.controls.drivers_licence_province) { // have control but no value
       if(this.mode !== DisputeFormMode.UPDATE) {
@@ -125,7 +127,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
       this.form.controls.address_province.setValue(null);
       this.form.controls.address_province_seq_no.setValidators(null);
       this.form.controls.address_province_seq_no.setValue(null);
-      this.form.controls.address_province_country_id.setValue(country.ctryId);
+      this.form.controls.address_province_country_id.setValue(null);
       this.form.controls.home_phone_number.setValidators([Validators.maxLength(20)]);
 
       if (this.isCA || this.isUSA) { // canada or usa validators
@@ -134,7 +136,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
         this.form.controls.home_phone_number.addValidators([FormControlValidators.phone]);
 
         if (this.isCA) { // pick BC by default if Canada selected
-          this.form.controls.address_province.setValue(this.bc.provNm);
+          this.form.controls.address_province_country_id.setValue(country.ctryId);
           this.form.controls.address_province_seq_no.setValue(this.bc.provSeqNo);
           this.form.controls.postal_code.addValidators([Validators.minLength(6), Validators.maxLength(6)]);
         } else {
@@ -158,8 +160,7 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   }
 
   onProvinceChange(province: ProvinceCodeValue) {
-    setTimeout(() => {
-      this.form.controls.address_province.setValue(province.provAbbreviationCd); // for sending two char province or state code to ARC
+    setTimeout(() => {      
       this.form.controls.address_province_country_id.setValue(province.ctryId);
       this.form.controls.address_province_seq_no.setValue(province.provSeqNo);
     }, 0)
@@ -168,9 +169,9 @@ export class DisputantFormComponent implements OnInit, AfterViewInit {
   onDLProvinceChange(province: ProvinceCodeValue) {
     setTimeout(() => {
       let form = this.form as NoticeOfDisputeFormGroup;
-
+      
+      form.controls.drivers_licence_province.setValue(null);
       if (province === null) {
-        form.controls.drivers_licence_province.setValue(null);
         form.controls.drivers_licence_country_id.setValue(null);
         form.controls.drivers_licence_province_seq_no.setValue(null);
       } else {
