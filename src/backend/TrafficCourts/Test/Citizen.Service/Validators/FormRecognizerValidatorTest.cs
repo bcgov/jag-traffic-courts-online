@@ -141,4 +141,39 @@ public class FormRecognizerValidatorTest
         Assert.Equal("1234567", violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber].Value);
     }
 
+    [Fact]
+    public async void TestSanitize_EmptySectionAndTicketAmountForAllCounts()
+    {
+        // Given
+        var _statuteLookupService = new Mock<IStatuteLookupService>();
+        var _logger = new Mock<ILogger<FormRecognizerValidator>>();
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
+
+        OcrViolationTicket violationTicket = new();
+
+        violationTicket.Fields.Add(OcrViolationTicket.Count1Description, new Field("description1"));
+        violationTicket.Fields.Add(OcrViolationTicket.Count1ActRegs, new Field(""));
+        violationTicket.Fields.Add(OcrViolationTicket.Count1Section, new Field(""));
+        violationTicket.Fields.Add(OcrViolationTicket.Count1TicketAmount, new Field(""));
+
+        violationTicket.Fields.Add(OcrViolationTicket.Count2Description, new Field("description2"));
+        violationTicket.Fields.Add(OcrViolationTicket.Count2ActRegs, new Field(""));
+        violationTicket.Fields.Add(OcrViolationTicket.Count2Section, new Field(""));
+        violationTicket.Fields.Add(OcrViolationTicket.Count2TicketAmount, new Field(""));
+
+        violationTicket.Fields.Add(OcrViolationTicket.Count3Description, new Field("description3"));
+        violationTicket.Fields.Add(OcrViolationTicket.Count3ActRegs, new Field(""));
+        violationTicket.Fields.Add(OcrViolationTicket.Count3Section, new Field(""));
+        violationTicket.Fields.Add(OcrViolationTicket.Count3TicketAmount, new Field(""));
+
+        // When
+        await formRecognizerValidator.SanitizeAsync(violationTicket);
+
+        // Then
+        Assert.True(string.IsNullOrEmpty(violationTicket.Fields[OcrViolationTicket.Count1Description].Value));
+        Assert.True(string.IsNullOrEmpty(violationTicket.Fields[OcrViolationTicket.Count2Description].Value));
+        Assert.True(string.IsNullOrEmpty(violationTicket.Fields[OcrViolationTicket.Count3Description].Value));
+    }
+
+
 }
