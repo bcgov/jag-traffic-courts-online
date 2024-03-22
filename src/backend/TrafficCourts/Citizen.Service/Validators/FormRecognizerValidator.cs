@@ -92,7 +92,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
 
         // For each count do the the three sanitization
-        void SanitizeCount(string sectionKey, string actRegsKey, string descKey)
+        void SanitizeCount(string sectionKey, string actRegsKey, string descKey, string ticketAmount)
         {
             SplitSectionActRegs(sectionKey, actRegsKey);
             ReplaceMUWithMV(actRegsKey);
@@ -114,6 +114,15 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
                 violationTicket.Fields[sectionKey].Value = newValue;
             }
+
+            // If the description is populated but the section and ticketAmount fields are blank, clear out the description as it was probably misread from the vertical text on the ticket image.
+            if (violationTicket.Fields.ContainsKey(descKey) && violationTicket.Fields[descKey].IsPopulated() 
+                && violationTicket.Fields.ContainsKey(sectionKey) && !violationTicket.Fields[sectionKey].IsPopulated()
+                && violationTicket.Fields.ContainsKey(ticketAmount) && !violationTicket.Fields[ticketAmount].IsPopulated())
+            {
+                violationTicket.Fields[descKey].Value = null;
+            }
+
         }
         
         void SanitizeWhiteSpace(string sectionKey)
@@ -127,9 +136,9 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
         SanitizeWhiteSpace(OcrViolationTicket.ViolationTicketTitle);
 
-        SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description);
-        SanitizeCount(OcrViolationTicket.Count2Section, OcrViolationTicket.Count2ActRegs, OcrViolationTicket.Count2Description);
-        SanitizeCount(OcrViolationTicket.Count3Section, OcrViolationTicket.Count3ActRegs, OcrViolationTicket.Count3Description);
+        SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description, OcrViolationTicket.Count1TicketAmount);
+        SanitizeCount(OcrViolationTicket.Count2Section, OcrViolationTicket.Count2ActRegs, OcrViolationTicket.Count2Description, OcrViolationTicket.Count2TicketAmount);
+        SanitizeCount(OcrViolationTicket.Count3Section, OcrViolationTicket.Count3ActRegs, OcrViolationTicket.Count3Description, OcrViolationTicket.Count3TicketAmount);
 
         // Pre-process ticket number if scan reads an A Oh as A Zero replace the Zero with an O in the second position
         // replace A1 with AI
