@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
 using TrafficCourts.OracleDataApi.Client.V1;
 using Xunit.Abstractions;
 
@@ -31,13 +33,57 @@ public class DomainModelMappingTestGenerator
         GenrateRoundTripMappingTests();
     }
 
+    [Fact]
+    public void generate_enum_unit_tests()
+    {
+        GenerateEnumMappingTests();
+    }
+
+    private void GeneratedCode(string function)
+    {
+        WriteLine($"[System.CodeDom.Compiler.GeneratedCode(\"DomainModelMappingTestGenerator.{function}\",\"\")]");
+    }
+
+    private void GenerateEnumMappingTests()
+    {
+        List<Type> enums = OracleDataApiEnums.ToList();
+
+        // map from Oracle To Domain
+        foreach (Type enumType in enums)
+        {
+            _output.WriteLine($"        #region {enumType.Name}");
+
+            _output.WriteLine($"        // Oracle => Domain");
+            string source = "Oracle";
+            string destination = "Domain.Models";
+
+            foreach (var name in Enum.GetNames(enumType))
+            {
+                _output.WriteLine($"        Assert.Equal({destination}.{enumType.Name}.{name}, _sut.Map<{destination}.{enumType.Name}>({source}.{enumType.Name}.{name}));");
+            }
+
+            _output.WriteLine($"        // Domain => Oracle");
+            source = "Domain.Models";
+            destination = "Oracle";
+            foreach (var name in Enum.GetNames(enumType))
+            {
+                _output.WriteLine($"        Assert.Equal({destination}.{enumType.Name}.{name}, _sut.Map<{destination}.{enumType.Name}>({source}.{enumType.Name}.{name}));");
+            }
+
+            _output.WriteLine($"        #endregion {enumType.Name}");
+            _output.WriteLine("");
+
+        }
+
+        // map from Domain To Oracle
+    }
+
     /// <summary>
     /// The generated source for from this method is added to the end of RoundTripMappingTest.cs
     /// </summary>
     private void GenrateRoundTripMappingTests()
     {
-        var types = typeof(TrafficCourts.OracleDataApi.Client.V1.ApiException)
-            .Assembly
+        var types = OracleAssembly
             .GetTypes()
             .Where(IsOracleDataApiModel)
             .OrderBy(_ => _.Name);
@@ -73,15 +119,16 @@ public class DomainModelMappingTestGenerator
         }
     }
 
-    private void GenerateOracleDomainModelProfile()
+    private void GenerateOracleDomainModelProfile([CallerMemberName] string function = null!)
     {
         _indent = 0;
 
-        WriteLine("using Oracle = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;");
+        WriteLine("using Oracle = TrafficCourts.OracleDataApi.Client.V1;");
         WriteLine("using DomainModel = TrafficCourts.Domain.Models;");
         WriteLine();
         WriteLine($"namespace {typeof(IOracleDataApiClient).Namespace};");
         WriteLine();
+        GeneratedCode(function);
         WriteLine("public class OracleDomainModelMappingProfile : AutoMapper.Profile");
         WriteLine("{");
         Indent();
@@ -94,19 +141,18 @@ public class DomainModelMappingTestGenerator
         Outdent();
         WriteLine("}");
 
+        Outdent();
+        WriteLine("}"); // end of class
+
         WriteLine();
         // generate EnumValueConverter
+        GeneratedCode(function);
         CreateEnumConverter();
-
-        Outdent();
-        WriteLine("}");
     }
 
     private void CreateCustomMappings()
     {
         WriteLine();
-        WriteLine($"CreateMap<Models.FileMetadata, {nameof(DomainModel)}.FileMetadata>().ReverseMap();");
-
         WriteLine("// FileResponse does not have a default constructor");
         WriteLine($"CreateMap<{nameof(Oracle)}.FileResponse, {nameof(DomainModel)}.FileResponse>()");
         Indent();
@@ -134,6 +180,12 @@ public class DomainModelMappingTestGenerator
 
     private void WriteLine(string value, string? suffix = null)
     {
+        if (string.IsNullOrEmpty(value))
+        {
+            _output.WriteLine("");
+            return;
+        }
+
         StringBuilder buffer = new StringBuilder();
         for (var i = 0; i < _indent; i++)
         {
@@ -150,7 +202,7 @@ public class DomainModelMappingTestGenerator
 
     private void CreateEnumConverter()
     {
-        WriteLine("class EnumTypeConverter : ");
+        WriteLine("internal class EnumTypeConverter : ");
 
         var enums = OracleDataApiEnums.ToList();
 
@@ -243,10 +295,12 @@ public class DomainModelMappingTestGenerator
         return names[0] == "UNKNOWN" && names[1] == "Y" && names[2] == "N";
     }
 
+    private static Assembly DomainAssembly => typeof(Domain.Models.Dispute).Assembly;
+    private static Assembly OracleAssembly => typeof(OracleDataApiService).Assembly;
+
     private void CreateDefaultMappings()
     {
-        var types = typeof(Domain.Models.Dispute).Assembly
-            .GetTypes();
+        var types = OracleAssembly.GetTypes();
 
         // each enumeration
         WriteLine("// enumerations");
@@ -260,11 +314,45 @@ public class DomainModelMappingTestGenerator
             WriteLine($"CreateMap<{nameof(Oracle)}.{type.Name}, {nameof(DomainModel)}.{type.Name}>().ConvertUsing<EnumTypeConverter>();");
         }
 
+        WriteLine("");
         WriteLine("// classes");
         foreach (var type in types.Where(IsTargetClass).OrderBy(_ => _.Name))
         {
-            WriteLine($"CreateMap<{nameof(Oracle)}.{type.Name}, {nameof(DomainModel)}.{type.Name}>().ReverseMap();");
+            // the domain model may have properties that do not exist on the oracle model
+            var unmapped = HasUnmappedProperties(type);
+            if (unmapped.Count == 0)
+            {
+                WriteLine($"CreateMap<{nameof(Oracle)}.{type.Name}, {nameof(DomainModel)}.{type.Name}>().ReverseMap();");
+            }
+            else
+            {
+                WriteLine($"CreateMap<{nameof(Oracle)}.{type.Name}, {nameof(DomainModel)}.{type.Name}>()");
+                Indent();
+                foreach (var property in unmapped)
+                {
+                    WriteLine($".ForMember(dest => dest.{property}, opt => opt.Ignore())");
+                }
+                WriteLine(".ReverseMap();");
+                Outdent();
+            }
         }
+    }
+
+    private static IList<string> HasUnmappedProperties(Type oracleType)
+    {
+        var domainType = DomainAssembly.GetTypes()
+            .Where(_ => _.Name == oracleType.Name && _.Namespace == "TrafficCourts.Domain.Models")
+            .Single();
+
+        var domainProperties = domainType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var oracleProperties = oracleType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        List<string> properties = domainProperties
+            .Where(property => !oracleProperties.Any(_ => _.Name == property.Name))
+            .Select(property => property.Name)
+            .ToList();
+
+        return properties;
     }
 
     private static IEnumerable<Type> OracleDataApiEnums => typeof(IOracleDataApiClient).Assembly
@@ -272,12 +360,39 @@ public class DomainModelMappingTestGenerator
         .Where(type => type.IsEnum && type.Namespace == typeof(IOracleDataApiClient).Namespace && type.Name != "FileResponse" && type.Name != "FileMetadata")
         .OrderBy(type => type.Name);
 
-    private static bool IsTargetEnum(Type type) => type.IsEnum && IncludeType(type);
+    private static bool IsTargetEnum(Type type)
+    {
+        if (!type.IsEnum) return false;
 
-    private static bool IsTargetClass(Type type) => type.IsClass && IncludeType(type);
+        if (type.Assembly == OracleAssembly)
+        {
+            // check to see if there is a Domain enum matching
+            return DomainAssembly.GetTypes()
+                .Any(_ => _.IsEnum && _.Name == type.Name && _.Namespace == "TrafficCourts.Domain.Models");
+        }
 
-    private static bool IncludeType(Type type) => type.Name != "FileResponse" && type.Name != "FileMetadata" && type.Namespace == "TrafficCourts.Domain.Models";
+        return OracleAssembly.GetTypes()
+            .Any(_ => _.IsEnum && _.Name == type.Name && _.Namespace == "TrafficCourts.OracleDataApi.Client.V1");
+    }
 
+    private static bool IsTargetClass(Type type) 
+    {
+        if (type.IsEnum) return false;
+
+        if (type.Name == "<>c") return false;
+
+        if (type.Assembly == OracleAssembly)
+        {
+            if (type.Name == "FileResponse") return false;
+
+            // check to see if there is a Domain enum matching
+            return DomainAssembly.GetTypes()
+                .Any(_ => _.Name == type.Name && _.Namespace == "TrafficCourts.Domain.Models");
+        }
+
+        return OracleAssembly.GetTypes()
+            .Any(_ => _.Name == type.Name && _.Namespace == "TrafficCourts.OracleDataApi.Client.V1");
+    }
 
     private static bool IsOracleDataApiModel(Type type) => type.IsClass 
         && !type.IsGenericType 
