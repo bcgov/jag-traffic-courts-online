@@ -52,6 +52,7 @@ public static class OracleDataApiExtensions
 
     private static void AddOracleDataApiService(IServiceCollection services)
     {
+        services.AddTransient<EnumTypeConverter>();
         services.AddTransient<IOracleDataApiService, OracleDataApiService>();
     }
 
