@@ -29,7 +29,7 @@ public interface IDisputeService
     /// <param name="parameters">The filter, sort and paging parameters.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
-    Task<IPagedList<DisputeListItem>> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken);
+    Task<PagedDisputeListItemCollection> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken);
 
     /// <summary>Saves new dispute in the oracle database.</summary>
     /// <param name="dispute"></param>
