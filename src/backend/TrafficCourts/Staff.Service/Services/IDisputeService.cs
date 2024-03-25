@@ -16,6 +16,14 @@ public interface IDisputeService
     Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets the number of records with the given <see cref="DisputeStatus"/>.
+    /// </summary>
+    /// <param name="status"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<GetDisputeCountResponse> GetDisputeCountAsync(DisputeStatus status, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets a paged collecton of disputes.
     /// </summary>
     /// <param name="parameters">The filter, sort and paging parameters.</param>
