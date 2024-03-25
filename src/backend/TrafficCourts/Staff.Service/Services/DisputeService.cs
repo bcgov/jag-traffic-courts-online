@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Text.Json;
 using TrafficCourts.Collections;
 using TrafficCourts.Common.Features.Lookups;
-using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
@@ -23,8 +22,6 @@ namespace TrafficCourts.Staff.Service.Services;
 public class DisputeService : IDisputeService
 {
     private readonly ILogger<DisputeService> _logger;
-    private readonly ICancelledDisputeEmailTemplate _cancelledDisputeEmailTemplate;
-    private readonly IRejectedDisputeEmailTemplate _rejectedDisputeEmailTemplate;
     private readonly IOracleDataApiService _oracleDataApi;
     private readonly IBus _bus;
     private readonly IObjectManagementService _objectManagementService;
@@ -37,27 +34,34 @@ public class DisputeService : IDisputeService
         IBus bus,
         IObjectManagementService objectManagementService,
         IAgencyLookupService agencyLookupService,
-        ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
-        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate,
-        ILogger<DisputeService> logger,
         IProvinceLookupService provinceLookupService,
-        IStaffDocumentService comsService)
+        IStaffDocumentService documentService,
+        ILogger<DisputeService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
         _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
-        _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(cancelledDisputeEmailTemplate));
-        _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate ?? throw new ArgumentNullException(nameof(rejectedDisputeEmailTemplate));
+        _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
+        _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(_provinceLookupService));
-        _documentService = comsService ?? throw new ArgumentNullException(nameof(_documentService));
     }
 
     public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
     {
         ICollection<DisputeListItem> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
         return disputes;
+    }
+
+    public async Task<GetDisputeCountResponse> GetDisputeCountAsync(DisputeStatus status, CancellationToken cancellationToken)
+    {
+        GetAllDisputesParameters filter = new() { Status = status };
+
+        var disputes = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
+
+        var count = disputes.Filter(filter).Count();
+
+        return new GetDisputeCountResponse(status, count);
     }
 
     public async Task<IPagedList<DisputeListItem>> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken)
@@ -94,13 +98,13 @@ public class DisputeService : IDisputeService
         // If so, retrieve the image from object storage and return it as well.
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(dispute, cancellationToken);
 
-        List<TrafficCourts.Domain.Models.FileMetadata>? disputeFiles = null;
+        List<FileMetadata>? disputeFiles = null;
 
         // search by notice of dispute guid
         if (dispute.NoticeOfDisputeGuid is not null && Guid.TryParse(dispute.NoticeOfDisputeGuid, out Guid noticeOfDisputeId))
         {
             // create new search properties
-            Domain.Models.DocumentProperties properties = new Domain.Models.DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
+            DocumentProperties properties = new DocumentProperties { NoticeOfDisputeId = noticeOfDisputeId };
             disputeFiles = await _documentService.FindFilesAsync(properties, cancellationToken);
         }
 
@@ -111,7 +115,7 @@ public class DisputeService : IDisputeService
 
     private async Task<OcrViolationTicket?> GetOcrResultsAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        Coms.Client.File? file = await GetFileAsync(dispute, Domain.Models.InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.OcrResult, cancellationToken);
         if (file is null)
         {
             return null;
@@ -128,9 +132,9 @@ public class DisputeService : IDisputeService
     /// <param name="dispute"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    private async Task<Domain.Models.ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
+    private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        Coms.Client.File? file = await GetFileAsync(dispute, Domain.Models.InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
+        Coms.Client.File? file = await GetFileAsync(dispute, InternalFileProperties.DocumentTypes.TicketImage, cancellationToken);
         if (file is null)
         {
             return null;
@@ -139,7 +143,7 @@ public class DisputeService : IDisputeService
         MemoryStream stream = new MemoryStream(); // todo: use memory stream manager
         file.Data.CopyTo(stream);
 
-        return new Domain.Models.ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
+        return new ViolationTicketImage(stream.ToArray(), file.ContentType ?? "application/octet-stream");
     }
 
 
@@ -157,7 +161,7 @@ public class DisputeService : IDisputeService
             return null;
         }
 
-        Domain.Models.InternalFileProperties properties = new()
+        InternalFileProperties properties = new()
         {
             NoticeOfDisputeId = noticeOfDisputeId,
             DocumentType = documentType
