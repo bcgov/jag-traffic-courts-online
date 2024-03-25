@@ -57,6 +57,7 @@ import { DocumentUpdateRequestInfoComponent } from '@components/staff-workbench/
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { TableFiltersComponent } from '@components/table-filters/table-filters.component';
 import { JjDisputeUpdatesComponent } from './components/jj-dispute-info/jj-dispute-updates/jj-dispute-updates.component';
+import { PagingComponent } from '@components/paging/paging.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -105,7 +106,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     JJFileHistoryComponent,
     JJDisputeDigitalCaseFileComponent,
     TableFiltersComponent,
-    JjDisputeUpdatesComponent
+    JjDisputeUpdatesComponent,
+    PagingComponent
   ],
   imports: [
     CommonModule,
