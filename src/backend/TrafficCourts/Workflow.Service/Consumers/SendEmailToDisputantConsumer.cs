@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Messaging.Models;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;

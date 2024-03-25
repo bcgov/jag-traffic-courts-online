@@ -4,11 +4,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
-using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Workflow.Service.Consumers;
-using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 using Xunit;
 using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 

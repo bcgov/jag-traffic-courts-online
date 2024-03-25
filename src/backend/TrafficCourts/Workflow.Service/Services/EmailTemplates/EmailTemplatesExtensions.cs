@@ -1,20 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿namespace TrafficCourts.Workflow.Service.Services.EmailTemplates;
 
-namespace TrafficCourts.Common.Features.Mail.Templates;
-
-public static class EmailTemplateExtensions
+public static class EmailTemplatesExtensions
 {
-    public static IServiceCollection AddEmailTemplates(this IServiceCollection services)
+    /// <summary>
+    /// Adds the email templates defined in the workflow service.
+    /// </summary>
+    /// <param name="services"></param>
+    public static void AddEmailTemplates(this IServiceCollection services)
     {
+        services.AddTransient<ICancelledDisputeEmailTemplate, CancelledDisputeEmailTemplate>();
         services.AddTransient<IDisputantEmailUpdateSuccessfulTemplate, DisputantEmailUpdateSuccessfulTemplate>();
+        services.AddTransient<IDisputeSubmittedEmailTemplate, DisputeSubmittedEmailTemplate>();
         services.AddTransient<IDisputeUpdateRequestAcceptedTemplate, DisputeUpdateRequestAcceptedTemplate>();
         services.AddTransient<IDisputeUpdateRequestReceivedTemplate, DisputeUpdateRequestReceivedTemplate>();
         services.AddTransient<IDisputeUpdateRequestRejectedTemplate, DisputeUpdateRequestRejectedTemplate>();
-        services.AddTransient<ICancelledDisputeEmailTemplate, CancelledDisputeEmailTemplate>();
-        services.AddTransient<IConfirmationEmailTemplate, ConfirmationEmailTemplate>();
         services.AddTransient<IProcessingDisputeEmailTemplate, ProcessingDisputeEmailTemplate>();
         services.AddTransient<IRejectedDisputeEmailTemplate, RejectedDisputeEmailTemplate>();
-
-        return services;
+        services.AddTransient<IVerificationEmailTemplate, VerificationEmailTemplate>();
     }
 }
