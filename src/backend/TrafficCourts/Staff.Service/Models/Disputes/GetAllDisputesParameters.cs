@@ -11,7 +11,7 @@ public class GetAllDisputesParameters : IPagable, ISortable
     /// The status to exclude
     /// </summary>
     [FromQuery(Name = "excludeStatus")]
-    public ExcludeStatus? ExcludeStatus { get; set; }
+    public List<ExcludeStatus>? ExcludeStatus { get; set; }
 
     /// <summary>
     /// The optional ticket number to search on. The value will be searched using contains.
@@ -29,7 +29,7 @@ public class GetAllDisputesParameters : IPagable, ISortable
     /// The optional status to find.
     /// </summary>
     [FromQuery(Name = "status")]
-    public DisputeStatus? Status { get; set; }
+    public List<DisputeStatus>? Status { get; set; }
 
     /// <summary>
     /// The optional from date to search. The submitted date will be filtered where greater or equal to this value.

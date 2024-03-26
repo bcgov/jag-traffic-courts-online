@@ -55,7 +55,7 @@ public class DisputeService : IDisputeService
 
     public async Task<GetDisputeCountResponse> GetDisputeCountAsync(DisputeStatus status, CancellationToken cancellationToken)
     {
-        GetAllDisputesParameters filter = new() { Status = status };
+        GetAllDisputesParameters filter = new() { Status = new List<DisputeStatus> { status } };
 
         var disputes = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
 
