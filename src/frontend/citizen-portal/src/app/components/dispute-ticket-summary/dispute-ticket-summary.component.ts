@@ -5,6 +5,7 @@ import { NoticeOfDisputeService, NoticeOfDispute, CountsActions, DisputeCount } 
 import { ConfigService } from "@config/config.service";
 import { TicketTypes } from "@shared/enums/ticket-type.enum";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
+import { ProvinceCodeValue } from "@config/config.model";
 
 @Component({
   selector: "app-dispute-ticket-summary",
@@ -21,6 +22,7 @@ export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
   RepresentedByLawyer = DisputeRepresentedByLawyer;
   ContactType = DisputeContactTypeCd;
   RequestCourtAppearance = DisputeRequestCourtAppearanceYn;
+  provincesAndStates: ProvinceCodeValue[];
 
   constructor(
     private configService: ConfigService,
@@ -34,6 +36,7 @@ export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
     if (this.noticeOfDispute) {
       this.ticketType = this.violationTicketService.ticketType;
       this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
+      this.provincesAndStates = this.configService.provincesAndStates;
     }
   }
 
@@ -54,5 +57,9 @@ export class DisputeTicketSummaryComponent implements OnInit, OnChanges {
 
   getCount(disputeCount: DisputeCount): ViolationTicketCount {
     return this.ticketCounts?.filter(i => i.count_no === disputeCount.count_no).shift();
+  }
+
+  getProvinceName(provSeqNo: number): string {
+    return this.provincesAndStates?.filter(i => i.provSeqNo === provSeqNo).shift()?.provNm;
   }
 }

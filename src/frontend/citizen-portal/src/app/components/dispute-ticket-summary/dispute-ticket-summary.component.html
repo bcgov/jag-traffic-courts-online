@@ -57,7 +57,10 @@
         <div class="row mb-2">
           <div class="col-lg-4">
             <small class="d-block">Province/State</small>
-            <div class="text">{{ noticeOfDispute.address_province }}</div>
+            <div class="text" *ngIf="noticeOfDispute.address_province">{{ noticeOfDispute.address_province }}</div>
+            <div class="text" *ngIf="noticeOfDispute.address_province_seq_no">
+              {{ getProvinceName(noticeOfDispute.address_province_seq_no) }}
+            </div>
           </div>
           <div class="col-lg-4">
             <small class="d-block">Country</small>
@@ -76,7 +79,9 @@
           </div>
           <div class="col-lg-4">
             <small class="d-block">Province/State of driver's licence</small>
-            <div class="text">{{ noticeOfDispute.drivers_licence_province }}</div>
+            <div class="text" *ngIf="noticeOfDispute.drivers_licence_province_seq_no">
+              {{ getProvinceName(noticeOfDispute.drivers_licence_province_seq_no) }}
+            </div>
           </div>
         </div>
 
