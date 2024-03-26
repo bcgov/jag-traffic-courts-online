@@ -22,6 +22,10 @@
               "items": {
                 "$ref": "#/components/schemas/ExcludeStatus"
               }
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ExcludeStatus"
+              }
             }
           },
           {
@@ -49,100 +53,6 @@
               "items": {
                 "$ref": "#/components/schemas/DisputeStatus"
               }
-            }
-          },
-          {
-            "name": "from",
-            "in": "query",
-            "description": "The optional from date to search. The submitted date will be filtered where greater or equal to this value.",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "thru",
-            "in": "query",
-            "description": "The optional thru date to search. The submitted date will be filtered where less than or equal to this value.",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "courtHouse",
-            "in": "query",
-            "description": "The optional court house location to search. The value will be searched using contains.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "direction",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/SortDirection"
-              }
-            }
-          },
-          {
-            "name": "DefaultPageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "ticket",
-            "in": "query",
-            "description": "The optional ticket number to search on. The value will be searched using contains.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "surname",
-            "in": "query",
-            "description": "The optional surname to search on. The value will be searched using contains.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "description": "The optional status to find.",
-            "schema": {
-              "$ref": "#/components/schemas/DisputeStatus"
             }
           },
           {

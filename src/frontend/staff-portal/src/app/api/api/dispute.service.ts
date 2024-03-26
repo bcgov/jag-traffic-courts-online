@@ -890,9 +890,11 @@ export class DisputeService {
     public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (excludeStatus !== undefined && excludeStatus !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>excludeStatus, 'excludeStatus');
+        if (excludeStatus) {
+            excludeStatus.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'excludeStatus');
+            })
         }
         if (ticket !== undefined && ticket !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -902,9 +904,11 @@ export class DisputeService {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>surname, 'surname');
         }
-        if (status !== undefined && status !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>status, 'status');
+        if (status) {
+            status.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'status');
+            })
         }
         if (from !== undefined && from !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
