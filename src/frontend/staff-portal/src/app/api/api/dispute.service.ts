@@ -786,7 +786,7 @@ export class DisputeService {
     }
 
     /**
-     * Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.
+     * Returns all Disputes from the Oracle Data API with given parameters.
      * @param excludeStatus The status to exclude
      * @param ticket The optional ticket number to search on. The value will be searched using contains.
      * @param surname The optional surname to search on. The value will be searched using contains.
@@ -794,11 +794,11 @@ export class DisputeService {
      * @param from The optional from date to search. The submitted date will be filtered where greater or equal to this value.
      * @param thru The optional thru date to search. The submitted date will be filtered where less than or equal to this value.
      * @param courtHouse The optional court house location to search. The value will be searched using contains.
-     * @param sortBy 
-     * @param direction 
-     * @param defaultPageSize 
-     * @param pageNumber 
-     * @param pageSize 
+     * @param sortBy The optional sort by contains the attribute name to sort. The data is sorted on the attribute.
+     * @param direction The optional sort direction contains the asc or desc. The data is sorted by given direction.
+     * @param defaultPageSize The default page size contains the default count of records.
+     * @param pageNumber The optional page number gives the records from given page
+     * @param pageSize The optional page size sets the record count
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
