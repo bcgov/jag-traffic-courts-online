@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-      "title": "VTC Staff API",
-      "description": "Violation Ticket Centre Staff API",
-      "version": "v1"
+    "title": "VTC Staff API",
+    "description": "Violation Ticket Centre Staff API",
+    "version": "v1"
   },
   "paths": {
     "/api/dispute/disputes": {
@@ -11,7 +11,7 @@
         "tags": [
           "Dispute"
         ],
-        "summary": "Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.",
+        "summary": "Returns all Disputes from the Oracle Data API with given parameters.",
         "parameters": [
           {
             "name": "excludeStatus",
@@ -84,6 +84,7 @@
           {
             "name": "sortBy",
             "in": "query",
+            "description": "The optional sort by contains the attribute name to sort. The data is sorted on the attribute.",
             "schema": {
               "type": "array",
               "items": {
@@ -94,6 +95,7 @@
           {
             "name": "direction",
             "in": "query",
+            "description": "The optional sort direction contains the asc or desc. The data is sorted by given direction.",
             "schema": {
               "type": "array",
               "items": {
@@ -104,6 +106,7 @@
           {
             "name": "DefaultPageSize",
             "in": "query",
+            "description": "The default page size contains the default count of records.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -112,6 +115,7 @@
           {
             "name": "pageNumber",
             "in": "query",
+            "description": "The optional page number gives the records from given page",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -120,6 +124,7 @@
           {
             "name": "pageSize",
             "in": "query",
+            "description": "The optional page size sets the record count",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -7652,8 +7657,8 @@
     }
   },
   "security": [
-      {
-          "Bearer": []
-      }
+    {
+      "Bearer": [ ]
+    }
   ]
 }

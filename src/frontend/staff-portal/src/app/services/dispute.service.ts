@@ -117,7 +117,7 @@ export class DisputeService implements IDisputeService {
      */
   public getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
     status?: DisputeStatus): Observable<PagedDisputeListItemCollection> {
-    return this.disputeApiService.apiDisputeDisputesGet(undefined, undefined, undefined, status, undefined, undefined, undefined, 
+    return this.disputeApiService.apiDisputeDisputesGet(undefined, undefined, undefined, null, undefined, undefined, undefined, 
       sortBy, sortDirection, undefined, pageNumber, 10)
       .pipe(
         map((response: PagedDisputeListItemCollection) => {

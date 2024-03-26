@@ -52,19 +52,34 @@ public class GetAllDisputesParameters : IPagable, ISortable
     #endregion
 
     #region Sorting
+    /// <summary>
+    /// The optional sort by contains the attribute name to sort. The data is sorted on the attribute.
+    /// </summary>
     [FromQuery(Name = "sortBy")]
     public List<string>? SortBy { get; set; }
 
+    /// <summary>
+    /// The optional sort direction contains the asc or desc. The data is sorted by given direction.
+    /// </summary>
     [FromQuery(Name = "direction")]
     public List<SortDirection>? SortDirection { get; set; }
     #endregion
 
     #region Paging
+    /// <summary>
+    /// The default page size contains the default count of records.
+    /// </summary>
     public int DefaultPageSize => 25;
 
+    /// <summary>
+    /// The optional page number gives the records from given page
+    /// </summary>
     [FromQuery(Name = "pageNumber")]
     public int? PageNumber { get; set; }
 
+    /// <summary>
+    /// The optional page size sets the record count
+    /// </summary>
     [FromQuery(Name = "pageSize")]
     public int? PageSize { get; set; }
 

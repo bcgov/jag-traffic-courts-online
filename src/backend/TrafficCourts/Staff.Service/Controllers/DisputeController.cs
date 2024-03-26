@@ -31,7 +31,7 @@ public class DisputeController : StaffControllerBase
     }
 
     /// <summary>
-    /// Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.
+    /// Returns all Disputes from the Oracle Data API with given parameters.
     /// </summary>
     /// <param name="parameters"></param>
     /// <param name="cancellationToken"></param>
