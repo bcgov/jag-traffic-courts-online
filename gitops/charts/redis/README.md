@@ -10,6 +10,8 @@ WARNING: There are "resources" sections in the chart not set. Using "resourcesPr
   - updateJob.resources
 
 
-Service Account:
+Service Account: default
+
+If service account created, then it needs to be granted to pull from tools
 
 Failed to pull image "image-registry.openshift-image-registry.svc:5000/0198bb-tools/redis-exporter:1.58.0-debian-12-r3": rpc error: code = Unknown desc = reading manifest 1.58.0-debian-12-r3 in image-registry.openshift-image-registry.svc:5000/0198bb-tools/redis-exporter: authentication required
