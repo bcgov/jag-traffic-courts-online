@@ -112,6 +112,7 @@ export class ContactInfoComponent implements OnInit {
         this.form.get('addressProvinceCountryId').setValue(ctryId);
         this.form.get("addressProvinceSeqNo").setValue(this.bc.provSeqNo)
         this.form.get("addressProvinceProvId").setValue(this.bc.provId);
+        this.form.get("addressProvince").setValue(this.bc.provAbbreviationCd);
       }
 
       this.form.get('postalCode').updateValueAndValidity();
@@ -151,7 +152,8 @@ export class ContactInfoComponent implements OnInit {
       this.form.get("addressProvinceCountryId").setValue(provFound.ctryId);
       this.form.get("addressProvinceSeqNo").setValue(provFound.provSeqNo);
       this.form.get("addressProvinceProvId").setValue(provFound.provId);
-    }, 0)
+      this.form.get("addressProvince").setValue(provFound.provAbbreviationCd);
+  })
   }
 
   onSelectContactType(newContactType: any) {
