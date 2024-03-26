@@ -12,16 +12,16 @@ public static class DisputeListItemExtension
             return query;
         }
 
-        if (parameters.ExcludeStatus is not null)
+        if (parameters.ExcludeStatus is not null && parameters.ExcludeStatus.Count != 0)
         {
-            string value = parameters.ExcludeStatus.Value.ToString();
-            query = query.Where(_ => _.Status.ToString() != value);
+            string[] values = parameters.ExcludeStatus.Select(_ => _.ToString()).ToArray();
+            query = query.Where(_ => !values.Contains(_.Status.ToString()));
         }
 
-        if (parameters.Status is not null)
+        if (parameters.Status is not null && parameters.Status.Count != 0)
         {
-            string value = parameters.Status.Value.ToString();
-            query = query.Where(_ => _.Status.ToString() == value);
+            string[] values = parameters.Status.Select(_ => _.ToString()).ToArray();
+            query = query.Where(_ => values.Contains(_.Status.ToString()));
         }
 
         if (parameters.From is not null)
