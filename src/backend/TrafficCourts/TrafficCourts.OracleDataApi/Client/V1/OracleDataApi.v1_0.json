@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080",
+      "url": "http://localhost:8083",
       "description": "Generated server url"
     }
   ],
@@ -4102,7 +4102,8 @@
           "driversLicenceCountry": {
             "maxLength": 100,
             "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "driversLicenceIssuedYear": {
             "type": "integer",
