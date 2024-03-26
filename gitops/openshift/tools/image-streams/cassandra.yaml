@@ -1,0 +1,20 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: cassandra
+  namespace: 0198bb-tools
+  labels:
+    usage: runtime-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: '4.0.12-debian-12-r9'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/cassandra:4.0.12-debian-12-r9'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source

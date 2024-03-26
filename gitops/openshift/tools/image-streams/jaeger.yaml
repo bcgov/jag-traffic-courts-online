@@ -1,0 +1,20 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: jaeger
+  namespace: 0198bb-tools
+  labels:
+    usage: runtime-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: '1.55.0-debian-12-r0'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/jaeger:1.55.0-debian-12-r0'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
