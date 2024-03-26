@@ -1,0 +1,16 @@
+# global values
+global:
+  namespace: 0198bb-prod
+  vault:
+    role: 0198bb-prod
+    path: /
+    
+fullnameOverride: "virus-scan"
+
+env:
+  "CLAMAV__SERVER": "clamav.0198bb-prod.svc.cluster.local"
+
+replicaCount: 2
+
+pdb:
+  create: true

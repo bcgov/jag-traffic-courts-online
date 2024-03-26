@@ -176,3 +176,10 @@ Deployment of Form Recognizer is currently a manual process and requires the bel
 Notes:
 (a) `form-recognizer-layout:latest` is built automatically by the `ci-azure-cognitive-service-layout.yml` github workflow whenever changes are made to the /tools/form-recognizer folder.
 (b) The OCR models are baked into the ocr-form-recognizer-layout image. When this container starts up, it'll copy the models to the /shared PVC ready for use. This layout container must startup first.
+
+
+
+
+# Virus Scan
+
+helm upgrade --install virus-scan virus-scan --values virus-scan-prod-values.yaml
