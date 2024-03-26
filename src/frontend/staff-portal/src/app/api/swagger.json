@@ -18,7 +18,10 @@
             "in": "query",
             "description": "The status to exclude",
             "schema": {
-              "$ref": "#/components/schemas/ExcludeStatus"
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ExcludeStatus"
+              }
             }
           },
           {
@@ -42,7 +45,10 @@
             "in": "query",
             "description": "The optional status to find.",
             "schema": {
-              "$ref": "#/components/schemas/DisputeStatus"
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DisputeStatus"
+              }
             }
           },
           {
