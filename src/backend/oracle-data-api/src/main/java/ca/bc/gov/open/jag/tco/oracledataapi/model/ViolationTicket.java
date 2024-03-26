@@ -107,7 +107,8 @@ public class ViolationTicket extends Auditable<String> {
 
 	@Size(max = 100)
 	@Column(length = 100)
-	private String driversLicenceCountry = "Unknown"; // FIXME: Hard-coded constant for now
+	@Schema(nullable = true)
+	private String driversLicenceCountry;
 
 	/**
 	 * The year the drivers licence was issued.

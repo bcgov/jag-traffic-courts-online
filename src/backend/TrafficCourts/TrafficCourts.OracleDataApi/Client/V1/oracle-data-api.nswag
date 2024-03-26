@@ -33,7 +33,7 @@
       "generatePrepareRequestAndProcessResponseAsAsyncMethods": false,
       "exposeJsonSerializerSettings": false,
       "clientClassAccessModifier": "internal",
-      "typeAccessModifier": "public",
+      "typeAccessModifier": "internal",
       "propertySetterAccessModifier": "",
       "generateNativeRecords": false,
       "generateContractsOutput": false,

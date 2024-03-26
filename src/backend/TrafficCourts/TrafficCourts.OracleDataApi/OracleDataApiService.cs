@@ -607,6 +607,12 @@ internal partial class OracleDataApiService : IOracleDataApiService
         {
             Oracle.Dispute oracleBody = _mapper.Map<Oracle.Dispute>(body);
 
+            // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
+            if (!string.IsNullOrEmpty(oracleBody.OcrTicketFilename))
+            {
+                oracleBody.ViolationTicket = CreateViolationTicketFromDispute(oracleBody);
+            }
+
             long id = await _client.SaveDisputeAsync(oracleBody, cancellationToken);
 
             await PublishDisputeChanged(id, cancellationToken);
@@ -827,6 +833,21 @@ internal partial class OracleDataApiService : IOracleDataApiService
             }
             throw; // throw the original
         }
+    }
+
+    private static Oracle.ViolationTicket CreateViolationTicketFromDispute(Oracle.Dispute dispute)
+    {
+        Oracle.ViolationTicket violationTicket = new();
+        violationTicket.TicketNumber = dispute.TicketNumber;
+        // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
+        List<Oracle.ViolationTicketCount> violationTicketCounts = new();
+        for (int i = 1; i <= 3; i++)
+        {
+            violationTicketCounts.Add(new Oracle.ViolationTicketCount { CountNo = i });
+        }
+        violationTicket.ViolationTicketCounts = violationTicketCounts;
+
+        return violationTicket;
     }
 
     #endregion

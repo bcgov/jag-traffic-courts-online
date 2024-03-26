@@ -924,7 +924,7 @@ namespace TrafficCourts.Domain.Models
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string DriversLicenceProvince { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("driversLicenceCountry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("driversLicenceCountry", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string DriversLicenceCountry { get; set; }
 
