@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { DateUtil } from '@shared/utils/date-util';
@@ -14,11 +14,12 @@ import { TableFilterService } from 'app/services/table-filter.service';
   templateUrl: './ticket-inbox.component.html',
   styleUrls: ['./ticket-inbox.component.scss'],
 })
-export class TicketInboxComponent implements OnInit, AfterViewInit {
+export class TicketInboxComponent implements OnInit {
   @Input() tabIndex: number;
   @Output() disputeInfo: EventEmitter<Dispute> = new EventEmitter();
 
   disputes: Dispute[] = [];
+  disputesCollection: PagedDisputeListItemCollection = {};
   dataSource = new MatTableDataSource(this.disputes);
 
   tableFilterKeys: TableFilterKeys[] = ["dateSubmittedFrom", "dateSubmittedTo", "disputantSurname", "status", "ticketNumber"];
@@ -41,8 +42,12 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
 
-  @ViewChild('tickTbSort') tickTbSort = new MatSort();
   showTicket = false;
+  currentPage: number = 1;
+  totalPages: number = 1;
+  sortBy: Array<string> = ["submittedTs"];
+  sortDirection: Array<SortDirection> = [SortDirection.Desc];
+  newCount: number = 0;
 
   constructor(
     private disputeService: DisputeService,
@@ -50,7 +55,10 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private tableFilterService: TableFilterService,
   ) {
-    this.disputeService.refreshDisputes.subscribe(x => { this.getAllDisputes(); })
+    this.disputeService.refreshDisputes.subscribe(x => { 
+      this.getAllDisputes(); 
+      this.countNewTickets(); 
+    });
   }
 
   ngOnInit() {
@@ -62,6 +70,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
     // when authentication token available, get data
     this.getAllDisputes();
+    this.countNewTickets();
   }
 
   isNew(d: Dispute): boolean {
@@ -72,26 +81,27 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     this.logger.log('TicketInboxComponent::getAllDisputes');
 
     this.disputes = [];
-    this.dataSource.data = this.disputes;
 
-    this.disputeService.getDisputes().subscribe((response) => {
+    this.disputeService.getDisputes(this.sortBy, this.sortDirection, this.currentPage, DisputeStatus.New).subscribe((response) => {
       this.logger.info(
         'TicketInboxComponent::getAllDisputes response',
         response
       );
 
-      response.forEach((dispute: Dispute) => {
+      this.disputesCollection = response;
+      this.currentPage = response.pageNumber;
+      this.totalPages = response.pageCount;
+      response.items.forEach((dispute: Dispute) => {
         dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
           this.disputes.push(dispute);
-      });
-      // initially sort data by Date Submitted
-      this.dataSource.data = this.disputes.sort((a: Dispute, b: Dispute) => { if (new Date(a.submittedTs) > new Date(b.submittedTs)) { return -1; } else { return 1 } });
+      });      
+      this.dataSource.data = this.disputes;
 
       // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = this.searchFilter;
-      let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-      dataFilter.status = dataFilter.status ?? "";
-      this.onApplyFilter(dataFilter);
+      // this.dataSource.filterPredicate = this.searchFilter;
+      // let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
+      // dataFilter.status = dataFilter.status ?? "";
+      // this.onApplyFilter(dataFilter);
     });
   }
 
@@ -114,14 +124,16 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
     });
   };
 
-  countNewTickets(): number {
-    if (this.dataSource.data?.filter((x: Dispute) => x.status == DisputeStatus.New))
-      return this.dataSource.data?.filter((x: Dispute) => x.status == DisputeStatus.New).length;
-    else return 0;
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.tickTbSort;
+  countNewTickets() {
+    this.disputeService.getDisputeStatusCount(DisputeStatus.New).subscribe((response) => {
+      this.logger.info(
+        'TicketInboxComponent::getDisputeStatusCount response',
+        response
+      );
+      if (response.count) {
+        this.newCount = response.count;
+      }
+    });
   }
 
   // called on keyup in filter field
@@ -131,5 +143,16 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
 
   backWorkbench(element) {
     this.disputeInfo.emit(element);
+  }
+
+  sortData(sort: Sort){
+    this.sortBy = [sort.active];
+    this.sortDirection = [sort.direction ? sort.direction as SortDirection : SortDirection.Desc];
+    this.getAllDisputes();
+  }
+
+  onPageChange(event: number) {
+    this.currentPage = event;
+    this.getAllDisputes();
   }
 }
