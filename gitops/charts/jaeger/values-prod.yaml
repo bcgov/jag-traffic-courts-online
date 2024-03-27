@@ -1,0 +1,59 @@
+# Default values for jaeger-aio.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  registry: image-registry.openshift-image-registry.svc:5000
+  repository: 0198bb-tools/jaegertracing-all-in-one
+
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  tag: "1.55.0"
+
+## Optionally specify an array of imagePullSecrets.
+## Secrets must be manually created in the namespace.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+## Example:
+## imagePullSecrets:
+##   - myRegistryKeySecretName
+##
+imagePullSecrets: []
+
+## @param nameOverride String to partially override jaeger-aio.fullname template (will maintain the release name)
+##
+nameOverride: ""
+
+## @param fullnameOverride String to fully override jaeger-aio.fullname template
+##
+fullnameOverride: "jaeger"
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "16686"
+
+## The storage backend to use
+storage:
+  # see https://www.jaegertracing.io/docs/latest/deployment/#memory
+  memory:
+    enabled: false
+    # Limit the number of traces stored in-memory, if not specified, defaults to 50000
+    maxTraces: 50000
+  # badger embedded local storage
+  badger:
+   enabled: true
+   ephemeral: false
+  #
+  pvc:
+    size: 1Gi
+    storageClassName: ""
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 2Gi
+  requests:
+    cpu: 100m
+    memory: 100Mi

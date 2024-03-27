@@ -1,0 +1,17 @@
+{{- if .Values.storage.badger.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "jaeger-aio.fullname" . }}-badger
+  labels:
+    {{- include "jaeger-aio.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.pvc.size }}
+  {{- if .Values.storage.pvc.storageClassName }}
+  storageClassName: {{ .Values.storage.pvc.storageClassName }}
+  {{- end }}
+{{- end }}
