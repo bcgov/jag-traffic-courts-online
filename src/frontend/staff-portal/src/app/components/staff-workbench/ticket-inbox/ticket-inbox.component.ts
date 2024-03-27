@@ -78,12 +78,11 @@ export class TicketInboxComponent implements OnInit {
   }
 
   getAllDisputes(): void {
-    this.logger.log('TicketInboxComponent::getAllDisputes');
-
-    this.disputes = [];
+    this.logger.log('TicketInboxComponent::getAllDisputes');    
 
     this.disputeService.getDisputes(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, 
       this.filters).subscribe((response) => {
+      this.disputes = [];
       this.logger.info(
         'TicketInboxComponent::getAllDisputes response',
         response
