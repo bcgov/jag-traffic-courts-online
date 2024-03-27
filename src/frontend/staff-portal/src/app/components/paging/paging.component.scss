@@ -1,0 +1,29 @@
+.pagination {    
+    li.active {
+        a{            
+            background-color: #1a5a96;
+            border-color: #1a5a96;
+        }
+        a:hover{
+            background-color: #1a5a96;
+        }       
+    }
+    li{
+        a:hover{
+            background-color: #7590b9;
+        }
+    }
+    li.disabled{
+        a:hover{
+            background-color: #fff;
+        }
+    }
+}
+
+.page-color{
+    color: rgba(0, 0, 0, 0.54);
+
+    span{
+        color: #1a5a96;
+    }
+}

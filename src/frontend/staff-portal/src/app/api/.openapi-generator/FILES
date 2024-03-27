@@ -53,6 +53,7 @@ model/field.model.ts
 model/fileHistory.model.ts
 model/fileHistoryAuditLogEntryType.model.ts
 model/fileMetadata.model.ts
+model/getDisputeCountResponse.model.ts
 model/jJDispute.model.ts
 model/jJDisputeAccidentYn.model.ts
 model/jJDisputeAppearInCourt.model.ts
@@ -88,10 +89,12 @@ model/language.model.ts
 model/lock.model.ts
 model/models.ts
 model/ocrViolationTicket.model.ts
+model/pagedDisputeListItemCollection.model.ts
 model/point.model.ts
 model/problemDetails.model.ts
 model/province.model.ts
 model/socialLinkRepresentation.model.ts
+model/sortDirection.model.ts
 model/statute.model.ts
 model/ticketImageDataJustinDocument.model.ts
 model/ticketImageDataJustinDocumentReportType.model.ts

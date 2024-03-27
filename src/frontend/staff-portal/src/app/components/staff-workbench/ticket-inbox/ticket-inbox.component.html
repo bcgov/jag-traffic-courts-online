@@ -3,7 +3,7 @@
   <ng-container recordCount>
     <div fxFlex fxFlex.gt-md="20">
       <div class="vcenter">
-        <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ countNewTickets() }} NEW ticket
+        <span class="BC-Gov-15px-black-text" style="color:green;"><b>{{ newCount }} NEW ticket
             records</b></span>
       </div>
     </div>
@@ -11,7 +11,7 @@
 </app-table-filters>
 
 <div class="table-responsive">
-  <table mat-table [dataSource]="dataSource" matSort #tickTbSort="matSort">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="__RedGreenAlert">
       <th mat-header-cell *matHeaderCellDef></th>
@@ -73,8 +73,8 @@
       </th>
       <td mat-cell *matCellDef="let element">
         <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"
-          *ngIf="element.emailAddressVerified === true || !(element.emailAddress)">{{ element.status }}</span>
-        <span *ngIf="element.emailAddressVerified === false && element.emailAddress">Email Address Not Verified</span>
+          *ngIf="element.emailAddressVerified || !(element.emailAddress)">{{ element.status }}</span>
+        <span *ngIf="!element.emailAddressVerified && element.emailAddress">Email Address Not Verified</span>
       </td>
     </ng-container>
 
@@ -125,3 +125,6 @@
 
   </table>
 </div>
+
+<app-paging [currentPage]="currentPage" [totalPages]="totalPages" (pageChanged)="onPageChange($event)">
+</app-paging>

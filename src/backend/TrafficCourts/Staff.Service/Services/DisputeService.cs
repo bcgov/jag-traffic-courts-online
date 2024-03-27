@@ -55,7 +55,7 @@ public class DisputeService : IDisputeService
 
     public async Task<GetDisputeCountResponse> GetDisputeCountAsync(DisputeStatus status, CancellationToken cancellationToken)
     {
-        GetAllDisputesParameters filter = new() { Status = status };
+        GetAllDisputesParameters filter = new() { Status = new List<DisputeStatus> { status } };
 
         var disputes = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
 
@@ -64,7 +64,7 @@ public class DisputeService : IDisputeService
         return new GetDisputeCountResponse(status, count);
     }
 
-    public async Task<IPagedList<DisputeListItem>> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken)
+    public async Task<PagedDisputeListItemCollection> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken)
     {
         // apply fitler, sorting and paging
         var disputes = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
@@ -80,7 +80,7 @@ public class DisputeService : IDisputeService
             .Sort(parameters)
             .Page(parameters, 25);
 
-        return paged;
+        return new PagedDisputeListItemCollection(paged);
     }
 
     public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
