@@ -1,5 +1,5 @@
 ﻿using TrafficCourts.Common.Features.EmailVerificationToken;
-using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Messaging.Models;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Configuration;
 
@@ -18,21 +18,23 @@ public class VerificationEmailTemplate : EmailTemplate<SendEmailVerificationEmai
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    private const string SubjectTemplate = "Verify your email for traffic violation ticket {0}";
-    private const string TextContentTemplate = @"In order to confirm submission of your intent to dispute traffic violation ticket {0} click on the following link: 
-
-{1}
-
-If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm.";
-
     public override EmailMessage Create(SendEmailVerificationEmail data)
     {
-        EmailMessage sendEmail = new();
+        string verificationUrl = CreateEmailVerificationUrl(data);
 
-        sendEmail.From = Sender;
-        sendEmail.To = data.EmailAddress;
-        sendEmail.Subject = string.Format(SubjectTemplate, data.TicketNumber);
-        sendEmail.TextContent = string.Format(TextContentTemplate, data.TicketNumber, CreateEmailVerificationUrl(data));
+        EmailMessage sendEmail = new()
+        {
+            From = Sender,
+            To = data.EmailAddress,
+            Subject = $"Verify your email for traffic violation ticket {data.TicketNumber}",
+            TextContent = $@"
+In order to confirm submission of your intent to dispute traffic violation ticket {data.TicketNumber} you must click on the following link. If you do not click on the link within 7 business days your dispute may not be registered.
+
+{verificationUrl}
+
+If you need more help, contact the {ViolationTicketCentreContact}."
+        };
+
         return sendEmail;
     }
 

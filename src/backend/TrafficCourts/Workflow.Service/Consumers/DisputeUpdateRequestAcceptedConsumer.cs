@@ -1,10 +1,10 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
-using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 using DisputeUpdateRequest = TrafficCourts.Domain.Models.DisputeUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;

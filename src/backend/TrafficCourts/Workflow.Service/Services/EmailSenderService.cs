@@ -1,7 +1,7 @@
 ﻿using MimeKit;
 using MimeKit.Text;
 using TrafficCourts.Workflow.Service.Configuration;
-using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Messaging.Models;
 using MailKit.Net.Smtp;
 
 namespace TrafficCourts.Workflow.Service.Services
@@ -287,13 +287,13 @@ namespace TrafficCourts.Workflow.Service.Services
     }
 
     [Serializable]
-    internal class EmailSendFailedException : Exception
+    public class EmailSendFailedException : Exception
     {
         public EmailSendFailedException(string? message, Exception? innerException) : base(message, innerException) { }
     }
 
     [Serializable]
-    internal class InvalidEmailMessageException : Exception
+    public class InvalidEmailMessageException : Exception
     {
         public InvalidEmailMessageException(string? message) : base(message) { }
     } 

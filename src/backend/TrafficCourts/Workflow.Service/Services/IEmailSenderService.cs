@@ -1,4 +1,4 @@
-﻿using TrafficCourts.Common.Features.Mail;
+﻿using TrafficCourts.Messaging.Models;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
