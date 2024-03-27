@@ -168,6 +168,16 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         var writtenReasons = digitalCaseFile.WrittenReasons;
         writtenReasons.FineReduction = dispute.FineReductionReason;
         writtenReasons.TimeToPay = dispute.TimeToPayReason;
+        // Set user signature for written reasons based on user type
+        switch (dispute.SignatoryType)
+        {
+            case JJDisputeSignatoryType.D:
+                writtenReasons.DisputantSignature = dispute.SignatoryName;
+                break;
+            case JJDisputeSignatoryType.A:
+                writtenReasons.AgentSignature = dispute.SignatoryName;
+                break;
+        }
 
         // set the counts
         var counts = digitalCaseFile.Counts;
