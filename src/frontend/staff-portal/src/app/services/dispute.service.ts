@@ -1,10 +1,11 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2, DisputeListItem, PagedDisputeListItemCollection, DisputeStatus, GetDisputeCountResponse, SortDirection } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2, DisputeListItem, PagedDisputeListItemCollection, DisputeStatus, GetDisputeCountResponse, SortDirection, ExcludeStatus } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
+import { TableFilter } from '@shared/models/table-filter-options.model';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
@@ -12,7 +13,7 @@ export interface IDisputeService {
   disputantUpdateRequests$: Observable<DisputantUpdateRequest[]>;
   disputantUpdateRequests: DisputantUpdateRequest[];
   getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
-    status?: DisputeStatus): Observable<PagedDisputeListItemCollection>;
+    filters?: TableFilter): Observable<PagedDisputeListItemCollection>;
   getDisputeStatusCount(status?: DisputeStatus): Observable<GetDisputeCountResponse>;
 }
 
@@ -116,9 +117,11 @@ export class DisputeService implements IDisputeService {
      * @param none
      */
   public getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
-    status?: DisputeStatus): Observable<PagedDisputeListItemCollection> {
-    return this.disputeApiService.apiDisputeDisputesGet(undefined, undefined, undefined, null, undefined, undefined, undefined, 
-      sortBy, sortDirection, undefined, pageNumber, 10)
+    filters?: TableFilter): Observable<PagedDisputeListItemCollection> {
+    return this.disputeApiService.apiDisputeDisputesGet(filters.status ? undefined : [ExcludeStatus.Cancelled, 
+      ExcludeStatus.Processing, ExcludeStatus.Rejected, ExcludeStatus.Concluded], filters.ticketNumber, filters.disputantSurname, 
+      filters.status ? [filters.status] : [DisputeStatus.New, DisputeStatus.Validated], filters.dateSubmittedFrom, 
+      filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 10)
       .pipe(
         map((response: PagedDisputeListItemCollection) => {
           this.logger.info('DisputeService::getDisputes', response);

@@ -48,12 +48,12 @@ export class TicketInboxComponent implements OnInit {
   sortBy: Array<string> = ["submittedTs"];
   sortDirection: Array<SortDirection> = [SortDirection.Desc];
   newCount: number = 0;
+  filters: TableFilter = new TableFilter();
 
   constructor(
     private disputeService: DisputeService,
     private logger: LoggerService,
     private authService: AuthService,
-    private tableFilterService: TableFilterService,
   ) {
     this.disputeService.refreshDisputes.subscribe(x => { 
       this.getAllDisputes(); 
@@ -82,7 +82,8 @@ export class TicketInboxComponent implements OnInit {
 
     this.disputes = [];
 
-    this.disputeService.getDisputes(this.sortBy, this.sortDirection, this.currentPage, DisputeStatus.New).subscribe((response) => {
+    this.disputeService.getDisputes(this.sortBy, this.sortDirection, this.currentPage != 0 ? this.currentPage : 1, 
+      this.filters).subscribe((response) => {
       this.logger.info(
         'TicketInboxComponent::getAllDisputes response',
         response
@@ -91,38 +92,16 @@ export class TicketInboxComponent implements OnInit {
       this.disputesCollection = response;
       this.currentPage = response.pageNumber;
       this.totalPages = response.pageCount;
+      if(!this.totalPages){
+        this.currentPage = 0;
+      }
       response.items.forEach((dispute: Dispute) => {
         dispute.__RedGreenAlert = dispute.status == DisputeStatus.New ? 'Green' : '',
           this.disputes.push(dispute);
       });      
       this.dataSource.data = this.disputes;
-
-      // this section allows filtering by ticket number or partial ticket number by setting the filter predicate
-      // this.dataSource.filterPredicate = this.searchFilter;
-      // let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
-      // dataFilter.status = dataFilter.status ?? "";
-      // this.onApplyFilter(dataFilter);
     });
   }
-
-  searchFilter = function (record: Dispute, filter: string) {
-    let searchTerms = JSON.parse(filter);
-    var excludingStatuses = !searchTerms?.status ? [DisputeStatus.Cancelled, DisputeStatus.Processing, DisputeStatus.Rejected, DisputeStatus.Concluded] : [];
-    if (excludingStatuses.includes(record?.status)) {
-      return false;
-    }
-    return Object.entries(searchTerms).every(([field, value]: [string, string]) => {
-      if ("dateSubmittedFrom" === field) {
-        return !DateUtil.isValid(value) || DateUtil.isDateOnOrAfter(record.submittedTs, value);
-      }
-      else if ("dateSubmittedTo" === field) {
-        return !DateUtil.isValid(value) || DateUtil.isDateOnOrBefore(record.submittedTs, value);
-      }
-      else {
-        return record[field].toLocaleLowerCase().indexOf(value?.trim().toLocaleLowerCase() ?? "") != -1;
-      }
-    });
-  };
 
   countNewTickets() {
     this.disputeService.getDisputeStatusCount(DisputeStatus.New).subscribe((response) => {
@@ -138,7 +117,8 @@ export class TicketInboxComponent implements OnInit {
 
   // called on keyup in filter field
   onApplyFilter(dataFilters: TableFilter) {
-    this.dataSource.filter = JSON.stringify(dataFilters);
+    this.filters = dataFilters;
+    this.getAllDisputes();
   }
 
   backWorkbench(element) {
