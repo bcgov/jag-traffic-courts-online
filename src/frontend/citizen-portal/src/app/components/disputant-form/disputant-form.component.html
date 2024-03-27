@@ -19,7 +19,8 @@
             <input matInput formControlName="disputant_given_names" />
             <mat-error *ngIf="form.controls.disputant_given_names.hasError('required')">{{ "error.required" | translate
               }}</mat-error>
-            <mat-error *ngIf="form.controls.disputant_given_names.hasError('maxlength')">{{ "error.max_length" | translate
+            <mat-error *ngIf="form.controls.disputant_given_names.hasError('maxlength')">{{ "error.max_length" |
+              translate
               }}30 per name</mat-error>
           </mat-form-field>
         </div>
@@ -49,7 +50,7 @@
             }}200</mat-error>
         </mat-form-field>
       </div>
-
+    </div>
     <div class="row" *ngIf="form.value.contact_type !== ContactType.Individual">
       <div class="col-md-6">
         <mat-form-field class="w-100">
