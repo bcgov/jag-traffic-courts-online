@@ -1,0 +1,69 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-cleanup-logs
+spec:
+  schedule: '@daily'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: forms-recognizer-logs
+              persistentVolumeClaim:
+                claimName: {{ include "form-recognizer.fullname" . }}-logs
+          containers:
+            - name: {{ include "form-recognizer.fullname" . }}-cleanup-logs
+              securityContext:
+                capabilities:
+                  drop: ["ALL"]
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+              image: alpine:3.17.2
+              # delete all logs older than 30 days
+              args:
+                - /bin/sh
+                - '-c'
+                - "LC_ALL=C find /logs -mtime +30 -delete || true;"
+              volumeMounts:
+                - name: forms-recognizer-logs
+                  mountPath: /logs
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "form-recognizer.fullname" . }}-cleanup-requests
+spec:
+  schedule: '@hourly'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: shared
+              persistentVolumeClaim:
+                claimName: {{ include "form-recognizer.fullname" . }}-shared
+          containers:
+            - name: cleanup-requests
+              securityContext:
+                capabilities:
+                  drop: ["ALL"]
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+              image: alpine:3.17.2
+              # delete all logs older than 60 minutes
+              args:
+                - /bin/sh
+                - '-c'
+                - "LC_ALL=C find /shared/custom/.__default__.virtualdir -mmin +60 -delete || true;"
+              volumeMounts:
+                - name: shared
+                  mountPath: /shared
+          restartPolicy: Never

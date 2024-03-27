@@ -192,6 +192,7 @@
     "start_ticket_dispute": "Start a ticket dispute",
     "status": "Status",
     "surname_corporate_name": "Surname or Corporate Name",
+    "given_name_corporate_name": "Given name(s) (if Corporate Name enter NA)",
     "take_photo_upload_image": "Please take photo or upload image.",
     "ticket_not_found": "Ticket not found.",
     "view_ticket_examples": "View ticket examples",

@@ -192,6 +192,7 @@
     "start_ticket_dispute": "Démarrer un litige concernant un ticket",
     "status": "Statut",
     "surname_corporate_name": "Nom de Famille ou Nom de la Société",
+    "given_name_corporate_name": "Prénom(s) (si la raison sociale indique NA)",
     "take_photo_upload_image": "Veuillez prendre une photo ou télécharger une image.",
     "ticket_not_found": "Billet non trouvé.",
     "view_ticket_examples": "Voir des exemples de billets",

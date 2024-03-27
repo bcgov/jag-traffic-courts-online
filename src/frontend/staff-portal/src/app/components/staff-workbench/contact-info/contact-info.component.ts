@@ -105,14 +105,14 @@ export class ContactInfoComponent implements OnInit {
         this.form.get('addressProvinceSeqNo').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([FormControlValidators.phone]);
-        this.form.get('addressProvinceCountryId').setValue(ctryId);
       }
 
       if (ctryId == this.canada.ctryId) {
-        this.form.get('postalCode').addValidators([Validators.minLength(6)]);
-        this.form.get("addressProvince").setValue(this.bc.provNm);
+        this.form.get('postalCode').addValidators([Validators.minLength(6)]);        
+        this.form.get('addressProvinceCountryId').setValue(ctryId);
         this.form.get("addressProvinceSeqNo").setValue(this.bc.provSeqNo)
         this.form.get("addressProvinceProvId").setValue(this.bc.provId);
+        this.form.get("addressProvince").setValue(this.bc.provAbbreviationCd);
       }
 
       this.form.get('postalCode').updateValueAndValidity();
@@ -149,10 +149,11 @@ export class ContactInfoComponent implements OnInit {
   public onAddressProvinceChange(provId: number) {
     setTimeout(() => {
       let provFound = this.config.provincesAndStates.filter(x => x.provId === provId).shift();
-      this.form.get("addressProvince").setValue(provFound.provNm);
       this.form.get("addressProvinceCountryId").setValue(provFound.ctryId);
       this.form.get("addressProvinceSeqNo").setValue(provFound.provSeqNo);
-    }, 0)
+      this.form.get("addressProvinceProvId").setValue(provFound.provId);
+      this.form.get("addressProvince").setValue(provFound.provAbbreviationCd);
+  })
   }
 
   onSelectContactType(newContactType: any) {
