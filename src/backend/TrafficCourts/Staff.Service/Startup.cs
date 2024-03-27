@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
@@ -65,9 +64,6 @@ public static class Startup
         builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
         builder.Services.AddTransient<IStaffDocumentService, StaffDocumentService>();
         builder.Services.AddTransient<IDisputeLockService, DisputeLockService>();
-
-        // staff service should not be creating emails, should send messages for workflow
-        builder.Services.AddEmailTemplates();
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();

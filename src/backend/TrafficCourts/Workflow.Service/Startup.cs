@@ -5,8 +5,6 @@ using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Domain.Models;
 using TrafficCourts.Common.OpenAPIs.VirusScan;
 using TrafficCourts.Messaging;
 using TrafficCourts.Workflow.Service.Configuration;
@@ -42,8 +40,6 @@ public static class Startup
         builder.Services.AddHashids(builder.Configuration);
         builder.Services.AddEmailVerificationTokens();
         builder.AddRedis();
-
-        builder.Services.AddTransient<IVerificationEmailTemplate, VerificationEmailTemplate>();
 
         builder.Services.AddOracleDataApi(builder.Configuration);
 

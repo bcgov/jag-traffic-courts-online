@@ -7,12 +7,14 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
 using Moq;
 using Xunit;
+using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 
 namespace TrafficCourts.Test.Workflow.Service.Consumers
 {
     public class DisputeApproveNotifyConsumerTests
     {
         private readonly Mock<ILogger<DisputeApprovedNotifyConsumer>> _mockLogger;
+        private IProcessingDisputeEmailTemplate _emailTemplate = Mock.Of<IProcessingDisputeEmailTemplate>();
 
         public DisputeApproveNotifyConsumerTests()
         {
@@ -21,7 +23,7 @@ namespace TrafficCourts.Test.Workflow.Service.Consumers
 
         private DisputeApprovedNotifyConsumer CreateConsumer()
         {
-            return new DisputeApprovedNotifyConsumer(_mockLogger.Object);
+            return new DisputeApprovedNotifyConsumer(_emailTemplate, _mockLogger.Object);
         }
 
         [Fact(Skip = "Failing in github actions but not locally")]

@@ -10,7 +10,7 @@ using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 using Testcontainers.Redis;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Messaging.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;

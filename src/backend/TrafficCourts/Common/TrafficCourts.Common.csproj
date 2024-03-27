@@ -74,6 +74,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Features\Mail\Model\" />
 	  <Folder Include="OpenAPIs\Keycloak\v22_0\template\" />
 	</ItemGroup>
 </Project>

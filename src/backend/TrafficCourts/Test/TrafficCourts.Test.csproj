@@ -42,5 +42,8 @@
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Workflow.Service\Features\" />
+	</ItemGroup>
 
 </Project>
