@@ -7,10 +7,11 @@ metadata:
     {{- include "jaeger-aio.labels" . | nindent 4 }}
 spec:
   ports:
-    - port: 80
+    - name: query-http
+      port: 16686
       targetPort: 16686
       protocol: TCP
-      name: query-http
+      
   selector:
     {{- include "jaeger-aio.selectorLabels" . | nindent 4 }}
   type: ClusterIP

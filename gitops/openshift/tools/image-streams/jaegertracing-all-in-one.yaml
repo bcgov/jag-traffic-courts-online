@@ -1,0 +1,20 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: jaegertracing-all-in-one
+  namespace: 0198bb-tools
+  labels:
+    usage: runtime-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: '1.55.0'
+      from:
+        kind: DockerImage
+        name: 'docker.io/jaegertracing/all-in-one:1.55.0'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source

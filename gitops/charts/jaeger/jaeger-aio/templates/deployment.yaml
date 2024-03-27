@@ -28,6 +28,16 @@ spec:
         - env:
           - name: COLLECTOR_ZIPKIN_HTTP_PORT
             value: "9411"
+          {{- if .Values.storage.badger.enabled }}
+          - name: SPAN_STORAGE_TYPE
+            value: "badger"
+          - name: BADGER_DIRECTORY_VALUE
+            value: "/badger/data"
+          - name: BADGER_DIRECTORY_KEY
+            value: "/badger/key"
+          - name: BADGER_EPHEMERAL
+            value: {{ .Values.storage.badger.ephemeral | quote }}
+          {{- end }}
           image: {{ template "jaeger.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: jaeger
@@ -37,16 +47,20 @@ spec:
           ports:
             - containerPort: 5775   # agent - accept zipkin.thrift over compact thrift protocol (deprecated)
               protocol: UDP
+            - containerPort: 5778   # agent - config HTTP
+              protocol: TCP
             - containerPort: 6831   # agent - accept jaeger.thrift over compact thrift protocol
               protocol: UDP
             - containerPort: 6832   # agent - accept jaeger.thrift over binary thrift protocol
               protocol: UDP
             - containerPort: 16686  # query - serve frontend
               protocol: TCP
-            - containerPort: 9411   # collector - Zipkin compatible endpoint (optional)
+            - containerPort: 4317   # collector - OTLP gRPC
               protocol: TCP
-            - containerPort: 5778   # agent - serve configs
-              protocol: TCP          
+            - containerPort: 4318   # collector - OTLP HTTP
+              protocol: TCP
+            - containerPort: 9411   # collector - Zipkin
+              protocol: TCP
           readinessProbe:
             httpGet:
               path: /
@@ -54,3 +68,10 @@ spec:
             initialDelaySeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: badger
+              mountPath: /badger
+      volumes:
+        - name: badger
+          persistentVolumeClaim:
+            claimName: {{ include "jaeger-aio.fullname" . }}-badger
