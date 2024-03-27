@@ -29,7 +29,7 @@ export class TableFiltersComponent implements OnInit {
       this.tableFilterConfigs[key] = true;
     })
     this.dataFilters = this.tableFilterService.tableFilters[this.tabIndex];
-    this.dataFilters.status = "";
+    this.dataFilters.status = this.dataFilters.status ?? "";
   }
 
   resetSearchFilters() {

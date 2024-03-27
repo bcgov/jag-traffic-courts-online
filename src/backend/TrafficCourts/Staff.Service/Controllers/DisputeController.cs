@@ -49,7 +49,7 @@ public class DisputeController : StaffControllerBase
     public async Task<IActionResult> GetDisputesAsync(GetAllDisputesParameters parameters, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving all Disputes from oracle-data-api");
-
+        parameters ??= GetAllDisputesParameters.Default;
         try
         {
             PagedDisputeListItemCollection disputes = await _disputeService.GetAllDisputesAsync(parameters, cancellationToken);

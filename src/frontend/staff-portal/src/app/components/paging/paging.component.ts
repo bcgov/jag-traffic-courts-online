@@ -28,4 +28,8 @@ export class PagingComponent {
       return false;
     }
   }
+
+  counter(i: number) {
+    return new Array(i);
+  }
 }

@@ -1,50 +1,29 @@
-.main-pagination {
-    width: 100%;
-    text-align: right;
-
-    .pagination {
-        display: inline-block;
-        margin-bottom: 0;
-
-        a {
-            color: #1a5a96;
-            float: left;
-            text-decoration: none;
-            padding: 0.3rem 0.75rem;
-            border: 1px solid #adb5bd;
-        }
-
-        a.active {
+.pagination {    
+    li.active {
+        a{            
             background-color: #1a5a96;
-            color: white;
-            border: 1px solid #1a5a96;
+            border-color: #1a5a96;
         }
-
-        a.disabled{
-            pointer-events: none;
-            opacity: 0.65;
-        }
-
-        a:hover:not(.active):not(.disabled) {
+        a:hover{
+            background-color: #1a5a96;
+        }       
+    }
+    li{
+        a:hover{
             background-color: #7590b9;
         }
-
-        a:first-child {
-            border-top-left-radius: 0.25rem;
-            border-bottom-left-radius: 0.25rem;
-        }
-
-        a:last-child {
-            border-top-right-radius: 0.25rem;
-            border-bottom-right-radius: 0.25rem;
+    }
+    li.disabled{
+        a:hover{
+            background-color: #fff;
         }
     }
+}
 
-    .page-color{
-        color: rgba(0, 0, 0, 0.54);
+.page-color{
+    color: rgba(0, 0, 0, 0.54);
 
-        span{
-            color: #1a5a96;
-        }
+    span{
+        color: #1a5a96;
     }
 }

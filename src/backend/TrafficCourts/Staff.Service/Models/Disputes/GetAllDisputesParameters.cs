@@ -75,15 +75,17 @@ public class GetAllDisputesParameters : IPagable, ISortable
     /// The optional page number gives the records from given page
     /// </summary>
     [FromQuery(Name = "pageNumber")]
-    public int? PageNumber { get; set; }
+    public int? PageNumber { get; set; } = 1;
 
     /// <summary>
     /// The optional page size sets the record count
     /// </summary>
     [FromQuery(Name = "pageSize")]
-    public int? PageSize { get; set; }
+    public int? PageSize { get; set; } = 25;
 
     #endregion
+
+    public static readonly GetAllDisputesParameters Default = new GetAllDisputesParameters();
 
     /// <summary>
     /// Sets the default sort order if no sort order specified
