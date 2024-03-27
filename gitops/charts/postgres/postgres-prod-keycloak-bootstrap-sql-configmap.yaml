@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-bootstrap-sql
+data:
+  bootstrap.sql: |
+    \c keycloakdb;
+    GRANT ALL ON SCHEMA public to keycloak;
