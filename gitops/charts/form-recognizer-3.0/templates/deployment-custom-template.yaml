@@ -50,7 +50,7 @@ spec:
               containerPort: 5000
               protocol: TCP
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.customTemplate.resources | nindent 12 }}
           volumeMounts:
             - name: shared
               mountPath: /shared
