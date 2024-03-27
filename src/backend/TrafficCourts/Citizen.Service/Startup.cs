@@ -38,8 +38,7 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
-                .AddRedisInstrumentation();
+            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
         }, meters: new string[] { "MassTransit", "ComsClient", "CitizenService" });
 
         builder.Services.AddHttpContextAccessor();

@@ -173,6 +173,7 @@ public static class Extensions
         {
             builder
                 .SetResourceBuilder(resourceBuilder)
+                .AddRedisInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation(options => options.Filter = AspNetCoreRequestFilter)
                 .AddSource(activitySource.Name)

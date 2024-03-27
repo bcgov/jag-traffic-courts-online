@@ -63,7 +63,9 @@ public static class Startup
         builder.Services.AddTransient<IEmailHistoryService, EmailHistoryService>();
         builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
         builder.Services.AddTransient<IStaffDocumentService, StaffDocumentService>();
-        builder.Services.AddTransient<IDisputeLockService, DisputeLockService>();
+
+        //builder.Services.AddTransient<IDisputeLockService, DisputeLockService>(); can use this one for in memory
+        builder.Services.AddTransient<IDisputeLockService, RedisDisputeLockService>();
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();

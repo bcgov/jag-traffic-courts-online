@@ -1,26 +1,26 @@
-﻿namespace TrafficCourts.Staff.Service.Models;
+﻿using System;
+
+namespace TrafficCourts.Staff.Service.Models;
 
 public class Lock
 {
-    /// <summary>
-    /// The function that returns the current UTC date and time. Overriden for tests.
-    /// </summary>
-    private readonly Func<DateTimeOffset> _utcNow;
+    private readonly TimeProvider _timeProvider;
 
-    public Lock() : this(() => DateTimeOffset.UtcNow)
+    public Lock() : this(TimeProvider.System)
     {
     }
 
-    internal Lock(Func<DateTimeOffset> utcNow)
+    internal Lock(TimeProvider timeProvider)
     {
-        _utcNow = utcNow ?? throw new ArgumentNullException(nameof(utcNow));
-        CreatedAtUtc = _utcNow();
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        CreatedAtUtc = timeProvider.GetUtcNow();
+        _timeProvider = timeProvider;
     }
 
     /// <summary>
     /// Lock ID
     /// </summary>
-    public string? LockId { get; set; }
+    public string LockId { get; set; } = string.Empty;
 
     /// <summary>
     /// The ticket number associated with the dispute.
@@ -40,5 +40,8 @@ public class Lock
     /// <summary>
     /// The time in UTC when the lock was created.
     /// </summary>
-    public DateTimeOffset CreatedAtUtc { get; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsExpired => ExpiryTimeUtc < _timeProvider.GetUtcNow();
 }
