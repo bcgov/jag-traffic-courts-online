@@ -1,6 +1,6 @@
 ﻿using TrafficCourts.Domain.Models;
 
-namespace TrafficCourts.Common.Features.Mail.Templates;
+namespace TrafficCourts.Workflow.Service.Services.EmailTemplates;
 
 public interface IDisputantEmailUpdateSuccessfulTemplate : IEmailTemplate<Dispute>
 {

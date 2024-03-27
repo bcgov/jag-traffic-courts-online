@@ -9,7 +9,7 @@ using MimeKit;
 using Moq;
 using Xunit;
 using TrafficCourts.Workflow.Service.Configuration;
-using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Messaging.Models;
 
 namespace TrafficCourts.Test.Workflow.Service.Services
 {
@@ -75,7 +75,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(_mockSmtpClient.Object));
 
-            var service = CreateService();
+            EmailSenderService service = CreateService();
 
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
@@ -107,27 +107,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
                 .Throws(new OperationCanceledException());
 
-            var service = CreateService();
-
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
+            EmailSenderService service = CreateService();
 
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage, cancellationToken);
-
-            try
-            {
-
-                await result;
-            }
-            catch (Exception ex)
-            {
-                // Assert
-                Assert.True(ex.Message == "The operation was canceled");
-            }
-
-            // Assert
-            Assert.False(result.IsCompletedSuccessfully);
+            var actual = await Assert.ThrowsAsync<EmailSendFailedException>(() => service.SendEmailAsync(emailMessage, CancellationToken.None));
+            Assert.Equal("The operation was canceled", actual.Message);
         }
 
         [Fact]
@@ -142,7 +126,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
                 TextContent = "plain old message"
             };
 
-            var service = CreateService();
+            EmailSenderService service = CreateService();
 
             // test e-mail send.
             await service.SendEmailAsync(emailMessage, CancellationToken.None);
@@ -221,24 +205,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(_mockSmtpClient.Object));
 
-            var service = CreateService();
-
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
+            EmailSenderService service = CreateService();
 
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage, cancellationToken);
-
-            try
-            {
-                await result;
-            }
-            catch (Exception ex)
-            {
-                Assert.True(ex.Message == "Host or message is null");
-            }
-
-            Assert.True(result.IsCompletedSuccessfully);
+            var actual = await Assert.ThrowsAsync<ParseException>(() => service.SendEmailAsync(emailMessage, CancellationToken.None));
+            Assert.Equal("No address found.", actual.Message);
         }
 
         [Fact]
@@ -261,23 +232,9 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
-
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage, cancellationToken);
-
-            try
-            {
-                await result;
-            }
-            catch (Exception ex)
-            {
-                // Assert
-                Assert.True(ex.Message == "Missing recipient info");
-            }
-
-            Assert.False(result.IsCompletedSuccessfully);
+            var actual = await Assert.ThrowsAsync<InvalidEmailMessageException>(() => service.SendEmailAsync(emailMessage, CancellationToken.None));
+            Assert.Equal("Missing recipient info", actual.Message);
         }
 /*
         [Fact]

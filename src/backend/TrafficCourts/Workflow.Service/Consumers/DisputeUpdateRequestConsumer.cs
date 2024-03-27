@@ -3,11 +3,10 @@ using MassTransit;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 using DisputeUpdateRequest = TrafficCourts.Messaging.MessageContracts.DisputeUpdateRequest;
 
 namespace TrafficCourts.Workflow.Service.Consumers;

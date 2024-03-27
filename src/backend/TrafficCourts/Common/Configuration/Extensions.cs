@@ -13,6 +13,7 @@ using StackExchange.Redis;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using TrafficCourts.Configuration.Validation;
+using TrafficCourts.Diagnostics;
 
 namespace TrafficCourts.Common.Configuration;
 
@@ -145,11 +146,22 @@ public static class Extensions
 
     private static void AddTracing(WebApplicationBuilder builder, ActivitySource activitySource, ILogger logger, Action<TracerProviderBuilder>? configure = null)
     {
-        string? endpoint = builder.Configuration["OTEL_EXPORTER_JAEGER_ENDPOINT"];
+        // https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/exporter.md
+        //
+        // standard environment variables
+        //
+        //  OTEL_EXPORTER_OTLP_ENDPOINT
+        //  OTEL_EXPORTER_OTLP_HEADERS
+        //  OTEL_EXPORTER_OTLP_TIMEOUT
+        //  OTEL_EXPORTER_OTLP_PROTOCOL
+
+        // should be http://jaeger-collector.<namespace>.svc.cluster.local:4317
+
+        string? endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_TRACES_ENDPOINT"];
 
         if (string.IsNullOrEmpty(endpoint))
         {
-            logger.Information("Jaeger endpoint is not configured, no telemetry traces will be collected.");
+            logger.Information("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT is not configured, no telemetry traces will be collected.");
             return;
         }
 
@@ -165,7 +177,8 @@ public static class Extensions
                 .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation(options => options.Filter = AspNetCoreRequestFilter)
                 .AddSource(activitySource.Name)
-                .AddJaegerExporter();
+                .AddProcessor(new SplunkEventCollectorFilteringProcessor())
+                .AddOtlpExporter();
 
             if (configure is not null)
             {
@@ -178,12 +191,6 @@ public static class Extensions
     {
         // do not trace metrics calls to GET /metrics
        return !(httpContext.Request.Method == "GET" && httpContext.Request.Path == "/metrics");
-    }
-
-    private static bool HttpClientRequestFilter(HttpRequestMessage message)
-    {
-        // do not trace calls to splunk
-        return message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
     }
 
     private static void AddMetrics(IServiceCollection services, params string[] meters)

@@ -1,10 +1,9 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Features.Mail;
-using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Messaging.Models;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 using ApiException = TrafficCourts.Exceptions.ApiException;
 using DisputeUpdateRequest = TrafficCourts.Domain.Models.DisputeUpdateRequest;
 
@@ -18,13 +17,17 @@ public partial class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerifi
 {
     private readonly ILogger<SetEmailVerifiedOnDisputeInDatabase> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IConfirmationEmailTemplate _confirmationEmailTemplate;
+    private readonly IDisputeSubmittedEmailTemplate _disputeSubmittedEmailTemplate;
     private readonly IDisputantEmailUpdateSuccessfulTemplate _emailUpdateSuccessfulTemplate;
 
-    public SetEmailVerifiedOnDisputeInDatabase(IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate, IDisputantEmailUpdateSuccessfulTemplate updateRequestReceivedTemplate, ILogger<SetEmailVerifiedOnDisputeInDatabase> logger)
+    public SetEmailVerifiedOnDisputeInDatabase(
+        IOracleDataApiService oracleDataApiService, 
+        IDisputeSubmittedEmailTemplate disputeSubmittedEmailTemplate, 
+        IDisputantEmailUpdateSuccessfulTemplate updateRequestReceivedTemplate, 
+        ILogger<SetEmailVerifiedOnDisputeInDatabase> logger)
     {
         _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
-        _confirmationEmailTemplate = confirmationEmailTemplate ?? throw new ArgumentNullException(nameof(confirmationEmailTemplate));
+        _disputeSubmittedEmailTemplate = disputeSubmittedEmailTemplate ?? throw new ArgumentNullException(nameof(disputeSubmittedEmailTemplate));
         _emailUpdateSuccessfulTemplate = updateRequestReceivedTemplate ?? throw new ArgumentNullException(nameof(updateRequestReceivedTemplate));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -82,15 +85,15 @@ public partial class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerifi
 
             // since the dispute is re-retrieved in this consumer, the email address may have been blanked out in the meantime
             // if it was dont send another email :)
-            if (!string.IsNullOrEmpty(dispute.EmailAddress)) {
+            if (!string.IsNullOrEmpty(dispute.EmailAddress))
+            {
                 // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
-                EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
+                IEmailTemplate<Dispute> template = message.IsUpdateEmailVerification
+                    ? _emailUpdateSuccessfulTemplate // Send email with email update successful content if this event is a result of email update process
+                    : _disputeSubmittedEmailTemplate;
 
-                // Send email with email update successful content if this event is a result of email update process
-                if (message.IsUpdateEmailVerification)
-                {
-                    emailMessage = _emailUpdateSuccessfulTemplate.Create(dispute);
-                }
+                EmailMessage emailMessage = template.Create(dispute);
+                
                 await context.PublishWithLog(_logger, new SendDisputantEmail
                 {
                     Message = emailMessage,

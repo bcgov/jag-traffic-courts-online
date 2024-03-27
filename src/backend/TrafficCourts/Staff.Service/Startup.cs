@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
@@ -67,9 +66,6 @@ public static class Startup
 
         //builder.Services.AddTransient<IDisputeLockService, DisputeLockService>(); can use this one for in memory
         builder.Services.AddTransient<IDisputeLockService, RedisDisputeLockService>();
-
-        // staff service should not be creating emails, should send messages for workflow
-        builder.Services.AddEmailTemplates();
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();

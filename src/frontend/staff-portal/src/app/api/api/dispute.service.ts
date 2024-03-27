@@ -21,7 +21,7 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { Dispute } from '../model/dispute.model';
 // @ts-ignore
-import { DisputeListItem } from '../model/disputeListItem.model';
+import { DisputeStatus } from '../model/disputeStatus.model';
 // @ts-ignore
 import { DisputeUpdateRequest } from '../model/disputeUpdateRequest.model';
 // @ts-ignore
@@ -29,7 +29,13 @@ import { DisputeWithUpdates } from '../model/disputeWithUpdates.model';
 // @ts-ignore
 import { ExcludeStatus } from '../model/excludeStatus.model';
 // @ts-ignore
+import { GetDisputeCountResponse } from '../model/getDisputeCountResponse.model';
+// @ts-ignore
+import { PagedDisputeListItemCollection } from '../model/pagedDisputeListItemCollection.model';
+// @ts-ignore
 import { ProblemDetails } from '../model/problemDetails.model';
+// @ts-ignore
+import { SortDirection } from '../model/sortDirection.model';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -710,20 +716,20 @@ export class DisputeService {
     }
 
     /**
-     * Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.
-     * @param excludeStatus 
+     * Returns the count of disputes with the given status.
+     * @param status 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<DisputeListItem>>;
-    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<DisputeListItem>>>;
-    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<DisputeListItem>>>;
-    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputesCountGet(status?: DisputeStatus, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<GetDisputeCountResponse>;
+    public apiDisputeDisputesCountGet(status?: DisputeStatus, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<GetDisputeCountResponse>>;
+    public apiDisputeDisputesCountGet(status?: DisputeStatus, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<GetDisputeCountResponse>>;
+    public apiDisputeDisputesCountGet(status?: DisputeStatus, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (excludeStatus !== undefined && excludeStatus !== null) {
+        if (status !== undefined && status !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>excludeStatus, 'excludeStatus');
+            <any>status, 'status');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -766,7 +772,140 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Array<DisputeListItem>>(`${this.configuration.basePath}/api/dispute/disputes`,
+        return this.httpClient.get<GetDisputeCountResponse>(`${this.configuration.basePath}/api/dispute/disputes/count`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Returns all Disputes from the Oracle Data API with given parameters.
+     * @param excludeStatus The status to exclude
+     * @param ticket The optional ticket number to search on. The value will be searched using contains.
+     * @param surname The optional surname to search on. The value will be searched using contains.
+     * @param status The optional status to find.
+     * @param from The optional from date to search. The submitted date will be filtered where greater or equal to this value.
+     * @param thru The optional thru date to search. The submitted date will be filtered where less than or equal to this value.
+     * @param courtHouse The optional court house location to search. The value will be searched using contains.
+     * @param sortBy The optional sort by contains the attribute name to sort. The data is sorted on the attribute.
+     * @param direction The optional sort direction contains the asc or desc. The data is sorted by given direction.
+     * @param defaultPageSize The default page size contains the default count of records.
+     * @param pageNumber The optional page number gives the records from given page
+     * @param pageSize The optional page size sets the record count
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<PagedDisputeListItemCollection>;
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<PagedDisputeListItemCollection>>;
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<PagedDisputeListItemCollection>>;
+    public apiDisputeDisputesGet(excludeStatus?: Array<ExcludeStatus>, ticket?: string, surname?: string, status?: Array<DisputeStatus>, from?: string, thru?: string, courtHouse?: string, sortBy?: Array<string>, direction?: Array<SortDirection>, defaultPageSize?: number, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (excludeStatus) {
+            excludeStatus.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'excludeStatus');
+            })
+        }
+        if (ticket !== undefined && ticket !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>ticket, 'ticket');
+        }
+        if (surname !== undefined && surname !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>surname, 'surname');
+        }
+        if (status) {
+            status.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'status');
+            })
+        }
+        if (from !== undefined && from !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>from, 'from');
+        }
+        if (thru !== undefined && thru !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>thru, 'thru');
+        }
+        if (courtHouse !== undefined && courtHouse !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>courtHouse, 'courtHouse');
+        }
+        if (sortBy) {
+            sortBy.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'sortBy');
+            })
+        }
+        if (direction) {
+            direction.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'direction');
+            })
+        }
+        if (defaultPageSize !== undefined && defaultPageSize !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>defaultPageSize, 'DefaultPageSize');
+        }
+        if (pageNumber !== undefined && pageNumber !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>pageNumber, 'pageNumber');
+        }
+        if (pageSize !== undefined && pageSize !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>pageSize, 'pageSize');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (Bearer) required
+        localVarCredential = this.configuration.lookupCredential('Bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json',
+                'text/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        return this.httpClient.get<PagedDisputeListItemCollection>(`${this.configuration.basePath}/api/dispute/disputes`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

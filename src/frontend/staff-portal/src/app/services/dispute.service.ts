@@ -1,17 +1,20 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2, DisputeListItem } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute as DisputeBase, DisputeWithUpdates as DisputeWithUpdatesBase, DisputeUpdateRequest as DisputantUpdateRequestBase, DisputeUpdateRequestStatus2, DisputeListItem, PagedDisputeListItemCollection, DisputeStatus, GetDisputeCountResponse, SortDirection, ExcludeStatus } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
+import { TableFilter } from '@shared/models/table-filter-options.model';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
   disputes: Dispute[];
   disputantUpdateRequests$: Observable<DisputantUpdateRequest[]>;
   disputantUpdateRequests: DisputantUpdateRequest[];
-  getDisputes(): Observable<Dispute[]>;
+  getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
+    filters?: TableFilter): Observable<PagedDisputeListItemCollection>;
+  getDisputeStatusCount(status?: DisputeStatus): Observable<GetDisputeCountResponse>;
 }
 
 @Injectable({
@@ -86,17 +89,44 @@ export class DisputeService implements IDisputeService {
   }
 
   /**
-     * Get the disputes from RSI excluding CANCELLED
+     * Get the dispute status count from RSI
+     *
+     * @param status
+     */
+  public getDisputeStatusCount(status?: DisputeStatus): Observable<GetDisputeCountResponse> {
+    return this.disputeApiService.apiDisputeDisputesCountGet(status)
+      .pipe(
+        map((response: GetDisputeCountResponse) => {
+          this.logger.info('DisputeService::getDisputeStatusCount', response);
+          return response;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::getDisputeStatusCount error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  /**
+     * Get the disputes from RSI
      *
      * @param none
      */
-  public getDisputes(): Observable<Dispute[]> {
-    return this.disputeApiService.apiDisputeDisputesGet()
+  public getDisputes(sortBy: Array<string>, sortDirection: Array<SortDirection>, pageNumber: number, 
+    filters?: TableFilter): Observable<PagedDisputeListItemCollection> {
+    return this.disputeApiService.apiDisputeDisputesGet(filters.status ? undefined : [ExcludeStatus.Cancelled, 
+      ExcludeStatus.Processing, ExcludeStatus.Rejected, ExcludeStatus.Concluded], filters.ticketNumber, filters.disputantSurname, 
+      filters.status ? [filters.status] : [DisputeStatus.New, DisputeStatus.Validated], filters.dateSubmittedFrom, 
+      filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 10)
       .pipe(
-        map((response: Dispute[]) => {
+        map((response: PagedDisputeListItemCollection) => {
           this.logger.info('DisputeService::getDisputes', response);
-          this._disputes.next(response);
-          response.forEach(dispute => {
+          this._disputes.next(response.items);
+          response.items.forEach(dispute => {
             dispute = this.joinDisputantGivenNames(dispute);
             dispute = this.joinContactGivenNames(dispute);
             dispute = this.joinLawyerNames(dispute);
