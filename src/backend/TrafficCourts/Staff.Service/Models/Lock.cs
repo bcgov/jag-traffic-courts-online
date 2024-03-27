@@ -40,7 +40,7 @@ public class Lock
     /// <summary>
     /// The time in UTC when the lock was created.
     /// </summary>
-    public DateTimeOffset CreatedAtUtc { get; }
+    public DateTimeOffset CreatedAtUtc { get; set; }
 
     [System.Text.Json.Serialization.JsonIgnore]
     public bool IsExpired => ExpiryTimeUtc < _timeProvider.GetUtcNow();
