@@ -27,7 +27,7 @@ global:
     openshift:
       ## @param global.compatibility.openshift.adaptSecurityContext Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC: remove runAsUser, runAsGroup and fsGroup and let the platform use their allowed default IDs. Possible values: auto (apply if the detected running cluster is Openshift), force (perform the adaptation always), disabled (do not perform adaptation)
       ##
-      adaptSecurityContext: auto
+      adaptSecurityContext: disabled
 ## @section Common parameters
 ##
 
@@ -101,7 +101,7 @@ diagnosticMode:
 image:
   registry: image-registry.openshift-image-registry.svc:5000
   repository: 0198bb-tools/keycloak
-  tag: 22.0.5-debian-11-r7
+  tag: 23.0.7-debian-12-r4
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -295,7 +295,7 @@ statefulsetAnnotations: {}
 ## @param podSecurityContext.fsGroup Set Keycloak pod's Security Context fsGroup
 ##
 podSecurityContext:
-  enabled: true
+  enabled: false
   fsGroupChangePolicy: Always
   sysctls: []
   supplementalGroups: []
@@ -314,7 +314,7 @@ podSecurityContext:
 ## @param containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
 ##
 containerSecurityContext:
-  enabled: true
+  enabled: false
   seLinuxOptions: null
   runAsUser: 1001
   runAsGroup: 0
@@ -331,7 +331,7 @@ containerSecurityContext:
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
 ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
 ##
-resourcesPreset: "none"
+resourcesPreset: "small"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
 ## Example:
 ## resources:
@@ -1041,7 +1041,7 @@ keycloakConfigCli:
   image:
     registry: docker.io
     repository: bitnami/keycloak-config-cli
-    tag: 5.8.0-debian-11-r65
+    tag: 5.11.1-debian-12-r0
     digest: ""
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -1107,7 +1107,7 @@ keycloakConfigCli:
   ## @param keycloakConfigCli.containerSecurityContext.seccompProfile.type Set keycloak-config-cli Security Context seccomp profile
   ##
   containerSecurityContext:
-    enabled: true
+    enabled: false
     seLinuxOptions: null
     runAsUser: 1001
     runAsGroup: 0
@@ -1128,7 +1128,7 @@ keycloakConfigCli:
   ## @param keycloakConfigCli.podSecurityContext.fsGroup Set keycloak-config-cli pod's Security Context fsGroup
   ##
   podSecurityContext:
-    enabled: true
+    enabled: false
     fsGroupChangePolicy: Always
     sysctls: []
     supplementalGroups: []

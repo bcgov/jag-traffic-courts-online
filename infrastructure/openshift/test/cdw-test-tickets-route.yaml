@@ -1,0 +1,24 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: cdw-test-tickets
+  namespace: 0198bb-test
+  labels:
+    app.kubernetes.io/instance: traffic-court-online
+    app.kubernetes.io/name: citizen-web
+    app.kubernetes.io/version: 1.16.0
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: 38.122.71.170 167.99.179.235 15.223.4.33
+    haproxy.router.openshift.io/disable_cookies: "true"
+spec:
+  host: cdw-test-tickets-0198bb-test.apps.silver.devops.gov.bc.ca
+  to:
+    kind: Service
+    name: traffic-court-online-citizen-web
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

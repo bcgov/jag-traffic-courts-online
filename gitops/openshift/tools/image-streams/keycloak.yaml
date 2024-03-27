@@ -1,0 +1,38 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: keycloak
+  namespace: 0198bb-tools
+  labels:
+    usage: runtime-image
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: '23.0.7-debian-12-r4'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/keycloak:23.0.7-debian-12-r4'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: '22.0.5-debian-11-r7'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/keycloak:22.0.5-debian-11-r7'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source        
+    - name: '22.0.4-debian-11-r2'
+      from:
+        kind: DockerImage
+        name: 'docker.io/bitnami/keycloak:22.0.4-debian-11-r2'
+        imagePullSecret: 'pipeline-docker-hub-pull'
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
