@@ -1,5 +1,5 @@
 <div fxFlex fxLayout="row wrap">
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.dateSubmittedFrom || tableFilterConfigs.dateSubmittedTo">
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.dateSubmittedFrom || tableFilterConfigs.dateSubmittedTo">
     <div fxFlex="30">
       <mat-label class="vcenter"><span class="BC-Gov-15px-blue-text"><b>Date Submitted:</b></span></mat-label>
     </div>
@@ -18,7 +18,7 @@
       </mat-form-field>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.decisionDateFrom || tableFilterConfigs.decisionDateTo">
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.decisionDateFrom || tableFilterConfigs.decisionDateTo">
     <div fxFlex="30">
       <mat-label class="vcenter"><span class="BC-Gov-15px-blue-text"><b>Decision Date:</b></span></mat-label>
     </div>
@@ -37,7 +37,7 @@
       </mat-form-field>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.ticketNumber">
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.ticketNumber">
     <div fxFlex="30">
       <label class="vcenter" for="ticketNumber"><span class="BC-Gov-15px-blue-text"><b>Ticket Number:</b></span></label>
     </div>
@@ -53,7 +53,8 @@
       <button mat-button (click)="resetSearchFilters()" class="reset-filters">Reset Filters</button>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.disputantSurname">
+  <ng-content select="[pagination]"></ng-content>
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.disputantSurname">
     <div fxFlex="30">
       <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
     </div>
@@ -64,7 +65,7 @@
       </mat-form-field>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.occamDisputantName">
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.occamDisputantName">
     <div fxFlex="30">
       <label class="vcenter" for="surname"><span class="BC-Gov-15px-blue-text"><b>Surname:</b></span></label>
     </div>
@@ -75,7 +76,7 @@
       </mat-form-field>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.status">
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.status">
     <div fxFlex="30">
       <label class="vcenter" for="status" (click)="statusCtl.open()"><span
           class="BC-Gov-15px-blue-text"><b>Status:</b></span></label>
@@ -92,7 +93,7 @@
       </div>
     </div>
   </div>
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.team">
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.team">
     <div fxFlex="30">
       <label class="vcenter" for="team" (click)="teamCtl.open()"><span
           class="BC-Gov-15px-blue-text"><b>Team:</b></span></label>
@@ -110,7 +111,8 @@
     </div>
   </div>
   <ng-content select="[recordCount]"></ng-content>
-  <div fxFlex fxFlex.gt-md="40" *ngIf="tableFilterConfigs.courthouseLocation">
+  <ng-content select="[paginationInfo]"></ng-content>
+  <div fxFlex fxFlex.gt-md="30" *ngIf="tableFilterConfigs.courthouseLocation">
     <div fxFlex="30">
       <label class="vcenter" for="courthouseLocation"><span class="BC-Gov-15px-blue-text"><b>Courthouse
             Location:</b></span></label>
