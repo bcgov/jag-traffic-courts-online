@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jaeger-aio.fullname" . }}-collector
+  labels:
+    app: jaeger
+    {{- include "jaeger-aio.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: collector-otlp-grpc
+    port: 4317
+    protocol: TCP
+    targetPort: 4317
+  - name: collector-otlp-http
+    port: 4318
+    protocol: TCP
+    targetPort: 4318
+  - name: collector-grpc
+    port: 14250
+    protocol: TCP
+    targetPort: 14250
+  - name: collector-http
+    port: 14268
+    protocol: TCP
+    targetPort: 14268
+  selector:
+    {{- include "jaeger-aio.selectorLabels" . | nindent 4 }}
+  type: ClusterIP

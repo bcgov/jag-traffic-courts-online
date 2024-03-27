@@ -1,0 +1,9 @@
+fullnameOverride: clamav
+
+clamav:
+  image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/clamav
+  tag: 1.0.5
+  replicaCount: 1
+
+pdb:
+  create: false
