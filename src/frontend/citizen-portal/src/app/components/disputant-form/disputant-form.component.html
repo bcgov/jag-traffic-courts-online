@@ -204,7 +204,7 @@
             }}</mat-label>
           <input *ngIf="isCA || isUSA" matInput formControlName="home_phone_number" mask="(000) 000-0000"
             [showMaskTyped]="true" />
-          <input *ngIf="!isCA && !isUSA" matInput formControlName="home_phone_number" mask="00000000000000000000" />
+          <input *ngIf="!isCA && !isUSA" matInput formControlName="home_phone_number" mask="99999999999999999999" />
           <mat-error *ngIf="form.controls.home_phone_number?.hasError('phone')">Must be a valid phone number
           </mat-error>
         </mat-form-field>
