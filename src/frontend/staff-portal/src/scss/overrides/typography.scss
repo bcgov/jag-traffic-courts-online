@@ -7,10 +7,16 @@
     background-color: none !important;
     filter: none !important;
   }
+
   .text-success.text-success {
     color: #333333 !important;
   }
+
   .pagebreak {
     page-break-before: always;
+  }
+
+  .mat-form-field-infix {
+    border-top-color: transparent !important;
   }
 }
