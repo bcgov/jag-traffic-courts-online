@@ -106,6 +106,13 @@ table td {
   font-size: 15px;
 }
 
+@media print { // temp fix for printing
+  .mat-form-field-infix {
+    border-top: none !important;
+    margin-top: .84375em !important;
+  }
+}
+
 .vcenter {
   min-height: 100%; /* Fallback for browsers do NOT support vh unit */
   display: flex;
