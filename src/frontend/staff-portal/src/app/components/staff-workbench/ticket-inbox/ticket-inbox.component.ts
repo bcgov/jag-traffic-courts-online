@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatSort, Sort } from '@angular/material/sort';
+import { Sort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeRequestCourtAppearanceYn, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, PagedDisputeListItemCollection, SortDirection } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
-import { DateUtil } from '@shared/utils/date-util';
 import { TableFilter, TableFilterKeys } from '@shared/models/table-filter-options.model';
 import { TableFilterService } from 'app/services/table-filter.service';
 
@@ -54,6 +53,7 @@ export class TicketInboxComponent implements OnInit {
     private disputeService: DisputeService,
     private logger: LoggerService,
     private authService: AuthService,
+    private tableFilterService: TableFilterService,
   ) {
     this.disputeService.refreshDisputes.subscribe(x => { 
       this.getAllDisputes(); 
@@ -69,6 +69,9 @@ export class TicketInboxComponent implements OnInit {
     })
 
     // when authentication token available, get data
+    let dataFilter: TableFilter = this.tableFilterService.tableFilters[this.tabIndex];
+    dataFilter.status = dataFilter.status ?? "";
+    this.filters = dataFilter;
     this.getAllDisputes();
     this.countNewTickets();
   }
