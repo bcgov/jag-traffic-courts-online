@@ -608,7 +608,7 @@
                       <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000" (change)="onFieldChange()"
                         *ngIf="form.get('addressCountryId').value === canada.ctryId || form.get('addressCountryId').value === usa.ctryId"
                         [showMaskTyped]="true" />
-                      <input matInput formControlName="homePhoneNumber" mask="00000000000000000000" (change)="onFieldChange()"
+                      <input matInput formControlName="homePhoneNumber" mask="99999999999999999999" (change)="onFieldChange()"
                         *ngIf="form.get('addressCountryId').value !== canada.ctryId && form.get('addressCountryId').value !== usa.ctryId" />                      
                       <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('phone')">{{ "error.phone_number" | translate }}
                       </mat-error>
