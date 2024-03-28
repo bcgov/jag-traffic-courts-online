@@ -86,6 +86,11 @@
 
       Please click <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket">here</a> for more options.</p>
   </div>
+  <div *ngIf="options.messageKey === 'error500'">
+    <span class="flex-grow-1"></span>
+    <p>Please refresh the page and try again.</p>
+    <p>If the problem persists, please contact support at <a href="mailto:Courts.TCO@gov.bc.ca" target="blank">Courts.TCO@gov.bc.ca</a></p>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <span class="flex-grow-1"></span>

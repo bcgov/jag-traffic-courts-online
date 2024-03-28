@@ -402,12 +402,17 @@ export class ViolationTicketService {
         this.openErrorScenarioEightDialog();
       }
       else { // fall back option
-        var errorMessages = "";
-        if (err.error?.errors) {
-          err.error.errors.forEach(error => { errorMessages += ". \n" + error });
+        if (err.status === 500) {
+            this.openErrorScenario500Dialog();
         }
-        this.logger.error("ViolationTicketService:onError validation error has occurred", errorMessages);
-        this.openErrorScenarioOneDialog();
+        else {
+            var errorMessages = "";
+            if (err.error?.errors) {
+              err.error.errors.forEach(error => { errorMessages += ". \n" + error });
+            }
+            this.logger.error("ViolationTicketService:onError validation error has occurred", errorMessages);
+            this.openErrorScenarioOneDialog();
+        }
       }
     }
     this.goToFind();
@@ -428,6 +433,10 @@ export class ViolationTicketService {
       cancelHide: true,
     };
     return this.dialog.open(ImageTicketNotFoundDialogComponent, { data })
+  }
+
+  private openErrorScenario500Dialog() {
+    return this.openImageTicketNotFoundDialog("Internal Server Error", "error500");
   }
 
   private openErrorScenarioOneDialog() {
