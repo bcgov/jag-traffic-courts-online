@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Text;
 using TrafficCourts.Citizen.Service.Features.CurrentUserInfo;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Disputes;
@@ -562,40 +563,63 @@ public class DisputesController : ControllerBase
 
     private bool CompareNames(SubmitNoticeOfDispute message, UserInfo? user)
     {
-#if DEBUG 
+#if DEBUG
 #warning Contact Name Comparisons with BC Services Cards have been disabled 
-       return true;
+        return true;
 #endif
-        bool result = true;
+
+        string Combine(string? name1, string? name2, string? name3)
+        {
+            StringBuilder buffer = new StringBuilder();
+            if (!string.IsNullOrEmpty(name1))
+            {
+                buffer.Append(name1.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(name2))
+            {
+                if (buffer.Length > 0)
+                {
+                    buffer.Append(' ');
+                }
+                buffer.Append(name2.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(name3))
+            {
+                if (buffer.Length > 0)
+                {
+                    buffer.Append(' ');
+                }
+                buffer.Append(name3.Trim());
+            }
+            return buffer.ToString();
+        }
+
+        bool DoesContain(string? a, string? b)
+        {
+            if (!string.IsNullOrEmpty(a) && !string.IsNullOrEmpty(b))
+            {
+                return a.Contains(b, StringComparison.OrdinalIgnoreCase);
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         // if contact type is individual then match with disputant name otherwise match with contact names
         if (message.ContactTypeCd == DisputeContactTypeCd.INDIVIDUAL)
         {
-            var givenNames = message.DisputantGivenName1
-                + (message.DisputantGivenName2 != null ? (" " + message.DisputantGivenName2) : "")
-                + (message.DisputantGivenName3 != null ? (" " + message.DisputantGivenName3) : "");
-            if (!message.DisputantSurname.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
-                || !(message.DisputantGivenName1.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
-            {
-                result = false;
-            }
+            var givenNames = Combine(message.DisputantGivenName1, message.DisputantGivenName2, message.DisputantGivenName3);            
+            return DoesContain(user?.GivenNames, givenNames) && DoesContain(user?.Surname, message.DisputantSurname);
         }
         else if (message.ContactTypeCd == DisputeContactTypeCd.LAWYER || message.ContactTypeCd == DisputeContactTypeCd.OTHER)
         {
-            var givenNames = message.ContactGiven1Nm
-                + (message.ContactGiven2Nm != null ? (" " + message.ContactGiven2Nm) : "")
-                + (message.ContactGiven3Nm != null ? (" " + message.ContactGiven3Nm) : "");
-            if (!message.ContactSurnameNm.Equals(user?.Surname, StringComparison.OrdinalIgnoreCase)
-                || !(message.ContactGiven1Nm.Equals(user?.GivenName, StringComparison.OrdinalIgnoreCase) || givenNames.Equals(user?.GivenNames, StringComparison.OrdinalIgnoreCase)))
-            {
-                result = false;
-            }
-        }
-        else
-        {
-            result = false;
+            var givenNames = Combine(message.ContactGiven1Nm, message.ContactGiven2Nm, message.ContactGiven3Nm);
+            return DoesContain(user?.GivenNames, givenNames) && DoesContain(user?.Surname, message.ContactSurnameNm);            
         }
 
-        return result;
+        return false;
     }
 }
