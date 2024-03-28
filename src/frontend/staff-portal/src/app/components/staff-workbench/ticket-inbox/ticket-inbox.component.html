@@ -25,8 +25,6 @@
   </ng-container>
 </app-table-filters>
 
-
-
 <div class="table-responsive">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 
@@ -75,7 +73,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="disputantGivenNames">
+    <ng-container matColumnDef="disputantGivenName1">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Given Name(s)
       </th>

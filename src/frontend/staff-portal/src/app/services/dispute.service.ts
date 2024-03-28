@@ -121,7 +121,7 @@ export class DisputeService implements IDisputeService {
     return this.disputeApiService.apiDisputeDisputesGet(filters.status ? undefined : [ExcludeStatus.Cancelled, 
       ExcludeStatus.Processing, ExcludeStatus.Rejected, ExcludeStatus.Concluded], filters.ticketNumber, filters.disputantSurname, 
       filters.status ? [filters.status] : [DisputeStatus.New, DisputeStatus.Validated], filters.dateSubmittedFrom, 
-      filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 10)
+      filters.dateSubmittedTo, undefined, sortBy, sortDirection, undefined, pageNumber, 25)
       .pipe(
         map((response: PagedDisputeListItemCollection) => {
           this.logger.info('DisputeService::getDisputes', response);
