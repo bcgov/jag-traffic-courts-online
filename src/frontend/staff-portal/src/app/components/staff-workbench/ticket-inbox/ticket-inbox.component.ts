@@ -120,6 +120,7 @@ export class TicketInboxComponent implements OnInit {
   // called on keyup in filter field
   onApplyFilter(dataFilters: TableFilter) {
     this.filters = dataFilters;
+    this.currentPage = 1;
     this.getAllDisputes();
   }
 
@@ -130,6 +131,7 @@ export class TicketInboxComponent implements OnInit {
   sortData(sort: Sort){
     this.sortBy = [sort.active];
     this.sortDirection = [sort.direction ? sort.direction as SortDirection : SortDirection.Desc];
+    this.currentPage = 1;
     this.getAllDisputes();
   }
 
