@@ -11,11 +11,9 @@ public class DisputeUpdateRequestReceivedTemplate : EmailTemplate<Dispute>, IDis
         {
             From = Sender,
             To = data.EmailAddress,
-            Subject = "TBD (ie. Dispute update request(s) received)",
+            Subject = $"Update Dispute for {data.TicketNumber} submitted.",
             TextContent = $@"
-TBD (ie. Your request to update dispute information was received)
-
-If you have questions about the status of your Violation Ticket, contact the {ViolationTicketCentreContact}."
+Thank you for updating your dispute for ticket {data.TicketNumber}. You will receive further communication to the email or mailing address provided. Do not reply to this email. If you have any questions, please email Courts.TCO@gov.bc.ca."
         };
 
         return email;
