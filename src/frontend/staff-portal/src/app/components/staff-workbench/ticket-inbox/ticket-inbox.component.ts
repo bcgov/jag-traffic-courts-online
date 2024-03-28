@@ -30,7 +30,7 @@ export class TicketInboxComponent implements OnInit {
     'submittedTs',
     'ticketNumber',
     'disputantSurname',
-    'disputantGivenNames',
+    'disputantGivenName1',
     'status',
     'requestCourtAppearanceYn',
     'disputantDetectedOcrIssues',
