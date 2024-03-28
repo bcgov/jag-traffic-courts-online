@@ -11,11 +11,8 @@ public class DisputantEmailUpdateSuccessfulTemplate : EmailTemplate<Dispute>, ID
         {
             From = Sender,
             To = data.EmailAddress,
-            Subject = "Email verification successful",
-            TextContent = $@"
-TBD (ie. Your email address has been updated successfully)
-
-If you have questions about the status of your Violation Ticket, contact the {ViolationTicketCentreContact}."
+            Subject = $"Update Dispute for {data.TicketNumber} processed",
+            TextContent = $@"This is to advise you that your request to update ticket {data.TicketNumber} has now been processed. Further communication may be sent to the email or mailing address provided. Do not reply to this email. If you have any questions please refer to the website at tickets.gov.bc.ca or email Courts.TCO@gov.bc.ca."
         };
 
         return email;

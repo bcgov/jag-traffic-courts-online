@@ -11,11 +11,10 @@ public class DisputeUpdateRequestRejectedTemplate : EmailTemplate<Dispute>, IDis
         {
             From = Sender,
             To = data.EmailAddress,
-            Subject = $"TBD (ie. Disputant contact information changes rejected)",
-            TextContent = $@"
-TBD (ie. Your requested contact changes have been rejected.)
+            Subject = $"Update Dispute for {data.TicketNumber} rejected.",
+            TextContent = $@"This is to advise you that your online dispute update for ticket {data.TicketNumber} has been rejected. Do not reply to this email. 
 
-If you have questions about the status of your Violation Ticket, contact the {ViolationTicketCentreContact}."
+If you have any questions, please email Courts.TCO@gov.bc.ca."
         };
 
         return email;

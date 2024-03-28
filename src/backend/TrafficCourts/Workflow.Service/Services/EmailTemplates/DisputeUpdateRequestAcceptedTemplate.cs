@@ -11,11 +11,8 @@ public class DisputeUpdateRequestAcceptedTemplate : EmailTemplate<Dispute>, IDis
         {
             From = Sender,
             To = data.EmailAddress,
-            Subject = $"TBD (ie. Disputant contact information changes approved)",
-            TextContent = $@"
-TBD (ie. Your requested contact changes have been approved.)
-
-If you have questions about the status of your Violation Ticket, contact the {ViolationTicketCentreContact}."
+            Subject = $"Update Dispute for {data.TicketNumber} processed.",
+            TextContent = $@"This is to advise you that your request to update ticket {data.TicketNumber} has now been processed. Further communication may be sent to the email or mailing address provided. Do not reply to this email. If you have any questions please refer to the website at tickets.gov.bc.ca or email Courts.TCO@gov.bc.ca."
         };
 
         return email;
