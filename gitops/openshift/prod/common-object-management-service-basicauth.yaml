@@ -1,0 +1,11 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: common-object-management-service-basicauth
+  namespace: 0198bb-prod
+  labels:
+    app: common-object-management-service
+stringData:
+  password: at-least-32-random-alphanumerics
+  username: at-least-32-random-alphanumerics
+type: kubernetes.io/basic-auth

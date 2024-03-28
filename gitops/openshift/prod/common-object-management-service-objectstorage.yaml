@@ -1,0 +1,11 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: common-object-management-service-objectstorage
+  namespace: 0198bb-prod
+stringData:
+  bucket: bucket-name
+  endpoint: https://host/
+  password: password
+  username: username
+type: Opaque
