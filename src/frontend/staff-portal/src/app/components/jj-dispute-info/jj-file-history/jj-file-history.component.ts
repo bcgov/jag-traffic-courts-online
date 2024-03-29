@@ -17,7 +17,8 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
   @Input() remarks: JJDisputeRemark[];
   @ViewChild(MatSort) sort = new MatSort();
 
-  dataSource = new MatTableDataSource<HistoryRecord>();
+  dataSource: MatTableDataSource<HistoryRecord> = new MatTableDataSource<HistoryRecord>();
+  data: HistoryRecord[] = [];
 
   fileHistory: FileHistory[] = [];
   emailHistory: EmailHistory[] = [];
@@ -36,7 +37,6 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
     private historyRecordService: HistoryRecordService
   ) {
     this.subscriptions.push(this.historyRecordService.refreshFileHistory.subscribe(ticketNumber => {
-      this.dataSource = new MatTableDataSource<HistoryRecord>();
       this.getAllHistories();
     }));
   }
@@ -52,6 +52,7 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
   }
 
   getAllHistories() {
+    this.data = [];
     let observables: Observable<any>[] = [];
     observables.push(this.historyRecordService.getFileHistories(this.ticketNumber))
     observables.push(this.historyRecordService.getEmailHistories(this.ticketNumber))
@@ -70,7 +71,7 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
   setDisplayHistory() {
     // file history events
     this.fileHistory.forEach(fileHistoryRecord => {
-      this.dataSource.data.push({
+      this.data.push({
         createdTs: fileHistoryRecord.createdTs,
         recordType: "Event",
         actionByApplicationUser: fileHistoryRecord.actionByApplicationUser,
@@ -80,7 +81,7 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
 
     // add email history
     this.emailHistory.forEach(emailHistoryRecord => {
-      this.dataSource.data.push({
+      this.data.push({
         createdTs: emailHistoryRecord.createdTs,
         recordType: emailHistoryRecord.successfullySent == EmailHistorySuccessfullySent.Y ? "Email Sent" : "Email Not Sent",
         actionByApplicationUser: emailHistoryRecord.toEmailAddress,
@@ -90,13 +91,15 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
 
     // add remarks
     this.remarks.forEach(remark => {
-      this.dataSource.data.push({
+      this.data.push({
         createdTs: remark.createdTs,
         recordType: "Remark",
         actionByApplicationUser: remark.userFullName,
         eventDescription: remark.note
       })
     })
+
+    this.dataSource.data = this.data;
 
     // sort by timestamp
     this.dataSource.data = this.dataSource.data.sort((a, b) => {
