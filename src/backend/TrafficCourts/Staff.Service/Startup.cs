@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -25,9 +26,17 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+            options
+                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+                .AddFusionCacheInstrumentation()
                 .AddRedisInstrumentation();
-        }, meters: ["MassTransit", "ComsClient", "OracleDataApi"]);
+        },
+        options => 
+        {
+            options
+                .AddFusionCacheInstrumentation()
+                .AddMeter("MassTransit", "ComsClient", "OracleDataApi");
+        });
 
         builder.AddRedis();
 

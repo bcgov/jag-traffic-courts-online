@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using MediatR;
+using System.Collections.Immutable;
 
 namespace TrafficCourts.Domain.Events;
 
@@ -7,7 +8,7 @@ namespace TrafficCourts.Domain.Events;
 /// </summary>
 /// <param name="ticketNumbers"></param>
 /// <param name="username"></param>
-public class DisputesAssignedEvent(IEnumerable<string> ticketNumbers, string? username) : BaseEvent
+public class DisputesAssignedEvent(IEnumerable<string> ticketNumbers, string? username) : INotification
 {
     /// <summary>
     /// The ticket numbers assigned.

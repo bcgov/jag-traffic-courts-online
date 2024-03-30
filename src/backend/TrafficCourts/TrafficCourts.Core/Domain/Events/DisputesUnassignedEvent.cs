@@ -1,8 +1,8 @@
-﻿namespace TrafficCourts.Domain.Events;
+﻿using MediatR;
+
+namespace TrafficCourts.Domain.Events;
 
 /// <summary>
 /// Raised when the disputes are unassigned.
 /// </summary>
-public class DisputesUnassignedEvent : BaseEvent
-{
-}
+public record DisputesUnassignedEvent : INotification;
