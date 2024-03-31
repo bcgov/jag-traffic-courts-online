@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "1.90.4"
+    tag: "1.90.5"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "1.90.4"
+    tag: "1.90.5"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
@@ -30,7 +30,7 @@ citizen-api:
 
 citizen-web:
   image:
-    tag: "1.90.4"
+    tag: "1.90.5"
     pullPolicy: Always
   route:
     # https://dev.justice.gov.bc.ca
@@ -39,7 +39,7 @@ citizen-web:
     {
         "production": false,
         "environment": "Dev",
-        "version": "1.90.4",
+        "version": "1.90.5",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -193,7 +193,7 @@ citizen-web:
 
 oracle-data-api:
   image:
-    tag: "1.90.4"
+    tag: "1.90.5"
     pullPolicy: Always
   env:
     "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
@@ -206,7 +206,7 @@ oracle-data-api:
 
 staff-api:
   image:
-    tag: "1.90.4"
+    tag: "1.90.5"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -220,7 +220,7 @@ staff-api:
 
 staff-web:
   image:
-    tag: "1.90.4"
+    tag: "1.90.5"
     pullPolicy: Always
   route:
     # https://dev.jag.gov.bc.ca
@@ -239,7 +239,7 @@ staff-web:
     {
         "production": false,
         "environment": "Dev",
-        "version": "1.90.4",
+        "version": "1.90.5",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
@@ -249,7 +249,7 @@ staff-web:
 
 workflow-service:
   image:
-    tag: "1.90.4"
+    tag: "1.90.5"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
