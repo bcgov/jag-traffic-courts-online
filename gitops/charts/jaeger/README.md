@@ -1,3 +1,4 @@
+helm upgrade --install jaeger jaeger-aio --values values-dev.yaml
 
 helm upgrade --install jaeger jaeger-aio --values values-test.yaml
 
