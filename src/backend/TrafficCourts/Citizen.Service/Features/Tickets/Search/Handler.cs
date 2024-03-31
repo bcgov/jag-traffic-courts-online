@@ -23,8 +23,6 @@ public class Handler : IRequestHandler<Request, Response>
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        using Activity? activity = Diagnostics.Source.StartActivity("ticket search");
-
         using IDisposable? requestScope = _logger.BeginScope(new Dictionary<string, object> { { "Request", request } });
         _logger.LogTrace("Begin handler");
 
@@ -33,7 +31,6 @@ public class Handler : IRequestHandler<Request, Response>
             _logger.LogDebug("Searching for ticket");
             ViolationTicket? ticket = await _service.SearchAsync(request.TicketNumber, new TimeOnly(request.Hour, request.Minute), cancellationToken);
 
-            activity?.SetStatus(ActivityStatusCode.Ok); // Ok means no Error, not that the search returned a value
             if (ticket is null)
             {
                 _logger.LogDebug("Not Found");
@@ -56,13 +53,11 @@ public class Handler : IRequestHandler<Request, Response>
         }
         catch (InvalidTicketVersionException exception)
         {
-            activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
             _logger.LogError(exception, "Could not return a ticket with invalid violation date and version (VT1)");
             return new Response(exception);
         }
         catch (Exception exception)
         {
-            activity?.SetStatus(ActivityStatusCode.Error);
             _logger.LogError(exception, "Error searching for ticket");
             return new Response(exception);
         }
