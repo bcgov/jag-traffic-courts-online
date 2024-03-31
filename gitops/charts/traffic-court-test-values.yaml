@@ -6,6 +6,9 @@ global:
     path: test/
 
 arc-dispute-api:
+  replicaCount: 3
+  pdb:
+    create: true
   image:
     tag: "1.90.4"
     pullPolicy: Always
@@ -13,6 +16,9 @@ arc-dispute-api:
     "Swagger__Enabled": "true"
 
 citizen-api:
+  replicaCount: 3
+  pdb:
+    create: true
   image:
     tag: "1.90.4"
     pullPolicy: Always
@@ -28,6 +34,9 @@ citizen-api:
     "OAuth__USERINFOENDPOINT": "https://idtest.gov.bc.ca/oauth2/userinfo"
 
 citizen-web:
+  replicaCount: 3
+  pdb:
+    create: true
   image:
     tag: "1.90.4"
     pullPolicy: Always
@@ -191,6 +200,9 @@ citizen-web:
     }
 
 oracle-data-api:
+  replicaCount: 3
+  pdb:
+    create: true
   image:
     tag: "1.90.4"
     pullPolicy: Always
@@ -204,6 +216,9 @@ oracle-data-api:
     "ORDS_API_AUTH_ENABLED": "true"
 
 staff-api:
+  replicaCount: 3
+  pdb:
+    create: true
   image:
     tag: "1.90.4"
     pullPolicy: Always
@@ -218,6 +233,9 @@ staff-api:
     "COMS__BASEURL": "http://common-object-management-service:3000"
 
 staff-web:
+  replicaCount: 3
+  pdb:
+    create: true
   image:
     tag: "1.90.4"
     pullPolicy: Always
@@ -247,6 +265,9 @@ staff-web:
       }
 
 workflow-service:
+  replicaCount: 3
+  pdb:
+    create: true
   image:
     tag: "1.90.4"
     pullPolicy: Always
