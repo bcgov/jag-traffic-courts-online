@@ -16,6 +16,7 @@ using TrafficCourts.Messaging;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -60,6 +61,7 @@ public static class Startup
         // add ticket search caching for RSI
         builder.Services
             .AddFusionCache(Caching.Cache.Citizen.TicketSearch.Name)
+            .WithCacheKeyPrefix(Caching.Cache.Citizen.Prefix)
             .WithCommonDistributedCacheOptions(redisConnectionString);
 
         // configure application 

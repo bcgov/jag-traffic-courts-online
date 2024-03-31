@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,6 +17,7 @@ public static class KeycloakExtension
 
         services.ConfigureValidatableSetting<KeycloakOptions>(configuration.GetRequiredSection(KeycloakOptions.Section));
 
+        // named http client used KeycloakTokenRefreshService
         services.AddHttpClient("Keycloak")
             .AddStandardResilienceHandler();
 
@@ -25,7 +25,8 @@ public static class KeycloakExtension
         services.AddTransient<ITokenCache, TokenCache>();
         services.AddHostedService(serviceProvider => CreateTokenRefreshService(serviceProvider, section));
         services.AddHttpClient<IKeycloakAdminApiClient, KeycloakAdminApiClient>(ConfigureAdminClient)
-            .AddHttpMessageHandler((serviceProvider) => CreateOidcDelegatingHandler(serviceProvider, section));
+            .AddHttpMessageHandler((serviceProvider) => CreateOidcDelegatingHandler(serviceProvider, section))
+            .AddStandardResilienceHandler();
 
         return services;
     }

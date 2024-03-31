@@ -10,6 +10,8 @@ using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
+using TrafficCourts.Caching;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace TrafficCourts.Staff.Service;
 
@@ -38,7 +40,19 @@ public static class Startup
                 .AddMeter("MassTransit", "ComsClient", "OracleDataApi");
         });
 
-        builder.AddRedis();
+        var redisConnectionString = builder.AddRedis();
+
+        // keycloak cache
+        builder.Services
+            .AddFusionCache(Caching.Cache.Keycloak.Name)
+            .WithCacheKeyPrefix(Caching.Cache.Prefix)
+            .WithCommonDistributedCacheOptions(redisConnectionString);
+
+        // oracle data api cache
+        builder.Services
+            .AddFusionCache(Caching.Cache.OracleData.Name)
+            .WithCacheKeyPrefix(Caching.Cache.Prefix)
+            .WithCommonDistributedCacheOptions(redisConnectionString);
 
         builder.Services.AddTransient<UserIdentityProviderHandler>();
         builder.Services.AddHttpContextAccessor();
