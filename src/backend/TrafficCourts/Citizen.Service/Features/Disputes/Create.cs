@@ -96,7 +96,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             {
                 ArgumentNullException.ThrowIfNull(request);
 
-                using Activity? activity = Diagnostics.Source.StartActivity("Create Dispute");
+                using Activity? activity = Diagnostics.Source.StartActivity("create dispute");
 
                 NoticeOfDispute dispute = request.Dispute;
                 string? ticketId = dispute.TicketId;

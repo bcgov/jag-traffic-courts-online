@@ -15,7 +15,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 
         public Stream? GetDataStream()
         {
-            using var activity = Diagnostics.Source.StartActivity("Get Embedded Data");
+            using var activity = Diagnostics.Source.StartActivity("get embedded data");
 
             var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
             var fileInfo = embeddedProvider.GetFileInfo(mockDataPath);

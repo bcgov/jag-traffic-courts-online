@@ -27,7 +27,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 
         public Stream? GetDataStream()
         {
-            using var activity = Diagnostics.Source.StartActivity("Get Mock File Data");
+            using var activity = Diagnostics.Source.StartActivity("get mock file data");
             string mockDataPath = _configuration.MockDataPath;
             return File.OpenRead(mockDataPath);
         }

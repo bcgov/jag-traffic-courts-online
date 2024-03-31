@@ -36,7 +36,7 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
     {
         ArgumentNullException.ThrowIfNull(stream);
 
-        using Activity? activity = Diagnostics.Source.StartActivity("Analyze Document");
+        using Activity? activity = Diagnostics.Source.StartActivity("analyze document");
         activity?.AddBaggage("ModelId", _modelId);
 
         AzureKeyCredential credential = new(_apiKey);
@@ -98,7 +98,7 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
 
     private static OcrViolationTicket Map(RecognizedFormCollection result)
     {
-        using Activity? activity = Diagnostics.Source.StartActivity("Map Analyze Result");
+        using Activity? activity = Diagnostics.Source.StartActivity("map analyze result");
 
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();

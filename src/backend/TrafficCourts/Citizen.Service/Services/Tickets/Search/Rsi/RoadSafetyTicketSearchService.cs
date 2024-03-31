@@ -55,7 +55,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 
         private async Task<List<Invoice>> SearchRsiAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
-            using var activity = Diagnostics.Source.StartActivity("RSI Ticket Search");
+            using var activity = Diagnostics.Source.StartActivity("rsi ticket search");
 
             RawTicketSearchResponse? response = null;
 

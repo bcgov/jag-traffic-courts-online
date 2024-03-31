@@ -23,7 +23,7 @@ public class Handler : IRequestHandler<Request, Response>
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        using Activity? activity = Diagnostics.Source.StartActivity("Ticket Search");
+        using Activity? activity = Diagnostics.Source.StartActivity("ticket search");
 
         using IDisposable? requestScope = _logger.BeginScope(new Dictionary<string, object> { { "Request", request } });
         _logger.LogTrace("Begin handler");
