@@ -176,10 +176,9 @@ public static class Extensions
             builder
                 .SetResourceBuilder(resourceBuilder)
                 .AddRedisInstrumentation()
-                .AddHttpClientInstrumentation()
+                .AddHttpClientInstrumentation(options => options.FilterHttpRequestMessage = SplunkHttpClientFilter)
                 .AddAspNetCoreInstrumentation(options => options.Filter = AspNetCoreRequestFilter)
                 .AddSource(activitySource.Name)
-                .AddProcessor(new SplunkEventCollectorFilteringProcessor())
                 .AddOtlpExporter(options =>
                 {
                     options.Endpoint = endpointUri;
@@ -191,6 +190,11 @@ public static class Extensions
                 configure(builder);
             }
         });
+    }
+
+    private static bool SplunkHttpClientFilter(HttpRequestMessage request)
+    {
+        return request.Method != HttpMethod.Post || (request.RequestUri?.Host) != "hec.monitoring.ag.gov.bc.ca";
     }
 
     private static bool AspNetCoreRequestFilter(Microsoft.AspNetCore.Http.HttpContext httpContext)
