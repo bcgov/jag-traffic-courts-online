@@ -7,7 +7,7 @@ public static class Cache
         /// <summary>
         /// The prefix of items cached by the citizen api
         /// </summary>
-        public const string Prefix = "citizen";
+        public const string Prefix = "citizen:";
 
         /// <summary>
         /// Ticket search named cache

@@ -5,7 +5,7 @@ public class Cache
     /// <summary>
     /// The prefix of items cached by the staff api
     /// </summary>
-    public const string Prefix = "staff";
+    public const string Prefix = "staff:";
 
     /// <summary>
     /// Keycloak named cache

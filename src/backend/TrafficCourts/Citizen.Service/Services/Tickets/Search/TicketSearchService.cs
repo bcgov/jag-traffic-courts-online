@@ -30,7 +30,7 @@ public class TicketSearchService : ITicketSearchService
     {
         ArgumentNullException.ThrowIfNull(ticketNumber);
 
-        using var activity = Diagnostics.Source.StartActivity("Ticket Search");
+        using var activity = Diagnostics.Source.StartActivity("ticket search");
 
         var time = $"{issuedTime.Hour:d2}:{issuedTime.Minute:d2}";
 

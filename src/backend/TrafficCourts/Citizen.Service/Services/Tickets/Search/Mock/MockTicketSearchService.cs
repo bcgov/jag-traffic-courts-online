@@ -30,7 +30,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 
         public Task<IList<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
-            using var activity = Diagnostics.Source.StartActivity("Mock Ticket Search");
+            using var activity = Diagnostics.Source.StartActivity("mock ticket search");
 
             IList<Invoice> invoices = Array.Empty<Invoice>();
 

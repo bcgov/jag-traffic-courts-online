@@ -45,17 +45,26 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 
             async Task<List<Invoice>> FusionCacheSearchAsync(FusionCacheFactoryExecutionContext<List<Invoice>> context, CancellationToken cancellationToken)
             {
-                List<Invoice> result = await SearchRsiAsync(ticketNumber, issuedTime, cancellationToken).ConfigureAwait(false);
-                context.Options.Duration = GetCacheDuration(result);
-                return result;
+                var (invoices, isError) = await SearchRsiAsync(ticketNumber, issuedTime, cancellationToken).ConfigureAwait(false);
+                
+                if (isError)
+                {
+                    context.Options.Duration = TimeSpan.Zero; // if the service is having an issue dont cache
+                }
+                else
+                {
+                    context.Options.Duration = GetCacheDuration(invoices);
+                }
+
+                return invoices;
             }
         }
 
         private string CacheKey(string ticketNumber, TimeOnly issuedTime) => Caching.Cache.Citizen.TicketSearch.Key(ticketNumber, issuedTime);
 
-        private async Task<List<Invoice>> SearchRsiAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
+        private async Task<(List<Invoice> invoices, bool isError)> SearchRsiAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
-            using var activity = Diagnostics.Source.StartActivity("RSI Ticket Search");
+            using var activity = Diagnostics.Source.StartActivity("rsi ticket search");
 
             RawTicketSearchResponse? response = null;
 
@@ -93,17 +102,17 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
                 }
 
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
-                return [];
+                return ([], true);
             }
 
             if (response is not null && response.Items is not null)
             {
                 IEnumerable<Invoice> invoices = await GetInvoicesAsync(response.Items, cancellationToken).ConfigureAwait(false);
-                return invoices.ToList();
+                return (invoices.ToList(), false);
             }
 
             _logger.LogInformation("No invoice numbers returned, returning empty result");
-            return [];
+            return ([], false);
 
         }
 

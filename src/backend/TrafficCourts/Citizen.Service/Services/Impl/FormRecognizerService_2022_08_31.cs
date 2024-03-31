@@ -34,7 +34,7 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
     {
         ArgumentNullException.ThrowIfNull(stream);
 
-        using Activity? activity = Diagnostics.Source.StartActivity("Analyze Document");
+        using Activity? activity = Diagnostics.Source.StartActivity("analyze document");
         activity?.AddBaggage("ModelId", _modelId);
         DocumentAnalysisClientOptions clientOptions = new(DocumentAnalysisClientOptions.ServiceVersion.V2022_08_31);
 
@@ -122,7 +122,7 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
     /// </remarks>
     private static OcrViolationTicket Map(AnalyzeResult result)
     {
-        using Activity? activity = Diagnostics.Source.StartActivity("Map Analyze Result");
+        using Activity? activity = Diagnostics.Source.StartActivity("map analyze result");
 
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();

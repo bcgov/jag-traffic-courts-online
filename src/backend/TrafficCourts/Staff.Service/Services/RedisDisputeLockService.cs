@@ -69,6 +69,8 @@ public partial class RedisDisputeLockService : IDisputeLockService
 
     public Lock? GetLock(string ticketNumber, string username)
     {
+        using Activity? activity = Diagnostics.Source.StartActivity("get lock");
+
         Lock? ticketLock = GetLock(ticketNumber);
 
         if (ticketLock is null)
@@ -97,6 +99,8 @@ public partial class RedisDisputeLockService : IDisputeLockService
 
     public DateTimeOffset? RefreshLock(string lockId, string username)
     {
+        using Activity? activity = Diagnostics.Source.StartActivity("refresh lock");
+
         Lock? @lock = GetLockById(lockId);
 
         if (@lock is null) return null;
@@ -138,9 +142,10 @@ public partial class RedisDisputeLockService : IDisputeLockService
         return null;
     }
 
-
     public void ReleaseLock(string lockId)
     {
+        using Activity? activity = Diagnostics.Source.StartActivity("release lock");
+
         Lock? lockToRelease = GetLockById(lockId);
         if (lockToRelease is null) return;
 
@@ -153,7 +158,6 @@ public partial class RedisDisputeLockService : IDisputeLockService
         string lockValueKey = LockValueRedisKey(lockToRelease.LockId);
         Database.KeyDelete(lockValueKey);
     }
-
 
     private Lock CreateLock(string ticketNumber, string username) => new()
     {
