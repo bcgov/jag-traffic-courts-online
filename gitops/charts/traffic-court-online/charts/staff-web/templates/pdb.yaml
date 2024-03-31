@@ -1,4 +1,4 @@
-{{- if and (.Values.pdb.create) (gt .Values.replicaCount 1) }}
+{{- if and .Values.pdb.create (gt (.Values.replicaCount | toString | atoi) 1) }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
