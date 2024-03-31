@@ -14,5 +14,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "staff-web.labels" . | nindent 6 }}
+      {{- include "staff-web.selectorLabels" . | nindent 6 }}
 {{- end -}}

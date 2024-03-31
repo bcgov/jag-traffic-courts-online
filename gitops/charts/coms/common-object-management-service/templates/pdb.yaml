@@ -14,5 +14,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "common-object-management-service.labels" . | nindent 6 }}
+      {{- include "common-object-management-service.selectorLabels" . | nindent 6 }}
 {{- end -}}

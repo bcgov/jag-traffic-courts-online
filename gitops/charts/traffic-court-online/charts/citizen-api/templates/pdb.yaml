@@ -14,5 +14,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "citizen-api.labels" . | nindent 6 }}
+      {{- include "citizen-api.selectorLabels" . | nindent 6 }}
 {{- end -}}
