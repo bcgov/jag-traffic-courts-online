@@ -80,7 +80,7 @@ export class ContactInfoComponent implements OnInit {
       addressProvinceSeqNo: [null],
       addressCountryId: [null, [Validators.required]],
       rejectedReason: [null, Validators.maxLength(256)], // Optional
-      postalCode: [null, [Validators.required]],
+      postalCode: [null],
       driversLicenceNumber: [null], // Optional
       driversLicenceProvinceProvId: [null],
       driversLicenceIssuedCountryId: [null],
@@ -110,7 +110,7 @@ export class ContactInfoComponent implements OnInit {
       if (ctryId == this.canada.ctryId) {
         this.form.get('postalCode').addValidators([Validators.minLength(6)]);        
         this.form.get('addressProvinceCountryId').setValue(ctryId);
-        this.form.get("addressProvinceSeqNo").setValue(this.bc.provSeqNo)
+        this.form.get("addressProvinceSeqNo").setValue(this.bc.provSeqNo);
         this.form.get("addressProvinceProvId").setValue(this.bc.provId);
         this.form.get("addressProvince").setValue(this.bc.provAbbreviationCd);
       }

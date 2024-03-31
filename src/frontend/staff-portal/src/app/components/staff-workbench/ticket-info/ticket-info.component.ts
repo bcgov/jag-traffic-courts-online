@@ -111,7 +111,7 @@ export class TicketInfoComponent implements OnInit {
       addressProvinceProvId: [null],
       addressProvinceCountryId: [null],
       addressProvinceSeqNo: [null],
-      postalCode: [null, [Validators.required]], // space needs to be added back to the middle for display
+      postalCode: [null], // space needs to be added back to the middle for display
       driversLicenceNumber: [null, [Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.maxLength(30)]],
       driversLicenceProvinceProvId: [null],
@@ -218,7 +218,7 @@ export class TicketInfoComponent implements OnInit {
       if (ctryId == this.canada.ctryId) {
         this.form.get('postalCode').addValidators([Validators.minLength(6)]);        
         this.form.get('addressProvinceCountryId').setValue(ctryId);
-        this.form.get("addressProvinceSeqNo").setValue(this.bc.provSeqNo)
+        this.form.get("addressProvinceSeqNo").setValue(this.bc.provSeqNo);
         this.form.get("addressProvinceProvId").setValue(this.bc.provId);
         this.form.get("addressProvince").setValue(this.bc.provAbbreviationCd);
       }
