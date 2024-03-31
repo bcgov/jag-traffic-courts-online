@@ -30,7 +30,7 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
     "eventDescription",
   ]
 
-  subscriptions: Subscription[];
+  subscriptions: Subscription[] = [];
 
   constructor(
     private logger: LoggerService,
