@@ -1,6 +1,7 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using OpenTelemetry.Metrics;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
@@ -28,7 +29,13 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
-        }, meters: ["MassTransit", "ComsClient", "OracleDataApi"]);
+        },
+        options =>
+        {
+            options
+                .AddFusionCacheInstrumentation()
+                .AddMeter("MassTransit", "ComsClient", "OracleDataApi");
+        });
 
         builder.Services.AddControllers();
 

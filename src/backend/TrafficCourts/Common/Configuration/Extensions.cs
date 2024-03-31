@@ -25,7 +25,7 @@ public static class Extensions
     /// </summary>
     /// <param name="builder">The builder for the application.</param>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is null.</exception>
-    public static void AddRedis(this WebApplicationBuilder builder)
+    public static string AddRedis(this WebApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -45,6 +45,8 @@ public static class Extensions
             {
                 options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
             });
+
+            return connectionString;
         }
         else
         {
@@ -125,23 +127,23 @@ public static class Extensions
     /// <param name="builder">The builder for the application</param>
     /// <param name="activitySource">The application <see cref="ActivitySource"/> to monitor.</param>
     /// <param name="logger">The program logger to log </param>
-    /// <param name="configure">Callback action to configure the OpenTelemetry.Trace.TracerProviderBuilder.</param>
+    /// <param name="tracing">Callback action to configure the OpenTelemetry.Trace.TracerProviderBuilder.</param>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="builder"/>, <paramref name="activitySource"/> or <param name="logger"/> is null.
     /// </exception>
     public static void AddOpenTelemetry(
         this WebApplicationBuilder builder, 
         ActivitySource activitySource, 
-        ILogger logger, 
-        Action<TracerProviderBuilder>? configure = null,
-        params string[] meters)
+        ILogger logger,
+        Action<TracerProviderBuilder>? tracing = null,
+        Action<MeterProviderBuilder>? metrics = null)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(activitySource);
         ArgumentNullException.ThrowIfNull(logger);
 
-        AddTracing(builder, activitySource, logger, configure);
-        AddMetrics(builder.Services, meters);
+        AddTracing(builder, activitySource, logger, tracing);
+        AddMetrics(builder.Services, metrics);
     }
 
     private static void AddTracing(WebApplicationBuilder builder, ActivitySource activitySource, ILogger logger, Action<TracerProviderBuilder>? configure = null)
@@ -193,7 +195,7 @@ public static class Extensions
        return !(httpContext.Request.Method == "GET" && httpContext.Request.Path == "/metrics");
     }
 
-    private static void AddMetrics(IServiceCollection services, params string[] meters)
+    private static void AddMetrics(IServiceCollection services, Action<MeterProviderBuilder>? configureMetrics = null)
     {
         services.AddOpenTelemetry().WithMetrics(builder => 
         {
@@ -201,14 +203,10 @@ public static class Extensions
                 .AddProcessInstrumentation()
                 .AddRuntimeInstrumentation()
                 .AddAspNetCoreInstrumentation()
-                .AddHttpClientInstrumentation();
+                .AddHttpClientInstrumentation()
+                .AddPrometheusExporter();
 
-            if (meters.Length != 0)
-            {
-                builder.AddMeter(meters);
-            }
-
-            builder.AddPrometheusExporter();
+            configureMetrics?.Invoke(builder);
         });
     }
 }

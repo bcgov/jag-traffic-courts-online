@@ -10,10 +10,13 @@ using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Services.Impl;
 using TrafficCourts.Common;
+using TrafficCourts.Caching;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
 using FluentValidation;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -38,37 +41,35 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
-        }, meters: new string[] { "MassTransit", "ComsClient", "CitizenService" });
+            options
+                .AddFusionCacheInstrumentation()
+                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
+        },
+            options =>
+            {
+                options
+                    .AddFusionCacheInstrumentation()
+                    .AddMeter("MassTransit", "ComsClient", "CitizenService");
+            }
+        );
 
         builder.Services.AddHttpContextAccessor();
 
         // Redis
-        builder.AddRedis();
+        var redisConnectionString = builder.AddRedis();
+
+        // add ticket search caching for RSI
+        builder.Services
+            .AddFusionCache(Caching.Cache.Citizen.TicketSearch.Name)
+            .WithCacheKeyPrefix(Caching.Cache.Citizen.Prefix)
+            .WithCommonDistributedCacheOptions(redisConnectionString);
 
         // configure application 
         builder.Services.UseConfigurationValidation();
         builder.UseTicketSearch(logger);
 
         // Form Recognizer
-        builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
-        string apiVersion = FormRecognizerOptions.Get(builder.Configuration).ApiVersion ?? String.Empty;
-        if (FormRecognizerOptions.v2_1 == apiVersion)
-        {
-            // API version 2.1, an older, but working version for deployment to OpenShift 
-            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2_1>();
-        }
-        else if (FormRecognizerOptions.v2022_08_31 == apiVersion)
-        {
-            // API version 2022_08_31 is the latest version available for deployment to OpenShift
-            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2022_08_31>();
-        }
-        else
-        {
-            throw new ArgumentException($"Unknown Form Recognizer ApiVersion '{apiVersion}'. Must be one of '2.1' or '2022-08-31'.");
-        }
-
-        builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
+        UseFormRecognizer(builder);
 
         builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
@@ -105,7 +106,7 @@ public static class Startup
         builder.Services.AddEmailVerificationTokens();
 
         builder.Services.AddRecyclableMemoryStreams();
-        
+
         builder.Services.AddAutoMapper(assembly); // Registering and Initializing AutoMapper
 
         // Finds and registers all the fluent validators in the assembly
@@ -117,6 +118,28 @@ public static class Startup
             .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
         AddSwagger(builder, assembly, logger);
+    }
+
+    private static void UseFormRecognizer(WebApplicationBuilder builder)
+    {
+        builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
+        string apiVersion = FormRecognizerOptions.Get(builder.Configuration).ApiVersion ?? String.Empty;
+        if (FormRecognizerOptions.v2_1 == apiVersion)
+        {
+            // API version 2.1, an older, but working version for deployment to OpenShift 
+            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2_1>();
+        }
+        else if (FormRecognizerOptions.v2022_08_31 == apiVersion)
+        {
+            // API version 2022_08_31 is the latest version available for deployment to OpenShift
+            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2022_08_31>();
+        }
+        else
+        {
+            throw new ArgumentException($"Unknown Form Recognizer ApiVersion '{apiVersion}'. Must be one of '2.1' or '2022-08-31'.");
+        }
+
+        builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
     }
 
     /// <summary>

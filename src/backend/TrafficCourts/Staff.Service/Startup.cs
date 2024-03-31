@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -9,6 +10,8 @@ using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
+using TrafficCourts.Caching;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace TrafficCourts.Staff.Service;
 
@@ -25,11 +28,31 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+            options
+                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+                .AddFusionCacheInstrumentation()
                 .AddRedisInstrumentation();
-        }, meters: ["MassTransit", "ComsClient", "OracleDataApi"]);
+        },
+        options => 
+        {
+            options
+                .AddFusionCacheInstrumentation()
+                .AddMeter("MassTransit", "ComsClient", "OracleDataApi");
+        });
 
-        builder.AddRedis();
+        var redisConnectionString = builder.AddRedis();
+
+        // keycloak cache
+        builder.Services
+            .AddFusionCache(Caching.Cache.Keycloak.Name)
+            .WithCacheKeyPrefix(Caching.Cache.Prefix)
+            .WithCommonDistributedCacheOptions(redisConnectionString);
+
+        // oracle data api cache
+        builder.Services
+            .AddFusionCache(Caching.Cache.OracleData.Name)
+            .WithCacheKeyPrefix(Caching.Cache.Prefix)
+            .WithCommonDistributedCacheOptions(redisConnectionString);
 
         builder.Services.AddTransient<UserIdentityProviderHandler>();
         builder.Services.AddHttpContextAccessor();

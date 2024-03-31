@@ -8,24 +8,32 @@ using TrafficCourts.Coms.Client;
 using TrafficCourts.Domain.Models;
 using TrafficCourts.Interfaces;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Staff.Service.Caching;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.Models;
 using TrafficCourts.Staff.Service.Models.Disputes;
-using X.PagedList;
 using OcrViolationTicket = TrafficCourts.Domain.Models.OcrViolationTicket;
+using ZiggyCreatures.Caching.Fusion;
+using MediatR;
+using TrafficCourts.Domain.Events;
 
 namespace TrafficCourts.Staff.Service.Services;
 
 /// <summary>
 /// Summary description for Class1
 /// </summary>
-public class DisputeService : IDisputeService
+public class DisputeService : IDisputeService, 
+    INotificationHandler<DisputeCreatedEvent>,
+    INotificationHandler<DisputeChangedEvent>,
+    INotificationHandler<DisputesAssignedEvent>,
+    INotificationHandler<DisputesUnassignedEvent>
 {
-    private readonly ILogger<DisputeService> _logger;
-    private readonly IOracleDataApiService _oracleDataApi;
-    private readonly IBus _bus;
-    private readonly IObjectManagementService _objectManagementService;
     private readonly IAgencyLookupService _agencyLookupService;
+    private readonly IBus _bus;
+    private readonly IFusionCache _cache;
+    private readonly ILogger<DisputeService> _logger;
+    private readonly IObjectManagementService _objectManagementService;
+    private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
     private readonly IStaffDocumentService _documentService;
 
@@ -36,12 +44,17 @@ public class DisputeService : IDisputeService
         IAgencyLookupService agencyLookupService,
         IProvinceLookupService provinceLookupService,
         IStaffDocumentService documentService,
+        IFusionCacheProvider cacheProvider,
         ILogger<DisputeService> logger)
     {
+        ArgumentNullException.ThrowIfNull(cacheProvider);
+
+        _cache = cacheProvider.GetCache(Cache.OracleData.Name);
+
+        _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
-        _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
         _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -49,15 +62,22 @@ public class DisputeService : IDisputeService
 
     public async Task<ICollection<DisputeListItem>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
     {
-        ICollection<DisputeListItem> disputes = await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
+        List<DisputeListItem> disputes = await GetCachedDisputesAsync(cancellationToken);
+
+        if (excludeStatus is not null)
+        {
+            GetAllDisputesParameters filter = new() { ExcludeStatus = [excludeStatus.Value] };
+            disputes = disputes.Filter(filter).ToList();
+        }
+
         return disputes;
     }
 
     public async Task<GetDisputeCountResponse> GetDisputeCountAsync(DisputeStatus status, CancellationToken cancellationToken)
     {
-        GetAllDisputesParameters filter = new() { Status = new List<DisputeStatus> { status } };
+        GetAllDisputesParameters filter = new() { Status = [status] };
 
-        var disputes = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
+        var disputes = await GetCachedDisputesAsync(cancellationToken);
 
         var count = disputes.Filter(filter).Count();
 
@@ -66,8 +86,7 @@ public class DisputeService : IDisputeService
 
     public async Task<PagedDisputeListItemCollection> GetAllDisputesAsync(GetAllDisputesParameters? parameters, CancellationToken cancellationToken)
     {
-        // apply fitler, sorting and paging
-        var disputes = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
+        var disputes = await GetCachedDisputesAsync(cancellationToken);
 
         // apply default sort if none supplied
         parameters ??= new GetAllDisputesParameters();
@@ -75,6 +94,7 @@ public class DisputeService : IDisputeService
 
         var agencies = await _agencyLookupService.GetListAsync();
 
+        // apply fitler, sorting and paging
         var paged = disputes
             .Filter(parameters, agencies)
             .Sort(parameters)
@@ -462,7 +482,6 @@ public class DisputeService : IDisputeService
         }
 
         return disputesWithUpdates;
-
     }
 
     /// <summary>
@@ -476,5 +495,57 @@ public class DisputeService : IDisputeService
         return await _oracleDataApi.GetDisputeUpdateRequestsAsync(disputeId, null, cancellationToken);
     }
 
+    public async Task Handle(DisputeCreatedEvent notification, CancellationToken cancellationToken)
+    {
+        await ClearCachedDisputeListItemsAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task Handle(DisputeChangedEvent notification, CancellationToken cancellationToken)
+    {
+        await ClearCachedDisputeListItemsAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task Handle(DisputesAssignedEvent notification, CancellationToken cancellationToken)
+    {
+        await ClearCachedDisputeListItemsAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task Handle(DisputesUnassignedEvent notification, CancellationToken cancellationToken)
+    {
+        await ClearCachedDisputeListItemsAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private string GetUserName(ClaimsPrincipal user) => user.Identity?.Name ?? string.Empty;
+
+    private async Task<List<DisputeListItem>> GetCachedDisputesAsync(CancellationToken cancellationToken)
+    {
+        var key = Cache.OracleData.DisputeListItems();
+
+        var value = await _cache.GetOrSetAsync<List<DisputeListItem>>(
+            key,
+            ct => GetAllDisputesAsListAsync(ct),
+            TimeSpan.FromMinutes(5),
+            cancellationToken);
+
+        return value;
+    }
+
+    private async Task<List<DisputeListItem>> GetAllDisputesAsListAsync(CancellationToken cancellationToken)
+    {
+        ICollection<DisputeListItem> values = await _oracleDataApi.GetAllDisputesAsync(null, null, cancellationToken);
+
+        if (values is List<DisputeListItem> listOfDisputes)
+        {
+            return listOfDisputes;
+        }
+
+        return new List<DisputeListItem>(values);
+    }
+
+    private async Task ClearCachedDisputeListItemsAsync(CancellationToken cancellationToken)
+    {
+        var key = Cache.OracleData.DisputeListItems();
+        await _cache.RemoveAsync(key, token: cancellationToken);
+
+    }
 }

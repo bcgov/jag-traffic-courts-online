@@ -1,20 +1,59 @@
 ﻿using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 {
     public class RoadSafetyTicketSearchService : ITicketInvoiceSearchService
     {
         private readonly IRoadSafetyTicketSearchApi _api;
+        private readonly IFusionCache _cache;
         private readonly ILogger<RoadSafetyTicketSearchService> _logger;
 
-        public RoadSafetyTicketSearchService(IRoadSafetyTicketSearchApi api, ILogger<RoadSafetyTicketSearchService> logger)
+        public RoadSafetyTicketSearchService(
+            IRoadSafetyTicketSearchApi api,
+            IFusionCacheProvider cacheProvider,
+            ILogger<RoadSafetyTicketSearchService> logger)
         {
+            ArgumentNullException.ThrowIfNull(cacheProvider);
+
             _api = api ?? throw new ArgumentNullException(nameof(api));
+            _cache = cacheProvider.GetCache(Caching.Cache.Citizen.TicketSearch.Name);
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-
         public async Task<IList<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
+        {
+            var cacheKey = CacheKey(ticketNumber, issuedTime);
+
+            var invoices = await _cache.GetOrSetAsync<List<Invoice>>(
+                cacheKey,
+                FusionCacheSearchAsync,
+                options: null,
+                cancellationToken);
+
+            return invoices;
+
+            // determine the cache duration based on the result
+            // see: https://github.com/ZiggyCreatures/FusionCache/blob/main/docs/AdaptiveCaching.md
+            TimeSpan GetCacheDuration(IList<Invoice>? result)
+            {
+                // wasn't found, cache for 5 minutes, otherwise 1 day - this helps avoid DDoS
+                return result is null || result.Count == 0
+                    ? TimeSpan.FromMinutes(5)
+                    : TimeSpan.FromDays(1);
+            }
+
+            async Task<List<Invoice>> FusionCacheSearchAsync(FusionCacheFactoryExecutionContext<List<Invoice>> context, CancellationToken cancellationToken)
+            {
+                List<Invoice> result = await SearchRsiAsync(ticketNumber, issuedTime, cancellationToken).ConfigureAwait(false);
+                context.Options.Duration = GetCacheDuration(result);
+                return result;
+            }
+        }
+
+        private string CacheKey(string ticketNumber, TimeOnly issuedTime) => Caching.Cache.Citizen.TicketSearch.Key(ticketNumber, issuedTime);
+
+        private async Task<List<Invoice>> SearchRsiAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
             using var activity = Diagnostics.Source.StartActivity("RSI Ticket Search");
 
@@ -22,10 +61,10 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 
             try
             {
-                var parameters = new GetTicketParams 
-                { 
-                    TicketNumber = ticketNumber, 
-                    Prn = "10006", 
+                var parameters = new GetTicketParams
+                {
+                    TicketNumber = ticketNumber,
+                    Prn = "10006",
                     IssuedTime = $"{issuedTime.Hour:d2}{issuedTime.Minute:d2}"
                 };
 
@@ -54,7 +93,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
                 }
 
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
-                return Array.Empty<Invoice>();
+                return [];
             }
 
             if (response is not null && response.Items is not null)
@@ -64,7 +103,8 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
             }
 
             _logger.LogInformation("No invoice numbers returned, returning empty result");
-            return Array.Empty<Invoice>();
+            return [];
+
         }
 
         private async Task<IEnumerable<Invoice>> GetInvoicesAsync(IEnumerable<Item> items, CancellationToken cancellationToken)

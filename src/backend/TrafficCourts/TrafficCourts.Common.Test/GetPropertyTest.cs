@@ -24,10 +24,10 @@ public class GetPropertyInfoTest
     public class Model
     {
         [Newtonsoft.Json.JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [System.Text.Json.Serialization.JsonPropertyName("age")]
-        public string Age { get; set; }
+        public string Age { get; set; } = string.Empty;
     }
 
 

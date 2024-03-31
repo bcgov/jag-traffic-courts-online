@@ -14,7 +14,7 @@ public class VirusScanApiConfigurationTest
     {
         VirusScanApiConfiguration sut = new()
         {
-            BaseUrl = uri
+            BaseUrl = uri!
         };
 
         var actual = Assert.Throws<SettingsValidationException>(() => sut.Validate());
