@@ -28,6 +28,7 @@ citizen-api:
     "FormRecognizer__Endpoint": "https://acs-forms-recognizer-0198bb-test.apps.silver.devops.gov.bc.ca/"
     "TicketSearch__SearchType": "RoadSafety"
     "MassTransit__Transport": "RabbitMq"
+    "RabbitMq__UseQuorumQueues": "true"
     "COMS__BASEURL": "http://common-object-management-service:3000"
     "JWT__AUTHORITY": "https://idtest.gov.bc.ca/login"  
     "JWT__AUDIENCE": "ca.bc.gov.ag.tco.test"
@@ -230,6 +231,7 @@ staff-api:
     "OAuth__TokenEndpoint": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
     "Swagger__Enabled": "true"
     "MassTransit__Transport": "RabbitMq"
+    "RabbitMq__UseQuorumQueues": "true"
     "COMS__BASEURL": "http://common-object-management-service:3000"
 
 staff-web:
@@ -276,6 +278,7 @@ workflow-service:
     "EmailConfiguration__AllowList": ""
     "EmailConfiguration__EmailVerificationURL": "https://test.tickets.gov.bc.ca/email/verify"
     "MassTransit__Transport": "RabbitMq"
+    "RabbitMq__UseQuorumQueues": "true"
     "COMS__BASEURL": "http://common-object-management-service:3000"
     "VIRUSSCAN__BASEURL": "http://virus-scan:8080"
   saga:
