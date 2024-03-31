@@ -161,7 +161,7 @@ public static class Extensions
 
         string? endpoint = builder.Configuration["OTEL_EXPORTER_OTLP_TRACES_ENDPOINT"];
 
-        if (string.IsNullOrEmpty(endpoint) || Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? endpointUri))
+        if (string.IsNullOrEmpty(endpoint) || !Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? endpointUri))
         {
             logger.Information("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT is not configured, no telemetry traces will be collected.");
             return;

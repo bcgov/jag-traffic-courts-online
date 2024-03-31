@@ -14,5 +14,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "arc-dispute-api.labels" . | nindent 6 }}
+      {{- include "arc-dispute-api.selectorLabels" . | nindent 6 }}
 {{- end -}}

@@ -14,5 +14,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "oracle-data-api.labels" . | nindent 6 }}
+      {{- include "oracle-data-api.selectorLabels" . | nindent 6 }}
 {{- end -}}

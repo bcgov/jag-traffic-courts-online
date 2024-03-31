@@ -14,5 +14,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "staff-api.labels" . | nindent 6 }}
+      {{- include "staff-api.selectorLabels" . | nindent 6 }}
 {{- end -}}
