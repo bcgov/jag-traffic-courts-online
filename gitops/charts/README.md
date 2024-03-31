@@ -182,4 +182,11 @@ Notes:
 
 # Virus Scan
 
-helm upgrade --install virus-scan virus-scan --values virus-scan-prod-values.yaml
+`helm upgrade --install virus-scan virus-scan --values virus-scan-prod-values.yaml`
+
+Scale to Zero: `helm upgrade --install virus-scan virus-scan --values virus-scan-prod-values.yaml --set replicaCount=0 --set pdb.create=false`
+
+
+# ClamAV 
+
+Scale to Zero: `helm upgrade --install clamav clamav-1.0.0.tgz --values prod.yaml --set clamav.replicaCount=0 --set pdb.create=false`

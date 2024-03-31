@@ -908,7 +908,7 @@ keycloakConfigCli:
   ## @param keycloakConfigCli.containerSecurityContext.runAsNonRoot Set keycloak-config-cli container's Security Context runAsNonRoot
   ##
   containerSecurityContext:
-    enabled: true
+    enabled: false
     runAsUser: 1001
     runAsNonRoot: true
   ## keycloak-config-cli pods' Security Context

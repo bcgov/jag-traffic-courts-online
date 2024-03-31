@@ -34,6 +34,8 @@ podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/port: "16686"
 
+replicaCount: 1
+
 ## The storage backend to use
 storage:
   # see https://www.jaegertracing.io/docs/latest/deployment/#memory
