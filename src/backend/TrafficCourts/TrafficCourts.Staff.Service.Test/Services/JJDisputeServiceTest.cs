@@ -37,7 +37,9 @@ public class JJDisputeServiceTest
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
 
         // Assert/Act
+        // TODO: fix this unit test
         //await Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
+        await Task.Yield(); // avoid warning to due above assertion commented out
     }
 
     [Fact]
@@ -58,7 +60,9 @@ public class JJDisputeServiceTest
         _oracleDataApiClient.Setup(_ => _.GetJJDisputeAsync(dispute.TicketNumber, It.IsAny<bool>(), CancellationToken.None)).ReturnsAsync(dispute);
 
         // Assert/Act
+        // TODO: fix this unit test
         //await Assert.ThrowsAsync<ArgumentException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
+        await Task.Yield(); // avoid warning to due above assertion commented out
     }
 
     [Fact]
@@ -82,7 +86,9 @@ public class JJDisputeServiceTest
         _keycloakService.Setup(_ => _.UsersByIdirAsync(dispute.JjAssignedTo, CancellationToken.None)).ReturnsAsync(_userReps.Object);
 
         // Assert/Act
+        // TODO: fix this unit test
         //await Assert.ThrowsAsync<ArgumentNullException>(() => jJDisputeService.GetPartIdAsync(dispute.TicketNumber, CancellationToken.None));
+        await Task.Yield(); // avoid warning to due above assertion commented out
     }
 
     [Fact]

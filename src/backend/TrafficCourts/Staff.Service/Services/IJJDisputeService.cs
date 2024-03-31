@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using TrafficCourts.Domain.Models;
+using TrafficCourts.Exceptions;
 
 namespace TrafficCourts.Staff.Service.Services;
 

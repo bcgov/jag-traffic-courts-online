@@ -25,7 +25,7 @@ public class HashidsExtensionsTest
     {
         // create strict mock cause we do not expect any methods to be called
         var mockIHashids = new Mock<IHashids>(MockBehavior.Strict);
-        var actual = HashidsExtensions.TryDecodeGuid(mockIHashids.Object, value, out Guid result);
+        var actual = HashidsExtensions.TryDecodeGuid(mockIHashids.Object, value!, out Guid result);
         Assert.False(actual);
         Assert.Equal(Guid.Empty, result);
     }

@@ -196,8 +196,11 @@ public partial class RedisDisputeLockService : IDisputeLockService
         }
 
         // problem, why couldn't we get the lock
+        _logger.LogWarning("On AquireLock, could not create the lock and could not get lock for ticket number {TicketNumber}", ticketNumber);
 
-        throw new LockIsInUseException(ticketLock.Username, ticketLock);
+        // this is a problem, hope this never happens, possible upstream bug
+        // this error really should be: unable to create lock and unable to get current lock holder
+        throw new LockIsInUseException(username, ticketLock);
     }
 
     /// <summary>
@@ -275,10 +278,19 @@ public partial class RedisDisputeLockService : IDisputeLockService
             var assembly = typeof(EmbeddedResourceLoader).GetTypeInfo().Assembly;
 
             using (var stream = assembly.GetManifestResourceStream(name))
-            using (var streamReader = new StreamReader(stream))
             {
-                return streamReader.ReadToEnd();
+                if (stream is null)
+                {
+                    // log could not get embedded resource stream for name: name
+                    throw new Exception($"Cannot read embedded resource with name: {name}");
+                }
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    return streamReader.ReadToEnd();
+                }
             }
+
         }
     }
 }
