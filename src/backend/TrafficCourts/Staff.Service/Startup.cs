@@ -42,15 +42,8 @@ public static class Startup
 
         var redisConnectionString = builder.AddRedis();
 
-        // keycloak cache
         builder.Services
-            .AddFusionCache(Caching.Cache.Keycloak.Name)
-            .WithCacheKeyPrefix(Caching.Cache.Prefix)
-            .WithCommonDistributedCacheOptions(redisConnectionString);
-
-        // oracle data api cache
-        builder.Services
-            .AddFusionCache(Caching.Cache.OracleData.Name)
+            .AddFusionCache()
             .WithCacheKeyPrefix(Caching.Cache.Prefix)
             .WithCommonDistributedCacheOptions(redisConnectionString);
 

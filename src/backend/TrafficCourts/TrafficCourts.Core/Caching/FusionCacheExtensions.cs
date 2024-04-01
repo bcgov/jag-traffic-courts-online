@@ -61,21 +61,7 @@ public static class FusionCacheExtensions
         // build our cache entry options
         FusionCacheEntryOptions entryOptions = new()
         {
-            // fail safe
-            IsFailSafeEnabled = true,
-            FailSafeMaxDuration = TimeSpan.FromHours(2),
-            FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
-
-            // facotry
-            FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
-            FactoryHardTimeout = TimeSpan.FromMilliseconds(1500),
-
-            // distributed cache
-            DistributedCacheSoftTimeout = TimeSpan.FromSeconds(1),
-            DistributedCacheHardTimeout = TimeSpan.FromSeconds(2),
-            AllowBackgroundDistributedCacheOperations = true,
-
-            JitterMaxDuration = TimeSpan.FromSeconds(2)
+            AllowBackgroundDistributedCacheOperations = true
         };
 
         configureCacheEntryOptions?.Invoke(entryOptions);

@@ -44,19 +44,16 @@ public class DisputeService : IDisputeService,
         IAgencyLookupService agencyLookupService,
         IProvinceLookupService provinceLookupService,
         IStaffDocumentService documentService,
-        IFusionCacheProvider cacheProvider,
+        IFusionCache cache,
         ILogger<DisputeService> logger)
     {
-        ArgumentNullException.ThrowIfNull(cacheProvider);
-
-        _cache = cacheProvider.GetCache(Cache.OracleData.Name);
-
         _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _objectManagementService = objectManagementService ?? throw new ArgumentNullException(nameof(objectManagementService));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
         _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 

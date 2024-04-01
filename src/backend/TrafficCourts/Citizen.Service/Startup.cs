@@ -58,10 +58,9 @@ public static class Startup
         // Redis
         var redisConnectionString = builder.AddRedis();
 
-        // add ticket search caching for RSI
         builder.Services
-            .AddFusionCache(Caching.Cache.Citizen.TicketSearch.Name)
-            .WithCacheKeyPrefix(Caching.Cache.Citizen.Prefix)
+            .AddFusionCache()
+            .WithCacheKeyPrefix(Caching.Cache.Prefix)
             .WithCommonDistributedCacheOptions(redisConnectionString);
 
         // configure application 
