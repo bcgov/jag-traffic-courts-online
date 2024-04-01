@@ -329,6 +329,12 @@ public class DisputesController : ControllerBase
             // can throw
             result.FileData = await _documentService.FindFilesAsync(properties, cancellationToken);
 
+            // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
+            if (result.FileData is not null) {
+                // If there is a missing fileName, remove it from the list as we can't display such an object in the UI.
+                result.FileData = result.FileData.Where(x => x.FileName is not null).ToList();
+            }
+
             return Ok(result);
         }
         catch (Exception exception)

@@ -65,6 +65,12 @@ public partial class JJDisputeService : IJJDisputeService
             dispute.FileData = dispute.FileData.Where(x => x.DocumentSource != TrafficCourts.Domain.Models.DocumentSource.Citizen || x.DocumentStatus == DisputeUpdateRequestStatus.ACCEPTED.ToString()).ToList();
         }
 
+        // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
+        if (dispute.FileData is not null) {
+            // If there is a missing fileName, remove it from the list as we can't display such an object in the UI.
+            dispute.FileData = dispute.FileData.Where(x => x.FileName is not null).ToList();
+        }
+
         // Populate the statute description of each count of the JJDispute
         foreach (var count in dispute.JjDisputedCounts)
         {
