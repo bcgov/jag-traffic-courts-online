@@ -62,6 +62,8 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
         private async Task<(List<Invoice> invoices, bool isError)> SearchRsiAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
             using var activity = Diagnostics.Source.StartActivity("rsi ticket search");
+            activity?.AddTag("ticket.number", ticketNumber);
+            activity?.AddTag("ticket.time", $"{issuedTime.Hour:D2}:{issuedTime.Minute:D2}");
 
             RawTicketSearchResponse? response = null;
 
@@ -91,13 +93,13 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
                 if (response.Error.Contains("not found", StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogDebug("Ticket not found, Road Safety service returned error message {Error}", response.Error);
-                }
-                else
-                {
-                    // not the error message we were expecting, log out at information level
-                    _logger.LogInformation("Road Safety service returned error message {Error}", response.Error);
+                    activity?.AddTag("rsi.response", "not found");
+                    return ([], false); // this is not an error, normal for tickets searched for to be not found
                 }
 
+                // not the error message we were expecting, log out at information level
+                _logger.LogInformation("Road Safety service returned error message {Error}", response.Error);
+                activity?.AddTag("rsi.response", "error");
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
                 return ([], true);
             }
@@ -105,12 +107,13 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
             if (response is not null && response.Items is not null)
             {
                 IEnumerable<Invoice> invoices = await GetInvoicesAsync(response.Items, cancellationToken).ConfigureAwait(false);
+                activity?.AddTag("rsi.response", "found");
                 return (invoices.ToList(), false);
             }
 
             _logger.LogInformation("No invoice numbers returned, returning empty result");
+            activity?.AddTag("rsi.response", "not found");
             return ([], false);
-
         }
 
         private async Task<IEnumerable<Invoice>> GetInvoicesAsync(IEnumerable<Item> items, CancellationToken cancellationToken)
