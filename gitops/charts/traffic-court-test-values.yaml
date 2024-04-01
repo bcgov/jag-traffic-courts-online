@@ -216,6 +216,7 @@ oracle-data-api:
     "HISTORY_REPOSITORY_SRC": "ords"
     "ORDS_API_AUTH_ENABLED": "true"
     "REDIS_CLUSTER_NODES": "redis-headless:6379"
+    "REDIS_PORT": "6379"
 staff-api:
   replicaCount: 3
   pdb:
