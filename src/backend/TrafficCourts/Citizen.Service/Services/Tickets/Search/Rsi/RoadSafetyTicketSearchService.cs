@@ -11,13 +11,11 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
 
         public RoadSafetyTicketSearchService(
             IRoadSafetyTicketSearchApi api,
-            IFusionCacheProvider cacheProvider,
+            IFusionCache cache,
             ILogger<RoadSafetyTicketSearchService> logger)
         {
-            ArgumentNullException.ThrowIfNull(cacheProvider);
-
             _api = api ?? throw new ArgumentNullException(nameof(api));
-            _cache = cacheProvider.GetCache(Caching.Cache.Citizen.TicketSearch.Name);
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -28,8 +26,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
             var invoices = await _cache.GetOrSetAsync<List<Invoice>>(
                 cacheKey,
                 FusionCacheSearchAsync,
-                options: null,
-                cancellationToken);
+                token: cancellationToken);
 
             return invoices;
 
@@ -60,7 +57,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
             }
         }
 
-        private string CacheKey(string ticketNumber, TimeOnly issuedTime) => Caching.Cache.Citizen.TicketSearch.Key(ticketNumber, issuedTime);
+        private string CacheKey(string ticketNumber, TimeOnly issuedTime) => Caching.Cache.TicketSearch.Key(ticketNumber, issuedTime);
 
         private async Task<(List<Invoice> invoices, bool isError)> SearchRsiAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {

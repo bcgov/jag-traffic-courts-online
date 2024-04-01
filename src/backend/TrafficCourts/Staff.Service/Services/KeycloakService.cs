@@ -15,14 +15,12 @@ public class KeycloakService : IKeycloakService
     public KeycloakService(
         IKeycloakAdminApiClient keycloakAdminApiClient, 
         KeycloakOptions options,
-        IFusionCacheProvider cacheProvider,
+        IFusionCache cache,
         ILogger<KeycloakService> logger)
     {
-        ArgumentNullException.ThrowIfNull(cacheProvider);
-
         _keycloakAdminClient = keycloakAdminApiClient ?? throw new ArgumentNullException(nameof(keycloakAdminApiClient));
         _options = options ?? throw new ArgumentNullException(nameof(options));
-        _cache = cacheProvider.GetCache(Caching.Cache.Keycloak.Name);
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
