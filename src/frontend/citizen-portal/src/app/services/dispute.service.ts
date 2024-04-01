@@ -20,8 +20,6 @@ import { DisputantContactInformation, DisputantContactInformationFormConfigs, Di
 })
 export class DisputeService {
   disputantFormKeys: DisputantContactInformationKeys[] = [
-    "disputant_surname",
-    "disputant_given_names",
     "contact_given_names",
     "contact_surname",
     "contact_type",
