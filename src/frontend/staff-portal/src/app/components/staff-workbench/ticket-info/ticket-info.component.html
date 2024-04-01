@@ -328,7 +328,7 @@
                   </div>
                 </div>
                 <div style="float: right; width: 100%;" class="row">
-                  <button class="large" mat-flat-button type="button" color="primary" (click)="validate()"
+                  <button class="large" mat-flat-button type="submit" color="primary" (click)="onValidateClick()"
                     style="background-color: #2ba242;"
                     [disabled]="form.get('violationTicket').invalid || lastUpdatedDispute.status !== DispStatus.New || form.get('violationTicket').touched || !isStatuteValid(1) || !isStatuteValid(2) || !isStatuteValid(3)">
                     Validate

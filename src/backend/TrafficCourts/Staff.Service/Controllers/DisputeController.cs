@@ -261,7 +261,7 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Reject)]
     public async Task<IActionResult> RejectDisputeAsync(
-        long disputeId, 
+        long disputeId,
         [FromForm] 
         [Required]
         [StringLength(256, ErrorMessage = "Rejected reason cannot exceed 256 characters.")] string rejectedReason, 
@@ -302,6 +302,7 @@ public class DisputeController : StaffControllerBase
     /// Updates the status of a particular Dispute record to VALIDATED.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to validate.</param>
+    /// <param name="dispute">Validated dispute data to update</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
@@ -322,13 +323,13 @@ public class DisputeController : StaffControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Validate)]
-    public async Task<IActionResult> ValidateDisputeAsync(long disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> ValidateDisputeAsync(long disputeId, Dispute? dispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "VALIDATED");
 
         try
         {
-            await _disputeService.ValidateDisputeAsync(disputeId, User, cancellationToken);
+            await _disputeService.ValidateDisputeAsync(disputeId, dispute, User, cancellationToken);
             return Ok();
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
