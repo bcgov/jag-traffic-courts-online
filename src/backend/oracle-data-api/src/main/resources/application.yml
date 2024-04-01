@@ -12,6 +12,9 @@ spring:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PASSWORD:password}
+    cluster:
+      nodes: ${REDIS_CLUSTER_NODES:}
+      max-redirects: ${REDIS_CLUSTER_MAX_REDIRECTS:}
     sentinel:
       master: ${REDIS_SENTINAL_MASTER:}
       nodes: ${REDIS_SENTINAL_NODES:}

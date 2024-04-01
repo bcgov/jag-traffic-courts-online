@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -34,7 +35,17 @@ public class RedisConfig {
 			config.setPassword(redisProperties.getPassword());
 			return new LettuceConnectionFactory(config);
 		}
-
+		// Cluster mode (for test and production)
+		else if (redisProperties.getCluster() != null) {
+			logger.debug("Configuring Redis to run in cluster mode.");
+			RedisClusterConfiguration config = new RedisClusterConfiguration(redisProperties.getCluster().getNodes());
+			config.setPassword(redisProperties.getPassword());
+			
+			if(redisProperties.getCluster().getMaxRedirects() != null)
+				config.setMaxRedirects(redisProperties.getCluster().getMaxRedirects());
+			
+			return new LettuceConnectionFactory(config);
+		}
 		// Standalone mode (for local development)
 		else {
 			logger.debug("Configuring Redis to run in standalone mode.");
