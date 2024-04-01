@@ -203,6 +203,8 @@ oracle-data-api:
     "JJDISPUTE_REPOSITORY_SRC": "ords"
     "HISTORY_REPOSITORY_SRC": "ords"
     "ORDS_API_AUTH_ENABLED": "true"
+    "REDIS_HOST": "redis-master"
+    "REDIS_PORT": "6379"
 
 staff-api:
   image:

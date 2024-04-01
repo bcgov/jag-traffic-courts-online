@@ -66,8 +66,6 @@ oracle-data-api:
     "OTEL_METRICS_EXPORTER": "none"
     "OTEL_SERVICE_NAME": "oracle-data-api"
     "OTEL_TRACES_EXPORTER": "jaeger"
-    "REDIS_HOST": "redis-master"
-    "REDIS_PORT": "6379"
     "UNASSIGN_DISPUTES_CRON": "0 0/5 * * * *"
     "UNASSIGN_DISPUTES_ENABLED": "true"
 
