@@ -215,7 +215,7 @@ oracle-data-api:
     "JJDISPUTE_REPOSITORY_SRC": "ords"
     "HISTORY_REPOSITORY_SRC": "ords"
     "ORDS_API_AUTH_ENABLED": "true"
-    "REDIS_HOST": "redis"
+    "REDIS_CLUSTER_NODES": "redis-0:6379,redis-1:6379,redis-2:6379,redis-3:6379,redis-4:6379,redis-5:6379"
 staff-api:
   replicaCount: 3
   pdb:
