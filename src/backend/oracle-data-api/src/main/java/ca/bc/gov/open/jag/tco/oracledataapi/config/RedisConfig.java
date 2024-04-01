@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.util.CollectionUtils;
 
 @Configuration
 public class RedisConfig {
@@ -36,7 +37,7 @@ public class RedisConfig {
 			return new LettuceConnectionFactory(config);
 		}
 		// Cluster mode (for test and production)
-		else if (redisProperties.getCluster() != null) {
+		else if (redisProperties.getCluster() != null && !CollectionUtils.isEmpty(redisProperties.getCluster().getNodes())) {
 			logger.debug("Configuring Redis to run in cluster mode.");
 			RedisClusterConfiguration config = new RedisClusterConfiguration(redisProperties.getCluster().getNodes());
 			config.setPassword(redisProperties.getPassword());
