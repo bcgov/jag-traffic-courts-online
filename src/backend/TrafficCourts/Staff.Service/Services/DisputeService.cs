@@ -229,17 +229,23 @@ public class DisputeService : IDisputeService,
         return updatedDispute;
     }
 
-    public async Task ValidateDisputeAsync(long disputeId, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task ValidateDisputeAsync(long disputeId, Dispute? dispute, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(user);
 
+        if (dispute != null)
+        {
+            _logger.LogDebug("Saving dispute before validating");
+            _ = await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
+        }
+
         _logger.LogDebug("Dispute status setting to validated");
 
-        Dispute dispute = await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
+        Dispute validatedDispute = await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistoryWithNoticeOfDisputeId(
-            dispute.NoticeOfDisputeGuid,
+            validatedDispute.NoticeOfDisputeGuid,
             FileHistoryAuditLogEntryType.SVAL,  // Handwritten ticket OCR details validated by staff
             GetUserName(user));
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);

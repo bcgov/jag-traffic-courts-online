@@ -17,6 +17,7 @@ using TrafficCourts.Staff.Service.Models.Disputes;
 using X.PagedList;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace TrafficCourts.Staff.Service.Test.Controllers;
 
@@ -203,13 +204,34 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), null, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
         // Act
-        await disputeController.ValidateDisputeAsync(id, CancellationToken.None);
+        await disputeController.ValidateDisputeAsync(id, null, CancellationToken.None);
+
+        // Assert
+        disputeService.VerifyAll();
+    }
+
+    [Fact]
+    public async Task ValidateDisputeAsync_WithValidDispute_ShouldValidateDisputeAndUpdate()
+    {
+        // Arrange
+        Dispute dispute = new();
+        long id = 1;
+        dispute.DisputeId = id;
+        var disputeService = new Mock<IDisputeService>();
+        disputeService
+            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), dispute, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Verifiable();
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+
+        // Act
+        await disputeController.ValidateDisputeAsync(id, dispute, CancellationToken.None);
 
         // Assert
         disputeService.VerifyAll();
