@@ -91,13 +91,11 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
                 if (response.Error.Contains("not found", StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogDebug("Ticket not found, Road Safety service returned error message {Error}", response.Error);
-                }
-                else
-                {
-                    // not the error message we were expecting, log out at information level
-                    _logger.LogInformation("Road Safety service returned error message {Error}", response.Error);
+                    return ([], false); // this is not an error, normal for tickets searched for to be not found
                 }
 
+                // not the error message we were expecting, log out at information level
+                _logger.LogInformation("Road Safety service returned error message {Error}", response.Error);
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
                 return ([], true);
             }
