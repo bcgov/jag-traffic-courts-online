@@ -28,6 +28,7 @@ export class TicketInfoComponent implements OnInit {
 
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
+  public validateClicked = false;
 
   public retrieving: boolean = true;
   public conflict: boolean = false;
@@ -419,7 +420,12 @@ export class TicketInfoComponent implements OnInit {
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
     this.lastUpdatedDispute = putDispute;
 
-    this.putDispute(putDispute);
+    if(this.validateClicked) {
+      this.validate(putDispute);
+    }
+    else {
+      this.putDispute(putDispute);
+    }
   }
 
   public onSubmitNoticeOfDispute(): void {
@@ -599,8 +605,12 @@ export class TicketInfoComponent implements OnInit {
   }
 
   // send to api, on return update status
-  validate(): void {
-    this.disputeService.validateDispute(this.lastUpdatedDispute.disputeId).subscribe({
+  validate(dispute: Dispute): void {
+    // no need to pass back byte array with image
+    let tempDispute = dispute;
+    tempDispute.violationTicket.violationTicketImage = null;
+
+    this.disputeService.validateDispute(this.lastUpdatedDispute.disputeId, tempDispute).subscribe({
       next: response => {
         this.lastUpdatedDispute.status = this.DispStatus.Validated;
         this.form.controls.violationTicket.disable();
@@ -878,5 +888,9 @@ export class TicketInfoComponent implements OnInit {
     sectionText += vtc.paragraph ? '(' + vtc.paragraph + ')' : "";
     sectionText += vtc.subparagraph ? '(' + vtc.subparagraph + ')' : "";
     return sectionText;
+  }
+
+  public onValidateClick(): void {
+    this.validateClicked = true;
   }
 }

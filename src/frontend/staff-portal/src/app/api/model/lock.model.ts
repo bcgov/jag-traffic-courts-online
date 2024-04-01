@@ -31,6 +31,6 @@ export interface Lock {
     /**
      * The time in UTC when the lock was created.
      */
-    readonly createdAtUtc?: string;
+    createdAtUtc?: string;
 }
 

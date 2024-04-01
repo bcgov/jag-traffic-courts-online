@@ -259,9 +259,15 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public validateDispute(disputeId: number): Observable<Dispute> {
+  public validateDispute(disputeId: number, dispute?: Dispute): Observable<Dispute> {
 
-    return this.disputeApiService.apiDisputeDisputeIdValidatePut(disputeId)
+    dispute.disputantBirthdate = "2001-01-01"; // TODO: remove this after disputant birthdate gone from schema
+    dispute = this.splitDisputantGivenNames(dispute);
+    dispute = this.splitContactGivenNames(dispute);
+    dispute = this.splitLawyerNames(dispute);
+    dispute = this.splitAddressLines(dispute);
+
+    return this.disputeApiService.apiDisputeDisputeIdValidatePut(disputeId, dispute)
       .pipe(
         map((response: any) => {
           this.logger.info('DisputeService::validateDispute', response)

@@ -651,13 +651,14 @@ export class DisputeService {
     /**
      * Updates the status of a particular Dispute record to VALIDATED.
      * @param disputeId Unique identifier for a specific Dispute record to validate.
+     * @param dispute Validated dispute data to update
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeIdValidatePut(disputeId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiDisputeDisputeIdValidatePut(disputeId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputeDisputeIdValidatePut(disputeId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputeDisputeIdValidatePut(disputeId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdValidatePut(disputeId: number, dispute?: Dispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputeDisputeIdValidatePut(disputeId: number, dispute?: Dispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputeDisputeIdValidatePut(disputeId: number, dispute?: Dispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputeDisputeIdValidatePut(disputeId: number, dispute?: Dispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdValidatePut.');
         }
@@ -691,6 +692,17 @@ export class DisputeService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -703,7 +715,7 @@ export class DisputeService {
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/validate`,
-            null,
+            dispute,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
