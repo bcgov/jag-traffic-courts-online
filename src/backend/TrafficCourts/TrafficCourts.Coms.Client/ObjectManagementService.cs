@@ -4,7 +4,6 @@ using TrafficCourts.Coms.Client.Monitoring;
 
 namespace TrafficCourts.Coms.Client;
 
-
 internal class ObjectManagementService : IObjectManagementService
 {
     private readonly IObjectManagementClient _client;
@@ -40,6 +39,7 @@ internal class ObjectManagementService : IObjectManagementService
             throw new ArgumentException("Data is required for creating file", nameof(file));
         }
 
+        using Activity? activity = Diagnostics.Source.StartActivity("create file");
         _logger.LogDebug("Creating file");
 
         MetadataValidator.Validate(file.Metadata);
@@ -54,6 +54,7 @@ internal class ObjectManagementService : IObjectManagementService
 
             if (created.Count == 0)
             {
+                activity?.SetStatus(ActivityStatusCode.Error);
                 _logger.LogError("Creating file did not return any created objects");
                 throw new ObjectManagementServiceException("Could not create file");
             }
@@ -70,6 +71,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
         catch (Exception exception)
         {
+            activity?.SetStatus(ActivityStatusCode.Error);
             throw ExceptionHandler("creating file", exception);
         }
     }
@@ -81,6 +83,7 @@ internal class ObjectManagementService : IObjectManagementService
             throw new ArgumentException("Cannot replace metadata on empty object id", nameof(id));
         }
 
+        using Activity? activity = Diagnostics.Source.StartActivity("delete file");
         _logger.LogDebug("Deleting file {FileId}", id);
 
         try
@@ -99,6 +102,7 @@ internal class ObjectManagementService : IObjectManagementService
         {
             // if the file does not exist, this could return 502 Bad Gateway error
             // see https://github.com/bcgov/common-object-management-service/issues/89
+            activity?.SetStatus(ActivityStatusCode.Error);
             throw ExceptionHandler("deleting file", exception);
         }
     }
@@ -110,6 +114,7 @@ internal class ObjectManagementService : IObjectManagementService
             throw new ArgumentException("Cannot get file on empty object id", nameof(id));
         }
 
+        using Activity? activity = Diagnostics.Source.StartActivity("get file");
         _logger.LogDebug("Getting file {FileId}", id);
 
         try
@@ -145,6 +150,7 @@ internal class ObjectManagementService : IObjectManagementService
             // - ReadObjectAsync failed, or
             // - GetMetadataAsync failed, or
             // - GetTagsAsync failed
+            activity?.SetStatus(ActivityStatusCode.Error);
             _logger.LogInformation(exception, "Could not get file by id, FileId={FileId}", id);
             throw new ObjectManagementServiceException("API error getting file", exception);
         }
@@ -158,6 +164,7 @@ internal class ObjectManagementService : IObjectManagementService
     {
         ArgumentNullException.ThrowIfNull(parameters);
 
+        using Activity? activity = Diagnostics.Source.StartActivity("file search");
         _logger.LogDebug("Searching for files");
 
         MetadataValidator.Validate(parameters.Metadata);
@@ -227,6 +234,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
         catch (Exception exception)
         {
+            activity?.SetStatus(ActivityStatusCode.Error);
             throw ExceptionHandler("searching files", exception);
         }
     }
@@ -245,6 +253,7 @@ internal class ObjectManagementService : IObjectManagementService
             throw new ArgumentException("Data is required for updating a file", nameof(file));
         }
 
+        using Activity? activity = Diagnostics.Source.StartActivity("update file");
         _logger.LogDebug("Updating file");
 
 
@@ -259,6 +268,7 @@ internal class ObjectManagementService : IObjectManagementService
         }
         catch (Exception exception)
         {
+            activity?.SetStatus(ActivityStatusCode.Error);
             throw ExceptionHandler("updating file", exception);
         }
     }
@@ -272,12 +282,15 @@ internal class ObjectManagementService : IObjectManagementService
 
         ArgumentNullException.ThrowIfNull(meta);
 
+        using Activity? activity = Diagnostics.Source.StartActivity("replace metadata");
+
         try
         {
             await _client.ReplaceMetadataAsync(meta, id, versionId: null, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
+            activity?.SetStatus(ActivityStatusCode.Error);
             throw ExceptionHandler("replacing metadata", exception);
         }
 
@@ -291,12 +304,14 @@ internal class ObjectManagementService : IObjectManagementService
             throw new ArgumentException("Cannot set tags on file with empty object id", nameof(id));
         }
 
+        using Activity? activity = Diagnostics.Source.StartActivity("set tags");
         try
         {
             await _client.ReplaceTaggingAsync(id, tags, null, cancellationToken);
         }
         catch (Exception exception)
         {
+            activity?.SetStatus(ActivityStatusCode.Error);
             throw ExceptionHandler("replacing tags", exception);
         }
     }
@@ -308,12 +323,14 @@ internal class ObjectManagementService : IObjectManagementService
             throw new ArgumentException("Cannot add tags on file with empty object id", nameof(id));
         }
 
+        using Activity? activity = Diagnostics.Source.StartActivity("add tags");
         try
         {
             await _client.AddTaggingAsync(id, tags, null, cancellationToken);
         }
         catch (Exception exception)
         {
+            activity?.SetStatus(ActivityStatusCode.Error);
             throw ExceptionHandler("adding tags", exception);
         }
     }

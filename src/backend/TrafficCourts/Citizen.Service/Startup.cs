@@ -43,7 +43,8 @@ public static class Startup
         {
             options
                 .AddFusionCacheInstrumentation()
-                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
+                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+                .AddSource(Coms.Client.Monitoring.Diagnostics.Source.Name);
         },
             options =>
             {
