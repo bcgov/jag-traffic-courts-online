@@ -432,7 +432,7 @@ public class DisputeService {
 		else if (issuedTime != null) {
 			disputeResults.addAll(disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime));
 		}
-		else if (excludeStatus != null) {
+		else if (excludeStatus != null && !DisputeStatus.UNKNOWN.equals(excludeStatus)) {
 			disputeResults.addAll(disputeRepository.findByStatusNotAndTicketNumber(excludeStatus, ticketNumber));
 		}
 		else {
