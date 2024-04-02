@@ -25,6 +25,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeListItem;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeUpdateRequestStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmptyObject;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.ords.occam.api.ViolationTicketApi;
@@ -70,7 +71,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	public List<DisputeListItem> findByStatusNotAndCreatedTsAfterAndNoticeOfDisputeGuid(DisputeStatus excludeStatus,
 			Date newerThan, String noticeOfDisputeGuid) {
 		String newerThanDate = null;
-		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
+		String statusShortName = excludeStatus != null && !DisputeStatus.UNKNOWN.equals(excludeStatus) ? excludeStatus.toShortName() : null;
 
 		if (newerThan != null) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT);
@@ -120,7 +121,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	
 	@Override
 	public List<DisputeResult> findByStatusNotAndTicketNumber(DisputeStatus excludeStatus, String ticketNumber) {
-		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
+		String statusShortName = excludeStatus != null && !DisputeStatus.UNKNOWN.equals(excludeStatus) ? excludeStatus.toShortName() : null;
 		
 		ViolationTicketListResponse response = violationTicketApi.violationTicketListGet(null, statusShortName, ticketNumber, null,
 				null);
@@ -299,7 +300,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	private List<Dispute> findByNoticeOfDisputeGuidImpl(DisputeStatus excludeStatus, Date newerThan,
 			String noticeOfDisputeGuid) {
 		String newerThanDate = null;
-		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
+		String statusShortName = excludeStatus != null && !DisputeStatus.UNKNOWN.equals(excludeStatus) ? excludeStatus.toShortName() : null;
 
 		if (newerThan != null) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateUtil.DATE_FORMAT);

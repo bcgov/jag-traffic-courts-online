@@ -39,7 +39,7 @@ public class DisputeUpdateRequestRepositoryImpl implements DisputeUpdateRequestR
 
 	@Override
 	public List<DisputeUpdateRequest> findByOptionalDisputeIdAndOptionalStatus(Long disputeId, DisputeUpdateRequestStatus status) {
-		String updateReqStatusShortName = status != null ? status.getShortName() : null;
+		String updateReqStatusShortName = status != null && !DisputeUpdateRequestStatus.UNKNOWN.equals(status) ? status.getShortName() : null;
 
 		UpdateRequestListResponse response = disputeUpdateRequestApi.v1DisputeUpdateRequestListGet(updateReqStatusShortName, null, disputeId, null);
 
