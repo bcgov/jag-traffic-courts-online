@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
 
-namespace TrafficCourts.Coms.Client.Monitoring
+namespace TrafficCourts.Coms.Client.Monitoring;
+
+internal static class Diagnostics
 {
-    public static class Diagnostics
-    {
-        public static readonly ActivitySource Source = new ActivitySource("coms");
-    }
+    public static readonly ActivitySource Source = new ActivitySource("coms");
 }

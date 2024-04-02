@@ -117,7 +117,8 @@ public static class Extensions
             loggerConfiguration
                 .ReadFrom.Configuration(builder.Configuration)
                 .Enrich.WithExceptionDetails(destructurers)
-                .Enrich.With<TrafficCourts.Logging.Enrichers.HostNameEnricher>();
+                .Enrich.With<TrafficCourts.Logging.Enrichers.HostNameEnricher>()
+                .Enrich.With<TrafficCourts.Logging.Enrichers.ActivityEnricher>();
         });
     }
 
