@@ -35,3 +35,10 @@
 | ------------------------- | -------------------------------------------------------- | ----- |
 | staff-web.replicaCount     |                                                          | `1`  |
 | staff-web.image.tag     |                                                          |        |
+
+### Maintenance Site (maintenance-site)
+
+| Name                      | Description                                              | Value |
+| ------------------------- | -------------------------------------------------------- | ----- |
+| maintenance-site.replicaCount     |                                                          | `1`  |
+| maintenance-site.image.tag     |                                                          |        |

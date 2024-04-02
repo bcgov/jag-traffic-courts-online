@@ -1,0 +1,22 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: maintenance-site-for-jag-proxy
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "maintenance-site.labels" . | nindent 4 }}
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: {{ .Values.route.allowedIPs }}
+    haproxy.router.openshift.io/disable_cookies: "true"
+spec:
+  host: maintenance-site-for-jag-proxy-{{ .Values.global.namespace }}.apps.silver.devops.gov.bc.ca
+  to:
+    kind: Service
+    name: {{ include "maintenance-site.fullname" . }}
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
