@@ -288,14 +288,3 @@ workflow-service:
       keys:
         host: "pgbouncer-host"
         port: "pgbouncer-port"
-
-maintenance-site:
-  replicaCount: 2
-  pdb:
-    create: true
-  image:
-    tag: "latest"
-    pullPolicy: Always
-  route:
-    # https://test.jag.gov.bc.ca
-    allowedIPs: "142.34.91.133 142.34.91.132"

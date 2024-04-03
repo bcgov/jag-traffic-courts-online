@@ -16,15 +16,9 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations:
-        checksum/keycloakConfig: {{ include "maintenance-site.tplvalues.render" ( dict "value" .Values.keycloakConfig "context" $ ) | sha256sum }}
       labels:
         {{- include "maintenance-site.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ .Values.global.licenseplate }}-vault
       containers:
         - env:

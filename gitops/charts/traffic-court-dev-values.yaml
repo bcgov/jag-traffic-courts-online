@@ -263,11 +263,3 @@ workflow-service:
   saga:
     db:
       secretName: "postgres-dev-pguser-masstransit"
-
-maintenance-site:
-  image:
-    tag: "latest"
-    pullPolicy: Always
-  route:
-    # https://dev.jag.gov.bc.ca
-    allowedIPs: "142.34.45.134"
