@@ -29,16 +29,25 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             options
-                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
-                .AddSource(Coms.Client.Monitoring.Diagnostics.Source.Name)
-                .AddFusionCacheInstrumentation()
+                .AddComsClientInstrumentation()
+                .AddFusionCacheInstrumentation(options =>
+                {
+                    // TODO: allow setting from config, useful in dev but not test/prod
+                    options.IncludeMemoryLevel = false;
+                    options.IncludeDistributedLevel = false;
+                    options.IncludeBackplane = false;
+                })
+                .AddMassTransitInstrumentation()
+                .AddOracleDataApiInstrumentation()
                 .AddRedisInstrumentation();
         },
         options => 
         {
             options
+                .AddComsClientInstrumentation()
                 .AddFusionCacheInstrumentation()
-                .AddMeter("MassTransit", "ComsClient", "OracleDataApi");
+                .AddMassTransitInstrumentation()
+                .AddOracleDataApiInstrumentation();
         });
 
         var redisConnectionString = builder.AddRedis();
