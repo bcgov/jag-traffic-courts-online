@@ -41,7 +41,7 @@ export class JJDisputeRemarksComponent implements OnChanges, OnDestroy {
   }
 
   refreshData(): void {
-    // Add Record saving remarks
+    // Add ticket validation saving remarks
     this.historyRecordService.FileHistories?.filter(i => i.auditLogEntryType === "FRMK").forEach((fileHistory: FileHistory) => {
       this.data.push(<JJDisputeRemark>{
         createdTs: fileHistory.createdTs,
