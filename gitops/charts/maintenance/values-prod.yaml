@@ -65,3 +65,7 @@ pdb:
   ## @param pdb.maxUnavailable Maximum number/percentage of pods that may be made unavailable
   ##
   maxUnavailable: ""
+
+# global values
+global:
+  namespace: 0198bb-prod
