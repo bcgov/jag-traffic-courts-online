@@ -10,7 +10,7 @@ image:
   registry: image-registry.openshift-image-registry.svc:5000
   repository: 0198bb-tools/maintenance-site
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -34,7 +34,8 @@ resources:
 ## @param route.allowedIPs List of space separated IP addresses that can connect to this route
 ## @param route.create Enable/disable a Pod Disruption Budget creation
 route:
-  allowedIPs: ""
+# https://dev.jag.gov.bc.ca
+  allowedIPs: "142.34.45.134"
   create: true
 
 ## Autoscaling configuration
