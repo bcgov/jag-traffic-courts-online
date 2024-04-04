@@ -42,15 +42,24 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             options
-                .AddFusionCacheInstrumentation()
-                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
-                .AddSource(Coms.Client.Monitoring.Diagnostics.Source.Name);
+                .AddFusionCacheInstrumentation(options =>
+                {
+                    // TODO: allow setting from config, useful in dev but not test/prod
+                    options.IncludeMemoryLevel = false;
+                    options.IncludeDistributedLevel = false;
+                    options.IncludeBackplane = false;
+                })
+                .AddCitizenServiceInstrumentation()
+                .AddComsClientInstrumentation()
+                .AddMassTransitInstrumentation();
         },
             options =>
             {
                 options
                     .AddFusionCacheInstrumentation()
-                    .AddMeter("MassTransit", "ComsClient", "CitizenService");
+                    .AddCitizenServiceInstrumentation()
+                    .AddComsClientInstrumentation()
+                    .AddMassTransitInstrumentation();
             }
         );
 

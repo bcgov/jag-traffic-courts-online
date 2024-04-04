@@ -2,6 +2,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
@@ -28,14 +29,25 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
-            options.AddSource(Coms.Client.Monitoring.Diagnostics.Source.Name);
+            options
+                .AddComsClientInstrumentation()
+                .AddFusionCacheInstrumentation(options =>
+                {
+                    // TODO: allow setting from config, useful in dev but not test/prod
+                    options.IncludeMemoryLevel = false;
+                    options.IncludeDistributedLevel = false;
+                    options.IncludeBackplane = false;
+                })
+                .AddMassTransitInstrumentation()
+                .AddOracleDataApiInstrumentation();
         },
         options =>
         {
             options
+                .AddComsClientInstrumentation()
                 .AddFusionCacheInstrumentation()
-                .AddMeter("MassTransit", "ComsClient", "OracleDataApi");
+                .AddMassTransitInstrumentation()
+                .AddOracleDataApiInstrumentation();
         });
 
         builder.Services.AddControllers();
