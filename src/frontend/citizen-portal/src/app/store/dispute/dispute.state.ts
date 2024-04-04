@@ -8,7 +8,8 @@ export interface DisputeState extends CustomState {
   result?: SearchDisputeResult,
   noticeOfDispute?: NoticeOfDispute,
   fileData?: FileMetadata[],
-  params?: QueryParamsForSearch
+  params?: QueryParamsForSearch,
+  isSubmitted?: boolean;
 }
 
 export const initialState: DisputeState = {
@@ -16,5 +17,6 @@ export const initialState: DisputeState = {
   noticeOfDispute: null,
   params: null,
   fileData: [],
-  loading: false
+  loading: false,
+  isSubmitted: false
 }

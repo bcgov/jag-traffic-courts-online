@@ -73,7 +73,9 @@ export class DisputeService {
               this.store.dispatch(DisputeStore.Actions.Search({ params }));
             }
           } else if (!state.result && state.params) {
-            this.store.dispatch(DisputeStore.Actions.Search({}));
+            this.store.dispatch(DisputeStore.Actions.Search({ params: state.params}));
+          } else if (state.isSubmitted) {
+            this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND_DISPUTE)]);
           }
           else {
             found = true;
@@ -137,7 +139,7 @@ export class DisputeService {
     };
     return this.dialog.open(ConfirmDialogComponent, { data });
   }
-  
+
   openDisputantEmailNotVerifiedDialog() {
     const data: DialogOptions = {
       titleKey: "Warning",
