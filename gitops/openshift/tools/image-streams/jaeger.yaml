@@ -12,8 +12,8 @@ spec:
     - name: '1.55.0-debian-12-r0'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/jaeger:1.55.0-debian-12-r0'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/jaeger:1.55.0-debian-12-r0'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
