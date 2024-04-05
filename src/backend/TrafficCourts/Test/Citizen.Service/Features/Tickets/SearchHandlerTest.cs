@@ -125,7 +125,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
             Mock<ILogger<TicketSearchService>> _logger = new();
             TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
-            Invoice invoice = new() {
+            Invoice invoice = new()
+            {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
                 PartyNumber = "n/a",
@@ -141,19 +142,19 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
                 Act = "DTM",
                 Section = "45(a)"
             };
-            IList<Invoice> invoices = [ invoice ];
+            IList<Invoice> invoices = [invoice];
 
             // When
             _invoiceSearchService
                 .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(invoices));
-            
+
             // Then
             // Invoice.Act does not match MVA or MVAR and so results should be null
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
             Assert.Null(actual);
         }
-        
+
 
         [Fact]
         public async Task search_includes_MVA_tickets()
@@ -165,7 +166,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
             Mock<ILogger<TicketSearchService>> _logger = new();
             TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
-            Invoice invoice = new() {
+            Invoice invoice = new()
+            {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
                 PartyNumber = "n/a",
@@ -179,22 +181,23 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
                 OffenceDescription = "Speed against area sign",
                 ViolationDate = "2023-04-09",
                 Act = "MVA",
-                Section = "45(a)"
+                Section = "45(a)",
+                FormNumber = "MV6000E (040924)"
             };
-            IList<Invoice> invoices = [ invoice ];
+            IList<Invoice> invoices = [invoice];
 
             // When
             _invoiceSearchService
                 .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(invoices));
-            
+
             // Then
             // Invoice.Act should match MVA
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
             Assert.NotNull(actual);
             Assert.Equal("EA00000000", actual.TicketNumber);
         }
-        
+
 
         [Fact]
         public async Task search_includes_MVAR_tickets()
@@ -206,7 +209,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
             Mock<ILogger<TicketSearchService>> _logger = new();
             TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
-            Invoice invoice = new() {
+            Invoice invoice = new()
+            {
                 InvoiceNumber = "EA000000001",
                 PbcRefNumber = "n/a",
                 PartyNumber = "n/a",
@@ -220,20 +224,187 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
                 OffenceDescription = "Speed against area sign",
                 ViolationDate = "2023-04-09",
                 Act = "MVAR",
-                Section = "45(a)"
+                Section = "45(a)",
+                FormNumber = "MV6000E (040924)"
             };
-            IList<Invoice> invoices = [ invoice ];
+            IList<Invoice> invoices = [invoice];
 
             // When
             _invoiceSearchService
                 .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(invoices));
-            
+
             // Then
             // Invoice.Act should match MVAR 
             var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
             Assert.NotNull(actual);
             Assert.Equal("EA00000000", actual.TicketNumber);
+        }
+
+        // test that asserts that the ticketSearchService includes Invoices with a FormNumber == "MV6000E (040924)"
+        [Fact]
+        public async Task search_includes_FormNumber_tickets()
+        {
+            // Given
+            string ticketNumber = "EA00000000";
+            string ticketTime = "00:00";
+            Mock<IBus> _bus = new();
+            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
+            Mock<ILogger<TicketSearchService>> _logger = new();
+            TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
+            Invoice invoice = new()
+            {
+                InvoiceNumber = "EA000000001",
+                PbcRefNumber = "n/a",
+                PartyNumber = "n/a",
+                PartyName = "n/a",
+                AccountNumber = "n/a",
+                SiteNumber = "n/a",
+                InvoiceType = "Traffic Violation Ticket",
+                ViolationDateTime = "2023-04-09T" + ticketTime,
+                TicketedAmount = 100.00M,
+                AmountDue = 100.00M,
+                OffenceDescription = "Speed against area sign",
+                ViolationDate = "2023-04-09",
+                Act = "MVAR",
+                Section = "45(a)",
+                FormNumber = "MV6000E (040924)"
+            };
+            IList<Invoice> invoices = [invoice];
+
+            // When
+            _invoiceSearchService
+                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(invoices));
+
+            // Then
+            var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
+            Assert.NotNull(actual);
+            Assert.Equal("EA00000000", actual.TicketNumber);
+        }
+
+        // test that asserts that the ticketSearchService includes Invoices with a FormNumber == "MV6000E(040924)"
+        [Fact]
+        public async Task search_includes_FormNumber_tickets_wo_spaces()
+        {
+            // Given
+            string ticketNumber = "EA00000000";
+            string ticketTime = "00:00";
+            Mock<IBus> _bus = new();
+            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
+            Mock<ILogger<TicketSearchService>> _logger = new();
+            TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
+            Invoice invoice = new()
+            {
+                InvoiceNumber = "EA000000001",
+                PbcRefNumber = "n/a",
+                PartyNumber = "n/a",
+                PartyName = "n/a",
+                AccountNumber = "n/a",
+                SiteNumber = "n/a",
+                InvoiceType = "Traffic Violation Ticket",
+                ViolationDateTime = "2023-04-09T" + ticketTime,
+                TicketedAmount = 100.00M,
+                AmountDue = 100.00M,
+                OffenceDescription = "Speed against area sign",
+                ViolationDate = "2023-04-09",
+                Act = "MVAR",
+                Section = "45(a)",
+                FormNumber = "MV6000E(040924)"
+            };
+            IList<Invoice> invoices = [invoice];
+
+            // When
+            _invoiceSearchService
+                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(invoices));
+
+            // Then
+            var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
+            Assert.NotNull(actual);
+            Assert.Equal("EA00000000", actual.TicketNumber);
+        }
+
+        // test that asserts that the ticketSearchService excludes Invoices with a FormNumber != "MV6000E (040924)"
+        [Fact]
+        public async Task search_excludes_FormNumber_tickets()
+        {
+            // Given
+            string ticketNumber = "EA00000000";
+            string ticketTime = "00:00";
+            Mock<IBus> _bus = new();
+            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
+            Mock<ILogger<TicketSearchService>> _logger = new();
+            TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
+            Invoice invoice = new()
+            {
+                InvoiceNumber = "EA000000001",
+                PbcRefNumber = "n/a",
+                PartyNumber = "n/a",
+                PartyName = "n/a",
+                AccountNumber = "n/a",
+                SiteNumber = "n/a",
+                InvoiceType = "Traffic Violation Ticket",
+                ViolationDateTime = "2023-04-09T" + ticketTime,
+                TicketedAmount = 100.00M,
+                AmountDue = 100.00M,
+                OffenceDescription = "Speed against area sign",
+                ViolationDate = "2023-04-09",
+                Act = "MVAR",
+                Section = "45(a)",
+                FormNumber = "MV7000E (040924)"
+            };
+            IList<Invoice> invoices = [invoice];
+
+            // When
+            _invoiceSearchService
+                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(invoices));
+
+            // Then
+            var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
+            Assert.Null(actual);
+        }
+
+        // test that asserts that the ticketSearchService excludes Invoices with a FormNumber != "MV6000E(040924)"
+        [Fact]
+        public async Task search_excludes_FormNumber_wo_spaces_tickets()
+        {
+            // Given
+            string ticketNumber = "EA00000000";
+            string ticketTime = "00:00";
+            Mock<IBus> _bus = new();
+            Mock<ITicketInvoiceSearchService> _invoiceSearchService = new();
+            Mock<ILogger<TicketSearchService>> _logger = new();
+            TicketSearchService ticketSearchService = new(_bus.Object, _invoiceSearchService.Object, _logger.Object);
+            Invoice invoice = new()
+            {
+                InvoiceNumber = "EA000000001",
+                PbcRefNumber = "n/a",
+                PartyNumber = "n/a",
+                PartyName = "n/a",
+                AccountNumber = "n/a",
+                SiteNumber = "n/a",
+                InvoiceType = "Traffic Violation Ticket",
+                ViolationDateTime = "2023-04-09T" + ticketTime,
+                TicketedAmount = 100.00M,
+                AmountDue = 100.00M,
+                OffenceDescription = "Speed against area sign",
+                ViolationDate = "2023-04-09",
+                Act = "MVAR",
+                Section = "45(a)",
+                FormNumber = "MV7000E(040924)"
+            };
+            IList<Invoice> invoices = [invoice];
+
+            // When
+            _invoiceSearchService
+                .Setup(_ => _.SearchAsync(It.IsAny<string>(), It.IsAny<TimeOnly>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(invoices));
+
+            // Then
+            var actual = await ticketSearchService.SearchAsync(ticketNumber, TimeOnly.MinValue, CancellationToken.None);
+            Assert.Null(actual);
         }
     }
 }
