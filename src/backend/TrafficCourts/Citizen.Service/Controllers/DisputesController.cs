@@ -73,6 +73,13 @@ public class DisputesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] Models.Disputes.NoticeOfDispute dispute, CancellationToken cancellationToken)
     {
+        if (dispute.TicketNumber is not null && dispute.ViolationTicket is not null && dispute.ViolationTicket.TicketNumber is not null 
+            && dispute.TicketNumber != dispute.ViolationTicket.TicketNumber)
+        {
+            _logger.LogDebug("TicketNumber of the Dispute: {DisputeTicketNumber} and ViolationTicket: {ViolationTicketNumber} are different.", dispute.TicketNumber, dispute.ViolationTicket.TicketNumber);
+            return BadRequest("Violation Ticket Number must match Ticket Number");
+        }
+
         Create.Request request = new Create.Request(dispute);
 
         // Part of the 'send' here is to add the scanned in image of a ticket(if there is one) to COMS and remove from REDIS cache
