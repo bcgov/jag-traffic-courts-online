@@ -1,7 +1,7 @@
 kind: ImageStream
 apiVersion: image.openshift.io/v1
 metadata:
-  name: form-recognizer-custom-template-3.0
+  name: common-object-management-service
   namespace: 0198bb-tools
   labels:
     usage: runtime-image
@@ -9,10 +9,10 @@ spec:
   lookupPolicy:
     local: true
   tags:
-    - name: '2022-08-31'
+    - name: '0.4.2'
       from:
         kind: DockerImage
-        name: 'artifacts.developer.gov.bc.ca/microsoft-docker-remote/azure-cognitive-services/form-recognizer/custom-template-3.0:2022-08-31'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bcgovimages/common-object-management-service:0.4.2'
         imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true

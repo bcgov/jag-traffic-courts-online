@@ -12,8 +12,8 @@ spec:
     - name: '3.8.6-jdk-11'
       from:
         kind: DockerImage
-        name: 'docker.io/maven:3.8.6-jdk-11'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/maven:3.8.6-jdk-11'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:

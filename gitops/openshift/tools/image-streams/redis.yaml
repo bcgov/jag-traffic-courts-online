@@ -12,8 +12,8 @@ spec:
     - name: '7.2.4-debian-12-r10'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/redis:7.2.4-debian-12-r10'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/redis:7.2.4-debian-12-r10'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -21,8 +21,8 @@ spec:
     - name: '7.2.1-debian-11-r24'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/redis:7.2.1-debian-11-r24'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/redis:7.2.1-debian-11-r24'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -30,8 +30,8 @@ spec:
     - name: '7.0.8-debian-11-r13'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/redis:7.0.8-debian-11-r13'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/redis:7.0.8-debian-11-r13'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -39,8 +39,8 @@ spec:
     - name: '7.0.5-debian-11-r23'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/redis:7.0.5-debian-11-r23'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/redis:7.0.5-debian-11-r23'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:

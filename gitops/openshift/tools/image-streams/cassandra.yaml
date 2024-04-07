@@ -12,8 +12,8 @@ spec:
     - name: '4.1.4-debian-12-r5'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/cassandra:4.1.4-debian-12-r5'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/cassandra:4.1.4-debian-12-r5'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -21,8 +21,8 @@ spec:
     - name: '4.0.12-debian-12-r9'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/cassandra:4.0.12-debian-12-r9'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/cassandra:4.0.12-debian-12-r9'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:

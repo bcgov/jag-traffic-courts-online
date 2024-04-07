@@ -12,8 +12,8 @@ spec:
     - name: '21'
       from:
         kind: DockerImage
-        name: 'docker.io/eclipse-temurin:21'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/eclipse-temurin:21'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -21,8 +21,8 @@ spec:
     - name: '17'
       from:
         kind: DockerImage
-        name: 'docker.io/eclipse-temurin:17'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/eclipse-temurin:17'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -30,8 +30,8 @@ spec:
     - name: '11'
       from:
         kind: DockerImage
-        name: 'docker.io/eclipse-temurin:11'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/eclipse-temurin:11'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:

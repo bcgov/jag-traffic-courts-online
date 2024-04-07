@@ -12,7 +12,8 @@ spec:
     - name: 'latest'
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/nginx-120:latest'
+        name: 'artifacts.developer.gov.bc.ca/redhat-access-docker-remote/ubi8/nginx-120:latest'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -20,7 +21,8 @@ spec:
     - name: '1-127'
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/nginx-120:1-127.1698060561'
+        name: 'artifacts.developer.gov.bc.ca/redhat-access-docker-remote/ubi8/nginx-120:1-127.1698060561'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -28,7 +30,8 @@ spec:
     - name: '1-92'
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/nginx-120:1-92'
+        name: 'artifacts.developer.gov.bc.ca/redhat-access-docker-remote/ubi8/nginx-120:1-92'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -36,7 +39,8 @@ spec:
     - name: '1-74'
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/nginx-120:1-74'
+        name: 'artifacts.developer.gov.bc.ca/redhat-access-docker-remote/ubi8/nginx-120:1-74'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -44,7 +48,8 @@ spec:
     - name: '1-54'
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/nginx-120:1-54'
+        name: 'artifacts.developer.gov.bc.ca/redhat-access-docker-remote/ubi8/nginx-120:1-54'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:

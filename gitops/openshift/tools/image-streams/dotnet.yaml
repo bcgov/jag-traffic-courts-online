@@ -12,8 +12,8 @@ spec:
     - name: '8.0'
       from:
         kind: DockerImage
-        name: 'mcr.microsoft.com/dotnet/sdk:8.0'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/microsoft-docker-remote/dotnet/sdk:8.0'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -21,8 +21,8 @@ spec:
     - name: '7.0'
       from:
         kind: DockerImage
-        name: 'mcr.microsoft.com/dotnet/sdk:7.0'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/microsoft-docker-remote/dotnet/sdk:7.0'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -42,7 +42,8 @@ spec:
     - name: 'latest'
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/dotnet-80-runtime:latest'
+        name: 'artifacts.developer.gov.bc.ca/redhat-access-docker-remote/ubi8/dotnet-80-runtime:latest'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -62,7 +63,8 @@ spec:
     - name: 'latest'
       from:
         kind: DockerImage
-        name: 'registry.access.redhat.com/ubi8/dotnet-70-runtime:latest'
+        name: 'artifacts.developer.gov.bc.ca/redhat-access-docker-remote/ubi8/dotnet-70-runtime:latest'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:

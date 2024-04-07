@@ -12,7 +12,8 @@ spec:
     - name: '2022-08-31'
       from:
         kind: DockerImage
-        name: 'mcr.microsoft.com/azure-cognitive-services/form-recognizer/layout-3.0:2022-08-31'
+        name: 'artifacts.developer.gov.bc.ca/microsoft-docker-remote/azure-cognitive-services/form-recognizer/layout-3.0:2022-08-31'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
