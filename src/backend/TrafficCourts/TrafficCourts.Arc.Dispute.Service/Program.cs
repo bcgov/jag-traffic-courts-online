@@ -1,5 +1,6 @@
 using TrafficCourts.Arc.Dispute.Service;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Health;
 using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Diagnostics;
 
@@ -26,6 +27,7 @@ if (swagger.Enabled)
 
 app.MapControllers();
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
+app.MapDefaultHealthCheckEndpoints();
 
 bool isDevelopment = app.Environment.IsDevelopment();
 try
