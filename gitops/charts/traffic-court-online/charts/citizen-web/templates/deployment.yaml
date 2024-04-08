@@ -15,6 +15,7 @@ metadata:
   annotations:
     app.openshift.io/connects-to: '[{{ include "tco.connectsTo" . | fromYaml | toJson }}]'
 spec:
+  minReadySeconds: 15
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
