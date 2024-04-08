@@ -47,7 +47,7 @@ storage:
    ephemeral: false
   #
   pvc:
-    size: 1Gi
+    size: 5Gi
     storageClassName: ""
 
 resources:

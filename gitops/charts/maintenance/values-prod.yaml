@@ -4,14 +4,14 @@
 
 ## @param replicaCount Number of replicas
 ##
-replicaCount: 2
+replicaCount: 3
 
 image:
   registry: image-registry.openshift-image-registry.svc:5000
   repository: 0198bb-tools/maintenance-site
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 
