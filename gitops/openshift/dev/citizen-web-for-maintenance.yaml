@@ -1,0 +1,23 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: citizen-web-for-justice-proxy
+  namespace: 0198bb-dev
+  labels:
+    app.kubernetes.io/instance: traffic-court-online
+    app.kubernetes.io/name: citizen-web
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: 142.34.45.132
+    haproxy.router.openshift.io/disable_cookies: "true"
+spec:
+  host: citizen-web-for-justice-proxy-0198bb-dev.apps.silver.devops.gov.bc.ca
+  to:
+    kind: Service
+    name: maintenance-site
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
