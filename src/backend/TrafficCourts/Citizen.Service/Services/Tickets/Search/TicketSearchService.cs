@@ -116,7 +116,8 @@ public class TicketSearchService : ITicketSearchService
             // TCVP-2560 all ISC tickets that always start with the letter 'S' and have a violation date before April 9, 2024 (VT1) are ineligible for TCO
             if (ticketNumber.StartsWith("S", StringComparison.OrdinalIgnoreCase) && issuedTs < _validVT2TicketEffectiveDate)
             {
-                _logger.LogInformation("Ticket found is not a valid VT2 type");
+                Activity.Current?.AddTag("rsi.violation.date", invoices[0].ViolationDateTime);
+                Activity.Current?.AddTag("invalid.reason", "VT1 ineligible");
                 throw new InvalidTicketVersionException(issuedTs);
             }
             ticket.IssuedTs = issuedTs;
@@ -196,12 +197,17 @@ public class TicketSearchService : ITicketSearchService
 [Serializable]
 public class InvalidTicketVersionException : Exception
 {
-    public InvalidTicketVersionException(DateTime violationDate) : base($"Invalid ticket found with violation date: {violationDate}. The version of the Ticket is not VT2 since its violation date is before April 9, 2024")
+    /// <summary>
+    /// The ticket is ineligible.
+    /// </summary>
+    /// <param name="violationDate"></param>
+    /// <remarks>The exception message is returned in the user in a bad request response</remarks>
+    public InvalidTicketVersionException(DateTime violationDate) : base($"This violation ticket is ineligible to be disputed on this site. Violation tickets starting with 'S' must dated after April 9, 2024. This ticket is dated {violationDate:MMMM dd, yyyy}.")
     {
         ViolationDate = violationDate;
     }
 
-    public DateTime ViolationDate { get; init; }
+    public DateTime ViolationDate { get; }
 }
 
 [Serializable]
