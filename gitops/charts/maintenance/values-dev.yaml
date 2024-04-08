@@ -31,13 +31,6 @@ resources:
     cpu: 100m
     memory: 256Mi
 
-## @param route.allowedIPs List of space separated IP addresses that can connect to this route
-## @param route.create Enable/disable a Pod Disruption Budget creation
-route:
-# https://dev.jag.gov.bc.ca
-  allowedIPs: "142.34.45.134"
-  create: true
-
 ## Autoscaling configuration
 ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 ## @param autoscaling.enabled Enable Horizontal POD autoscaling
