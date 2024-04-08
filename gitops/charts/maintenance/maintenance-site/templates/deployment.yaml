@@ -19,7 +19,6 @@ spec:
       labels:
         {{- include "maintenance-site.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Values.global.licenseplate }}-vault
       containers:
         - env:
           - name: TZ
