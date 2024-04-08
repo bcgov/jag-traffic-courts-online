@@ -2,17 +2,18 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: citizen-web-for-justice-proxy
-  namespace: {{ .Values.global.namespace }}
+  namespace: 0198bb-dev
   labels:
-    {{- include "citizen-web.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: traffic-court-online
+    app.kubernetes.io/name: citizen-web
   annotations:
-    haproxy.router.openshift.io/ip_whitelist: {{ .Values.route.allowedIPs }}
+    haproxy.router.openshift.io/ip_whitelist: 142.34.45.132
     haproxy.router.openshift.io/disable_cookies: "true"
 spec:
-  host: citizen-web-for-justice-proxy-{{ .Values.global.namespace }}.apps.silver.devops.gov.bc.ca
+  host: citizen-web-for-justice-proxy-0198bb-dev.apps.silver.devops.gov.bc.ca
   to:
     kind: Service
-    name: {{ include "citizen-web.fullname" . }}
+    name: traffic-court-online-citizen-web
     weight: 100
   port:
     targetPort: http
