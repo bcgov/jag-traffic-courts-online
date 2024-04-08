@@ -4,7 +4,7 @@
 
 ## @param replicaCount Number of replicas
 ##
-replicaCount: 2
+replicaCount: 3
 
 image:
   registry: image-registry.openshift-image-registry.svc:5000
