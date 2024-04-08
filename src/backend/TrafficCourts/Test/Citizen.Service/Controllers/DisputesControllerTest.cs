@@ -188,5 +188,35 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
         }
+
+        [Fact]
+        public void CreateAsync_TicketNumbersDoNotMatch_ReturnsBadRequest()
+        {
+            // Arrange
+            var mockMediator = new Mock<IMediator>();
+            var mockLogger = new Mock<ILogger<DisputesController>>();
+            var mockBus = new Mock<IBus>();
+            var mockHashids = new Mock<IHashids>();
+            var mockMapper = new Mock<IMapper>();
+            var mockComsService = new Mock<ICitizenDocumentService>();
+            var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
+            var controller = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder, mockMapper.Object, mockComsService.Object);
+            var dispute = new NoticeOfDispute
+            {
+                TicketNumber = "EB02000004",
+                ViolationTicket = new TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket
+                {
+                    TicketNumber = "EB02000099"
+                }
+            };
+
+            // Act
+            var result = controller.CreateAsync(dispute, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            var errorResult = Assert.IsType<BadRequestObjectResult>(result?.Result);
+            Assert.Equal("Violation Ticket Number must match Ticket Number", errorResult.Value);
+        }
     }
 }

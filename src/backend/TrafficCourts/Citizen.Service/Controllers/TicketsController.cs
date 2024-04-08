@@ -60,6 +60,13 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 return NotFound();
             }
 
+            // no need to check if the dispute is submitted before if this ticket is invalid
+            InvalidTicketVersionException? exception = response.Result.Value as InvalidTicketVersionException;
+            if (exception is not null)
+            {
+                return BadRequest(exception.Message);
+            }
+
             try
             {
                 var check = await _ticketSearchService.IsDisputeSubmittedBefore(ticketNumber, cancellationToken);

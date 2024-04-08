@@ -53,7 +53,12 @@ public class Handler : IRequestHandler<Request, Response>
         }
         catch (InvalidTicketVersionException exception)
         {
-            _logger.LogError(exception, "Could not return a ticket with invalid violation date and version (VT1)");
+            if (_logger.IsEnabled(LogLevel.Debug)) 
+            {
+                _logger.LogDebug("Tickets starting with 'S' must dated after April 9, 2024. This ticket is dated {ViolationDate}.",
+                    exception.ViolationDate);
+            }
+
             return new Response(exception);
         }
         catch (Exception exception)

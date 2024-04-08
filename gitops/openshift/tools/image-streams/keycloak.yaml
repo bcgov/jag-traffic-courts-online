@@ -12,8 +12,8 @@ spec:
     - name: '23.0.7-debian-12-r4'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/keycloak:23.0.7-debian-12-r4'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/keycloak:23.0.7-debian-12-r4'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -21,8 +21,8 @@ spec:
     - name: '22.0.5-debian-11-r7'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/keycloak:22.0.5-debian-11-r7'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/keycloak:22.0.5-debian-11-r7'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:
@@ -30,8 +30,8 @@ spec:
     - name: '22.0.4-debian-11-r2'
       from:
         kind: DockerImage
-        name: 'docker.io/bitnami/keycloak:22.0.4-debian-11-r2'
-        imagePullSecret: 'pipeline-docker-hub-pull'
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/bitnami/keycloak:22.0.4-debian-11-r2'
+        imagePullSecret: 'artifacts-default-gpffbq'
       importPolicy:
         scheduled: true
       referencePolicy:

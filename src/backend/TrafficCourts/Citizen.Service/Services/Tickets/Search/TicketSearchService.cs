@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 using TrafficCourts.Common;
 using TrafficCourts.Domain.Models;
@@ -13,6 +14,7 @@ public class TicketSearchService : ITicketSearchService
     private const string _mva = "MVA";
     private const string _mvar = "MVAR";
     private const string _mvr = "MVR";
+    private const string _formNumber = "^MV6000E\\s*\\(\\s*040924\\s*\\)$";
     private readonly IBus _bus;
     private readonly ITicketInvoiceSearchService _invoiceSearchService;
     private readonly ILogger<TicketSearchService> _logger;
@@ -43,12 +45,26 @@ public class TicketSearchService : ITicketSearchService
             // call the ticket service
             IEnumerable<Invoice>? response = await _invoiceSearchService.SearchAsync(ticketNumber, issuedTime, cancellationToken);
 
-            // TCVP-2651 Filter results to only MVA/MVAR violation tickets
-            var invoices = response.Where(_ => _.Act == _mva || _.Act == _mvr || _.Act == _mvar).ToList();
-            
-            var droppedInvoices = response.Where(_ => _.Act != _mva && _.Act != _mvr && _.Act != _mvar).ToList();
-            if (droppedInvoices.Count != 0) {
-                _logger.LogDebug("Dropped {Count} non MVA/MVAR violation ticket(s) from the RSI search results", droppedInvoices.Count);
+            var invoices = response.ToList();
+
+            // TCVP-2563 New requirement, only filter if ticketNumber starts with "E"
+            if (ticketNumber.StartsWith('E')) {
+                var count = invoices.Count;
+
+                // TCVP-2651 Filter results to only MVA/MVAR violation tickets 
+                invoices = invoices.Where(_ => _.Act == _mva || _.Act == _mvr || _.Act == _mvar).ToList();
+                if (invoices.Count != count) {
+                    _logger.LogDebug("Dropped non MVA/MVAR violation ticket(s) from the RSI search results");
+                    activity?.AddTag("unsupported.act.dropped.counts", count - invoices.Count);
+                    count = invoices.Count;
+                }
+
+                // TCVP-2563 Filter results to only those whose Form Number is "MV6000E (040924)" or "MV6000E(040924)".
+                invoices = invoices.Where(_ => _.FormNumber is not null && Regex.IsMatch(_.FormNumber, _formNumber, RegexOptions.IgnoreCase)).ToList();
+                if (invoices.Count != count) {
+                    _logger.LogDebug("Dropped invalid Form Number violation ticket(s) from the RSI search results");
+                    activity?.AddTag("unsupported.form.number.dropped.counts", count - invoices.Count);
+                }
             }
 
             if (invoices.Count != 0)
@@ -100,7 +116,8 @@ public class TicketSearchService : ITicketSearchService
             // TCVP-2560 all ISC tickets that always start with the letter 'S' and have a violation date before April 9, 2024 (VT1) are ineligible for TCO
             if (ticketNumber.StartsWith("S", StringComparison.OrdinalIgnoreCase) && issuedTs < _validVT2TicketEffectiveDate)
             {
-                _logger.LogInformation("Ticket found is not a valid VT2 type");
+                Activity.Current?.AddTag("rsi.violation.date", invoices[0].ViolationDateTime);
+                Activity.Current?.AddTag("invalid.reason", "VT1 ineligible");
                 throw new InvalidTicketVersionException(issuedTs);
             }
             ticket.IssuedTs = issuedTs;
@@ -180,12 +197,17 @@ public class TicketSearchService : ITicketSearchService
 [Serializable]
 public class InvalidTicketVersionException : Exception
 {
-    public InvalidTicketVersionException(DateTime violationDate) : base($"Invalid ticket found with violation date: {violationDate}. The version of the Ticket is not VT2 since its violation date is before April 9, 2024")
+    /// <summary>
+    /// The ticket is ineligible.
+    /// </summary>
+    /// <param name="violationDate"></param>
+    /// <remarks>The exception message is returned in the user in a bad request response</remarks>
+    public InvalidTicketVersionException(DateTime violationDate) : base($"This violation ticket is ineligible to be disputed on this site. Violation tickets starting with 'S' must dated after April 9, 2024. This ticket is dated {violationDate:MMMM dd, yyyy}.")
     {
         ViolationDate = violationDate;
     }
 
-    public DateTime ViolationDate { get; init; }
+    public DateTime ViolationDate { get; }
 }
 
 [Serializable]

@@ -6,7 +6,6 @@ import { LoggerService } from '@core/services/logger.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
 import { Observable, Subscription, forkJoin } from 'rxjs';
 
-
 @Component({
   selector: 'app-jj-file-history',
   templateUrl: './jj-file-history.component.html',
@@ -14,7 +13,6 @@ import { Observable, Subscription, forkJoin } from 'rxjs';
 })
 export class JJFileHistoryComponent implements OnInit, OnDestroy {
   @Input() ticketNumber: string;
-  @Input() remarks: JJDisputeRemark[];
   @ViewChild(MatSort) sort = new MatSort();
 
   dataSource: MatTableDataSource<HistoryRecord> = new MatTableDataSource<HistoryRecord>();
@@ -86,16 +84,6 @@ export class JJFileHistoryComponent implements OnInit, OnDestroy {
         recordType: emailHistoryRecord.successfullySent == EmailHistorySuccessfullySent.Y ? "Email Sent" : "Email Not Sent",
         actionByApplicationUser: emailHistoryRecord.toEmailAddress,
         eventDescription: emailHistoryRecord.subject
-      })
-    })
-
-    // add remarks
-    this.remarks.forEach(remark => {
-      this.data.push({
-        createdTs: remark.createdTs,
-        recordType: "Remark",
-        actionByApplicationUser: remark.userFullName,
-        eventDescription: remark.note
       })
     })
 
