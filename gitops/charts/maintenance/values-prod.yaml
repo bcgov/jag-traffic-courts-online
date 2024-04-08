@@ -11,7 +11,7 @@ image:
   repository: 0198bb-tools/maintenance-site
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 
