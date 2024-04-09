@@ -44,7 +44,7 @@ citizen-web:
   appConfig: |
     {
         "production": true,
-        "environment": "Prod",
+        "environment": "prod",
         "version": "2.0.0",
         "useMockServices": false,
         "apiBaseUrl": "/api",
@@ -242,10 +242,10 @@ staff-api:
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
-    "Jwt__Authority": "https://oidc-0198bb-prod.apps.silver.devops.gov.bc.ca/realms/traffic-court"
-    "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-prod.apps.silver.devops.gov.bc.ca/admin/realms/"
+    "Jwt__Authority": "https://tco-oidc.jag.gov.bc.ca/auth/realms/traffic-court"
+    "KeycloakAdminApi__BaseUri": "https://tco-oidc.jag.gov.bc.ca/admin/realms/"
     "KeycloakAdminApi__Realm": "traffic-court"
-    "OAuth__TokenEndpoint": "https://oidc-0198bb-prod.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
+    "OAuth__TokenEndpoint": "https://tco-oidc.jag.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
     "Swagger__Enabled": "false"
     "MassTransit__Transport": "RabbitMq"
     "RabbitMq__UseQuorumQueues": "true"
@@ -264,7 +264,7 @@ staff-web:
   keycloakConfig: |
     {
       "config": {
-        "url": "https://oidc-0198bb-prod.apps.silver.devops.gov.bc.ca/",
+        "url": "https://tco-oidc.jag.gov.bc.ca/",
         "realm": "traffic-court",
         "clientId": "staff-portal"
       },
@@ -274,7 +274,7 @@ staff-web:
   appConfig: |
     {
         "production": true,
-        "environment": "Prod",
+        "environment": "prod",
         "version": "2.0.0",
         "useMockServices": false,
         "apiBaseUrl": "/api",
