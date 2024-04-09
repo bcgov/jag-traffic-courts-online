@@ -41,10 +41,16 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
+            {{- if or .Values.appConfig .Values.existingAppConfigConfigmap }}
+            - name: configuration
+              mountPath: /usr/share/nginx/html/assets/app.config.json
+              readOnly: true
+              subPath: app.config.json
+            {{- end }}
             - name: configuration
               mountPath: /usr/share/nginx/html/assets/config/keycloak.config.json
               readOnly: true
-              subPath: keycloak.config.json
+              subPath: keycloak.config.json 
             - name: configuration
               mountPath: /opt/app-root/etc/nginx.default.d/nginx-api-proxy-pass.conf
               readOnly: true
