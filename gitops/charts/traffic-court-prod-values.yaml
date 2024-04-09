@@ -242,7 +242,7 @@ staff-api:
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
-    "Jwt__Authority": "https://tco-oidc.jag.gov.bc.ca/auth/realms/traffic-court"
+    "Jwt__Authority": "https://tco-oidc.jag.gov.bc.ca/realms/traffic-court"
     "KeycloakAdminApi__BaseUri": "https://tco-oidc.jag.gov.bc.ca/admin/realms/"
     "KeycloakAdminApi__Realm": "traffic-court"
     "OAuth__TokenEndpoint": "https://tco-oidc.jag.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
