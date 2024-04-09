@@ -25,7 +25,7 @@ citizen-api:
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
     "FormRecognizer__ModelId": "ViolationTicket"
-    "FormRecognizer__Endpoint": "https://acs-forms-recognizer-0198bb-prod.apps.silver.devops.gov.bc.ca/"
+    "FormRecognizer__Endpoint": "http://acs-form-recognizer-proxy.0198bb-prod.svc.cluster.local:5000/"
     "TicketSearch__SearchType": "RoadSafety"
     "MassTransit__Transport": "RabbitMq"
     "RabbitMq__UseQuorumQueues": "true"
