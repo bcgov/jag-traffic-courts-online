@@ -16,6 +16,7 @@ export class LandingComponent implements AfterViewInit {
   icbcVisitUsLink: string;
   provincialCourtOfBCVisitUsLink: string;
   courthouseServicesOfBCVisitUsLink: string;
+  public environment: string;
 
   constructor(
     private appConfigService: AppConfigService,
@@ -28,6 +29,7 @@ export class LandingComponent implements AfterViewInit {
     this.icbcVisitUsLink = this.appConfigService.icbcVisitUsLink;
     this.provincialCourtOfBCVisitUsLink = this.appConfigService.provincialCourtOfBCVisitUsLink;
     this.courthouseServicesOfBCVisitUsLink = this.appConfigService.courthouseServicesOfBCVisitUsLink;
+    this.environment = this.appConfigService.environment;
   }
 
   ngAfterViewInit(): void {
