@@ -16,7 +16,7 @@ export class LandingComponent implements AfterViewInit {
   icbcVisitUsLink: string;
   provincialCourtOfBCVisitUsLink: string;
   courthouseServicesOfBCVisitUsLink: string;
-  public environment: string;
+  environment: string;
 
   constructor(
     private appConfigService: AppConfigService,
