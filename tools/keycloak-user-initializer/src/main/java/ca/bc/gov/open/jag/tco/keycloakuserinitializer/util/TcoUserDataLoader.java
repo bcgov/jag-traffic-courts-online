@@ -26,7 +26,7 @@ public class TcoUserDataLoader {
 
 		List<TcoUser> users = new ArrayList<TcoUser>();
 		try (
-			InputStream is = getFileAsIOStream("data/tco-user-list.csv");
+			InputStream is = loadFile();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 			users.addAll(new CsvToBeanBuilder<TcoUser>(reader)
 					.withType(TcoUser.class)
@@ -40,9 +40,7 @@ public class TcoUserDataLoader {
 	}
 	
 	private InputStream getFileAsIOStream(final String fileName) {
-        InputStream ioStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream(fileName);
+        InputStream ioStream = getClass().getResourceAsStream(fileName);
         
         if (ioStream == null) {
             throw new IllegalArgumentException(fileName + " is not found");

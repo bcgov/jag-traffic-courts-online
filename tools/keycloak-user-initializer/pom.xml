@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.11</version>
+		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.bc.gov.open.jag.tco</groupId>
@@ -14,7 +14,7 @@
 	<name>keycloak-user-initializer</name>
 	<description>Utility app to create users and assign roles in Keycloak</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<idir-package>ca.bc.gov.open.jag.tco.keycloakuserinitializer.idir</idir-package>
 		<target.fileName>${project.artifactId}-${project.version}</target.fileName>
 	</properties>
@@ -40,18 +40,17 @@
 		    <artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		
-		<!-- Swagger UI -->
 		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.7.0</version>
+		    <groupId>org.springdoc</groupId>
+		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		    <version>2.5.0</version>
 		</dependency>
 		
 		<!-- Keycloak Client -->
 		<dependency>
 			<groupId>org.keycloak</groupId>
     		<artifactId>keycloak-admin-client</artifactId>
-    		<version>21.1.1</version>
+    		<version>24.0.2</version>
 		</dependency>
 		
 		<!-- CSV reader -->
@@ -70,7 +69,7 @@
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-annotations</artifactId>
-			<version>1.6.10</version>
+			<version>1.6.14</version>
 		</dependency>
 
 		<dependency>
@@ -80,6 +79,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-multipart</artifactId>
+			 
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
@@ -142,6 +142,22 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
+		<dependency>
+		    <groupId>jakarta.ws.rs</groupId>
+		    <artifactId>jakarta.ws.rs-api</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-properties-migrator</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -164,7 +180,7 @@
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>6.5.0</version>
+				<version>7.4.0</version>
 				<executions>
 					<execution>
 						<id>idir-api</id>
@@ -177,9 +193,10 @@
                 			<skipValidateSpec>true</skipValidateSpec>
 							<configOptions>
 								<useTags>true</useTags>
+								<useJakartaEe>true</useJakartaEe>
 								<useRuntimeException>true</useRuntimeException>
 							</configOptions>
-							<library>jersey2</library>
+							<library>jersey3</library>
 							<apiPackage>${idir-package}.api</apiPackage>
 							<modelPackage>${idir-package}.api.model</modelPackage>
 							<invokerPackage>${idir-package}.api.handler</invokerPackage>
