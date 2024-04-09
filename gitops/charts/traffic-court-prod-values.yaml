@@ -260,7 +260,7 @@ staff-web:
     pullPolicy: Always
   route:
     # https://test.jag.gov.bc.ca
-    allowedIPs: "142.34.91.133 142.34.91.132"
+    allowedIPs: "142.34.134.88 142.34.134.89 142.34.134.90"
   keycloakConfig: |
     {
       "config": {
