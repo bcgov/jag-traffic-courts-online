@@ -4,6 +4,8 @@ metadata:
   name: {{ include "staff-web.configmapName" . }}
   labels: {{- include "staff-web.labels" . | nindent 4 }}
 data:
+  app.config.json: |-
+{{ include "staff-web.tplvalues.render" ( dict "value" .Values.appConfig "context" $ ) | indent 4 }}
   keycloak.config.json: |-
 {{ include "staff-web.tplvalues.render" ( dict "value" .Values.keycloakConfig "context" $ ) | indent 4 }}
   nginx-api-proxy-pass.conf: |-
