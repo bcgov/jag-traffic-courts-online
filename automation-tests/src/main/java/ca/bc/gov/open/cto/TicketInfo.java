@@ -33,16 +33,16 @@ public class TicketInfo {
 	public static String 			IMAGE_TICKET_STATE_OF_DL 	= "BC";
 	public static String 			IMAGE_TICKET_TIME_HOURS 	= "15";
 	public static String 			IMAGE_TICKET_TIME_MINUTES 	= "23";
-	public static String 			IMAGE_TICKET_NAME 			= "TestName";
-	public static String 			IMAGE_TICKET_SURNAME 		= RANDOM_NUMBER + " Surname";
+	public static String 			IMAGE_TICKET_NAME 			= "GIVENONE";
+	public static String 			IMAGE_TICKET_SURNAME 		= "SURNAME";
 	public static String 			IMAGE_TICKET_COUNT_1		= "Excessive Speeding";
-	public static String 			IMAGE_TICKET_COUNT_2 		= "Drive Without Licence";
+	public static String 			IMAGE_TICKET_COUNT_2 		= "Schools And Playgrounds";
 	public static String 			IMAGE_TICKET_COUNT_3		= "Slow Driving";
 	public static String 			IMAGE_TICKET_ACT_1			= "MVA";
 	public static String 			IMAGE_TICKET_ACT_2 			= "MVA";
 	public static String 			IMAGE_TICKET_ACT_3			= "MVA";
 	public static String 			IMAGE_TICKET_SECTION_1		= "148(1)";
-	public static String 			IMAGE_TICKET_SECTION_2 		= "24(1)";
+	public static String 			IMAGE_TICKET_SECTION_2 		= "147";
 	public static String 			IMAGE_TICKET_SECTION_3		= "145(1)";
 	public static String 			IMAGE_TICKET_PAY_AMOUNT_1	= "368";
 	public static String 			IMAGE_TICKET_PAY_AMOUNT_2 	= "276";
@@ -83,7 +83,8 @@ public class TicketInfo {
 		E_TICKET_INVOICE_2 = E_TICKET_NUMBER + "2";
 		E_TICKET_INVOICE_3 = E_TICKET_NUMBER + "3";
 		TICKET_NUMBER = "AT" + RANDOM_NUMBER;
-		IMAGE_TICKET_SURNAME = RANDOM_NUMBER + " Surname";
+//		IMAGE_TICKET_SURNAME = RANDOM_NUMBER + " Surname";
+		IMAGE_TICKET_SURNAME = IMAGE_TICKET_SURNAME + " ";
 	}
 
 }

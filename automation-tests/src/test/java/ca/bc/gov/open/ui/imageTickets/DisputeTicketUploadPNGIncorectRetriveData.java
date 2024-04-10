@@ -2,6 +2,7 @@ package ca.bc.gov.open.ui.imageTickets;
 
 import java.time.Duration;
 
+import ca.bc.gov.open.cto.CommonMethods;
 import ca.bc.gov.open.ui.eTickets.DisputeTicketOptionsPicker;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -77,16 +78,7 @@ public class DisputeTicketUploadPNGIncorectRetriveData {
 		element.click();
 		System.out.println("Start dispute ticket");
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-		element.sendKeys("3220 Qadra");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-		element.sendKeys("Victoria");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
-		element.sendKeys("V8X1G3");
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
-		element.sendKeys(TICKET_EMAIL);
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
-		element.sendKeys("9999999999");
+		CommonMethods.addressInputForImageDispute(driverWait);
 
 		DisputeTicketUploadPNG review = new DisputeTicketUploadPNG();
 		review.review(element, driverWait, driver);
@@ -99,11 +91,11 @@ public class DisputeTicketUploadPNGIncorectRetriveData {
 
 		Thread.sleep(1000);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='fine_reduction_reason']")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='time_to_pay_reason']")));
 		element.sendKeys(
 				"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 

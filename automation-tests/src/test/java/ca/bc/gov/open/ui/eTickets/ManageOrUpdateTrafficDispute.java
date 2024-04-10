@@ -19,67 +19,67 @@ import static ca.bc.gov.open.cto.TicketInfo.*;
 
 public class ManageOrUpdateTrafficDispute {
 
-	private WebDriver driver;
+    private WebDriver driver;
 
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
-	}
+    @After
+    public void tearDown() {
+        driver.close();
+        driver.quit();
+    }
 
-	@AfterClass
-	public static void afterClass() {
-		CustomWebDriverManager.instance = null;
-	}
+    @AfterClass
+    public static void afterClass() {
+        CustomWebDriverManager.instance = null;
+    }
 
-	@Test
-	public void test() throws Exception {
-		driver = CustomWebDriverManager.getDriver();
-		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
+    @Test
+    public void test() throws Exception {
+        driver = CustomWebDriverManager.getDriver();
+        WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
+        WebElement element = CustomWebDriverManager.getElement();
+        CustomWebDriverManager.getElements();
 
-		SubmitToStaffWorkbench dispute = new SubmitToStaffWorkbench();
-		dispute.test();
+        SubmitToStaffWorkbench dispute = new SubmitToStaffWorkbench();
+        dispute.test();
 
-		CommonUtils.login();
+        CommonUtils.login();
 
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		element = driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Manage or update my dispute')]")));
-		Thread.sleep(1000);
-		js.executeScript("arguments[0].click();", element);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        element = driverWait.until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'Manage or update my dispute')]")));
+        Thread.sleep(1000);
+        js.executeScript("arguments[0].click();", element);
 
-		element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
-		element.sendKeys(E_TICKET_NUMBER);
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-0")));
+        element.sendKeys(E_TICKET_NUMBER);
 
-		element = driverWait
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'HH')]")));
-		element.sendKeys(E_TICKET_TIME_HOURS);
+        element = driverWait
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'HH')]")));
+        element.sendKeys(E_TICKET_TIME_HOURS);
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'MM')]")))
-				.sendKeys(E_TICKET_TIME_MINUTES);
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
-				.click();
-		Thread.sleep(1000);
-		// Start Traffic ticket dispute request
-		JavascriptExecutor js1 = (JavascriptExecutor) driver;
-		// Scroll down till the bottom of the page
-		js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-		System.out.println("Scroll down till the bottom of the page");
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(@placeholder,'MM')]")))
+                .sendKeys(E_TICKET_TIME_MINUTES);
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Find ticket ')]")))
+                .click();
+        Thread.sleep(1000);
+        // Start Traffic ticket dispute request
+        JavascriptExecutor js1 = (JavascriptExecutor) driver;
+        // Scroll down till the bottom of the page
+        js1.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+        System.out.println("Scroll down till the bottom of the page");
 
-		driverWait.until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//*[contains(text(), 'What would you like to do?')]")));
+        driverWait.until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'What would you like to do?')]")));
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//b[contains(text(), 'Check Status')]")))
-				.click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//b[contains(text(), 'Check Status')]")))
+                .click();
 
 
-		new WebDriverWait(driver, Duration.ofSeconds(10))
-				.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(text(), 'Submitted')]")));
-	}
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(text(), 'Submitted')]")));
+    }
 
 }

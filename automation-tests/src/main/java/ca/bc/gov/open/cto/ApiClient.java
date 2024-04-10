@@ -15,7 +15,7 @@ import java.io.InputStream;
 import static ca.bc.gov.open.cto.TicketInfo.*;
 
 public class ApiClient {
-    public static final String IMAGE_ENDPOINT_URL = "https://ticket-gen-0198bb-tools.apps.silver.devops.gov.bc.ca/generate/v2?writingStyle=1";
+    public static final String IMAGE_ENDPOINT_URL = "https://ticket-gen-0198bb-tools.apps.silver.devops.gov.bc.ca/generate/v2?writingStyle=2";
     public static final String E_TICKET_ENDPOINT_URL = "https://citizen-api-0198bb-dev.apps.silver.devops.gov.bc.ca/api/invoice";
 
     public static void generateImageTicket() {
@@ -203,7 +203,7 @@ public class ApiClient {
                     "    \"attribute4\": \"\",\n" +
                     "    \"act\": \"" + actConstant + "\",\n" +
                     "    \"section_number\": \"" + sectionConstant + "\",\n" +
-                    "    \"evt_form_number\": \"\"\n" +
+                    "    \"evt_form_number\": \"MV6000E (040924)\"\n" +
                     "}";
 
             System.out.println("E-Ticket Request:\n" + jsonTemplate);

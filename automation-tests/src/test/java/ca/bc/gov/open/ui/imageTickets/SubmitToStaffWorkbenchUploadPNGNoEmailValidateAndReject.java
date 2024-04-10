@@ -2,15 +2,13 @@ package ca.bc.gov.open.ui.imageTickets;
 
 import java.time.Duration;
 
+import ca.bc.gov.open.cto.CommonMethods;
 import ca.bc.gov.open.ui.eTickets.DisputeTicketOptionsPicker;
 import ca.bc.gov.open.ui.eTickets.SubmitToStaffWorkbench;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -53,6 +51,8 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
         SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject submit = new SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject();
         submit.submitPNG(element, driverWait, driver);
 
+        Thread.sleep(2 * 60 * 1000); // wait 2 mins, it's taking time to process ticket on BE side
+
         // Switch to Staff Workbench\
         CommonUtils.loginStaffWorkbench();
 
@@ -66,7 +66,7 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
         staffRejectImageTicket(driverWait, driver);
     }
 
-public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) throws Exception {
+    public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) throws Exception {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Reject ')]")))
                 .click();
@@ -126,20 +126,22 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
         element.click();
         System.out.println("Start dispute ticket");
 
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-        element.sendKeys("3220 Qadra");
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-        element.sendKeys("Victoria");
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
-        element.sendKeys("V8X1G3");
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-        element.sendKeys(TICKET_EMAIL);
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
-        element.sendKeys("9999999999");
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
-        element.sendKeys("999999999");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
+//        element.sendKeys("3220 Qadra");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
+//        element.sendKeys("Victoria");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
+//        element.sendKeys("V8X1G3");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
+//        element.sendKeys(TICKET_EMAIL);
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
+//        element.sendKeys("9999999999");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
+//        element.sendKeys("999999999");
 
-        Thread.sleep(1000);
+        CommonMethods.addressInputForImageDispute(driverWait);
+
+        Thread.sleep(2000);
         JavascriptExecutor js2 = (JavascriptExecutor) driver;
 
         element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-select-6")));
@@ -151,6 +153,7 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
 
         Thread.sleep(1000);
         element = driverWait
+                //I prefer to be contacted by regular mail
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".mat-checkbox-inner-container")));
         Thread.sleep(1000);
         js2.executeScript("arguments[0].click();", element);
@@ -169,11 +172,11 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
 
         Thread.sleep(1000);
 
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-13")));
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='fine_reduction_reason']")));
         element.sendKeys(
                 "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-14")));
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@formcontrolname='time_to_pay_reason']")));
         element.sendKeys(
                 "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu");
 
@@ -186,10 +189,6 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), 'Please review and ensure details are correct before submission. You may update your dispute online up to 5 business days prior to a set Hearing Date.')]")));
 
-        // Click Next
-//        JavascriptExecutor js5 = (JavascriptExecutor) driver;
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//strong[contains(text(),'Submit request')]")));
-//        js5.executeScript("arguments[0].click();", element);
 
         Thread.sleep(1000);
         System.out.println("Click Submit button");
@@ -213,18 +212,21 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
 
         element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("ticketNumber")));
         element.sendKeys(TICKET_NUMBER);
+        element.sendKeys(Keys.RETURN);
 
         Thread.sleep(1000);
 
         // Click first entry and verify the new created user is present
         new WebDriverWait(driver, Duration.ofSeconds(60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + TICKET_NUMBER + "')]")));
-        new WebDriverWait(driver, Duration.ofSeconds(60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
-
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(text(), '" + TICKET_NUMBER + "')]")));
+        Thread.sleep(3000);
+//
+//        new WebDriverWait(driver, Duration.ofSeconds(60))
+//                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
+//
         Thread.sleep(1000);
         element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//a[contains(text(), '" +  TICKET_NUMBER + "')]")));
+                .xpath("//a[contains(text(), '" + TICKET_NUMBER + "')]")));
         element.click();
 
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
@@ -247,40 +249,40 @@ public void staffRejectImageTicket(WebDriverWait driverWait, WebDriver driver) t
 //                .xpath("//span[contains(text(), 'Excessive Speeding')]")));
 //        element.click();
 
-////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
-////        element.clear();
-////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
-////        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
-//////
-//////        element.sendKeys("Driving Without Licence");
-//////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-//////                .xpath("//span[contains(text(), 'Driving Without Licence')]")));
-//////        element.click();
-////
-////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
-////        element.clear();
-////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
-////        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
-////
-//////        element.sendKeys("Driving With Burned Out Break Lights");
-//////        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-//////                .xpath("//span[contains(text(), 'Driving With Burned Out Break Lights')]")));
-//////        element.click();
-////
-////        Thread.sleep(1000);
-////        driver.findElement(By.xpath("//html")).click();
-////
-////        Thread.sleep(1000);
-////        driver.findElement(By.xpath("//html")).click();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+        element.clear();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-16")));
+        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
 //
-//
+//        element.sendKeys("Driving Without Licence");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//                .xpath("//span[contains(text(), 'Driving Without Licence')]")));
+//        element.click();
+
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
+        element.clear();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-18")));
+        element.sendKeys("MVA 10(1) Special licence for tractors, etc.");
+
+//        element.sendKeys("Driving With Burned Out Break Lights");
+//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
+//                .xpath("//span[contains(text(), 'Driving With Burned Out Break Lights')]")));
+//        element.click();
+
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//html")).click();
+
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//html")).click();
+
+
         Thread.sleep(1000);
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), ' Save ')]")))
                 .click();
 //
 
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(text(), 'Please describe the changes you made to the dispute')]/following-sibling::*//textarea")));
         element.sendKeys(

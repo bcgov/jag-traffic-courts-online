@@ -19,26 +19,26 @@ import static ca.bc.gov.open.cto.CommonMethods.*;
 
 public class DummyTest {
 
-	private WebDriver driver;
+    private WebDriver driver;
 
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
-	}
+    @After
+    public void tearDown() {
+        driver.close();
+        driver.quit();
+    }
 
-	@AfterClass
-	public static void afterClass() {
-		CustomWebDriverManager.instance = null;
-	}
+    @AfterClass
+    public static void afterClass() {
+        CustomWebDriverManager.instance = null;
+    }
 
-	@Test
-	public void test() throws Exception {
-		driver = CustomWebDriverManager.getDriver();
-		WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
-		WebElement element = CustomWebDriverManager.getElement();
-		CustomWebDriverManager.getElements();
-		driver.get("https://github.com/");
-	}
+    @Test
+    public void test() throws Exception {
+        driver = CustomWebDriverManager.getDriver();
+        WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
+        WebElement element = CustomWebDriverManager.getElement();
+        CustomWebDriverManager.getElements();
+        driver.get("https://github.com/");
+    }
 
 }
