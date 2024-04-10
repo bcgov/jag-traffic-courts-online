@@ -258,6 +258,15 @@ args: []
 ##     value: "bar"
 ##
 extraEnvVars: []
+  # - name: KC_HOSTNAME
+  #   value: "tco-oidc.jag.gov.bc.ca"
+  # - name: KC_HOSTNAME_ADMIN
+  #   value: "tco-oidc.jag.gov.bc.ca"
+  # - name: KC_HOSTNAME_STRICT
+  #   value: "true"
+  # - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+  #   value: "true"
+
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""

@@ -1,5 +1,5 @@
 <app-page>
-  <section>
+  <section *ngIf="environment !== 'prod'">
     <button mat-flat-button style="background-color: #19fb4a; color: #003366; width:100%; height:100px;" disabled="true">
       <h1><b>UNDER CONSTRUCTION DO NOT USE UNLESS YOU ARE AN AUTHORIZED TESTER</b></h1>
     </button>
