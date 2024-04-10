@@ -89,9 +89,8 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
     {
         Instrumentation.FormRecognizer.EndOperation(operation, e);
         var elapsedSeconds = (int)Math.Round(stopwatch.Elapsed.TotalSeconds);
-        var message = string.Format("Form Recognizer job timed out after {elapsedSeconds} seconds.", elapsedSeconds);
-        _logger.LogError(message);
-        return new TimeoutException(message, e);
+        _logger.LogInformation("Form Recognizer job timed out after {ElapsedSeconds} seconds.", elapsedSeconds);
+        return new TimeoutException("Form Recognizer job timed out", e);
     }
 
     private Exception HandleInternalServerError(ITimerOperation operation, Stopwatch stopwatch, Exception e)
@@ -100,9 +99,8 @@ public class FormRecognizerService_2022_08_31 : IFormRecognizerService
         // The root cause is not a timeout, but a Form Recognizer server error. So we wrap the exception to make it more clear of the actual cause.
         Instrumentation.FormRecognizer.EndOperation(operation, e);
         var elapsedSeconds = (int)Math.Round(stopwatch.Elapsed.TotalSeconds);
-        var message = string.Format("Form Recognizer internal server error after {elapsedSeconds} seconds, likely concurrent/locked file access of shared resources. Job was cancelled.", elapsedSeconds);
-        _logger.LogError(message);
-        return new Exception(message, e);
+        _logger.LogInformation("Form Recognizer internal server error after {ElapsedSeconds} seconds, likely concurrent/locked file access of shared resources. Job was cancelled.", elapsedSeconds);
+        return new Exception("Form Recognizer internal server error", e);
     }
 
     private Exception HandleOtherException(ITimerOperation operation, Exception e)

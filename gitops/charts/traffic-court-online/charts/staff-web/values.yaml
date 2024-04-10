@@ -50,6 +50,21 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+
+## @param appConfig application configuration json file
+## appConfig: |-
+##    {
+##      "production": false,
+##      "environment": "Dev",
+##      "version": "2.0.2",
+##      "useMockServices": false,
+##      "apiBaseUrl": "/api",
+##      "features": {
+##        "dispute":true
+##      }
+##    }
+appConfig: ""
+
 ## @param keycloakConfig keycloak configuration file
 ## keycloakConfig: |-
 ##    {
