@@ -240,7 +240,7 @@ staff-web:
   appConfig: |  
     {
         "production": false,
-        "environment": "Dev",
+        "environment": "dev",
         "version": "2.0.0",
         "useMockServices": false,
         "apiBaseUrl": "/api",
