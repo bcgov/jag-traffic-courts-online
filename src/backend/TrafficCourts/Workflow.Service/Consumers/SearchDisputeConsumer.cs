@@ -71,7 +71,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     DisputeStatus = result?.DisputeStatus.ToString(),
                     JJDisputeStatus = result?.JjDisputeStatus?.ToString(),
                     HearingType = result?.JjDisputeHearingType?.ToString(),
-                    IsEmailVerified = result?.IsEmailAddressVerified
+                    IsEmailVerified = result?.IsEmailAddressVerified,
+                    RequestCourtAppearanceYn = result?.RequestCourtAppearanceYn.ToString()
                 });
             }
             catch (Exception ex)

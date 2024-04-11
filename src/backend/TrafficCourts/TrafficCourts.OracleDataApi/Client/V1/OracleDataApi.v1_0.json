@@ -4775,6 +4775,16 @@
             "type": "boolean",
             "description": "Null if there is no email address, true if the email address has been successfully verified, false otherwise.",
             "nullable": true
+          },
+          "requestCourtAppearanceYn": {
+            "type": "string",
+            "description": "This represents user's request to appear in court if 'YES' or provide written reasons if 'NO', null if there was no response.",
+            "nullable": true,
+            "enum": [
+              "UNKNOWN",
+              "Y",
+              "N"
+            ]
           }
         }
       }
