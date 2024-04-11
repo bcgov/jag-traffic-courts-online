@@ -67,7 +67,7 @@ export class FormUtilsService {
    * Resets FormControl value(s) and clears associated validators.
    */
   public resetAndClearValidators(
-    control: FormControl | FormGroup,
+    control: FormControl | FormGroup | AbstractControl,
     blocklist: string[] = []
   ): void {
     if (control instanceof FormGroup) {
