@@ -1954,7 +1954,9 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {
+
+        }
       },
       "SearchDisputeResult": {
         "type": "object",
@@ -1975,6 +1977,9 @@
           "is_email_verified": {
             "type": "boolean",
             "nullable": true
+          },
+          "request_court_appearance": {
+            "$ref": "#/components/schemas/DisputeRequestCourtAppearanceYn"
           },
           "is_error": {
             "type": "boolean"
@@ -2313,7 +2318,7 @@
   },
   "security": [
     {
-      "Bearer": [ ]
+      "Bearer": []
     }
   ]
 }

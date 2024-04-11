@@ -241,6 +241,7 @@ public class DisputesController : ControllerBase
                 _ = Enum.TryParse(searchResponse.DisputeStatus, out DisputeStatus disputeStatus);
                 _ = Enum.TryParse(searchResponse.JJDisputeStatus, out JJDisputeStatus jjDisputeStatus);
                 _ = Enum.TryParse(searchResponse.HearingType, out JJDisputeHearingType hearingType);
+                _ = Enum.TryParse(searchResponse.RequestCourtAppearanceYn, out DisputeRequestCourtAppearanceYn requestCourtAppearanceYn);
 
                 SearchDisputeResult searchResult = new()
                 {
@@ -248,7 +249,8 @@ public class DisputesController : ControllerBase
                     DisputeStatus = disputeStatus,
                     JJDisputeStatus = jjDisputeStatus,
                     HearingType = hearingType,
-                    IsEmailVerified = searchResponse.IsEmailVerified
+                    IsEmailVerified = searchResponse.IsEmailVerified,
+                    RequestCourtAppearanceYn = requestCourtAppearanceYn
                 };
 
                 return Ok(searchResult);

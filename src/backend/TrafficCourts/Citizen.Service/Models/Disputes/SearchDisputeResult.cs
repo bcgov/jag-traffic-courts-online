@@ -20,6 +20,9 @@ namespace TrafficCourts.Citizen.Service.Models.Disputes
         [JsonPropertyName("is_email_verified")]
         public bool? IsEmailVerified { get; set; }
 
+        [JsonPropertyName("request_court_appearance")]
+        public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
+
         [JsonPropertyName("is_error")]
         public bool IsError { get; set; }
     }

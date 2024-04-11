@@ -1396,6 +1396,8 @@ namespace TrafficCourts.Domain.Models
         [Newtonsoft.Json.JsonProperty("isEmailAddressVerified", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? IsEmailAddressVerified { get; set; }
 
+        public DisputeRequestCourtAppearanceYn RequestCourtAppearanceYn { get; set; }
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
         [Newtonsoft.Json.JsonExtensionData]

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { QueryParamsForSearch } from '@shared/models/query-params-for-search.model';
-import { DisputeStatus, JJDisputeHearingType, JJDisputeStatus, SearchDisputeResult } from 'app/api';
+import { DisputeRequestCourtAppearanceYn, DisputeStatus, JJDisputeHearingType, JJDisputeStatus, SearchDisputeResult } from 'app/api';
 import { StatusStepType } from 'app/services/dispute.service';
 import { DisputeStore } from 'app/store';
 
@@ -42,7 +42,7 @@ export class DisputeStatusDialogComponent {
         }
         case StatusStepType.SCHEDULED: {
           step.isCompleted = this.dispute?.hearing_type === JJDisputeHearingType.CourtAppearance && this.checkScheduledCompleted();
-          if (this.dispute?.hearing_type === JJDisputeHearingType.CourtAppearance) this.steps.push(step);
+          if (this.dispute?.request_court_appearance === DisputeRequestCourtAppearanceYn.Y || this.dispute?.hearing_type === JJDisputeHearingType.CourtAppearance) this.steps.push(step);
           break;
         }
         case StatusStepType.CONCLUDED: {

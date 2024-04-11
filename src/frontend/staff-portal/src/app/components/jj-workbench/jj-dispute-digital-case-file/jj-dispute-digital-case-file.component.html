@@ -68,9 +68,12 @@
         <span *ngIf="element.status==='REQUIRE_COURT_HEARING'"><button mat-rounded-button
             style="color:white; background-color:#fcba19; width:150px; border-radius: 10px;" disabled="true">Require
             Court Hearing</button></span>
+        <span *ngIf="element.status==='CONFIRMED'"><button mat-rounded-button
+              style="color:white; background-color:#1a5a96; width:150px; border-radius: 10px;"
+              disabled="true">Confirmed</button></span>
         <span *ngIf="element.isCompleted"><button mat-rounded-button
             style="color:white; background-color:#c5c5c5; width:150px; border-radius: 10px;"
-            disabled="true">Complete</button></span>
+            disabled="true">Concluded</button></span>
       </td>
     </ng-container>
 
