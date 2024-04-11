@@ -54,10 +54,7 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndSubmitARCandCancel
         DisputeTicketOptionsPickerByMail popupWindowHandle = new DisputeTicketOptionsPickerByMail();
         popupWindowHandle.popup(element, driverWait, driver);
 
-        Thread.sleep(2 * 60 * 1000); // wait 2 mins, it's taking time to process ticket on BE side
-
         // Switch to Staff Workbench
-
         CommonUtils.loginStaffWorkbench();
 
         SubmitToStaffWorkbench loginStaff = new SubmitToStaffWorkbench();

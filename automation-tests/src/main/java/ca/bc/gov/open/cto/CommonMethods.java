@@ -10,48 +10,40 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.Calendar;
 
 import static ca.bc.gov.open.cto.Constants.*;
-import static ca.bc.gov.open.cto.Constants.LICENSE_XPATH;
 import static ca.bc.gov.open.cto.TicketInfo.*;
 
 public class CommonMethods {
 
     public static String user;
+
     public static void clickOnNextButton(WebDriver driver, WebDriverWait driverWait) throws InterruptedException {
-            // Click Next
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
-            js.executeScript("arguments[0].click();", element);
-            System.out.println("Click Next");
-            Thread.sleep(1000);
+        // Click Next
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("primaryButton")));
+        js.executeScript("arguments[0].click();", element);
+        System.out.println("Click Next");
+        Thread.sleep(1000);
     }
 
     public static void pleadGuilty1stCountDoNotAttendCourt(WebDriver driver, WebDriverWait driverWait) throws InterruptedException {
-            // Click Next
+        // Click Next
         JavascriptExecutor js = (JavascriptExecutor) driver;
         WebElement element = driverWait.until(ExpectedConditions
                 .presenceOfElementLocated(By.cssSelector("#mat-radio-5 .mat-radio-outer-circle")));
         js.executeScript("arguments[0].click();", element);
 
         System.out.println("I would like to plead guilty and request time to pay on this count.- selected");
-            Thread.sleep(1000);
+        Thread.sleep(1000);
     }
 
     public static void pleadGuilty1stCountAttendCourt(WebDriver driver, WebDriverWait driverWait) throws InterruptedException {
-//        JavascriptExecutor js = (JavascriptExecutor) driver;
-//        WebElement element = driverWait.until(ExpectedConditions
-//                .presenceOfElementLocated(By.cssSelector("#mat-checkbox-4 .mat-checkbox-inner-container")));
-//        js.executeScript("arguments[0].click();", element);
-
-//        clickOnElementByXpath(driver,driverWait,"//input[@id='mat-checkbox-2-input']");
-        clickOnElementByXpath(driver,driverWait,"//input[@id='mat-checkbox-3-input']");
+        clickOnElementByXpath(driver, driverWait, "//input[@id='mat-checkbox-3-input']");
         System.out.println("I would like to request a fine reduction on this count..- selected");
         Thread.sleep(1000);
     }
 
     public static void agreeCommitedOffence1stCountAttendCourt(WebDriver driver, WebDriverWait driverWait) throws InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-//        WebElement element = driverWait.until(ExpectedConditions
-//                .presenceOfElementLocated(By.cssSelector("#mat-radio-5 .mat-radio-button")));
         WebElement element = driverWait.until(ExpectedConditions
                 .presenceOfElementLocated(By.xpath("//input[@id='mat-radio-5-input']")));
 
@@ -114,7 +106,8 @@ public class CommonMethods {
         element.click();
         Thread.sleep(1000);
     }
-    public static void clickOnElementByXpath(WebDriver driver, WebDriverWait driverWait, String xpath)  {
+
+    public static void clickOnElementByXpath(WebDriver driver, WebDriverWait driverWait, String xpath) {
         driverWait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
 
         try {

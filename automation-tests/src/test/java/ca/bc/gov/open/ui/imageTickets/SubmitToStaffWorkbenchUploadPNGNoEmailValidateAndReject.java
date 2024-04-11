@@ -17,10 +17,14 @@ import ca.bc.gov.open.cto.CustomWebDriverManager;
 
 import static ca.bc.gov.open.cto.ApiClient.generateImageTicket;
 import static ca.bc.gov.open.cto.TicketInfo.*;
+import static ca.bc.gov.open.ui.eTickets.SubmitToStaffWorkbench.waitForElementWithRefresh;
 
 public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
 
     private WebDriver driver;
+    String xpath = "//a[contains(text(), '" + TICKET_NUMBER + "')]"; // XPath pattern for the element
+    int timeoutSeconds = 300; // Timeout in seconds (5 minutes)
+    int searchIntervalSeconds = 5; // Interval in seconds between search attempts
 
     @After
     public void tearDown() {
@@ -50,8 +54,6 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
 
         SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject submit = new SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject();
         submit.submitPNG(element, driverWait, driver);
-
-        Thread.sleep(2 * 60 * 1000); // wait 2 mins, it's taking time to process ticket on BE side
 
         // Switch to Staff Workbench\
         CommonUtils.loginStaffWorkbench();
@@ -126,19 +128,6 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
         element.click();
         System.out.println("Start dispute ticket");
 
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-4")));
-//        element.sendKeys("3220 Qadra");
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-5")));
-//        element.sendKeys("Victoria");
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-7")));
-//        element.sendKeys("V8X1G3");
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-6")));
-//        element.sendKeys(TICKET_EMAIL);
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-8")));
-//        element.sendKeys("9999999999");
-//        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-9")));
-//        element.sendKeys("999999999");
-
         CommonMethods.addressInputForImageDispute(driverWait);
 
         Thread.sleep(2000);
@@ -209,6 +198,16 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
     }
 
     public void staffWorkCheckAndEdit(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
+
+        xpath = "//a[contains(text(), '" + TICKET_NUMBER + "')]"; // XPath pattern for the element
+        element = waitForElementWithRefresh(driver, xpath, TICKET_NUMBER, timeoutSeconds, searchIntervalSeconds);
+        if (element != null) {
+            element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+            element.click();
+
+        } else {
+            System.out.println("Dispute not found.");
+        }
 
         element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("ticketNumber")));
         element.sendKeys(TICKET_NUMBER);

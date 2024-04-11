@@ -1,14 +1,11 @@
 package ca.bc.gov.open.ui.eTickets;
 
-import ca.bc.gov.open.cto.CommonMethods;
 import ca.bc.gov.open.cto.CommonUtils;
 import ca.bc.gov.open.cto.CustomWebDriverManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
-
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -18,7 +15,7 @@ import java.time.Duration;
 
 import static ca.bc.gov.open.cto.TicketInfo.*;
 
-public class SubmitToStaffWorkbench {
+public class ManualTicketCheckOnStaffWorkbench {
 
     private WebDriver driver;
     private String user;
@@ -26,6 +23,7 @@ public class SubmitToStaffWorkbench {
     private static String appPASSWORD = System.getenv("PASSWORD_APP");
 
     String xpath = "//a[contains(text(), '" + E_TICKET_NUMBER + "')]"; // XPath pattern for the element
+    String searchText = E_TICKET_NUMBER; // Text to search
     int timeoutSeconds = 300; // Timeout in seconds (5 minutes)
     int searchIntervalSeconds = 5; // Interval in seconds between search attempts
 
@@ -45,12 +43,13 @@ public class SubmitToStaffWorkbench {
         driver = CustomWebDriverManager.getDriver();
         WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
 
-        DisputeTicketOptionsPickerByMail dispute = new DisputeTicketOptionsPickerByMail();
-        dispute.test();
+        E_TICKET_NUMBER = "ET57345336";
+        searchText = E_TICKET_NUMBER; // Text to search
+        xpath = "//a[contains(text(), '" + E_TICKET_NUMBER + "')]"; // XPath pattern for the element
 
         CommonUtils.loginStaffWorkbench();
 
-        SubmitToStaffWorkbench loginStaff = new SubmitToStaffWorkbench();
+        ManualTicketCheckOnStaffWorkbench loginStaff = new ManualTicketCheckOnStaffWorkbench();
         loginStaff.loginToStaffWorkbenchWithUser(driverWait, driver, appUSERNAME);
 
         validateTicketOnStaffWOrkbench(driverWait, driver);
@@ -58,10 +57,10 @@ public class SubmitToStaffWorkbench {
 
     public void validateTicketOnStaffWOrkbench(WebDriverWait driverWait, WebDriver driver) throws Exception {
 
-        xpath = "//a[contains(text(), '" + E_TICKET_NUMBER + "')]"; // XPath pattern for the element
-        WebElement element = waitForElementWithRefresh(driver, xpath, E_TICKET_NUMBER, timeoutSeconds, searchIntervalSeconds);
+        WebElement element = SubmitToStaffWorkbench.waitForElementWithRefresh(driver, xpath, searchText, timeoutSeconds, searchIntervalSeconds);
         if (element != null) {
-            element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+            element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
+                    "//a[contains(text(), '" + E_TICKET_NUMBER + "')]")));
             element.click();
 
         } else {
@@ -118,42 +117,6 @@ public class SubmitToStaffWorkbench {
 
         new WebDriverWait(driver, Duration.ofSeconds(20)).until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//*[contains(text(), 'Sign out')]")));
-    }
-
-    public static WebElement waitForElementWithRefresh(WebDriver driver, String xpath, String searchText, int timeoutSeconds, int searchIntervalSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        WebElement element = null;
-        boolean found = false;
-
-        long startTime = System.currentTimeMillis();
-        while (!found && (System.currentTimeMillis() - startTime) < (timeoutSeconds * 1000)) {
-            try {
-                WebElement searchElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("ticketNumber")));
-                searchElement.clear();
-                searchElement.sendKeys(searchText);
-                searchElement.sendKeys(Keys.RETURN);
-
-                element = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
-                found = true;
-            } catch (Exception e) {
-                // If element is not found, refresh the page and perform the search again
-                driver.navigate().refresh();
-            }
-            // Wait for the specified interval before retrying
-            try {
-                Thread.sleep(searchIntervalSeconds * 1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        // If element is found, return it
-        if (found) {
-            return element;
-        } else {
-            System.out.println("Dispute ticket wasn't created. Not found.");
-            return null;
-        }
     }
 
 }
