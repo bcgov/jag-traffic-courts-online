@@ -26,6 +26,7 @@ public class SearchDisputeResponseTest
         Assert.Null(sut.DisputeStatus);
         Assert.Null(sut.NoticeOfDisputeGuid);
         Assert.Null(sut.JJDisputeStatus);
+        Assert.Null(sut.RequestCourtAppearanceYn);
     }
 
     [Fact]
@@ -41,5 +42,6 @@ public class SearchDisputeResponseTest
         Assert.Null(sut.DisputeStatus);
         Assert.Null(sut.NoticeOfDisputeGuid);
         Assert.Null(sut.JJDisputeStatus);
+        Assert.Null(sut.RequestCourtAppearanceYn);
     }
 }
