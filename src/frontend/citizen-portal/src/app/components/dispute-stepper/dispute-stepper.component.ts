@@ -131,19 +131,19 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // build form
     this.form = this.noticeOfDisputeService.getNoticeOfDisputeForm(this.ticket);
-    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance);    
+    this.requestCourtAppearanceFormControl.setValue((<NoticeOfDispute>this.ticket)?.request_court_appearance);
     let signatory_type = (<NoticeOfDispute>this.ticket)?.signatory_type;
-    if(signatory_type){
+    if (signatory_type) {
       this.signatureBoxForm.controls.signatory_type.setValue(signatory_type);
       let signatory_name = (<NoticeOfDispute>this.ticket)?.signatory_name;
-      if(signatory_type === "D"){
+      if (signatory_type === this.SignatoryType.D) {
         this.signatureBoxForm.controls.disputant_signatory_name.setValue(signatory_name);
         this.signatureBoxForm.controls.agent_signatory_name.disable();
-      } else if(signatory_type === "A"){
+      } else if (signatory_type === this.SignatoryType.A) {
         this.signatureBoxForm.controls.agent_signatory_name.setValue(signatory_name);
         this.signatureBoxForm.controls.disputant_signatory_name.disable();
       }
-    } else{
+    } else {
       this.signatureBoxForm.controls.agent_signatory_name.disable();
       this.signatureBoxForm.controls.disputant_signatory_name.disable();
     }
@@ -227,9 +227,9 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
     var signatoryName = null;
     if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.D) {
-      signatoryName = this.signatureBoxForm.get('disputant_signatory_name');
+      signatoryName = this.signatureBoxForm.controls.disputant_signatory_name;
     } else if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.A) {
-      signatoryName = this.signatureBoxForm.get('agent_signatory_name');
+      signatoryName = this.signatureBoxForm.controls.agent_signatory_name;
     }
 
     let fileData: FileMetadata[] = [];
@@ -275,8 +275,8 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.Y) {
           valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
         } else if (this.requestCourtAppearanceFormControl.value === this.RequestCourtAppearance.N) {
-          valid = valid && this.isSignatureFormValid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || 
-          (countForm.value.request_reduction === this.RequestReduction.Y));
+          valid = valid && this.isSignatureFormValid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) ||
+            (countForm.value.request_reduction === this.RequestReduction.Y));
         }
         allCountsValid = allCountsValid && (valid || countForm.value.__skip);
       }
@@ -286,9 +286,9 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   private get isSignatureFormValid(): boolean {
     if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.D) {
-      return this.signatureBoxForm?.get('disputant_signatory_name')?.valid;
+      return this.signatureBoxForm?.controls.disputant_signatory_name?.valid;
     } else if (this.signatureBoxForm?.value.signatory_type === this.SignatoryType.A) {
-      return this.signatureBoxForm?.get('agent_signatory_name')?.valid;
+      return this.signatureBoxForm?.controls.agent_signatory_name?.valid;
     }
   }
 
@@ -300,6 +300,14 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     return result && this.additionalForm?.valid;
   }
 
+  get isRequestedCourtAppearance(): boolean {
+    return (<NoticeOfDispute>this.ticket)?.request_court_appearance === this.RequestCourtAppearance.Y;
+  }
+
+  isPledGuilty(count: Count): boolean {
+    return count.dispute_count?.plea_cd === this.Plea.G;
+  }
+
   onChangeRequestCourtAppearance(value: DisputeRequestCourtAppearanceYn) {
     if (typeof value !== "undefined") {
       this.noticeOfDispute.request_court_appearance = value;
@@ -308,17 +316,15 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
         count.form.controls.request_reduction.setValue(this.RequestReduction.N);
         count.form.controls.request_time_to_pay.setValue(this.RequestTimeToPay.N);
         count.form.controls.__skip.setValue(false);
+
+        if (value === this.RequestCourtAppearance.Y) {
+          count.form.patchValue(count.dispute_count);
+        }
       })
       if (value === this.RequestCourtAppearance.Y) {
-        this.signatureBoxForm.controls.signatory_type.setValue(null);
-        this.signatureBoxForm.controls.disputant_signatory_name.setValue(null);
-        this.signatureBoxForm.controls.agent_signatory_name.setValue(null);
-        this.signatureBoxForm.controls.signatory_type.clearValidators();
-        this.signatureBoxForm.controls.disputant_signatory_name.clearValidators();
-        this.signatureBoxForm.controls.agent_signatory_name.clearValidators();
-        this.signatureBoxForm.controls.signatory_type.updateValueAndValidity();
-        this.signatureBoxForm.controls.disputant_signatory_name.updateValueAndValidity();
-        this.signatureBoxForm.controls.agent_signatory_name.updateValueAndValidity();
+        this.formUtilsService.resetAndClearValidators(this.signatureBoxForm.controls.signatory_type);
+        this.formUtilsService.resetAndClearValidators(this.signatureBoxForm.controls.disputant_signatory_name);
+        this.formUtilsService.resetAndClearValidators(this.signatureBoxForm.controls.agent_signatory_name);
       }
     }
   }
@@ -352,9 +358,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (value === this.InterpreterRequired.Y) {
       this.additionalForm.controls.interpreter_language_cd.setValidators([Validators.required]);
     } else {
-      this.additionalForm.controls.interpreter_language_cd.setValue(null);
-      this.additionalForm.controls.interpreter_language_cd.clearValidators();
-      this.additionalForm.controls.interpreter_language_cd.updateValueAndValidity();
+      this.formUtilsService.resetAndClearValidators(this.additionalForm.controls.interpreter_language_cd);
     }
   }
 
@@ -362,9 +366,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (event.checked) {
       this.additionalForm.controls.witness_no.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
-      this.additionalForm.controls.witness_no.setValue(null);
-      this.additionalForm.controls.witness_no.clearValidators();
-      this.additionalForm.controls.witness_no.updateValueAndValidity();
+      this.formUtilsService.resetAndClearValidators(this.additionalForm.controls.witness_no);
     }
   }
 
@@ -376,20 +378,15 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   onChangeSignatureType(value: DisputeSignatoryType) {
     if (value === this.SignatoryType.D) {
       this.signatureBoxForm.controls.disputant_signatory_name.setValidators([Validators.maxLength(100), Validators.required]);
-      this.signatureBoxForm.controls.agent_signatory_name.setValue(null);
-      this.signatureBoxForm.controls.agent_signatory_name.clearValidators();
+      this.formUtilsService.resetAndClearValidators(this.signatureBoxForm.controls.agent_signatory_name);
       this.signatureBoxForm.controls.agent_signatory_name.disable();
       this.signatureBoxForm.controls.disputant_signatory_name.enable();
     } else if (value === this.SignatoryType.A) {
       this.signatureBoxForm.controls.agent_signatory_name.setValidators([Validators.maxLength(100), Validators.required]);
-      this.signatureBoxForm.controls.disputant_signatory_name.setValue(null);
-      this.signatureBoxForm.controls.disputant_signatory_name.clearValidators();
+      this.formUtilsService.resetAndClearValidators(this.signatureBoxForm.controls.disputant_signatory_name);
       this.signatureBoxForm.controls.disputant_signatory_name.disable();
       this.signatureBoxForm.controls.agent_signatory_name.enable();
     }
-
-    this.signatureBoxForm.controls.agent_signatory_name.updateValueAndValidity();
-    this.signatureBoxForm.controls.disputant_signatory_name.updateValueAndValidity();
   }
 
   getToolTipDEata(data) {
