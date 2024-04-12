@@ -67,4 +67,5 @@ package-lock.json
 # SFTP file location that contains generated ARC files 
 /sftp-in
 automation-tests/.idea/
+automation-tests/TestUpload.png
 .idea/
