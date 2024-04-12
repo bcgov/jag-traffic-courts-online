@@ -18,6 +18,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
+import static ca.bc.gov.open.cto.Config.HEADLESS;
+
 public class CustomWebDriverManager {
 
 	public static CustomWebDriverManager instance = null;
@@ -54,10 +56,11 @@ public class CustomWebDriverManager {
 		if (Config.SELECTED_DRIVER.equals(Constants.CHROME_DRIVER)) {
 
 			ChromeOptions options = getChromeOptions();
+
+			if (HEADLESS) { options.addArguments("--headless");}
 			options.addArguments("--disable-notifications"); //disables 3rd party notifications
 			options.addArguments("--disable-extensions"); //disables 3rd party extensions
 			options.addArguments("--no-sandbox");
-			options.addArguments("--headless");
 			options.addArguments("--window-size=1920,1080");
 			options.addArguments("--disable-dev-shm-usage");
 			options.addArguments("--verbose");
@@ -73,7 +76,7 @@ public class CustomWebDriverManager {
 		} else if (Config.SELECTED_DRIVER.equals(Constants.FIREFOX_DRIVER)) {
 
 			FirefoxOptions options = new FirefoxOptions();
-			options.addArguments("--headless");
+			if (HEADLESS) { options.addArguments("--headless");}
 			WebDriverManager.firefoxdriver().setup();
 			WebDriver driver = new FirefoxDriver(options);
 			driver.manage().window().maximize();
@@ -102,7 +105,7 @@ public class CustomWebDriverManager {
 			options.addArguments("--disable-notifications"); //disables 3rd party notifications
 			options.addArguments("--disable-extensions"); //disables 3rd party extensions
 			options.addArguments("--no-sandbox");
-//			options.addArguments("--headless");
+			if (HEADLESS) { options.addArguments("--headless");}
 			options.addArguments("--window-size=1920,1080");
 //			options.addArguments("--kiosk"); // full screen for not headless run
 			options.addArguments("--disable-dev-shm-usage");

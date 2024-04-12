@@ -23,7 +23,7 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
 
     private WebDriver driver;
     String xpath = "//a[contains(text(), '" + TICKET_NUMBER + "')]"; // XPath pattern for the element
-    int timeoutSeconds = 300; // Timeout in seconds (5 minutes)
+    int timeoutSeconds = 600; // (10 minutes) Timeout in seconds for order to appear in staff workbench
     int searchIntervalSeconds = 5; // Interval in seconds between search attempts
 
     @After
@@ -199,34 +199,16 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
 
     public void staffWorkCheckAndEdit(WebElement element, WebDriverWait driverWait, WebDriver driver) throws Exception {
 
+        System.out.println("Started ticket search... ");
         xpath = "//a[contains(text(), '" + TICKET_NUMBER + "')]"; // XPath pattern for the element
         element = waitForElementWithRefresh(driver, xpath, TICKET_NUMBER, timeoutSeconds, searchIntervalSeconds);
         if (element != null) {
             element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
             element.click();
-
+            System.out.println("Ticket is found.");
         } else {
-            System.out.println("Dispute not found.");
+            System.out.println("Ticket is not found.");
         }
-
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.name("ticketNumber")));
-        element.sendKeys(TICKET_NUMBER);
-        element.sendKeys(Keys.RETURN);
-
-        Thread.sleep(1000);
-
-        // Click first entry and verify the new created user is present
-        new WebDriverWait(driver, Duration.ofSeconds(60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(text(), '" + TICKET_NUMBER + "')]")));
-        Thread.sleep(3000);
-//
-//        new WebDriverWait(driver, Duration.ofSeconds(60))
-//                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_NAME + "')]")));
-//
-        Thread.sleep(1000);
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//a[contains(text(), '" + TICKET_NUMBER + "')]")));
-        element.click();
 
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
                 .presenceOfElementLocated(By.xpath("//*[contains(text(), '" + IMAGE_TICKET_SECTION_1 + "')]")));
@@ -268,8 +250,8 @@ public class SubmitToStaffWorkbenchUploadPNGNoEmailValidateAndReject {
 //                .xpath("//span[contains(text(), 'Driving With Burned Out Break Lights')]")));
 //        element.click();
 
-        Thread.sleep(1000);
-        driver.findElement(By.xpath("//html")).click();
+//        Thread.sleep(1000);
+//        driver.findElement(By.xpath("//html")).click();
 
         Thread.sleep(1000);
         driver.findElement(By.xpath("//html")).click();
