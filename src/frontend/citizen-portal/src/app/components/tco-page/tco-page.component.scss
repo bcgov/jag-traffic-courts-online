@@ -29,6 +29,10 @@
     &:first-child {
       margin-left: 0;
     }
+
+    &:last-child {
+      padding-right: 1em;
+    }
   }
 
   a {
@@ -48,6 +52,7 @@ div.summary-header {
   min-height: 60px;
   padding: 20px 0;
   opacity: 0.8;
+  overflow-x: auto;
 }
 
 div.container {

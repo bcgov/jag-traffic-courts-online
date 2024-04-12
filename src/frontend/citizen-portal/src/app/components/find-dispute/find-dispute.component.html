@@ -16,7 +16,7 @@
               <mat-label>Enter violation ticket number</mat-label>
               <input formControlName="ticketNumber" placeholder="XX00000000" matInput type="text"
                 oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off" />
-              <button mat-button matSuffix mat-icon-button aria-label="Clear"
+              <button mat-button matSuffix mat-icon-button type="button" aria-label="Clear"
                 (click)="form.controls.ticketNumber.setValue('')">
                 <mat-icon>close</mat-icon>
               </button>
