@@ -12,6 +12,7 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TicketInformationDialogComponent } from '@shared/dialogs/ticket-information-dialog/ticket-information-dialog.component';
+import { WindowRefService } from '@core/services/window-ref.service';
 
 @Component({
   selector: 'app-find-ticket',
@@ -25,7 +26,7 @@ export class FindTicketComponent implements OnInit {
   dialogRef: MatDialogRef<WaitForOcrDialogComponent>;
   analyzingTicket: boolean = false;
   notFound = false;
-  toolTipData = 'If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca and include your Given Name, Surname and Violation Ticket Number.';  
+  toolTipData = 'If you cannot upload a copy of your handwritten ticket, please contact support at Courts.TCO@gov.bc.ca and include your Given Name, Surname and Violation Ticket Number.';
   configuration = new Configuration();
 
   constructor(
@@ -35,6 +36,7 @@ export class FindTicketComponent implements OnInit {
     private ngProgress: NgProgress,
     private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
+    private window: WindowRefService
   ) {
     this.progressRef?.state?.subscribe(value => {
       if (value.active === false) this.dialogRef?.close();
@@ -69,16 +71,16 @@ export class FindTicketComponent implements OnInit {
 
   onFileChange(event: any) {
     this.logger.log('FindTicketComponent::onFileChange');
-    this.viewWaitForOcr();
-    this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef, this.dialogRef);
-    event.target.value = null; // reset file input
-  }
+    this.window.nativeWindow.scroll(0, 0);
 
-  viewWaitForOcr(): void {
-    this.dialogRef = this.dialog.open(WaitForOcrDialogComponent, {
-      width: '600px',
-      disableClose: true
-    });
+    setTimeout(() => {
+      this.dialogRef = this.dialog.open(WaitForOcrDialogComponent, {
+        width: '600px',
+        disableClose: true
+      });
+      this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef, this.dialogRef);
+      event.target.value = null; // reset file input
+    }, 400);
   }
 
   onViewTicketExample(): void {
