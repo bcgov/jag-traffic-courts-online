@@ -55,12 +55,16 @@ public class CustomWebDriverManager {
 
 		if (Config.SELECTED_DRIVER.equals(Constants.CHROME_DRIVER)) {
 
-			ChromeOptions options = getChromeOptions();
+			Map<String,String> prefs = new HashMap<>();
+			prefs.put("safebrowsing.enabled", "false"); // Bypass warning message, keep file anyway (for .exe, .jar, etc.)
+
+			ChromeOptions options = new ChromeOptions();
 
 			if (HEADLESS) { options.addArguments("--headless");}
 			options.addArguments("--disable-notifications"); //disables 3rd party notifications
 			options.addArguments("--disable-extensions"); //disables 3rd party extensions
 			options.addArguments("--no-sandbox");
+			options.addArguments("--start-maximized");
 			options.addArguments("--window-size=1920,1080");
 			options.addArguments("--disable-dev-shm-usage");
 			options.addArguments("--verbose");
@@ -68,6 +72,8 @@ public class CustomWebDriverManager {
 			options.addArguments("--ignore-ssl-errors=yes");
 			options.addArguments("--ignore-certificate-errors");
 			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("test-type");
+			options.setExperimentalOption("prefs", prefs);
 			WebDriverManager.chromedriver().setup();
 			WebDriver driver = new ChromeDriver(options);
 			driver.manage().window().maximize();
@@ -123,23 +129,6 @@ public class CustomWebDriverManager {
 
 		return driver;
 
-	}
-	private static ChromeOptions getChromeOptions() {
-
-		Map<String,String> prefs = new HashMap<>();
-		prefs.put("safebrowsing.enabled", "false"); // Bypass warning message, keep file anyway (for .exe, .jar, etc.)
-
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--disable-notifications"); //disables 3rd party notifications
-		options.addArguments("disable-extensions"); //disables 3rd party extensions
-		options.addArguments("--no-sandbox");
-		options.addArguments("test-type");
-		options.setExperimentalOption("prefs", prefs);
-		options.addArguments("start-maximized");
-		options.addArguments("--remote-allow-origins=*");
-		//options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1080","--ignore-certificate-errors","--no-sandbox", "--disable-dev-shm-usage");
-
-		return options;
 	}
 
 	public static WebDriver getDriver() {
