@@ -1,4 +1,5 @@
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Health;
 using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Diagnostics;
 using TrafficCourts.Staff.Service;
@@ -25,6 +26,7 @@ app.MapControllers()
     .RequireAuthorization(); // This will set a default policy that says a user has to be authenticated
 
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
+app.MapDefaultHealthCheckEndpoints();
 
 bool isDevelopment = app.Environment.IsDevelopment();
 try

@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Serilog;
 using Serilog.Exceptions.Core;
 using Serilog.Exceptions;
+using BCGov.VirusScan.Api.Health;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<VirusScanController>()); // some anchor class
 builder.Services.AddVirusScan();
 builder.AddInstrumentation();
+builder.AddDefaultHealthChecks();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -47,6 +49,7 @@ app.MapControllers();
 
 // not sure if this is working yet
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
+app.MapDefaultHealthCheckEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

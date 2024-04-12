@@ -5,6 +5,7 @@ using TrafficCourts.Citizen.Service;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Health;
 using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Diagnostics;
 
@@ -30,6 +31,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
+app.MapDefaultHealthCheckEndpoints();
 
 bool isDevelopment = app.Environment.IsDevelopment();
 try

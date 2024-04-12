@@ -17,6 +17,7 @@ using FluentValidation;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using ZiggyCreatures.Caching.Fusion;
+using TrafficCourts.Common.Health;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -62,6 +63,8 @@ public static class Startup
                     .AddMassTransitInstrumentation();
             }
         );
+
+        builder.AddDefaultHealthChecks();
 
         builder.Services.AddHttpContextAccessor();
 

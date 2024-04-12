@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Health;
 using TrafficCourts.Configuration.Validation;
 using TrafficCourts.Diagnostics;
 using TrafficCourts.Workflow.Service;
@@ -23,11 +23,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
-
-app.UseHealthChecks("/health/ready", new HealthCheckOptions()
-{
-    Predicate = (check) => check.Tags.Contains("ready")
-});
+app.MapDefaultHealthCheckEndpoints();
 
 bool isDevelopment = app.Environment.IsDevelopment();
 try

@@ -7,6 +7,7 @@ using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Health;
 using TrafficCourts.Common.OpenAPIs.VirusScan;
 using TrafficCourts.Messaging;
 using TrafficCourts.Workflow.Service.Configuration;
@@ -49,6 +50,8 @@ public static class Startup
                 .AddMassTransitInstrumentation()
                 .AddOracleDataApiInstrumentation();
         });
+
+        builder.AddDefaultHealthChecks();
 
         builder.Services.AddControllers();
 

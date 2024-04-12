@@ -6,6 +6,7 @@ using TrafficCourts.Arc.Dispute.Service.Services;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Converters;
+using TrafficCourts.Common.Health;
 
 namespace TrafficCourts.Arc.Dispute.Service;
 
@@ -22,6 +23,8 @@ public static class Startup
 
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger);
+
+        builder.AddDefaultHealthChecks();
 
         // Registering and Initializing AutoMapper
         builder.Services.AddAutoMapper(assembly);
