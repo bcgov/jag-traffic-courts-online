@@ -175,5 +175,26 @@ public class FormRecognizerValidatorTest
         Assert.True(string.IsNullOrEmpty(violationTicket.Fields[OcrViolationTicket.Count3Description].Value));
     }
 
+    [Fact]
+    public async void TestSanitize_WhitespaceRemoved()
+    {
+        // Given
+        var _statuteLookupService = new Mock<IStatuteLookupService>();
+        var _logger = new Mock<ILogger<FormRecognizerValidator>>();
+        FormRecognizerValidator formRecognizerValidator = new(_statuteLookupService.Object, _logger.Object);
 
+        OcrViolationTicket violationTicket = new();
+        violationTicket.Fields.Add(OcrViolationTicket.DetachmentLocation, new Field(" \t \n some_text \t "));
+        violationTicket.Fields.Add(OcrViolationTicket.HearingLocation, new Field(" \t \r\n some_text \t "));
+        violationTicket.Fields.Add(OcrViolationTicket.ViolationTicketTitle, new Field(" \t \n some_text \t "));
+
+        // When
+        await formRecognizerValidator.SanitizeAsync(violationTicket);
+
+        // Then
+        Assert.Equal(" some_text ", violationTicket.Fields[OcrViolationTicket.DetachmentLocation].Value);
+        Assert.Equal(" some_text ", violationTicket.Fields[OcrViolationTicket.HearingLocation].Value);
+        Assert.Equal(" some_text ", violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle].Value);
+    }    
+    
 }

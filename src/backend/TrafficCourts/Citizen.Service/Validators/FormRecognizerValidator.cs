@@ -130,10 +130,13 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             if (violationTicket.Fields.TryGetValue(sectionKey, out var field))
             {
                 var titleValue = field.Value ?? "";
-                field.Value = Regex.Replace(titleValue, @"\s", " "); // replace all whitespace characters with a space
+                field.Value = Regex.Replace(titleValue, @"[\s\0\b\a]+", " "); // replace all whitespace characters with a space
             }
         }
 
+        // TCVP-2914 replace newline characters from location
+        SanitizeWhiteSpace(OcrViolationTicket.DetachmentLocation);
+        SanitizeWhiteSpace(OcrViolationTicket.HearingLocation);
         SanitizeWhiteSpace(OcrViolationTicket.ViolationTicketTitle);
 
         SanitizeCount(OcrViolationTicket.Count1Section, OcrViolationTicket.Count1ActRegs, OcrViolationTicket.Count1Description, OcrViolationTicket.Count1TicketAmount);
