@@ -45,6 +45,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
   private state: DisputeStore.State;
   previousButtonIcon = "keyboard_arrow_left";
   previousButtonKey = "stepper.backReview";
+  previousButtonKeyForUpdate = "Cancel";
   defaultLanguage: string;
   adjournmentFormLink: string;
   DisputeFormMode = DisputeFormMode;
@@ -148,7 +149,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
       this.signatureBoxForm.controls.disputant_signatory_name.disable();
     }
     if (this.mode !== DisputeFormMode.CREATE) {
-      this.previousButtonKey = "Cancel";
+      this.previousButtonKey = this.previousButtonKeyForUpdate;
       this.store.select(DisputeStore.Selectors.State).subscribe(state => {
         this.state = state;
       })
@@ -190,6 +191,11 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
 
   private getCountFormInitValue(count): DisputeCount {
     return { ...this.countFormDefaultValue, ...count };
+  }
+
+  onStepBack(): void {
+    this.stepper.previous();
+    this.scrollToSectionHook();
   }
 
   onStepCancel(): void {

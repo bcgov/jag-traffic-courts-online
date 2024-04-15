@@ -1,4 +1,4 @@
-<mat-vertical-stepper #disputeStepper linear *ngIf="form">
+<mat-vertical-stepper class="dispute-stepper" #disputeStepper linear *ngIf="form">
   <ng-template matStepperIcon="edit">
     <mat-icon>done</mat-icon>
   </ng-template>
@@ -44,50 +44,50 @@
           </span>
         </mat-radio-button>
         <!-- Signature Panel -->
-        <div [formGroup]="signatureBoxForm" class="container signature-box" *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.N">
-          <mat-radio-group formControlName="signatory_type"
-            (change)="onChangeSignatureType($event.value)">
+        <div [formGroup]="signatureBoxForm" class="container signature-box"
+          *ngIf="requestCourtAppearanceFormControl.value === RequestCourtAppearance.N">
+          <mat-radio-group formControlName="signatory_type" (change)="onChangeSignatureType($event.value)">
             <span>
               {{ "stepper.count.signature_box_desc" | translate }}
             </span>
-            <div class="row justify-content-start custom-row">
-              <div class="col-1">
+            <div fxLayout="row">
+              <div class="mt-3">
                 <mat-radio-button [value]="SignatoryType.D"></mat-radio-button>
               </div>
-              <div class="col-2 custom-column">
-                <strong>{{ "stepper.count.signatory_option_1" | translate }}</strong>
-              </div>
-              <div class="col-4 custom-column">
-                <input matInput formControlName="disputant_signatory_name" [errorStateMatcher]="matcher">
-                <mat-error *ngIf="(signatureBoxForm.controls.disputant_signatory_name.dirty
-                    || signatureBoxForm.controls.disputant_signatory_name.touched)
-                    && signatureBoxForm.controls.disputant_signatory_name.invalid
-                    && signatureBoxForm.controls.disputant_signatory_name.hasError('required')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-                <mat-error *ngIf="signatureBoxForm.controls.disputant_signatory_name.hasError('maxlength')">
-                  {{ "error.max_length" | translate }}100
-                </mat-error>
+              <div fxFlex>
+                <mat-form-field class="w-100">
+                  <mat-label>{{ "stepper.count.signatory_option_1" | translate }}</mat-label>
+                  <input matInput formControlName="disputant_signatory_name" [errorStateMatcher]="matcher" />
+                  <mat-error *ngIf="(signatureBoxForm.controls.disputant_signatory_name.dirty
+                  || signatureBoxForm.controls.disputant_signatory_name.touched)
+                  && signatureBoxForm.controls.disputant_signatory_name.invalid
+                  && signatureBoxForm.controls.disputant_signatory_name.hasError('required')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="signatureBoxForm.controls.disputant_signatory_name.hasError('maxlength')">
+                    {{ "error.max_length" | translate }}100
+                  </mat-error>
+                </mat-form-field>
               </div>
             </div>
-            <div class="row justify-content-start">
-              <div class="col-1">
+            <div fxLayout="row">
+              <div class="mt-3">
                 <mat-radio-button [value]="SignatoryType.A"></mat-radio-button>
               </div>
-              <div class="col-2 custom-column">
-                <strong>{{ "stepper.count.signatory_option_2" | translate }}</strong>
-              </div>
-              <div class="col-4 custom-column">
-                <input matInput formControlName="agent_signatory_name" [errorStateMatcher]="matcher">
-                <mat-error *ngIf="(signatureBoxForm.controls.agent_signatory_name.dirty
-                    || signatureBoxForm.controls.agent_signatory_name.touched)
-                    && signatureBoxForm.controls.agent_signatory_name.invalid
-                    && signatureBoxForm.controls.agent_signatory_name.hasError('required')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-                <mat-error *ngIf="signatureBoxForm.controls.agent_signatory_name.hasError('maxlength')">
-                  {{ "error.max_length" | translate }}100
-                </mat-error>
+              <div fxFlex>
+                <mat-form-field class="w-100">
+                  <mat-label>{{ "stepper.count.signatory_option_2" | translate }}</mat-label>
+                  <input matInput formControlName="agent_signatory_name" [errorStateMatcher]="matcher" />
+                  <mat-error *ngIf="(signatureBoxForm.controls.agent_signatory_name.dirty
+                  || signatureBoxForm.controls.agent_signatory_name.touched)
+                  && signatureBoxForm.controls.agent_signatory_name.invalid
+                  && signatureBoxForm.controls.agent_signatory_name.hasError('required')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="signatureBoxForm.controls.agent_signatory_name.hasError('maxlength')">
+                    {{ "error.max_length" | translate }}100
+                  </mat-error>
+                </mat-form-field>
               </div>
             </div>
           </mat-radio-group>
@@ -97,7 +97,8 @@
 
       <ng-container *ngIf="mode === DisputeFormMode.CREATE || isRequestedCourtAppearance">
         <div>
-          <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> my dispute heard at an in-person court hearing</span>
+          <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> my dispute heard at an
+            in-person court hearing</span>
           <span
             matTooltip="Dispute any count or plead guilty and ask for a fine reduction or more time to pay for any count."
             #tooltip3="matTooltip">
@@ -122,7 +123,8 @@
         <ng-container #alertContent class="alert-content">
           <span class="text-dark">
             <strong>You have selected that you do not want to attend a court hearing.</strong> You must provide written
-            reasons in the Additional Information section for this option. You will be notified by the Court of the outcome
+            reasons in the Additional Information section for this option. You will be notified by the Court of the
+            outcome
             of your request.
           </span>
         </ng-container>
@@ -133,16 +135,21 @@
       <app-alert type="warning" icon="info">
         <ng-container #alertContent class="alert-content">
           <span class="text-dark">
-            <p><strong>You or your agent must appear at the court hearing.</strong> A Notice of Hearing will be sent to the contact address
-              provided earlier. It will have the date, time and location of your hearing. If you or your agent do not appear
-              in court on the hearing date, the court must treat the ticket as not disputed, you will be considered to have
+            <p><strong>You or your agent must appear at the court hearing.</strong> A Notice of Hearing will be sent to
+              the contact address
+              provided earlier. It will have the date, time and location of your hearing. If you or your agent do not
+              appear
+              in court on the hearing date, the court must treat the ticket as not disputed, you will be considered to
+              have
               plead guilty and the full ticketed amount must be paid immediately.</p>
 
-            <p><strong>Please Note:</strong> If you want to make changes to your dispute, online changes may be made up to 5 business days
+            <p><strong>Please Note:</strong> If you want to make changes to your dispute, online changes may be made up
+              to 5 business days
               before the original scheduled date of your hearing. If it is less than 5 business days, you must contact
               your nearest provincial court registry.</p>
 
-            <p><strong>Important:</strong> Written reasons for a fine reduction and/or time to pay may not be submitted online or at a court registry less
+            <p><strong>Important:</strong> Written reasons for a fine reduction and/or time to pay may not be submitted
+              online or at a court registry less
               than 5 business days before the scheduled hearing date.</p>
           </span>
         </ng-container>
@@ -236,7 +243,7 @@
       </mat-card><br />
     </ng-container>
     <app-stepper-footer [disableSave]="!isCountFormsValid()" (save)="disputeStepper.next()"
-      (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+      (back)="onStepBack()" [secondaryActionButtonIcon]="previousButtonIcon"
       [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
     </app-stepper-footer>
   </mat-step>
@@ -393,23 +400,26 @@
               </mat-error>
             </div>
           </div>
-          <div class="row" *ngIf="additionalForm.value.interpreter_required === InterpreterRequired.Y">
-            <div class="col interpreter-language">
-              <mat-form-field class="w-25">
-                <mat-label>
-                  {{ "stepper.additional.interpreter_language" | translate }}
-                </mat-label>
-                <mat-select formControlName="interpreter_language_cd"
-                  matTooltip="{{getToolTipDEata(additionalForm.controls.interpreter_language_cd)}}">
-                  <mat-option *ngFor="let language of languages" [value]="language.code">
-                    {{ language.description }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="additionalForm.controls.interpreter_language_cd.hasError('requiredIfTrue')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-              </mat-form-field>
-              <div class="interpreter_language_note">{{ "stepper.additional.interpreter_language_desc" | translate }}</div>
+          <div *ngIf="additionalForm.value.interpreter_required === InterpreterRequired.Y">
+            <div fxLayout="column">
+              <div fxLayout="row">
+                <mat-form-field fxFlex.gt-sm="25" fxFlex.lt-md="100">
+                  <mat-label>
+                    {{ "stepper.additional.interpreter_language" | translate }}
+                  </mat-label>
+                  <mat-select formControlName="interpreter_language_cd"
+                    matTooltip="{{getToolTipDEata(additionalForm.controls.interpreter_language_cd)}}">
+                    <mat-option *ngFor="let language of languages" [value]="language.code">
+                      {{ language.description }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="additionalForm.controls.interpreter_language_cd.hasError('requiredIfTrue')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="interpreter-language-note">{{ "stepper.additional.interpreter_language_desc" | translate }}
+              </div>
             </div>
           </div>
 
@@ -421,29 +431,33 @@
               </mat-checkbox>
             </div>
           </div>
-          <div class="row" *ngIf="additionalForm.value.__witness_present">
-            <div class="col">
-              <mat-form-field class="pe-4 w-25">
-                <mat-label>Number of witnesses</mat-label>
-                <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
-                  formControlName="witness_no" [errorStateMatcher]="matcher" (keypress)="($event.charCode >= 48 && $event.charCode < 58)"/>
-                <mat-error *ngIf="additionalForm.controls.witness_no.hasError('requiredIfTrue')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-                <mat-error *ngIf="additionalForm.controls.witness_no.hasError('min')">
-                  {{ "error.positive_number" | translate }}
-                </mat-error>
-                <mat-error *ngIf="additionalForm.controls.witness_no.hasError('max')">
-                  {{ "error.max_number" | translate }}{{ maxWitnesses + 1 }}
-                </mat-error>
-              </mat-form-field>
+          <div *ngIf="additionalForm.value.__witness_present">
+            <div fxLayout="column">
+              <div fxLayout="row">
+                <mat-form-field fxFlex.gt-sm="25" fxFlex.lt-md="100">
+                  <mat-label>Number of witnesses</mat-label>
+                  <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
+                    formControlName="witness_no" [errorStateMatcher]="matcher"
+                    (keypress)="($event.charCode >= 48 && $event.charCode < 58)" />
+                  <mat-error *ngIf="additionalForm.controls.witness_no.hasError('requiredIfTrue')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="additionalForm.controls.witness_no.hasError('min')">
+                    {{ "error.positive_number" | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="additionalForm.controls.witness_no.hasError('max')">
+                    {{ "error.max_number" | translate }}{{ maxWitnesses + 1 }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
           </div>
 
           <div class="col" *ngIf="additionalForm.value.__witness_present">
             <app-alert type="warning" icon="warning">
               <ng-container #alertContent class="alert-content">
-                <strong>{{ "stepper.additional.witness_note1" | translate }}</strong><br/>{{ "stepper.additional.witness_note2" | translate }}
+                <strong>{{ "stepper.additional.witness_note1" | translate }}</strong><br />{{
+                "stepper.additional.witness_note2" | translate }}
               </ng-container>
             </app-alert>
           </div>
@@ -508,7 +522,7 @@
         </div>
       </form>
       <app-stepper-footer [disableSave]="!isAdditionalFormValid()" (save)="disputeStepper.next()"
-        (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
+        (back)="onStepBack()" [secondaryActionButtonIcon]="previousButtonIcon"
         [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
       </app-stepper-footer>
     </app-page>
@@ -530,12 +544,13 @@
       <div class="col mb-2">
         <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
-            <strong>Please review and ensure details are correct before submission. You may update your dispute online up to 5 business days prior to a set Hearing Date.</strong>
+            <strong>Please review and ensure details are correct before submission. You may update your dispute online
+              up to 5 business days prior to a set Hearing Date.</strong>
           </ng-container>
         </app-alert>
       </div>
 
-      <app-stepper-footer [disableSave]="disableSave" (save)="onSubmitClicked()" (back)="disputeStepper.previous()"
+      <app-stepper-footer [disableSave]="disableSave" (save)="onSubmitClicked()" (back)="onStepBack()"
         [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
         [saveButtonKey]="'stepper.submit'" [hasSecondaryAction]="true">
       </app-stepper-footer>
