@@ -10,7 +10,7 @@ arc-dispute-api:
   pdb:
     create: true
   image:
-    tag: "2.0.3"
+    tag: "2.1.0"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "false"
@@ -20,7 +20,7 @@ citizen-api:
   pdb:
     create: true
   image:
-    tag: "2.0.3"
+    tag: "2.1.0"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-08-31"
@@ -39,7 +39,7 @@ citizen-web:
   pdb:
     create: true
   image:
-    tag: "2.0.3"
+    tag: "2.1.0"
     pullPolicy: Always
   appConfig: |
     {
@@ -221,7 +221,7 @@ oracle-data-api:
   pdb:
     create: true
   image:
-    tag: "2.0.3"
+    tag: "2.1.0"
     pullPolicy: Always
   env:
     "JAVA_OPTS": ""
@@ -238,7 +238,7 @@ staff-api:
   pdb:
     create: true
   image:
-    tag: "2.0.3"
+    tag: "2.1.0"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -256,7 +256,7 @@ staff-web:
   pdb:
     create: true
   image:
-    tag: "2.0.3"
+    tag: "2.1.0"
     pullPolicy: Always
   route:
     # https://test.jag.gov.bc.ca
@@ -288,7 +288,7 @@ workflow-service:
   pdb:
     create: true
   image:
-    tag: "2.0.3"
+    tag: "2.1.0"
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
