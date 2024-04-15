@@ -51,8 +51,8 @@
 		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-		<PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="3.1.0" />
-		<PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
+		<PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="4.0.1" />
+		<PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.3" />
 		<PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
