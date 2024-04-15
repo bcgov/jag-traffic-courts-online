@@ -10,27 +10,3 @@ To drop and rerun the OCR init job to re-initalize the PVC in the event of a Azu
 oc -n 0198bb-test delete job acs-form-recognizer-init 
 helm template test-release . --show-only templates/job-init.yaml | oc -n 0198bb-test apply -f -
 ```
-
-# Deployment tasks:
-```shell
-# deploy PVC and init storage
-helm template release . --show-only templates/pvc-logs.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-helm template release . --show-only templates/pvc-shared.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-helm template release . --show-only templates/job-init.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-
-# deploy services
-helm template release . --show-only templates/service-layout.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-helm template release . --show-only templates/service-custom-template.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-helm template release . --show-only templates/service-proxy.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-
-# deploy config
-helm template release . --show-only templates/configmap-proxy-config.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-
-# deploy applications
-helm template release . --show-only templates/deployment-layout.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-helm template release . --show-only templates/deployment-custom-template.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-helm template release . --show-only templates/deployment-proxy.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-
-# deploy cleanup cronjobs
-helm template release . --show-only templates/cronjobs.yaml --values ./values-prod.yaml | oc -n 0198bb-prod apply -f -
-```
