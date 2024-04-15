@@ -17,7 +17,7 @@
 		</PackageReference>
 		<PackageReference Include="MassTransit.TestFramework" Version="8.2.1" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
-		<PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.1.0" />
+		<PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.4.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
 		<PackageReference Include="Moq" Version="4.20.70" />
 		<PackageReference Include="SshKeyGenerator" Version="1.1.51" />
