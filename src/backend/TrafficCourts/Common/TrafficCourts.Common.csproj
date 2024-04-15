@@ -10,36 +10,36 @@
 	<ItemGroup>
 		<PackageReference Include="Hashids.net" Version="1.7.0" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="8.0.1">
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+		<PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="8.0.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
-		<PackageReference Include="NSwag.ApiDescription.Client" Version="14.0.2">
+		<PackageReference Include="NSwag.ApiDescription.Client" Version="14.0.7">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="NSwag.MSBuild" Version="14.0.2">
+		<PackageReference Include="NSwag.MSBuild" Version="14.0.7">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="OpenTelemetry" Version="1.7.0" />
-		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
+		<PackageReference Include="OpenTelemetry" Version="1.8.0" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.8.0" />
 		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.4.0-rc.4" />
-		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.1" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.7.1" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.8.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.8.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.8.1" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="0.5.0-beta.2" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.8.0" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.0.0-rc9.13" />
 		<PackageReference Include="Scrutor" Version="4.2.2" />
 		<PackageReference Include="Serilog" Version="3.1.1" />
@@ -51,12 +51,12 @@
 		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-		<PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="3.1.0" />
-		<PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
+		<PackageReference Include="Serilog.Sinks.PeriodicBatching" Version="4.0.1" />
+		<PackageReference Include="Serilog.Sinks.Splunk" Version="4.0.3" />
 		<PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.1" />
 	</ItemGroup>
 
 	<Target Name="NSwag" BeforeTargets="BeforeBuild">
