@@ -1,0 +1,10 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: arc-dispute-api
+    usage: runtime-image
+  name: arc-dispute-api
+spec:
+  lookupPolicy:
+    local: false
