@@ -13,7 +13,7 @@ init:
     #tag: "3.19"
     #command: ["tail", "-f", "/dev/null"]
     repository: image-registry.openshift-image-registry.svc:5000/0198bb-tools/acs-form-recognizer-init
-    tag: "2.2"
+    tag: "2.3"
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
 
