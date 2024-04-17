@@ -2,17 +2,17 @@
 
 .request-info {
   .contact-body {
-    margin-top: 20px;
+    margin-top: 1.25rem;
   }
 
   button {
-    width: 167px;
+    width: 10.438rem;
     border-radius: inherit;
   }
 
   .count-list {
-    border-left: 15px solid #3b6288;
-    padding: 15px;
+    border-left: 0.938rem solid #3b6288;
+    padding: 0.938rem;
     color: #07396a;
     background-color: #f3f3f3;
   }
@@ -22,7 +22,7 @@
   }
 
   section {
-    margin-top: 20px;
+    margin-top: 1.25rem;
   }
 
   .fa-minus-circle, .fa-plus-circle{
@@ -54,7 +54,7 @@ a {
 
 small {
   color: theme-palette(grey, dark);
-  line-height: 1.3em;
+  line-height: 1.3rem;
 }
 
 label {
@@ -71,13 +71,13 @@ mat-icon {
 
 button.mat-flat-button .mat-icon {
   vertical-align: top;
-  font-size: 1.25em;
+  font-size: 1.25rem;
 }
 
 .mat-flat-button,
 .mat-stroked-button {
   width: 100%;
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 
   &.large {
     height: 46px;
