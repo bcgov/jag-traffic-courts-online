@@ -12,8 +12,8 @@ public class GetFileAsync : ObjectManagementServiceTest
         // create some sample data data
         Dictionary<string, IEnumerable<string>> headers = new()
         {
-            { "x-amz-meta-id", new string[] { id.ToString("d") } },
-            { "x-amz-meta-name", new string[] { "filename.png" } }
+            { Metadata.IdHeader, new string[] { id.ToString("d") } },
+            { Metadata.NameHeader, new string[] { "filename.png" } }
         };
 
         List<MetadataItem> metadataItems = new List<MetadataItem>

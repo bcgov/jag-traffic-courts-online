@@ -6,9 +6,15 @@ internal static class Metadata
     private const string Id = "coms-id";
     private const string Name = "coms-name";
 
-    // metadata header keys - used when we get the object
-    private const string IdHeader = "x-amz-meta-coms-id";
-    private const string NameHeader = "x-amz-meta-coms-name";
+    /// <summary>
+    /// The HTTP header containing the file id.
+    /// </summary>
+    internal const string IdHeader = "x-amz-meta-coms-id";
+
+    /// <summary>
+    /// The HTTP header containing the filename.
+    /// </summary>
+    internal const string NameHeader = "x-amz-meta-coms-name";
 
     private static readonly StringComparer _comparer= StringComparer.OrdinalIgnoreCase;
 
