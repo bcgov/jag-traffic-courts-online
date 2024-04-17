@@ -1,0 +1,10 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: citizen-api
+    usage: runtime-image
+  name: citizen-api
+spec:
+  lookupPolicy:
+    local: false

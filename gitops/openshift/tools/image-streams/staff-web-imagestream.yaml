@@ -1,0 +1,10 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    build: staff-web
+    usage: runtime-image
+  name: staff-web
+spec:
+  lookupPolicy:
+    local: false
