@@ -26,10 +26,8 @@
           <app-page-header>
             <ng-container subHeader>
               <span>Ticket Information </span>
-              <i *ngIf="collapseObj?.ticketInformation" class="fa fa-minus-circle"
-                style="font-size:18px; color:#009cde"></i>
-              <i *ngIf="!collapseObj?.ticketInformation" class="fa fa-plus-circle"
-                style="font-size:18px; color:#009cde"></i>
+              <i *ngIf="collapseObj?.ticketInformation" class="fa fa-minus-circle"></i>
+              <i *ngIf="!collapseObj?.ticketInformation" class="fa fa-plus-circle"></i>
             </ng-container>
           </app-page-header>
         </mat-expansion-panel-header>
@@ -404,10 +402,8 @@
                 <span
                   *ngIf="lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress">Contact
                   Information -- Email Address Not Verified </span>
-                <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"
-                  style="font-size:18px; color:#009cde"></i>
-                <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle"
-                  style="font-size:18px; color:#009cde"></i>
+                <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"></i>
+                <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle"></i>
               </ng-container>
             </app-page-header>
           </mat-expansion-panel-header>
@@ -686,6 +682,8 @@
         </mat-expansion-panel>
         <app-ticket-request [disputeInfo]="lastUpdatedDispute"
           *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)"></app-ticket-request>
+        <app-upload [disputeInfo]="lastUpdatedDispute"
+          *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)"></app-upload>
         <div style="float: right; width: 100%;"
           *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)">
           <button class="large" mat-flat-button type="button" color="primary"

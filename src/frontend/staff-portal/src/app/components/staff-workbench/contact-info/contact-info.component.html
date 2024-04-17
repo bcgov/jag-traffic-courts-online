@@ -373,6 +373,8 @@
       </mat-expansion-panel>
       <app-ticket-request [disputeInfo]="lastUpdatedDispute"
         *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)"></app-ticket-request>
+      <app-upload [disputeInfo]="lastUpdatedDispute"
+        *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)"></app-upload>
       <div style="float: right; width: 100%;"
         *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)">
         <button class="large" mat-flat-button type="button" color="primary"
