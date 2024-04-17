@@ -127,6 +127,20 @@ public class DisputeService : IDisputeService,
 
         dispute.FileData = disputeFiles;
 
+        // TCVP-2878 Filter files that are corrupt in COMS (missing attributes)
+        if (dispute.FileData is not null)
+        {
+            int count = dispute.FileData.Count;
+            // If there is a missing fileName, remove it from the list as we can't display such an object in the UI.
+            dispute.FileData = dispute.FileData.Where(x => x.FileName is not null).ToList();
+
+            if (count != dispute.FileData.Count)
+            {
+                // This should never happen, but if it does, it means that there is bad data in COMS (an application error)
+                _logger.LogError("COMS has files with missing filenames (bad data). Excluded {count} files from search results", dispute.FileData.Count - count);
+            }
+        }
+
         return dispute;
     }
 
