@@ -137,7 +137,7 @@ public class DisputeService : IDisputeService,
             if (count != dispute.FileData.Count)
             {
                 // This should never happen, but if it does, it means that there is bad data in COMS (an application error)
-                _logger.LogError("COMS has files with missing filenames (bad data). Excluded {count} files from search results", dispute.FileData.Count - count);
+                _logger.LogError("COMS has files with missing filenames (bad data). Excluded {count} files from search results", count - dispute.FileData.Count);
             }
         }
 
