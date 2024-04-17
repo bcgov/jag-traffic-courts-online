@@ -98,12 +98,12 @@ hr {
   margin-bottom: 0.5rem;
 }
 .count-heading {
-  font-size: 13px;
+  font-size: 0.813rem;
   color: theme-palette(grey, light);
 }
 
 .count-data {
-  font-size: 13px;
+  font-size: 0.813rem;
   color: theme-palette(blue, light);
 }
 
@@ -113,13 +113,13 @@ hr {
 
 mat-expansion-panel {
   box-shadow: none !important;
-  padding-bottom: 1em;
+  padding-bottom: 1rem;
   border-bottom: 1px solid theme-palette(grey, light);
 }
 
 mat-expansion-panel-header {
   padding-left: 0;
-  padding-right: 0.5em;
+  padding-right: 0.5rem;
 }
 
 ::ng-deep {
@@ -139,7 +139,7 @@ mat-expansion-panel-header {
 
 small {
   color: theme-palette(grey, dark);
-  line-height: 1.3em;
+  line-height: 1.3rem;
 }
 
 .h2 {
@@ -148,6 +148,6 @@ small {
 
 .text {
   font-weight: 700;
-  line-height: 1.5em;
+  line-height: 1.5rem;
 }
   
