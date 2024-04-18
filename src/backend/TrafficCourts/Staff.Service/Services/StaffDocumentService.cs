@@ -9,7 +9,7 @@ namespace TrafficCourts.Staff.Service.Services;
 /// <summary>
 /// A service for file operations utilizing common object management service client
 /// </summary>
-public class StaffDocumentService : IStaffDocumentService
+public partial class StaffDocumentService : IStaffDocumentService
 {
     private readonly IObjectManagementService _objectManagementService;
     private readonly IMemoryStreamManager _memoryStreamManager;
@@ -34,7 +34,7 @@ public class StaffDocumentService : IStaffDocumentService
 
         Coms.Client.File file = await _objectManagementService.GetFileAsync(fileId, cancellationToken);
 
-        var properties = new Domain.Models.DocumentProperties(file.Metadata, file.Tags);
+        var properties = new DocumentProperties(file.Metadata, file.Tags);
 
         if (!properties.VirusScanIsClean)
         {
@@ -63,7 +63,7 @@ public class StaffDocumentService : IStaffDocumentService
 
         FileSearchResult file = searchResults[0];
 
-        var properties = new Domain.Models.DocumentProperties(file.Metadata, file.Tags);
+        var properties = new DocumentProperties(file.Metadata, file.Tags);
 
         await _objectManagementService.DeleteFileAsync(fileId, cancellationToken);
 
@@ -78,7 +78,7 @@ public class StaffDocumentService : IStaffDocumentService
         await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
-    public async Task<List<TrafficCourts.Domain.Models.FileMetadata>> FindFilesAsync(Domain.Models.DocumentProperties properties, CancellationToken cancellationToken)
+    public async Task<List<FileMetadata>> FindFilesAsync(DocumentProperties properties, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Searching files through COMS");
 
@@ -86,19 +86,28 @@ public class StaffDocumentService : IStaffDocumentService
         var tags = properties.ToTags();
         FileSearchParameters searchParameters = new(null, metadata, tags);
 
-        IList<FileSearchResult> searchResult = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
+        IList<FileSearchResult> searchResults = await _objectManagementService.FileSearchAsync(searchParameters, cancellationToken);
 
-        List<TrafficCourts.Domain.Models.FileMetadata> fileData = new();
-
-        foreach (var result in searchResult)
+        if (searchResults.Count == 0)
         {
-            properties = new Domain.Models.DocumentProperties(result.Metadata, result.Tags);
+            return [];
+        }
 
-            TrafficCourts.Domain.Models.FileMetadata fileMetadata = new()
+        List<FileMetadata> fileData = new(searchResults.Count);
+
+        foreach (var result in searchResults)
+        {
+            properties = new DocumentProperties(result.Metadata, result.Tags);
+
+            if (properties.DocumentName != result.FileName)
+            {
+                LogFilenameDoesNotMatch(properties);
+            }
+
+            FileMetadata fileMetadata = new()
             {
                 FileId = result.Id,
-                //FileName = result.FileName, // this is always null;
-                FileName = properties.DocumentName,
+                FileName = properties.DocumentName, // or result.FileName which should be the same
                 DocumentType = properties.DocumentType,
                 DocumentSource = properties.DocumentSource,
                 DocumentStatus = properties.StaffReviewStatus,
@@ -113,11 +122,11 @@ public class StaffDocumentService : IStaffDocumentService
         return fileData;
     }
 
-    public async Task<Guid> SaveFileAsync(IFormFile file, Domain.Models.DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<Guid> SaveFileAsync(IFormFile file, DocumentProperties properties, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Saving file through COMS");
 
-        properties.DocumentSource = TrafficCourts.Domain.Models.DocumentSource.Staff;
+        properties.DocumentSource = DocumentSource.Staff;
 
         // get the tags
         var metadata = properties.ToMetadata();
@@ -165,5 +174,27 @@ public class StaffDocumentService : IStaffDocumentService
     {
         string? username = user.Identity?.Name;
         return username ?? string.Empty;
+    }
+
+
+    [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Filename from search results does not match document property filename")]
+    public partial void LogFilenameDoesNotMatch(
+        [TagProvider(typeof(DocumentPropertiesTagProvider), nameof(DocumentPropertiesTagProvider.RecordTags), OmitReferenceName = true)]
+        DocumentProperties properties);
+}
+
+internal static partial class DocumentPropertiesTagProvider
+{
+    public static void RecordTags(ITagCollector collector, DocumentProperties properties)
+    {
+        if (properties.NoticeOfDisputeId is not null)
+        {
+            collector.Add("NoticeOfDisputeId", properties.NoticeOfDisputeId);
+        }
+
+        if (properties.TcoDisputeId is not null)
+        {
+            collector.Add("DisputeId", properties.TcoDisputeId);
+        }
     }
 }

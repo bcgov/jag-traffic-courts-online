@@ -10,15 +10,22 @@ public class DocumentProperties : FileProperties
 {
     private static class PropertyName
     {
-        public const string VirusScanStatus = "virus-scan-status";
-        public const string VirusName = "virus-name";
-        public const string TcoDisputeId = "tco-dispute-id";
-        public const string OccamDisputeId = "occam-dispute-id";
-        public const string NoticeOfDisputeId = "notice-of-dispute-id";
-        public const string DocumentName = "name";
-        public const string DocumentType = "document-type";
-        public const string DocumentSource = "document-source";
-        public const string StaffReviewStatus = "staff-review-status";
+        public static class Tags
+        {
+            public const string DocumentType = "document-type";
+            public const string OccamDisputeId = "occam-dispute-id";
+            public const string StaffReviewStatus = "staff-review-status";
+            public const string VirusName = "virus-name";
+            public const string VirusScanStatus = "virus-scan-status";
+        }
+
+        public static class Metadata
+        {
+            public const string DocumentName = "coms-name";             // this one is defined in COMS
+            public const string DocumentSource = "document-source";
+            public const string NoticeOfDisputeId = "notice-of-dispute-id";
+            public const string TcoDisputeId = "tco-dispute-id";
+        }
     }
 
     private string? _virusScanStatus;
@@ -77,46 +84,46 @@ public class DocumentProperties : FileProperties
         ArgumentNullException.ThrowIfNull(tags);
 
         // Common properties
-        DocumentName = GetStringProperty(PropertyName.DocumentName, metadata);
-        DocumentSource = GetEnumProperty<DocumentSource>(PropertyName.DocumentSource, metadata);
-        DocumentType = GetStringProperty(PropertyName.DocumentType, tags);
+        DocumentName = GetStringProperty(PropertyName.Metadata.DocumentName, metadata);
+        DocumentSource = GetEnumProperty<DocumentSource>(PropertyName.Metadata.DocumentSource, metadata);
+        DocumentType = GetStringProperty(PropertyName.Tags.DocumentType, tags);
 
         // virus scan properties
-        _virusScanStatus = GetStringProperty(PropertyName.VirusScanStatus, tags);
-        VirusName = GetStringProperty(PropertyName.VirusName, tags);
+        _virusScanStatus = GetStringProperty(PropertyName.Tags.VirusScanStatus, tags);
+        VirusName = GetStringProperty(PropertyName.Tags.VirusName, tags);
 
-        StaffReviewStatus = GetStringProperty(PropertyName.StaffReviewStatus, tags);
+        StaffReviewStatus = GetStringProperty(PropertyName.Tags.StaffReviewStatus, tags);
 
         // Staff Portal properties
-        TcoDisputeId = GetInt64Property(PropertyName.TcoDisputeId, metadata);
+        TcoDisputeId = GetInt64Property(PropertyName.Metadata.TcoDisputeId, metadata);
 
         // Citizen Portal properties
-        NoticeOfDisputeId = GetGuidProperty(PropertyName.NoticeOfDisputeId, metadata);
+        NoticeOfDisputeId = GetGuidProperty(PropertyName.Metadata.NoticeOfDisputeId, metadata);
     }
 
     protected override void SetTags(Dictionary<string, string> properties)
     {
         // Common properties
-        if (!string.IsNullOrEmpty(DocumentType)) properties.Add(PropertyName.DocumentType, DocumentType);
+        if (!string.IsNullOrEmpty(DocumentType)) properties.Add(PropertyName.Tags.DocumentType, DocumentType);
 
         // add virus scan properties
-        if (!string.IsNullOrEmpty(_virusScanStatus)) properties.Add(PropertyName.VirusScanStatus, _virusScanStatus);
-        if (!string.IsNullOrEmpty(VirusName)) properties.Add(PropertyName.VirusName, VirusName);
+        if (!string.IsNullOrEmpty(_virusScanStatus)) properties.Add(PropertyName.Tags.VirusScanStatus, _virusScanStatus);
+        if (!string.IsNullOrEmpty(VirusName)) properties.Add(PropertyName.Tags.VirusName, VirusName);
 
-        if (!string.IsNullOrEmpty(StaffReviewStatus)) properties.Add(PropertyName.StaffReviewStatus, StaffReviewStatus);
+        if (!string.IsNullOrEmpty(StaffReviewStatus)) properties.Add(PropertyName.Tags.StaffReviewStatus, StaffReviewStatus);
     }
 
     protected override void SetMetadata(Dictionary<string, string> properties)
     {
         base.SetMetadata(properties);
 
-        if (DocumentSource is not null) properties.Add(PropertyName.DocumentSource, DocumentSource.Value.ToString());
+        if (DocumentSource is not null) properties.Add(PropertyName.Metadata.DocumentSource, DocumentSource.Value.ToString());
 
         // Staff Portal properties
-        if (TcoDisputeId is not null) properties.Add(PropertyName.TcoDisputeId, TcoDisputeId.Value.ToString());
+        if (TcoDisputeId is not null) properties.Add(PropertyName.Metadata.TcoDisputeId, TcoDisputeId.Value.ToString());
 
         // Citizen Portal properties
-        if (NoticeOfDisputeId is not null) properties.Add(PropertyName.NoticeOfDisputeId, NoticeOfDisputeId.Value.ToString("d"));
+        if (NoticeOfDisputeId is not null) properties.Add(PropertyName.Metadata.NoticeOfDisputeId, NoticeOfDisputeId.Value.ToString("d"));
     }
 
     public void SetVirusScanNotInfected()

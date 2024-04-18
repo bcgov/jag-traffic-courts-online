@@ -11,7 +11,7 @@ internal static partial class TagProvider
     public static void RecordTags(ITagCollector collector, ConsumeContext<EmailVerificationSuccessful> context)
     {
         RecordTags<EmailVerificationSuccessful>(collector, context);
-        RecordNoticeOfDisputeGuidTag(collector, context.Message.NoticeOfDisputeGuid);
+        RecordNoticeOfDisputeIdTag(collector, context.Message.NoticeOfDisputeGuid);
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ internal static partial class TagProvider
     public static void RecordTags(ITagCollector collector, ConsumeContext<CheckEmailVerificationTokenRequest> context)
     {
         RecordTags<CheckEmailVerificationTokenRequest>(collector, context);
-        RecordNoticeOfDisputeGuidTag(collector, context.Message.NoticeOfDisputeGuid);
+        RecordNoticeOfDisputeIdTag(collector, context.Message.NoticeOfDisputeGuid);
     }
 
     /// <summary>
@@ -62,8 +62,8 @@ internal static partial class TagProvider
         collector.Add("SentTime", context.SentTime);
     }
 
-    private static void RecordNoticeOfDisputeGuidTag(ITagCollector collector, Guid noticeOfDisputeGuid)
+    private static void RecordNoticeOfDisputeIdTag(ITagCollector collector, Guid noticeOfDisputeGuid)
     {
-        collector.Add("NoticeOfDisputeGuid", noticeOfDisputeGuid);
+        collector.Add("NoticeOfDisputeId", noticeOfDisputeGuid);
     }
 }
