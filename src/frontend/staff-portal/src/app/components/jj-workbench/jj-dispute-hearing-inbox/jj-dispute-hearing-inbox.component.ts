@@ -40,10 +40,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     "jjAssignedTo",
     "ticketNumber",
-    "dateSubmitted",
+    "submittedTs",
     "violationDate",
     "courthouseLocation",
-    "appearanceTs",
+    "mostRecentCourtAppearance.appearanceTs",
     "duration",
     "room",
     "accidentYn",

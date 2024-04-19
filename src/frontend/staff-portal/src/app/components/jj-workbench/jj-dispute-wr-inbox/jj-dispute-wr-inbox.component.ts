@@ -28,9 +28,9 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<JJDispute> = new MatTableDataSource();
   displayedColumns: string[] = [
     "ticketNumber",
-    "dateSubmitted",
+    "submittedTs",
     "violationDate",
-    "fullName",
+    "occamDisputantName",
     "courthouseLocation",
     "policeDetachment",
     "accidentYn",
