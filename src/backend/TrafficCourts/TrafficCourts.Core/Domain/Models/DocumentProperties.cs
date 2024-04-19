@@ -117,6 +117,7 @@ public class DocumentProperties : FileProperties
     {
         base.SetMetadata(properties);
 
+        if (DocumentName is not null) properties.Add(PropertyName.Metadata.DocumentName, DocumentName);
         if (DocumentSource is not null) properties.Add(PropertyName.Metadata.DocumentSource, DocumentSource.Value.ToString());
 
         // Staff Portal properties

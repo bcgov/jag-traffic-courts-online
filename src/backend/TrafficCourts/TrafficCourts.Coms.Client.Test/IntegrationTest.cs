@@ -27,6 +27,7 @@ namespace TrafficCourts.Coms.Client.Test
 
         public IntegrationTest(ITestOutputHelper output)
         {
+
             var configuration = new ConfigurationBuilder()
                 .AddUserSecrets<IntegrationTest>()
                 .Build();

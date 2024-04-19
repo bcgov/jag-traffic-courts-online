@@ -3,29 +3,16 @@
 internal static class Metadata
 {
     // metadata keys - used when fetching just metadata about files
-    private const string Id = "coms-id";
-    private const string Name = "coms-name";
-
-    /// <summary>
-    /// The HTTP header containing the file id.
-    /// </summary>
-    internal const string IdHeader = "x-amz-meta-coms-id";
-
-    /// <summary>
-    /// The HTTP header containing the filename.
-    /// </summary>
-    internal const string NameHeader = "x-amz-meta-coms-name";
-
-    private static readonly StringComparer _comparer= StringComparer.OrdinalIgnoreCase;
-
-    public static bool IsInternal(string key)
+    internal static class Keys
     {
-        return _comparer.Equals(key, Id) || _comparer.Equals(key, Name);
+        public const string Id = "coms-id";
+        public const string Name = "coms-name";
     }
 
-    public static bool IsNotInternal(KeyValuePair<string, string> item) => !IsInternal(item.Key);
-    public static bool IsInternal(KeyValuePair<string, string> item) => IsInternal(item.Key);
-    public static bool IsName(string key) => _comparer.Equals(key, Name);
+    /// <summary>
+    /// The prefix on headers when metadata is returned
+    /// </summary>
+    public const string HeaderPrefix = "x-amz-meta-";
 
     /// <summary>
     /// Creates the Metadata dictionary from the source with the correct <see cref="IEqualityComparer"/>.
@@ -37,17 +24,20 @@ internal static class Metadata
             return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
-        return new Dictionary<string, string>(source.Where(IsNotInternal), StringComparer.OrdinalIgnoreCase);
+        return new Dictionary<string, string>(source, StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>
-    /// Gets the filename from the headers.
+    /// Gets the filename from the headers. Note the headers will contain the prefix "x-amz-meta-" where as 
+    /// when fetching the metadata, there is no prefix.
     /// </summary>
     /// <param name="headers"></param>
     /// <returns></returns>
-    public static string? GetFilename(this IReadOnlyDictionary<string, IEnumerable<string>> headers)
+    public static string? GetFilename(this FileResponse response)
     {
-        if (headers is not null && headers.TryGetValue(NameHeader, out var values))
+        IReadOnlyDictionary<string, IEnumerable<string>>? headers = response?.Headers;
+
+        if (headers is not null && headers.TryGetValue($"{HeaderPrefix}{Keys.Name}", out var values))
         {
             return values.FirstOrDefault();
         }

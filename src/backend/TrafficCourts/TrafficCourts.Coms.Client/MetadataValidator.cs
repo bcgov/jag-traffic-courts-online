@@ -31,7 +31,6 @@ public static class MetadataValidator
             yield return '}';
             //yield return ' '; // included in control 0-31
             //yield return '\t'; // included in control 0-31
-
         }
     }
 
@@ -41,7 +40,7 @@ public static class MetadataValidator
     /// <param name="items"></param>
     /// <exception cref="MetadataInvalidKeyException">A key contains an invalid character</exception>
     /// <exception cref="MetadataTooLongException">The total length of the metadata is too long</exception>
-    public static void Validate(IReadOnlyDictionary<string, string>? items, bool allowInternal = false)
+    public static void Validate(IReadOnlyDictionary<string, string>? items)
     {
         // no metadata is ok
         if (items is null)
@@ -49,22 +48,17 @@ public static class MetadataValidator
             return;
         }
 
-        ValidateKeys(items, allowInternal);
+        ValidateKeys(items);
         ValidateLength(items);
     }
 
-    private static void ValidateKeys(IReadOnlyDictionary<string, string> items, bool allowInternal)
+    private static void ValidateKeys(IReadOnlyDictionary<string, string> items)
     {
         foreach (var item in items)
         {
             string key = item.Key;
 
             if (string.IsNullOrWhiteSpace(key))
-            {
-                throw new MetadataInvalidKeyException(key);
-            }
-
-            if (!allowInternal && Metadata.IsInternal(key))
             {
                 throw new MetadataInvalidKeyException(key);
             }
@@ -84,7 +78,7 @@ public static class MetadataValidator
 
     private static void ValidateLength(IReadOnlyDictionary<string, string> items)
     {
-        int prefixLength = "x-amz-meta-".Length;
+        int prefixLength = Metadata.HeaderPrefix.Length;
 
         // see https://github.com/bcgov/common-object-management-service/wiki/Metadata-Tag#metadata
         int length = 0;
