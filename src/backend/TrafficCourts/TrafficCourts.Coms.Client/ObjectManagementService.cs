@@ -124,7 +124,7 @@ internal partial class ObjectManagementService : IObjectManagementService
                 .ConfigureAwait(false);
 
             string? contentType = GetHeader(response.Headers, "Content-Type");
-            string? fileName = response.Headers.GetFilename();
+            string? fileName = response.GetFilename();
             if (fileName is null)
             {
                 LogNoFilenameForObject(id);
@@ -340,6 +340,12 @@ internal partial class ObjectManagementService : IObjectManagementService
         }
     }
 
+    /// <summary>
+    /// Tries to get the named header.
+    /// </summary>
+    /// <param name="headers"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
     private static string? GetHeader(IReadOnlyDictionary<string, IEnumerable<string>> headers, string name)
     {
         string? value = null;
@@ -354,22 +360,23 @@ internal partial class ObjectManagementService : IObjectManagementService
         return value;
     }
 
-    private string GetFileName(Guid id, Dictionary<Guid, IList<DBMetadataKeyValue>> values)
+    /// <summary>
+    /// Gets the filename from the metadata values. Do not use this function to get 
+    /// the filename from headers.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="values"></param>
+    /// <returns></returns>
+    private static string GetFileName(Guid id, Dictionary<Guid, IList<DBMetadataKeyValue>> values)
     {
+        Debug.Assert(values != null);
+
         if (!values.TryGetValue(id, out var items))
         {
             return string.Empty;
         }
 
-        foreach (var item in items)
-        {
-            if (Metadata.IsName(item.Key))
-            {
-                return item.Value;
-            }
-        }
-
-        return string.Empty;
+        return items.FirstOrDefault(item => item.Key == Metadata.Keys.Name)?.Value ?? string.Empty;
     }
 
     /// <summary>
@@ -378,7 +385,7 @@ internal partial class ObjectManagementService : IObjectManagementService
     /// <param name="results"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    private List<FileSearchResult> FilterSearchResults(List<FileSearchResult> results, FileSearchParameters parameters)
+    private static List<FileSearchResult> FilterSearchResults(List<FileSearchResult> results, FileSearchParameters parameters)
     {
         Debug.Assert(results != null);
         Debug.Assert(parameters != null);
@@ -457,9 +464,7 @@ internal partial class ObjectManagementService : IObjectManagementService
             return new Dictionary<string, string>();
         }
 
-        return items
-            .Where(_ => !Metadata.IsInternal(_.Key))
-            .ToDictionary(_ => _.Key, _ =>  _.Value);
+        return items.ToDictionary(_ => _.Key, _ =>  _.Value);
     }
 
     private async Task<Dictionary<Guid, IList<DBMetadataKeyValue>>> GetMetadataAsync(Guid id, CancellationToken cancellationToken)
