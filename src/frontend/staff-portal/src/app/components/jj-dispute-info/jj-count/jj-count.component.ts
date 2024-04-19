@@ -161,12 +161,16 @@ export class JJCountComponent implements OnInit, OnChanges {
       this.timeToPay = this.jjDisputedCount ? (this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no") : "";
       this.updateInclSurcharge(this.inclSurcharge);
 
+      // TCVP-2467
       if (!this.isViewOnly &&
         (this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.NotGuilty
           || this.jjDisputedCount.jjDisputedCountRoP.finding === JJDisputedCountRoPFinding.Cancelled)) {
         this.form.controls.lesserOrGreaterAmount.setValue(null);
         this.form.controls.totalFineAmount.setValue(null);
         this.form.controls.revisedDueDate.setValue(null);
+        this.jjDisputedCount.lesserOrGreaterAmount = null;
+        this.jjDisputedCount.revisedDueDate = null;
+        this.jjDisputedCount.totalFineAmount = null;
       }
 
       // Make sure the date hint label is shown if there is a revised date/time
