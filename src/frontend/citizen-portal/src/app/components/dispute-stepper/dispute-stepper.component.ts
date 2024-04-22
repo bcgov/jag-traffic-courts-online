@@ -346,7 +346,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     if (checked && this.form.value.contact_type === DisputeContactTypeCd.Lawyer) {
       this.legalRepresentationForm.controls.law_firm_name.patchValue(this.form.value.contact_law_firm_name);
 
-      var contactNames = [this.form.value.contact_surname, this.form.value.contact_given_names]
+      var contactNames = [this.form.value.contact_given_names, this.form.value.contact_surname]
       this.legalRepresentationForm.controls.lawyer_full_name.patchValue(contactNames.join(" "));
 
       var address = [this.form.value.address, this.form.value.address_city, this.form.value.address_province, this.form.value.postal_code]
