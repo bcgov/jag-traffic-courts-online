@@ -141,7 +141,7 @@ public class DisputeTicketAttendCourtHearing {
         }
         Thread.sleep(1000);
         JavascriptExecutor jse8 = (JavascriptExecutor) driver;
-        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-checkbox-2-input")));
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//strong[contains(text(), 'Submit request')]")));
         jse8.executeScript("arguments[0].click();", element);
         System.out.println("Tick declare box checked");
         Thread.sleep(1000);

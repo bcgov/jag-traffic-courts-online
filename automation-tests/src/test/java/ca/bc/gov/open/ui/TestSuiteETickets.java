@@ -1,8 +1,6 @@
 package ca.bc.gov.open.ui;
 
 import ca.bc.gov.open.ui.eTickets.*;
-import ca.bc.gov.open.ui.imageTickets.MoreThan500CharsOnAdditionalInfoNegTest;
-import ca.bc.gov.open.ui.imageTickets.UploadInfoNotMatchValidationChars;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
