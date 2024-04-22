@@ -304,3 +304,10 @@ workflow-service:
       keys:
         host: "pgbouncer-host"
         port: "pgbouncer-port"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 512Mi
