@@ -38,7 +38,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     "jjDecisionDate",
     "jjAssignedTo",
     "violationDate",
-    "fullName",
+    "occamDisputantName",
     "courthouseLocation",
     "status",
     "vtcAssignedTo"
