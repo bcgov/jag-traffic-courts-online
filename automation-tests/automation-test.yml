@@ -1,0 +1,47 @@
+# This is the workflow that creates a new automation test API image and pushes it to the Openshift image stream, triggering the deployment
+
+name: AutomationTest - Build Image and Run Autotests on Workflow Dispatch
+
+# Controls when the workflow will run
+#on:
+#  # Allows you to run this workflow manually from the Actions tab
+#  workflow_dispatch:
+#    inputs:
+#        app:
+#            description: 'App Name (tco)'
+#            required: true
+#            default: AutomationTests
+
+on:
+  push:
+    branches: [ Automation-Tests-Update ]
+    paths:
+      - 'automation-tests/**'
+      - '.github/workflows/automation-test.yml'
+
+jobs:
+  # This workflow contains a single job called "build-run-autotests"
+  build-run-autotests:
+    runs-on:  ubuntu-latest
+    env:
+      USERNAME_APP: ${{ secrets.USERNAME_APP }}
+      PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
+    steps:
+     - uses: actions/checkout@v2
+     
+     - name: Login to OpenShift
+       uses: docker/login-action@v1
+       with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+            
+     - name: Build and push
+       env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./automation-tests
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/auto-tests
+       run: |
+          docker build --tag ${IMAGE} -f ${CONTEXT}/Dockerfile ${CONTEXT}
+          docker push ${IMAGE}

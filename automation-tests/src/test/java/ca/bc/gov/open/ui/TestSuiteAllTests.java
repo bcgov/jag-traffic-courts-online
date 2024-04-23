@@ -6,17 +6,15 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-
-	DisputeTicketAttendCourtHearing.class, DisputeTicketByLawyerContactDetails.class, DisputeTicketByOtherContactDetails.class, 
-	DisputeTicketOptionsPicker.class, DisputeTicketOptionsPickerDiffCountry.class, DisputeTicketOptionsPickerDiffCountryFormat.class,
-	DisputeTicketUploadPNG.class, DisputeTicketUploadPNGIncorectRetriveData.class, MoreThan500CharsOnAdditionalInfoNegTest.class,
-	ContactInfoValidationChars.class, UploadInfoNotMatchValidationChars.class, AdditionalInfoValidation.class, ContactINfoLawyerValidationChars.class,
+		TestSuiteImageTickets.class,
+		TestSuiteETickets.class,
+//		TestSuiteRolesTests.class  - in progress, blocked by jj workbench ticket
 
 })
 
 
 public class TestSuiteAllTests {
-	
+
 	@Test
 	public void test() throws Exception {
 

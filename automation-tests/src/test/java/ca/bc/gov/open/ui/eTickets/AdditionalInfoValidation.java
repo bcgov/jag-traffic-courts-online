@@ -1,0 +1,127 @@
+package ca.bc.gov.open.ui.eTickets;
+
+import ca.bc.gov.open.cto.CommonMethods;
+import ca.bc.gov.open.cto.CommonUtils;
+import ca.bc.gov.open.cto.CustomWebDriverManager;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.List;
+
+import static ca.bc.gov.open.cto.CommonMethods.*;
+import static ca.bc.gov.open.cto.Constants.*;
+
+public class AdditionalInfoValidation {
+
+    private WebDriver driver;
+
+    @After
+    public void tearDown() {
+        driver.close();
+        driver.quit();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        CustomWebDriverManager.instance = null;
+    }
+
+    @Test
+    public void test() throws Exception {
+        driver = CustomWebDriverManager.getDriver();
+        WebDriverWait driverWait = CustomWebDriverManager.getDriverWait();
+        WebElement element = CustomWebDriverManager.getElement();
+        CustomWebDriverManager.getElements();
+
+        CommonUtils.login();
+
+        DisputeTicketOptionsPicker disputeTicketExisting = new DisputeTicketOptionsPicker();
+        disputeTicketExisting.startDisputeTicket(element, driverWait, driver);
+
+        CommonMethods.addressInputForETicketDispute(driverWait);
+
+        Thread.sleep(1000);
+
+        clickOnNextButton(driver, driverWait);
+
+        selectAttendCourtHearingRBO(driver, driverWait);
+
+        agreeCommitedOffence1stCountAttendCourt(driver, driverWait);
+
+        skip2ndCount(driver, driverWait);
+
+        skip3rdCount(driver, driverWait);
+
+        scrollToBottom(driver, driverWait);
+
+        clickOnNextButton(driver, driverWait);
+
+        String a = "Additional information";
+        // identify elements with text()
+        List<WebElement> l = driver.findElements(By.xpath("//*[contains(text(),'Additional information')]"));
+        // verify list size
+        if (l.size() > 0) {
+            System.out.println("Text: " + a + " is present. ");
+        } else {
+            System.out.println("Text: " + a + " is not present. ");
+        }
+        JavascriptExecutor jse21 = (JavascriptExecutor) driver;
+        element = driverWait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(), 'I intend to be represented by a lawyer')]")));
+        jse21.executeScript("arguments[0].click();", element);
+        Thread.sleep(1000);
+
+        // Additional Info with lawyer, interpreter and witness
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(LAW_FIRM_NAME_XPATH)));
+        element.sendKeys(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qua");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(LAWYER_FULL_NAME_XPATH)));
+        element.sendKeys(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(LAWYER_ADDRESS_XPATH)));
+        element.sendKeys(
+                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(LAWYER_PHONE_XPATH)));
+        element.sendKeys("9999999999");
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(LAWYER_EMAIL_XPATH)));
+        element.sendKeys(
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@a.com");
+        JavascriptExecutor jse6 = (JavascriptExecutor) driver;
+        element = driverWait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//*[contains(text(), ' I require a language interpreter at the hearing. ')]")));
+        jse6.executeScript("arguments[0].click();", element);
+
+        JavascriptExecutor jse7 = (JavascriptExecutor) driver;
+        element = driverWait.until(ExpectedConditions
+                .elementToBeClickable(By.xpath("//*[contains(text(), ' I intend to call a witness(es). ')]")));
+        jse7.executeScript("arguments[0].click();", element);
+        Thread.sleep(1000);
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
+        element.clear();
+        element = driverWait.until(ExpectedConditions.presenceOfElementLocated(By.id("mat-input-15")));
+        element.sendKeys(
+                "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
+
+        Thread.sleep(1000);
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 200')]")));
+
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'Maximum length is 100')]")));
+
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'Must be a valid email address')]")));
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions
+                .presenceOfElementLocated(By.xpath("//*[contains(text(), 'must be a number less than 100')]")));
+
+    }
+
+}

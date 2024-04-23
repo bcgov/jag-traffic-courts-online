@@ -10,50 +10,96 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<io.github.bonigarcia.version>5.6.3</io.github.bonigarcia.version>
+		<org.seleniumhq.selenium.version>4.11.0</org.seleniumhq.selenium.version>
+		<com.microsoft.sqlserver.version>6.4.0.jre8</com.microsoft.sqlserver.version>
+		<junit.version>4.13.1</junit.version>
+		<org.apache.pdfbox.version>2.0.26</org.apache.pdfbox.version>
+		<com.oracle.database.jdbc.version>21.4.0.0.1</com.oracle.database.jdbc.version>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<dependencies>
-
-<!-- 		<dependency>
+		<!-- Selenium Drivers -->
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>${io.github.bonigarcia.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>3.141.59</version>
-		</dependency> -->
-
+			<artifactId>selenium-api</artifactId>
+			<version>${org.seleniumhq.selenium.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-chrome-driver</artifactId>
+			<version>${org.seleniumhq.selenium.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-firefox-driver</artifactId>
+			<version>${org.seleniumhq.selenium.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-ie-driver</artifactId>
+			<version>${org.seleniumhq.selenium.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-edge-driver</artifactId>
+			<version>${org.seleniumhq.selenium.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-support</artifactId>
+			<version>${org.seleniumhq.selenium.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>4.7.2</version>
+			<version>${org.seleniumhq.selenium.version}</version>
 		</dependency>
-
 
 		<!-- Microsoft SQL Server jdbc driver -->
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>6.4.0.jre8</version>
+			<version>${com.microsoft.sqlserver.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
-			<version>21.4.0.0.1</version>
+			<version>${com.oracle.database.jdbc.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>${junit.version}</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.26</version>
+			<version>${org.apache.pdfbox.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.0</version>
 		</dependency>
 	</dependencies>
 
@@ -72,7 +118,35 @@
 		</resources>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>ca.bc.gov.open.ui.TestRunner</mainClass>
+						</manifest>
+					</archive>
+					<descriptors>
+						<descriptor>src/assembly/test-jar-with-dependencies.xml</descriptor>
+					</descriptors>
+				</configuration>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -81,27 +155,17 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>ca.epbc.ui.Atest</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
-					<compilerVersion>1.8</compilerVersion>
-					<source>1.8</source>
-					<target>1.8</target>
-					<testSource>1.8</testSource>
-					<testTarget>1.8</testTarget>
+					<compilerVersion>${java.version}</compilerVersion>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<testSource>${maven.compiler.source}</testSource>
+					<testTarget>${maven.compiler.target}</testTarget>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -119,18 +183,6 @@
 								${project.build.directory}/libs
 							</outputDirectory>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
