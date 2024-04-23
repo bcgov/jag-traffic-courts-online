@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Workflow.Service.Sagas;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -8,6 +9,12 @@ namespace TrafficCourts.Workflow.Service;
 /// </summary>
 internal static partial class TagProvider
 {
+    public static void RecordTags(ITagCollector collector, SendEmailVerificationEmail message)
+    {
+        RecordNoticeOfDisputeIdTag(collector, message.NoticeOfDisputeGuid);
+        collector.Add("TicketNumber", message.TicketNumber);
+    }
+
     public static void RecordTags(ITagCollector collector, ConsumeContext<EmailVerificationSuccessful> context)
     {
         RecordTags<EmailVerificationSuccessful>(collector, context);
@@ -32,6 +39,15 @@ internal static partial class TagProvider
         Logging.TagProvider.RecordTicketNumber(collector, context.Message.TicketFileNumber);
     }
 
+    /// <summary>
+    /// Records the common consume context properties and the ticket number.
+    /// </summary>
+    public static void RecordTags(ITagCollector collector, ConsumeContext<SubmitNoticeOfDispute> context)
+    {
+        RecordTags<SubmitNoticeOfDispute>(collector, context);
+        Logging.TagProvider.RecordTicketNumber(collector, context.Message.TicketNumber);
+    }
+
     public static void RecordTags(ITagCollector collector, Exception exception)
     {
         if (exception is Arc.Dispute.Client.ApiException apiException)
@@ -44,6 +60,21 @@ internal static partial class TagProvider
     public static void RecordCountNumberTag(ITagCollector collector, int count)
     {
         collector.Add("CountNumber", count);
+    }
+
+    public static void RecordTags(ITagCollector collector, VerifyEmailAddressState state)
+    {
+        RecordNoticeOfDisputeIdTag(collector, state.CorrelationId);
+
+        if (!string.IsNullOrEmpty(state.TicketNumber))
+        {
+            collector.Add("TicketNumber", state.TicketNumber);
+        }
+    }
+
+    public static void RecordDisputeIdTag(ITagCollector collector, long disputeId)
+    {
+        collector.Add("DisputeId", disputeId);
     }
 
     /// <summary>

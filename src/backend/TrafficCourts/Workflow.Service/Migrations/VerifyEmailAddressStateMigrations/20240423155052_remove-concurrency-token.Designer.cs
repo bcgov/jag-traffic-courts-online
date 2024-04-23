@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TrafficCourts.Workflow.Service.Sagas;
@@ -11,9 +12,11 @@ using TrafficCourts.Workflow.Service.Sagas;
 namespace TrafficCourts.Workflow.Service.Migrations.VerifyEmailAddressStateMigrations
 {
     [DbContext(typeof(VerifyEmailAddressStateDbContext))]
-    partial class VerifyEmailAddressStateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423155052_remove-concurrency-token")]
+    partial class removeconcurrencytoken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
