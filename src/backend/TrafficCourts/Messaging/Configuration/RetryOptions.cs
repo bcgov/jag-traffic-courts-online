@@ -8,9 +8,9 @@ public class RetryOptions
     public int Times { get; set; } = 5;
 
     /// <summary>
-    /// The interval between each retry attempt in minutes
+    /// The interval between each retry attempt in milliseconds
     /// </summary>
-    public int Interval { get; set; } = 2;
+    public int Interval { get; set; } = 100;
 
     /// <summary>
     /// Limits the number of concurrent messages consumed on the receive endpoint, regardless of message type.

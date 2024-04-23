@@ -11,11 +11,6 @@ public class VerifyEmailAddressState : SagaStateMachineInstance
     [MaxLength(64)]
     public string CurrentState { get; set; } = null!;
 
-    [Timestamp]
-    public uint Version { get; set; }
-
-    public Guid NoticeOfDisputeGuid => CorrelationId;
-
     [MaxLength(100)]
     public string? EmailAddress { get; set; } = string.Empty;
 
