@@ -6,6 +6,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { TableFilter } from '@shared/models/table-filter-options.model';
+import { HttpClient, HttpContext, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { AuthService } from './auth.service';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
@@ -30,7 +32,9 @@ export class DisputeService implements IDisputeService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private disputeApiService: DisputeApiService
+    private disputeApiService: DisputeApiService,
+    private http: HttpClient,
+    private authService: AuthService
   ) {
     this._disputes = new BehaviorSubject<Dispute[]>(null);
   }
@@ -369,10 +373,10 @@ export class DisputeService implements IDisputeService {
   }
 
   /**
-* Accept the dispute update request
-*
-* @param disputeId
-*/
+  * Accept the dispute update request
+  *
+  * @param disputeId
+  */
   public rejectDisputeUpdateRequest(updateStatusId: number): Observable<any> {
 
     return this.disputeApiService.apiDisputeUpdaterequestUpdateStatusIdRejectPut(updateStatusId)
@@ -517,6 +521,25 @@ export class DisputeService implements IDisputeService {
     if (dispute.addressLine3) dispute.address = dispute.address + "," + dispute.addressLine3;
 
     return dispute;
+  }
+
+  public apiTicketValidationPrintGet(disputeId: number, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone): Observable<any> {
+    return this.http
+    .get(`/api/dispute/${disputeId}/print?timeZone=${timeZone}`, {
+      observe: 'response',
+      responseType: 'blob',
+      context: new HttpContext(),
+      withCredentials: true,
+      headers: new HttpHeaders(
+        {
+          'Authorization': 'Bearer ' + this.authService.token,
+          'Accept': '*/*',
+          'Access-Control-Allow-Origin': ''
+        }),
+    }).pipe(
+      map((result: HttpResponse<Blob>) => {
+        return result.body;
+      }));
   }
 }
 

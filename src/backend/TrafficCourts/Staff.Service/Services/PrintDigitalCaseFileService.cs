@@ -10,23 +10,29 @@ namespace TrafficCourts.Staff.Service.Services;
 
 public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
 {
-    private readonly IJJDisputeService _disputeService;
+    private readonly IJJDisputeService _jjDisputeService;
     private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
+    private readonly ICountryLookupService _countryLookupService;
     private readonly IDocumentGenerationService _documentGeneration;
+    private readonly IDisputeService _disputeService;
     private readonly ILogger<PrintDigitalCaseFileService> _logger;
 
     public PrintDigitalCaseFileService(
-        IJJDisputeService disputeService,
+        IJJDisputeService jjDisputeService,
         IOracleDataApiService oracleDataApi,
         IProvinceLookupService provinceLookupService,
+        ICountryLookupService countryLookupService,
         IDocumentGenerationService documentGeneration,
+        IDisputeService disputeService,
         ILogger<PrintDigitalCaseFileService> logger)
     {
-        _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
+        _jjDisputeService = jjDisputeService ?? throw new ArgumentNullException(nameof(jjDisputeService));
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
+        _countryLookupService = countryLookupService ?? throw new ArgumentNullException(nameof(countryLookupService));
         _documentGeneration = documentGeneration ?? throw new ArgumentNullException(nameof(documentGeneration));
+        _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -46,6 +52,130 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return report;
     }
 
+    public async Task<RenderedReport> PrintTicketValidationViewAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(disputeId);
+        ArgumentNullException.ThrowIfNull(timeZoneId);
+
+        // generate the digital case file model
+        DigitalCaseFile digitalCaseFile = await GetDigitalCaseFileAsync(disputeId, timeZoneId, cancellationToken);
+
+        var report = await RenderReportAsync(digitalCaseFile, cancellationToken);
+
+        return report;
+    }
+
+    /// <summary>
+    /// Fetches the <see cref="DigitalCaseFile"/> based on OCCAM disputeId. This is for printing ticket validation view in DCF template (TCVP-2865).
+    /// </summary>
+    /// <param name="disputeId"></param>
+    /// <param name="timeZoneId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(long disputeId, string timeZoneId, CancellationToken cancellationToken)
+    {
+        // get the user's time zone
+        TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+
+        var dispute = await _disputeService.GetDisputeAsync(disputeId, false, cancellationToken);
+
+        Domain.Models.Province? driversLicenceProvince = null;
+        if (dispute.DriversLicenceIssuedProvinceSeqNo is not null && dispute.DriversLicenceIssuedCountryId is not null)
+        {
+            driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DriversLicenceIssuedProvinceSeqNo.ToString()!, dispute.DriversLicenceIssuedCountryId.ToString()!);
+        }
+
+        var digitalCaseFile = new DigitalCaseFile();
+
+        // set the ticket information
+        var ticket = digitalCaseFile.Ticket;
+        ticket.Number = dispute.ViolationTicket.TicketNumber;
+        ticket.Surname = dispute.ViolationTicket.DisputantSurname;
+        ticket.GivenNames = dispute.ViolationTicket.DisputantGivenNames;
+        ticket.PoliceDetachment = dispute.ViolationTicket.DetachmentLocation;
+        ticket.Issued = new FormattedDateTime(dispute.ViolationTicket.IssuedTs);
+        ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
+        ticket.CourtAgenyId = dispute.CourtAgenId;
+        ticket.CourtHouse = dispute.ViolationTicket.CourtLocation;
+
+        // set the contact information
+        var contact = digitalCaseFile.Contact;
+        contact.Surname = dispute.DisputantSurname ?? ticket.Surname;
+        contact.GivenNames = ConcatenateWithSpaces(dispute.DisputantGivenName1, dispute.DisputantGivenName2, dispute.DisputantGivenName3);
+        if (string.IsNullOrEmpty(contact.GivenNames))
+        {
+            contact.GivenNames = ticket.GivenNames;
+        }
+        Domain.Models.Province? addressProvince = null;
+        if (dispute.AddressProvinceSeqNo != null && dispute.AddressCountryId != null)
+        {
+            addressProvince = await GetDriversLicenceProvinceAsync(dispute.AddressProvinceSeqNo.ToString()!, dispute.AddressCountryId.ToString()!);
+        }
+        Domain.Models.Country? addressCountry = null;
+        if (dispute.AddressCountryId != null)
+        {
+            addressCountry = await GetCountryAsync(dispute.AddressCountryId.ToString()!);
+        }
+        contact.Address = FormatAddress(dispute, addressProvince?.ProvAbbreviationCd, addressCountry?.CtryLongNm);
+        contact.DriversLicence.Province = driversLicenceProvince?.ProvAbbreviationCd ?? string.Empty;
+        contact.DriversLicence.Number = dispute.DriversLicenceNumber;
+        contact.Email = dispute.EmailAddress;
+
+        // set written reasons
+        var writtenReasons = digitalCaseFile.WrittenReasons;
+        writtenReasons.FineReduction = dispute.FineReductionReason;
+        writtenReasons.TimeToPay = dispute.TimeToPayReason;
+        // Set user signature for written reasons based on user type
+        switch (dispute.SignatoryType)
+        {
+            case DisputeSignatoryType.D:
+                writtenReasons.DisputantSignature = dispute.SignatoryName;
+                break;
+            case DisputeSignatoryType.A:
+                writtenReasons.AgentSignature = dispute.SignatoryName;
+                break;
+        }
+
+        // set the counts
+        var counts = digitalCaseFile.Counts;
+        for (int i = 1; i <= 3; i++)
+        {
+            var offenseCount = new OffenseCount();
+
+            var disputedCount = dispute.DisputeCounts.FirstOrDefault(_ => _.CountNo == i);
+            var violationTicketCount = dispute.ViolationTicket.ViolationTicketCounts.FirstOrDefault(_ => _.CountNo == i);
+            if (disputedCount is not null && violationTicketCount is not null)
+            {
+                offenseCount.Count = disputedCount.CountNo.ToString();
+                offenseCount.Offense = new FormattedDateOnly(dispute.IssuedTs);
+                offenseCount.Plea = ToString(disputedCount.PleaCode);
+                offenseCount.Description = GetStatuteDescription(violationTicketCount);
+                offenseCount.Fine = (decimal?)(violationTicketCount.TicketedAmount);
+                offenseCount.AppearInCourt = ToString(disputedCount.RequestCourtAppearance);
+                offenseCount.RequestFineReduction = ToString(disputedCount.RequestReduction);
+                offenseCount.RequestTimeToPay = ToString(disputedCount.RequestTimeToPay);
+            }
+
+            counts.Add(offenseCount);
+        }
+
+        // set uploaded documents
+        var documents = digitalCaseFile.Documents;
+        if (dispute.FileData != null)
+        {
+            foreach (var fileData in dispute.FileData.Where(_ => _.FileName != null))
+            {
+#pragma warning disable CS8601 // Possible null reference assignment - already checked FileName != null
+                documents.Add(new Document { FileName = fileData.FileName });
+#pragma warning restore CS8601 // Possible null reference assignment.
+            }
+        }
+
+        // set file history
+        digitalCaseFile.History = await GetFileHistory(dispute.DisputeId, dispute.TicketNumber, cancellationToken);
+
+        return digitalCaseFile;
+    }
 
     private async Task<RenderedReport> RenderReportAsync(DigitalCaseFile digitalCaseFile, CancellationToken cancellationToken)
     {
@@ -88,6 +218,17 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return driversLicenceProvince;
     }
 
+    private async Task<Domain.Models.Country?> GetCountryAsync(string countryId)
+    {
+        Domain.Models.Country? country = null;
+        if (countryId is not null)
+        {
+            country = await _countryLookupService.GetByIdAsync(countryId);
+        }
+
+        return country;
+    }
+
     /// <summary>
     /// Fetches the <see cref="DigitalCaseFile"/> based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
@@ -100,10 +241,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         // get the user's time zone
         TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
 
-        var dispute = await _disputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
+        var dispute = await _jjDisputeService.GetJJDisputeAsync(ticketNumber, false, cancellationToken);
 
         Domain.Models.Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
-        var fileHistory = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(dispute.TicketNumber, cancellationToken);
 
         var digitalCaseFile = new DigitalCaseFile();
 
@@ -116,7 +256,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.GivenNames = ConcatenateWithSpaces(dispute.OccamDisputantGiven1Nm, dispute.OccamDisputantGiven2Nm, dispute.OccamDisputantGiven3Nm);
         ticket.OffenceLocation = dispute.OffenceLocation;
         ticket.PoliceDetachment = dispute.PoliceDetachment;
-        ticket.Issued = new FormattedDateTime(dispute.IssuedTs); 
+        ticket.Issued = new FormattedDateTime(dispute.IssuedTs);
         ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
@@ -151,8 +291,8 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         string? jjDisplayName = string.Empty;
         if (dispute.JjAssignedTo is not null)
         {
-            jjDisplayName = await _disputeService.GetDisputeAssignToDisplayNameAsync(dispute.JjAssignedTo, cancellationToken);
-        }  
+            jjDisplayName = await _jjDisputeService.GetDisputeAssignToDisplayNameAsync(dispute.JjAssignedTo, cancellationToken);
+        }
 
         SetFields(appearance, currentAppearance, jjDisplayName);
 
@@ -207,7 +347,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
                 offenseCount.IsDueDateRevised = IsDueDateRevised(disputedCount);
                 offenseCount.RevisedDue = IsDueDateRevised(disputedCount) ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
                 offenseCount.FinalDue = disputedCount.RevisedDueDate != null ? new FormattedDateOnly(disputedCount.RevisedDueDate) : new FormattedDateOnly(disputedCount.DueDate);
-                offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null 
+                offenseCount.Surcharge = offenseCount.RoundLesserOrGreaterAmount != null
                     ? Math.Round((decimal)offenseCount.RoundLesserOrGreaterAmount * 0.15M) : 0;
                 offenseCount.Comments = disputedCount.Comments;
                 // set jjDisputedCountRoP data for this count
@@ -249,20 +389,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         }
 
         // set file history
-        var history = digitalCaseFile.History;
-
-        // File History searches by ticket number and *could* return files for multiple disputes
-        // This is a bug waiting to happen, so we will be more careful
-        foreach (var h in fileHistory.Where(_ => _.DisputeId == dispute.OccamDisputeId))
-        {
-            history.Add(new FileHistoryEvent
-            {
-                When = new FormattedDateTime(h.CreatedTs),
-                Description = h.Description,
-                Type = h.AuditLogEntryType.ToString(),
-                Username = h.ActionByApplicationUser,
-            });
-        }
+        digitalCaseFile.History = await GetFileHistory(dispute.OccamDisputeId, ticketNumber, cancellationToken);
 
         // set file remarks
         var remarks = digitalCaseFile.FileRemarks;
@@ -277,6 +404,29 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         }
 
         return digitalCaseFile;
+    }
+
+    private async Task<List<FileHistoryEvent>> GetFileHistory(long disputeId, string ticketNumber, CancellationToken cancellationToken)
+    {
+        var fileHistory = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
+
+        // set file history
+        List<FileHistoryEvent> history = new();
+
+        // File History searches by ticket number and *could* return files for multiple disputes
+        // This is a bug waiting to happen, so we will be more careful
+        foreach (var h in fileHistory.Where(_ => _.DisputeId == disputeId))
+        {
+            history.Add(new FileHistoryEvent
+            {
+                When = new FormattedDateTime(h.CreatedTs),
+                Description = h.Description,
+                Type = h.AuditLogEntryType.ToString(),
+                Username = h.ActionByApplicationUser,
+            });
+        }
+
+        return history;
     }
 
     private Appearance SetFields(Appearance appearance, JJDisputeCourtAppearanceRoP appearanceRop, string? jjDisplayName)
@@ -337,6 +487,20 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return string.Empty;
     }
 
+    private string ToString(DisputeCountPleaCode? value)
+    {
+        if (value is not null && value != DisputeCountPleaCode.UNKNOWN)
+        {
+            switch (value)
+            {
+                case DisputeCountPleaCode.G: return "Guilty";
+                case DisputeCountPleaCode.N: return "Not Guilty";
+            }
+        }
+
+        return string.Empty;
+    }
+
     private string ToString(JJDisputedCountRequestTimeToPay? value)
     {
         if (value is not null && value != JJDisputedCountRequestTimeToPay.UNKNOWN)
@@ -351,6 +515,20 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return string.Empty;
     }
 
+    private string ToString(DisputeCountRequestTimeToPay? value)
+    {
+        if (value is not null && value != DisputeCountRequestTimeToPay.UNKNOWN)
+        {
+            switch (value)
+            {
+                case DisputeCountRequestTimeToPay.Y: return "Yes";
+                case DisputeCountRequestTimeToPay.N: return "No";
+            }
+        }
+
+        return string.Empty;
+    }
+
     private string ToString(JJDisputedCountRequestReduction? value)
     {
         if (value is not null && value != JJDisputedCountRequestReduction.UNKNOWN)
@@ -359,6 +537,20 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
             {
                 case JJDisputedCountRequestReduction.Y: return "Yes";
                 case JJDisputedCountRequestReduction.N: return "No";
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private string ToString(DisputeCountRequestReduction? value)
+    {
+        if (value is not null && value != DisputeCountRequestReduction.UNKNOWN)
+        {
+            switch (value)
+            {
+                case DisputeCountRequestReduction.Y: return "Yes";
+                case DisputeCountRequestReduction.N: return "No";
             }
         }
 
@@ -467,6 +659,20 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         return string.Empty;
     }
 
+    private string ToString(DisputeCountRequestCourtAppearance? value)
+    {
+        if (value is not null && value != DisputeCountRequestCourtAppearance.UNKNOWN)
+        {
+            switch (value)
+            {
+                case DisputeCountRequestCourtAppearance.Y: return "I want to appear in court";
+                case DisputeCountRequestCourtAppearance.N: return "I do not want to appear in court";
+            }
+        }
+
+        return string.Empty;
+    }
+
     private string ToString(JJDisputedCountIncludesSurcharge? value)
     {
         if (value is not null && value != JJDisputedCountIncludesSurcharge.UNKNOWN)
@@ -534,6 +740,40 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         var nonEmptyParts = addressParts.Where(part => !string.IsNullOrEmpty(part));
         // Concatenates all the address fields by a comma and returns them as a single string
         return string.Join(", ", nonEmptyParts);
+    }
+
+    private string FormatAddress(Dispute dispute, string? province, string? country)
+    {
+        // Filter out null or empty strings before joining
+        var addressParts = new[] { dispute.AddressLine1, dispute.AddressLine2, dispute.AddressLine3, dispute.AddressCity, province, country, dispute.PostalCode };
+        var nonEmptyParts = addressParts.Where(part => !string.IsNullOrEmpty(part));
+        // Concatenates all the address fields by a comma and returns them as a single string
+        return string.Join(", ", nonEmptyParts);
+    }
+
+    private string GetStatuteDescription(ViolationTicketCount count)
+    {
+        // Filter out null or empty strings before joining
+        var sectionParts = new[] { count.Section, count.Subsection, count.Paragraph, count.Subparagraph };
+        var nonEmptyParts = sectionParts.Where(part => !string.IsNullOrEmpty(part)).ToArray();
+        // Build string to return for full statute description
+        if (nonEmptyParts.Length > 0)
+        {
+            StringBuilder stringBuilder = new();
+            stringBuilder.Append(count.ActOrRegulationNameCode + ' ');
+            stringBuilder.Append(nonEmptyParts.ElementAt(0));
+            for (var i = 1; i < nonEmptyParts.Length; i++)
+            {
+                stringBuilder.Append('(' + nonEmptyParts.ElementAt(i) + ')');
+            }
+            stringBuilder.Append(' ' + count.Description);
+
+            return stringBuilder.ToString();
+        }
+        else
+        {
+            return string.Empty;
+        }
     }
 
     private string ConcatenateWithSpaces(params string[] values)

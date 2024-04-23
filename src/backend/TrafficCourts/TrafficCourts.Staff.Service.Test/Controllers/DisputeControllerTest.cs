@@ -35,7 +35,8 @@ public class DisputeControllerTest
             .Setup(_ => _.GetAllDisputesAsync(It.IsAny<GetAllDisputesParameters>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         GetAllDisputesParameters? parameters = null;
@@ -62,7 +63,8 @@ public class DisputeControllerTest
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new (disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.GetDisputeAsync(id, CancellationToken.None);
@@ -86,7 +88,8 @@ public class DisputeControllerTest
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.GetDisputeAsync(id, CancellationToken.None);
@@ -110,7 +113,8 @@ public class DisputeControllerTest
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.GetDisputeAsync(id, CancellationToken.None);
@@ -134,7 +138,8 @@ public class DisputeControllerTest
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", CancellationToken.None);
@@ -158,7 +163,8 @@ public class DisputeControllerTest
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.UpdateDisputeAsync(id, dispute, "test comment", CancellationToken.None);
@@ -183,7 +189,8 @@ public class DisputeControllerTest
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<ClaimsPrincipal>(), It.IsAny<string>(), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .Throws(new TrafficCourts.Exceptions.ApiException("msg", StatusCodes.Status404NotFound, "rsp", null!, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.UpdateDisputeAsync(updatedId, dispute, "test comment", CancellationToken.None);
@@ -207,7 +214,8 @@ public class DisputeControllerTest
             .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), null, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         await disputeController.ValidateDisputeAsync(id, null, CancellationToken.None);
@@ -228,7 +236,8 @@ public class DisputeControllerTest
             .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), dispute, It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         await disputeController.ValidateDisputeAsync(id, dispute, CancellationToken.None);
@@ -250,7 +259,8 @@ public class DisputeControllerTest
             .Setup(_ => _.AcceptDisputeUpdateRequestAsync(It.Is<long>(v => v == id), It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         await disputeController.AcceptDisputeUpdateRequestAsync(id, CancellationToken.None);
@@ -276,7 +286,8 @@ public class DisputeControllerTest
             .Setup(_ => _.GetAllDisputesWithPendingUpdateRequestsAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(disputes);
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.GetDisputesWithPendingUpdateRequestsAsync(CancellationToken.None);
@@ -309,7 +320,8 @@ public class DisputeControllerTest
             .Setup(_ => _.GetDisputeUpdateRequestsAsync(1, It.IsAny<CancellationToken>()))
             .ReturnsAsync(updateRequests);
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         // Act
         IActionResult? result = await disputeController.GetDisputeUpdateRequestsAsync(1, CancellationToken.None);
@@ -333,7 +345,8 @@ public class DisputeControllerTest
         dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         var mockLogger = new Mock<ILogger<DisputeController>>();
-        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+        var mockPrintDcf = new Mock<IPrintDigitalCaseFileService>();
+        DisputeController disputeController = new(disputeService.Object, mockPrintDcf.Object, mockLogger.Object);
 
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), true, It.IsAny<CancellationToken>()))

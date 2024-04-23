@@ -1,8 +1,17 @@
 <app-page>
+  <ng-container stickyToolBar>
+    <div class="app-width" style="padding-top: 1.5vh; padding-bottom: 1.5vh;" fxLayout="row">
+      <div fxFlex>
+        <a (click)="onBack()" style="color: #48afe5">
+          <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
+        </a>
+      </div>
+      <div>
+        <button mat-raised-button (click)="onPrint()">Print</button>
+      </div>
+    </div>
+  </ng-container>
   <div class="contact-info">
-    <a (click)="onBack()" style="color: #48afe5">
-      <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
-    </a>
     <app-ticket-status [dispute]="lastUpdatedDispute" *ngIf="lastUpdatedDispute"></app-ticket-status>
     <div *ngIf="conflict === true">
       <span>
