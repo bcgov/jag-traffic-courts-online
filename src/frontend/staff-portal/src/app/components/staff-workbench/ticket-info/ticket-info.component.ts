@@ -414,6 +414,9 @@ export class TicketInfoComponent implements OnInit {
       let violationTicketCount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).value as ViolationTicketCount;
       violationTicketCount.countNo = i;
       violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
+      if (violationTicketCount.ticketedAmount != undefined && violationTicketCount.ticketedAmount.toString().length == 0) {
+        violationTicketCount.ticketedAmount = null;
+      }
       putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
     }
 

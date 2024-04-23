@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -157,9 +158,31 @@ public class DisputeService {
 		
 		// TCVP-2748 Replace null province values with NA if specific province IDs are null since db check constraints expect values if IDs are null for provinces
 		replaceProvinceValuesWithNA(disputeToUpdate);
-		
+				
 		// Copy all new dispute counts data to be saved from the request to disputeCountsToUpdate ignoring the disputeCountId, creation audit fields
 		if (dispute.getDisputeCounts() != null && disputeCountsToUpdate != null) {
+
+			// TCVP-2941 Remove Counts that have been cleared by staff
+			// - if Fine Amount is blank, then remove the Count. This can/should only happen if Staff purposely clears out the Fine Amount data when Validating a ticket.
+			List<ViolationTicketCount> violationTicketCounts = dispute.getViolationTicket().getViolationTicketCounts();
+			for (Iterator<ViolationTicketCount> iter = violationTicketCounts.iterator(); iter.hasNext();) {
+				ViolationTicketCount violationTicketCount = iter.next();
+				if (violationTicketCount.getTicketedAmount() == null) {
+					// Remove the Disputed Count
+					int index = violationTicketCount.getCountNo() - 1;
+					if (index > 0 
+							&& index < dispute.getDisputeCounts().size()
+							&& index < disputeCountsToUpdate.size()
+							&& index < violationTicketCountsToUpdate.size()) {
+						dispute.getDisputeCounts().remove(index);
+						disputeCountsToUpdate.remove(index);
+						violationTicketCountsToUpdate.remove(index);
+						// Remove the Count from the Violation Ticket
+						iter.remove();
+					}
+				}
+			}
+			
 			if (dispute.getDisputeCounts().size() == disputeCountsToUpdate.size()) {
 				for (int i = 0; i < dispute.getDisputeCounts().size(); i++) {
 					BeanUtils.copyProperties(dispute.getDisputeCounts().get(i), disputeCountsToUpdate.get(i), "createdBy", "createdTs", "disputeCountId");
@@ -194,7 +217,8 @@ public class DisputeService {
 			}
 		}
 
-		// Add updated ticket counts
+		// Add updated ticket counts (set Parent object on counts)
+		disputeToUpdate.setDisputeCounts(new ArrayList<DisputeCount>());
 		disputeToUpdate.addDisputeCounts(disputeCountsToUpdate);
 
 		if (violationTicketToUpdate != null && violationTicketCountsToUpdate != null) {
