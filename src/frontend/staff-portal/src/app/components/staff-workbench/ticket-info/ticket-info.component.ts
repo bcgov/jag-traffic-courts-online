@@ -893,4 +893,15 @@ export class TicketInfoComponent implements OnInit {
   public onValidateClick(): void {
     this.validateClicked = true;
   }
+
+  onPrint() {
+    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId).subscribe(result => {
+      if (result) {
+        var url = URL.createObjectURL(result);
+        window.open(url);
+      } else {
+        alert("File contents not found");
+      }
+    });
+  }
 }

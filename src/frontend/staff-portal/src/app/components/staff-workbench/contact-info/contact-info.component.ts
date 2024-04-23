@@ -377,4 +377,15 @@ export class ContactInfoComponent implements OnInit {
   public handleCollapse(name: string) {
     this.collapseObj[name] = !this.collapseObj[name]
   }
+
+  onPrint() {
+    this.disputeService.apiTicketValidationPrintGet(this.lastUpdatedDispute.disputeId).subscribe(result => {
+      if (result) {
+        var url = URL.createObjectURL(result);
+        window.open(url);
+      } else {
+        alert("File contents not found");
+      }
+    });
+  }
 }
