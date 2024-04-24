@@ -11,7 +11,7 @@ public abstract class EmailTemplate<T> : IEmailTemplate<T>
     /// <summary>
     /// Provides sender email address.
     /// </summary>
-    protected const string Sender = "donotreply_courts.tco@gov.bc.ca";
+    protected const string Sender = "DoNotReply.TCO@gov.bc.ca";
 
     /// <summary>
     /// Provides the common help text.
