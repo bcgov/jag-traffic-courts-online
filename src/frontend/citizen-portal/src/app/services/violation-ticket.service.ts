@@ -383,7 +383,8 @@ export class ViolationTicketService {
         this.logger.error("ViolationTicketService:onError critical validation error has occurred", errorMessages);
         this.openErrorScenarioOneDialog();
       }
-      else if (this.isErrorMatch(err, "Form recognizer has identified this ticket as having an old format (VT1) which is no longer accepted.")) {
+      else if (this.isErrorMatch(err, "Form recognizer has identified this ticket as having an old format (VT1) which is no longer accepted.") || 
+               this.isErrorMatch(err, "Violation tickets starting with 'S' must dated after", false)) {
         this.logger.error("ViolationTicketService:onError validation error has occurred", "VT1 no longer supported");
         this.openErrorScenarioThreeDialog();
       }
