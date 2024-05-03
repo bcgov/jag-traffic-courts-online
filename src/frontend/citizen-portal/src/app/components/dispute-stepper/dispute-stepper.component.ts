@@ -485,7 +485,7 @@ export class DisputeStepperComponent implements OnInit, AfterViewInit {
     let file = files[0];
 
     let fileData = await firstValueFrom(this.fileData$)
-    if (fileData.length >= 4) {
+    if (fileData.filter(i => !i.deleteRequested).length >= 4) {
       this.onUploadFileError("Maximum 4 file uploads per dispute.");
       return;
     }

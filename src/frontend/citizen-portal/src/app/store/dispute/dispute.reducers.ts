@@ -31,8 +31,11 @@ const disputeReducer = createReducer(initialState,
   on(Actions.AddDocument, (state, input) => ({ ...state, fileData: state.fileData.concat({ fileName: input.file.name, __penfingFile: input.file, documentType: input.fileType, pendingFileStream: input.pendingFileStream }) })),
   on(Actions.RemoveDocument, (state, input) => {
     var fileData = state.fileData.filter(i => i !== input.file);
-    var file = { ...input.file };
-    file.deleteRequested = true;
-    return { ...state, fileData: fileData.concat(file) };
+    if (input.file.fileId) {
+      var file = { ...input.file };
+      file.deleteRequested = true;
+      fileData = fileData.concat(file);
+    }
+    return { ...state, fileData };
   }),
 )
