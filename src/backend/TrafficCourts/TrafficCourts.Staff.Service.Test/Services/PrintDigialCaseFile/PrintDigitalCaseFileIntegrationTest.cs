@@ -71,6 +71,7 @@ namespace TrafficCourts.Staff.Service.Test.Services.PrintDigialCaseFile
                 jjDisputeService,
                 oracleDataApi,
                 Mock.Of<IProvinceLookupService>(),
+                Mock.Of<IAgencyLookupService>(),
                 Mock.Of<ICountryLookupService>(),
                 Mock.Of<IDocumentGenerationService>(),
                 disputeService,
