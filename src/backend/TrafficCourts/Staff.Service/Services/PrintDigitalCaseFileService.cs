@@ -13,6 +13,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     private readonly IJJDisputeService _disputeService;
     private readonly IOracleDataApiService _oracleDataApi;
     private readonly IProvinceLookupService _provinceLookupService;
+    private readonly IAgencyLookupService _agencyLookupService;
     private readonly IDocumentGenerationService _documentGeneration;
     private readonly ILogger<PrintDigitalCaseFileService> _logger;
 
@@ -20,12 +21,14 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         IJJDisputeService disputeService,
         IOracleDataApiService oracleDataApi,
         IProvinceLookupService provinceLookupService,
+        IAgencyLookupService agencyLookupService,
         IDocumentGenerationService documentGeneration,
         ILogger<PrintDigitalCaseFileService> logger)
     {
         _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _provinceLookupService = provinceLookupService ?? throw new ArgumentNullException(nameof(provinceLookupService));
+        _agencyLookupService = agencyLookupService ?? throw new ArgumentNullException(nameof(agencyLookupService));
         _documentGeneration = documentGeneration ?? throw new ArgumentNullException(nameof(documentGeneration));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -89,6 +92,22 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
     }
 
     /// <summary>
+    /// Returns Agency (Courthouse Location) based on the provided agencyId through agencyLookupService.
+    /// </summary>
+    /// <param name="agencyId"></param>
+    /// <returns></returns>
+    private async Task<Agency?> GetCourthouseLocationAsync(string agencyId)
+    {
+        Domain.Models.Agency? courthouseLocation = null;
+        if (agencyId is not null)
+        {
+            courthouseLocation = await _agencyLookupService.GetByIdAsync(agencyId);
+        }
+
+        return courthouseLocation;
+    }
+
+    /// <summary>
     /// Fetches the <see cref="DigitalCaseFile"/> based on ticket number. This really should be using the tco_dispute.dispute_id.
     /// </summary>
     internal async Task<DigitalCaseFile> GetDigitalCaseFileAsync(string ticketNumber, string timeZoneId, CancellationToken cancellationToken)
@@ -105,6 +124,9 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         Domain.Models.Province? driversLicenceProvince = await GetDriversLicenceProvinceAsync(dispute.DrvLicIssuedProvSeqNo, dispute.DrvLicIssuedCtryId);
         var fileHistory = await _oracleDataApi.GetFileHistoryByTicketNumberAsync(dispute.TicketNumber, cancellationToken);
 
+        // Get courthouse location data from the courthouse location lookup service based on CourtAgenId provided from the dispute
+        Agency? courthouseLocation = await GetCourthouseLocationAsync(dispute.CourtAgenId);
+
         var digitalCaseFile = new DigitalCaseFile();
 
         // fill in each section, the sections and fields are populated in order matching the template
@@ -120,7 +142,7 @@ public class PrintDigitalCaseFileService : IPrintDigitalCaseFileService
         ticket.Submitted = new FormattedDateOnly(dispute.SubmittedTs);
         ticket.IcbcReceived = new FormattedDateOnly(dispute.IcbcReceivedDate);
         ticket.CourtAgenyId = dispute.CourtAgenId;
-        ticket.CourtHouse = dispute.CourthouseLocation;
+        ticket.CourtHouse = courthouseLocation?.Name ?? string.Empty;
 
         // set the contact information
         var contact = digitalCaseFile.Contact;
